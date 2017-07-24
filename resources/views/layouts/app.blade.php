@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en" data-textdirection="ltr" class="loading">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+        <meta name="description" content="Stack admin is super flexible, powerful, clean &amp; modern responsive bootstrap 4 admin template with unlimited possibilities.">
+        <meta name="keywords" content="admin template, stack admin template, dashboard template, flat admin template, responsive admin template, web app">
+        <meta name="author" content="PIXINVENT">
+        <title>Aplikasi Keuangan Kantor Cabang PT. Asabri (Persero)</title>
+        <link rel="apple-touch-icon" href="app-assets/images/ico/apple-icon-120.png">
+        <link rel="shortcut icon" type="image/x-icon" href="app-assets/images/ico/favicon.ico">
+        <link href="https://fonts.googleapis.com/css?family=Montserrat:300,300i,400,400i,500,500i%7COpen+Sans:300,300i,400,400i,600,600i,700,700i" rel="stylesheet">
+        <!-- BEGIN VENDOR CSS-->
+        <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/bootstrap.min.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/fonts/feather/style.min.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/fonts/font-awesome/css/font-awesome.min.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/fonts/flag-icon-css/css/flag-icon.min.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/extensions/pace.css') }}">
+        @yield('additional-vendorcss')
+        <!-- END VENDOR CSS-->
+        <!-- BEGIN STACK CSS-->
+        <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/bootstrap-extended.min.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/app.min.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/colors.min.css')}}">
+        <!-- END STACK CSS-->
+        <!-- BEGIN Page Level CSS-->
+        <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/core/menu/menu-types/vertical-menu.min.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/core/menu/menu-types/vertical-overlay-menu.min.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/core/colors/palette-gradient.min.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/fonts/simple-line-icons/style.min.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/core/colors/palette-gradient.min.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/pages/timeline.min.css') }}">
+        <!-- link(rel='stylesheet', type='text/css', href='../../../app-assets/css#{rtl}/pages/users.css')-->
+        <!-- END Page Level CSS-->
+        <!-- BEGIN Custom CSS-->
+        <!-- <link rel="stylesheet" type="text/css" href="assets/css/style.css"> -->
+        <!-- END Custom CSS-->
+    </head>
+    <body data-open="click" data-menu="vertical-menu" data-col="2-columns" class="vertical-layout vertical-menu 2-columns  fixed-navbar">
+        <!-- - var navbarShadow = true-->
+        <!-- navbar-fixed-top-->
+        <nav class="header-navbar navbar navbar-with-menu navbar-fixed-top navbar-semi-light bg-gradient-x-grey-blue">
+            <div class="navbar-wrapper">
+                <div class="navbar-header">
+                    <ul class="nav navbar-nav">
+                        <li class="nav-item mobile-menu hidden-md-up float-xs-left"><a href="#" class="nav-link nav-menu-main menu-toggle hidden-xs"><i class="ft-menu font-large-1"></i></a></li>
+                        <li class="nav-item">
+                            <a href="{{ url('/') }}" class="navbar-brand">
+                                <img src="{{ asset('app-assets/images/asabri-logo.png', $secure = null) }}" width="45%" align="middle" hspace="30%">
+                            </a>
+                        </li>
+                        <li class="nav-item hidden-md-up float-xs-right">
+                            <a data-toggle="collapse" data-target="#navbar-mobile" class="nav-link open-navbar-container"><i class="fa fa-ellipsis-v"></i></a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="navbar-container content container-fluid">
+                    <div id="navbar-mobile" class="collapse navbar-toggleable-sm">
+                        <ul class="nav navbar-nav">
+                            <li class="nav-item hidden-sm-down"><a href="#" class="nav-link nav-menu-main menu-toggle hidden-xs"><i class="ft-menu"></i></a></li>
+                            <li class="nav-item hidden-sm-down"><a href="#" class="nav-link nav-link-expand"><i class="ficon ft-maximize"></i></a></li>
+                        </ul>
+                        <ul class="nav navbar-nav float-xs-right">
+                            
+                            <li class="dropdown dropdown-user nav-item">
+                                <a href="#" data-toggle="dropdown" class="dropdown-toggle nav-link dropdown-user-link">
+                                    <span class="avatar avatar-online">
+                                        <img src="{{ asset('app-assets/images/empty-profile-grey.jpg', $secure = null) }}" alt="avatar"><i></i></span>
+                                    <span class="user-name">{{ Auth::user()->name }}</span>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right">
+                                    <div class="dropdown-divider"></div><a href="{{ url('logout', $parameters = [], $secure = null) }}" class="dropdown-item"><i class="ft-power"></i> Logout</a>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        <!-- ////////////////////////////////////////////////////////////////////////////-->
+        <div data-scroll-to-active="true" class="main-menu menu-fixed menu-light menu-accordion menu-shadow">
+            <div class="main-menu-content">
+                <ul id="main-menu-navigation" data-menu="menu-navigation" class="navigation navigation-main">
+                    <li class="navigation-header">
+                    </li>
+                    <li class="navigation-header">
+                        <span >Main Menus</span><i data-toggle="tooltip" data-placement="right" data-original-title="General"
+                                               class=" ft-minus"></i>
+                    </li>
+                    <li class="nav-item {{ checkActiveMenu('dashboard') }}"><a href="{{ url('/dashboard', $parameters = [], $secure = null) }}"><i class="ft-home"></i><span data-i18n="" class="menu-title">Dashboard</span><!--<span class="tag tag tag-primary tag-pill float-xs-right mr-2">3</span>--></a>
+                    </li>
+                    <li class="nav-item {{ checkActiveMenu('dropping') }}"><a href="{{ url('/dropping', $parameters = [], $secure = null) }}"><i class="ft-monitor"></i><span data-i18n="" class="menu-title">Dropping</span></a>
+                    </li>
+                    <li class="nav-item {{ checkActiveMenu('transaksi') }}"><a href="{{ url('/transaksi', $parameters = [], $secure = null) }}"><i class="ft-layout"></i><span data-i18n="" class="menu-title">Transaksi</span></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="app-content content container-fluid">
+            <div class="content-wrapper">
+                @yield('content')
+            </div>
+        </div>
+        <!-- ////////////////////////////////////////////////////////////////////////////-->
+
+        <footer class="footer footer-static footer-dark navbar-border" style="bottom: 0;">
+            <p class="clearfix blue-grey lighten-2 text-sm-center mb-0 px-2">
+                <span class="float-md-left d-xs-block d-md-inline-block">Copyright &copy; 2017 <a href="https://gumcode.net/"
+                                                                                                  target="_blank" class="text-bold-800 grey darken-2">Gumcode </a>, All rights
+                    reserved. </span>
+                <span class="float-md-right d-xs-block d-md-inline-block">Hand-crafted & Made with <i class="ft-heart pink"></i></span>
+            </p>
+        </footer>
+        <!-- BEGIN VENDOR JS-->
+        <script src="{{ asset('app-assets/vendors/js/vendors.min.js') }}" type="text/javascript"></script>
+        <!-- BEGIN VENDOR JS-->
+        @yield('customjs')
+        <!-- BEGIN STACK JS-->
+        <script src="{{ asset('app-assets/js/core/app-menu.min.js') }}" type="text/javascript"></script>
+        <script src="{{ asset('app-assets/js/core/app.min.js') }}" type="text/javascript"></script>
+        <script src="{{ asset('app-assets/js/scripts/customizer.min.js') }}" type="text/javascript"></script>
+        <!-- END STACK JS-->
+    </body>
+</html>
