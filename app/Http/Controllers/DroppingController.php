@@ -11,11 +11,11 @@ use App\Models\PaymentJournalDropping;
 class DroppingController extends Controller
 {
 
-    protected $model;
+    protected $JDroppingModel;
 
     public function __construct(PaymentJournalDropping $JDropping)
     {
-        $this->model = $JDropping;
+        $this->JDroppingModel = $JDropping;
     }
 
     public function index() 
@@ -28,25 +28,37 @@ class DroppingController extends Controller
     	return view('table');
     }
 
-    public function getAll(){
-        $dropping = $this->model->get();
+    public function getAll()
+    {
+        $droppings = $this->JDroppingModel->get();
         $result = [];
-        foreach ($dropping as $value) {
+        foreach ($droppings as $dropping) {
             $result[] = [
-                'account'       => $value->OFFSETACCOUNT, 
-                'journalnum'    => $value->JOURNALNUM, 
-                'transdate'     => $value->TRANSDATE, 
-                'credit'        => 'IDR '. number_format($value->CREDIT, 2),
-                'mainaccount'   => $value->OFFSETMAINACCOUNT,
-                'company'       => $value->COMPANY
+                'account'       => $dropping->OFFSETACCOUNT, 
+                'journalnum'    => $dropping->JOURNALNUM, 
+                'transdate'     => $dropping->TRANSDATE, 
+                'credit'        => 'IDR '. number_format($dropping->CREDIT, 2),
+                'mainaccount'   => $dropping->OFFSETMAINACCOUNT,
+                'company'       => $dropping->COMPANY
             ];
         }
         return response()->json($result);
     }
 
-    public function tarik_tunai()
+    public function formatData($dropping)
     {
-    	return view('dropping.tariktunai');
+        
+    }
+
+    public function tarik_tunai($journalnum)
+    {
+        $dropping = $this->JDroppingModel->where('JOURNALNUM', $journalnum)->firstOrFail();
+    	return view('dropping.tariktunai', ['dropping' => $dropping]);
+    }
+
+    public function tarik_tunai_process($journalnum, Request $request)
+    {
+        dd($request->all());
     }
 
     public function pengembalian()

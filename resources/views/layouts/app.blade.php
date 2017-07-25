@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-textdirection="ltr" class="loading">
+<html lang="en" data-textdirection="ltr" class="loading" style="">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -37,7 +37,7 @@
         <!-- <link rel="stylesheet" type="text/css" href="assets/css/style.css"> -->
         <!-- END Custom CSS-->
     </head>
-    <body data-open="click" data-menu="vertical-menu" data-col="2-columns" class="vertical-layout vertical-menu 2-columns  fixed-navbar">
+    <body data-open="click" data-menu="vertical-menu" data-col="2-columns" class="vertical-layout vertical-menu 2-columns  fixed-navbar" style="">
         <!-- - var navbarShadow = true-->
         <!-- navbar-fixed-top-->
         <nav class="header-navbar navbar navbar-with-menu navbar-fixed-top navbar-semi-light bg-gradient-x-grey-blue">
@@ -88,8 +88,8 @@
                         <span >Main Menus</span><i data-toggle="tooltip" data-placement="right" data-original-title="General"
                                                class=" ft-minus"></i>
                     </li>
-                    <li class="nav-item {{ checkActiveMenu('dashboard') }}"><a href="{{ url('/dashboard', $parameters = [], $secure = null) }}"><i class="ft-home"></i><span data-i18n="" class="menu-title">Dashboard</span><!--<span class="tag tag tag-primary tag-pill float-xs-right mr-2">3</span>--></a>
-                    </li>
+                    {{-- <li class="nav-item {{ checkActiveMenu('dashboard') }}"><a href="{{ url('/dashboard', $parameters = [], $secure = null) }}"><i class="ft-home"></i><span data-i18n="" class="menu-title">Dashboard</span><!--<span class="tag tag tag-primary tag-pill float-xs-right mr-2">3</span>--></a>
+                    </li> --}}
                     <li class="nav-item {{ checkActiveMenu('dropping') }}"><a href="{{ url('/dropping', $parameters = [], $secure = null) }}"><i class="ft-monitor"></i><span data-i18n="" class="menu-title">Dropping</span></a>
                     </li>
                     <li class="nav-item {{ checkActiveMenu('transaksi') }}"><a href="{{ url('/transaksi', $parameters = [], $secure = null) }}"><i class="ft-layout"></i><span data-i18n="" class="menu-title">Transaksi</span></a>
@@ -104,7 +104,7 @@
         </div>
         <!-- ////////////////////////////////////////////////////////////////////////////-->
 
-        <footer class="footer footer-static footer-dark navbar-border" style="bottom: 0;">
+        <footer class="footer footer-static footer-dark navbar-border" style="">
             <p class="clearfix blue-grey lighten-2 text-sm-center mb-0 px-2">
                 <span class="float-md-left d-xs-block d-md-inline-block">Copyright &copy; 2017 <a href="https://gumcode.net/"
                                                                                                   target="_blank" class="text-bold-800 grey darken-2">Gumcode </a>, All rights

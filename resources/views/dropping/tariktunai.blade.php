@@ -4,18 +4,20 @@
                 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/tables/jsgrid/jsgrid-theme.min.css') }}">
                 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/tables/jsgrid/jsgrid.min.css') }}">
                 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/forms/selects/select2.min.css') }}">
+                <link rel="stylesheet" type="text/css" href="https://pixinvent.com/stack-responsive-bootstrap-4-admin-template/app-assets/vendors/css/forms/toggle/switchery.min.css">
+                <link rel="stylesheet" type="text/css" href="https://pixinvent.com/stack-responsive-bootstrap-4-admin-template/app-assets/css/plugins/forms/switch.min.css">
                 @endsection
 
                 @section('content')
                 <div class="content-header row">
                     <div class="content-header-left col-md-6 col-xs-12 mb-2">
-                        <h3 class="content-header-title mb-0">Informasi Dropping</h3>
+                        <h3 class="content-header-title mb-0">Tarik Tunai</h3>
                         <div class="row breadcrumbs-top">
                             <div class="breadcrumb-wrapper col-xs-12">
                                 <ol class="breadcrumb">
-                                    <li class="breadcrumb-item"><a href="index-2.html">Dashboard</a>
+                                    <li class="breadcrumb-item"><a href="{{ url('/') }}">Dashboard</a>
                                     </li>
-                                    <li class="breadcrumb-item">Informasi Dropping
+                                    <li class="breadcrumb-item"><a href="{{ url('/dropping') }}">Informasi Dropping</a>
                                     </li>
                                     <li class="breadcrumb-item active">Tarik Tunai
                                     </li>
@@ -24,162 +26,237 @@
                         </div>
                     </div>
                 </div>
-                <div class="content-body"><!-- Basic scenario start -->
-                    <section id="basic">
-                        <div class="row">
-                            <div class="col-xs-7">
-                                <div class="card">
-                                    <div class="content">
-	            <div class="container-fluid">
-	                <div class="row">
-	                    <div class="col-md-12">
-	                        <div class="card">
-	                            <div class="card-header" data-background-color="purple">
-	                                <h4 class="title">Tarik Tunai Dropping</h4>
-	                            </div>
-	                            <div class="card-content table-responsive">
-		                            <div class="col-md-6">
-			                            	<div class="form-group" style="overflow: hidden;" >
-				                                <div class="col-md-3">
-				                                    <label for="">Tanggal</label>
-				                                </div>
-				                                <div class="col-md-9">
-				                                    <input type="text" placeholder="{{date('d/m/Y')}}" class="form-control" disabled>
-				                                </div>
-				                            </div>
-				                            <div class="form-group" style="overflow: hidden;" >
-				                                <div class="col-md-3">
-				                                    <label for="">Jumlah</label>
-				                                </div>
-				                                <div class="col-md-9">
-				                                    <input type="text" placeholder="100.000.000" class="form-control" disabled>
-				                                </div>
-				                            </div>
-				                            <div class="form-group" style="overflow: hidden;" >
-				                                <div class="col-md-3">
-				                                    <label for="">Nama Bank</label>
-				                                </div>
-				                                <div class="col-md-9">
-				                                    <input type="text" placeholder="BCA" class="form-control" disabled>
-				                                </div>
-				                            </div>
-				                            <div class="form-group" style="overflow: hidden;" >
-				                                <div class="col-md-3">
-				                                    <label for="">No. Rekening</label>
-				                                </div>
-				                                <div class="col-md-9">
-				                                    <input type="text" placeholder="121000111098" class="form-control" disabled>
-				                                </div>
-				                            </div>
-				                            <div class="form-group" style="overflow: hidden;" >
-				                                <div class="col-md-3">
-				                                    <label for="">Cabang</label>
-				                                </div>
-				                                <div class="col-md-9">
-				                                    <input type="text" placeholder="Jakarta Timur" class="form-control" disabled>
-				                                </div>
-				                            </div>
-				                            <div class="form-group" style="overflow: hidden;" >
-				                                <div class="col-md-9">
-				                                    <label for="">Apakah nominal sesuai dengan dropping?</label>
-				                                </div>
-				                                <div class="col-md-6">
-				                                    <input type="checkbox" name="check1" value="ya" class="form-control">Iya<br/>
-				                                    <input type="checkbox" name="check2" value="tidak" class="form-control">Tidak<br/>
-				                                </div>
-				                            </div>						                         
-				                        <a href="<?php echo $app->make('url')->to('/table');?>" class="btn btn-primary pull-right">Posting<div class="ripple-container"></div></a>
-
-			                            <a href="<?php echo $app->make('url')->to('/table');?>" class="btn btn-primary pull-right" style = "background-color:#F1C40F">Keluar<div class="ripple-container"></div></a>
-
-			                            <?php
-			                            	
-			                            ?>
-			                            <a href="<?php echo $app->make('url')->to('/pengembalian');?>" class="btn btn-primary">Pengembalian kelebihan dropping</a>
-
-			                            <a href="<?php echo $app->make('url')->to('/penambahan');?>" class="btn btn-primary">Penambahan kekurangan dropping</a>
-
-			                        </div>
-		                     	</div>
-	                        </div>
-	                    </div>
-
-	                    
-	                    </div>
-	                </div>
-	            </div>
-	        </div>
-                                </div>
+                <div class="content-body">
+                <!-- Basic scenario start -->
+                  <section id ="basic-form-layouts">
+                    <div class="row match-height">
+                      <div class="col-md-6">
+                        <div class="card" style="height: 100px;">
+                          <div class="card-header">
+                            <h4 class="card-title" id="basic-layout-form">Detail Tarik Tunai <b>{{ $dropping->JOURNALNUM }}</b></h4>
+                            <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
+                            <div class="heading-elements">
+                              <ul class="list-inline mb-0">
+                                <li><a data-action="collapse"><i class="ft-minus"></i></a></li>
+                              </ul>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xs-12">
-                                <div class="card">
-                                    <div class="card-header">
-                                        <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
-                                        
+                          </div>
+                          <div class="card-body collapse in">
+                            <div class="card-block">
+                              <div class="card-text">
+                                <p>Penjelasan singkat mengenai form bisa diletakkan <b>disini</b>.</p>
+                              </div>
+                              <form class="form" id="tariktunai-form" method="POST" action="{{ url('dropping/tariktunai/'.$dropping->JOURNALNUM) }}">
+                              {{ csrf_field() }}
+                                <div class="form-body">
+                                  <h4 class="form-section"> Informasi Transaksi</h4>
+                                  <div class="row">
+                                    <div class="col-md-6">
+                                      <div class="form-group">
+                                        <label for="projectinput1">Tanggal Transaksi</label>
+                                        <input type="date" readonly="" id="transdate" class="form-control" placeholder="Tanggal Transaksi" name="transdate" value="{{ date("Y-m-d",strtotime($dropping->TRANSDATE)) }}">
+                                      </div>
                                     </div>
-                                    <!--<div class="card-body collapse in">
-                                        <div class="card-block card-dashboard ">
-                                            <!-- <p>Grid with filtering, editing, inserting, deleting, sorting and paging. Data provided by controller.</p> >--
-                                            <div id="basicScenario"></div>
-                                        </div>
-                                    </div>-->
+                                    <div class="col-md-6">
+                                      <div class="form-group">
+                                        <label for="projectinput2">Jumlah Transaksi</label>
+                                        <input type="text" readonly="" id="credit" class="form-control" placeholder="Jumlah Transaksi" name="credit" value="{{ 'IDR '.number_format($dropping->CREDIT, 2) }}">
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <h4 class="form-section">Informasi Bank</h4>
+                                  <div class="row">
+                                    <div class="col-md-6">
+                                      <div class="form-group">
+                                        <label for="companyName">Nama Bank</label>
+                                        <input type="text" readonly="" id="mainaccount" class="form-control" placeholder="Nama Bank" name="mainaccount" value="{{ $dropping->OFFSETACCOUNT }}">
+                                      </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                      <div class="form-group">
+                                        <label for="companyName">Nomor Rekening</label>
+                                        <input type="number" readonly="" id="offsetmainaccount" class="form-control" placeholder="Nama Bank" name="offsetmainaccount" value="{{ $dropping->OFFSETMAINACCOUNT }}">
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="form-group">
+                                    <label for="projectinput8">Cabang Kantor</label>
+                                    <input type="text" readonly="" id="company" class="form-control" placeholder="Cabang Kantor" name="company" value="{{ $dropping->COMPANY }}">
+                                  </div>
+                                  <h4 class="form-section">Kesesuaian Dropping</h4>
+                                  <div class="row">
+                                    <div class="col-md-8">
+                                      <div class="form-group">
+                                        <label for="companyName">Silahkan tentukan kesesuain nominal dengan dropping</label>
+                                        <input type="checkbox" onchange="change_checkbox(this)" class="form-control switch" id="switch1" checked="checked" name="sesuai" value="true" data-on-label="Sesuai" data-off-label="Tidak sesuai"/>
+                                      </div>
+                                    </div>
+                                  </div>
                                 </div>
+                                {{-- <div class="form-actions">
+                                  <a href="{{ url('dropping') }}" class="btn btn-warning mr-1">
+                                    <i class="ft-x"></i> Kembali
+                                  </a>
+                                  <button type="submit" class="btn btn-primary" id="post" name="post">
+                                    <i class="fa fa-check-square-o"></i> Post
+                                  </button>
+                                </div> --}}
+                              </form>
                             </div>
+                          </div>
                         </div>
-                    </section>
-                    <!-- Basic scenario end -->
+                      </div>
+                      <div class="col-md-6">
+                        <div class="card" id="kesesuaian" style="height: 1800px;display: none;">
+                          <div class="card-header">
+                            <h4 class="card-title" id="basic-layout-colored-form-control">Form Pengembalian/Penambahan dropping</h4>
+                            <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
+                            <div class="heading-elements">
+                              <ul class="list-inline mb-0">
+                                <li><a data-action="collapse"><i class="ft-minus"></i></a></li>
+                              </ul>
+                            </div>
+                          </div>
+                          <div class="card-body collapse in">
+                            <div class="card-block">
+                              <div class="row">
+                                <div class="col-md-12">
+                                  <div class="alert alert-warning mb-2" role="alert" id="alert-dropping" style="display: block;">
+                                    <strong>Perhatian!</strong> Jika dropping tidak sesuai, silahkan pilih apakah <b>pengembalian kelebihan dropping</b> atau <b>penambahan kekurangan dropping</b> yang akan dilakukan pada form pada sisi kanan.
+                                  </div>
+                                </div>
+                              </div>
+                              <form class="form" method="POST" id="kesesuaian-form" action="{{ url('dropping/tariktunai/'.$dropping->JOURNALNUM) }}">
+                              {{ csrf_field() }}
+                                <div class="form-body">
+                                  <h4 class="form-section"> Pengembalian/Penambahan Dropping</h4>
+                                  <div class="row">
+                                    <div class="col-md-12">
+                                      <div class="form-group mt-1 pb-1">
+                                        <label for="switcherySize11" class="font-medium-2 text-bold-600 mr-1">Pengembalian kelebihan</label>
+                                        <input type="checkbox" id="switcherySize11" class="switchery" checked/>
+                                        <label for="switcherySize11" class="font-medium-2 text-bold-600 ml-1">Penambahan kekurangan</label>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <h4 class="form-section"> Informasi Transaksi</h4>
+                                  <div class="row">
+                                    <div class="col-md-6">
+                                      <div class="form-group">
+                                        <label for="projectinput1">Tanggal Transaksi</label>
+                                        <input type="date" id="transdate" class="form-control" placeholder="Tanggal Transaksi" name="transdate" value="">
+                                      </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                      <div class="form-group">
+                                        <label for="projectinput2">Jumlah Transaksi</label>
+                                        <input type="text" id="credit" class="form-control" placeholder="Jumlah Transaksi" name="credit" value="">
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <h4 class="form-section"> Informasi Bank</h4>
+                                  <div class="row">
+                                    <div class="col-md-6">
+                                      <div class="form-group">
+                                        <label for="companyName">Nama Bank</label>
+                                        <input type="text" id="mainaccount" class="form-control" placeholder="Nama Bank" name="mainaccount" value="">
+                                      </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                      <div class="form-group">
+                                        <label for="companyName">Nomor Rekening</label>
+                                        <input type="number" id="offsetmainaccount" class="form-control" placeholder="Nama Bank" name="offsetmainaccount" value="">
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="form-group">
+                                    <label for="projectinput8">Cabang Kantor</label>
+                                    <input type="text" id="company" class="form-control" placeholder="Cabang Kantor" name="company" value="">
+                                  </div>
+                                </div>
+                              </form>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row match-height">
+                      <div class="col-md-12">
+                        <div class="card">
+                        {{-- <div class="card-header"></div> --}}
+                          <div class="card-body collapse in">
+                            <div class="card-block">
+                              <div class="form-actions">
+                                <a href="{{ url('dropping') }}" class="btn btn-warning mr-1">
+                                  <i class="ft-x"></i> Kembali
+                                </a>
+                                <button type="button" data-toggle="modal" data-target="#xSmall" class="btn btn-primary">
+                                  <i class="fa fa-check-square-o"></i> Simpan Post
+                                </button>
+                              </div>  
+                              <!-- Modal -->
+                              <div class="modal fade text-xs-left" id="xSmall" tabindex="-1" role="dialog" aria-labelledby="myModalLabel20"
+                              aria-hidden="true">
+                                <div class="modal-dialog modal-md" role="document">
+                                  <div class="modal-content">
+                                    <div class="modal-header">
+                                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                      </button>
+                                      <h4 class="modal-title" id="myModalLabel20">Box Konfirmasi</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                      <p>Apakah anda yakin dengan data yang anda input?
+                                      </p>
+                                    </div>
+                                    <div class="modal-footer">
+                                      <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">Close</button>
+                                      <button type="submit" id="post" onclick="forms_submit()" class="btn btn-outline-primary">Simpan post</button>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </section>
+
+                <!-- Basic scenario end -->
                 </div>
                 @endsection
 
                 @section('customjs')
                 <!-- BEGIN PAGE VENDOR JS-->
                 <script type="text/javascript" src="{{ asset('app-assets/vendors/js/ui/jquery.sticky.js') }}"></script>
-                <script type="text/javascript" src="{{ asset('app-assets/vendors/js/charts/jquery.sparkline.min.js') }}"></script>
-                <script src="{{ asset('app-assets/vendors/js/tables/jsgrid/jsgrid.min.js') }}" type="text/javascript"></script>
-                <script src="{{ asset('app-assets/vendors/js/tables/jsgrid/griddata.js') }}" type="text/javascript"></script>
                 <script src="{{ asset('app-assets/vendors/js/tables/jsgrid/jquery.validate.min.js') }}" type="text/javascript"></script>
                 <script src="{{ asset('app-assets/vendors/js/forms/select/select2.full.min.js') }}" type="text/javascript"></script>
+                <script src="{{ asset('app-assets/vendors/js/forms/toggle/bootstrap-checkbox.min.js') }}"></script>
+                <script src="{{ asset('app-assets/vendors/js/forms/toggle/switchery.min.js') }}" type="text/javascript"></script>
                 <!-- END PAGE VENDOR JS-->
                 <!-- BEGIN PAGE LEVEL JS-->
                 <script type="text/javascript" src="{{ asset('app-assets/js/scripts/ui/breadcrumbs-with-stats.min.js') }}"></script>
-                {{-- <script src="{{ asset('app-assets/js/scripts/tables/jsgrid/jsgrid.min.js') }}" type="text/javascript"></script> --}}
                 <script src="{{ asset('app-assets/js/scripts/forms/select/form-select2.min.js') }}" type="text/javascript"></script>
-                <!-- END PAGE LEVEL JS-->
+                <script src="{{ asset('app-assets/js/scripts/forms/switch.min.js') }}" type="text/javascript"></script>
+                <script src="{{ asset('app-assets/js/scripts/modal/components-modal.min.js') }}" type="text/javascript"></script>
+                <!-- END PAGE LEVEL JS-->  
 
                 <script type="text/javascript">
-                  $(document).ready(function() {
-                    $("#basicScenario").jsGrid( {
-                      width:"100%", 
-                      // height:"400px",
-                      sorting:!0, 
-                      autoload:!0,
-                      paging:!0,
-                      pagesize:15,
-                      pageButtonCount:5, 
-                      controller: {
-                        loadData: function(filter) {
-                          return $.ajax({
-                              type: "GET",
-                              url: "{{ url('dropping/get') }}",
-                              data: filter,
-                              dataType: "JSON"
-                          })
-                        }
-                      }, 
-                      fields: [
-                          { name: "journalnum", type: "text", title: "Nomor Jurnal", width: 90 },
-                          { name: "account", type: "text", title: "Nama Bank", width: 80 },
-                          { name: "mainaccount", type: "text", title: "No. Rekening", width: 100 },
-                          { name: "transdate", type: "text", title: "Tanggal Transaksi", width: 100 },
-                          { name: "credit", type: "text", title: "Nominal", width: 100 },
-                          { name: "company", type: "text", title: "Cabang", width: 100 },
-                          { name: "company", type: "control", itemTemplate:function(e) {
-                            return "<a href='{{ url('/dropping/get') }}/"+ e +"' class='btn btn-success btn-sm'>Lanjut</a>"
-                          }}
-                      ]
-                    })
-                  });
+                  function change_checkbox(el) {
+                    if(el.checked) {
+                      document.getElementById("kesesuaian").style.display = 'none';
+                    } else {
+                      document.getElementById("kesesuaian").style.display = 'block';
+                    }
+                  };
+
+                  function forms_submit() {
+                    if(document.getElementById("switch1").checked){
+                      document.getElementById("tariktunai-form").submit();
+                    } else{
+                      document.getElementById("kesesuaian-form").submit();
+                    }
+                  };
                 </script>
                 @endsection

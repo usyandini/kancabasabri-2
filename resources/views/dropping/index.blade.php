@@ -13,7 +13,7 @@
                         <div class="row breadcrumbs-top">
                             <div class="breadcrumb-wrapper col-xs-12">
                                 <ol class="breadcrumb">
-                                    <li class="breadcrumb-item"><a href="index-2.html">Dashboard</a>
+                                    <li class="breadcrumb-item"><a href="">Dropping</a>
                                     </li>
                                     <li class="breadcrumb-item active">Informasi Dropping
                                     </li>
@@ -146,11 +146,23 @@
                           { name: "transdate", type: "text", title: "Tanggal Transaksi", width: 100 },
                           { name: "credit", type: "text", title: "Nominal", width: 100 },
                           { name: "company", type: "text", title: "Cabang", width: 100 },
-                          { name: "company", type: "control", itemTemplate:function(e) {
-                            return "<a href='{{ url('/dropping/get') }}/"+ e +"' class='btn btn-success btn-sm'>Lanjut</a>"
+                          { name: "journalnum", type: "control", itemTemplate:function(e) {
+                            return "<a href='{{ url('/dropping/tariktunai') }}/"+ e +"' class='btn btn-success btn-sm'>Lanjut</a>"
                           }
                         }
                       ]
+                     /* fields: [
+                          { name: "journalnum", type: "text", title: "Nomor Jurnal", width: 90 },
+                          { name: "namabank", type: "text", title: "Nama Bank", width: 80 },
+                          { name: "rekbank", type: "text", title: "No. Rekening", width: 100 },
+                          { name: "transdate", type: "text", title: "Tanggal Transaksi", width: 100 },
+                          { name: "debit", type: "text", title: "Nominal", width: 100 },
+                          { name: "cabang", type: "text", title: "Cabang", width: 100 },                        
+                          { name: "journalnum", type: "control", itemTemplate:function(e) {
+                            return "<a href='{{ url('/dropping/tariktunai') }}/"+ e +"' class='btn btn-success btn-sm'>Lanjut</a>"
+                          }
+                        }
+                      ]*/
                     })
                   });
                 </script>

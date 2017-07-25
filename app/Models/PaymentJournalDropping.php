@@ -8,5 +8,6 @@ class PaymentJournalDropping extends Model
 {
     protected $connection = 'sqlsrv2';
     
-    protected $table = 'PIL_PAYMENTJOURNALDROPPING';
+   // protected $table = 'PIL_DROPPING_VIEW';
+   protected $table = 'PIL_PAYMENTJOURNALDROPPING';
 }
