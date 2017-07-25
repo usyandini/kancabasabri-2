@@ -11,6 +11,7 @@
 |
 */
 
+Route::auth();
 Route::group(['middleware' => 'guest'], function() {
    Route::get('/', 'Auth\AuthController@showLoginForm'); 
 });
@@ -25,12 +26,9 @@ Route::group(['middleware' => 'auth'], function() {
 	    Route::get('/table', 'DroppingController@table');
 	    
 	    Route::get('/tariktunai/{journalnum}', 'DroppingController@tarik_tunai');
-	    Route::post('/tariktunai/process/{journalnum}', 'DroppingController@tarik_tunai_process');
+	    Route::post('/tariktunai/{journalnum}', 'DroppingController@tarik_tunai_process');
 	});
-
    	
 	Route::get('/pengembalian', 'DroppingController@pengembalian');
 	Route::get('/penambahan', 'DroppingController@penambahan');
 });
-
-Route::auth();
