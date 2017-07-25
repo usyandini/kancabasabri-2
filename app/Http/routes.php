@@ -12,7 +12,7 @@
 */
 
 Route::group(['middleware' => 'guest'], function() {
-   Route::get('/', 'Auth\AuthController@login'); 
+   Route::get('/', 'Auth\AuthController@showLoginForm'); 
 });
 
 Route::group(['middleware' => 'auth'], function() {
@@ -23,7 +23,9 @@ Route::group(['middleware' => 'auth'], function() {
 		Route::resource('/', 'DroppingController');
 		Route::get('/get', 'DroppingController@getAll');
 	    Route::get('/table', 'DroppingController@table');
-	    Route::get('/tariktunai', 'DroppingController@tarik_tunai');
+	    
+	    Route::get('/tariktunai/{journalnum}', 'DroppingController@tarik_tunai');
+	    Route::post('/tariktunai/process/{journalnum}', 'DroppingController@tarik_tunai_process');
 	});
 
    	
