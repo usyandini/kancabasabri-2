@@ -22,7 +22,11 @@ Route::group(['middleware' => 'auth'], function() {
 
    	Route::group(['prefix' => 'dropping'], function() {
 		Route::resource('/', 'DroppingController');
+		// Route::POST('/filter/process', 'DroppingController@');
+
 		Route::get('/get', 'DroppingController@getAll');
+		Route::get('/get/filtered/{year}/{periode}/{kcabang}', 'DroppingController@getFiltered');
+
 	    Route::get('/table', 'DroppingController@table');
 	    
 	    Route::get('/tariktunai/{id_drop}', 'DroppingController@tarik_tunai');
