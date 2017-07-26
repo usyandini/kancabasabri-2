@@ -42,7 +42,7 @@ class DroppingController extends Controller
             $result[] = [
                 'bank'       => $dropping->BANK_DROPPING, 
                 'journalnum'    => $dropping->JOURNALNUM, 
-                'transdate'     => $dropping->TRANSDATE, 
+                'transdate'     => date("Y-m-d", strtotime($dropping->TRANSDATE)), 
                 'credit'        => 'IDR '. number_format($dropping->KREDIT, 2),
                 'banknum'   => $dropping->REKENING_DROPPING,
                 'company'       => $dropping->CABANG_DROPPING
@@ -82,7 +82,7 @@ class DroppingController extends Controller
             $result[] = [
                 'bank'       => $dropping->BANK_DROPPING, 
                 'journalnum'    => $dropping->JOURNALNUM, 
-                'transdate'     => $dropping->TRANSDATE, 
+                'transdate'     => date("Y-m-d", strtotime($dropping->TRANSDATE)), 
                 'credit'        => 'IDR '. number_format($dropping->KREDIT, 2),
                 'banknum'   => $dropping->REKENING_DROPPING,
                 'company'       => $dropping->CABANG_DROPPING
@@ -93,7 +93,7 @@ class DroppingController extends Controller
 
     public function tarik_tunai($journalnum)
     {
-        $dropping = $this->jDroppingModel->where('JOURNALNUM', $journalnum)->firstOrFail();
+        $dropping = $this->jDroppingModel->where([['JOURNALNUM', $journalnum], ['KREDIT', '>', 0]])->firstOrFail();
     	return view('dropping.tariktunai', ['dropping' => $dropping]);
     }
 
