@@ -34,8 +34,8 @@
                                     </div>
                                     <div class="card-body collapse in">
                                       <div class="card-block">
-                                        <div class="row">
-                                          <form method="POST" action="">
+                                        <form method="POST" action="{{ url('dropping/filter') }}">
+                                          <div class="row">
                                             {{ csrf_field() }}
                                             <div class="col-xs-4">
                                                 <div class="form-group">
@@ -46,7 +46,7 @@
                                                       $thn_skr = date('Y');
                                                       for($x=$thn_skr; $x >= 2005; $x--){
                                                     ?>
-                                                      <option value="<?php echo $x;?>"><?php echo $x;?></option>
+                                                      <option value="<?php echo $x;?>" {{ ($x == $filters['transyear'] ? 'selected=""' : '') }}><?php echo $x;?></option>
                                                       <?php }?>
                                                   </select>
                                                 </div>
@@ -67,29 +67,29 @@
                                                 <div class="form-grpup">
                                                   <label>Kantor Cabang</label>
                                                   <select class="select2 form-control" name="kcabang">
-                                                    <option value="0" selected="">Semua Cabang</option>
+                                                    <option value="0">Semua Cabang</option>
                                                     @foreach($kcabangs as $cabang)
-                                                      <option value="{{ $cabang->DESCRIPTION }}">{{ $cabang->DESCRIPTION }}</option>
+                                                      <option value="{{ $cabang->DESCRIPTION }}" {{ ($cabang->DESCRIPTION == $filters['kcabang'] ? 'selected=""' : '') }}>{{ $cabang->DESCRIPTION }}</option>
                                                     @endforeach
                                                   </select>
                                                 </div>
                                             </div>
-                                          </form>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-xs-2 pull-right">
-                                              <div class="form-group">
-                                                <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i> Filter</button>
+                                          </div>
+                                          <div class="row">
+                                              <div class="col-xs-2 pull-right">
+                                                <div class="form-group">
+                                                  <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i> Filter</button>
+                                                </div>
                                               </div>
-                                            </div>
-                                          @if (checkActiveMenu('dropping') != 'active')
-                                            <div class="col-xs-2">
-                                              <div class="form-group">
-                                                <a href="{{ url('dropping') }}" class="btn btn-danger"><i class="fa fa-times"></i> Reset</a>
+                                            @if (checkActiveMenu('dropping') != 'active')
+                                              <div class="col-xs-2">
+                                                <div class="form-group">
+                                                  <a href="{{ url('dropping') }}" class="btn btn-danger"><i class="fa fa-times"></i> Reset Filter</a>
+                                                </div>
                                               </div>
-                                            </div>
-                                          @endif
-                                        </div>
+                                            @endif
+                                          </div>
+                                        </form>
                                       </div>
                                     </div>
                                 </div>
@@ -145,7 +145,7 @@
                         loadData: function(filter) {
                           return $.ajax({
                               type: "GET",
-                              url: "{{ (checkActiveMenu('dropping') == 'active' ? url('dropping/get') : url('dropping/get/filtered/'.$filters) ) }}",
+                              url: "{{ (checkActiveMenu('dropping') == 'active' ? url('dropping/get') : url('dropping/get/filtered/'.$filters['transyear'].'/'.$filters['periode'].'/'.$filters['kcabang']) ) }}",
                               data: filter,
                               dataType: "JSON"
                           })

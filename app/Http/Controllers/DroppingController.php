@@ -15,17 +15,18 @@ class DroppingController extends Controller
 
     protected $jDroppingModel;
     protected $financialTModel;
+    protected $kantorCabangs;
 
     public function __construct(PaymentJournalDropping $jDropping, FinancialTag $financialT)
     {
         $this->jDroppingModel = $jDropping;
         $this->financialTModel = $financialT;
+        $this->kantorCabangs = $this->financialTModel->where([['DESCRIPTION', '!=', ''],['DESCRIPTION', '!=', null] ])->get();
     }
 
     public function index() 
     {
-        $kantorCabangs = $this->financialTModel->get();
-        return view('dropping.index', ['kcabangs' => $kantorCabangs, 'filters' => null]);
+        return view('dropping.index', ['kcabangs' => $this->kantorCabangs, 'filters' => null]);
     }
 
     public function table()
@@ -35,7 +36,7 @@ class DroppingController extends Controller
 
     public function getAll()
     {
-        $droppings = $this->jDroppingModel->get();
+        $droppings = $this->jDroppingModel->where('KREDIT', '>', 0)->get();
         $result = [];
         foreach ($droppings as $dropping) {
             $result[] = [
@@ -52,29 +53,32 @@ class DroppingController extends Controller
 
     public function filterHandle(Request $request)
     {
-        
+        return redirect('dropping/filter/'.$request->transyear.'/'.$request->periode.'/'.$request->kcabang);
     }
 
-    public function getFiltered($filters)
+    public function filter($transyear, $periode, $kcabang)
     {
-        $droppings = $this->jDroppingModel;
+        return view('dropping.index', ['kcabangs' => $this->kantorCabangs, 'filters' => array('transyear' => $transyear, 'periode' => $periode, 'kcabang' => $kcabang)]);
+    }
+
+    public function getFiltered($transyear, $periode, $kcabang)
+    {
+        $droppings = $this->jDroppingModel->where('KREDIT', '>', 0);
         
-        if ($filters['transyear'] != 0) {
-            $droppings->whereYear('TRANSDATE', $filters['transyear']);
+        if ($transyear != '0') {
+            $droppings = $droppings->whereYear('TRANSDATE', '=', $transyear);
         }
 
-        if ($filters['periode'] != 0) {
+        if ($periode != '0') {
 
         }
     
-        if ($filters['kcabang'] != 0) {
-            $droppings->where('CABANG_DROPPING', $filters['kcabang']);
+        if ($kcabang != '0') {
+            $droppings = $droppings->where('CABANG_DROPPING', $kcabang);
         }   
-
-        $droppings->get();
              
         $result = [];
-        foreach ($droppings as $dropping) {
+        foreach ($droppings->get() as $dropping) {
             $result[] = [
                 'bank'       => $dropping->BANK_DROPPING, 
                 'journalnum'    => $dropping->JOURNALNUM, 

@@ -22,12 +22,11 @@ Route::group(['middleware' => 'auth'], function() {
 
    	Route::group(['prefix' => 'dropping'], function() {
 		Route::resource('/', 'DroppingController');
-		// Route::POST('/filter/process', 'DroppingController@');
-
 		Route::get('/get', 'DroppingController@getAll');
-		Route::get('/get/filtered/{year}/{periode}/{kcabang}', 'DroppingController@getFiltered');
-
-	    Route::get('/table', 'DroppingController@table');
+		
+		Route::post('/filter', 'DroppingController@filterHandle');
+		Route::get('/filter/{transyear}/{periode}/{kcabang}', 'DroppingController@filter');
+		Route::get('/get/filtered/{transyear}/{periode}/{kcabang}', 'DroppingController@getFiltered');
 	    
 	    Route::get('/tariktunai/{journalnum}', 'DroppingController@tarik_tunai');
 	    Route::post('/tariktunai/{journalnum}', 'DroppingController@tarik_tunai_process');
