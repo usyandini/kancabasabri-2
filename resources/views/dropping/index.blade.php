@@ -141,28 +141,16 @@
                       }, 
                       fields: [
                           { name: "journalnum", type: "text", title: "Nomor Jurnal", width: 90 },
-                          { name: "account", type: "text", title: "Nama Bank", width: 80 },
-                          { name: "mainaccount", type: "text", title: "No. Rekening", width: 100 },
-                          { name: "transdate", type: "text", title: "Tanggal Transaksi", width: 100 },
-                          { name: "credit", type: "text", title: "Nominal", width: 100 },
-                          { name: "company", type: "text", title: "Cabang", width: 100 },
-                          { name: "journalnum", type: "control", itemTemplate:function(e) {
+                          { name: "namabank", type: "text", title: "Nama Bank", width: 80 },
+                          { name: "rekbank", type: "text", title: "No. Rekening", width: 100 },
+                          { name: "transdate", type: "date", title: "Tanggal Dropping", dateFormat: "d-m-Y", width: 100 },
+                          { name: "debit", type: "text", title: "Jumlah", width: 100 },
+                          { name: "cabang", type: "text", title: "Cabang", width: 100 },
+                          { name: "id_drop", type: "control", itemTemplate:function(e) {
                             return "<a href='{{ url('/dropping/tariktunai') }}/"+ e +"' class='btn btn-success btn-sm'>Lanjut</a>"
                           }
                         }
                       ]
-                     /* fields: [
-                          { name: "journalnum", type: "text", title: "Nomor Jurnal", width: 90 },
-                          { name: "namabank", type: "text", title: "Nama Bank", width: 80 },
-                          { name: "rekbank", type: "text", title: "No. Rekening", width: 100 },
-                          { name: "transdate", type: "text", title: "Tanggal Transaksi", width: 100 },
-                          { name: "debit", type: "text", title: "Nominal", width: 100 },
-                          { name: "cabang", type: "text", title: "Cabang", width: 100 },                        
-                          { name: "journalnum", type: "control", itemTemplate:function(e) {
-                            return "<a href='{{ url('/dropping/tariktunai') }}/"+ e +"' class='btn btn-success btn-sm'>Lanjut</a>"
-                          }
-                        }
-                      ]*/
                     })
                   });
                 </script>

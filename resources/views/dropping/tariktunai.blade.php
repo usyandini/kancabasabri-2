@@ -33,7 +33,7 @@
                       <div class="col-md-6">
                         <div class="card" style="height: 100px;">
                           <div class="card-header">
-                            <h4 class="card-title" id="basic-layout-form">Detail Tarik Tunai <b>{{ $dropping->JOURNALNUM }}</b></h4>
+                            <h4 class="card-title" id="basic-layout-form">Detail Tarik Tunai <br><b>{{ $dropping->CABANG_DROPPING }}</b></h4>
                             <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
                             <div class="heading-elements">
                               <ul class="list-inline mb-0">
@@ -46,21 +46,21 @@
                               <div class="card-text">
                                 <p>Penjelasan singkat mengenai form bisa diletakkan <b>disini</b>.</p>
                               </div>
-                              <form class="form" id="tariktunai-form" method="POST" action="{{ url('dropping/tariktunai/'.$dropping->JOURNALNUM) }}">
+                              <form class="form" id="tariktunai-form" method="POST" action="{{ url('dropping/tariktunai/'.$dropping->RECID) }}">
                               {{ csrf_field() }}
                                 <div class="form-body">
-                                  <h4 class="form-section"> Informasi Transaksi</h4>
+                                  <h4 class="form-section"> Informasi Dropping</h4>
                                   <div class="row">
                                     <div class="col-md-6">
                                       <div class="form-group">
-                                        <label for="projectinput1">Tanggal Transaksi</label>
+                                        <label for="projectinput1">Tanggal Dropping</label>
                                         <input type="date" readonly="" id="transdate" class="form-control" placeholder="Tanggal Transaksi" name="transdate" value="{{ date("Y-m-d",strtotime($dropping->TRANSDATE)) }}">
                                       </div>
                                     </div>
                                     <div class="col-md-6">
                                       <div class="form-group">
                                         <label for="projectinput2">Jumlah Transaksi</label>
-                                        <input type="text" readonly="" id="credit" class="form-control" placeholder="Jumlah Transaksi" name="credit" value="{{ 'IDR '.number_format($dropping->CREDIT, 2) }}">
+                                        <input type="text" readonly="" id="debit" class="form-control" placeholder="Jumlah Transaksi" name="credit" value="{{ 'IDR '.number_format($dropping->DEBIT, 2) }}">
                                       </div>
                                     </div>
                                   </div>
@@ -69,19 +69,19 @@
                                     <div class="col-md-6">
                                       <div class="form-group">
                                         <label for="companyName">Nama Bank</label>
-                                        <input type="text" readonly="" id="mainaccount" class="form-control" placeholder="Nama Bank" name="mainaccount" value="{{ $dropping->OFFSETACCOUNT }}">
+                                        <input type="text" readonly="" id="bank_dropping" class="form-control" placeholder="Nama Bank" name="mainaccount" value="{{ $dropping->BANK_DROPPING }}">
                                       </div>
                                     </div>
                                     <div class="col-md-6">
                                       <div class="form-group">
                                         <label for="companyName">Nomor Rekening</label>
-                                        <input type="number" readonly="" id="offsetmainaccount" class="form-control" placeholder="Nama Bank" name="offsetmainaccount" value="{{ $dropping->OFFSETMAINACCOUNT }}">
+                                        <input type="text" readonly="" id="rekening_dropping" class="form-control" placeholder="Nama Bank" name="offsetmainaccount" value="{{ $dropping->REKENING_DROPPING }}">
                                       </div>
                                     </div>
                                   </div>
                                   <div class="form-group">
                                     <label for="projectinput8">Cabang Kantor</label>
-                                    <input type="text" readonly="" id="company" class="form-control" placeholder="Cabang Kantor" name="company" value="{{ $dropping->COMPANY }}">
+                                    <input type="text" readonly="" id="cabang_dropping" class="form-control" placeholder="Cabang Kantor" name="company" value="{{ $dropping->CABANG_DROPPING }}">
                                   </div>
                                   <h4 class="form-section">Kesesuaian Dropping</h4>
                                   <div class="row">
@@ -144,7 +144,7 @@
                                     <div class="col-md-6">
                                       <div class="form-group">
                                         <label for="projectinput1">Tanggal Transaksi</label>
-                                        <input type="date" id="transdate" class="form-control" placeholder="Tanggal Transaksi" name="transdate" value="">
+                                        <input type="date" id="backdate" class="form-control" placeholder="{{date('d/m/Y')}}" name="backdate" value="{{ date("Y-m-d") }}" disabled>
                                       </div>
                                     </div>
                                     <div class="col-md-6">

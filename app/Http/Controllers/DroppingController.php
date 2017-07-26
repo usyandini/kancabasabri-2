@@ -34,12 +34,14 @@ class DroppingController extends Controller
         $result = [];
         foreach ($droppings as $dropping) {
             $result[] = [
-                'account'       => $dropping->OFFSETACCOUNT, 
-                'journalnum'    => $dropping->JOURNALNUM, 
+                'id_drop'       => $dropping->RECID,
+                'journalnum'    => $dropping->JOURNALNUM,
+                'namabank'      => $dropping->BANK_DROPPING,
+                'rekbank'       => $dropping->REKENING_DROPPING,
                 'transdate'     => $dropping->TRANSDATE, 
+                'debit'         => 'IDR '. number_format($dropping->DEBIT, 2),
                 'credit'        => 'IDR '. number_format($dropping->CREDIT, 2),
-                'mainaccount'   => $dropping->OFFSETMAINACCOUNT,
-                'company'       => $dropping->COMPANY
+                'cabang'        => $dropping->CABANG_DROPPING
             ];
         }
         return response()->json($result);
@@ -52,7 +54,7 @@ class DroppingController extends Controller
 
     public function tarik_tunai($journalnum)
     {
-        $dropping = $this->JDroppingModel->where('JOURNALNUM', $journalnum)->firstOrFail();
+        $dropping = $this->JDroppingModel->where('RECID', $journalnum)->firstOrFail();
     	return view('dropping.tariktunai', ['dropping' => $dropping]);
     }
 

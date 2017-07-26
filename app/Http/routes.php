@@ -25,8 +25,8 @@ Route::group(['middleware' => 'auth'], function() {
 		Route::get('/get', 'DroppingController@getAll');
 	    Route::get('/table', 'DroppingController@table');
 	    
-	    Route::get('/tariktunai/{journalnum}', 'DroppingController@tarik_tunai');
-	    Route::post('/tariktunai/{journalnum}', 'DroppingController@tarik_tunai_process');
+	    Route::get('/tariktunai/{id_drop}', 'DroppingController@tarik_tunai');
+	    Route::post('/tariktunai/{id_drop}', 'DroppingController@tarik_tunai_process');
 	});
    	
 	Route::get('/pengembalian', 'DroppingController@pengembalian');
