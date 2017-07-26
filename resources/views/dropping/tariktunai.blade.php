@@ -4,8 +4,8 @@
                 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/tables/jsgrid/jsgrid-theme.min.css') }}">
                 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/tables/jsgrid/jsgrid.min.css') }}">
                 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/forms/selects/select2.min.css') }}">
-                <link rel="stylesheet" type="text/css" href="https://pixinvent.com/stack-responsive-bootstrap-4-admin-template/app-assets/vendors/css/forms/toggle/switchery.min.css">
-                <link rel="stylesheet" type="text/css" href="https://pixinvent.com/stack-responsive-bootstrap-4-admin-template/app-assets/css/plugins/forms/switch.min.css">
+                <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/forms/toggle/switchery.min.css') }}">
+                <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/plugins/forms/switch.min.css') }}">
                 @endsection
 
                 @section('content')
@@ -59,8 +59,8 @@
                                     </div>
                                     <div class="col-md-6">
                                       <div class="form-group">
-                                        <label for="projectinput2">Jumlah Transaksi</label>
-                                        <input type="text" readonly="" id="credit" class="form-control" placeholder="Jumlah Transaksi" name="credit" value="{{ 'IDR '.number_format($dropping->CREDIT, 2) }}">
+                                        <label for="projectinput2">Nominal Transaksi (Dalam IDR)</label>
+                                        <input type="text" readonly="" id="credit" class="form-control" placeholder="Jumlah Transaksi" name="credit" value="{{ number_format($dropping->KREDIT, 2) }}">
                                       </div>
                                     </div>
                                   </div>
@@ -69,19 +69,19 @@
                                     <div class="col-md-6">
                                       <div class="form-group">
                                         <label for="companyName">Nama Bank</label>
-                                        <input type="text" readonly="" id="mainaccount" class="form-control" placeholder="Nama Bank" name="mainaccount" value="{{ $dropping->OFFSETACCOUNT }}">
+                                        <input type="text" readonly="" id="bank" class="form-control" placeholder="Nama Bank" name="bank" value="{{ $dropping->BANK_DROPPING }}">
                                       </div>
                                     </div>
                                     <div class="col-md-6">
                                       <div class="form-group">
                                         <label for="companyName">Nomor Rekening</label>
-                                        <input type="number" readonly="" id="offsetmainaccount" class="form-control" placeholder="Nama Bank" name="offsetmainaccount" value="{{ $dropping->OFFSETMAINACCOUNT }}">
+                                        <input type="number" readonly="" id="banknum" class="form-control" placeholder="Nama Bank" name="banknum" value="{{ $dropping->REKENING_DROPPING }}">
                                       </div>
                                     </div>
                                   </div>
                                   <div class="form-group">
                                     <label for="projectinput8">Cabang Kantor</label>
-                                    <input type="text" readonly="" id="company" class="form-control" placeholder="Cabang Kantor" name="company" value="{{ $dropping->COMPANY }}">
+                                    <input type="text" readonly="" id="company" class="form-control" placeholder="Cabang Kantor" name="company" value="{{ $dropping->CABANG_DROPPING }}">
                                   </div>
                                   <h4 class="form-section">Kesesuaian Dropping</h4>
                                   <div class="row">
@@ -122,7 +122,7 @@
                               <div class="row">
                                 <div class="col-md-12">
                                   <div class="alert alert-warning mb-2" role="alert" id="alert-dropping" style="display: block;">
-                                    <strong>Perhatian!</strong> Jika dropping tidak sesuai, silahkan pilih apakah <b>pengembalian kelebihan dropping</b> atau <b>penambahan kekurangan dropping</b> yang akan dilakukan pada form pada sisi kanan.
+                                    <strong>Perhatian!</strong> Jika dropping tidak sesuai, silahkan melengkapi form <b>pengembalian kelebihan dropping</b> atau <b>penambahan kekurangan dropping</b>.
                                   </div>
                                 </div>
                               </div>
@@ -149,8 +149,8 @@
                                     </div>
                                     <div class="col-md-6">
                                       <div class="form-group">
-                                        <label for="projectinput2">Jumlah Transaksi</label>
-                                        <input type="text" id="credit" class="form-control" placeholder="Jumlah Transaksi" name="credit" value="">
+                                        <label for="projectinput2">Nominal Transaksi (Dalam IDR)</label>
+                                        <input type="number" id="credit" class="form-control" placeholder="Nominal Transaksi" name="credit" value="">
                                       </div>
                                     </div>
                                   </div>
@@ -205,9 +205,8 @@
                                       </button>
                                       <h4 class="modal-title" id="myModalLabel20">Box Konfirmasi</h4>
                                     </div>
-                                    <div class="modal-body">
-                                      <p>Apakah anda yakin dengan data yang anda input?
-                                      </p>
+                                    <div class="modal-body" id="confirmation-msg">
+                                      <p>Apakah anda yakin dengan <b>data dropping</b> yang anda input sudah sesuai?</p>
                                     </div>
                                     <div class="modal-footer">
                                       <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">Close</button>
@@ -246,14 +245,17 @@
                   function change_checkbox(el) {
                     if(el.checked) {
                       document.getElementById("kesesuaian").style.display = 'none';
+                      document.getElementById("confirmation-msg").innerHTML = '<p>Apakah anda yakin untuk menyimpan <b>data dropping</b> yang anda input sudah sesuai?</p>';
                     } else {
                       document.getElementById("kesesuaian").style.display = 'block';
+                      document.getElementById("confirmation-msg").innerHTML = '<p>Apakah anda yakin untuk menyimpan <b>data ketidaksesuaian dropping</b> yang telah anda input?</p>';
                     }
                   };
 
                   function forms_submit() {
                     if(document.getElementById("switch1").checked){
                       document.getElementById("tariktunai-form").submit();
+
                     } else{
                       document.getElementById("kesesuaian-form").submit();
                     }
