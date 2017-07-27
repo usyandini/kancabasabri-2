@@ -75,7 +75,7 @@
                                     <div class="col-md-6">
                                       <div class="form-group">
                                         <label for="companyName">Nomor Rekening</label>
-                                        <input type="number" readonly="" id="banknum" class="form-control" placeholder="Nama Bank" name="banknum" value="{{ $dropping->REKENING_DROPPING }}">
+                                        <input type="text" readonly="" id="banknum" class="form-control" placeholder="Nama Bank" name="banknum" value="{{ $dropping->REKENING_DROPPING }}">
                                       </div>
                                     </div>
                                   </div>
@@ -156,22 +156,38 @@
                                   </div>
                                   <h4 class="form-section"> Informasi Bank</h4>
                                   <div class="row">
+                                    <div class="col-md-12">
+                                      <div class="form-group">
+                                        <label for="projectinput8">Cabang Kantor</label>
+                                        <select class="form-control" name="kcabang">
+                                          @foreach($kcabangs as $cabang)
+                                            <option value="{{ $cabang->DESCRIPTION }}">{{ $cabang->DESCRIPTION }}</option>
+                                          @endforeach
+                                        </select>
+                                      </div>
+                                    </div>
                                     <div class="col-md-6">
                                       <div class="form-group">
                                         <label for="companyName">Nama Bank</label>
-                                        <input type="text" id="bank" class="form-control" placeholder="Nama Bank" name="bank" value="">
+                                        <select class="form-control" name="namabank">
+                                            <option>Nama Bank</option>
+                                          {{--@foreach($akunbanks as $akunbank)
+                                            <option value="{{ $akunbank->BANK }}">{{ $akunbank->BANK }}</option>
+                                          @endforeach--}}
+                                        </select>
                                       </div>
                                     </div>
                                     <div class="col-md-6">
                                       <div class="form-group">
                                         <label for="companyName">Nomor Rekening</label>
-                                        <input type="text" id="banknum" class="form-control" placeholder="Nama Bank" name="banknum" value="">
+                                        <select class="form-control" name="namabank">
+                                          <option>Rekening Bank</option>
+                                          {{--@foreach($akunbanks as $akunbank)
+                                          <option value="{{ $akunbank->REKENING }}">{{ $akunbank->REKENING }}</option>
+                                          @endforeach--}}
+                                        </select>
                                       </div>
                                     </div>
-                                  </div>
-                                  <div class="form-group">
-                                    <label for="projectinput8">Cabang Kantor</label>
-                                    <input type="text" id="company" class="form-control" placeholder="Cabang Kantor" name="company" value="">
                                   </div>
                                 </div>
                               </form>
