@@ -72,7 +72,16 @@ class DroppingController extends Controller
         }
 
         if ($periode != '0') {
-
+            switch($periode){
+                case '1':
+                    $droppings = $droppings->whereMonth('TRANSDATE', '>=', '1')->whereMonth('TRANSDATE', '<=', '3');break;
+                case '2':
+                    $droppings = $droppings->whereMonth('TRANSDATE', '>=', '4')->whereMonth('TRANSDATE', '<=', '6');break;
+                case '3':
+                    $droppings = $droppings->whereMonth('TRANSDATE', '>=', '7')->whereMonth('TRANSDATE', '<=', '9');break;
+                case '4':
+                    $droppings = $droppings->whereMonth('TRANSDATE', '>=', '10')->whereMonth('TRANSDATE', '<=', '12');break;
+            }
         }
     
         if ($kcabang != '0') {
@@ -86,7 +95,7 @@ class DroppingController extends Controller
                 'bank'          => $dropping->BANK_DROPPING, 
                 'journalnum'    => $dropping->JOURNALNUM, 
                 'transdate'     => date("d-m-Y", strtotime($dropping->TRANSDATE)), 
-                'debit'        => 'IDR '. number_format($dropping->DEBIT, 2),
+                'debit'         => 'IDR '. number_format($dropping->DEBIT, 2),
                 'banknum'       => $dropping->REKENING_DROPPING,
                 'company'       => $dropping->CABANG_DROPPING
             ];

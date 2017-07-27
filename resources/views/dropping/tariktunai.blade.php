@@ -159,13 +159,13 @@
                                     <div class="col-md-6">
                                       <div class="form-group">
                                         <label for="companyName">Nama Bank</label>
-                                        <input type="text" id="mainaccount" class="form-control" placeholder="Nama Bank" name="mainaccount" value="">
+                                        <input type="text" id="bank" class="form-control" placeholder="Nama Bank" name="bank" value="">
                                       </div>
                                     </div>
                                     <div class="col-md-6">
                                       <div class="form-group">
                                         <label for="companyName">Nomor Rekening</label>
-                                        <input type="number" id="offsetmainaccount" class="form-control" placeholder="Nama Bank" name="offsetmainaccount" value="">
+                                        <input type="text" id="banknum" class="form-control" placeholder="Nama Bank" name="banknum" value="">
                                       </div>
                                     </div>
                                   </div>
