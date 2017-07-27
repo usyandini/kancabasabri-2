@@ -9,7 +9,7 @@
                 @section('content')
                 <div class="content-header row">
                     <div class="content-header-left col-md-6 col-xs-12 mb-2">
-                        <h3 class="content-header-title mb-0">Informasi Dropping</h3>
+                        <h3 class="content-header-title mb-0">Informasi DDDropping</h3>
                         <div class="row breadcrumbs-top">
                             <div class="breadcrumb-wrapper col-xs-12">
                                 <ol class="breadcrumb">
