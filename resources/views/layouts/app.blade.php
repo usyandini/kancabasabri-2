@@ -92,7 +92,13 @@
                     </li> --}}
                     <li class="nav-item {{ checkActiveMenu('dropping') }}"><a href="{{ url('/dropping', $parameters = [], $secure = null) }}"><i class="ft-monitor"></i><span data-i18n="" class="menu-title">Dropping</span></a>
                     </li>
-                    <li class="nav-item {{ checkActiveMenu('transaksi') }}"><a href="{{ url('/transaksi', $parameters = [], $secure = null) }}"><i class="ft-layout"></i><span data-i18n="" class="menu-title">Transaksi</span></a>
+                    <li class="nav-item has-sub {{ checkActiveMenu('transaksi') }}"><a href="{{ url('/transaksi', $parameters = [], $secure = null) }}"><i class="ft-layout"></i><span data-i18n="" class="menu-title">Transaksi</span></a>
+                        <ul class="menu-content">
+                            <li class="is-shown open"><a href="#" class="menu-item">Informasi Transaksi</a>
+                            <li class="is-shown open"><a href="#" class="menu-item">Input Transaksi</a>
+                            <li class="is-shown open"><a href="#" class="menu-item">Persetujuan Transaksi</a>
+                            <li class="is-shown open"><a href="#" class="menu-item">Verifikasi Transaksi</a>
+                        </ul>
                     </li>
                 </ul>
             </div>

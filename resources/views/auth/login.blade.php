@@ -50,7 +50,7 @@
                                 </div>
                                 <div class="card-body collapse in">
                                     <div class="card-block">
-                                        <form class="form-horizontal form-simple" method="POST" action="{{ url('/login') }}" novalidate>
+                                        <form class="form-horizontal form-simple" method="POST" action="{{ url('login') }}" novalidate>
                                         	{{ csrf_field() }}
                                             <fieldset class="form-group position-relative has-icon-left mb-0">
                                                 <input type="email" name="email" value="{{ old('email', $default = null) }}" class="form-control form-control-lg input-lg" id="user-name" placeholder="Your E-mail" required>

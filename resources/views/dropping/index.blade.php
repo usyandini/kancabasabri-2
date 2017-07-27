@@ -9,7 +9,7 @@
                 @section('content')
                 <div class="content-header row">
                     <div class="content-header-left col-md-6 col-xs-12 mb-2">
-                        <h3 class="content-header-title mb-0">Informasi Dropping</h3>
+                        <h3 class="content-header-title mb-0">Informasi DDDropping</h3>
                         <div class="row breadcrumbs-top">
                             <div class="breadcrumb-wrapper col-xs-12">
                                 <ol class="breadcrumb">
@@ -56,10 +56,10 @@
                                                   <label>Periode</label>
                                                   <select class="select2 form-control" name="periode">
                                                     <option value="0">Semua Periode</option>
-                                                    {{-- <option value="1">I</option>
+                                                    <option value="1">I</option>
                                                     <option value="2">II</option>
                                                     <option value="3">III</option>
-                                                    <option value="4">IV</option> --}}
+                                                    <option value="4">IV</option>
                                                   </select>
                                                 </div>
                                             </div>
@@ -155,10 +155,10 @@
                           { name: "journalnum", type: "text", title: "Nomor Jurnal", width: 90 },
                           { name: "bank", type: "text", title: "Nama Bank", width: 80 },
                           { name: "banknum", type: "text", title: "No. Rekening", width: 100 },
-                          { name: "transdate", type: "text", title: "Tanggal Transaksi", width: 100 },
-                          { name: "credit", type: "text", title: "Nominal", width: 100 },
+                          { name: "transdate", type: "text", title: "Tanggal Dropping", width: 100 },
+                          { name: "debit", type: "text", title: "Nominal", width: 100 },
                           { name: "company", type: "text", title: "Kantor Cabang", width: 100 },
-                          { name: "journalnum", type: "control", itemTemplate:function(e) {
+                          { name: "id_dropping", type: "control", itemTemplate:function(e) {
                             return "<a href='{{ url('/dropping/tariktunai') }}/"+ e +"' class='btn btn-success btn-sm'>Lanjut</a>"
                           }
                         }
