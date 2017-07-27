@@ -40,11 +40,11 @@ class DroppingController extends Controller
         $result = [];
         foreach ($droppings as $dropping) {
             $result[] = [
-                'bank'       => $dropping->BANK_DROPPING, 
+                'bank'          => $dropping->BANK_DROPPING, 
                 'journalnum'    => $dropping->JOURNALNUM, 
                 'transdate'     => date("Y-m-d", strtotime($dropping->TRANSDATE)), 
                 'credit'        => 'IDR '. number_format($dropping->KREDIT, 2),
-                'banknum'   => $dropping->REKENING_DROPPING,
+                'banknum'       => $dropping->REKENING_DROPPING,
                 'company'       => $dropping->CABANG_DROPPING
             ];
         }
