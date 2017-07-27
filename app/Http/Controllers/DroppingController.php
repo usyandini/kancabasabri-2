@@ -8,6 +8,7 @@ use App\Http\Requests;
 use App\User;
 use App\Models\PaymentJournalDropping;
 use App\Models\KantorCabang;
+use App\Models\AkunBank;
 
 
 class DroppingController extends Controller
@@ -16,12 +17,14 @@ class DroppingController extends Controller
     protected $jDroppingModel;
     protected $kanCabModel;
     protected $kantorCabangs;
+    protected $akunBankModel;
 
-    public function __construct(PaymentJournalDropping $jDropping, KantorCabang $kanCab)
+    public function __construct(PaymentJournalDropping $jDropping, KantorCabang $kanCab, AkunBank $bankAkun)
     {
         $this->jDroppingModel = $jDropping;
         $this->kanCabModel = $kanCab;
         $this->kantorCabangs = $this->kanCabModel->where([['DESCRIPTION', '!=', ''],['DESCRIPTION', '!=', null] ])->get();
+        $this->akunBankModel = $bankAkun;
     }
 
     public function index() 
@@ -106,12 +109,27 @@ class DroppingController extends Controller
     public function tarik_tunai($id_drop)
     {
         $dropping = $this->jDroppingModel->where([['RECID', $id_drop], ['DEBIT', '>', 0]])->firstOrFail();
-    	return view('dropping.tariktunai', ['dropping' => $dropping]);
+        $akunBank = $this->akunBankModel->get();
+    	return view('dropping.tariktunai', ['dropping' => $dropping], ['kcabangs' => $this->kantorCabangs], ['akunbanks' => $akunBank]);
     }
 
     public function tarik_tunai_process($id_drop, Request $request)
     {
         dd($request->all());
+    }
+
+    public function getBank()
+    {
+        $banks = $this->akunBankModel->get();
+        $result = [];
+        foreach ($banks as $bank) {
+            $result[] = [
+                'bankamount'          => $bank->BANK, 
+                'banknumamount'       => $bank->REKENING, 
+                'company'             => $bank->CABANG
+            ];
+        }
+        return response()->json($result);
     }
 
     public function pengembalian()
