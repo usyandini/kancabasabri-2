@@ -83,7 +83,7 @@ return [
             'host'          => env('DB_HOST', '172.25.1.11'),
             'port'          => env('DB_PORT', '1433'),
             'database'      => env('DB_DATABASE', 'DBCabang'),
-            'username'      => env('DB_USERNAME', 'userc_cabang'),
+            'username'      => env('DB_USERNAME', 'user_cabang'),
             'password'      => env('DB_PASSWORD', 'cabang123!'),
             'charset'       => 'utf8',
             'prefix'        => '',
