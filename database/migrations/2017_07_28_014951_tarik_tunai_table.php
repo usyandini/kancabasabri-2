@@ -21,9 +21,6 @@ class TarikTunaiTable extends Migration
             $table->string('cabang',50);
             $table->string('status',50); 
             $table->double('ket_nominal')->nullable();
-            /*$table->string('ket_bank',50)->nullable();
-            $table->string('ket_rek',50)->nullable();
-            $table->string('ket_cabang',50)->nullable();*/
             $table->timestamps();       
         });
     }
