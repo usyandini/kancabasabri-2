@@ -54,13 +54,13 @@
                                     <div class="col-md-6">
                                       <div class="form-group">
                                         <label for="projectinput1">Tanggal Dropping</label>
-                                        <input type="date" readonly="" id="transdate" class="form-control" placeholder="Tanggal Transaksi" name="transdate" value="{{ date("Y-m-d",strtotime($dropping->TRANSDATE)) }}">
+                                        <input type="date" readonly="" id="tgl_dropping" class="form-control" placeholder="Tanggal Transaksi" name="tgl_dropping" value="{{ date("Y-m-d",strtotime($dropping->TRANSDATE)) }}">
                                       </div>
                                     </div>
                                     <div class="col-md-6">
                                       <div class="form-group">
-                                        <label for="projectinput2">Nominal Tarik Tunai (Dalam IDR)</label>
-                                        <input type="text" readonly="" id="debit" class="form-control" placeholder="Jumlah Transaksi" name="debit" value="{{ number_format($dropping->DEBIT, 2) }}">
+                                        <label for="projectinput2">Nominal Dropping (Dalam IDR)</label>
+                                        <input type="text" readonly="" id="nominal_tunai" class="form-control" placeholder="Jumlah Transaksi" name="nominal_tunai" value="{{ number_format($dropping->DEBIT, 2) }}">
                                       </div>
                                     </div>
                                   </div>
@@ -69,26 +69,26 @@
                                     <div class="col-md-6">
                                       <div class="form-group">
                                         <label for="companyName">Nama Bank</label>
-                                        <input type="text" readonly="" id="bank" class="form-control" placeholder="Nama Bank" name="bank" value="{{ $dropping->BANK_DROPPING }}">
+                                        <input type="text" readonly="" id="akun_bank" class="form-control" placeholder="Nama Bank" name="akun_bank" value="{{ $dropping->BANK_DROPPING }}">
                                       </div>
                                     </div>
                                     <div class="col-md-6">
                                       <div class="form-group">
                                         <label for="companyName">Nomor Rekening</label>
-                                        <input type="text" readonly="" id="banknum" class="form-control" placeholder="Nama Bank" name="banknum" value="{{ $dropping->REKENING_DROPPING }}">
+                                        <input type="text" readonly="" id="rek_bank" class="form-control" placeholder="Nama Bank" name="rek_bank" value="{{ $dropping->REKENING_DROPPING }}">
                                       </div>
                                     </div>
                                   </div>
                                   <div class="form-group">
                                     <label for="projectinput8">Cabang Kantor</label>
-                                    <input type="text" readonly="" id="company" class="form-control" placeholder="Cabang Kantor" name="company" value="{{ $dropping->CABANG_DROPPING }}">
+                                    <input type="text" readonly="" id="cabang" class="form-control" placeholder="Cabang Kantor" name="cabang" value="{{ $dropping->CABANG_DROPPING }}">
                                   </div>
                                   <h4 class="form-section">Kesesuaian Dropping</h4>
                                   <div class="row">
-                                    <div class="col-md-8">
+                                    <div class="col-md-12">
                                       <div class="form-group">
-                                        <label for="companyName">Silahkan tentukan kesesuain nominal dengan dropping</label>
-                                        <input type="checkbox" onchange="change_checkbox(this)" class="form-control switch" id="switch1" checked="checked" name="sesuai" value="true" data-on-label="Sesuai" data-off-label="Tidak sesuai"/>
+                                        <label for="companyName">Apakah nominal dropping sudah sesuai dengan pengajuan?</label>
+                                        <input type="checkbox" onchange="change_checkbox(this)" class="form-control switch" id="switch1" checked="checked" name="status" value="sesuai" data-on-label="Sesuai" data-off-label="Tidak sesuai"/>
                                       </div>
                                     </div>
                                   </div>
@@ -150,7 +150,7 @@
                                     <div class="col-md-6">
                                       <div class="form-group">
                                         <label for="projectinput2">Nominal Transaksi (Dalam IDR)</label>
-                                        <input type="number" id="credit" class="form-control" placeholder="Nominal Transaksi" name="credit" value="">
+                                        <input type="number" id="ket_nominal" class="form-control" placeholder="Nominal Transaksi" name="ket_nominal" value="">
                                       </div>
                                     </div>
                                   </div>
@@ -159,7 +159,8 @@
                                     <div class="col-md-12">
                                       <div class="form-group">
                                         <label for="projectinput8">Cabang Kantor</label>
-                                        <select class="form-control" name="kcabang">
+                                        <select class="form-control" id="cabang" name="cabang">
+                                            <option>--Pilih Kantor Cabang</option>
                                           @foreach($kcabangs as $cabang)
                                             <option value="{{ $cabang->DESCRIPTION }}">{{ $cabang->DESCRIPTION }}</option>
                                           @endforeach
@@ -169,8 +170,8 @@
                                     <div class="col-md-6">
                                       <div class="form-group">
                                         <label for="companyName">Nama Bank</label>
-                                        <select class="form-control" name="namabank">
-                                            <option>Nama Bank</option>
+                                        <select class="form-control" id="akun_bank" name="akun_bank">
+                                            <option>--Pilih Bank</option>
                                           {{--@foreach($akunbanks as $akunbank)
                                             <option value="{{ $akunbank->BANK }}">{{ $akunbank->BANK }}</option>
                                           @endforeach--}}
@@ -180,8 +181,8 @@
                                     <div class="col-md-6">
                                       <div class="form-group">
                                         <label for="companyName">Nomor Rekening</label>
-                                        <select class="form-control" name="namabank">
-                                          <option>Rekening Bank</option>
+                                        <select class="form-control" name="rek_bank">
+                                          <option>--Pilih Rekening</option>
                                           {{--@foreach($akunbanks as $akunbank)
                                           <option value="{{ $akunbank->REKENING }}">{{ $akunbank->REKENING }}</option>
                                           @endforeach--}}
@@ -222,7 +223,7 @@
                                       <h4 class="modal-title" id="myModalLabel20">Box Konfirmasi</h4>
                                     </div>
                                     <div class="modal-body" id="confirmation-msg">
-                                      <p>Apakah anda yakin dengan <b>data dropping</b> yang anda input sudah sesuai?</p>
+                                      <p>Apakah anda yakin dengan <b>data tarik tunai dropping</b> yang anda input sudah sesuai?</p>
                                     </div>
                                     <div class="modal-footer">
                                       <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">Close</button>
@@ -261,7 +262,7 @@
                   function change_checkbox(el) {
                     if(el.checked) {
                       document.getElementById("kesesuaian").style.display = 'none';
-                      document.getElementById("confirmation-msg").innerHTML = '<p>Apakah anda yakin untuk menyimpan <b>data dropping</b> yang anda input sudah sesuai?</p>';
+                      document.getElementById("confirmation-msg").innerHTML = '<p>Apakah anda yakin untuk menyimpan <b>data tarik tunai dropping</b> yang anda input sudah sesuai?</p>';
                     } else {
                       document.getElementById("kesesuaian").style.display = 'block';
                       document.getElementById("confirmation-msg").innerHTML = '<p>Apakah anda yakin untuk menyimpan <b>data ketidaksesuaian dropping</b> yang telah anda input?</p>';

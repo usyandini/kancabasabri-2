@@ -8,5 +8,8 @@ use App\Http\Requests;
 
 class TransaksiController extends Controller
 {
-    //
+    public function index() 
+    {
+        return view('transaksi.input');
+    }
 }

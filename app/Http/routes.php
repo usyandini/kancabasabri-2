@@ -33,6 +33,11 @@ Route::group(['middleware' => 'auth'], function() {
 	    Route::post('/tariktunai/{id_dropping}', 'DroppingController@tarik_tunai_process');
 	});
    	
+   	Route::group(['prefix' => 'transaksi'], function() {
+   		Route::resource('/', 'TransaksiController');
+	
+	});
+
 	Route::get('/pengembalian', 'DroppingController@pengembalian');
 	Route::get('/penambahan', 'DroppingController@penambahan');
 });

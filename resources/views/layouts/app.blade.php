@@ -90,12 +90,11 @@
                     </li>
                     {{-- <li class="nav-item {{ checkActiveMenu('dashboard') }}"><a href="{{ url('/dashboard', $parameters = [], $secure = null) }}"><i class="ft-home"></i><span data-i18n="" class="menu-title">Dashboard</span><!--<span class="tag tag tag-primary tag-pill float-xs-right mr-2">3</span>--></a>
                     </li> --}}
-                    <li class="nav-item {{ checkActiveMenu('dropping') }}"><a href="{{ url('/dropping', $parameters = [], $secure = null) }}"><i class="ft-monitor"></i><span data-i18n="" class="menu-title">Dropping</span></a>
+                    <li class="nav-item {{ checkActiveMenu('dropping') }}"><a href="{{ url('/dropping', $parameters = [], $secure = null) }}"><i class="ft-box"></i><span data-i18n="" class="menu-title">Dropping</span></a>
                     </li>
-                    <li class="nav-item has-sub {{ checkActiveMenu('transaksi') }}"><a href="{{ url('/transaksi', $parameters = [], $secure = null) }}"><i class="ft-layout"></i><span data-i18n="" class="menu-title">Transaksi</span></a>
+                    <li class="nav-item has-sub {{ checkActiveMenu('transaksi') }}"><a href=""><i class="ft-layout"></i><span data-i18n="" class="menu-title">Transaksi</span></a>
                         <ul class="menu-content">
-                            <li class="is-shown open"><a href="#" class="menu-item">Informasi Transaksi</a>
-                            <li class="is-shown open"><a href="#" class="menu-item">Input Transaksi</a>
+                            <li class="is-shown open"><a href="{{ url('/transaksi', $parameters = [], $secure = null) }}" class="menu-item">Input Transaksi</a>
                             <li class="is-shown open"><a href="#" class="menu-item">Persetujuan Transaksi</a>
                             <li class="is-shown open"><a href="#" class="menu-item">Verifikasi Transaksi</a>
                         </ul>

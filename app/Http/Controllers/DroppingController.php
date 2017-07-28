@@ -23,7 +23,7 @@ class DroppingController extends Controller
     {
         $this->jDroppingModel = $jDropping;
         $this->kanCabModel = $kanCab;
-        $this->kantorCabangs = $this->kanCabModel->where([['DESCRIPTION', '!=', ''],['DESCRIPTION', '!=', null] ])->get();
+        $this->kantorCabangs = $this->kanCabModel->orderby('DESCRIPTION', 'asc')->where([['DESCRIPTION', '!=', ''],['DESCRIPTION', '!=', null] ])->get();
         $this->akunBankModel = $bankAkun;
     }
 

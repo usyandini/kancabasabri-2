@@ -9,13 +9,13 @@
                 @section('content')
                 <div class="content-header row">
                     <div class="content-header-left col-md-6 col-xs-12 mb-2">
-                        <h3 class="content-header-title mb-0">Informasi Dropping</h3>
+                        <h3 class="content-header-title mb-0">Informasi Transaksi</h3>
                         <div class="row breadcrumbs-top">
                             <div class="breadcrumb-wrapper col-xs-12">
                                 <ol class="breadcrumb">
                                     <li class="breadcrumb-item"><a href="index-2.html">Dashboard</a>
                                     </li>
-                                    <li class="breadcrumb-item active">Informasi Dropping
+                                    <li class="breadcrumb-item active">Informasi Transaksi
                                     </li>
                                 </ol>
                             </div>
@@ -30,11 +30,10 @@
                                     <div class="card-header">
                                       <h4 class="card-title">Pencarian Dropping</h4>
                                       <a class="heading-elements-toggle"><i class="ft-align-justify font-medium-3"></i></a>
-                                      
                                     </div>
                                     <div class="card-body collapse in">
                                       <div class="card-block">
-                                        <form method="POST" action="{{ url('dropping/filter') }}">
+                                        <form method="POST" action="{{ url('transaksi') }}">
                                           <div class="row">
                                             {{ csrf_field() }}
                                             <div class="col-xs-4">
@@ -46,7 +45,7 @@
                                                       $thn_skr = date('Y');
                                                       for($x=$thn_skr; $x >= 2005; $x--){
                                                     ?>
-                                                      <option value="<?php echo $x;?>" {{ ($x == $filters['transyear'] ? 'selected=""' : '') }}><?php echo $x;?></option>
+                                                      <option value="<?php echo $x;?>"><?php echo $x;?></option>
                                                       <?php }?>
                                                   </select>
                                                 </div>
@@ -68,9 +67,6 @@
                                                   <label>Kantor Cabang</label>
                                                   <select class="select2 form-control" name="kcabang">
                                                     <option value="0">Semua Cabang</option>
-                                                    @foreach($kcabangs as $cabang)
-                                                      <option value="{{ $cabang->DESCRIPTION }}" {{ ($cabang->DESCRIPTION == $filters['kcabang'] ? 'selected=""' : '') }}>{{ $cabang->DESCRIPTION }}</option>
-                                                    @endforeach
                                                   </select>
                                                 </div>
                                             </div>
@@ -78,16 +74,14 @@
                                           <div class="row">
                                               <div class="col-xs-2 pull-right">
                                                 <div class="form-group">
-                                                  <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i> Filter</button>
+                                                  <a href="#" class="btn btn-primary"><i class="fa fa-search"></i> Cari</a>
                                                 </div>
                                               </div>
-                                            @if (checkActiveMenu('dropping') != 'active')
                                               <div class="col-xs-2">
                                                 <div class="form-group">
-                                                  <a href="{{ url('dropping') }}" class="btn btn-danger"><i class="fa fa-times"></i> Reset Filter</a>
+                                                  <a href="#" class="btn btn-danger"><i class="fa fa-plus"></i> Tambah</a>
                                                 </div>
                                               </div>
-                                            @endif
                                           </div>
                                         </form>
                                       </div>
@@ -100,7 +94,6 @@
                                 <div class="card">
                                     <div class="card-header">
                                         <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
-                                        
                                     </div>
                                     <div class="card-body collapse in">
                                         <div class="card-block card-dashboard ">
@@ -130,40 +123,6 @@
                 {{-- <script src="{{ asset('app-assets/js/scripts/tables/jsgrid/jsgrid.min.js') }}" type="text/javascript"></script> --}}
                 <script src="{{ asset('app-assets/js/scripts/forms/select/form-select2.min.js') }}" type="text/javascript"></script>
                 <!-- END PAGE LEVEL JS-->
-
-                <script type="text/javascript">
-                  $(document).ready(function() {
-                    $("#basicScenario").jsGrid( {
-                      width:"100%", 
-                      // height:"400px",
-                      sorting:!0, 
-                      autoload:!0,
-                      paging:!0,
-                      pagesize:15,
-                      pageButtonCount:5, 
-                      controller: {
-                        loadData: function(filter) {
-                          return $.ajax({
-                              type: "GET",
-                              url: "{{ (checkActiveMenu('dropping') == 'active' ? url('dropping/get') : url('dropping/get/filtered/'.$filters['transyear'].'/'.$filters['periode'].'/'.$filters['kcabang']) ) }}",
-                              data: filter,
-                              dataType: "JSON"
-                          })
-                        }
-                      }, 
-                      fields: [
-                          { name: "journalnum", type: "text", title: "Nomor Jurnal", width: 90 },
-                          { name: "bank", type: "text", title: "Nama Bank", width: 80 },
-                          { name: "banknum", type: "text", title: "No. Rekening", width: 100 },
-                          { name: "transdate", type: "text", title: "Tanggal Dropping", width: 100 },
-                          { name: "debit", type: "text", title: "Nominal", width: 100 },
-                          { name: "company", type: "text", title: "Kantor Cabang", width: 100 },
-                          { name: "id_dropping", type: "control", itemTemplate:function(e) {
-                            return "<a href='{{ url('/dropping/tariktunai') }}/"+ e +"' class='btn btn-success btn-sm'>Lanjut</a>"
-                          }
-                        }
-                      ]
-                    })
-                  });
-                </script>
+                <script type="text/javascript" src="{{ asset('app-assets/js/scripts/ui/breadcrumbs-with-stats.min.js') }}"></script>
+                <script src="{{ asset('app-assets/js/scripts/tables/jsgrid/jsgrid.min.js') }}" type="text/javascript"></script>
                 @endsection
