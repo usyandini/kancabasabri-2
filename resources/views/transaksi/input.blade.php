@@ -13,7 +13,7 @@
                         <div class="row breadcrumbs-top">
                             <div class="breadcrumb-wrapper col-xs-12">
                                 <ol class="breadcrumb">
-                                    <li class="breadcrumb-item"><a href="index-2.html">Dashboard</a>
+                                    <li class="breadcrumb-item"><a href="">Transaksi</a>
                                     </li>
                                     <li class="breadcrumb-item active">Informasi Transaksi
                                     </li>
@@ -28,7 +28,7 @@
                             <div class="col-xs-7">
                                 <div class="card">
                                     <div class="card-header">
-                                      <h4 class="card-title">Pencarian Dropping</h4>
+                                      <h4 class="card-title">Pencarian Transaksi</h4>
                                       <a class="heading-elements-toggle"><i class="ft-align-justify font-medium-3"></i></a>
                                     </div>
                                     <div class="card-body collapse in">
@@ -38,41 +38,19 @@
                                             {{ csrf_field() }}
                                             <div class="col-xs-4">
                                                 <div class="form-group">
-                                                  <label>Tahun</label>
-                                                  <select class="select2 form-control" name="transyear">
-                                                    <option value="0">Semua Tahun</option>
-                                                    <?php
-                                                      $thn_skr = date('Y');
-                                                      for($x=$thn_skr; $x >= 2005; $x--){
-                                                    ?>
-                                                      <option value="<?php echo $x;?>"><?php echo $x;?></option>
-                                                      <?php }?>
-                                                  </select>
+                                                  <label>Tanggal</label>
+                                                  <input class="form-control" type="date" placeholder="{{ date('d/m/Y') }}" name="tgl_transaksi" id="tgl_transaksi" value="{{ date('Y-m-d') }}">
                                                 </div>
                                             </div>
                                             <div class="col-xs-4">
                                                 <div class="form-grpup">
-                                                  <label>Periode</label>
-                                                  <select class="select2 form-control" name="periode">
-                                                    <option value="0">Semua Periode</option>
-                                                    <option value="1">I</option>
-                                                    <option value="2">II</option>
-                                                    <option value="3">III</option>
-                                                    <option value="4">IV</option>
-                                                  </select>
-                                                </div>
-                                            </div>
-                                            <div class="col-xs-4">
-                                                <div class="form-grpup">
-                                                  <label>Kantor Cabang</label>
-                                                  <select class="select2 form-control" name="kcabang">
-                                                    <option value="0">Semua Cabang</option>
-                                                  </select>
+                                                  <label>No. Batch</label>
+                                                  <input class="form-control" type="text" id="batch"></input>
                                                 </div>
                                             </div>
                                           </div>
                                           <div class="row">
-                                              <div class="col-xs-2 pull-right">
+                                              <div class="col-xs-2">
                                                 <div class="form-group">
                                                   <a href="#" class="btn btn-primary"><i class="fa fa-search"></i> Cari</a>
                                                 </div>
