@@ -13,14 +13,18 @@ class TarikTunaiTable extends Migration
     public function up()
     {
         Schema::create('tarik_tunai', function (Blueprint $table) {
-            $table->increments('id_tunai')->unique();
+            $db = DB::connection('sqlsrv2')->getDatabaseName();
+
+            $table->increments('id');
+            $table->bigInteger('id_dropping');
+            
             $table->date('tgl_dopping');
-            $table->double('nominal_tunai');
+            $table->double('nominal');
             $table->string('akun_bank',50);
             $table->string('rek_bank',50);
             $table->string('cabang',50);
-            $table->string('status',50); 
-            $table->double('ket_nominal')->nullable();
+            $table->boolean('is_sesuai'); 
+            $table->integer('id_penyesuaian')->unsigned()->default(null)->nullable();
             $table->timestamps();       
         });
     }
