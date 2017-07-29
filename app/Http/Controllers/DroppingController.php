@@ -9,6 +9,7 @@ use App\User;
 use App\Models\PaymentJournalDropping;
 use App\Models\KantorCabang;
 use App\Models\AkunBank;
+use App\Models\TarikTunai;
 
 
 class DroppingController extends Controller
