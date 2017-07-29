@@ -12,4 +12,9 @@ class TransaksiController extends Controller
     {
         return view('transaksi.input');
     }
+
+    public function view_transaksi()
+    {
+    	return view('transaksi.viewtransaksi');
+    }
 }

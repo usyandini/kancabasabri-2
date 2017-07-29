@@ -43,7 +43,7 @@
                                                 </div>
                                             </div>
                                             <div class="col-xs-4">
-                                                <div class="form-grpup">
+                                                <div class="form-group">
                                                   <label>No. Batch</label>
                                                   <input class="form-control" type="text" id="batch"></input>
                                                 </div>
@@ -80,7 +80,10 @@
                                             <div id="basicScenario"></div><br>
                                             <div class="col-xs-12">
                                                 <div class="form-group">
-                                                  <a href="#" class="btn btn-primary pull-right"><i class="fa fa-check"></i> Simpan</a>
+                                                    <div class="col-xs-4">
+                                                      <label>Status<input type="text" class="form-control" id="status" readonly="readonly" value="Simpan"></input></label>
+                                                    </div>
+                                                    <a href="{{ url('/transaksi/viewtransaksi') }}" class="btn btn-primary pull-right"><i class="fa fa-check" id="status" value="Simpan"></i> Simpan</a>
                                                 </div>
                                             </div>
                                         </div>
