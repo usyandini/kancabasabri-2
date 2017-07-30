@@ -6,6 +6,8 @@
                 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/forms/selects/select2.min.css') }}">
                 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/forms/toggle/switchery.min.css') }}">
                 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/plugins/forms/switch.min.css') }}">
+                <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/extensions/toastr.css') }}">
+                <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/plugins/extensions/toastr.min.css') }}">
                 @endsection
 
                 @section('content')
@@ -60,7 +62,7 @@
                                     <div class="col-md-6">
                                       <div class="form-group">
                                         <label for="projectinput2">Nominal Dropping (Dalam IDR)</label>
-                                        <input type="text" readonly="" id="nominal_tunai" class="form-control" placeholder="Jumlah Transaksi" name="nominal_tunai" value="{{ number_format($dropping->DEBIT, 2) }}">
+                                        <input type="text" readonly="" id="nominal_tunai" class="form-control" placeholder="number_format($dropping->DEBIT, 2)" name="nominal" value="{{ $dropping->DEBIT }}">
                                       </div>
                                     </div>
                                   </div>
@@ -88,19 +90,11 @@
                                     <div class="col-md-12">
                                       <div class="form-group">
                                         <label for="companyName">Apakah nominal dropping sudah sesuai dengan pengajuan?</label>
-                                        <input type="checkbox" onchange="change_checkbox(this)" class="form-control switch" id="switch1" checked="checked" name="status" value="sesuai" data-on-label="Sesuai" data-off-label="Tidak sesuai"/>
+                                        <input type="checkbox" onchange="change_checkbox(this)" class="form-control switch" id="switch1" checked="checked" name="is_sesuai" value="1" data-on-label="Sesuai" data-off-label="Tidak sesuai"/>
                                       </div>
                                     </div>
                                   </div>
                                 </div>
-                                {{-- <div class="form-actions">
-                                  <a href="{{ url('dropping') }}" class="btn btn-warning mr-1">
-                                    <i class="ft-x"></i> Kembali
-                                  </a>
-                                  <button type="submit" class="btn btn-primary" id="post" name="post">
-                                    <i class="fa fa-check-square-o"></i> Post
-                                  </button>
-                                </div> --}}
                               </form>
                             </div>
                           </div>
@@ -128,13 +122,19 @@
                               </div>
                               <form class="form" method="POST" id="kesesuaian-form" action="{{ url('dropping/tariktunai/'.$dropping->RECID) }}">
                               {{ csrf_field() }}
+                                <input type="hidden" name="tgl_dropping" value="{{ $dropping->TRANSDATE }}">
+                                <input type="hidden" name="nominal" value="{{ $dropping->DEBIT }}">
+                                <input type="hidden" name="akun_bank" value="{{ $dropping->BANK_DROPPING }}">
+                                <input type="hidden" name="rek_bank" value="{{ $dropping->REKENING_DROPPING }}">
+                                <input type="hidden" name="cabang" value="{{ $dropping->CABANG_DROPPING }}">
+                                <input type="hidden" name="is_sesuai" value="0">
                                 <div class="form-body">
                                   <h4 class="form-section"> Pengembalian/Penambahan Dropping</h4>
                                   <div class="row">
                                     <div class="col-md-12">
                                       <div class="form-group mt-1 pb-1">
                                         <label for="switcherySize11" class="font-medium-2 text-bold-600 mr-1">Pengembalian kelebihan</label>
-                                        <input type="checkbox" id="switcherySize11" class="switchery" checked/>
+                                        <input type="checkbox" id="switcherySize11" class="switchery" checked name="p_is_pengembalian" value="1" />
                                         <label for="switcherySize11" class="font-medium-2 text-bold-600 ml-1">Penambahan kekurangan</label>
                                       </div>
                                     </div>
@@ -144,13 +144,13 @@
                                     <div class="col-md-6">
                                       <div class="form-group">
                                         <label for="projectinput1">Tanggal Transaksi</label>
-                                        <input type="date" id="transdate" class="form-control" placeholder="{{date('d/m/Y')}}" name="transdate" value="{{ date('Y-m-d') }}" disabled>
+                                        <input readonly="" type="date" id="p_tgl_dropping" class="form-control" placeholder="{{date('d/m/Y')}}" name="p_tgl_dropping" value="{{ date('Y-m-d') }}">
                                       </div>
                                     </div>
                                     <div class="col-md-6">
                                       <div class="form-group">
                                         <label for="projectinput2">Nominal Transaksi (Dalam IDR)</label>
-                                        <input type="number" id="ket_nominal" class="form-control" placeholder="Nominal Transaksi" name="ket_nominal" value="">
+                                        <input type="number" id="p_nominal" class="form-control" placeholder="Nominal Transaksi" name="p_nominal" value="{{ old('ket_nominal') }}" required="">
                                       </div>
                                     </div>
                                   </div>
@@ -159,8 +159,8 @@
                                     <div class="col-md-12">
                                       <div class="form-group">
                                         <label for="projectinput8">Cabang Kantor</label>
-                                        <select class="form-control" id="cabang" name="cabang">
-                                            <option>--Pilih Kantor Cabang</option>
+                                        <select class="form-control kcabang" id="cabang" name="p_cabang" required="">
+                                            <option value="0">--Pilih Kantor Cabang</option>
                                           @foreach($kcabangs as $cabang)
                                             <option value="{{ $cabang->DESCRIPTION }}">{{ $cabang->DESCRIPTION }}</option>
                                           @endforeach
@@ -170,22 +170,16 @@
                                     <div class="col-md-6">
                                       <div class="form-group">
                                         <label for="companyName">Nama Bank</label>
-                                        <select class="form-control" id="akun_bank" name="akun_bank">
-                                            <option>--Pilih Bank</option>
-                                          {{--@foreach($akunbanks as $akunbank)
-                                            <option value="{{ $akunbank->BANK }}">{{ $akunbank->BANK }}</option>
-                                          @endforeach--}}
+                                        <select class="form-control akun_bank" id="akun_bank" name="p_akun_bank" disabled="" required="">
+                                            <option value="0">Pilih kantor cabang terlebih dahulu</option>
                                         </select>
                                       </div>
                                     </div>
                                     <div class="col-md-6">
                                       <div class="form-group">
                                         <label for="companyName">Nomor Rekening</label>
-                                        <select class="form-control" name="rek_bank">
-                                          <option>--Pilih Rekening</option>
-                                          {{--@foreach($akunbanks as $akunbank)
-                                          <option value="{{ $akunbank->REKENING }}">{{ $akunbank->REKENING }}</option>
-                                          @endforeach--}}
+                                        <select class="form-control rekening" name="p_rek_bank" disabled="" required="">
+                                          <option>Pilih bank terlebih dahulu</option>
                                         </select>
                                       </div>
                                     </div>
@@ -250,12 +244,14 @@
                 <script src="{{ asset('app-assets/vendors/js/forms/select/select2.full.min.js') }}" type="text/javascript"></script>
                 <script src="{{ asset('app-assets/vendors/js/forms/toggle/bootstrap-checkbox.min.js') }}"></script>
                 <script src="{{ asset('app-assets/vendors/js/forms/toggle/switchery.min.js') }}" type="text/javascript"></script>
+                <script src="{{ asset('app-assets/vendors/js/extensions/toastr.min.js') }}" type="text/javascript"></script>
                 <!-- END PAGE VENDOR JS-->
                 <!-- BEGIN PAGE LEVEL JS-->
                 <script type="text/javascript" src="{{ asset('app-assets/js/scripts/ui/breadcrumbs-with-stats.min.js') }}"></script>
                 <script src="{{ asset('app-assets/js/scripts/forms/select/form-select2.min.js') }}" type="text/javascript"></script>
                 <script src="{{ asset('app-assets/js/scripts/forms/switch.min.js') }}" type="text/javascript"></script>
                 <script src="{{ asset('app-assets/js/scripts/modal/components-modal.min.js') }}" type="text/javascript"></script>
+                <script src="{{ asset('app-assets/js/scripts/extensions/toastr.min.js') }}" type="text/javascript"></script>
                 <!-- END PAGE LEVEL JS-->  
 
                 <script type="text/javascript">
@@ -272,10 +268,40 @@
                   function forms_submit() {
                     if(document.getElementById("switch1").checked){
                       document.getElementById("tariktunai-form").submit();
-
                     } else{
                       document.getElementById("kesesuaian-form").submit();
                     }
                   };
+
+                  $('select.kcabang').on('change', function(){
+                      $.post('{{ url('/dropping/banks') }}', {_token: '{{ csrf_token() }}', type: 'bank', id: $(this).val()}, function(e){
+                        console.log(e);
+                          if (e != 0) {
+                            $('select[name="p_akun_bank"]').html(e);
+                            $('select[name="p_akun_bank"]').prop("disabled", false);
+                          } else {
+                            $('select[name="p_akun_bank"]').html("<option value='0'>Pilih kantor cabang terlebih dahulu</option>");
+                            $('select[name="p_akun_bank"]').prop("disabled", true);
+                            toastr.error("Daftar bank pada kantor cabang yang dimaksud tidak ditemukan. Silahkan pilih kantor cabang lain.", "Perhatian", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
+                          }
+
+                          $('select[name="p_rek_bank"]').html("<option value='0'>Pilih bank terlebih dahulu</option>");
+                          $('select[name="p_rek_bank"]').prop("disabled", true);
+                      });
+                  });
+
+                  $('select.akun_bank').on('change', function(){
+                      $.post('{{ url('/dropping/banks') }}', {_token: '{{ csrf_token() }}', type: 'rekening', id: $(this).val()}, function(e){
+                        console.log(e);
+                          if (e != 0) {
+                            $('select[name="p_rek_bank"]').html(e);
+                            $('select[name="p_rek_bank"]').prop("disabled", false);
+                          } else {
+                            $('select[name="p_rek_bank"]').html("<option value='0'>Pilih bank terlebih dahulu</option>");
+                            $('select[name="p_rek_bank"]').prop("disabled", true);
+                            toastr.error("Daftar rekening pada bank yang dimaksud tidak ditemukan. Silahkan pilih bank lain.", "Perhatian", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
+                          }
+                      });
+                  });
                 </script>
                 @endsection

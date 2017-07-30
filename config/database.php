@@ -86,7 +86,7 @@ return [
             'username'      => env('DB_USERNAME', 'user_cabang'),
             'password'      => env('DB_PASSWORD', 'cabang123!'),
             'charset'       => 'utf8',
-            'prefix'        => '',
+            'prefix'        => ''
         ],
 
         'sqlsrv2' => [

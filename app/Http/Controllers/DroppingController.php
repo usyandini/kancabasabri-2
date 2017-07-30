@@ -10,7 +10,9 @@ use App\Models\PaymentJournalDropping;
 use App\Models\KantorCabang;
 use App\Models\AkunBank;
 use App\Models\TarikTunai;
+use App\Models\PenyesuaianDropping;
 
+use Validator;
 
 class DroppingController extends Controller
 {
@@ -19,17 +21,24 @@ class DroppingController extends Controller
     protected $kanCabModel;
     protected $kantorCabangs;
     protected $akunBankModel;
+    protected $tarikTunaiModel;
 
-    public function __construct(PaymentJournalDropping $jDropping, KantorCabang $kanCab, AkunBank $bankAkun)
+    public function __construct(
+        PaymentJournalDropping $jDropping, 
+        KantorCabang $kanCab, 
+        AkunBank $bankAkun,
+        TarikTunai $tarikTunai)
     {
         $this->jDroppingModel = $jDropping;
         $this->kanCabModel = $kanCab;
         $this->kantorCabangs = $this->kanCabModel->orderby('DESCRIPTION', 'asc')->where([['DESCRIPTION', '!=', ''],['DESCRIPTION', '!=', null] ])->get();
         $this->akunBankModel = $bankAkun;
+        $this->tarikTunaiModel = $tarikTunai;
     }
 
     public function index() 
     {
+        // dd($this->getAll());
         return view('dropping.index', ['kcabangs' => $this->kantorCabangs, 'filters' => null]);
     }
 
@@ -51,7 +60,8 @@ class DroppingController extends Controller
                 'debit'         => 'IDR '. number_format($dropping->DEBIT, 2),
                 'credit'        => 'IDR '. number_format($dropping->KREDIT, 2),
                 'banknum'       => $dropping->REKENING_DROPPING,
-                'company'       => $dropping->CABANG_DROPPING
+                'company'       => $dropping->CABANG_DROPPING,
+                'stat'          => $dropping->tarikTunai['is_sesuai']
             ];
         }
         return response()->json($result);
@@ -111,26 +121,35 @@ class DroppingController extends Controller
     {
         $dropping = $this->jDroppingModel->where([['RECID', $id_drop], ['DEBIT', '>', 0]])->firstOrFail();
         $akunBank = $this->akunBankModel->get();
-    	return view('dropping.tariktunai', ['dropping' => $dropping], ['kcabangs' => $this->kantorCabangs], ['akunbanks' => $akunBank]);
+    	return view('dropping.tariktunai', ['dropping' => $dropping], ['kcabangs' => $this->kantorCabangs]);
     }
 
     public function tarik_tunai_process($id_drop, Request $request)
     {
-        dd($request->all());
-    }
-
-    public function getBank()
-    {
-        $banks = $this->akunBankModel->get();
-        $result = [];
-        foreach ($banks as $bank) {
-            $result[] = [
-                'bankamount'          => $bank->BANK, 
-                'banknumamount'       => $bank->REKENING, 
-                'company'             => $bank->CABANG
-            ];
+        if ($request->is_sesuai == "1") {
+            $inputsTT = $request->except('_method', '_token');
+        } else {
+            $inputsTT = $request->except('_method', '_token', 'p_akun_bank', 'p_cabang', 'is_pengembalian', 'p_nominal', 'p_rek_bank', 'p_tgl_dropping');
+            $inputsPD = array(
+                'akun_bank'         => $request->p_akun_bank, 
+                'cabang'            => $request->p_cabang,
+                'is_pengembalian'   => $request->p_is_pengembalian == "1" ? false : true,
+                'nominal'           => $request->p_nominal,
+                'rek_bank'          => $request->p_rek_bank,
+                'tgl_dropping'      => $request->p_tgl_dropping
+            );
+            
+            $penyesuaian = PenyesuaianDropping::create($inputsPD);
+            $inputsTT['id_penyesuaian'] = $penyesuaian->id;
         }
-        return response()->json($result);
+        
+        $inputsTT['created_by'] = \Auth::id();
+        $inputsTT['id_dropping'] = $id_drop;
+        
+        TarikTunai::create($inputsTT);
+        
+        session()->flash('success', true);
+        return redirect('/dropping');
     }
 
     public function pengembalian()
@@ -141,6 +160,29 @@ class DroppingController extends Controller
     public function penambahan()
     {
     	return view ('penambahan');
+    }
+
+    public function getChainedBank(Request $request)
+    {
+        $return = 0;
+        switch ($request->input('type')) {
+            case 'bank':
+                $banks = $this->akunBankModel->where('CABANG', $request->input('id'))->get();
+                if (count($banks) > 0) {
+                    $return = '<option value="0">Pilih Bank</option>';
+                    foreach($banks as $temp) 
+                        $return .= "<option value='$temp->BANK_NAME'>".$temp->BANK_NAME."</option>";
+                } 
+            case 'rekening':
+                $rekening = $this->akunBankModel->where('BANK_NAME', $request->input('id'))->get();
+                if (count($rekening) > 0) {
+                    $return = '<option value="0">Pilih Rekening</option>';
+                    foreach($rekening as $temp) 
+                        $return .= "<option value='$temp->REKENING'>".$temp->REKENING."</option>";
+                }
+                break;
+        }
+        return $return;
     }
 
     public function redirect($url, $statusCode = 303)

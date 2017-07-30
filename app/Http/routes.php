@@ -31,6 +31,8 @@ Route::group(['middleware' => 'auth'], function() {
 
 	    Route::get('/tariktunai/{id_dropping}', 'DroppingController@tarik_tunai');
 	    Route::post('/tariktunai/{id_dropping}', 'DroppingController@tarik_tunai_process');
+
+	    Route::post('/banks/', 'DroppingController@getChainedBank');
 	});
    	
    	Route::group(['prefix' => 'transaksi'], function() {

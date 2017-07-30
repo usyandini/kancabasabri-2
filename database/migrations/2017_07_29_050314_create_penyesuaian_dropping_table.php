@@ -17,8 +17,9 @@ class CreatePenyesuaianDroppingTable extends Migration
             $table->date('tgl_dopping');
             $table->boolean('is_pengembalian');
             $table->double('nominal');
-            $table->integer('akun_bank');
-            $table->integer('cabang');
+            $table->string('cabang', 50);
+            $table->string('akun_bank', 50);
+            $table->string('rek_bank', 50);
             $table->timestamps();
         });
     }

@@ -25,12 +25,19 @@
                 <div class="content-body"><!-- Basic scenario start -->
                     <section id="basic">
                         <div class="row">
+                            @if(session('success'))
+                            <div class="col-xs-7">
+                                <div class="alert alert-success">
+                                  Data dropping berhasil dipost.
+                                </div>
+                              </div>
+                            </div>
+                            @endif
                             <div class="col-xs-7">
                                 <div class="card">
                                     <div class="card-header">
                                       <h4 class="card-title">Pencarian Dropping</h4>
                                       <a class="heading-elements-toggle"><i class="ft-align-justify font-medium-3"></i></a>
-                                      
                                     </div>
                                     <div class="card-body collapse in">
                                       <div class="card-block">
@@ -158,11 +165,17 @@
                           { name: "transdate", type: "text", title: "Tanggal Dropping", width: 100 },
                           { name: "debit", type: "text", title: "Nominal", width: 100 },
                           { name: "company", type: "text", title: "Kantor Cabang", width: 100 },
+                          { name: "stat", type: "text", title: "Status Posting", itemTemplate:function(e) {
+                            var content = e == '1' ? "Sesuai" : (e == '0' ? "Tidak sesuai" : 'Belum posting');
+                            var tag = e == '1' ? "tag-success" : (e == '0' ? "tag-default" : 'tag-info');
+                            return "<span class='tag "+tag+"'>"+content+"</span>" ;
+                            } 
+                          },
                           { name: "id_dropping", type: "control", itemTemplate:function(e) {
                             return "<a href='{{ url('/dropping/tariktunai') }}/"+ e +"' class='btn btn-success btn-sm'>Lanjut</a>"
+                            }
                           }
-                        }
-                      ]
+                        ]
                     })
                   });
                 </script>
