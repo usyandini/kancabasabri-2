@@ -53,7 +53,7 @@
                                                       $thn_skr = date('Y');
                                                       for($x=$thn_skr; $x >= 2005; $x--){
                                                     ?>
-                                                      <option value="<?php echo $x;?>" {{ ($x == $filters['transyear'] ? 'selected=""' : '') }}><?php echo $x;?></option>
+                                                      <option {{ ($filters['transyear'] == $x) ? 'selected=""' : '' }} value="<?php echo $x;?>" {{ ($x == $filters['transyear'] ? 'selected=""' : '') }}><?php echo $x;?></option>
                                                       <?php }?>
                                                   </select>
                                                 </div>
@@ -63,10 +63,10 @@
                                                   <label>Periode</label>
                                                   <select class="select2 form-control" name="periode">
                                                     <option value="0">Semua Periode</option>
-                                                    <option value="1">I</option>
-                                                    <option value="2">II</option>
-                                                    <option value="3">III</option>
-                                                    <option value="4">IV</option>
+                                                    <option {{ $filters['periode'] == '1' ? 'selected=""' : '' }} value="1">I</option>
+                                                    <option {{ $filters['periode'] == '2' ? 'selected=""' : '' }} value="2">II</option>
+                                                    <option {{ $filters['periode'] == '3' ? 'selected=""' : '' }} value="3">III</option>
+                                                    <option {{ $filters['periode'] == '4' ? 'selected=""' : '' }} value="4">IV</option>
                                                   </select>
                                                 </div>
                                             </div>
@@ -141,13 +141,15 @@
                 <script type="text/javascript">
                   $(document).ready(function() {
                     $("#basicScenario").jsGrid( {
-                      width:"100%", 
-                      // height:"400px",
-                      sorting:!0, 
-                      autoload:!0,
-                      paging:!0,
-                      pagesize:15,
-                      pageButtonCount:5, 
+                      width: "100%",
+               
+                      sorting: true,
+                      paging: true,
+                      autoload: true,
+               
+                      pageSize: 5,
+                      pageButtonCount: 10,
+                      
                       controller: {
                         loadData: function(filter) {
                           return $.ajax({
