@@ -13,7 +13,7 @@
                         <div class="row breadcrumbs-top">
                             <div class="breadcrumb-wrapper col-xs-12">
                                 <ol class="breadcrumb">
-                                    <li class="breadcrumb-item"><a href="">Transaksi</a>
+                                    <li class="breadcrumb-item"><a href="">Dashboard</a>
                                     </li>
                                     <li class="breadcrumb-item active">Informasi Transaksi
                                     </li>
@@ -43,7 +43,7 @@
                                                 </div>
                                             </div>
                                             <div class="col-xs-4">
-                                                <div class="form-grpup">
+                                                <div class="form-group">
                                                   <label>No. Batch</label>
                                                   <input class="form-control" type="text" id="batch"></input>
                                                 </div>
@@ -71,12 +71,21 @@
                             <div class="col-xs-12">
                                 <div class="card">
                                     <div class="card-header">
+                                        <h4 class="card-title">Input Transaksi</h4>
                                         <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
                                     </div>
                                     <div class="card-body collapse in">
                                         <div class="card-block card-dashboard ">
                                             <!-- <p>Grid with filtering, editing, inserting, deleting, sorting and paging. Data provided by controller.</p> -->
-                                            <div id="basicScenario"></div>
+                                            <div id="basicScenario"></div><br>
+                                            <div class="col-xs-12">
+                                                <div class="form-group">
+                                                    <div class="col-xs-4">
+                                                      <label>Status<input type="text" class="form-control" id="status" readonly="readonly" value="Simpan"></input></label>
+                                                    </div>
+                                                    <a href="{{ url('/transaksi/viewtransaksi') }}" class="btn btn-primary pull-right"><i class="fa fa-check" id="status" value="Simpan"></i> Simpan</a>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -98,9 +107,39 @@
                 <!-- END PAGE VENDOR JS-->
                 <!-- BEGIN PAGE LEVEL JS-->
                 <script type="text/javascript" src="{{ asset('app-assets/js/scripts/ui/breadcrumbs-with-stats.min.js') }}"></script>
-                {{-- <script src="{{ asset('app-assets/js/scripts/tables/jsgrid/jsgrid.min.js') }}" type="text/javascript"></script> --}}
-                <script src="{{ asset('app-assets/js/scripts/forms/select/form-select2.min.js') }}" type="text/javascript"></script>
+                {{--<script src="{{ asset('app-assets/js/scripts/tables/jsgrid/jsgrid.min.js') }}" type="text/javascript"></script>--}}
+                {{--<script src="{{ asset('app-assets/js/scripts/forms/select/form-select2.min.js') }}" type="text/javascript"></script>--}}
                 <!-- END PAGE LEVEL JS-->
                 <script type="text/javascript" src="{{ asset('app-assets/js/scripts/ui/breadcrumbs-with-stats.min.js') }}"></script>
                 <script src="{{ asset('app-assets/js/scripts/tables/jsgrid/jsgrid.min.js') }}" type="text/javascript"></script>
+                <script type="text/javascript">
+                  $(document).ready(function() {
+                    $("#basicScenario").jsGrid( {
+                      width:"100%", 
+                      //height:"400px",
+                      sorting:true, 
+                      autoload:true,
+                      paging:false,
+                      editButton:true,
+                      deleteButton:true,
+                      editing:true,
+
+                      deleteConfirm: "Apakah anda yakin untuk menghapus?",                       
+                       
+                      fields: [
+                            { name: "tgl_trans", type: "text", title: "Tanggal" },
+                            { name: "item_trans", type: "select", title: "Item" }, 
+                            { name: "jml_item", type: "number", title: "Jumlah Item" },
+                            { name: "uraian", type: "text", title: "Uraian"},
+                            { name: "subpos", type: "select", title: "Sub Pos"},
+                            { name: "mata_anggaran", type: "select", title: "Mata Anggaran", width:200 }, 
+                            { name: "kasbank", type: "select", title: "Kas/Bank" }, 
+                            { name: "account", type: "text", title: "Account", items: db.countries, valueField: "id_akun", width:200 }, 
+                            { name: "anggaran", type: "text", title: "Anggaran Tersedia", width:200, sorting: !1 }, 
+                            { name: "jml_trans", type: "text", title: "Jumlah Transaksi", width:200, sorting: !1 }, 
+                            { type: "control" }
+                      ]
+                    })
+                  });
+                </script>
                 @endsection
