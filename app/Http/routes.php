@@ -39,7 +39,4 @@ Route::group(['middleware' => 'auth'], function() {
    		Route::resource('/', 'TransaksiController');
 		Route::get('/viewtransaksi', 'TransaksiController@view_transaksi');
 	});
-
-	Route::get('/pengembalian', 'DroppingController@pengembalian');
-	Route::get('/penambahan', 'DroppingController@penambahan');
 });

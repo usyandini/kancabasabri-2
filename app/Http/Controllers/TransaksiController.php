@@ -10,7 +10,7 @@ class TransaksiController extends Controller
 {
     public function index() 
     {
-        return view('transaksi.input');
+        return view('transaksi.input', ['filters' => null]);
     }
 
     public function view_transaksi()
