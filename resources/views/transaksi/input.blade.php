@@ -79,7 +79,7 @@
                                                     <div class="col-xs-4">
                                                       <label>Status<input type="text" class="form-control" id="status" readonly="readonly" value="Simpan"></input></label>
                                                     </div>
-                                                    <a href="{{ url('/transaksi/viewtransaksi') }}" class="btn btn-primary pull-right"><i class="fa fa-check" id="status" value="Simpan"></i> Simpan</a>
+                                                    <button onclick="simpan_jsgrid()" class="btn btn-primary pull-right"><i class="fa fa-check" id="status" value="Simpan"></i> Simpan</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -137,6 +137,7 @@
                   //           { type: "control" }
                   //     ]
                   //   })
+                  var x = [];
                   $(document).ready(function() {
                     $("#basicScenario").jsGrid( {
                       width: "100%",
@@ -158,8 +159,23 @@
                               data: filter,
                               dataType: "JSON"
                           })
+                        },
+                        insertItem: function (item) {
+                          item["type"] = 'insert';
+                          x.push(item);
+                          console.log(x);
+                            // return $.ajax({
+                            //     type: "POST",
+                            //     url: "{{ url('transaksi') }}",
+                            //     data: {
+                            //       "item" : item,
+                            //       "_token" : "{{ csrf_token() }}"
+                            //     }
+                            // });
                         }
+
                       }, 
+
                       fields: [
                           { name: "journalnum", type: "text", title: "Nomor Jurnal", width: 90 },
                           { name: "bank", type: "text", title: "Nama Bank", width: 80 },
@@ -175,7 +191,11 @@
                           },
                           { type: "control" }
                         ]
-                    })
+                    });
                   });
+
+                  function simpan_jsgrid() {
+                    console.log(x);
+                  };
                 </script>
                 @endsection

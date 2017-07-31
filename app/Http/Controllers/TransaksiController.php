@@ -17,4 +17,9 @@ class TransaksiController extends Controller
     {
     	return view('transaksi.viewtransaksi');
     }
+
+    public function store(Request $request)
+    {
+    	dd($request->all());
+    }
 }
