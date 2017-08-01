@@ -37,6 +37,14 @@
                                         <div class="card-block card-dashboard ">
                                             <!-- <p>Grid with filtering, editing, inserting, deleting, sorting and paging. Data provided by controller.</p> -->
                                             <div id="basicScenario"></div><br>
+                                            <div class="col-lg-6 col-md-12 pull-right">
+                                              <fieldset class="form-group">
+                                                <label class="custom-file center-block block">
+                                                  <input type="file" id="file_transaksi" class="custom-file-input">
+                                                  <span class="custom-file-control"></span>
+                                                </label>
+                                              </fieldset>
+                                            </div>
                                             <div class="col-xs-12">
                                                 <div class="form-group">
                                                   <a href="#" class="btn btn-success pull-right"><i class="fa fa-check-square-o"></i> Kirim</a>
