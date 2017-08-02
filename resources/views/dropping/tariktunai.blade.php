@@ -128,23 +128,30 @@
                                 <input type="hidden" name="rek_bank" value="{{ $dropping->REKENING_DROPPING }}">
                                 <input type="hidden" name="cabang" value="{{ $dropping->CABANG_DROPPING }}">
                                 <input type="hidden" name="is_sesuai" value="0">
+
                                 <div class="form-body">
                                   <h4 class="form-section"> Pengembalian/Penambahan Dropping</h4>
                                   <div class="row">
                                     <div class="col-md-12">
                                       <div class="form-group mt-1 pb-1">
                                         <label for="switcherySize11" class="font-medium-2 text-bold-600 mr-1">Pengembalian kelebihan</label>
-                                        <input type="checkbox" id="switcherySize11" class="switchery" checked name="p_is_pengembalian" value="1" />
+                                        <input type="checkbox" onchange="change_title(this)" id="switcherySize11" class="switchery" checked="checked" name="p_is_pengembalian" value="1" />
                                         <label for="switcherySize11" class="font-medium-2 text-bold-600 ml-1">Penambahan kekurangan</label>
                                       </div>
                                     </div>
                                   </div>
-                                  <h4 class="form-section"> Informasi Pengembalian/Penambahan</h4>
+                                  <div class="row">
+                                    <div class="col-md-12">
+                                      <div id="judul_kesesuaian">
+                                        <h4 class="form-section"> Informasi Penambahan</h4>
+                                      </div>
+                                    </div>
+                                  </div>
                                   <div class="row">
                                     <div class="col-md-6">
                                       <div class="form-group">
                                         <label for="projectinput1">Tanggal Transaksi</label>
-                                        <input readonly="" type="date" id="p_tgl_dropping" class="form-control" placeholder="{{date('d/m/Y')}}" name="p_tgl_dropping" value="{{ date('Y-m-d') }}">
+                                        <input readonly="" type="date" id="p_tgl_dropping" class="form-control" placeholder="{{ date('d/m/Y') }}" name="p_tgl_dropping" value="{{ date('Y-m-d') }}">
                                       </div>
                                     </div>
                                     <div class="col-md-6">
@@ -264,6 +271,16 @@
                       document.getElementById("confirmation-msg").innerHTML = '<p>Apakah anda yakin untuk menyimpan <b>data ketidaksesuaian dropping</b> yang telah anda input?</p>';
                     }
                   };
+
+                  function change_title(t){
+                    if(t.checked){
+                      document.getElementById("kesesuaian-form").style.display = 'inline';
+                      document.getElementById("judul_kesesuaian").innerHTML = '<h4 class="form-section"> Informasi Penambahan</h4>';
+                    } else {
+                      document.getElementById("kesesuaian-form").style.display = 'block';
+                      document.getElementById("judul_kesesuaian").innerHTML = '<h4 class="form-section"> Informasi Pengembalian</h4>';
+                    }
+                  }
 
                   function forms_submit() {
                     if(document.getElementById("switch1").checked){

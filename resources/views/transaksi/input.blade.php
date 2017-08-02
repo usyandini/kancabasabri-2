@@ -74,11 +74,19 @@
                                         <div class="card-block card-dashboard ">
                                             <!-- <p>Grid with filtering, editing, inserting, deleting, sorting and paging. Data provided by controller.</p> -->
                                             <div id="basicScenario"></div><br>
+                                            <div class="col-lg-6 col-md-12 pull-right">
+                                              <fieldset class="form-group">
+                                                <label class="custom-file center-block block">
+                                                  <input type="file" id="file_transaksi" class="custom-file-input">
+                                                  <span class="custom-file-control"></span>
+                                                </label>
+                                              </fieldset>
+                                            </div>
+                                            <div class="col-xs-4">
+                                              <label>Status<input type="text" class="form-control" id="status" readonly="readonly" value="Simpan"></input></label>
+                                            </div>
                                             <div class="col-xs-12">
                                                 <div class="form-group">
-                                                    <div class="col-xs-4">
-                                                      <label>Status<input type="text" class="form-control" id="status" readonly="readonly" value="Simpan"></input></label>
-                                                    </div>
                                                     <button onclick="simpan_jsgrid()" class="btn btn-primary pull-right"><i class="fa fa-check" id="status" value="Simpan"></i> Simpan</button>
                                                 </div>
                                             </div>
