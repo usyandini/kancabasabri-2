@@ -21,27 +21,25 @@ class TransaksiController extends Controller
     protected $itemModel;
     protected $subPosModel;
     protected $kegiatanModel;
+    protected $transaksiModel;
 
     public function __construct(
         AkunBank $bank,
         Item $item,
         SubPos $subPos,
-        Kegiatan $kegiatan)
+        Kegiatan $kegiatan,
+        Transaksi $transaksi)
     {
         $this->bankModel = $bank;
         $this->itemModel = $item;
         $this->subPosModel = $subPos;
         $this->kegiatanModel = $kegiatan;
+        $this->transaksiModel = $transaksi;
     }
 
     public function index() 
     {
         return view('transaksi.input', ['filters' => null]);
-    }
-
-    public function view_transaksi()
-    {
-    	return view('transaksi.viewtransaksi');
     }
 
     public function store(Request $request)
@@ -73,5 +71,24 @@ class TransaksiController extends Controller
         }
 
         return $return;
+    }
+    
+    public function transaksi_process($batch, Request $request)
+    {
+        $inputsTrans = $request->except('_method', '_token');
+        
+        $inputsTrans['created_by'] = \Auth::id();
+        $inputsTrans['created_at'] = $batch;
+        
+        Transaksi::create($inputsTrans);
+        
+        session()->flash('success', true);
+        return redirect('/transaksi/viewtransaksi/{created_at}');
+    }
+    
+    public function view_transaksi($batch)
+    {
+        $transaksi = $this->transaksiModel->where(['created_at', $batch])->get();
+        return view('transaksi.viewtransaksi', ['transaksi' => $transaksi]);
     }   
 }

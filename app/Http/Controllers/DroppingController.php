@@ -146,16 +146,6 @@ class DroppingController extends Controller
         return redirect('/dropping');
     }
 
-    public function pengembalian()
-    {
-    	return view ('pengembalian');
-    }
-
-    public function penambahan()
-    {
-    	return view ('penambahan');
-    }
-
     public function getChainedBank(Request $request)
     {
         $return = 0;

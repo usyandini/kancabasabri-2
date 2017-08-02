@@ -37,9 +37,11 @@ Route::group(['middleware' => 'auth'], function() {
    	
    	Route::group(['prefix' => 'transaksi'], function() {
    		Route::resource('/', 'TransaksiController');
-		Route::get('/viewtransaksi', 'TransaksiController@view_transaksi');
 
 		Route::get('/get', 'TransaksiController@getAll');
 		Route::get('/get/attributes/{type}', 'TransaksiController@getAttributes');
+		
+		Route::post('/post', 'TransaksiController@transaksi_process');
+		Route::get('/viewtransaksi/{created_at}', 'TransaksiController@view_transaksi');
 	});
 });

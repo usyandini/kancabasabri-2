@@ -89,7 +89,7 @@
                                   <div class="row">
                                     <div class="col-md-12">
                                       <div class="form-group">
-                                        <label for="companyName">Apakah nominal dropping sudah sesuai dengan pengajuan?</label>
+                                        <label for="companyName">Apakah nominal dropping sudah sesuai dengan pengajuan?</label><br>
                                         <input type="checkbox" onchange="change_checkbox(this)" class="form-control switch" id="switch1" checked="checked" name="is_sesuai" value="1" data-on-label="Sesuai" data-off-label="Tidak sesuai"/>
                                       </div>
                                     </div>

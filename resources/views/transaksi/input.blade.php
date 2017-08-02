@@ -70,7 +70,7 @@
                                         <h4 class="card-title">List Transaksi</h4>
                                         <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
                                     </div>
-                                    <div class="card-body collapse in">
+                                    <div class="card-body collapse in ">
                                         <div class="card-block card-dashboard ">
                                             <!-- <p>Grid with filtering, editing, inserting, deleting, sorting and paging. Data provided by controller.</p> -->
                                             <div id="basicScenario"></div><br>
@@ -87,7 +87,7 @@
                                             </div>
                                             <div class="col-xs-12">
                                                 <div class="form-group">
-                                                    <button onclick="simpan_jsgrid()" class="btn btn-primary pull-right"><i class="fa fa-check" id="status" value="Simpan"></i> Simpan</button>
+                                                    <button type="submit" onclick="simpan_jsgrid()" class="btn btn-primary pull-right" id="button_status" value="Simpan"><i class="fa fa-check"> Simpan</i></button>
                                                 </div>
                                             </div>
                                         </div>
@@ -146,10 +146,10 @@
                   //     ]
                   //   })
                   var x = [];
+
                   $(document).ready(function() {
                     $("#basicScenario").jsGrid( {
                       width: "auto",
-
                
                       sorting: true,
                       paging: true,
@@ -174,20 +174,33 @@
                           item["type"] = 'insert';
                           x.push(item);
                           console.log(x);
-                            // return $.ajax({
-                            //     type: "POST",
-                            //     url: "{{ url('transaksi') }}",
-                            //     data: {
-                            //       "item" : item,
-                            //       "_token" : "{{ csrf_token() }}"
-                            //     }
-                            // });
-                        }
+                          //   return $.ajax({
+                          //       type: "POST",
+                          //       url: "{{ url('transaksi/transaksi_process') }}",
+                          //       data: {
+                          //         "item" : item,
+                          //        "_token" : "{{ csrf_token() }}"
+                          //       }
+                          //   });
+                          /*$.extend(item, {
+                            tgl: $("#tgl").val(),
+                            item: parseInt($("#item").val(), 10),
+                            qty_item: parseInt($("#qty_item").val(), 10),
+                            desc: $("#desc").val(),
+                            sub_pos: parseInt($("#sub_pos").val(), 10),
+                            mata_anggaran: parseInt($("#mata_anggaran").val(), 10),
+                            bank: $("#bank").val(),
+                            account: $("#account").val(),
+                            anggaran: $("#anggaran").val(),
+                            total: $("#total").val()
+                          });
+                            $("#basicScenario").jsGrid(isNew ? "insertItem" : "loadData", item);*/
+                          }
 
                       }, 
 
                       fields: [
-                          { name: "tgl", width: 100, type: "text", title: "Tanggal" },
+                          { name: "tgl", type: "text", width: 100, title: "Tanggal" },
                           { name: "item", width: 300, type: "select", items: getData('item'), valueField: "MAINACCOUNTID", textField: "NAME", title: "Item", align: "center" },
                           { name: "qty_item", width: 100, type: "number", title: "Jumlah Item" },
                           { name: "desc", width: 100, type: "text", title: "Uraian", align: "center" },
@@ -201,25 +214,40 @@
                         ]
                     });
                   });
-
+                  
                   function getData(type) {
-                      var returned = function () {
-                          var tmp = null;
-                          $.ajax({
-                              'async': false,
-                              'type': "GET",
-                              'dataType': 'JSON',
-                              'url': "{{ url('transaksi/get/attributes') }}/" +type,
-                              'success': function (data) {
-                                  tmp = data;
-                              }
-                          });
-                          return tmp;
-                      }();
-                      return returned;
-                    }
+                    var returned = function () {
+                        var tmp = null;
+                        $.ajax({
+                            'async': false,
+                            'type': "GET",
+                            'dataType': 'JSON',
+                            'url': "{{ url('transaksi/get/attributes') }}/" +type,
+                            'success': function (data) {
+                                tmp = data;
+                            }
+                        });
+                        return tmp;
+                    }();
+                    return returned;
+                  };
 
-                    function simpan_jsgrid() {
+                  function simpan_jsgrid(){
+                    /*$('#basicScenario').each(function(){
+                        x.push($(this).html());
+                    });
+                    $('#button_status').click(function(){
+                        $.ajax({
+                          type : "POST",
+                          url : "{{ url('transaksi/transaksi_process') }}",
+                          data : "content="+x,
+                          success: function(item) {
+                              alert(item);// alert the data from the server
+                          },
+                          error : function() {
+                          }
+                         });
+                    });*/
                     console.log(x);
                   };
                 </script>
