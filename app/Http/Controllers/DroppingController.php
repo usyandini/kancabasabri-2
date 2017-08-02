@@ -38,13 +38,7 @@ class DroppingController extends Controller
 
     public function index() 
     {
-        // dd($this->getAll());
         return view('dropping.index', ['kcabangs' => $this->kantorCabangs, 'filters' => null]);
-    }
-
-    public function table()
-    {
-    	return view('table');
     }
 
     public function getAll()

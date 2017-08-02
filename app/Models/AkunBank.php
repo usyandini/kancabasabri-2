@@ -9,4 +9,9 @@ class AkunBank extends Model
     protected $connection = 'sqlsrv2';
 
     protected $table = 'PIL_BANK_VIEW';
+
+	public function kcabang()
+	{
+		return $this->belongsTo('App\Models\KantorCabang', 'ID_CABANG', 'VALUE');
+	}    
 }

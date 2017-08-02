@@ -140,13 +140,15 @@
                   var x = [];
                   $(document).ready(function() {
                     $("#basicScenario").jsGrid( {
-                      width: "100%",
+                      width: "auto",
+
                
                       sorting: true,
                       paging: true,
                       autoload: true,
                       editing: true,
                       inserting: true,
+                      align: "center",
                
                       pageSize: 5,
                       pageButtonCount: 10,
@@ -155,7 +157,7 @@
                         loadData: function(filter) {
                           return $.ajax({
                               type: "GET",
-                              url: "{{  url('dropping/get')}}",
+                              url: "{{  url('transaksi/get')}}",
                               data: filter,
                               dataType: "JSON"
                           })
@@ -177,24 +179,39 @@
                       }, 
 
                       fields: [
-                          { name: "journalnum", type: "text", title: "Nomor Jurnal", width: 90 },
-                          { name: "bank", type: "text", title: "Nama Bank", width: 80 },
-                          { name: "banknum", type: "text", title: "No. Rekening", width: 100 },
-                          { name: "transdate", type: "text", title: "Tanggal Dropping", width: 100 },
-                          { name: "debit", type: "text", title: "Nominal", width: 100 },
-                          { name: "company", type: "text", title: "Kantor Cabang", width: 100 },
-                          { name: "stat", type: "text", title: "Status Posting", itemTemplate:function(e) {
-                            var content = e == '1' ? "Sesuai" : (e == '0' ? "Tidak sesuai" : 'Belum posting');
-                            var tag = e == '1' ? "tag-success" : (e == '0' ? "tag-default" : 'tag-info');
-                            return "<span class='tag "+tag+"'>"+content+"</span>" ;
-                            } 
-                          },
-                          { type: "control" }
+                          { name: "tgl", width: 100, type: "text", title: "Tanggal" },
+                          { name: "item", width: 300, type: "select", items: getData('item'), valueField: "MAINACCOUNTID", textField: "NAME", title: "Item", align: "center" },
+                          { name: "qty_item", width: 100, type: "number", title: "Jumlah Item" },
+                          { name: "desc", width: 100, type: "text", title: "Uraian", align: "center" },
+                          { name: "sub_pos", width: 100, type: "select", items: getData('subpos'), valueField: "VALUE", textField: "DESCRIPTION", title: "Subpos"},
+                          { name: "mata_anggaran", width: 200, type: "select", items: getData('kegiatan'), valueField: "VALUE", textField: "DESCRIPTION", title: "Mata Anggaran"},
+                          { name: "bank", width: 200, type: "select", items: getData('bank'), valueField: "BANK", textField: "BANK_NAME", title: "Bank/Kas"},
+                          { name: "account", width: 200, type: "text", title: "Account" },
+                          { name: "anggaran", width: 200, type: "text", title: "Anggaran tersedia" },
+                          { name: "total", width: 100, type: "text", title: "Total" },
+                          { type: "control", width: 100 }
                         ]
                     });
                   });
 
-                  function simpan_jsgrid() {
+                  function getData(type) {
+                      var returned = function () {
+                          var tmp = null;
+                          $.ajax({
+                              'async': false,
+                              'type': "GET",
+                              'dataType': 'JSON',
+                              'url': "{{ url('transaksi/get/attributes') }}/" +type,
+                              'success': function (data) {
+                                  tmp = data;
+                              }
+                          });
+                          return tmp;
+                      }();
+                      return returned;
+                    }
+
+                    function simpan_jsgrid() {
                     console.log(x);
                   };
                 </script>
