@@ -49,7 +49,7 @@ class TransaksiController extends Controller
 
     public function getAll()
     {
-        return response()->json($this->bankModel->get());
+        return response()->json($this->transaksiModel->get());
     }
 
     public function getAttributes($type)
@@ -57,16 +57,20 @@ class TransaksiController extends Controller
         $return = null;
         switch ($type) {
             case 'item':
-                $return = response()->json($this->itemModel->get());
+                $return = $this->itemModel->get();
+                $return->splice(0,0,[["MAINACCOUNTID" => 0, "NAME" => "Silahkan pilih nama item"]]);
                 break;
             case 'bank':
-                $return = response()->json($this->bankModel->get());
+                $return = $this->bankModel->get();
+                $return->splice(0,0,[["BANK" => 0, "BANK_NAME" => "Silahkan pilih bank"]]);
                 break;       
             case 'subpos':
-                $return = response()->json($this->subPosModel->get());
+                $return = $this->subPosModel->get();
+                $return->splice(0,0,[["VALUE" => 0, "DESCRIPTION" => "Silahkan pilih subpos"]]);
                 break;
             case 'kegiatan':
-                $return = response()->json($this->kegiatanModel->get());
+                $return = $this->kegiatanModel->get();
+                $return->splice(0,0,[["VALUE" => 0, "DESCRIPTION" => "Silahkan pilih kegiatan"]]);
                 break;
         }
 
