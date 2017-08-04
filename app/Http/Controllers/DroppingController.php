@@ -55,7 +55,9 @@ class DroppingController extends Controller
                 'credit'        => 'IDR '. number_format($dropping->KREDIT, 2),
                 'banknum'       => $dropping->REKENING_DROPPING,
                 'company'       => $dropping->CABANG_DROPPING,
-                'stat'          => $dropping->tarikTunai['is_sesuai']
+                'stat'          => $dropping->tarikTunai['is_sesuai'],
+                'nominal_tarik' => $dropping->tarikTunai['nominal_tarik'],
+                'sisa'          => 'IDR '. number_format($dropping->tarikTunai['sisa_dropping'], 2)
             ];
         }
         return response()->json($result);
@@ -115,13 +117,14 @@ class DroppingController extends Controller
     {
         $dropping = $this->jDroppingModel->where([['RECID', $id_drop], ['DEBIT', '>', 0]])->firstOrFail();
         $akunBank = $this->akunBankModel->get();
-    	return view('dropping.tariktunai', ['dropping' => $dropping], ['kcabangs' => $this->kantorCabangs]);
+        $tariktunai = $this->tarikTunaiModel->get();
+    	return view('dropping.tariktunai', ['dropping' => $dropping], ['kcabangs' => $this->kantorCabangs], ['tariktunai' => $tariktunai]);
     }
 
     public function tarik_tunai_process($id_drop, Request $request)
     {
         if ($request->is_sesuai == "1") {
-            $inputsTT = $request->except('_method', '_token');
+            $inputsTT = $request->except('_method', '_token', 'nominal');
         } else {
             $inputsTT = $request->except('_method', '_token', 'p_akun_bank', 'p_cabang', 'is_pengembalian', 'p_nominal', 'p_rek_bank', 'p_tgl_dropping');
             $inputsPD = array(
@@ -136,13 +139,21 @@ class DroppingController extends Controller
             $penyesuaian = PenyesuaianDropping::create($inputsPD);
             $inputsTT['id_penyesuaian'] = $penyesuaian->id;
         }
-        
-        $inputsTT['created_by'] = \Auth::id();
-        $inputsTT['id_dropping'] = $id_drop;
-        
-        TarikTunai::create($inputsTT);
-        
-        session()->flash('success', true);
+
+        $request->sisa_dropping = $request->nominal;
+        if($request->sisa_dropping != 0 && $request->nominal_tarik <= $request->sisa_dropping){
+            $inputsTT['sisa_dropping'] = ($request->sisa_dropping - $request->nominal_tarik);
+
+            $inputsTT['nominal'] = $request->sisa_dropping;
+            $inputsTT['created_by'] = \Auth::id();
+            $inputsTT['id_dropping'] = $id_drop;
+            
+            TarikTunai::create($inputsTT);
+            
+            session()->flash('success', true);
+        } else {
+            session()->flash('success', false);
+        }
         return redirect('/dropping');
     }
 

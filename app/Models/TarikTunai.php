@@ -19,7 +19,9 @@ class TarikTunai extends Model
     	'is_sesuai', 
     	'id_penyesuaian', 
     	'created_by',
-    	'tgl_dropping'
+    	'tgl_dropping',
+        'nominal_tarik',
+        'sisa_dropping'
     ];
 
     public function creator()

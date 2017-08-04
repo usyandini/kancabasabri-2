@@ -112,7 +112,7 @@
                                     <div class="card-body collapse in">
                                         <div class="card-block card-dashboard ">
                                             <!-- <p>Grid with filtering, editing, inserting, deleting, sorting and paging. Data provided by controller.</p> -->
-                                            <div id="basicScenario"></div>
+                                            <div id="tabelDropping"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -140,7 +140,7 @@
 
                 <script type="text/javascript">
                   $(document).ready(function() {
-                    $("#basicScenario").jsGrid( {
+                    $("#tabelDropping").jsGrid( {
                       width: "100%",
                
                       sorting: true,
@@ -166,6 +166,7 @@
                           { name: "banknum", type: "text", title: "No. Rekening", width: 100 },
                           { name: "transdate", type: "text", title: "Tanggal Dropping", width: 100 },
                           { name: "debit", type: "text", title: "Nominal", width: 100 },
+                          { name: "sisa", type: "text", title: "Sisa", width: 100 },
                           { name: "company", type: "text", title: "Kantor Cabang", width: 100 },
                           { name: "stat", type: "text", title: "Status Posting", itemTemplate:function(e) {
                             var content = e == '1' ? "Sesuai" : (e == '0' ? "Tidak sesuai" : 'Belum posting');

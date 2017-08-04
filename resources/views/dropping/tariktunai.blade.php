@@ -51,7 +51,7 @@
                               <form class="form" id="tariktunai-form" method="POST" action="{{ url('dropping/tariktunai/'.$dropping->RECID) }}">
                               {{ csrf_field() }}
                                 <div class="form-body">
-                                  <h4 class="form-section"> Informasi Tarik Tunai</h4>
+                                  <h4 class="form-section"> Kesesuaian Dropping</h4>
                                   <div class="row">
                                     <div class="col-md-6">
                                       <div class="form-group">
@@ -62,37 +62,46 @@
                                     <div class="col-md-6">
                                       <div class="form-group">
                                         <label for="projectinput2">Nominal Dropping (Dalam IDR)</label>
-                                        <input type="text" readonly="" id="nominal_tunai" class="form-control" placeholder="number_format($dropping->DEBIT, 2)" name="nominal" value="{{ $dropping->DEBIT }}">
+                                        <input type="text" readonly="" id="nominal_dropping" class="form-control" placeholder="number_format($dropping->DEBIT, 2)" name="nominal" value="{{ $dropping->DEBIT }}">
                                       </div>
                                     </div>
-                                  </div>
-                                  <h4 class="form-section">Informasi Bank</h4>
-                                  <div class="row">
-                                    <div class="col-md-6">
-                                      <div class="form-group">
-                                        <label for="companyName">Nama Bank</label>
-                                        <input type="text" readonly="" id="akun_bank" class="form-control" placeholder="Nama Bank" name="akun_bank" value="{{ $dropping->BANK_DROPPING }}">
-                                      </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                      <div class="form-group">
-                                        <label for="companyName">Nomor Rekening</label>
-                                        <input type="text" readonly="" id="rek_bank" class="form-control" placeholder="Nama Bank" name="rek_bank" value="{{ $dropping->REKENING_DROPPING }}">
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <div class="form-group">
-                                    <label for="projectinput8">Cabang Kantor</label>
-                                    <input type="text" readonly="" id="cabang" class="form-control" placeholder="Cabang Kantor" name="cabang" value="{{ $dropping->CABANG_DROPPING }}">
-                                  </div>
-                                  <h4 class="form-section">Kesesuaian Dropping</h4>
-                                  <div class="row">
                                     <div class="col-md-12">
                                       <div class="form-group">
                                         <label for="companyName">Apakah nominal dropping sudah sesuai dengan pengajuan?</label><br>
                                         <input type="checkbox" onchange="change_checkbox(this)" class="form-control switch" id="switch1" checked="checked" name="is_sesuai" value="1" data-on-label="Sesuai" data-off-label="Tidak sesuai"/>
                                       </div>
                                     </div>
+                                  </div>
+                                  <h4 class="form-section">Informasi Tarik Tunai</h4>
+                                  <div class="row">
+                                    <div class="col-md-6">
+                                      <div class="form-group">
+                                        <label for="projectinput1">Tanggal Tarik Tunai</label>
+                                        <input type="date" readonly="" id="tgl_tarik" class="form-control" placeholder="Tanggal Tarik Tunai" name="tgl_tarik" value="{{ date("Y-m-d") }}">
+                                      </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                      <div class="form-group">
+                                        <label for="projectinput2">Nominal Tarik Tunai(Dalam IDR)</label>
+                                        <input type="text" id="nominal_tarik" class="form-control" placeholder="Nominal Tarik Tunai" name="nominal_tarik" value="">
+                                      </div>
+                                    </div>
+                                    <div class="col-md-6 pull-right">
+                                      <div class="form-group">
+                                        <label for="companyName">Nomor Rekening</label>
+                                        <input type="text" readonly="" id="rek_bank" class="form-control" placeholder="Rekening Bank" name="rek_bank" value="{{ $dropping->REKENING_DROPPING }}">
+                                      </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                      <div class="form-group">
+                                        <label for="companyName">Nama Bank</label>
+                                        <input type="text" readonly="" id="akun_bank" class="form-control" placeholder="Nama Bank" name="akun_bank" value="{{ $dropping->BANK_DROPPING }}">
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="form-group">
+                                    <label for="projectinput8">Kantor Cabang</label>
+                                    <input type="text" readonly="" id="cabang" class="form-control" placeholder="Kantor Cabang" name="cabang" value="{{ $dropping->CABANG_DROPPING }}">
                                   </div>
                                 </div>
                               </form>
@@ -165,7 +174,7 @@
                                   <div class="row">
                                     <div class="col-md-12">
                                       <div class="form-group">
-                                        <label for="projectinput8">Cabang Kantor</label>
+                                        <label for="projectinput8">Kantor Cabang</label>
                                         <select class="form-control kcabang" id="cabang" name="p_cabang" required="">
                                             <option value="0">--Pilih Kantor Cabang</option>
                                           @foreach($kcabangs as $cabang)
