@@ -21,6 +21,7 @@
         <!-- END VENDOR CSS-->
         <!-- BEGIN STACK CSS-->
         <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/bootstrap-extended.min.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/jquery-ui.css') }}">
         <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/app.min.css') }}">
         <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/colors.min.css')}}">
         <!-- END STACK CSS-->
@@ -119,6 +120,7 @@
         </footer>
         <!-- BEGIN VENDOR JS-->
         <script src="{{ asset('app-assets/vendors/js/vendors.min.js') }}" type="text/javascript"></script>
+        <script src="{{ asset('app-assets/vendors/js/ui/jquery-ui.min.js') }}"></script>
         <!-- BEGIN VENDOR JS-->
         @yield('customjs')
         <!-- BEGIN STACK JS-->

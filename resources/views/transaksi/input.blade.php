@@ -117,112 +117,181 @@
                 <script type="text/javascript" src="{{ asset('app-assets/js/scripts/ui/breadcrumbs-with-stats.min.js') }}"></script>
                 {{-- <script src="{{ asset('app-assets/js/scripts/tables/jsgrid/jsgrid.min.js') }}" type="text/javascript"></script> --}}
                 <script type="text/javascript">
-                  // $(document).ready(function() {
-                  //   $("#basicScenario").jsGrid( {
-                  //     width:"100%", 
-                  //     //height:"400px",
-                  //     // sorting:true, 
-                  //     autoload:true,
-                  //     paging:true,
-                  //     editButton:true,
-                  //     deleteButton:true,
-                  //     editing:true,
-
-                  //     deleteConfirm: "Apakah anda yakin untuk menghapus?",
-                  //     controller: {}                       
-                       
-                  //     fields: [
-                  //           { name: "tgl_trans", type: "text", title: "Tanggal" },
-                  //           { name: "item_trans", type: "select", title: "Item" }, 
-                  //           { name: "jml_item", type: "number", title: "Jumlah Item" },
-                  //           { name: "uraian", type: "text", title: "Uraian"},
-                  //           { name: "subpos", type: "select", title: "Sub Pos"},
-                  //           { name: "mata_anggaran", type: "select", title: "Mata Anggaran", width:200 }, 
-                  //           { name: "kasbank", type: "select", title: "Kas/Bank" }, 
-                  //           { name: "account", type: "text", title: "Account", items: db.countries, valueField: "id_akun", width:200 }, 
-                  //           { name: "anggaran", type: "text", title: "Anggaran Tersedia", width:200, sorting: !1 }, 
-                  //           { name: "jml_trans", type: "text", title: "Jumlah Transaksi", width:200, sorting: !1 }, 
-                  //           { type: "control" }
-                  //     ]
-                  //   })
                   var x = [];
+                  var account = item = m_anggaran = subpos = account_field = null;
 
                   $(document).ready(function() {
+                    var MyDateField = function(config) {
+                        jsGrid.Field.call(this, config);
+                    };
+                     
+                    MyDateField.prototype = new jsGrid.Field({
+                     
+                        css: "date-field", align: "center",
+                     
+                        myCustomProperty: "foo",
+                     
+                        sorter: function(date1, date2) {
+                            return new Date(date1) - new Date(date2);
+                        },
+                     
+                        itemTemplate: function(value) {
+                            return value ? ("0" + new Date(value).getDate()).slice(-2) + '/' + ("0" + (new Date(value).getMonth() + 1)).slice(-2) + '/' + new Date(value).getFullYear() : '';
+                        },
+                     
+                        insertTemplate: function(value) {
+                            return this._insertPicker = $("<input>").datepicker({ defaultDate: new Date() });
+                        },
+                     
+                        editTemplate: function(value) {
+                            return this._editPicker = $("<input>").datepicker().datepicker("setDate", new Date(value));
+                        },
+                     
+                        insertValue: function() {                            
+                            return this._insertPicker.datepicker("getDate")!= null ? this._insertPicker.datepicker("getDate").toISOString() : '';
+                        },
+                        editValue: function() {
+                            return this._editPicker.datepicker("getDate").toISOString();
+                        }
+                    });
+                     
+                    jsGrid.fields.date = MyDateField;
+
                     $("#basicScenario").jsGrid( {
                       width: "auto",
                
-                      sorting: true,
-                      paging: true,
-                      autoload: true,
-                      editing: true,
-                      inserting: true,
-                      align: "center",
+                      sorting: true, paging: true, autoload: true, editing: true, inserting: true,
                
-                      pageSize: 5,
-                      pageButtonCount: 10,
+                      pageSize: 5, pageButtonCount: 10,
                       
                       controller: {
                         loadData: function(filter) {
                           return $.ajax({
-                              type: "GET",
-                              url: "{{  url('transaksi/get')}}",
-                              data: filter,
-                              dataType: "JSON"
+                              type: "GET", url: "{{  url('transaksi/get')}}", data: filter, dataType: "JSON"
                           })
                         },
                         insertItem: function (item) {
                           item["type"] = 'insert';
                           x.push(item);
                           console.log(x);
-                          //   return $.ajax({
-                          //       type: "POST",
-                          //       url: "{{ url('transaksi/transaksi_process') }}",
-                          //       data: {
-                          //         "item" : item,
-                          //        "_token" : "{{ csrf_token() }}"
-                          //       }
-                          //   });
-                          /*$.extend(item, {
-                            tgl: $("#tgl").val(),
-                            item: parseInt($("#item").val(), 10),
-                            qty_item: parseInt($("#qty_item").val(), 10),
-                            desc: $("#desc").val(),
-                            sub_pos: parseInt($("#sub_pos").val(), 10),
-                            mata_anggaran: parseInt($("#mata_anggaran").val(), 10),
-                            bank: $("#bank").val(),
-                            account: $("#account").val(),
-                            anggaran: $("#anggaran").val(),
-                            total: $("#total").val()
-                          });
-                            $("#basicScenario").jsGrid(isNew ? "insertItem" : "loadData", item);*/
-                          }
-
+                        }
                       }, 
 
                       fields: [
-                          { name: "tgl", type: "text", width: 100, title: "Tanggal" },
-                          { name: "item", width: 300, type: "select", items: getData('item'), valueField: "MAINACCOUNTID", textField: "NAME", title: "Item", align: "center" },
-                          { name: "qty_item", width: 100, type: "number", title: "Jumlah Item" },
-                          { name: "desc", width: 100, type: "text", title: "Uraian", align: "center" },
-                          { name: "sub_pos", width: 100, type: "select", items: getData('subpos'), valueField: "VALUE", textField: "DESCRIPTION", title: "Subpos"},
-                          { name: "mata_anggaran", width: 200, type: "select", items: getData('kegiatan'), valueField: "VALUE", textField: "DESCRIPTION", title: "Mata Anggaran"},
-                          { name: "bank", width: 200, type: "select", items: getData('bank'), valueField: "BANK", textField: "BANK_NAME", title: "Bank/Kas"},
-                          { name: "account", width: 200, type: "text", title: "Account" },
-                          { name: "anggaran", width: 200, type: "text", title: "Anggaran tersedia" },
-                          { name: "total", width: 100, type: "text", title: "Total" },
-                          { type: "control", width: 100 }
+                          { 
+                            type: "control", 
+                            width: 60 },
+                          { 
+                            name: "tgl", 
+                            type: "date", 
+                            width: 150, 
+                            title: "Tanggal", 
+                            align: "center",
+                            validate: {
+                              validator : "required",
+                              message : "Kolom tanggal tidak boleh kosong."  
+                            } },
+                          { 
+                            name: "item", 
+                            width: 300, 
+                            align: "center",
+                            type: "select", 
+                            items: getData('item'), 
+                            valueField: "MAINACCOUNTID", 
+                            textField: "NAME", 
+                            title: "Item", 
+                            insertTemplate: function() {
+                              var result = jsGrid.fields.select.prototype.insertTemplate.call(this);
+                                result.on("change", function() {
+                                    populateAccount('item', $(this).val());
+                                });
+                                return result; } },
+                          { 
+                            name: "qty_item", 
+                            width: 100, type: 
+                            "number", 
+                            title: "Jumlah Item",
+                            validate: {
+                              validator: "range",
+                              message: "Kolom jumlah item tidak boleh 0.",
+                              param: [1, 99999999999]
+                            }  },
+                          { 
+                            name: "desc", 
+                            width: 300, 
+                            type: "textarea", 
+                            title: "Uraian", 
+                            align: "center",
+                            validate: {
+                              validator : "required",
+                              message : "Kolom uraian tidak boleh kosong."  
+                            }  },
+                          { 
+                            name: "sub_pos", 
+                            width: 200, 
+                            type: "select", 
+                            items: getData('subpos'), 
+                            valueField: "VALUE", 
+                            textField: "DESCRIPTION", 
+                            title: "Subpos", 
+                            insertTemplate: function() {
+                              var result = jsGrid.fields.select.prototype.insertTemplate.call(this);
+                                result.on("change", function() {
+                                    populateAccount('subpos', $(this).val());
+                                });
+                                return result; } },
+                          { 
+                            name: "mata_anggaran", 
+                            width: 200, 
+                            type: "select", 
+                            items: getData('kegiatan'), 
+                            valueField: "VALUE", 
+                            textField: "DESCRIPTION", 
+                            title: "Mata Anggaran", 
+                            insertTemplate: function() {
+                                var result = jsGrid.fields.select.prototype.insertTemplate.call(this);
+                                result.on("change", function() {
+                                    populateAccount('m_anggaran', $(this).val());
+                                });
+                                return result; } },
+                          { 
+                            name: "bank", 
+                            width: 200, 
+                            type: "select", 
+                            items: getData('bank'), 
+                            valueField: "BANK", 
+                            textField: "BANK_NAME", 
+                            title: "Bank/Kas" },
+                          { 
+                            name: "account", 
+                            width: 200, 
+                            align: "center",
+                            type: "text", 
+                            title: "Account", 
+                            readOnly: true, 
+                            insertTemplate: function() {
+                              account_field = jsGrid.fields.text.prototype.insertTemplate.call(this);
+                              return account_field; } },
+                          { 
+                            name: "anggaran", 
+                            width: 200, 
+                            type: "number", 
+                            title: "Anggaran tersedia" },
+                          { 
+                            name: "total", 
+                            align: "center",
+                            width: 200, 
+                            type: "text", 
+                            title: "Total" }
                         ]
                     });
                   });
-                  
+
                   function getData(type) {
                     var returned = function () {
                         var tmp = null;
                         $.ajax({
-                            'async': false,
-                            'type': "GET",
-                            'dataType': 'JSON',
-                            'url': "{{ url('transaksi/get/attributes') }}/" +type,
+                            'async': false, 'type': "GET", 'dataType': 'JSON', 'url': "{{ url('transaksi/get/attributes') }}/" +type,
                             'success': function (data) {
                                 tmp = data;
                             }
@@ -230,6 +299,27 @@
                         return tmp;
                     }();
                     return returned;
+                  };
+
+                  function populateAccount(type, value) {
+                    switch (type) {
+                      case 'item':
+                        item = value;
+                        break;
+                      case 'm_anggaran':
+                        m_anggaran = value;
+                        break;
+                      case 'subpos':
+                        subpos = value;
+                        break;
+                    }
+                    
+                    generateAccount(item, m_anggaran, subpos);
+                  }
+
+                  function generateAccount(item, m_anggaran, subpos) {
+                    account = item + '-THT-' + subpos + '-' + m_anggaran;   
+                    $(account_field).val(account);
                   };
 
                   function simpan_jsgrid(){
@@ -247,7 +337,7 @@
                           error : function() {
                           }
                          });
-                    });*/
+                    });*/               
                     console.log(x);
                   };
                 </script>
