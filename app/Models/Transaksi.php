@@ -21,6 +21,7 @@ class Transaksi extends Model
     	'account',
     	'anggaran',
     	'total',
-    	'created_by'
+    	'created_by',
+        'batch_id'
     ];
 }

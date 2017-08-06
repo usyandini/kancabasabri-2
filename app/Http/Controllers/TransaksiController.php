@@ -11,8 +11,10 @@ use App\Models\Item;
 use App\Models\Kegiatan;
 use App\Models\SubPos;
 use App\Models\Transaksi;
+use App\Models\BerkasTransaksi;
 
 use Validator;
+use App\Services\FileUpload;
 
 class TransaksiController extends Controller
 {
@@ -44,7 +46,47 @@ class TransaksiController extends Controller
 
     public function store(Request $request)
     {
-    	dd($request->all());
+        // dd($request->berkas);
+        $current_batch = $this->transaksiModel->limit(1)->orderBy('id', 'desc')->first()['batch_id'] ? $this->transaksiModel->limit(1)->orderBy('id', 'desc')->first()['batch_id']+1 : 1;
+        $batch_values = array();
+
+        foreach (json_decode($request->batch_values) as $value) {
+            array_push($batch_values, [
+                    'tgl'       => $value->tgl,
+                    'item'      => (int)$value->item,
+                    'qty_item'  => (int)$value->qty_item,
+                    'desc'      => $value->desc,
+                    'sub_pos'   => (int)$value->sub_pos,
+                    'mata_anggaran' => (int)$value->mata_anggaran,
+                    'akun_bank'      => (int)$value->bank,
+                    'account'   => $value->account,
+                    'anggaran'  => (int)$value->anggaran,
+                    'total'     => (int)$value->total,
+                    'created_by'    => \Auth::user()->id,
+                    'batch_id'      => $current_batch,
+                    'created_at'    => \Carbon\Carbon::now(),
+                    'updated_at'    => \Carbon\Carbon::now()
+            ]);
+        }
+        
+        Transaksi::insert($batch_values);
+
+        if ($request->berkas != null) {
+            $this->storeBerkas($request->berkas, $current_batch);
+        }
+    }
+
+    public function storeBerkas($inputs, $current_batch)
+    {
+        $fileUpload = new FileUpload();
+        $newNames = $fileUpload->multipleUpload($inputs, 'transaksi');
+
+        $store = array();
+        foreach (explode('||', $newNames) as $value) {
+            array_push($store, ['file_name' => $value, 'batch_id' => $current_batch, 'created_at' => \Carbon\Carbon::now(), 'updated_at' => \Carbon\Carbon::now()]);
+        }
+
+        BerkasTransaksi::insert($store);
     }
 
     public function getAll()
@@ -58,23 +100,19 @@ class TransaksiController extends Controller
         switch ($type) {
             case 'item':
                 $return = $this->itemModel->get();
-                $return->splice(0,0,[["MAINACCOUNTID" => 0, "NAME" => "Silahkan pilih nama item"]]);
                 break;
             case 'bank':
                 $return = $this->bankModel->get();
-                $return->splice(0,0,[["BANK" => 0, "BANK_NAME" => "Silahkan pilih bank"]]);
                 break;       
             case 'subpos':
                 $return = $this->subPosModel->get();
-                $return->splice(0,0,[["VALUE" => 0, "DESCRIPTION" => "Silahkan pilih subpos"]]);
                 break;
             case 'kegiatan':
                 $return = $this->kegiatanModel->get();
-                $return->splice(0,0,[["VALUE" => 0, "DESCRIPTION" => "Silahkan pilih kegiatan"]]);
                 break;
         }
 
-        return $return;
+        return response()->json($return);
     }
     
     public function transaksi_process($batch, Request $request)
