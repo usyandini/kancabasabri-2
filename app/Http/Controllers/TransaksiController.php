@@ -50,30 +50,37 @@ class TransaksiController extends Controller
         $current_batch = $this->transaksiModel->limit(1)->orderBy('id', 'desc')->first()['batch_id'] ? $this->transaksiModel->limit(1)->orderBy('id', 'desc')->first()['batch_id']+1 : 1;
         $batch_values = array();
 
+        // dd($request->batch_values);
         foreach (json_decode($request->batch_values) as $value) {
             array_push($batch_values, [
-                    'tgl'       => $value->tgl,
-                    'item'      => (int)$value->item,
-                    'qty_item'  => (int)$value->qty_item,
-                    'desc'      => $value->desc,
-                    'sub_pos'   => (int)$value->sub_pos,
-                    'mata_anggaran' => (int)$value->mata_anggaran,
-                    'akun_bank'      => (int)$value->bank,
-                    'account'   => $value->account,
-                    'anggaran'  => (int)$value->anggaran,
-                    'total'     => (int)$value->total,
+                    'tgl'           => $value->tgl,
+                    'item'          => $value->item,
+                    'qty_item'      => (int)$value->qty_item,
+                    'desc'          => $value->desc,
+                    'sub_pos'       => $value->sub_pos,
+                    'mata_anggaran' => $value->mata_anggaran,
+                    'akun_bank'     => $value->bank,
+                    'account'       => $value->account,
+                    'anggaran'      => (int)$value->anggaran,
+                    'total'         => (int)$value->total,
                     'created_by'    => \Auth::user()->id,
                     'batch_id'      => $current_batch,
                     'created_at'    => \Carbon\Carbon::now(),
                     'updated_at'    => \Carbon\Carbon::now()
             ]);
         }
+        // dd($batch_values);
         
         Transaksi::insert($batch_values);
+        $batch_counter = count($batch_values);
 
-        if ($request->berkas != null) {
+        if ($request->berkas[0] != null) {
             $this->storeBerkas($request->berkas, $current_batch);
         }
+
+
+        session()->flash('success', $batch_counter);
+        return redirect('transaksi');
     }
 
     public function storeBerkas($inputs, $current_batch)
@@ -91,7 +98,26 @@ class TransaksiController extends Controller
 
     public function getAll()
     {
-        return response()->json($this->transaksiModel->get());
+        $transaksi = $this->transaksiModel->get();
+        
+        $result = array();
+        foreach ($transaksi as $value) {
+            array_push($result, [
+                'id'            => $value->id,
+                'tgl'           => $value->tgl,
+                'item'          => $value->item,
+                'qty_item'      => $value->qty_item,
+                'desc'          => $value->desc,
+                'sub_pos'       => $value->sub_pos,
+                'mata_anggaran' => $value->mata_anggaran,
+                'bank'          => $value->akun_bank,
+                'account'       => $value->account,
+                'anggaran'      => $value->anggaran,
+                'total'         => $value->total
+                ]);
+        }
+        // dd($result);
+        return response()->json($result);
     }
 
     public function getAttributes($type)
@@ -111,7 +137,7 @@ class TransaksiController extends Controller
                 $return = $this->kegiatanModel->get();
                 break;
         }
-
+        // dd($return);
         return response()->json($return);
     }
     

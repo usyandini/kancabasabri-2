@@ -4,7 +4,12 @@
                 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/tables/jsgrid/jsgrid-theme.min.css') }}">
                 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/tables/jsgrid/jsgrid.min.css') }}">
                 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/forms/selects/select2.min.css') }}">
-                <link rel="stylesheet" type="text/css" href="https://pixinvent.com/stack-responsive-bootstrap-4-admin-template/app-assets/css/core/colors/palette-callout.min.css">
+                <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/core/colors/palette-callout.min.css') }}">
+                <style type="text/css">
+                  .hide {
+                    display: none;
+                  }
+                </style>
                 @endsection
 
                 @section('content')
@@ -73,9 +78,19 @@
                                     <div class="card-body collapse in ">
                                         <div class="card-block card-dashboard ">
                                           <div class="row">
+                                            @if(session('success'))
+                                            <div class="col-xs-7">
+                                                <div class="alert alert-success">
+                                                  Batch transaksi sebanyak <b>{{ session('success') }} baris berhasil disimpan</b>.
+                                                </div>
+                                              </div>
+                                            @endif
                                             <div class="col-md-6">
                                               <div class="alert alert-info mb-2" role="alert" id="alert-dropping" style="display: block;">
                                                 <strong>Perhatian!</strong> Silahkan menambahkan transaksi baru melalui tombol <i class="fa fa-plus"></i> pada tabel.
+                                              </div>
+                                              <div class="alert alert-warning mb-2" role="alert" id="alert-dropping" style="display: block;">
+                                                <strong>Perhatian!</strong> Sistem akan melakukan generate secara otomatis untuk <b>kolom Account</b>. User tidak perlu melakukan input.
                                               </div>
                                             </div>
                                           </div>
@@ -93,9 +108,14 @@
                                                 <input type="hidden" name="batch_values" id="batch_values">
                                               </div>
                                               <div class="row">
-                                                <div class="col-xs-12">
+                                                <div class="col-xs-2 pull-right">
                                                     <div class="form-group">
-                                                        <button type="submit" onclick="populateBatchInput()" class="btn btn-primary pull-right" id="button_status" value="Simpan"><i class="fa fa-check"></i> Simpan</button>
+                                                        <button type="submit" onclick="populateBatchInput()" class="btn btn-primary pull-right" id="button_status" value="Simpan"><i class="fa fa-check"></i> Simpan perubahan batch</button>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-3 pull-right">
+                                                  <div class="form-group">
+                                                      <button type="submit" onclick="" class="btn btn-danger pull-right" id="button_status" value="Simpan"><i class="fa fa-check-circle"></i> Submit batch untuk Verifikasi</button>
                                                     </div>
                                                 </div>
                                               </div>
@@ -183,14 +203,35 @@
                         insertItem: function (item) {
                           item["type"] = 'insert';
                           inputs.push(item);
-                          console.log(inputs);
+                        },
+                        updateItem: function(item) {
+                          console.log(item);  
                         }
                       }, 
 
                       fields: [
+                          {
+                            name: "id",
+                            css: "hide",
+                            width: 0,
+                            readOnly: true
+                          },
                           { 
                             type: "control", 
                             width: 60 },
+                          { 
+                            name: "account", 
+                            width: 200, 
+                            align: "left",
+                            type: "text", 
+                            title: "Account", 
+                            readOnly: true, 
+                            itemTemplate: function(value) {
+                              return "<span class='tag tag-default'><b>"+value+"</b></span>";
+                            },
+                            insertTemplate: function() {
+                              account_field = jsGrid.fields.text.prototype.insertTemplate.call(this);
+                              return account_field; } },
                           { 
                             name: "tgl", 
                             type: "date", 
@@ -223,6 +264,9 @@
                             align: "left",
                             type: "number", 
                             title: "Jumlah Item",
+                            itemTemplate: function(value) {
+                              return value + " buah";
+                            },
                             validate: {
                               validator: "min",
                               message: "Kolom jumlah item tidak boleh 0.",
@@ -253,10 +297,7 @@
                                     populateAccount('subpos', $(this).val());
                                 });
                                 return result; },
-                            validate: {
-                              validator: "required",
-                              message: "Kolom subpos tidak boleh tidak dipilih."
-                            } },
+                            }, 
                           { 
                             name: "mata_anggaran", 
                             width: 200, 
@@ -272,11 +313,7 @@
                                     populateAccount('m_anggaran', $(this).val());
                                 });
                                 return result; },
-                            valdiate: {
-                              validator: "min",
-                              message: "Kolom mata anggaran tidak boleh tidak dipilih.",
-                              param: [1]
-                             } }, 
+                            }, 
                           { 
                             name: "bank", 
                             width: 200,
@@ -292,21 +329,14 @@
                               param: [1]
                              } },
                           { 
-                            name: "account", 
-                            width: 200, 
-                            align: "left",
-                            type: "text", 
-                            title: "Account", 
-                            readOnly: true, 
-                            insertTemplate: function() {
-                              account_field = jsGrid.fields.text.prototype.insertTemplate.call(this);
-                              return account_field; } },
-                          { 
                             name: "anggaran", 
                             width: 200, 
                             align: "left",
                             type: "number", 
                             title: "Anggaran tersedia",
+                            itemTemplate: function(value) {
+                              return "<span class='tag tag-info'>IDR " + parseInt(value).toLocaleString() + ",00</span>";
+                            },
                             valdiate: {
                               validator: "min",
                               message: "Kolom anggaran tidak boleh kosong.",
@@ -318,6 +348,9 @@
                             width: 200, 
                             type: "number", 
                             title: "Total",
+                            itemTemplate: function(value) {
+                              return "<span class='tag tag-warning'>IDR " + parseInt(value).toLocaleString() + ",00</span>";
+                            },
                             valdiate: {
                               validator: "min",
                               message: "Kolom total tidak boleh kosong.",
