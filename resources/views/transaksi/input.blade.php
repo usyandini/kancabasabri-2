@@ -4,7 +4,12 @@
                 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/tables/jsgrid/jsgrid-theme.min.css') }}">
                 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/tables/jsgrid/jsgrid.min.css') }}">
                 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/forms/selects/select2.min.css') }}">
-                <link rel="stylesheet" type="text/css" href="https://pixinvent.com/stack-responsive-bootstrap-4-admin-template/app-assets/css/core/colors/palette-callout.min.css">
+                <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/core/colors/palette-callout.min.css') }}">
+                <style type="text/css">
+                  .hide {
+                    display: none;
+                  }
+                </style>
                 @endsection
 
                 @section('content')
@@ -72,24 +77,50 @@
                                     </div>
                                     <div class="card-body collapse in ">
                                         <div class="card-block card-dashboard ">
+                                          <div class="row">
+                                            @if(session('success'))
+                                            <div class="col-xs-7">
+                                                <div class="alert alert-success">
+                                                  Batch transaksi sebanyak <b>{{ session('success')[0] }} baris baru berhasil disimpan</b>.<br>
+                                                  Batch transaksi sebanyak <b>{{ session('success')[1] }} baris berhasil diupdate</b>.
+                                                </div>
+                                              </div>
+                                            @endif
+                                            <div class="col-md-6">
+                                              <div class="alert alert-info mb-2" role="alert" id="alert-dropping" style="display: block;">
+                                                <strong>Perhatian!</strong> Silahkan menambahkan transaksi baru melalui tombol <i class="fa fa-plus"></i> pada tabel.
+                                              </div>
+                                              <div class="alert alert-warning mb-2" role="alert" id="alert-dropping" style="display: block;">
+                                                <strong>Perhatian!</strong> Sistem akan melakukan generate secara otomatis untuk <b>kolom Account</b>. User tidak perlu melakukan input pada kolom tsb.
+                                              </div>
+                                            </div>
+                                          </div>
                                             <!-- <p>Grid with filtering, editing, inserting, deleting, sorting and paging. Data provided by controller.</p> -->
                                             <div id="basicScenario"></div><br>
-                                            <div class="col-lg-6 col-md-12 pull-right">
-                                              <fieldset class="form-group">
-                                                <label class="custom-file center-block block">
-                                                  <input type="file" id="file_transaksi" class="custom-file-input">
-                                                  <span class="custom-file-control"></span>
-                                                </label>
-                                              </fieldset>
-                                            </div>
-                                            <div class="col-xs-4">
-                                              <label>Status<input type="text" class="form-control" id="status" readonly="readonly" value="Simpan"></input></label>
-                                            </div>
-                                            <div class="col-xs-12">
-                                                <div class="form-group">
-                                                    <button type="submit" onclick="simpan_jsgrid()" class="btn btn-primary pull-right" id="button_status" value="Simpan"><i class="fa fa-check"> Simpan</i></button>
+                                            <form method="POST" action="{{ url('transaksi/') }}" id="mainForm" enctype="multipart/form-data">
+                                              {{ csrf_field() }}
+                                              <div class="row">
+                                                <div class="col-lg-6 col-md-12">
+                                                  <fieldset class="form-group">
+                                                    <label for="basicInputFile">Upload berkas</label>
+                                                    <input type="file" class="form-control-file" id="basicInputFile" multiple="" name="berkas[]">
+                                                  </fieldset>
                                                 </div>
-                                            </div>
+                                                <input type="hidden" name="batch_values" id="batch_values">
+                                              </div>
+                                              <div class="row">
+                                                <div class="col-xs-2 pull-right">
+                                                    <div class="form-group">
+                                                        <button type="submit" onclick="populateBatchInput()" class="btn btn-primary pull-right" id="button_status" value="Simpan"><i class="fa fa-check"></i> Simpan perubahan batch</button>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-3 pull-right">
+                                                  <div class="form-group">
+                                                      <button type="submit" onclick="" class="btn btn-danger pull-right" id="button_status" value="Simpan"><i class="fa fa-check-circle"></i> Submit batch untuk Verifikasi</button>
+                                                    </div>
+                                                </div>
+                                              </div>
+                                            </form>
                                         </div>
                                     </div>
                                 </div>
@@ -117,8 +148,9 @@
                 <script type="text/javascript" src="{{ asset('app-assets/js/scripts/ui/breadcrumbs-with-stats.min.js') }}"></script>
                 {{-- <script src="{{ asset('app-assets/js/scripts/tables/jsgrid/jsgrid.min.js') }}" type="text/javascript"></script> --}}
                 <script type="text/javascript">
-                  var x = [];
-                  var account = item = m_anggaran = subpos = account_field = null;
+                  var inputs = [];
+                  var item = m_anggaran = subpos = account_field = null;
+                  var tempIdCounter = 0;
 
                   $(document).ready(function() {
                     var MyDateField = function(config) {
@@ -171,22 +203,63 @@
                           })
                         },
                         insertItem: function (item) {
-                          item["type"] = 'insert';
-                          x.push(item);
-                          console.log(x);
+                          item["isNew"] = true;
+                          item["tempId"] = ++tempIdCounter;
+                          inputs.push(item);
+                          console.log(item);
+                        },
+                        updateItem: function(item) {
+                          if (item["isNew"]) {
+                            inputs.splice(item["tempId"], 1, item);  
+                          } else {
+                            inputs.push(item);
+                          }
+                          console.log(item);  
                         }
                       }, 
 
                       fields: [
+                          {
+                            name: "id",
+                            css: "hide",
+                            width: 0,
+                            readOnly: true
+                          },
                           { 
                             type: "control", 
-                            width: 60 },
+                            width: 60,
+                            itemTemplate: function(value, item) {
+                              var $result = $([]);
+
+                              if(item) {
+                                  $result = $result.add(this._createEditButton(item));
+                              }
+                  
+                              if(item) {
+                                  $result = $result.add(this._createDeleteButton(item));
+                              }
+                  
+                              return $result;
+                            } },
+                          { 
+                            name: "account", 
+                            width: 200, 
+                            align: "left",
+                            type: "text", 
+                            title: "Account", 
+                            readOnly: true, 
+                            itemTemplate: function(value) {
+                              return "<span class='tag tag-default'><b>"+value+"</b></span>";
+                            },
+                            insertTemplate: function() {
+                              account_field = jsGrid.fields.text.prototype.insertTemplate.call(this);
+                              return account_field; } },
                           { 
                             name: "tgl", 
                             type: "date", 
                             width: 150, 
                             title: "Tanggal", 
-                            align: "center",
+                            align: "left",
                             validate: {
                               validator : "required",
                               message : "Kolom tanggal tidak boleh kosong."  
@@ -194,55 +267,63 @@
                           { 
                             name: "item", 
                             width: 300, 
-                            align: "center",
+                            align: "left",
                             type: "select", 
                             items: getData('item'), 
                             valueField: "MAINACCOUNTID", 
                             textField: "NAME", 
                             title: "Item", 
+                            selectedindex: 0,
                             insertTemplate: function() {
-                              var result = jsGrid.fields.select.prototype.insertTemplate.call(this);
+                                var result = jsGrid.fields.select.prototype.insertTemplate.call(this);
                                 result.on("change", function() {
                                     populateAccount('item', $(this).val());
                                 });
                                 return result; } },
                           { 
                             name: "qty_item", 
-                            width: 100, type: 
-                            "number", 
+                            width: 100, 
+                            align: "left",
+                            type: "number", 
                             title: "Jumlah Item",
+                            itemTemplate: function(value) {
+                              return value + " buah";
+                            },
                             validate: {
-                              validator: "range",
+                              validator: "min",
                               message: "Kolom jumlah item tidak boleh 0.",
-                              param: [1, 99999999999]
+                              param: [0]
                             }  },
                           { 
                             name: "desc", 
                             width: 300, 
                             type: "textarea", 
                             title: "Uraian", 
-                            align: "center",
+                            align: "left",
                             validate: {
-                              validator : "required",
-                              message : "Kolom uraian tidak boleh kosong."  
+                              validator: "required",
+                              message: "Kolom uraian tidak boleh kosong."  
                             }  },
                           { 
                             name: "sub_pos", 
                             width: 200, 
+                            align: "left",
                             type: "select", 
                             items: getData('subpos'), 
                             valueField: "VALUE", 
                             textField: "DESCRIPTION", 
                             title: "Subpos", 
                             insertTemplate: function() {
-                              var result = jsGrid.fields.select.prototype.insertTemplate.call(this);
+                                var result = jsGrid.fields.select.prototype.insertTemplate.call(this);
                                 result.on("change", function() {
                                     populateAccount('subpos', $(this).val());
                                 });
-                                return result; } },
+                                return result; },
+                            }, 
                           { 
                             name: "mata_anggaran", 
                             width: 200, 
+                            align: "left",
                             type: "select", 
                             items: getData('kegiatan'), 
                             valueField: "VALUE", 
@@ -253,40 +334,71 @@
                                 result.on("change", function() {
                                     populateAccount('m_anggaran', $(this).val());
                                 });
-                                return result; } },
+                                return result; },
+                            }, 
                           { 
                             name: "bank", 
-                            width: 200, 
+                            width: 200,
+                            align: "left", 
                             type: "select", 
                             items: getData('bank'), 
                             valueField: "BANK", 
                             textField: "BANK_NAME", 
-                            title: "Bank/Kas" },
-                          { 
-                            name: "account", 
-                            width: 200, 
-                            align: "center",
-                            type: "text", 
-                            title: "Account", 
-                            readOnly: true, 
-                            insertTemplate: function() {
-                              account_field = jsGrid.fields.text.prototype.insertTemplate.call(this);
-                              return account_field; } },
+                            title: "Bank/Kas", 
+                            valdiate: {
+                              validator: "min",
+                              message: "Kolom bank tidak boleh tidak dipilih.",
+                              param: [1]
+                             } },
                           { 
                             name: "anggaran", 
                             width: 200, 
+                            align: "left",
                             type: "number", 
-                            title: "Anggaran tersedia" },
+                            title: "Anggaran tersedia",
+                            itemTemplate: function(value) {
+                              return "<span class='tag tag-info'>IDR " + parseInt(value).toLocaleString() + ",00</span>";
+                            },
+                            valdiate: {
+                              validator: "min",
+                              message: "Kolom anggaran tidak boleh kosong.",
+                              param: [1]
+                             } },
                           { 
                             name: "total", 
-                            align: "center",
+                            align: "left",
                             width: 200, 
-                            type: "text", 
-                            title: "Total" }
+                            type: "number", 
+                            title: "Total",
+                            itemTemplate: function(value) {
+                              return "<span class='tag tag-danger'><b>IDR " + parseInt(value).toLocaleString() + ",00</b></span>";
+                            },
+                            valdiate: {
+                              validator: "min",
+                              message: "Kolom total tidak boleh kosong.",
+                              param: [1]
+                             } },
+                          { 
+                            type: "control", 
+                            width: 60,
+                            itemTemplate: function(value, item) {
+                              var $result = $([]);
+
+                              if(item) {
+                                  $result = $result.add(this._createEditButton(item));
+                              }
+                  
+                              if(item) {
+                                  $result = $result.add(this._createDeleteButton(item));
+                              }
+                  
+                              return $result;
+                            } }
                         ]
                     });
                   });
 
+                  
                   function getData(type) {
                     var returned = function () {
                         var tmp = null;
@@ -313,32 +425,17 @@
                         subpos = value;
                         break;
                     }
-                    
                     generateAccount(item, m_anggaran, subpos);
                   }
 
                   function generateAccount(item, m_anggaran, subpos) {
-                    account = item + '-THT-' + subpos + '-' + m_anggaran;   
+                    var userId = {{ Auth::user()->id }};
+                    var account = item + '-THT-' + userId + '-' + subpos + '-' + m_anggaran;   
                     $(account_field).val(account);
                   };
 
-                  function simpan_jsgrid(){
-                    /*$('#basicScenario').each(function(){
-                        x.push($(this).html());
-                    });
-                    $('#button_status').click(function(){
-                        $.ajax({
-                          type : "POST",
-                          url : "{{ url('transaksi/transaksi_process') }}",
-                          data : "content="+x,
-                          success: function(item) {
-                              alert(item);// alert the data from the server
-                          },
-                          error : function() {
-                          }
-                         });
-                    });*/               
-                    console.log(x);
+                  function populateBatchInput(){
+                    $('input[name="batch_values"]').val(JSON.stringify(inputs));
                   };
                 </script>
                 @endsection

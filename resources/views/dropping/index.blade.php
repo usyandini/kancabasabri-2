@@ -28,11 +28,11 @@
                             @if(session('success'))
                             <div class="col-xs-7">
                                 <div class="alert alert-success">
-                                  Data dropping berhasil dipost.
+                                  <b>Data dropping berhasil dipost.</b>
                                 </div>
-                              </div>
                             </div>
                             @endif
+                            </div>
                             <div class="col-xs-7">
                                 <div class="card">
                                     <div class="card-header">
