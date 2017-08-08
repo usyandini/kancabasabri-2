@@ -45,11 +45,10 @@
                           </div>
                           <div class="card-body collapse in">
                             <div class="card-block">
-                              <div class="card-text">
-                                <p>Penjelasan singkat mengenai form bisa diletakkan <b>disini</b>.</p>
-                              </div>
                               <form class="form" id="tariktunai-form" method="POST" action="{{ url('dropping/tariktunai/'.$dropping->RECID) }}">
                               {{ csrf_field() }}
+                                <input type="hidden" name="sisa_dropping" value="{{ $dropping->tarikTunai['sisa_dropping'] }}">
+
                                 <div class="form-body">
                                   <h4 class="form-section"> Kesesuaian Dropping</h4>
                                   <div class="row">
@@ -62,28 +61,7 @@
                                     <div class="col-md-6">
                                       <div class="form-group">
                                         <label for="projectinput2">Nominal Dropping (Dalam IDR)</label>
-                                        <input type="text" readonly="" id="nominal_dropping" class="form-control" placeholder="number_format($dropping->DEBIT, 2)" name="nominal" value="{{ $dropping->DEBIT }}">
-                                      </div>
-                                    </div>
-                                    <div class="col-md-12">
-                                      <div class="form-group">
-                                        <label for="companyName">Apakah nominal dropping sudah sesuai dengan pengajuan?</label><br>
-                                        <input type="checkbox" onchange="change_checkbox(this)" class="form-control switch" id="switch1" checked="checked" name="is_sesuai" value="1" data-on-label="Sesuai" data-off-label="Tidak sesuai"/>
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <h4 class="form-section">Informasi Tarik Tunai</h4>
-                                  <div class="row">
-                                    <div class="col-md-6">
-                                      <div class="form-group">
-                                        <label for="projectinput1">Tanggal Tarik Tunai</label>
-                                        <input type="date" readonly="" id="tgl_tarik" class="form-control" placeholder="Tanggal Tarik Tunai" name="tgl_tarik" value="{{ date("Y-m-d") }}">
-                                      </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                      <div class="form-group">
-                                        <label for="projectinput2">Nominal Tarik Tunai(Dalam IDR)</label>
-                                        <input type="text" id="nominal_tarik" class="form-control" placeholder="Nominal Tarik Tunai" name="nominal_tarik" value="">
+                                          <input type="text" readonly="" id="nominal_dropping" class="form-control" placeholder="{{ $dropping->DEBIT }}" name="nominal" value="{{ $dropping->DEBIT }}">
                                       </div>
                                     </div>
                                     <div class="col-md-6 pull-right">
@@ -98,10 +76,36 @@
                                         <input type="text" readonly="" id="akun_bank" class="form-control" placeholder="Nama Bank" name="akun_bank" value="{{ $dropping->BANK_DROPPING }}">
                                       </div>
                                     </div>
+                                    <div class="col-md-12">
+                                      <div class="form-group">
+                                        <label for="projectinput8">Kantor Cabang</label>
+                                        <input type="text" readonly="" id="cabang" class="form-control" placeholder="Kantor Cabang" name="cabang" value="{{ $dropping->CABANG_DROPPING }}">
+                                      </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                      <div class="form-group">
+                                        <label for="companyName">Apakah nominal dropping sudah sesuai dengan pengajuan?</label><br>
+                                        <input type="checkbox" onchange="change_checkbox(this)" class="form-control switch" id="switch1" checked="checked" name="is_sesuai" value="1" data-on-label="Sesuai" data-off-label="Tidak sesuai"/>
+                                      </div>
+                                    </div>
                                   </div>
-                                  <div class="form-group">
-                                    <label for="projectinput8">Kantor Cabang</label>
-                                    <input type="text" readonly="" id="cabang" class="form-control" placeholder="Kantor Cabang" name="cabang" value="{{ $dropping->CABANG_DROPPING }}">
+                                  <h4 class="form-section">Informasi Tarik Tunai</h4>
+                                  <button type="button" class="btn btn-success">
+                                    <i class="fa fa-plus"></i> Tambah
+                                  </button>
+                                  <div class="row">
+                                    <div class="col-md-6">
+                                      <div class="form-group">
+                                        <label for="projectinput1">Tanggal Tarik Tunai</label>
+                                        <input type="date" readonly="" id="tgl_tarik" class="form-control" placeholder="Tanggal Tarik Tunai" name="tgl_tarik" value="{{ date("Y-m-d") }}">
+                                      </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                      <div class="form-group">
+                                        <label for="projectinput2">Nominal Tarik Tunai(Dalam IDR)</label>
+                                        <input type="text" id="nominal_tarik" class="form-control" placeholder="Nominal Tarik Tunai" name="nominal_tarik" value="">
+                                      </div>
+                                    </div>
                                   </div>
                                 </div>
                               </form>
@@ -137,6 +141,8 @@
                                 <input type="hidden" name="rek_bank" value="{{ $dropping->REKENING_DROPPING }}">
                                 <input type="hidden" name="cabang" value="{{ $dropping->CABANG_DROPPING }}">
                                 <input type="hidden" name="is_sesuai" value="0">
+                                <input type="hidden" name="nominal_tarik" value="0">
+                                <input type="hidden" name="sisa_dropping" value="0">
 
                                 <div class="form-body">
                                   <h4 class="form-section"> Pengembalian/Penambahan Dropping</h4>
@@ -215,10 +221,10 @@
                             <div class="card-block">
                               <div class="form-actions">
                                 <a href="{{ url('dropping') }}" class="btn btn-warning mr-1">
-                                  <i class="ft-x"></i> Kembali
+                                  <i class="ft-x"></i> Keluar
                                 </a>
                                 <button type="button" data-toggle="modal" data-target="#xSmall" class="btn btn-primary">
-                                  <i class="fa fa-check-square-o"></i> Simpan Post
+                                  <i class="fa fa-check-square-o"></i> Posting
                                 </button>
                               </div>  
                               <!-- Modal -->
@@ -237,7 +243,7 @@
                                     </div>
                                     <div class="modal-footer">
                                       <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">Close</button>
-                                      <button type="submit" id="post" onclick="forms_submit()" class="btn btn-outline-primary">Simpan post</button>
+                                      <button type="submit" id="post" onclick="forms_submit()" class="btn btn-outline-primary">Posting</button>
                                     </div>
                                   </div>
                                 </div>

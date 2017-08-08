@@ -154,7 +154,7 @@
                         loadData: function(filter) {
                           return $.ajax({
                               type: "GET",
-                              url: "{{ (checkActiveMenu('dropping') == 'active' ? url('dropping/get') : url('dropping/get/filtered/'.$filters['transyear'].'/'.$filters['periode'].'/'.$filters['kcabang']) ) }}",
+                              url: "{{ (checkActiveMenu('dropping') == 'active' ? url('dropping') : url('dropping/get/filtered/'.$filters['transyear'].'/'.$filters['periode'].'/'.$filters['kcabang']) ) }}",
                               data: filter,
                               dataType: "JSON"
                           })
@@ -168,14 +168,14 @@
                           { name: "debit", type: "text", title: "Nominal", width: 100 },
                           { name: "sisa", type: "text", title: "Sisa", width: 100 },
                           { name: "company", type: "text", title: "Kantor Cabang", width: 100 },
-                          { name: "stat", type: "text", title: "Status Posting", itemTemplate:function(e) {
+                          { name: "stat", type: "text", title: "Status Dropping", itemTemplate:function(e) {
                             var content = e == '1' ? "Sesuai" : (e == '0' ? "Tidak sesuai" : 'Belum posting');
                             var tag = e == '1' ? "tag-success" : (e == '0' ? "tag-default" : 'tag-info');
                             return "<span class='tag "+tag+"'>"+content+"</span>" ;
                             } 
                           },
                           { name: "id_dropping", type: "control", itemTemplate:function(e) {
-                            return "<a href='{{ url('/dropping/tariktunai') }}/"+ e +"' class='btn btn-success btn-sm'>Lanjut</a>"
+                            return "<a href='{{ url('/dropping/tariktunai') }}/"+ e +"' class='btn btn-success btn-sm' method='POST'>Lanjut</a>"
                             }
                           }
                         ]

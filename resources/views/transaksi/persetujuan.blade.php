@@ -71,7 +71,7 @@
                                             <!-- <p>Grid with filtering, editing, inserting, deleting, sorting and paging. Data provided by controller.</p> -->
                                             <div id="basicScenario"></div><br>
                                             <div class="col-xs-12 pull-right">
-                                              <label>Status<input type="text" class="form-control" id="status" readonly="readonly" value="Simpan"></input></label>
+                                              <label>Status<input type="text" class="form-control" id="status" readonly="readonly" value="Terima"></input></label>
                                               <div class="form-groups">
                                                   <button type="submit" class="btn btn-primary" id="button_status" value="Terima"><i class="fa fa-check"> Terima</i></button>
                                                   <button type="submit" class="btn btn-danger" id="button_status" value="Tolak"><i class="fa fa-times"> Tolak</i></button>

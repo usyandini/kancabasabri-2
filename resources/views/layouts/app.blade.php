@@ -89,8 +89,8 @@
                         <span >Main Menus</span><i data-toggle="tooltip" data-placement="right" data-original-title="General"
                                                class=" ft-minus"></i>
                     </li>
-                    {{-- <li class="nav-item {{ checkActiveMenu('dashboard') }}"><a href="{{ url('/dashboard', $parameters = [], $secure = null) }}"><i class="ft-home"></i><span data-i18n="" class="menu-title">Dashboard</span><!--<span class="tag tag tag-primary tag-pill float-xs-right mr-2">3</span>--></a>
-                    </li> --}}
+                    {{--<li class="nav-item {{ checkActiveMenu('dashboard') }}"><a href="{{ url('/dashboard', $parameters = [], $secure = null) }}"><i class="ft-home"></i><span data-i18n="" class="menu-title">Dashboard</span><!--<span class="tag tag tag-primary tag-pill float-xs-right mr-2">3</span>--></a>
+                    </li>--}}
                     <li class="nav-item {{ checkActiveMenu('dropping') }}"><a href="{{ url('/dropping', $parameters = [], $secure = null) }}"><i class="ft-box"></i><span data-i18n="" class="menu-title">Dropping</span></a>
                     </li>
                     <li class="nav-item has-sub {{ checkActiveMenu('transaksi') }}"><a href=""><i class="ft-layout"></i><span data-i18n="" class="menu-title">Transaksi</span></a>
