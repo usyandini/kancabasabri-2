@@ -81,7 +81,8 @@
                                             @if(session('success'))
                                             <div class="col-xs-7">
                                                 <div class="alert alert-success">
-                                                  Batch transaksi sebanyak <b>{{ session('success') }} baris berhasil disimpan</b>.
+                                                  Batch transaksi sebanyak <b>{{ session('success')[0] }} baris baru berhasil disimpan</b>.<br>
+                                                  Batch transaksi sebanyak <b>{{ session('success')[1] }} baris berhasil diupdate</b>.
                                                 </div>
                                               </div>
                                             @endif
@@ -90,7 +91,7 @@
                                                 <strong>Perhatian!</strong> Silahkan menambahkan transaksi baru melalui tombol <i class="fa fa-plus"></i> pada tabel.
                                               </div>
                                               <div class="alert alert-warning mb-2" role="alert" id="alert-dropping" style="display: block;">
-                                                <strong>Perhatian!</strong> Sistem akan melakukan generate secara otomatis untuk <b>kolom Account</b>. User tidak perlu melakukan input.
+                                                <strong>Perhatian!</strong> Sistem akan melakukan generate secara otomatis untuk <b>kolom Account</b>. User tidak perlu melakukan input pada kolom tsb.
                                               </div>
                                             </div>
                                           </div>
@@ -149,6 +150,7 @@
                 <script type="text/javascript">
                   var inputs = [];
                   var item = m_anggaran = subpos = account_field = null;
+                  var tempIdCounter = 0;
 
                   $(document).ready(function() {
                     var MyDateField = function(config) {
@@ -201,10 +203,17 @@
                           })
                         },
                         insertItem: function (item) {
-                          item["type"] = 'insert';
+                          item["isNew"] = true;
+                          item["tempId"] = ++tempIdCounter;
                           inputs.push(item);
+                          console.log(item);
                         },
                         updateItem: function(item) {
+                          if (item["isNew"]) {
+                            inputs.splice(item["tempId"], 1, item);  
+                          } else {
+                            inputs.push(item);
+                          }
                           console.log(item);  
                         }
                       }, 
@@ -218,7 +227,20 @@
                           },
                           { 
                             type: "control", 
-                            width: 60 },
+                            width: 60,
+                            itemTemplate: function(value, item) {
+                              var $result = $([]);
+
+                              if(item) {
+                                  $result = $result.add(this._createEditButton(item));
+                              }
+                  
+                              if(item) {
+                                  $result = $result.add(this._createDeleteButton(item));
+                              }
+                  
+                              return $result;
+                            } },
                           { 
                             name: "account", 
                             width: 200, 
@@ -349,7 +371,7 @@
                             type: "number", 
                             title: "Total",
                             itemTemplate: function(value) {
-                              return "<span class='tag tag-warning'>IDR " + parseInt(value).toLocaleString() + ",00</span>";
+                              return "<span class='tag tag-danger'><b>IDR " + parseInt(value).toLocaleString() + ",00</b></span>";
                             },
                             valdiate: {
                               validator: "min",
@@ -358,7 +380,20 @@
                              } },
                           { 
                             type: "control", 
-                            width: 60 }
+                            width: 60,
+                            itemTemplate: function(value, item) {
+                              var $result = $([]);
+
+                              if(item) {
+                                  $result = $result.add(this._createEditButton(item));
+                              }
+                  
+                              if(item) {
+                                  $result = $result.add(this._createDeleteButton(item));
+                              }
+                  
+                              return $result;
+                            } }
                         ]
                     });
                   });
