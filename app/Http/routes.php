@@ -57,11 +57,9 @@ Route::group(['middleware' => 'auth'], function() {
 
 		Route::get('/get', 'TransaksiController@getAll');
 		Route::get('/get/attributes/{type}', 'TransaksiController@getAttributes');
+		Route::post('/submit/verify', 'TransaksiController@submit');
+		// Route::get('/berkas/remove', 'TransaksiController@removeBerkas');
 		
-		Route::post('/post', 'TransaksiController@transaksi_process');
-		
-		Route::get('/viewtransaksi', 'TransaksiController@view_transaksi');
-		Route::get('/persetujuan', 'TransaksiController@persetujuan_transaksi');
-		Route::get('/verifikasi', 'TransaksiController@verifikasi_transaksi');
+		Route::get('/viewtransaksi/{created_at}', 'TransaksiController@view_transaksi');
 	});
 });

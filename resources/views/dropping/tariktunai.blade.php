@@ -251,8 +251,8 @@
                                       <p>Apakah anda yakin dengan <b>data tarik tunai dropping</b> yang anda input sudah sesuai?</p>
                                     </div>
                                     <div class="modal-footer">
-                                      <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">Close</button>
-                                      <button type="submit" id="post" onclick="forms_submit()" class="btn btn-outline-primary">Posting</button>
+                                      <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">Kembali</button>
+                                      <button type="submit" id="post" onclick="forms_submit()" class="btn btn-outline-primary">Simpan post</button>
                                     </div>
                                   </div>
                                 </div>
@@ -323,7 +323,7 @@
                           } else {
                             $('select[name="p_akun_bank"]').html("<option value='0'>Pilih kantor cabang terlebih dahulu</option>");
                             $('select[name="p_akun_bank"]').prop("disabled", true);
-                            toastr.error("Daftar bank pada kantor cabang yang dimaksud tidak ditemukan. Silahkan pilih kantor cabang lain.", "Perhatian", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
+                            toastr.error("Daftar bank pada kantor cabang yang dimaksud tidak ditemukan. Silahkan pilih kantor cabang lain. Terima kasih.", "Perhatian", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
                           }
 
                           $('select[name="p_rek_bank"]').html("<option value='0'>Pilih bank terlebih dahulu</option>");
@@ -340,7 +340,7 @@
                           } else {
                             $('select[name="p_rek_bank"]').html("<option value='0'>Pilih bank terlebih dahulu</option>");
                             $('select[name="p_rek_bank"]').prop("disabled", true);
-                            toastr.error("Daftar rekening pada bank yang dimaksud tidak ditemukan. Silahkan pilih bank lain.", "Perhatian", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
+                            toastr.error("Daftar rekening pada bank yang dimaksud tidak ditemukan. Silahkan pilih bank lain. Terima kasih.", "Perhatian", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
                           }
                       });
                   });

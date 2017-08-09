@@ -11,10 +11,16 @@ use App\Models\Item;
 use App\Models\Kegiatan;
 use App\Models\SubPos;
 use App\Models\Transaksi;
+use App\Models\TransaksiStatus;
 use App\Models\BerkasTransaksi;
 
 use Validator;
 use App\Services\FileUpload;
+
+//  ----------- STAT DESC -------------
+//          0 = Inserted 
+//          1 = Posted / Submited      
+//  -----------------------------------
 
 class TransaksiController extends Controller
 {
@@ -24,6 +30,8 @@ class TransaksiController extends Controller
     protected $subPosModel;
     protected $kegiatanModel;
     protected $transaksiModel;
+
+    protected $current_batch;
 
     public function __construct(
         AkunBank $bank,
@@ -37,89 +45,29 @@ class TransaksiController extends Controller
         $this->subPosModel = $subPos;
         $this->kegiatanModel = $kegiatan;
         $this->transaksiModel = $transaksi;
+        $this->current_batch = $this->defineBatch();
     }
 
     public function index() 
     {
-        return view('transaksi.input', ['filters' => null]);
+        $berkas = BerkasTransaksi::where('batch_id', $this->current_batch)->get();
+
+        return view('transaksi.input', ['filters' => null, 'berkas' => $berkas]);
     }
 
-    public function store(Request $request)
+    public function defineBatch()
     {
-        // dd($request->berkas);
-        $current_batch = $this->transaksiModel
-                            ->limit(1)
-                            ->orderBy('id', 'desc')
-                            ->first()['batch_id'] ? $this->transaksiModel->limit(1)->orderBy('id', 'desc')->first()['batch_id'] : 1;
-        $batch_insert = array();
-        $batch_update = array();
+        $result = 1;
+        if ($this->transaksiModel->orderBy('id', 'desc')->first()) {
+            $current_batch = $this->transaksiModel->orderBy('id', 'desc')->first();
+            $result = $current_batch['batch_id'];
 
-        // dd($request->batch_values);
-        foreach (json_decode($request->batch_values) as $value) {
-            $store_values = [
-                    'id'            => $value->id,
-                    'tgl'           => $value->tgl,
-                    'item'          => $value->item,
-                    'qty_item'      => (int)$value->qty_item,
-                    'desc'          => $value->desc,
-                    'sub_pos'       => $value->sub_pos,
-                    'mata_anggaran' => $value->mata_anggaran,
-                    'akun_bank'     => $value->bank,
-                    'account'       => $value->account,
-                    'anggaran'      => (int)$value->anggaran,
-                    'total'         => (int)$value->total,
-                    'created_by'    => \Auth::user()->id,
-                    'batch_id'      => (int)$current_batch,
-                    'created_at'    => \Carbon\Carbon::now(),
-                    'updated_at'    => \Carbon\Carbon::now()];
-
-            if (isset($value->isNew)) {
-                unset($store_values['id']);
-                array_push($batch_insert, $store_values);
-            } else {
-                array_push($batch_update, $store_values);
+            if ($current_batch->latestStat() && (int)$current_batch->latestStat() > 0) {
+                $result += 1;
             }
-        }
-        // dd($batch_update);
-        // dd($batch_insert);
-        if (count($batch_insert) > 0) {
-            Transaksi::insert($batch_insert);
-        }
+        } 
 
-        if (count($batch_update) > 0) {
-            $this->storeUpdate($batch_update);
-        }
-
-        if ($request->berkas[0] != null) {
-            $this->storeBerkas($request->berkas, $current_batch);
-        }
-        $batch_counter = array(count($batch_insert), count($batch_update));
-
-        session()->flash('success', $batch_counter);
-        return redirect('transaksi');
-    }
-
-    public function storeUpdate($batch_update)
-    {
-        foreach ($batch_update as $value) {
-            $id = $value['id'];
-            unset($value['id']);
-            unset($value['created_at']);
-            Transaksi::where('id', $id)->update($value);
-        }
-    }
-
-    public function storeBerkas($inputs, $current_batch)
-    {
-        $fileUpload = new FileUpload();
-        $newNames = $fileUpload->multipleUpload($inputs, 'transaksi');
-
-        $store = array();
-        foreach (explode('||', $newNames) as $value) {
-            array_push($store, ['file_name' => $value, 'batch_id' => $current_batch, 'created_at' => \Carbon\Carbon::now(), 'updated_at' => \Carbon\Carbon::now()]);
-        }
-
-        BerkasTransaksi::insert($store);
+        return $result;
     }
 
     public function getAll()
@@ -166,18 +114,108 @@ class TransaksiController extends Controller
         // dd($return);
         return response()->json($return);
     }
-    
-    public function transaksi_process($batch, Request $request)
+
+    public function store(Request $request)
     {
-        $inputsTrans = $request->except('_method', '_token');
+        $batch_insert = $batch_update = array();
         
-        $inputsTrans['created_by'] = \Auth::id();
-        $inputsTrans['created_at'] = $batch;
+        // dd(count($request->berkas[0]));
+        foreach (json_decode($request->batch_values) as $value) {
+            $store_values = [
+                    'id'            => $value->id,
+                    'tgl'           => $value->tgl,
+                    'item'          => $value->item,
+                    'qty_item'      => (int)$value->qty_item,
+                    'desc'          => $value->desc,
+                    'sub_pos'       => $value->sub_pos,
+                    'mata_anggaran' => $value->mata_anggaran,
+                    'akun_bank'     => $value->bank,
+                    'account'       => $value->account,
+                    'anggaran'      => (int)$value->anggaran,
+                    'total'         => (int)$value->total,
+                    'created_by'    => \Auth::user()->id,
+                    'batch_id'      => (int)$this->current_batch,
+                    'created_at'    => \Carbon\Carbon::now(),
+                    'updated_at'    => \Carbon\Carbon::now()];
+
+            if (isset($value->isNew)) {
+                unset($store_values['id']);
+                array_push($batch_insert, $store_values);
+            } else {
+                array_push($batch_update, $store_values);
+            }
+        }
         
-        Transaksi::create($inputsTrans);
+        // dd($batch_insert);
+
+        $this->doInsert($batch_insert, $this->current_batch);
+        $this->doUpdate($batch_update);
+        $this->storeBerkas($request->berkas, $this->current_batch);
+        $this->updateBatchStat($this->current_batch, 0);
         
-        session()->flash('success', true);
-        return redirect('/transaksi/viewtransaksi/{created_at}');
+        $batch_counter = array(count($batch_insert), count($batch_update), count($request->berkas[0]));
+
+        session()->flash('success', $batch_counter);
+        return redirect('transaksi');
+    }
+
+    public function doInsert($batch_insert, $current_batch)
+    {
+        if (count($batch_insert) > 0) {
+            Transaksi::insert($batch_insert);
+        }
+    }
+
+    public function doUpdate($batch_update)
+    {
+        if (count($batch_update) > 0) {
+            foreach ($batch_update as $value) {
+                $id = $value['id'];
+                unset($value['id']);
+                unset($value['created_at']);
+                Transaksi::where('id', $id)->update($value);
+            }
+        }
+    }
+
+    public function storeBerkas($inputs, $current_batch)
+    {
+        if ($inputs[0] != null) {
+            $fileUpload = new FileUpload();
+            $newNames = $fileUpload->multipleUpload($inputs, 'transaksi');
+
+            $store = array();
+            foreach (explode('||', $newNames) as $value) {
+                array_push($store, ['file_name' => $value, 'batch_id' => $current_batch, 'created_at' => \Carbon\Carbon::now(), 'updated_at' => \Carbon\Carbon::now()]);
+            }
+
+            BerkasTransaksi::insert($store);
+        }
+    }
+
+    public function removeBerkas($id)
+    {
+        BerkasTransaksi::where('id', $id)->delete();
+    }
+
+    public function updateBatchStat($current_batch, $stat)
+    {
+        $stat_inputs = [
+                'batch_id'      => $current_batch, 
+                'stat'          => $stat, 
+                'submitted_by'  => \Auth::user()->id];
+        $findStat = TransaksiStatus::where([['batch_id', $current_batch], ['stat', $stat]])->first();
+
+        if ($findStat) {
+            TransaksiStatus::where('id', $findStat['id'])->update($stat_inputs);
+        } else {
+            TransaksiStatus::create($stat_inputs);
+        }
+    }
+
+    public function submit(Request $request)
+    {
+
     }
     
     /*public function view_transaksi($batch)

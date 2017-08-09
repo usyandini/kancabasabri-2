@@ -24,4 +24,17 @@ class Transaksi extends Model
     	'created_by',
         'batch_id'
     ];
+
+    public function stat()
+    {
+        return $this->hasMany('App\Models\TransaksiStatus', 'batch_id', 'batch_id');
+    }
+
+    public function latestStat()
+    {
+        $check = $this->hasOne('App\Models\TransaksiStatus', 'batch_id', 'batch_id')->limit(1)->orderBy('id', 'desc')->first();
+
+        if ($check) return $check['stat'];
+        else return false; 
+    }
 }
