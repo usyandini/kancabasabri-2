@@ -5,6 +5,8 @@
                 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/tables/jsgrid/jsgrid.min.css') }}">
                 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/forms/selects/select2.min.css') }}">
                 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/core/colors/palette-callout.min.css') }}">
+                <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/extensions/toastr.css') }}">
+                <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/plugins/extensions/toastr.min.css') }}">
                 <style type="text/css">
                   .hide {
                     display: none;
@@ -34,7 +36,7 @@
                             <div class="col-xs-5">
                                 <div class="card">
                                     <div class="card-header">
-                                      <h4 class="card-title">Pencarian Transaksi</h4>
+                                      <h4 class="card-title">Pencarian Transaksi by Batch</h4>
                                       <a class="heading-elements-toggle"><i class="ft-align-justify font-medium-3"></i></a>
                                     </div>
                                     <div class="card-body collapse in">
@@ -44,7 +46,7 @@
                                             {{ csrf_field() }}
                                             <div class="col-xs-6">
                                                 <div class="form-group">
-                                                  <label>Tanggal</label>
+                                                  <label>Tanggal Batch</label>
                                                   <input class="form-control" type="date" placeholder="{{ date('d/m/Y') }}" name="tgl_transaksi" id="tgl_transaksi" value="{{ date('Y-m-d') }}">
                                                 </div>
                                             </div>
@@ -67,6 +69,17 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-md-7">
+                                <div class="alert alert-amber alert-dismissible fade in mb-2" role="alert">
+                                  <h4 class="alert-heading mb-2">Perlu Diperhatikan!</h4>
+                                  <ul>
+                                    <li>Silahkan menambahkan transaksi baru melalui tombol <i class="fa fa-plus"></i> pada tabel.</li>
+                                    <li>Sistem akan melakukan <b><i>automatic generate</i></b> untuk <b>kolom Account</b>. User tidak perlu melakukan input atau perubahan pada kolom tsb.</li>
+                                    <li>Selama data batch yang ada <b>belum disubmit untuk verifikasi</b>, semua insert baru akan dimasukkan ke dalam <b>satu batch yang sama</b>. </li>
+                                    <li>Pastikan untuk melakukan <b>simpan perubahan batch</b> sebelum melakukan <b>submit batch untuk verifikasi</b>.</li>
+                                  </ul>
+                                </div>
+                              </div>
                         </div>
                         <div class="row">
                             <div class="col-xs-12">
@@ -81,21 +94,19 @@
                                             @if(session('success'))
                                             <div class="col-xs-7">
                                                 <div class="alert alert-success">
-                                                  Batch transaksi sebanyak <b>{{ session('success')[0] }} baris baru berhasil disimpan</b>.<br>
-                                                  Batch transaksi sebanyak <b>{{ session('success')[1] }} baris berhasil diupdate</b>.
+                                                  @if(session('success')[0] > 0)
+                                                    Batch transaksi sebanyak <b>{{ session('success')[0] }} baris baru berhasil disimpan</b>.<br>
+                                                  @endif
+                                                  @if(session('success')[1] > 0)
+                                                    Batch transaksi sebanyak <b>{{ session('success')[1] }} baris berhasil diupdate</b>.<br>
+                                                  @endif
+                                                  @if(session('success')[2] > 0)
+                                                    Berkas batch transaksi sebanyak <b>{{ session('success')[2] }} berkas baru berhasil disimpan</b>.
+                                                  @endif
                                                 </div>
                                               </div>
                                             @endif
-                                            <div class="col-md-6">
-                                              <div class="alert alert-info mb-2" role="alert" id="alert-dropping" style="display: block;">
-                                                <strong>Perhatian!</strong> Silahkan menambahkan transaksi baru melalui tombol <i class="fa fa-plus"></i> pada tabel.
-                                              </div>
-                                              <div class="alert alert-warning mb-2" role="alert" id="alert-dropping" style="display: block;">
-                                                <strong>Perhatian!</strong> Sistem akan melakukan generate secara otomatis untuk <b>kolom Account</b>. User tidak perlu melakukan input pada kolom tsb.
-                                              </div>
-                                            </div>
                                           </div>
-                                            <!-- <p>Grid with filtering, editing, inserting, deleting, sorting and paging. Data provided by controller.</p> -->
                                             <div id="basicScenario"></div><br>
                                             <form method="POST" action="{{ url('transaksi/') }}" id="mainForm" enctype="multipart/form-data">
                                               {{ csrf_field() }}
@@ -105,22 +116,34 @@
                                                     <label for="basicInputFile">Upload berkas</label>
                                                     <input type="file" class="form-control-file" id="basicInputFile" multiple="" name="berkas[]">
                                                   </fieldset>
+                                                  <div class="bs-callout-info callout-border-left mt-1 p-1">
+                                                    <h4 class="info">List Berkas Batch ini</h4>
+                                                    <table>
+                                                      @foreach($berkas as $value)
+                                                      <tr>
+                                                        <td width="25%">File: <a href="{{ asset('file/transaksi').'/'.$value->file_name }}" target="_blank">{{ $value->file_name }}</a></td>
+                                                        <td width="25%">Diunggah: <b>{{ $value->created_at }}</b></td>
+                                                        <td width="5%"><a href=""><i class="fa fa-times"></i> Hapus</a></td>
+                                                      </tr>
+                                                      @endforeach
+                                                    </table>
+                                                  </div>
                                                 </div>
                                                 <input type="hidden" name="batch_values" id="batch_values">
                                               </div>
+                                              </form>
                                               <div class="row">
                                                 <div class="col-xs-2 pull-right">
                                                     <div class="form-group">
-                                                        <button type="submit" onclick="populateBatchInput()" class="btn btn-primary pull-right" id="button_status" value="Simpan"><i class="fa fa-check"></i> Simpan perubahan batch</button>
+                                                        <button type="submit" onclick="populateBatchInput()" class="btn btn-primary pull-right" id="simpan" value="Simpan"><i class="fa fa-check"></i> Simpan perubahan batch</button>
                                                     </div>
                                                 </div>
                                                 <div class="col-xs-3 pull-right">
                                                   <div class="form-group">
-                                                      <button type="submit" onclick="" class="btn btn-danger pull-right" id="button_status" value="Simpan"><i class="fa fa-check-circle"></i> Submit batch untuk Verifikasi</button>
+                                                      <button  data-toggle="modal" data-target="#xSmall" class="btn btn-danger pull-right" id="button_status" value="Simpan"><i class="fa fa-check-circle"></i> Submit batch untuk Verifikasi</button>
                                                     </div>
                                                 </div>
                                               </div>
-                                            </form>
                                         </div>
                                     </div>
                                 </div>
@@ -128,6 +151,29 @@
                         </div>
                     </section>
                     <!-- Basic scenario end -->
+                </div>
+
+                <!-- Modal -->
+                <div class="modal fade text-xs-left" id="xSmall" tabindex="-1" role="dialog" aria-labelledby="myModalLabel20"
+                aria-hidden="true">
+                  <div class="modal-dialog modal-md" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h4 class="modal-title" id="myModalLabel20">Box Konfirmasi</h4>
+                      </div>
+                      <div class="modal-body" id="confirmation-msg">
+                        <p>Anda akan melakukan submit untuk verifikasi batch ini.</p>
+                        <p>Apakah anda yakin dengan <b>data batch</b> yang anda input sudah sesuai?</p>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">Kembali</button>
+                        <button type="submit" id="post" onclick="" class="btn btn-outline-primary">Submit untuk verifikasi</button>
+                      </div>
+                    </div>
+                  </div>
                 </div>
                 @endsection
 
@@ -139,6 +185,7 @@
                 <script src="{{ asset('app-assets/vendors/js/tables/jsgrid/griddata.js') }}" type="text/javascript"></script>
                 <script src="{{ asset('app-assets/vendors/js/tables/jsgrid/jquery.validate.min.js') }}" type="text/javascript"></script>
                 <script src="{{ asset('app-assets/vendors/js/forms/select/select2.full.min.js') }}" type="text/javascript"></script>
+                <script src="{{ asset('app-assets/vendors/js/extensions/toastr.min.js') }}" type="text/javascript"></script>
                 <!-- END PAGE VENDOR JS-->
                 <!-- BEGIN PAGE LEVEL JS-->
                 <script type="text/javascript" src="{{ asset('app-assets/js/scripts/ui/breadcrumbs-with-stats.min.js') }}"></script>
@@ -146,7 +193,7 @@
                 {{--<script src="{{ asset('app-assets/js/scripts/forms/select/form-select2.min.js') }}" type="text/javascript"></script>--}}
                 <!-- END PAGE LEVEL JS-->
                 <script type="text/javascript" src="{{ asset('app-assets/js/scripts/ui/breadcrumbs-with-stats.min.js') }}"></script>
-                {{-- <script src="{{ asset('app-assets/js/scripts/tables/jsgrid/jsgrid.min.js') }}" type="text/javascript"></script> --}}
+                <script src="{{ asset('app-assets/js/scripts/extensions/toastr.min.js') }}" type="text/javascript"></script>
                 <script type="text/javascript">
                   var inputs = [];
                   var item = m_anggaran = subpos = account_field = null;
@@ -158,27 +205,20 @@
                     };
                      
                     MyDateField.prototype = new jsGrid.Field({
-                     
                         css: "date-field", align: "center",
-                     
                         myCustomProperty: "foo",
-                     
                         sorter: function(date1, date2) {
                             return new Date(date1) - new Date(date2);
                         },
-                     
                         itemTemplate: function(value) {
                             return value ? ("0" + new Date(value).getDate()).slice(-2) + '/' + ("0" + (new Date(value).getMonth() + 1)).slice(-2) + '/' + new Date(value).getFullYear() : '';
                         },
-                     
                         insertTemplate: function(value) {
                             return this._insertPicker = $("<input>").datepicker({ defaultDate: new Date() });
                         },
-                     
                         editTemplate: function(value) {
                             return this._editPicker = $("<input>").datepicker().datepicker("setDate", new Date(value));
                         },
-                     
                         insertValue: function() {                            
                             return this._insertPicker.datepicker("getDate")!= null ? this._insertPicker.datepicker("getDate").toISOString() : '';
                         },
@@ -253,6 +293,10 @@
                             },
                             insertTemplate: function() {
                               account_field = jsGrid.fields.text.prototype.insertTemplate.call(this);
+                              return account_field; },
+                            editTemplate: function(value) {
+                              account_field = jsGrid.fields.text.prototype.editTemplate.call(this);
+                              $(account_field).val(value);
                               return account_field; } },
                           { 
                             name: "tgl", 
@@ -276,6 +320,15 @@
                             selectedindex: 0,
                             insertTemplate: function() {
                                 var result = jsGrid.fields.select.prototype.insertTemplate.call(this);
+                                result.on("change", function() {
+                                    populateAccount('item', $(this).val());
+                                });
+                                return result; },
+                            editTemplate: function(value) {
+                                var result = jsGrid.fields.select.prototype.editTemplate.call(this);
+                                $(result).val(value);
+                                populateAccount('item', value);
+
                                 result.on("change", function() {
                                     populateAccount('item', $(this).val());
                                 });
@@ -319,6 +372,15 @@
                                     populateAccount('subpos', $(this).val());
                                 });
                                 return result; },
+                            editTemplate: function(value) {
+                                var result = jsGrid.fields.select.prototype.editTemplate.call(this);
+                                $(result).val(value);
+                                populateAccount('subpos', value);
+
+                                result.on("change", function() {
+                                    populateAccount('subpos', $(this).val());
+                                });
+                                return result; }
                             }, 
                           { 
                             name: "mata_anggaran", 
@@ -335,6 +397,15 @@
                                     populateAccount('m_anggaran', $(this).val());
                                 });
                                 return result; },
+                            editTemplate: function(value) {
+                                var result = jsGrid.fields.select.prototype.editTemplate.call(this);
+                                $(result).val(value);
+                                populateAccount('m_anggaran', value);
+
+                                result.on("change", function() {
+                                    populateAccount('m_anggaran', $(this).val());
+                                });
+                                return result; }
                             }, 
                           { 
                             name: "bank", 
@@ -398,7 +469,6 @@
                     });
                   });
 
-                  
                   function getData(type) {
                     var returned = function () {
                         var tmp = null;
@@ -435,7 +505,13 @@
                   };
 
                   function populateBatchInput(){
-                    $('input[name="batch_values"]').val(JSON.stringify(inputs));
+                    console.log($('input[name="berkas[]"]').val());
+                    if (inputs.length > 0) {
+                      $('input[name="batch_values"]').val(JSON.stringify(inputs));
+                      $('form[id="mainForm"]').submit();
+                    } else {
+                      toastr.error("Silahkan input perubahan pada tabel transaksi untuk penyimpanan. Terima kasih.", "Perhatian", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
+                    }
                   };
                 </script>
                 @endsection
