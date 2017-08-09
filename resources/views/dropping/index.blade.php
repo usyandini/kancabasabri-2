@@ -107,12 +107,11 @@
                                 <div class="card">
                                     <div class="card-header">
                                         <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
-                                        
                                     </div>
                                     <div class="card-body collapse in">
                                         <div class="card-block card-dashboard ">
                                             <!-- <p>Grid with filtering, editing, inserting, deleting, sorting and paging. Data provided by controller.</p> -->
-                                            <div id="tabelDropping"></div>
+                                            <div id="basicScenario"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -140,7 +139,7 @@
 
                 <script type="text/javascript">
                   $(document).ready(function() {
-                    $("#tabelDropping").jsGrid( {
+                    $("#basicScenario").jsGrid( {
                       width: "100%",
                
                       sorting: true,
@@ -166,19 +165,18 @@
                           { name: "banknum", type: "text", title: "No. Rekening", width: 100 },
                           { name: "transdate", type: "text", title: "Tanggal Dropping", width: 100 },
                           { name: "debit", type: "text", title: "Nominal", width: 100 },
-                          { name: "sisa", type: "text", title: "Sisa", width: 100 },
                           { name: "company", type: "text", title: "Kantor Cabang", width: 100 },
-                          { name: "stat", type: "text", title: "Status Dropping", itemTemplate:function(e) {
+                          { name: "stat", type: "text", title: "Status Posting", itemTemplate:function(e) {
                             var content = e == '1' ? "Sesuai" : (e == '0' ? "Tidak sesuai" : 'Belum posting');
                             var tag = e == '1' ? "tag-success" : (e == '0' ? "tag-default" : 'tag-info');
                             return "<span class='tag "+tag+"'>"+content+"</span>" ;
                             } 
                           },
                           { name: "id_dropping", type: "control", itemTemplate:function(e) {
-                            return "<a href='{{ url('/dropping/tariktunai') }}/"+ e +"' class='btn btn-success btn-sm' method='POST'>Lanjut</a>"
+                            return "<a href='{{ url('/dropping/tariktunai') }}/"+ e +"' class='btn btn-success btn-sm'>Lanjut</a>"
                             }
                           }
-                        ]
+                      ]
                     })
                   });
                 </script>

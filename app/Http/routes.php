@@ -44,7 +44,8 @@ Route::group(['middleware' => 'auth'], function() {
 		Route::get('/filter/{transyear}/{periode}/{kcabang}', 'DroppingController@filter');
 		Route::get('/get/filtered/{transyear}/{periode}/{kcabang}', 'DroppingController@getFiltered');
 		
-		Route::post('/tariktunai/{id_dropping}', 'DroppingController@postDropping');
+		//Route::get('/tariktunai/{id_dropping}', 'DroppingController@postDropping');
+		Route::get('/tariktunai/{id_dropping}', 'DroppingController@getTarikTunai');
 	    Route::get('/tariktunai/{id_dropping}', 'DroppingController@tarik_tunai');
 	    Route::post('/tariktunai/{id_dropping}', 'DroppingController@tarik_tunai_process');
 

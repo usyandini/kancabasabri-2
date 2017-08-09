@@ -90,9 +90,9 @@
                                     </div>
                                   </div>
                                   <h4 class="form-section">Informasi Tarik Tunai</h4>
-                                  <button type="button" class="btn btn-success">
+                                  {{-- <button type="button" class="btn btn-success">
                                     <i class="fa fa-plus"></i> Tambah
-                                  </button>
+                                  </button> --}}
                                   <div class="row">
                                     <div class="col-md-6">
                                       <div class="form-group">
@@ -103,8 +103,17 @@
                                     <div class="col-md-6">
                                       <div class="form-group">
                                         <label for="projectinput2">Nominal Tarik Tunai(Dalam IDR)</label>
-                                        <input type="text" id="nominal_tarik" class="form-control" placeholder="Nominal Tarik Tunai" name="nominal_tarik" value="">
+                                        <input type="text" id="nominal_tarik" class="form-control" placeholder="Nominal Tarik Tunai" name="nominal_tarik" value="" required="">
                                       </div>
+                                    </div>
+                                  </div>
+                                  <h4 class="form-section">History Tarik Tunai</h4>
+                                  <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <!-- <p>Grid with filtering, editing, inserting, deleting, sorting and paging. Data provided by controller.</p> -->
+                                            <div id="historyTarikTunai"></div>
+                                        </div>
                                     </div>
                                   </div>
                                 </div>
@@ -334,6 +343,32 @@
                             toastr.error("Daftar rekening pada bank yang dimaksud tidak ditemukan. Silahkan pilih bank lain.", "Perhatian", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
                           }
                       });
+                  });
+
+                  $(document).ready(function() {
+                    $("#historyTarikTunai").jsGrid( {
+                      width: "100%",
+               
+                      sorting: true,
+                      paging: true,
+                      autoload: true,
+                      
+                      controller: {
+                        loadData: function() {
+                          return $.ajax({
+                              type: "GET",
+                              url: "{{ url('dropping/tariktunai/{id_dropping}') }}",
+                              data: db,
+                              dataType: "JSON"
+                          })
+                        }
+                      }, 
+                      fields: [
+                          { name: "tanggal_tarik", type: "text", title: "Tanggal Dropping", width: 100 },
+                          { name: "nominal_tarik", type: "text", title: "Nominal", width: 100 },
+                          { name: "sisa_dropping", type: "text", title: "Sisa", width: 100 }
+                      ]
+                    })
                   });
                 </script>
                 @endsection
