@@ -26,7 +26,8 @@ class AddColumnNominalTarikTunaiTable extends Migration
     public function down()
     {
         Schema::table('tarik_tunai', function (Blueprint $table) {
-            //
+            $table->dropColumn(['nominal_tarik']);
+            $table->dropColumn(['sisa_dropping']);
         });
     }
 }
