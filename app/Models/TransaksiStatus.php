@@ -10,6 +10,8 @@ class TransaksiStatus extends Model
 
     protected $table = 'transaksi_status';
 
+    protected $dateFormat = 'Y-m-d H:i:s';
+
     protected $fillable = [
     	'batch_id', 
     	'stat',
@@ -19,5 +21,20 @@ class TransaksiStatus extends Model
     public function submitter()
     {
     	return $this->belongsTo('App\User', 'submitted_by', 'id');
+    }
+
+    public function status()
+    {
+        $stat = $this->stat;
+        switch ($stat) {
+            case 0:
+                return "Belum submit";
+                break;
+            case 1:
+                return "Menunggu verifikasi";
+            default:
+                break;
+        }
+        return null;
     }
 }

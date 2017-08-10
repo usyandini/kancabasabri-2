@@ -85,7 +85,12 @@
                             <div class="col-xs-12">
                                 <div class="card">
                                     <div class="card-header">
-                                        <h4 class="card-title">List Transaksi</h4>
+                                        <h4 class="card-title">List Transaksi</h4><br>
+                                        {{-- @if(!$pending_batch)
+                                        <p>Batch saat ini : <code>{{ date("d-m-Y", strtotime($current_batch_stat->created_at)) }}</code> | Terkahir Update : <code>{{ $current_batch_stat->updated_at }}</code> oleh <code>{{ $current_batch_stat['submitter']['name'] }}</code> | Status : <code>{{ $current_batch_stat->status() }}</code></p>
+                                        @else
+                                        <p>Info batch <code>{{ $current_batch_stat->created_at }}</code>: <code>Masih menunggu konfirmasi verifikasi. <b>Edit atau tambah baru tidak diperbolehkan.</b></code></p>
+                                        @endif --}}
                                         <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
                                     </div>
                                     <div class="card-body collapse in ">
@@ -106,50 +111,81 @@
                                                 </div>
                                               </div>
                                             @endif
+                                            @if(session('success_submit'))
+                                              <div class="col-xs-6">
+                                                <div class="alert alert-info">
+                                                  Batch <code>{{ date("d-m-Y", strtotime(session('success_submit'))) }}</code> berhasil disubmit. <b>Silahkan tunggu verifikasi dari user.</b></code>
+                                                </div>
+                                              </div>
+                                            @endif
                                           </div>
                                             <div id="basicScenario"></div><br>
-                                            <form method="POST" action="{{ url('transaksi/') }}" id="mainForm" enctype="multipart/form-data">
-                                              {{ csrf_field() }}
                                               <div class="row">
+                                                <form method="POST" action="{{ url('transaksi/') }}" id="mainForm" enctype="multipart/form-data">
+                                                  {{ csrf_field() }}
+                                                  <div class="col-lg-6 col-md-12">
+                                                    @if(!$pending_batch)
+                                                      <fieldset class="form-group">
+                                                        <label for="basicInputFile">Upload berkas</label>
+                                                        <input type="file" class="form-control-file" id="basicInputFile" multiple="" name="berkas[]">
+                                                      </fieldset>
+                                                    @endif
+                                                    <div class="bs-callout-info callout-border-left callout-bordered callout-transparent mt-1 p-1">
+                                                      <h4 class="info">List Berkas</h4>
+                                                      <table>
+                                                        @foreach($berkas as $value)
+                                                          <tr>
+                                                            <td width="25%">File: <a href="{{ asset('file/transaksi').'/'.$value->file_name }}" target="_blank">{{ $value->file_name }}</a></td>
+                                                            <td width="25%">Diunggah: <b>{{ $value->created_at }}</b></td>
+                                                            <td width="5%">
+                                                            @if(!$pending_batch)
+                                                              {{-- <form method="POST" action="{{ url('') }}"> --}}
+                                                              <a href=""><i class="fa fa-times"></i> Hapus</a>
+                                                              {{-- </form> --}}
+                                                            @endif
+                                                            </td>
+                                                          </tr>
+                                                        @endforeach
+                                                      </table>
+                                                    </div>
+                                                  </div>
+                                                  <input type="hidden" name="batch_values" id="batch_values">
+                                                </form>
                                                 <div class="col-lg-6 col-md-12">
-                                                  <fieldset class="form-group">
-                                                    <label for="basicInputFile">Upload berkas</label>
-                                                    <input type="file" class="form-control-file" id="basicInputFile" multiple="" name="berkas[]">
-                                                  </fieldset>
-                                                  <div class="bs-callout-info callout-border-left mt-1 p-1">
-                                                    <h4 class="info">List Berkas Batch ini</h4>
+                                                  <div class="bs-callout-danger callout-border-left callout-bordered mt-1 p-1">
+                                                    <h4 class="danger">History Batch </h4>
                                                     <table>
-                                                      @foreach($berkas as $value)
-                                                      <tr>
-                                                        <td width="25%">File: <a href="{{ asset('file/transaksi').'/'.$value->file_name }}" target="_blank">{{ $value->file_name }}</a></td>
-                                                        <td width="25%">Diunggah: <b>{{ $value->created_at }}</b></td>
-                                                        <td width="5%"><a href=""><i class="fa fa-times"></i> Hapus</a></td>
-                                                      </tr>
+                                                      @foreach($batch_history as $hist)
+                                                        <tr>
+                                                          <td><b class="text-danger">{{ $hist['stat'] }}</b></td>
+                                                          <td>oleh <b class="text-warning">{{ $hist['submitted'] }}</b></td>
+                                                          <td>| <code>{{ $hist['created_at'] }}</code></td>
+                                                        </tr>
                                                       @endforeach
                                                     </table>
                                                   </div>
                                                 </div>
-                                                <input type="hidden" name="batch_values" id="batch_values">
                                               </div>
-                                              </form>
+                                              @if(!$pending_batch)
                                               <div class="row">
                                                 <div class="col-xs-2 pull-right">
                                                     <div class="form-group">
-                                                        <button type="submit" onclick="populateBatchInput()" class="btn btn-primary pull-right" id="simpan" value="Simpan"><i class="fa fa-check"></i> Simpan perubahan batch</button>
+                                                        <button onclick="populateBatchInput()" class="btn btn-primary pull-right" id="simpan" value="Simpan"><i class="fa fa-check"></i> Simpan perubahan batch</button>
                                                     </div>
                                                 </div>
                                                 <div class="col-xs-3 pull-right">
                                                   <div class="form-group">
-                                                      <button  data-toggle="modal" data-target="#xSmall" class="btn btn-danger pull-right" id="button_status" value="Simpan"><i class="fa fa-check-circle"></i> Submit batch untuk Verifikasi</button>
+                                                      <button onclick="checkBatchSubmit()" data-toggle="modal" data-target="#xSmall" class="btn btn-danger pull-right" id="button_status"><i class="fa fa-check-circle"></i> Submit batch untuk Verifikasi</button>
                                                     </div>
                                                 </div>
                                               </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
+                                              @endif
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                      </section>
                     <!-- Basic scenario end -->
                 </div>
 
@@ -165,12 +201,23 @@
                         <h4 class="modal-title" id="myModalLabel20">Box Konfirmasi</h4>
                       </div>
                       <div class="modal-body" id="confirmation-msg">
-                        <p>Anda akan melakukan submit untuk verifikasi batch ini.</p>
+                        <p>Anda akan melakukan submit untuk verifikasi batch ini. Anda tidak diperbolehkan untuk memperbarui item batch selama batch ini masih dalam proses verifikasi. Informasi batch ini : 
+                        <ul>
+                          @if(!$pending_batch)
+                            <li>Batch saat ini : <code>{{ date("d-m-Y", strtotime($current_batch_stat->created_at)) }}</code></li>
+                            <li>Terkahir Update : <code>{{ $current_batch_stat->updated_at }}</code> oleh <code>{{ $current_batch_stat['submitter']['name'] }}</code></li>
+                            <li>Banyak item : <code id="totalRows"></code>, dengan <code>{{ count($berkas).' berkas lampiran' }}</code></li>
+                          @endif
+                        </ul>
+                        </p>
                         <p>Apakah anda yakin dengan <b>data batch</b> yang anda input sudah sesuai?</p>
                       </div>
                       <div class="modal-footer">
-                        <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">Kembali</button>
-                        <button type="submit" id="post" onclick="" class="btn btn-outline-primary">Submit untuk verifikasi</button>
+                        <form method="POST" action="{{ url('transaksi/submit/verify') }}">
+                          {{ csrf_field() }}
+                          <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">Tidak, kembali</button>
+                          <button type="submit" class="btn btn-outline-primary">Ya, submit untuk verifikasi</button>
+                        </form>
                       </div>
                     </div>
                   </div>
@@ -197,7 +244,8 @@
                 <script type="text/javascript">
                   var inputs = [];
                   var item = m_anggaran = subpos = account_field = null;
-                  var tempIdCounter = 0;
+                  var tempIdCounter = totalRows = 0;
+                  var editableStat = {{ !$pending_batch ? 1 : 0 }};
 
                   $(document).ready(function() {
                     var MyDateField = function(config) {
@@ -220,10 +268,10 @@
                             return this._editPicker = $("<input>").datepicker().datepicker("setDate", new Date(value));
                         },
                         insertValue: function() {                            
-                            return this._insertPicker.datepicker("getDate")!= null ? this._insertPicker.datepicker("getDate").toISOString() : '';
+                            return this._insertPicker.datepicker("getDate")!= null ? this._insertPicker.datepicker("getDate").toString() : '';
                         },
                         editValue: function() {
-                            return this._editPicker.datepicker("getDate").toISOString();
+                            return this._editPicker.datepicker("getDate").toString();
                         }
                     });
                      
@@ -232,14 +280,18 @@
                     $("#basicScenario").jsGrid( {
                       width: "auto",
                
-                      sorting: true, paging: true, autoload: true, editing: true, inserting: true,
+                      sorting: true, 
+                      paging: true, 
+                      autoload: true, 
+                      editing: editableStat == 1 ? true : false, 
+                      inserting: editableStat == 1 ? true : false,
                
-                      pageSize: 5, pageButtonCount: 10,
+                      pageSize: 10, pageButtonCount: 10,
                       
                       controller: {
                         loadData: function(filter) {
                           return $.ajax({
-                              type: "GET", url: "{{  url('transaksi/get')}}", data: filter, dataType: "JSON"
+                              type: "GET", url: "{{  url($jsGrid_url) }}", data: filter, dataType: "JSON"
                           })
                         },
                         insertItem: function (item) {
@@ -250,14 +302,24 @@
                         },
                         updateItem: function(item) {
                           if (item["isNew"]) {
-                            inputs.splice(item["tempId"], 1, item);  
+                            inputs.splice(item["tempId"]-1, 1, item);  
                           } else {
                             inputs.push(item);
                           }
                           console.log(item);  
+                        },
+                        deleteItem: function(item) {
+
                         }
                       }, 
+                      onRefreshed: function(args) {
+                        var items = args.grid.option("data");
+                        items.forEach(function(item) {
+                          totalRows += 1;
+                        });
 
+                        $('code[id="totalRows"]').html(totalRows + " baris");
+                      },
                       fields: [
                           {
                             name: "id",
@@ -268,19 +330,8 @@
                           { 
                             type: "control", 
                             width: 60,
-                            itemTemplate: function(value, item) {
-                              var $result = $([]);
-
-                              if(item) {
-                                  $result = $result.add(this._createEditButton(item));
-                              }
-                  
-                              if(item) {
-                                  $result = $result.add(this._createDeleteButton(item));
-                              }
-                  
-                              return $result;
-                            } },
+                            css: editableStat == 1 ? '' : "hide"
+                          },
                           { 
                             name: "account", 
                             width: 200, 
@@ -452,19 +503,8 @@
                           { 
                             type: "control", 
                             width: 60,
-                            itemTemplate: function(value, item) {
-                              var $result = $([]);
-
-                              if(item) {
-                                  $result = $result.add(this._createEditButton(item));
-                              }
-                  
-                              if(item) {
-                                  $result = $result.add(this._createDeleteButton(item));
-                              }
-                  
-                              return $result;
-                            } }
+                            css: editableStat == 1 ? '' : "hide"
+                          }
                         ]
                     });
                   });
@@ -504,13 +544,16 @@
                     $(account_field).val(account);
                   };
 
+                  function checkBatchSubmit() {
+
+                  };
+
                   function populateBatchInput(){
-                    console.log($('input[name="berkas[]"]').val());
-                    if (inputs.length > 0) {
+                    if (inputs.length > 0 || $('input[name="berkas[]"]').val() != '') {
                       $('input[name="batch_values"]').val(JSON.stringify(inputs));
                       $('form[id="mainForm"]').submit();
                     } else {
-                      toastr.error("Silahkan input perubahan pada tabel transaksi untuk penyimpanan. Terima kasih.", "Perhatian", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
+                      toastr.error("Silahkan input perubahan pada tabel transaksi atau berkas transaksi untuk melakukan penyimpanan. Terima kasih.", "Perhatian", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
                     }
                   };
                 </script>

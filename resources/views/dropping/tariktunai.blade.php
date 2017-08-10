@@ -227,8 +227,8 @@
                                       <p>Apakah anda yakin dengan <b>data tarik tunai dropping</b> yang anda input sudah sesuai?</p>
                                     </div>
                                     <div class="modal-footer">
-                                      <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">Kembali</button>
-                                      <button type="submit" id="post" onclick="forms_submit()" class="btn btn-outline-primary">Simpan post</button>
+                                      <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">Tidak, kembali</button>
+                                      <button type="submit" id="post" onclick="forms_submit()" class="btn btn-outline-primary">Ya, simpan post</button>
                                     </div>
                                   </div>
                                 </div>
