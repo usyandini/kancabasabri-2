@@ -109,9 +109,11 @@ class DroppingController extends Controller
                 'journalnum'    => $dropping->JOURNALNUM, 
                 'transdate'     => date("d-m-Y", strtotime($dropping->TRANSDATE)), 
                 'debit'         => 'IDR '. number_format($dropping->DEBIT, 2),
+                'credit'        => 'IDR '. number_format($dropping->KREDIT, 2),
                 'banknum'       => $dropping->REKENING_DROPPING,
                 'company'       => $dropping->CABANG_DROPPING,
                 'stat'          => $dropping->tarikTunai['is_sesuai'],
+                'nominal_tarik' => $dropping->tarikTunai['nominal_tarik'],
                 'sisa'          => 'IDR '. number_format($dropping->tarikTunai['sisa_dropping'], 2)
             ];
         }
@@ -119,58 +121,48 @@ class DroppingController extends Controller
         return response()->json($result);
     }
 
-    public function tarik_tunai($id_drop, Request $request)
+    public function inputDrop($id_drop)
     {
         $dropping = $this->jDroppingModel->where([['RECID', $id_drop], ['DEBIT', '>', 0]])->firstOrFail();
-        $akunBank = $this->akunBankModel->get();
-        $tabDropping = $this->droppingModel->get();
-
         //----- input view dropping axapta to table dropping dbcabang ketika klik lanjut -----//
-        $inputDropping['RECID']         = $dropping->RECID;
-        $inputDropping['JOURNALNAME']   = $dropping->JOURNALNAME;
-        $inputDropping['JOURNALNUM']    = $dropping->JOURNALNUM;
-        $inputDropping['TRANSDATE']     = $dropping->TRANSDATE;
-        $inputDropping['DEBIT']         = $dropping->DEBIT;
-        $inputDropping['BANK_DROPPING'] = $dropping->BANK_DROPPING;
-        $inputDropping['REKENING_DROPPING'] = $dropping->REKENING_DROPPING;
-        $inputDropping['CABANG_DROPPING']   = $dropping->CABANG_DROPPING;
-        $inputDropping['AKUN_DROPPING']     = $dropping->AKUN_DROPPING;
-        $inputDropping['TXT']           = $dropping->TXT;
-        $inputDropping['KREDIT']        = $dropping->KREDIT;
+        $inputDropping = [
+                'RECID'         => $dropping->RECID,
+                'JOURNALNAME'   => $dropping->JOURNALNAME,
+                'JOURNALNUM'    => $dropping->JOURNALNUM,
+                'TRANSDATE'     => $dropping->TRANSDATE,
+                'DEBIT'         => $dropping->DEBIT,
+                'BANK_DROPPING' => $dropping->BANK_DROPPING,
+            'REKENING_DROPPING' => $dropping->REKENING_DROPPING,
+            'CABANG_DROPPING'   => $dropping->CABANG_DROPPING,
+            'AKUN_DROPPING'     => $dropping->AKUN_DROPPING,
+                'TXT'           => $dropping->TXT,
+                'KREDIT'        => $dropping->KREDIT];
         
         //----- update droping where recid = id_drop ------//
-        foreach($tabDropping as $postDropping){
-            if($postDropping != null){
-                Dropping::where('RECID', $id_drop)->update($inputDropping);
-            }else{
-                Dropping::create($inputDropping);
-            }
+        $findDrop = Dropping::where([['RECID', $id_drop], ['DEBIT', '>', 0]])->first();
+
+        if($findDrop){
+            Dropping::where('RECID', $findDrop['RECID'])->update($inputDropping);
+        }else{
+            Dropping::create($inputDropping);
         }
-        //$tariktunai = $this->tarikTunaiModel->where('id_dropping', $id_drop)->groupby('id')->orderby('created_at', 'desc')->firstOrFail();
-    	
-        return view('dropping.tariktunai', ['dropping' => $dropping], ['kcabangs' => $this->kantorCabangs], ['tariktunai' => $this->tarikTunaiModel]);
     }
 
-    public function getTarikTunai($id_drop)
+    public function tarik_tunai($id_drop, Request $request)
     {
-        $tariktunais = $this->tarikTunaiModel->where('id_dropping', $id_drop)->get();
-        $result = [];
-        foreach ($tariktunais as $tariktunai) {
-            $result[] = [
-                'id_tt'         => $tariktunai->id,
-                'id_dropping'   => $tariktunai->id_dropping,
-                'tanggal_tarik' => date("d-m-Y", strtotime($tariktunai->created_at)), 
-                'nominal_tarik' => 'IDR '. number_format($tariktunai->nominal_tarik, 2),
-                'sisa_dropping' => 'IDR '. number_format($tariktunai->sisa_dropping, 2)
-            ];
-        }
-        return response()->json($result);
+        $this->inputDrop($id_drop); 
+
+        $dropping = $this->droppingModel->where([['RECID', $id_drop], ['DEBIT', '>', 0]])->firstOrFail();
+        $akunBank = $this->akunBankModel->get();
+        $tariktunai = TarikTunai::where('id_dropping', $id_drop)->get();
+
+        return view('dropping.tariktunai', ['tariktunai' => $tariktunai, 'dropping' => $dropping, 'kcabangs' => $this->kantorCabangs]);
     }
 
     public function tarik_tunai_process($id_drop, Request $request)
     {
         if ($request->is_sesuai == "1") {
-            $inputsTT = $request->except('_method', '_token');
+            $inputsTT = $request->except('_method', '_token', 'nominal');
         } else {
             $inputsTT = $request->except('_method', '_token', 'p_akun_bank', 'p_cabang', 'is_pengembalian', 'p_nominal', 'p_rek_bank', 'p_tgl_dropping');
             $inputsPD = array(
@@ -186,17 +178,24 @@ class DroppingController extends Controller
             $inputsTT['id_penyesuaian'] = $penyesuaian->id;
         }
 
-        $request->sisa_dropping = $request->nominal;
-        if($request->sisa_dropping != 0 && $request->nominal_tarik <= $request->sisa_dropping){
-            $inputsTT['sisa_dropping'] = ($request->sisa_dropping - $request->nominal_tarik);
+        //----- Fungsi tarik tunai, jika tidak ada record maka tariktunai berasal dari nominal awal - nominal tarik -----//
+        //----- jika ada record maka tariktunai berasal dari (nominal = sisa dropping sebelumnya) - nominal tarik  -----//
+        $temp_sisa = TarikTunai::where('id_dropping', $id_drop)->orderby('created_at', 'desc')->first();
+        if($temp_sisa){
+            $inputsTT['nominal'] = $temp_sisa['sisa_dropping'];
+        }else{
+            $inputsTT['nominal'] = $request->nominal;
+            $temp_sisa['sisa_dropping'] = $request->nominal;
+        }
 
-            $inputsTT['nominal'] = $request->sisa_dropping;
-            
+        if($temp_sisa['sisa_dropping'] != 0 && $request->nominal_tarik <= $temp_sisa['sisa_dropping']){
+            $inputsTT['sisa_dropping'] = ($temp_sisa['sisa_dropping'] - $request->nominal_tarik);
+
             $inputsTT['created_by'] = \Auth::id();
             $inputsTT['id_dropping'] = $id_drop;
             
             TarikTunai::create($inputsTT);
-            
+           
             session()->flash('success', true);
         } else {
             session()->flash('success', false);

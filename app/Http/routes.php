@@ -44,8 +44,6 @@ Route::group(['middleware' => 'auth'], function() {
 		Route::get('/filter/{transyear}/{periode}/{kcabang}', 'DroppingController@filter');
 		Route::get('/get/filtered/{transyear}/{periode}/{kcabang}', 'DroppingController@getFiltered');
 		
-		//Route::get('/tariktunai/{id_dropping}', 'DroppingController@postDropping');
-		Route::get('/tariktunai/{id_dropping}', 'DroppingController@getTarikTunai');
 	    Route::get('/tariktunai/{id_dropping}', 'DroppingController@tarik_tunai');
 	    Route::post('/tariktunai/{id_dropping}', 'DroppingController@tarik_tunai_process');
 
@@ -60,6 +58,10 @@ Route::group(['middleware' => 'auth'], function() {
 		Route::post('/submit/verify', 'TransaksiController@submit');
 		// Route::get('/berkas/remove', 'TransaksiController@removeBerkas');
 		
-		Route::get('/viewtransaksi/{created_at}', 'TransaksiController@view_transaksi');
+		Route::get('/viewtransaksi/{id_batch}', 'TransaksiController@view_transaksi');
+		
+		Route::get('/viewtransaksi', 'TransaksiController@view_transaksi');
+		Route::get('/persetujuan', 'TransaksiController@persetujuan_transaksi');
+		Route::get('/verifikasi', 'TransaksiController@verifikasi_transaksi');
 	});
 });
