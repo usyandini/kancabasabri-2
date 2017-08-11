@@ -120,7 +120,7 @@
                                             @endif
                                             @if(session('success_deletion'))
                                               <div class="col-xs-6">
-                                                <div class="alert alert-info">
+                                                <div class="alert alert-success">
                                                   File <code>{{ session('success_deletion') }}</code> berhasil dihapus.
                                                 </div>
                                               </div>

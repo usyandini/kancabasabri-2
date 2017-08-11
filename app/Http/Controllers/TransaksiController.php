@@ -249,7 +249,7 @@ class TransaksiController extends Controller
         $this->storeBerkas($request->berkas, $this->current_batch);
         $this->updateBatchStat($this->current_batch, 0);
         
-        $batch_counter = array(count($batch_insert), count($batch_update), count($request->berkas[0]));
+        $batch_counter = array(count($batch_insert), count($batch_update), count($request->berkas));
 
         session()->flash('success', $batch_counter);
         return redirect('transaksi');
@@ -299,7 +299,7 @@ class TransaksiController extends Controller
 
         BerkasTransaksi::where('id', $request->file_id)->delete();
 
-        session()->flash('success_deletion', $request->name);
+        session()->flash('success_deletion', $request->file_name);
         return redirect()->back();
     }
 
