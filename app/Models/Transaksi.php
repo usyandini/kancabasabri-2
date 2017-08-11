@@ -10,6 +10,8 @@ class Transaksi extends Model
 
     protected $table = 'transaksi';
 
+    protected $dateFormat = 'Y-m-d H:i:s';
+
     protected $fillable = [
     	'tgl',
     	'item',

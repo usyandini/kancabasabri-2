@@ -103,7 +103,7 @@ class TransaksiController extends Controller
             }
             array_push($result, [
                 'stat'          => $stat,
-                'created_at'    => date("d-m-Y, H:m", strtotime($hist->created_at)),
+                'created_at'    => date("d-m-Y, H:i", strtotime($hist->created_at)),
                 'submitted'     => $hist['submitter']['name']]);
         }
         return $result;
@@ -213,6 +213,7 @@ class TransaksiController extends Controller
 
     public function store(Request $request)
     {
+        // dd($request->batch_values);
         $batch_insert = $batch_update = array();
         
         foreach (json_decode($request->batch_values) as $value) {
@@ -290,7 +291,16 @@ class TransaksiController extends Controller
 
     public function removeBerkas(Request $request)
     {
-        BerkasTransaksi::where('id', $id)->delete();
+        // dd($request->all());
+        $file_path = public_path('file/transaksi/'.$request->file_name);
+        if (\File::exists($file_path)) {
+            unlink($file_path);
+        }
+
+        BerkasTransaksi::where('id', $request->file_id)->delete();
+
+        session()->flash('success_deletion', $request->name);
+        return redirect()->back();
     }
 
     public function updateBatchStat($current_batch, $stat)

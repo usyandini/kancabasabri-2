@@ -118,6 +118,13 @@
                                                 </div>
                                               </div>
                                             @endif
+                                            @if(session('success_deletion'))
+                                              <div class="col-xs-6">
+                                                <div class="alert alert-info">
+                                                  File <code>{{ session('success_deletion') }}</code> berhasil dihapus.
+                                                </div>
+                                              </div>
+                                            @endif
                                           </div>
                                             <div id="basicScenario"></div><br>
                                               <div class="row">
@@ -140,11 +147,7 @@
                                                               <td width="25%">Diunggah: <b>{{ $value->created_at }}</b></td>
                                                               <td width="5%">
                                                               @if(!$pending_batch)
-                                                                <form method="POST" action="{{ url('transaksi/berkas/remove') }}">
-                                                                  {{ csrf_field() }}
-                                                                  <input type="hidden" name="id" value="{{ $value->id }}">
-                                                                  <a href="#" onclick="$(this).closest('form').submit()"><i class="fa fa-times"></i> Hapus</a>
-                                                                </form>
+                                                                  <a href="javascript:deleteBerkas('{{ $value->id }}', '{{ $value->file_name }}');"><i class="fa fa-times"></i> Hapus</a>
                                                               @endif
                                                               </td>
                                                             </tr>
@@ -158,6 +161,11 @@
                                                     </div>
                                                   </div>
                                                   <input type="hidden" name="batch_values" id="batch_values">
+                                                </form>
+                                                <form method="POST" id="deleteBerkas" action="{{ url('transaksi/berkas/remove') }}">
+                                                  {{ csrf_field() }}
+                                                  <input type="hidden" name="file_id" value="">
+                                                  <input type="hidden" name="file_name" value="">
                                                 </form>
                                                 <div class="col-lg-6 col-md-12">
                                                   <div class="bs-callout-danger callout-border-left callout-bordered mt-1 p-1">
@@ -552,6 +560,12 @@
                     var userId = {{ Auth::user()->id }};
                     var account = item + '-THT-' + userId +'-00-' + subpos + '-' + m_anggaran;   
                     $(account_field).val(account);
+                  };
+
+                  function deleteBerkas(file_id, file_name) {
+                    $('input[name="file_id"]').val(file_id);
+                    $('input[name="file_name"]').val(file_name);
+                    $('form[id="deleteBerkas"').submit();
                   };
 
                   function checkBatchSubmit() {
