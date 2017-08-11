@@ -92,19 +92,29 @@ class TransaksiController extends Controller
         $history = TransaksiStatus::where('batch_id', $batch)->get();
         $result = array();
         foreach ($history as $hist) {
-            $stat = null;
+            $stat = $updated_at = $stat2 = null;;
             switch ($hist->stat) {
                 case 0:
                     $stat = "Pertama kali dibuat";
+                    $stat2 =  "Terakhir diperbarui";
+                    $updated_at = date("d-m-Y, H:i", strtotime($hist->updated_at));
                     break;
                 case 1:
                     $stat = "Disubmit untuk verifikasi oleh Kasmin";
                     break;
             }
+            
             array_push($result, [
                 'stat'          => $stat,
                 'created_at'    => date("d-m-Y, H:i", strtotime($hist->created_at)),
                 'submitted'     => $hist['submitter']['name']]);
+
+            if ($updated_at) {
+                array_push($result, [
+                    'stat'          => $stat2,
+                    'created_at'    => $updated_at,
+                    'submitted'     => $hist['submitter']['name']]);                
+            }
         }
         return $result;
     }
