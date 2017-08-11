@@ -300,9 +300,24 @@ class TransaksiController extends Controller
         return redirect('transaksi');
     }
     
-    public function view_transaksi($batch)
+    /*public function view_transaksi($batch)
     {
         $transaksi = $this->transaksiModel->where(['created_at', $batch])->get();
         return view('transaksi.viewtransaksi', ['transaksi' => $transaksi]);
+    } */  
+
+    public function view_transaksi()
+    {
+        return view('transaksi.viewtransaksi');
+    }
+    
+    public function persetujuan_transaksi()
+    {
+        return view('transaksi.persetujuan');
     }   
+    
+    public function verifikasi_transaksi()
+    {
+        return view('transaksi.verifikasi');
+    }      
 }

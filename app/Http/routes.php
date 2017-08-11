@@ -15,6 +15,21 @@ Route::auth();
 Route::group(['middleware' => 'guest'], function() {
 	Route::get('/', 'Auth\AuthController@showLoginForm'); 
 	Route::get('/login', 'Auth\AuthController@postLogin');
+
+	/*Route::get('/login', function()
+	{
+	    $ldap_dn    = 'cn=read-only-admin,dc=example,dc=com';
+	    $ldap_pass  = 'password';
+	    $ldap_conn  = ldap_connect('ldap.forumsys.com');
+	    ldap_set_option($ldap_conn, LDAP_OPT_PROTOCOL_VERSION, 3);
+
+	    if (ldap_bind($ldap_conn, $ldap_dn, $ldap_pass)) {
+	        echo "BERHASIL MASUK LDAP SERVER";
+	    }else{
+	        echo 'GAGAL CONNECT LDAP SERVER!';
+	    }
+
+	});*/
 });
 
 Route::group(['middleware' => 'auth'], function() {
@@ -28,7 +43,7 @@ Route::group(['middleware' => 'auth'], function() {
 		Route::post('/filter', 'DroppingController@filterHandle');
 		Route::get('/filter/{transyear}/{periode}/{kcabang}', 'DroppingController@filter');
 		Route::get('/get/filtered/{transyear}/{periode}/{kcabang}', 'DroppingController@getFiltered');
-
+		
 	    Route::get('/tariktunai/{id_dropping}', 'DroppingController@tarik_tunai');
 	    Route::post('/tariktunai/{id_dropping}', 'DroppingController@tarik_tunai_process');
 
@@ -44,6 +59,10 @@ Route::group(['middleware' => 'auth'], function() {
 		Route::post('/submit/verify', 'TransaksiController@submit');
 		// Route::get('/berkas/remove', 'TransaksiController@removeBerkas');
 		
-		Route::get('/viewtransaksi/{created_at}', 'TransaksiController@view_transaksi');
+		Route::get('/viewtransaksi/{id_batch}', 'TransaksiController@view_transaksi');
+		
+		Route::get('/viewtransaksi', 'TransaksiController@view_transaksi');
+		Route::get('/persetujuan', 'TransaksiController@persetujuan_transaksi');
+		Route::get('/verifikasi', 'TransaksiController@verifikasi_transaksi');
 	});
 });

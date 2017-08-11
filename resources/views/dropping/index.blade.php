@@ -107,7 +107,6 @@
                                 <div class="card">
                                     <div class="card-header">
                                         <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
-                                        
                                     </div>
                                     <div class="card-body collapse in">
                                         <div class="card-block card-dashboard ">
@@ -154,7 +153,7 @@
                         loadData: function(filter) {
                           return $.ajax({
                               type: "GET",
-                              url: "{{ (checkActiveMenu('dropping') == 'active' ? url('dropping/get') : url('dropping/get/filtered/'.$filters['transyear'].'/'.$filters['periode'].'/'.$filters['kcabang']) ) }}",
+                              url: "{{ (checkActiveMenu('dropping') == 'active' ? url('dropping') : url('dropping/get/filtered/'.$filters['transyear'].'/'.$filters['periode'].'/'.$filters['kcabang']) ) }}",
                               data: filter,
                               dataType: "JSON"
                           })
@@ -177,7 +176,7 @@
                             return "<a href='{{ url('/dropping/tariktunai') }}/"+ e +"' class='btn btn-success btn-sm'>Lanjut</a>"
                             }
                           }
-                        ]
+                      ]
                     })
                   });
                 </script>

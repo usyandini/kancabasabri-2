@@ -12,7 +12,7 @@ class CreateDroppingTable extends Migration
      */
     public function up()
     {
-        
+        //
     }
 
     /**
