@@ -9,6 +9,15 @@ function checkActiveMenu($uri)
 	return $class;
 }
 
+function checkOpenedMenu($uri)
+{
+	$class = '';
+	if (Request::is($uri)) {
+		$class = 'open';
+	}
+	return $class;
+}
+
 function checkActiveToggle($uri)
 {
 	$class = '';
