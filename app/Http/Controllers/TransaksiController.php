@@ -19,9 +19,11 @@ use App\Services\FileUpload;
 
 //  ----------- BATCH STAT DESC -------------
 //          0 = Inserted 
-//          1 = Posted / Submited      
+//          1 = Posted / Submitted to Kasmin
 //          2 = Rejected for revision
-//          3 = Verified
+//          3 = Verified by Kasmin (lvl 1) / Submitted to Akuntansi 
+//          4 = Rejected for revision
+//          5 = Verified by Akuntansi (lvl 2)
 //  -----------------------------------------
 
 class TransaksiController extends Controller
@@ -52,26 +54,34 @@ class TransaksiController extends Controller
 
     public function index() 
     {
-        $pending_batch = null;
+        // dd($this->isEmptyBatchExist());
+        $pending_batch = $empty_batch = $berkas = null;
+        $jsGrid_url = 'transaksi';
         $current_batch_stat = TransaksiStatus::where([['batch_id', $this->current_batch], ['stat', 0]])->first();
         $history = $this->defineBatchHistory($this->current_batch);
         
-        // Wether there's still a pending batch to be confirmed or just submitted
-        if ($current_batch_stat) {
-            $jsGrid_url = 'transaksi/get/batch/'.$this->current_batch;
-            $berkas = BerkasTransaksi::where('batch_id', $this->current_batch)->get();
+        if ($this->isEmptyBatchExist()) {
+            $empty_batch = true;
         } else {
-            $pending_batch = $this->definePendingBatch();
-            $jsGrid_url = 'transaksi/get/batch/'.$pending_batch;
-            $berkas = BerkasTransaksi::where('batch_id', $pending_batch)->get();
-            $current_batch_stat = TransaksiStatus::where([['batch_id', $pending_batch], ['stat', 0]])->first();
-            $history = $this->defineBatchHistory($pending_batch);
+            // Wether there's still a pending batch to be confirmed or just submitted
+            if ($current_batch_stat) {
+                $jsGrid_url = 'transaksi/get/batch/'.$this->current_batch;
+                $berkas = BerkasTransaksi::where('batch_id', $this->current_batch)->get();
+            } else {
+                $pending_batch = $this->definePendingBatch();
+                $jsGrid_url = 'transaksi/get/batch/'.$pending_batch;
+                $berkas = BerkasTransaksi::where('batch_id', $pending_batch)->get();
+                $current_batch_stat = TransaksiStatus::where([['batch_id', $pending_batch], ['stat', 0]])->first();
+                $history = $this->defineBatchHistory($pending_batch);
+            }
         }
 
+        // dd($empty_batch);
         return view('transaksi.input', [
             'filters' => null, 
             'berkas' => $berkas, 
             'current_batch_stat' => $current_batch_stat, 
+            'empty_batch' => $empty_batch,
             'pending_batch' => $pending_batch,
             'batch_history' => $history,
             'jsGrid_url' => $jsGrid_url]);
@@ -88,7 +98,7 @@ class TransaksiController extends Controller
                     $stat = "Pertama kali dibuat";
                     break;
                 case 1:
-                    $stat = "Disubmit untuk verifikasi";
+                    $stat = "Disubmit untuk verifikasi oleh Kasmin";
                     break;
             }
             array_push($result, [
@@ -190,6 +200,17 @@ class TransaksiController extends Controller
         return response()->json($return);
     }
 
+    public function isEmptyBatchExist()
+    {
+        $batchIsEmptyOrNot = TransaksiStatus::first();
+        $newestBatchIsFinal = TransaksiStatus::where([['stat', '<', 5]])->orderBy('id', 'desc')->first();
+        
+        if ($batchIsEmptyOrNot == null || $newestBatchIsFinal == null) {
+            return true;
+        } 
+        return false;
+    }
+
     public function store(Request $request)
     {
         $batch_insert = $batch_update = array();
@@ -267,7 +288,7 @@ class TransaksiController extends Controller
         }
     }
 
-    public function removeBerkas($id)
+    public function removeBerkas(Request $request)
     {
         BerkasTransaksi::where('id', $id)->delete();
     }

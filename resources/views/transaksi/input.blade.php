@@ -132,21 +132,29 @@
                                                     @endif
                                                     <div class="bs-callout-info callout-border-left callout-bordered callout-transparent mt-1 p-1">
                                                       <h4 class="info">List Berkas</h4>
-                                                      <table>
-                                                        @foreach($berkas as $value)
-                                                          <tr>
-                                                            <td width="25%">File: <a href="{{ asset('file/transaksi').'/'.$value->file_name }}" target="_blank">{{ $value->file_name }}</a></td>
-                                                            <td width="25%">Diunggah: <b>{{ $value->created_at }}</b></td>
-                                                            <td width="5%">
-                                                            @if(!$pending_batch)
-                                                              {{-- <form method="POST" action="{{ url('') }}"> --}}
-                                                              <a href=""><i class="fa fa-times"></i> Hapus</a>
-                                                              {{-- </form> --}}
-                                                            @endif
-                                                            </td>
-                                                          </tr>
-                                                        @endforeach
-                                                      </table>
+                                                      @if($berkas!=null)
+                                                        <table>
+                                                          @forelse($berkas as $value)
+                                                            <tr>
+                                                              <td width="25%">File: <a href="{{ asset('file/transaksi').'/'.$value->file_name }}" target="_blank">{{ $value->file_name }}</a></td>
+                                                              <td width="25%">Diunggah: <b>{{ $value->created_at }}</b></td>
+                                                              <td width="5%">
+                                                              @if(!$pending_batch)
+                                                                <form method="POST" action="{{ url('transaksi/berkas/remove') }}">
+                                                                  {{ csrf_field() }}
+                                                                  <input type="hidden" name="id" value="{{ $value->id }}">
+                                                                  <a href="#" onclick="$(this).closest('form').submit()"><i class="fa fa-times"></i> Hapus</a>
+                                                                </form>
+                                                              @endif
+                                                              </td>
+                                                            </tr>
+                                                          @empty
+                                                            <code>Belum ada file terlampir</code>
+                                                          @endforelse
+                                                        </table>
+                                                      @else
+                                                        <code>Belum ada file terlampir</code>
+                                                      @endif
                                                     </div>
                                                   </div>
                                                   <input type="hidden" name="batch_values" id="batch_values">
@@ -155,13 +163,15 @@
                                                   <div class="bs-callout-danger callout-border-left callout-bordered mt-1 p-1">
                                                     <h4 class="danger">History Batch </h4>
                                                     <table>
-                                                      @foreach($batch_history as $hist)
+                                                      @forelse($batch_history as $hist)
                                                         <tr>
                                                           <td><b class="text-danger">{{ $hist['stat'] }}</b></td>
                                                           <td>oleh <b class="text-warning">{{ $hist['submitted'] }}</b></td>
                                                           <td>| <code>{{ $hist['created_at'] }}</code></td>
                                                         </tr>
-                                                      @endforeach
+                                                      @empty
+                                                        <code>Belum ada history batch terbaru.</code>
+                                                      @endforelse
                                                     </table>
                                                   </div>
                                                 </div>
@@ -203,7 +213,7 @@
                       <div class="modal-body" id="confirmation-msg">
                         <p>Anda akan melakukan submit untuk verifikasi batch ini. Anda tidak diperbolehkan untuk memperbarui item batch selama batch ini masih dalam proses verifikasi. Informasi batch ini : 
                         <ul>
-                          @if(!$pending_batch)
+                          @if(!$empty_batch && !$pending_batch)
                             <li>Batch saat ini : <code>{{ date("d-m-Y", strtotime($current_batch_stat->created_at)) }}</code></li>
                             <li>Terkahir Update : <code>{{ $current_batch_stat->updated_at }}</code> oleh <code>{{ $current_batch_stat['submitter']['name'] }}</code></li>
                             <li>Banyak item : <code id="totalRows"></code>, dengan <code>{{ count($berkas).' berkas lampiran' }}</code></li>

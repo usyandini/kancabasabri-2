@@ -57,7 +57,7 @@ Route::group(['middleware' => 'auth'], function() {
 		Route::get('get/batch/{batch}', 'TransaksiController@getByBatch');
 		Route::get('/get/attributes/{type}', 'TransaksiController@getAttributes');
 		Route::post('/submit/verify', 'TransaksiController@submit');
-		// Route::get('/berkas/remove', 'TransaksiController@removeBerkas');
+		Route::post('/berkas/remove', 'TransaksiController@removeBerkas');
 		
 		Route::get('/viewtransaksi/{id_batch}', 'TransaksiController@view_transaksi');
 		
