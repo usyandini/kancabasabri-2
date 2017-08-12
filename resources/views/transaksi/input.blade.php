@@ -79,18 +79,13 @@
                                     <li>Pastikan untuk melakukan <b>simpan perubahan batch</b> sebelum melakukan <b>submit batch untuk verifikasi</b>.</li>
                                   </ul>
                                 </div>
-                              </div>
+                            </div>
                         </div>
                         <div class="row">
                             <div class="col-xs-12">
                                 <div class="card">
                                     <div class="card-header">
                                         <h4 class="card-title">List Transaksi</h4><br>
-                                        {{-- @if(!$pending_batch)
-                                        <p>Batch saat ini : <code>{{ date("d-m-Y", strtotime($current_batch_stat->created_at)) }}</code> | Terkahir Update : <code>{{ $current_batch_stat->updated_at }}</code> oleh <code>{{ $current_batch_stat['submitter']['name'] }}</code> | Status : <code>{{ $current_batch_stat->status() }}</code></p>
-                                        @else
-                                        <p>Info batch <code>{{ $current_batch_stat->created_at }}</code>: <code>Masih menunggu konfirmasi verifikasi. <b>Edit atau tambah baru tidak diperbolehkan.</b></code></p>
-                                        @endif --}}
                                         <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
                                     </div>
                                     <div class="card-body collapse in ">
@@ -131,7 +126,7 @@
                                                 <form method="POST" action="{{ url('transaksi/') }}" id="mainForm" enctype="multipart/form-data">
                                                   {{ csrf_field() }}
                                                   <div class="col-lg-6 col-md-12">
-                                                    @if(!$pending_batch)
+                                                    @if($editable)
                                                       <fieldset class="form-group">
                                                         <label for="basicInputFile">Upload berkas</label>
                                                         <input type="file" class="form-control-file" id="basicInputFile" multiple="" name="berkas[]">
@@ -139,14 +134,13 @@
                                                     @endif
                                                     <div class="bs-callout-info callout-border-left callout-bordered callout-transparent mt-1 p-1">
                                                       <h4 class="info">List Berkas</h4>
-                                                      @if($berkas!=null)
                                                         <table>
                                                           @forelse($berkas as $value)
                                                             <tr>
                                                               <td width="25%">File: <a href="{{ asset('file/transaksi').'/'.$value->file_name }}" target="_blank">{{ $value->file_name }}</a></td>
                                                               <td width="25%">Diunggah: <b>{{ $value->created_at }}</b></td>
                                                               <td width="5%">
-                                                              @if(!$pending_batch)
+                                                              @if($editable)
                                                                   <a href="javascript:deleteBerkas('{{ $value->id }}', '{{ $value->file_name }}');"><i class="fa fa-times"></i> Hapus</a>
                                                               @endif
                                                               </td>
@@ -155,9 +149,6 @@
                                                             <code>Belum ada file terlampir</code>
                                                           @endforelse
                                                         </table>
-                                                      @else
-                                                        <code>Belum ada file terlampir</code>
-                                                      @endif
                                                     </div>
                                                   </div>
                                                   <input type="hidden" name="batch_values" id="batch_values">
@@ -184,7 +175,7 @@
                                                   </div>
                                                 </div>
                                               </div>
-                                              @if(!$pending_batch)
+                                              @if($editable)
                                               <div class="row">
                                                 <div class="col-xs-2 pull-right">
                                                     <div class="form-group">
@@ -193,7 +184,7 @@
                                                 </div>
                                                 <div class="col-xs-3 pull-right">
                                                   <div class="form-group">
-                                                      <button onclick="checkBatchSubmit()" data-toggle="modal" data-target="#xSmall" class="btn btn-danger pull-right" id="button_status"><i class="fa fa-check-circle"></i> Submit batch untuk Verifikasi</button>
+                                                      <button onclick="checkBatchSubmit()" class="btn btn-danger pull-right" id="button_status"><i class="fa fa-check-circle"></i> Submit batch untuk Verifikasi</button>
                                                     </div>
                                                 </div>
                                               </div>
@@ -221,9 +212,9 @@
                       <div class="modal-body" id="confirmation-msg">
                         <p>Anda akan melakukan submit untuk verifikasi batch ini. Anda tidak diperbolehkan untuk memperbarui item batch selama batch ini masih dalam proses verifikasi. Informasi batch ini : 
                         <ul>
-                          @if(!$empty_batch && !$pending_batch)
-                            <li>Batch saat ini : <code>{{ date("d-m-Y", strtotime($current_batch_stat->created_at)) }}</code></li>
-                            <li>Terkahir Update : <code>{{ $current_batch_stat->updated_at }}</code> oleh <code>{{ $current_batch_stat['submitter']['name'] }}</code></li>
+                          @if(!$empty_batch && $editable)
+                            <li>Batch saat ini : <code>{{ date("d-m-Y", strtotime($active_batch->created_at)) }}</code></li>
+                            <li>Terkahir Update : <code>{{ $active_batch->updated_at }}</code> oleh <code>{{ $active_batch['submitter']['name'] }}</code></li>
                             <li>Banyak item : <code id="totalRows"></code>, dengan <code>{{ count($berkas).' berkas lampiran' }}</code></li>
                           @endif
                         </ul>
@@ -263,7 +254,7 @@
                   var inputs = [];
                   var item = m_anggaran = subpos = account_field = null;
                   var tempIdCounter = totalRows = 0;
-                  var editableStat = {{ !$pending_batch ? 1 : 0 }};
+                  var editableStat = {{ $editable ? 1 : 0 }};
 
                   $(document).ready(function() {
                     var MyDateField = function(config) {
@@ -569,7 +560,11 @@
                   };
 
                   function checkBatchSubmit() {
-
+                    if (totalRows > 0) {
+                      $('#xSmall').modal()
+                    } else {
+                      toastr.error("Silahkan input data yang hendak disubmit. Terima kasih.", "Data tidak boleh kosong", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});                      
+                    }
                   };
 
                   function populateBatchInput(){
@@ -577,7 +572,7 @@
                       $('input[name="batch_values"]').val(JSON.stringify(inputs));
                       $('form[id="mainForm"]').submit();
                     } else {
-                      toastr.error("Silahkan input perubahan pada tabel transaksi atau berkas transaksi untuk melakukan penyimpanan. Terima kasih.", "Perhatian", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
+                      toastr.error("Silahkan input perubahan pada tabel transaksi atau berkas transaksi untuk melakukan penyimpanan. Terima kasih.", "Input tidak boleh kosong.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
                     }
                   };
                 </script>

@@ -52,39 +52,74 @@ class TransaksiController extends Controller
         $this->current_batch = $this->defineCurrentBatch();
     }
 
-    public function index() 
+    public function index()
     {
-        // dd($this->isEmptyBatchExist());
-        $pending_batch = $empty_batch = $berkas = null;
+        $empty_batch = null;
+        $berkas = $history = [];
         $jsGrid_url = 'transaksi';
-        $current_batch_stat = TransaksiStatus::where([['batch_id', $this->current_batch], ['stat', 0]])->first();
+        $active_batch = $this->current_batch;
+        
+        if ($active_batch) {
+            $editable = $active_batch->isUpdatable();
+            $berkas = BerkasTransaksi::where('batch_id', $active_batch['batch_id'])->get();
+            $history = $this->defineBatchHistory($active_batch['batch_id']);
+            $jsGrid_url = 'transaksi/get/batch/'.$active_batch['batch_id'];
+        } else {
+            $empty_batch = $editable = true;
+        }
+        return view('transaksi.input', [
+            'filters'       => null,
+            'active_batch'  => $active_batch,
+            'editable'      => $editable,
+            'empty_batch'   => $empty_batch,
+            'berkas'        => $berkas,
+            'batch_history' => $history,
+            'jsGrid_url'    => $jsGrid_url]);
+    }
+
+    public function index2() 
+    {
+        $pending_batch = $empty_batch = $berkas = $editable = null;
+        $jsGrid_url = 'transaksi';
+        $active_batch = TransaksiStatus::where([['batch_id', $this->current_batch], ['stat', 0]])->first();
         $history = $this->defineBatchHistory($this->current_batch);
         
-        if ($this->isEmptyBatchExist()) {
+        if ($this->isNowBatchEmpty()) {
             $empty_batch = true;
         } else {
-            // Wether there's still a pending batch to be confirmed or just submitted
-            if ($current_batch_stat) {
+            if ($active_batch) {
                 $jsGrid_url = 'transaksi/get/batch/'.$this->current_batch;
                 $berkas = BerkasTransaksi::where('batch_id', $this->current_batch)->get();
+                $editable = true;
             } else {
                 $pending_batch = $this->definePendingBatch();
                 $jsGrid_url = 'transaksi/get/batch/'.$pending_batch;
                 $berkas = BerkasTransaksi::where('batch_id', $pending_batch)->get();
-                $current_batch_stat = TransaksiStatus::where([['batch_id', $pending_batch], ['stat', 0]])->first();
+                $active_batch = TransaksiStatus::where([['batch_id', $pending_batch], ['stat', 0]])->first();
                 $history = $this->defineBatchHistory($pending_batch);
             }
         }
 
-        // dd($empty_batch);
         return view('transaksi.input', [
             'filters' => null, 
             'berkas' => $berkas, 
-            'current_batch_stat' => $current_batch_stat, 
+            'editable' => $editable,
+            'active_batch' => $active_batch, 
             'empty_batch' => $empty_batch,
             'pending_batch' => $pending_batch,
             'batch_history' => $history,
             'jsGrid_url' => $jsGrid_url]);
+    }
+
+    public function defineCurrentBatch()
+    {
+        // $current_batch = $this->transaksiModel->orderBy('id', 'desc')->first();
+        $current_batch = TransaksiStatus::orderBy('id', 'desc')->first();
+        if ($current_batch) {
+            return $current_batch;
+        } 
+
+        return null;
     }
 
     public function defineBatchHistory($batch)
@@ -95,12 +130,12 @@ class TransaksiController extends Controller
             $stat = $updated_at = $stat2 = null;;
             switch ($hist->stat) {
                 case 0:
-                    $stat = "Pertama kali dibuat";
+                    $stat = "Pertama dibuat";
                     $stat2 =  "Terakhir diperbarui";
                     $updated_at = date("d-m-Y, H:i", strtotime($hist->updated_at));
                     break;
                 case 1:
-                    $stat = "Disubmit untuk verifikasi oleh Kasmin";
+                    $stat = "Disubmit untuk verifikasi Kasmin";
                     break;
             }
             
@@ -116,21 +151,6 @@ class TransaksiController extends Controller
                     'submitted'     => $hist['submitter']['name']]);                
             }
         }
-        return $result;
-    }
-
-    public function defineCurrentBatch()
-    {
-        $result = 1;
-        if ($this->transaksiModel->orderBy('id', 'desc')->first()) {
-            $current_batch = $this->transaksiModel->orderBy('id', 'desc')->first();
-            $result = $current_batch['batch_id'];
-
-            if ($current_batch->latestStat() && (int)$current_batch->latestStat() > 0) {
-                $result += 1;
-            }
-        } 
-
         return $result;
     }
 
@@ -185,7 +205,6 @@ class TransaksiController extends Controller
                 'total'         => $value->total
                 ]);
         }
-        // dd($result);
         return response()->json($result);
     }
 
@@ -206,11 +225,10 @@ class TransaksiController extends Controller
                 $return = $this->kegiatanModel->get();
                 break;
         }
-        // dd($return);
         return response()->json($return);
     }
 
-    public function isEmptyBatchExist()
+    public function isNowBatchEmpty()
     {
         $batchIsEmptyOrNot = TransaksiStatus::first();
         $newestBatchIsFinal = TransaksiStatus::where([['stat', '<', 5]])->orderBy('id', 'desc')->first();
@@ -223,8 +241,8 @@ class TransaksiController extends Controller
 
     public function store(Request $request)
     {
-        // dd($request->batch_values);
         $batch_insert = $batch_update = array();
+        $current_batch_id = $this->current_batch ? $this->current_batch['batch_id'] : 1;
         
         foreach (json_decode($request->batch_values) as $value) {
             $store_values = [
@@ -240,7 +258,7 @@ class TransaksiController extends Controller
                     'anggaran'      => (int)$value->anggaran,
                     'total'         => (int)$value->total,
                     'created_by'    => \Auth::user()->id,
-                    'batch_id'      => (int)$this->current_batch,
+                    'batch_id'      => (int)$current_batch_id,
                     'created_at'    => \Carbon\Carbon::now(),
                     'updated_at'    => \Carbon\Carbon::now()];
 
@@ -251,21 +269,19 @@ class TransaksiController extends Controller
                 array_push($batch_update, $store_values);
             }
         }
-        
-        // dd($batch_insert);
 
-        $this->doInsert($batch_insert, $this->current_batch);
+        $this->doInsert($batch_insert);
         $this->doUpdate($batch_update);
-        $this->storeBerkas($request->berkas, $this->current_batch);
-        $this->updateBatchStat($this->current_batch, 0);
+        $this->storeBerkas($request->berkas, $current_batch_id);
+        $this->updateBatchStat($current_batch_id, 0);
         
-        $batch_counter = array(count($batch_insert), count($batch_update), count($request->berkas));
+        $batch_counter = array(count($batch_insert), count($batch_update), $request->berkas[0] ? count($request->berkas) : 0);
 
         session()->flash('success', $batch_counter);
         return redirect('transaksi');
     }
 
-    public function doInsert($batch_insert, $current_batch)
+    public function doInsert($batch_insert)
     {
         if (count($batch_insert) > 0) {
             Transaksi::insert($batch_insert);
@@ -301,7 +317,6 @@ class TransaksiController extends Controller
 
     public function removeBerkas(Request $request)
     {
-        // dd($request->all());
         $file_path = public_path('file/transaksi/'.$request->file_name);
         if (\File::exists($file_path)) {
             unlink($file_path);
@@ -331,11 +346,8 @@ class TransaksiController extends Controller
 
     public function submit(Request $request)
     {
-        // dd($request->all());
         $prev_batch = $this->current_batch;
-        // dd($prev_batch);
-        $this->updateBatchStat($this->current_batch, 1);
-        $prev_batch = TransaksiStatus::where([['batch_id', $prev_batch], ['stat', 0]])->first();
+        $this->updateBatchStat($this->current_batch['batch_id'], 1);
 
         session()->flash('success_submit', $prev_batch->created_at);
         return redirect('transaksi');
@@ -354,7 +366,11 @@ class TransaksiController extends Controller
     
     public function persetujuan_transaksi()
     {
-        return view('transaksi.persetujuan');
+        $jsGrid_url = 'transaksi/get';
+        return view('transaksi.persetujuan', [
+            'pending_batch' => null,
+            'jsGrid_url' => $jsGrid_url
+            ]);
     }   
     
     public function verifikasi_transaksi()

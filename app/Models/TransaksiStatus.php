@@ -29,11 +29,24 @@ class TransaksiStatus extends Model
         switch ($stat) {
             case 0:
                 return "Belum submit";
-                break;
             case 1:
                 return "Menunggu verifikasi";
             default:
                 break;
+        }
+        return null;
+    }
+
+    public function isUpdatable()
+    {
+        $stat = $this->stat;
+        switch ($stat) {
+            case 0:
+                return true;
+            case 1:
+                return false;
+            case 2:
+                return true;
         }
         return null;
     }
