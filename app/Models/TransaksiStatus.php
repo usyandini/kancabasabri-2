@@ -10,7 +10,7 @@ class TransaksiStatus extends Model
 
     protected $table = 'transaksi_status';
 
-    protected $dateFormat = 'Y-m-d H:i:s';
+    protected $dateFormat = 'Y-m-d H:i:s+';
 
     protected $fillable = [
     	'batch_id', 
