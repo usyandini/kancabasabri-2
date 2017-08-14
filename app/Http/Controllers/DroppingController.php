@@ -193,14 +193,30 @@ class DroppingController extends Controller
 
             $inputsTT['created_by'] = \Auth::id();
             $inputsTT['id_dropping'] = $id_drop;
+            //$inputsTT['berkas_tariktunai'] = $this->storeBerkas($request->berkas_tariktunai);            
             
             TarikTunai::create($inputsTT);
            
             session()->flash('success', true);
         } else {
-            session()->flash('success', false);
+            session()->flash('failed', true);
         }
         return redirect('/dropping');
+    }
+
+    public function storeBerkas($inputs)
+    {
+        //---- belum terselesaikan ----//
+        if ($inputs[0] != null) {
+            $fileUpload = new FileUpload();
+            $newNames = $fileUpload->multipleUpload($inputs, 'tariktunai');
+
+            $store = array();
+            foreach (explode('||', $newNames) as $value) {
+                array_push($store, ['berkas_tariktunai' => $value]);
+            }
+            TarikTunai::insert($store);
+        }
     }
 
     public function getChainedBank(Request $request)

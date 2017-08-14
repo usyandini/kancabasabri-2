@@ -28,7 +28,13 @@
                             @if(session('success'))
                             <div class="col-xs-7">
                                 <div class="alert alert-success">
-                                  <b>Data dropping berhasil dipost.</b>
+                                  <b>Data tarik tunai berhasil dikirim.</b>
+                                </div>
+                            </div>
+                            @elseif(session('failed'))
+                            <div class="col-xs-7">
+                                <div class="alert alert-warning">
+                                  <b>Data tarik tunai gagal dikirim. Nominal tarik tunai melebihi dana dropping.</b>
                                 </div>
                             </div>
                             @endif

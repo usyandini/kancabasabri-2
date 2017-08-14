@@ -45,7 +45,7 @@
                           </div>
                           <div class="card-body collapse in">
                             <div class="card-block">
-                              <form class="form" id="tariktunai-form" method="POST" action="{{ url('dropping/tariktunai/'.$dropping->RECID) }}">
+                              <form class="form" id="tariktunai-form" method="POST" action="{{ url('dropping/tariktunai/'.$dropping->RECID) }}" enctype="multipart/form-data">
                               {{ csrf_field() }}
                                 <input type="hidden" name="sisa_dropping" value="{{ $dropping->tarikTunai['sisa_dropping'] }}">
 
@@ -90,9 +90,6 @@
                                     </div>
                                   </div>
                                   <h4 class="form-section">Informasi Tarik Tunai</h4>
-                                  {{-- <button type="button" class="btn btn-success">
-                                    <i class="fa fa-plus"></i> Tambah
-                                  </button> --}}
                                   <div class="row">
                                     <div class="col-md-6">
                                       <div class="form-group">
@@ -107,6 +104,12 @@
                                       </div>
                                     </div>
                                   </div>
+                                  <div class="col-md-12">
+                                    <div class="form-group">
+                                      <label for="basicInputFile">Upload berkas tarik tunai</label>
+                                      <input type="file" class="form-control-file" id="basicInputFile" multiple="" name="berkas_tariktunai">
+                                    </div>
+                                  </div>
                                   <h4 class="form-section">History Tarik Tunai</h4>
                                   <div class="row">
                                     <div class="col-md-12">
@@ -119,6 +122,7 @@
                                                 <th>Saldo</th>
                                                 <th>Nominal Tarik</th>
                                                 <th>Sisa Dropping</th>
+                                                <th>Attachment</th>
                                               </tr>
                                             </thead>
                                             @foreach($tariktunai as $history)
@@ -128,6 +132,7 @@
                                                 <td>{{ $history->nominal }}</td>
                                                 <td>{{ $history->nominal_tarik }}</td>
                                                 <td>{{ $history->sisa_dropping }}</td>
+                                                <td>{{ $history->berkas_tariktunai }}</td>
                                               </tr>
                                             </tbody>
                                             @endforeach
@@ -142,6 +147,7 @@
                           </div>
                         </div>
                       </div>
+
                       <div class="col-md-6">
                         <div class="card" id="kesesuaian" style="height: 1800px;display: none;">
                           <div class="card-header">
@@ -170,7 +176,7 @@
                                 <input type="hidden" name="rek_bank" value="{{ $dropping->REKENING_DROPPING }}">
                                 <input type="hidden" name="cabang" value="{{ $dropping->CABANG_DROPPING }}">
                                 <input type="hidden" name="is_sesuai" value="0">
-                                <input type="hidden" name="nominal_tarik" value="" required="">
+                                <input type="hidden" name="nominal_tarik" value="">
                                 <input type="hidden" name="sisa_dropping" value="">
 
                                 <div class="form-body">
