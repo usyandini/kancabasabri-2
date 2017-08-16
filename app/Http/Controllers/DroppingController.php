@@ -210,8 +210,10 @@ class DroppingController extends Controller
         if ($inputs != null) {
             $fileUpload = new FileUpload();
             $newNames = $fileUpload->upload($inputs, 'tariktunai');
+            return $newNames;
+        }else{
+            return null;
         }
-        return $newNames;
     }
 
     public function getChainedBank(Request $request)
