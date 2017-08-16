@@ -14,6 +14,7 @@ use App\Models\PenyesuaianDropping;
 use App\Models\Dropping;
 
 use Validator;
+use App\Services\FileUpload;
 
 class DroppingController extends Controller
 {
@@ -193,7 +194,7 @@ class DroppingController extends Controller
 
             $inputsTT['created_by'] = \Auth::id();
             $inputsTT['id_dropping'] = $id_drop;
-            //$inputsTT['berkas_tariktunai'] = $this->storeBerkas($request->berkas_tariktunai);            
+            $inputsTT['berkas_tariktunai'] = $this->storeBerkas($request->berkas);      
             
             TarikTunai::create($inputsTT);
            
@@ -201,22 +202,16 @@ class DroppingController extends Controller
         } else {
             session()->flash('failed', true);
         }
-        return redirect('/dropping');
+        return redirect('/dropping/tariktunai/'.$id_drop);
     }
 
     public function storeBerkas($inputs)
     {
-        //---- belum terselesaikan ----//
-        if ($inputs[0] != null) {
+        if ($inputs != null) {
             $fileUpload = new FileUpload();
-            $newNames = $fileUpload->multipleUpload($inputs, 'tariktunai');
-
-            $store = array();
-            foreach (explode('||', $newNames) as $value) {
-                array_push($store, ['berkas_tariktunai' => $value]);
-            }
-            TarikTunai::insert($store);
+            $newNames = $fileUpload->upload($inputs, 'tariktunai');
         }
+        return $newNames;
     }
 
     public function getChainedBank(Request $request)

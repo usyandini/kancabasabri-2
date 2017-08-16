@@ -25,20 +25,6 @@
                 <div class="content-body"><!-- Basic scenario start -->
                     <section id="basic">
                         <div class="row">
-                            @if(session('success'))
-                            <div class="col-xs-7">
-                                <div class="alert alert-success">
-                                  <b>Data tarik tunai berhasil dikirim.</b>
-                                </div>
-                            </div>
-                            @elseif(session('failed'))
-                            <div class="col-xs-7">
-                                <div class="alert alert-warning">
-                                  <b>Data tarik tunai gagal dikirim. Nominal tarik tunai melebihi dana dropping.</b>
-                                </div>
-                            </div>
-                            @endif
-                            </div>
                             <div class="col-xs-7">
                                 <div class="card">
                                     <div class="card-header">

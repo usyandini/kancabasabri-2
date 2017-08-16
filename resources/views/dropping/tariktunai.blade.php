@@ -32,6 +32,21 @@
                 <!-- Basic scenario start -->
                   <section id ="basic-form-layouts">
                     <div class="row match-height">
+                    <div class="row">
+                        @if(session('success'))
+                        <div class="col-xs-7">
+                            <div class="alert alert-success">
+                              <b>Data tarik tunai berhasil dikirim.</b>
+                            </div>
+                        </div>
+                        @elseif(session('failed'))
+                        <div class="col-xs-7">
+                            <div class="alert alert-warning">
+                              <b>Data tarik tunai gagal dikirim. Nominal tarik tunai melebihi dana dropping.</b>
+                            </div>
+                        </div>
+                        @endif
+                      </div>
                       <div class="col-md-6">
                         <div class="card" style="height: 100px;">
                           <div class="card-header">
@@ -54,37 +69,37 @@
                                   <div class="row">
                                     <div class="col-md-6">
                                       <div class="form-group">
-                                        <label for="projectinput1">Tanggal Dropping</label>
+                                        <label for="tgl_dropping">Tanggal Dropping</label>
                                         <input type="date" readonly="" id="tgl_dropping" class="form-control" placeholder="Tanggal Transaksi" name="tgl_dropping" value="{{ date("Y-m-d",strtotime($dropping->TRANSDATE)) }}">
                                       </div>
                                     </div>
                                     <div class="col-md-6">
                                       <div class="form-group">
-                                        <label for="projectinput2">Nominal Dropping (Dalam IDR)</label>
+                                        <label for="nominal">Nominal Dropping (Dalam IDR)</label>
                                           <input type="text" readonly="" id="nominal_dropping" class="form-control" placeholder="{{ $dropping->DEBIT }}" name="nominal" value="{{ $dropping->DEBIT }}">
                                       </div>
                                     </div>
                                     <div class="col-md-6 pull-right">
                                       <div class="form-group">
-                                        <label for="companyName">Nomor Rekening</label>
+                                        <label for="rek_bank">Nomor Rekening</label>
                                         <input type="text" readonly="" id="rek_bank" class="form-control" placeholder="Rekening Bank" name="rek_bank" value="{{ $dropping->REKENING_DROPPING }}">
                                       </div>
                                     </div>
                                     <div class="col-md-6">
                                       <div class="form-group">
-                                        <label for="companyName">Nama Bank</label>
+                                        <label for="akun_bank">Nama Bank</label>
                                         <input type="text" readonly="" id="akun_bank" class="form-control" placeholder="Nama Bank" name="akun_bank" value="{{ $dropping->BANK_DROPPING }}">
                                       </div>
                                     </div>
                                     <div class="col-md-12">
                                       <div class="form-group">
-                                        <label for="projectinput8">Kantor Cabang</label>
+                                        <label for="cabang">Kantor Cabang</label>
                                         <input type="text" readonly="" id="cabang" class="form-control" placeholder="Kantor Cabang" name="cabang" value="{{ $dropping->CABANG_DROPPING }}">
                                       </div>
                                     </div>
                                     <div class="col-md-12">
                                       <div class="form-group">
-                                        <label for="companyName">Apakah nominal dropping sudah sesuai dengan pengajuan?</label><br>
+                                        <label for="is_sesuai">Apakah nominal dropping sudah sesuai dengan pengajuan?</label><br>
                                         <input type="checkbox" onchange="change_checkbox(this)" class="form-control switch" id="switch1" checked="checked" name="is_sesuai" value="1" data-on-label="Sesuai" data-off-label="Tidak sesuai"/>
                                       </div>
                                     </div>
@@ -93,21 +108,21 @@
                                   <div class="row">
                                     <div class="col-md-6">
                                       <div class="form-group">
-                                        <label for="projectinput1">Tanggal Tarik Tunai</label>
+                                        <label for="tgl_tarik">Tanggal Tarik Tunai</label>
                                         <input type="date" readonly="" id="tgl_tarik" class="form-control" placeholder="Tanggal Tarik Tunai" name="tgl_tarik" value="{{ date("Y-m-d") }}">
                                       </div>
                                     </div>
                                     <div class="col-md-6">
                                       <div class="form-group">
-                                        <label for="projectinput2">Nominal Tarik Tunai(Dalam IDR)</label>
-                                        <input type="text" id="nominal_tarik" class="form-control" placeholder="Nominal Tarik Tunai" name="nominal_tarik" value="" required="">
+                                        <label for="nominal_tarik">Nominal Tarik Tunai(Dalam IDR)</label>
+                                        <input type="number" id="nominal_tarik" class="form-control" placeholder="Nominal Tarik Tunai" name="nominal_tarik" value="" required="" validate="Nominal Tarik Tunai Harus Diisi">
                                       </div>
                                     </div>
                                   </div>
                                   <div class="col-md-12">
                                     <div class="form-group">
-                                      <label for="basicInputFile">Upload berkas tarik tunai</label>
-                                      <input type="file" class="form-control-file" id="basicInputFile" multiple="" name="berkas_tariktunai">
+                                      <label for="berkas">Upload berkas tarik tunai</label>
+                                      <input type="file" class="form-control-file" id="berkas" name="berkas">
                                     </div>
                                   </div>
                                   <h4 class="form-section">History Tarik Tunai</h4>
@@ -132,7 +147,7 @@
                                                 <td>{{ $history->nominal }}</td>
                                                 <td>{{ $history->nominal_tarik }}</td>
                                                 <td>{{ $history->sisa_dropping }}</td>
-                                                <td>{{ $history->berkas_tariktunai }}</td>
+                                                <td><a href="{{ asset('file/tariktunai').'/'.$history->berkas_tariktunai }}" target="_blank">{{ $history->berkas_tariktunai }}</a></td>
                                               </tr>
                                             </tbody>
                                             @endforeach

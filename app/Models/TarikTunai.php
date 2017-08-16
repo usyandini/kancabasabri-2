@@ -21,7 +21,8 @@ class TarikTunai extends Model
     	'created_by',
     	'tgl_dropping',
         'nominal_tarik',
-        'sisa_dropping'
+        'sisa_dropping',
+        'berkas_tariktunai'
     ];
 
     public function creator()
