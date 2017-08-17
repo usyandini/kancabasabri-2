@@ -77,40 +77,6 @@ class TransaksiController extends Controller
             'jsGrid_url'    => $jsGrid_url]);
     }
 
-    public function index2() 
-    {
-        $pending_batch = $empty_batch = $berkas = $editable = null;
-        $jsGrid_url = 'transaksi';
-        $active_batch = TransaksiStatus::where([['batch_id', $this->current_batch], ['stat', 0]])->first();
-        $history = $this->defineBatchHistory($this->current_batch);
-        
-        if ($this->isNowBatchEmpty()) {
-            $empty_batch = true;
-        } else {
-            if ($active_batch) {
-                $jsGrid_url = 'transaksi/get/batch/'.$this->current_batch;
-                $berkas = BerkasTransaksi::where('batch_id', $this->current_batch)->get();
-                $editable = true;
-            } else {
-                $pending_batch = $this->definePendingBatch();
-                $jsGrid_url = 'transaksi/get/batch/'.$pending_batch;
-                $berkas = BerkasTransaksi::where('batch_id', $pending_batch)->get();
-                $active_batch = TransaksiStatus::where([['batch_id', $pending_batch], ['stat', 0]])->first();
-                $history = $this->defineBatchHistory($pending_batch);
-            }
-        }
-
-        return view('transaksi.input', [
-            'filters' => null, 
-            'berkas' => $berkas, 
-            'editable' => $editable,
-            'active_batch' => $active_batch, 
-            'empty_batch' => $empty_batch,
-            'pending_batch' => $pending_batch,
-            'batch_history' => $history,
-            'jsGrid_url' => $jsGrid_url]);
-    }
-
     public function defineCurrentBatch()
     {
         // $current_batch = $this->transaksiModel->orderBy('id', 'desc')->first();
@@ -364,13 +330,26 @@ class TransaksiController extends Controller
         return view('transaksi.viewtransaksi');
     }
     
-    public function persetujuan_transaksi()
+    public function persetujuan($batch)
     {
-        $jsGrid_url = 'transaksi/get';
+        $berkas = $history = [];
+        $jsGrid_url = 'transaksi';
+        $valid_batch = TransaksiStatus::where([['batch_id', $batch], ['stat', 1]])->first();
+        
+        if ($valid_batch) {
+            $berkas = BerkasTransaksi::where('batch_id', $valid_batch['batch_id'])->get();
+            $history = $this->defineBatchHistory($valid_batch['batch_id']);
+            $jsGrid_url = 'transaksi/get/batch/'.$valid_batch['batch_id'];
+        } else {
+            $empty_batch = $editable = true;
+        }
         return view('transaksi.persetujuan', [
-            'pending_batch' => null,
-            'jsGrid_url' => $jsGrid_url
-            ]);
+            'filters'       => null,
+            'editable'      => false,
+            'active_batch'  => $valid_batch,
+            'berkas'        => $berkas,
+            'batch_history' => $history,
+            'jsGrid_url'    => $jsGrid_url]);
     }   
     
     public function verifikasi_transaksi()
