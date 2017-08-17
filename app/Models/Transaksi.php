@@ -29,12 +29,12 @@ class Transaksi extends Model
 
     public function stat()
     {
-        return $this->hasMany('App\Models\TransaksiStatus', 'batch_id', 'batch_id');
+        return $this->hasMany('App\Models\BatchStatus', 'batch_id', 'batch_id');
     }
 
     public function latestStat()
     {
-        $check = $this->hasOne('App\Models\TransaksiStatus', 'batch_id', 'batch_id')->limit(1)->orderBy('id', 'desc')->first();
+        $check = $this->hasOne('App\Models\BatchStatus', 'batch_id', 'batch_id')->limit(1)->orderBy('id', 'desc')->first();
 
         if ($check) return $check['stat'];
         else return false; 

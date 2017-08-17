@@ -46,7 +46,7 @@
                                                   <select class="select2 form-control" name="date">
                                                     <option value="0">Pilih tanggal</option>
                                                     @foreach($batches_dates as $batch)
-                                                      <option value="{{ $batch->batch_id }}" {{ $filters[0] == $batch->batch_id ? 'selected=""' : '' }}>{{ date('d F Y', strtotime($batch->created_at)) }}</option>
+                                                      <option value="{{ $batch->id }}" {{ $filters[0] == $batch->id ? 'selected=""' : '' }}>{{ date('d F Y', strtotime($batch->created_at)) }}</option>
                                                     @endforeach
                                                   </select>
                                                 </div>
@@ -135,7 +135,7 @@
                                             @if(session('failed_filter'))
                                               <div class="col-xs-6">
                                                 <div class="alert alert-danger">
-                                                  Pencarian dengan <b>dua field</b> tidak diperbolehkan. 
+                                                  {!! session('failed_filter') !!}
                                                 </div>
                                               </div>
                                             @endif
@@ -196,8 +196,8 @@
                                                     <table>
                                                       @forelse($batch_history as $hist)
                                                         <tr>
-                                                          <td><b class="text-danger">{{ $hist['stat'] }}</b></td>
-                                                          <td>oleh <b class="text-warning">{{ $hist['submitted'] }}</b></td>
+                                                          <td><b class="text-danger">{{ $hist->status() }}</b></td>
+                                                          <td>oleh <b class="text-warning">{{ $hist['submitter']['name'] }}</b></td>
                                                           <td>| <code>{{ $hist['created_at'] }}</code></td>
                                                         </tr>
                                                       @empty

@@ -4,11 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class TransaksiStatus extends Model
+class BatchStatus extends Model
 {
     protected $connection = 'sqlsrv';
 
-    protected $table = 'transaksi_status';
+    protected $table = 'batches_status';
 
     protected $dateFormat = 'Y-m-d H:i:s';
 
@@ -28,25 +28,11 @@ class TransaksiStatus extends Model
         $stat = $this->stat;
         switch ($stat) {
             case 0:
-                return "Belum submit";
+                return "Pertama dibuat";
             case 1:
                 return "Menunggu verifikasi";
             default:
                 break;
-        }
-        return null;
-    }
-
-    public function isUpdatable()
-    {
-        $last = $this->where('batch_id', $this->batch_id)->orderBy('id', 'desc')->first();
-        switch ($last['stat']) {
-            case 0:
-                return true;
-            case 1:
-                return false;
-            case 2:
-                return true;
         }
         return null;
     }
