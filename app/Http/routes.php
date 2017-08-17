@@ -52,6 +52,8 @@ Route::group(['middleware' => 'auth'], function() {
    	
    	Route::group(['prefix' => 'transaksi'], function() {
    		Route::resource('/', 'TransaksiController');
+   		Route::post('/filter/process', 'TransaksiController@filter_handle');
+   		Route::get('/filter/result/{batch}/{batch_no}', 'TransaksiController@filter_result');
 
 		Route::get('/get', 'TransaksiController@getAll');
 		Route::get('get/batch/{batch}', 'TransaksiController@getByBatch');
@@ -62,7 +64,7 @@ Route::group(['middleware' => 'auth'], function() {
 		Route::get('/viewtransaksi/{id_batch}', 'TransaksiController@view_transaksi');
 		
 		Route::get('/viewtransaksi', 'TransaksiController@view_transaksi');
-		Route::get('/persetujuan', 'TransaksiController@persetujuan_transaksi');
+		Route::get('/persetujuan/{id_batch}', 'TransaksiController@persetujuan');
 		Route::get('/verifikasi', 'TransaksiController@verifikasi_transaksi');
 	});
 });

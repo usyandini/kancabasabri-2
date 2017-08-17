@@ -12,8 +12,19 @@ function checkActiveMenu($uri)
 function checkOpenedMenu($uri)
 {
 	$class = '';
-	if (Request::is($uri)) {
+	if (Request::segment(1) == $uri) {
 		$class = 'open';
+	}
+	return $class;
+}
+
+function checkSubMenu($uri) 
+{
+	$class = '';
+	if (Request::segment(2) && Request::segment(2) == $uri) {
+		$class = 'active';
+	} elseif (Request::segment(1) == $uri) {
+		$class = 'active';	
 	}
 	return $class;
 }

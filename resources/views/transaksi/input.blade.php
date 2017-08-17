@@ -3,10 +3,6 @@
                 @section('additional-vendorcss')
                 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/tables/jsgrid/jsgrid-theme.min.css') }}">
                 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/tables/jsgrid/jsgrid.min.css') }}">
-                <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/forms/selects/select2.min.css') }}">
-                <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/core/colors/palette-callout.min.css') }}">
-                <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/extensions/toastr.css') }}">
-                <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/plugins/extensions/toastr.min.css') }}">
                 <style type="text/css">
                   .hide {
                     display: none;
@@ -41,28 +37,40 @@
                                     </div>
                                     <div class="card-body collapse in">
                                       <div class="card-block">
-                                        <form method="POST" action="{{ url('transaksi') }}">
+                                        <form method="POST" action="{{ url('transaksi/filter/process') }}">
                                           <div class="row">
                                             {{ csrf_field() }}
                                             <div class="col-xs-6">
                                                 <div class="form-group">
                                                   <label>Tanggal Batch</label>
-                                                  <input class="form-control" type="date" placeholder="{{ date('d/m/Y') }}" name="tgl_transaksi" id="tgl_transaksi" value="{{ date('Y-m-d') }}">
+                                                  <select class="select2 form-control" name="date">
+                                                    <option value="0">Pilih tanggal</option>
+                                                    @foreach($batches_dates as $batch)
+                                                      <option value="{{ $batch->batch_id }}" {{ $filters[0] == $batch->batch_id ? 'selected=""' : '' }}>{{ date('d F Y', strtotime($batch->created_at)) }}</option>
+                                                    @endforeach
+                                                  </select>
                                                 </div>
                                             </div>
                                             <div class="col-xs-6">
                                                 <div class="form-group">
                                                   <label>No. Batch</label>
-                                                  <input class="form-control" type="text" id="batch"></input>
+                                                  <input class="form-control" type="text" id="batch" name="batch_no"></input>
                                                 </div>
                                             </div>
                                           </div>
                                           <div class="row">
-                                              <div class="col-xs-2">
-                                                <div class="form-group">
-                                                  <a href="#" class="btn btn-primary"><i class="fa fa-search"></i> Cari</a>
-                                                </div>
+                                            <div class="col-xs-2">
+                                              <div class="form-group">
+                                                <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i> Filter</a>
                                               </div>
+                                            </div>
+                                            @if($filters)
+                                            <div class="col-xs-2">
+                                              <div class="form-group">
+                                                <a href="{{ url('transaksi') }}" class="btn btn-danger"><i class="fa fa-times"></i> Reset Filter</a>
+                                              </div>
+                                            </div>
+                                            @endif
                                           </div>
                                         </form>
                                       </div>
@@ -85,7 +93,11 @@
                             <div class="col-xs-12">
                                 <div class="card">
                                     <div class="card-header">
-                                        <h4 class="card-title">List Transaksi</h4><br>
+                                        @if ($filters)
+                                          <h4 class="card-title">Hasil Pencarian Transaksi</h4><br>
+                                        @else
+                                          <h4 class="card-title">List Transaksi</h4><br>
+                                        @endif
                                         <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
                                     </div>
                                     <div class="card-body collapse in ">
@@ -117,6 +129,26 @@
                                               <div class="col-xs-6">
                                                 <div class="alert alert-success">
                                                   File <code>{{ session('success_deletion') }}</code> berhasil dihapus.
+                                                </div>
+                                              </div>
+                                            @endif
+                                            @if(session('failed_filter'))
+                                              <div class="col-xs-6">
+                                                <div class="alert alert-danger">
+                                                  Pencarian dengan <b>dua field</b> tidak diperbolehkan. 
+                                                </div>
+                                              </div>
+                                            @endif
+                                            @if(session('success_filtering'))
+                                              <div class="col-xs-6">
+                                                <div class="alert alert-success">
+                                                  Filtering berhasil berdasar
+                                                  @if($filters[0])
+                                                    <b>tanggal batch. </b>
+                                                  @endif
+                                                  @if($filters[1])
+                                                    <b>nomor batch. </b>
+                                                  @endif
                                                 </div>
                                               </div>
                                             @endif
@@ -240,16 +272,12 @@
                 <script src="{{ asset('app-assets/vendors/js/tables/jsgrid/jsgrid.min.js') }}" type="text/javascript"></script>
                 <script src="{{ asset('app-assets/vendors/js/tables/jsgrid/griddata.js') }}" type="text/javascript"></script>
                 <script src="{{ asset('app-assets/vendors/js/tables/jsgrid/jquery.validate.min.js') }}" type="text/javascript"></script>
-                <script src="{{ asset('app-assets/vendors/js/forms/select/select2.full.min.js') }}" type="text/javascript"></script>
-                <script src="{{ asset('app-assets/vendors/js/extensions/toastr.min.js') }}" type="text/javascript"></script>
+                
                 <!-- END PAGE VENDOR JS-->
                 <!-- BEGIN PAGE LEVEL JS-->
                 <script type="text/javascript" src="{{ asset('app-assets/js/scripts/ui/breadcrumbs-with-stats.min.js') }}"></script>
                 {{--<script src="{{ asset('app-assets/js/scripts/tables/jsgrid/jsgrid.min.js') }}" type="text/javascript"></script>--}}
-                {{--<script src="{{ asset('app-assets/js/scripts/forms/select/form-select2.min.js') }}" type="text/javascript"></script>--}}
                 <!-- END PAGE LEVEL JS-->
-                <script type="text/javascript" src="{{ asset('app-assets/js/scripts/ui/breadcrumbs-with-stats.min.js') }}"></script>
-                <script src="{{ asset('app-assets/js/scripts/extensions/toastr.min.js') }}" type="text/javascript"></script>
                 <script type="text/javascript">
                   var inputs = [];
                   var item = m_anggaran = subpos = account_field = null;

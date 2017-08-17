@@ -36,6 +36,7 @@ class TransaksiController extends Controller
     protected $transaksiModel;
 
     protected $current_batch;
+    protected $batches_dates;
 
     public function __construct(
         AkunBank $bank,
@@ -50,6 +51,7 @@ class TransaksiController extends Controller
         $this->kegiatanModel = $kegiatan;
         $this->transaksiModel = $transaksi;
         $this->current_batch = $this->defineCurrentBatch();
+        $this->batches_dates = TransaksiStatus::where('stat', 0)->get();
     }
 
     public function index()
@@ -58,7 +60,7 @@ class TransaksiController extends Controller
         $berkas = $history = [];
         $jsGrid_url = 'transaksi';
         $active_batch = $this->current_batch;
-        
+
         if ($active_batch) {
             $editable = $active_batch->isUpdatable();
             $berkas = BerkasTransaksi::where('batch_id', $active_batch['batch_id'])->get();
@@ -68,6 +70,7 @@ class TransaksiController extends Controller
             $empty_batch = $editable = true;
         }
         return view('transaksi.input', [
+            'batches_dates'   => $this->batches_dates,
             'filters'       => null,
             'active_batch'  => $active_batch,
             'editable'      => $editable,
@@ -125,6 +128,44 @@ class TransaksiController extends Controller
         $pending_batch = TransaksiStatus::where([['batch_id', $this->current_batch-1], ['stat', '<', 2]])->first();
 
         return $pending_batch['batch_id'];
+    }
+
+    public function filter_handle(Request $request) 
+    {
+        $request->batch_no = $request->batch_no ? $request->batch_no : '0';
+        if ($request->batch_no && $request->date != '0') {
+            session()->flash('failed_filter', true);
+            return redirect('transaksi');
+        } 
+        return redirect('transaksi/filter/result/'.$request->date.'/'.$request->batch_no);
+    }
+
+    public function filter_result($batch_id, $batch_no)
+    {
+        $empty_batch = null;
+        $berkas = $history = [];
+        $jsGrid_url = 'transaksi';
+        $active_batch = TransaksiStatus::where('batch_id', $batch_id)->first();
+        
+        if ($active_batch) {
+            $editable = $active_batch->isUpdatable();
+            $berkas = BerkasTransaksi::where('batch_id', $active_batch['batch_id'])->get();
+            $history = $this->defineBatchHistory($active_batch['batch_id']);
+            $jsGrid_url = 'transaksi/get/batch/'.$active_batch['batch_id'];
+        } else {
+            $empty_batch = $editable = true;
+        }
+
+        session()->flash('success_filtering', true);
+        return view('transaksi.input', [
+            'batches_dates' => $this->batches_dates,
+            'filters'       => [$batch_id, $batch_no],
+            'active_batch'  => $active_batch,
+            'editable'      => $editable,
+            'empty_batch'   => $empty_batch,
+            'berkas'        => $berkas,
+            'batch_history' => $history,
+            'jsGrid_url'    => $jsGrid_url]);   
     }
 
     public function getAll()

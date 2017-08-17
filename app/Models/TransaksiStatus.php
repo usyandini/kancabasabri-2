@@ -39,8 +39,8 @@ class TransaksiStatus extends Model
 
     public function isUpdatable()
     {
-        $stat = $this->stat;
-        switch ($stat) {
+        $last = $this->where('batch_id', $this->batch_id)->orderBy('id', 'desc')->first();
+        switch ($last['stat']) {
             case 0:
                 return true;
             case 1:

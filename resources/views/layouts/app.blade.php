@@ -17,6 +17,10 @@
         <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/fonts/font-awesome/css/font-awesome.min.css') }}">
         <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/fonts/flag-icon-css/css/flag-icon.min.css') }}">
         <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/extensions/pace.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/forms/selects/select2.min.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/core/colors/palette-callout.min.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/extensions/toastr.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/plugins/extensions/toastr.min.css') }}">
         @yield('additional-vendorcss')
         <!-- END VENDOR CSS-->
         <!-- BEGIN STACK CSS-->
@@ -89,15 +93,13 @@
                         <span >Main Menus</span><i data-toggle="tooltip" data-placement="right" data-original-title="General"
                                                class=" ft-minus"></i>
                     </li>
-                    {{--<li class="nav-item {{ checkActiveMenu('dashboard') }}"><a href="{{ url('/dashboard', $parameters = [], $secure = null) }}"><i class="ft-home"></i><span data-i18n="" class="menu-title">Dashboard</span><!--<span class="tag tag tag-primary tag-pill float-xs-right mr-2">3</span>--></a>
-                    </li>--}}
                     <li class="nav-item {{ checkActiveMenu('dropping') }}"><a href="{{ url('/dropping', $parameters = [], $secure = null) }}"><i class="ft-box"></i><span data-i18n="" class="menu-title">Dropping</span></a>
                     </li>
                     <li class="nav-item has-sub {{ checkOpenedMenu('transaksi') }}"><a href=""><i class="ft-layout"></i><span data-i18n="" class="menu-title">Transaksi</span></a>
                         <ul class="menu-content">
                             <li class="is-shown {{ checkActiveMenu('transaksi') }}"><a href="{{ url('/transaksi', $parameters = [], $secure = null) }}" class="menu-item">Informasi Transaksi</a>
-                            <li class="is-shown {{ checkActiveMenu('transaksi/persetujuan') }}"><a href="{{ url('/transaksi/persetujuan', $parameters = [], $secure = null) }}" class="menu-item">Persetujuan Transaksi</a>
-                            <li class="is-shown {{ checkActiveMenu('transaksi/verifikasi') }}"><a href="{{ url('/transaksi/verifikasi', $parameters = [], $secure = null) }}" class="menu-item">Verifikasi Transaksi</a>
+                            <li class="is-shown {{ checkActiveMenu('persetujuan') }}"><a href="{{ url('/transaksi/persetujuan', $parameters = [], $secure = null) }}" class="menu-item">Persetujuan Transaksi</a>
+                            <li class="is-shown {{ checkActiveMenu('verifikasi') }}"><a href="{{ url('/transaksi/verifikasi', $parameters = [], $secure = null) }}" class="menu-item">Verifikasi Transaksi</a>
                         </ul>
                     </li>
                 </ul>
@@ -122,11 +124,16 @@
         <script src="{{ asset('app-assets/vendors/js/vendors.min.js') }}" type="text/javascript"></script>
         <script src="{{ asset('app-assets/vendors/js/ui/jquery-ui.min.js') }}"></script>
         <!-- BEGIN VENDOR JS-->
+        <script src="{{ asset('app-assets/vendors/js/forms/select/select2.full.min.js') }}" type="text/javascript"></script>
+        <script src="{{ asset('app-assets/vendors/js/extensions/toastr.min.js') }}" type="text/javascript"></script>
         @yield('customjs')
         <!-- BEGIN STACK JS-->
         <script src="{{ asset('app-assets/js/core/app-menu.min.js') }}" type="text/javascript"></script>
         <script src="{{ asset('app-assets/js/core/app.min.js') }}" type="text/javascript"></script>
         <script src="{{ asset('app-assets/js/scripts/customizer.min.js') }}" type="text/javascript"></script>
+        <script type="text/javascript" src="{{ asset('app-assets/js/scripts/ui/breadcrumbs-with-stats.min.js') }}"></script>
+        <script src="{{ asset('app-assets/js/scripts/extensions/toastr.min.js') }}" type="text/javascript"></script>
+        <script src="{{ asset('app-assets/js/scripts/forms/select/form-select2.min.js') }}" type="text/javascript"></script>
         <!-- END STACK JS-->
     </body>
 </html>
