@@ -399,9 +399,6 @@
                             align: "left",
                             type: "number", 
                             title: "Jumlah Item",
-                            itemTemplate: function(value) {
-                              return value + " buah";
-                            },
                             validate: {
                               validator: "min",
                               message: "Kolom jumlah item tidak boleh 0.",
