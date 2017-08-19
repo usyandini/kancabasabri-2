@@ -30,7 +30,9 @@ class BatchStatus extends Model
             case 0:
                 return "Pertama dibuat";
             case 1:
-                return "Menunggu verifikasi";
+                return "Terakhir diupdate";
+            case 2:
+                return "Submit verifikasi Kasmin";
             default:
                 break;
         }

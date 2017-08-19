@@ -31,14 +31,13 @@ class Batch extends Model
 
 	public function isUpdatable()
     {
-    	// return $this->latestStat();
         switch ($this->latestStat()->stat) {
             case 0:
                 return true;
             case 1:
-                return false;
-            case 2:
                 return true;
+            case 2:
+                return false;
         }
         return null;
     }
