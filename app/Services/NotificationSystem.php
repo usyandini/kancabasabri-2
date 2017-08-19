@@ -30,15 +30,23 @@ class NotificationSystem
 	public static function getAll($receiver_id = null)
 	{
 		if ($receiver_id) {
-			return Notification::where(['receiver_id', $receiver_id])->get();
+			return Notification::where([['receiver_id', $receiver_id]])->get();
 		}
 
 		return Notification::get();
-
 	}
 
-	public function getUnreads()
+	public static function markAsRead($id)
 	{
+		Notification::where('id', $id)->update(['is_read' => 1]);
+	}
 
+	public static function getUnreads($receiver_id = null)
+	{
+		if ($receiver_id) {
+			return Notification::where([['receiver_id', $receiver_id], ['is_read', 0]])->get();
+		}
+
+		return Notification::where('is_read', 0)->get();
 	}
 }

@@ -16,11 +16,19 @@ class Notification extends Model
 
     public function receiver()
     {
-    	return $this->belongsTo('app\User', 'receiver_id', 'id');
+    	return $this->belongsTo('App\User', 'receiver_id', 'id');
     }
 
     public function batch()
     {
-    	return $this->belongsTo('app\Models\BatchStatus', 'batch_id', 'id');
+    	return $this->belongsTo('App\Models\Batch', 'batch_id', 'id');
+    }
+
+    public function wording()
+    {
+        switch ($this->type) {
+            case "1":
+                return 'Batch <b>'.date('d-m-Y', strtotime($this->batch->created_at)).' </b> butuh review anda untuk approval sebagai Kasmin.';
+        }
     }
 }

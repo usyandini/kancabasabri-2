@@ -69,17 +69,16 @@
                         <ul class="nav navbar-nav float-xs-right">
                             <li class="dropdown dropdown-notification nav-item">
                               <a href="#" data-toggle="dropdown" class="nav-link nav-link-label"><i class="ficon ft-bell"></i>
-                                <span class="tag tag-pill tag-default tag-danger tag-default tag-up">5</span>
+                                <span class="tag tag-pill tag-default tag-danger tag-default tag-up" id="unreadCount"></span>
                               </a>
-                              <ul class="dropdown-menu dropdown-menu-media dropdown-menu-right">
+                              <ul class="dropdown-menu dropdown-menu-media dropdown-menu-right"  style="width: 500px;">
                                 <li class="dropdown-menu-header">
                                   <h6 class="dropdown-header m-0">
                                     <span class="grey darken-2">Notifications</span>
-                                    <span class="notification-tag tag tag-default tag-danger float-xs-right m-0">5 New</span>
                                   </h6>
                                 </li>
-                                <li class="list-group scrollable-container">
-                                  <a href="javascript:void(0)" class="list-group-item">
+                                <li class="list-group scrollable-container" id="notifList">
+                                  {{-- <a href="javascript:void(0)" class="list-group-item">
                                     <div class="media">
                                       <div class="media-left valign-middle"><i class="ft-plus-square icon-bg-circle bg-cyan"></i></div>
                                       <div class="media-body">
@@ -136,7 +135,7 @@
                                         </small>
                                       </div>
                                     </div>
-                                  </a>
+                                  </a> --}}
                                 </li>
                                 <li class="dropdown-menu-footer"><a href="javascript:void(0)" class="dropdown-item text-muted text-xs-center">Read all notifications</a></li>
                               </ul>
@@ -208,5 +207,6 @@
         <script src="{{ asset('app-assets/js/scripts/extensions/toastr.min.js') }}" type="text/javascript"></script>
         <script src="{{ asset('app-assets/js/scripts/forms/select/form-select2.min.js') }}" type="text/javascript"></script>
         <!-- END STACK JS-->
+        @extends('layouts.notif-js')
     </body>
 </html>

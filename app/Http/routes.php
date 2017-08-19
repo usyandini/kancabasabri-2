@@ -33,7 +33,7 @@ Route::group(['middleware' => 'guest'], function() {
 });
 
 Route::group(['middleware' => 'auth'], function() {
-	// Route::get('/home', 'HomeController@index');
+	Route::get('notification/', 'NotificationController@get');
    	Route::get('/dashboard', 'DashboardController@index');
 
    	Route::group(['prefix' => 'dropping'], function() {
