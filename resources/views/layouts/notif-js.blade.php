@@ -61,7 +61,7 @@
             }
             e.notifications.forEach(function(val) {
                 $('#notifList, notifList2').append(''+
-                    '<a href="javascript:void(0)" class="list-group-item">' +
+                    '<a href="{{ url('notification/redirect') }}/'+ val.id +'" class="list-group-item">' +
                         '<div class="media">' +
                           '<div class="media-left valign-middle"><i class="ft-plus-square icon-bg-circle bg-cyan"></i></div>' +
                           '<div class="media-body">' +

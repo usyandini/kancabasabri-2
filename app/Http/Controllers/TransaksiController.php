@@ -7,6 +7,7 @@ use App\Http\Requests;
 
 use App\Models\AkunBank;
 use App\Models\Item;
+use App\Models\RejectReason;
 use App\Models\Kegiatan;
 use App\Models\SubPos;
 use App\Models\Transaksi;
@@ -298,23 +299,36 @@ class TransaksiController extends Controller
     {
         $berkas = $history = [];
         $jsGrid_url = 'transaksi';
-        $valid_batch = BatchStatus::where([['batch_id', $batch], ['stat', 1]])->first();
+        $empty_batch = $editable = false;
+        $valid_batch = Batch::where('id', $batch)->first();
         
         if ($valid_batch) {
-            $berkas = BerkasTransaksi::where('batch_id', $valid_batch['batch_id'])->get();
-            $history = $this->defineBatchHistory($valid_batch['batch_id']);
-            $jsGrid_url = 'transaksi/get/batch/'.$valid_batch['batch_id'];
-        } else {
-            $empty_batch = $editable = true;
-        }
+            $berkas = BerkasTransaksi::where('batch_id', $valid_batch['id'])->get();
+            $history = BatchStatus::where('batch_id', $valid_batch['id'])->get();
+            $jsGrid_url = 'transaksi/get/batch/'.$valid_batch['id'];
+        } 
+
         return view('transaksi.persetujuan', [
             'filters'       => null,
             'editable'      => false,
             'active_batch'  => $valid_batch,
+            'empty_batch'   => $empty_batch,
             'berkas'        => $berkas,
             'batch_history' => $history,
-            'jsGrid_url'    => $jsGrid_url]);
+            'jsGrid_url'    => $jsGrid_url,
+            'reject_reasons'    => RejectReason::where('type', 1)->get()]);
     }   
+
+    public function submitVerification($type, $batch_id, Request $request)
+    {
+        $input = $request->only('is_approved', 'reason');
+        $this->approveOrReject($type, $batch_id, $input);
+
+        NotificationSystem::send($this->current_batch['id'], 3);
+
+        session()->flash('success', true);
+        return redirect()->back();   
+    }
     
     public function verifikasi_transaksi()
     {

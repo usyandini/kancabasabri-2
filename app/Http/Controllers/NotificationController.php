@@ -29,4 +29,17 @@ class NotificationController extends Controller
 
     	return response()->json($result);
     }
+
+    public function redirect($id)
+    {
+    	NotificationSystem::markAsRead($id);
+    	
+    	$notifDetail = NotificationSystem::get($id);
+    	switch ($notifDetail->type) {
+    		case 1:
+    			return redirect('transaksi/persetujuan/'.$notifDetail->batch_id);
+			case 2:
+				return redirect('transaksi');
+    	}
+    }
 }

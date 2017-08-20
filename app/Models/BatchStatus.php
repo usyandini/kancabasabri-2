@@ -23,6 +23,11 @@ class BatchStatus extends Model
     	return $this->belongsTo('App\User', 'submitted_by', 'id');
     }
 
+    public function rejectReason()
+    {
+        return $this->hasOne('App\Models\RejectHistory', 'batch_status_id', 'id');
+    }
+
     public function status()
     {
         $stat = $this->stat;
@@ -33,6 +38,10 @@ class BatchStatus extends Model
                 return "Terakhir diupdate";
             case 2:
                 return "Submit verifikasi Kasmin";
+            case 3:
+                return "Reject oleh Kasmin";
+            case 4:
+                return "Mendapat approval dari Kasmin";
             default:
                 break;
         }

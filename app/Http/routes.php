@@ -34,6 +34,7 @@ Route::group(['middleware' => 'guest'], function() {
 
 Route::group(['middleware' => 'auth'], function() {
 	Route::get('notification/', 'NotificationController@get');
+	Route::get('notification/redirect/{id}', 'NotificationController@redirect');
    	Route::get('/dashboard', 'DashboardController@index');
 
    	Route::group(['prefix' => 'dropping'], function() {
@@ -65,6 +66,7 @@ Route::group(['middleware' => 'auth'], function() {
 		
 		Route::get('/viewtransaksi', 'TransaksiController@view_transaksi');
 		Route::get('/persetujuan/{id_batch}', 'TransaksiController@persetujuan');
+		Route::post('/verifikasi/{type}/{id_batch}', 'TransaksiController@submitVerification');
 		Route::get('/verifikasi', 'TransaksiController@verifikasi_transaksi');
 	});
 });

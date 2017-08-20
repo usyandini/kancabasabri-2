@@ -3,8 +3,10 @@
                 @section('additional-vendorcss')
                 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/tables/jsgrid/jsgrid-theme.min.css') }}">
                 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/tables/jsgrid/jsgrid.min.css') }}">
+                <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/forms/toggle/switchery.min.css') }}">
+                <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/plugins/forms/switch.min.css') }}">
+                <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/core/colors/palette-callout.min.css') }}">
                 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/forms/selects/select2.min.css') }}">
-                <link rel="stylesheet" type="text/css" href="https://pixinvent.com/stack-responsive-bootstrap-4-admin-template/app-assets/css/core/colors/palette-callout.min.css">
                 <style type="text/css">
                   .hide {
                     display: none;
@@ -89,79 +91,37 @@
                                             @if(session('success'))
                                             <div class="col-xs-7">
                                                 <div class="alert alert-success">
-                                                  @if(session('success')[0] > 0)
-                                                    Batch transaksi sebanyak <b>{{ session('success')[0] }} baris baru berhasil disimpan</b>.<br>
-                                                  @endif
-                                                  @if(session('success')[1] > 0)
-                                                    Batch transaksi sebanyak <b>{{ session('success')[1] }} baris berhasil diupdate</b>.<br>
-                                                  @endif
-                                                  @if(session('success')[2] > 0)
-                                                    Berkas batch transaksi sebanyak <b>{{ session('success')[2] }} berkas baru berhasil disimpan</b>.
-                                                  @endif
-                                                </div>
-                                              </div>
-                                            @endif
-                                            @if(session('success_submit'))
-                                              <div class="col-xs-6">
-                                                <div class="alert alert-info">
-                                                  Batch <code>{{ date("d-m-Y", strtotime(session('success_submit'))) }}</code> berhasil disubmit. <b>Silahkan tunggu verifikasi dari user.</b></code>
-                                                </div>
-                                              </div>
-                                            @endif
-                                            @if(session('success_deletion'))
-                                              <div class="col-xs-6">
-                                                <div class="alert alert-success">
-                                                  File <code>{{ session('success_deletion') }}</code> berhasil dihapus.
+                                                    Batch ini berhasil ditindaklanjuti dan mengirimkan notifikasi ke user yang bersangkutan.
                                                 </div>
                                               </div>
                                             @endif
                                           </div>
                                             <div id="basicScenario"></div><br>
                                               <div class="row">
-                                                <form method="POST" action="{{ url('transaksi/') }}" id="mainForm" enctype="multipart/form-data">
-                                                  {{ csrf_field() }}
-                                                  <div class="col-lg-6 col-md-12">
-                                                  {{--   @if($editable)
-                                                      <fieldset class="form-group">
-                                                        <label for="basicInputFile">Upload berkas</label>
-                                                        <input type="file" class="form-control-file" id="basicInputFile" multiple="" name="berkas[]">
-                                                      </fieldset>
-                                                    @endif --}}
-                                                    <div class="bs-callout-info callout-border-left callout-bordered callout-transparent mt-1 p-1">
-                                                      <h4 class="info">List Berkas</h4>
-                                                        <table>
-                                                          @forelse($berkas as $value)
-                                                            <tr>
-                                                              <td width="25%">File: <a href="{{ asset('file/transaksi').'/'.$value->file_name }}" target="_blank">{{ $value->file_name }}</a></td>
-                                                              <td width="25%">Diunggah: <b>{{ $value->created_at }}</b></td>
-                                                              {{-- <td width="5%">
-                                                              @if($editable)
-                                                                  <a href="javascript:deleteBerkas('{{ $value->id }}', '{{ $value->file_name }}');"><i class="fa fa-times"></i> Hapus</a>
-                                                              @endif
-                                                              </td> --}}
-                                                            </tr>
-                                                          @empty
-                                                            <code>Belum ada file terlampir</code>
-                                                          @endforelse
-                                                        </table>
-                                                    </div>
+                                                <div class="col-lg-6 col-md-12">
+                                                  <div class="bs-callout-info callout-border-left callout-bordered callout-transparent mt-1 p-1">
+                                                    <h4 class="info">List Berkas</h4>
+                                                    <table>
+                                                      @forelse($berkas as $value)
+                                                        <tr>
+                                                          <td width="25%">File: <a href="{{ asset('file/transaksi').'/'.$value->file_name }}" target="_blank">{{ $value->file_name }}</a></td>
+                                                          <td width="25%">Diunggah: <b>{{ $value->created_at }}</b></td>
+                                                        </tr>
+                                                      @empty
+                                                        <code>Belum ada file terlampir</code>
+                                                      @endforelse
+                                                    </table>
                                                   </div>
-                                                  <input type="hidden" name="batch_values" id="batch_values">
-                                                </form>
-                                                <form method="POST" id="deleteBerkas" action="{{ url('transaksi/berkas/remove') }}">
-                                                  {{ csrf_field() }}
-                                                  <input type="hidden" name="file_id" value="">
-                                                  <input type="hidden" name="file_name" value="">
-                                                </form>
+                                                </div>
                                                 <div class="col-lg-6 col-md-12">
                                                   <div class="bs-callout-danger callout-border-left callout-bordered mt-1 p-1">
                                                     <h4 class="danger">History Batch </h4>
                                                     <table>
                                                       @forelse($batch_history as $hist)
                                                         <tr>
-                                                          <td><b class="text-danger">{{ $hist['stat'] }}</b></td>
-                                                          <td>oleh <b class="text-warning">{{ $hist['submitted'] }}</b></td>
-                                                          <td>| <code>{{ $hist['created_at'] }}</code></td>
+                                                          <td><b class="text-danger">{{ $hist->status() }}</b></td>
+                                                          <td>oleh <b class="text-warning">{{ $hist['submitter']['name'] }}</b></td>
+                                                          <td>| <code>{{ $hist['updated_at'] }}</code></td>
                                                         </tr>
                                                       @empty
                                                         <code>Belum ada history batch terbaru.</code>
@@ -170,20 +130,14 @@
                                                   </div>
                                                 </div>
                                               </div>
-                                              {{-- @if($editable)
+                                              <br>
                                               <div class="row">
-                                                <div class="col-xs-2 pull-right">
+                                                <div class="col-md-3 pull-right">
                                                     <div class="form-group">
-                                                        <button onclick="populateBatchInput()" class="btn btn-primary pull-right" id="simpan" value="Simpan"><i class="fa fa-check"></i> Simpan perubahan batch</button>
-                                                    </div>
-                                                </div>
-                                                <div class="col-xs-3 pull-right">
-                                                  <div class="form-group">
-                                                      <button onclick="checkBatchSubmit()" class="btn btn-danger pull-right" id="button_status"><i class="fa fa-check-circle"></i> Submit batch untuk Verifikasi</button>
+                                                        <button onclick="checkBatchSubmit()" class="btn btn-info pull-right" id="simpan" value="Simpan"><i class="fa fa-refresh"></i> Tindaklanjuti</button>
                                                     </div>
                                                 </div>
                                               </div>
-                                              @endif --}}
                                           </div>
                                       </div>
                                   </div>
@@ -194,7 +148,7 @@
                 </div>
 
                 <!-- Modal -->
-                {{-- <div class="modal fade text-xs-left" id="xSmall" tabindex="-1" role="dialog" aria-labelledby="myModalLabel20"
+                <div class="modal fade text-xs-left" id="xSmall" tabindex="-1" role="dialog" aria-labelledby="myModalLabel20"
                 aria-hidden="true">
                   <div class="modal-dialog modal-md" role="document">
                     <div class="modal-content">
@@ -202,30 +156,49 @@
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                           <span aria-hidden="true">&times;</span>
                         </button>
-                        <h4 class="modal-title" id="myModalLabel20">Box Konfirmasi</h4>
+                        <h4 class="modal-title" id="myModalLabel20">Box Konfirmasi Verifikasi lvl 1</h4>
                       </div>
                       <div class="modal-body" id="confirmation-msg">
-                        <p>Anda akan melakukan submit untuk verifikasi batch ini. Anda tidak diperbolehkan untuk memperbarui item batch selama batch ini masih dalam proses verifikasi. Informasi batch ini : 
-                        <ul>
-                          @if(!$empty_batch && $editable)
-                            <li>Batch saat ini : <code>{{ date("d-m-Y", strtotime($active_batch->created_at)) }}</code></li>
-                            <li>Terkahir Update : <code>{{ $active_batch->updated_at }}</code> oleh <code>{{ $active_batch['submitter']['name'] }}</code></li>
-                            <li>Banyak item : <code id="totalRows"></code>, dengan <code>{{ count($berkas).' berkas lampiran' }}</code></li>
-                          @endif
-                        </ul>
-                        </p>
-                        <p>Apakah anda yakin dengan <b>data batch</b> yang anda input sudah sesuai?</p>
+                        <div class="row">
+                          <div class="col-md-12">
+                              <form method="POST" action="{{ url('transaksi/verifikasi').'/1/'.$active_batch->id }}" id="verification">
+                              {{ csrf_field() }}
+                              <p>Anda akan <b>memverifikasi batch ini</b> sebagai Kasmin. Informasi batch ini : 
+                              <ul>
+                                <li>Batch saat ini : <code>{{ date("d-m-Y", strtotime($active_batch->created_at)) }}</code></li>
+                                <li>Terkahir Update : <code>{{ $active_batch->updated_at }}</code> oleh <code>{{ $active_batch['submitter']['name'] }}</code></li>
+                                <li>Banyak item : <code id="totalRows"></code>, dengan <code>{{ count($berkas).' berkas lampiran' }}</code></li>
+                              </ul>
+                              <div class="row">
+                                <div class="col-md-12">
+                                  <div class="form-group">
+                                    <label for="companyName">Apakah batch ini dapat dilanjutkan ke <b>verifikasi level 2</b>?</label><br>
+                                    <input type="checkbox" onchange="approveOrNot(this)" class="form-control switch" id="switch1" checked="checked" name="is_approved" value="1" data-on-label="Approve untuk verifikasi level 2" data-off-label="Reject dengan alasan"/>
+                                  </div>
+                                </div>
+                                <div class="col-md-10" id="reason" style="display: none;">
+                                  <div class="form-group">
+                                    <label>Alasan <b>penolakan</b> (Isi hanya jika verifikasi bersifat <i>rejection</i>)</label>
+                                    <select class="form-control" name="reason">
+                                      <option value="0">Silahkan pilih alasan anda</option>
+                                      @foreach($reject_reasons as $res)
+                                        <option value="{{ $res->id }}">{{ $res->content }}</option>
+                                      @endforeach
+                                    </select>
+                                  </div>
+                                </div>
+                              </div>
+                            </form>
+                          </div>
+                        </div>
                       </div>
                       <div class="modal-footer">
-                        <form method="POST" action="{{ url('transaksi/submit/verify') }}">
-                          {{ csrf_field() }}
-                          <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">Tidak, kembali</button>
-                          <button type="submit" class="btn btn-outline-primary">Ya, submit untuk verifikasi</button>
-                        </form>
+                        <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">Kembali</button>
+                        <button onclick="submitVer()" type="submit" class="btn btn-outline-primary">Submit verifikasi</button>
                       </div>
                     </div>
                   </div>
-                </div> --}}
+                </div>
                 @endsection
 
                 @section('customjs')
@@ -234,14 +207,17 @@
                 <script type="text/javascript" src="{{ asset('app-assets/vendors/js/charts/jquery.sparkline.min.js') }}"></script>
                 <script src="{{ asset('app-assets/vendors/js/tables/jsgrid/jsgrid.min.js') }}" type="text/javascript"></script>
                 <script src="{{ asset('app-assets/vendors/js/tables/jsgrid/griddata.js') }}" type="text/javascript"></script>
+                <script src="{{ asset('app-assets/vendors/js/forms/toggle/bootstrap-checkbox.min.js') }}"></script>
                 <script src="{{ asset('app-assets/vendors/js/tables/jsgrid/jquery.validate.min.js') }}" type="text/javascript"></script>
+                <script src="{{ asset('app-assets/vendors/js/forms/toggle/switchery.min.js') }}" type="text/javascript"></script>
                 <script src="{{ asset('app-assets/vendors/js/forms/select/select2.full.min.js') }}" type="text/javascript"></script>
                 <script src="{{ asset('app-assets/vendors/js/extensions/toastr.min.js') }}" type="text/javascript"></script>
                 <!-- END PAGE VENDOR JS-->
                 <!-- BEGIN PAGE LEVEL JS-->
                 <script type="text/javascript" src="{{ asset('app-assets/js/scripts/ui/breadcrumbs-with-stats.min.js') }}"></script>
                 {{--<script src="{{ asset('app-assets/js/scripts/tables/jsgrid/jsgrid.min.js') }}" type="text/javascript"></script>--}}
-                {{--<script src="{{ asset('app-assets/js/scripts/forms/select/form-select2.min.js') }}" type="text/javascript"></script>--}}
+                {{-- <script src="{{ asset('app-assets/js/scripts/forms/select/form-select2.min.js') }}" type="text/javascript"></script> --}}
+                <script src="{{ asset('app-assets/js/scripts/forms/switch.min.js') }}" type="text/javascript"></script>
                 <!-- END PAGE LEVEL JS-->
                 <script type="text/javascript" src="{{ asset('app-assets/js/scripts/ui/breadcrumbs-with-stats.min.js') }}"></script>
                 <script src="{{ asset('app-assets/js/scripts/extensions/toastr.min.js') }}" type="text/javascript"></script>
@@ -559,6 +535,28 @@
                       $('#xSmall').modal()
                     } else {
                       toastr.error("Silahkan input data yang hendak disubmit. Terima kasih.", "Data tidak boleh kosong", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});                      
+                    }
+                  };
+
+                  function approveOrNot(el) {
+                    if(el.checked) {
+                      document.getElementById("reason").style.display = 'none';
+                    } else {
+                      document.getElementById("reason").style.display = 'block';
+                      toastr.info("Silahkan input alasan penolakan anda untuk verifikasi lvl 1 ini. Terima kasih.", "Alasan penolakan dibutuhkan", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
+                    }
+                  };
+
+                  function submitVer() {
+                    var valid = true;
+                    if (!$('input[name="is_approved"]').is(':checked')) {
+                      if ($('select[name="reason"]').val() == '0') {
+                        valid = false;
+                        toastr.error("Silahkan input alasan penolakan anda untuk verifikasi lvl 1 ini. Terima kasih.", "Alasan penolakan dibutuhkan.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
+                      } 
+                    }
+                    if (valid) {
+                      $('form[id="verification"]').submit();
                     }
                   };
 
