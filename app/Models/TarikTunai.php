@@ -29,4 +29,9 @@ class TarikTunai extends Model
     {
     	return $this->belongsTo('App\User', 'created_by', 'id');
     }
+
+    public function kesesuaianDropping()
+    {
+        return $this->hasOne('App\Models\PenyesuaianDropping', 'id', 'id_penyesuaian');
+    }
 }

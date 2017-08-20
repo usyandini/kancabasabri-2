@@ -8,6 +8,8 @@
                 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/plugins/forms/switch.min.css') }}">
                 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/extensions/toastr.css') }}">
                 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/plugins/extensions/toastr.min.css') }}">
+                <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/plugins/forms/validation/form-validation.css') }}">
+                <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/forms/icheck/icheck.css') }}">
                 @endsection
 
                 @section('content')
@@ -39,12 +41,25 @@
                               <b>Data tarik tunai berhasil dikirim.</b>
                             </div>
                         </div>
-                        @elseif(session('failed'))
+                        @elseif(session('offset'))
                         <div class="col-xs-7">
                             <div class="alert alert-warning">
                               <b>Data tarik tunai gagal dikirim. Nominal tarik tunai melebihi dana dropping.</b>
                             </div>
                         </div>
+                        @endif
+
+                        @if (count($errors) > 0)
+                            <div class="col-xs-7">
+                                <div class="alert alert-danger alert-dismissible" role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <ul>
+                                    @foreach ($errors->all() as $error)
+                                        <li><b>{{ $error }}</b></li>
+                                    @endforeach
+                                    </ul>
+                                </div>
+                            </div>
                         @endif
                       </div>
                       <div class="col-md-6">
@@ -99,8 +114,8 @@
                                     </div>
                                     <div class="col-md-12">
                                       <div class="form-group">
-                                        <label for="is_sesuai">Apakah nominal dropping sudah sesuai dengan pengajuan?</label><br>
-                                        <input type="checkbox" onchange="change_checkbox(this)" class="form-control switch" id="switch1" checked="checked" name="is_sesuai" value="1" data-on-label="Sesuai" data-off-label="Tidak sesuai"/>
+                                        <label for="is_sesuai">Apakah anda ingin melanjutkan Tarik Tunai?</label><br>
+                                        <input type="checkbox" onchange="change_checkbox(this)" class="form-control switch" id="switch1" checked="checked" name="is_sesuai" value="1" data-on-label="Tarik Tunai" data-off-label="Penyesuaian Dropping"/>
                                       </div>
                                     </div>
                                   </div>
@@ -115,14 +130,20 @@
                                     <div class="col-md-6">
                                       <div class="form-group">
                                         <label for="nominal_tarik">Nominal Tarik Tunai(Dalam IDR)</label>
-                                        <input type="number" id="nominal_tarik" class="form-control" placeholder="Nominal Tarik Tunai" name="nominal_tarik" value="" required="" validate="Nominal Tarik Tunai Harus Diisi">
+                                        <span class="required"> *</span>
+                                        <div class="controls">
+                                          <input type="text" id="nominal_tarik" name="nominal_tarik" class="form-control" value="{{ old('nominal_tarik') }}" required data-validation-containsnumber-regex="(\d)+" data-validation-containsnumber-message="Hanya diisi oleh angka">
+                                        </div>
                                       </div>
                                     </div>
                                   </div>
                                   <div class="col-md-12">
                                     <div class="form-group">
                                       <label for="berkas">Upload berkas tarik tunai</label>
-                                      <input type="file" class="form-control-file" id="berkas" name="berkas">
+                                      <span class="required"> *</span>
+                                      <div class="controls">
+                                        <input type="file" class="form-control-file" id="berkas" name="berkas" value="" required>
+                                      </div>
                                     </div>
                                   </div>
                                   <h4 class="form-section">History Tarik Tunai</h4>
@@ -222,7 +243,10 @@
                                     <div class="col-md-6">
                                       <div class="form-group">
                                         <label for="projectinput2">Nominal Transaksi (Dalam IDR)</label>
-                                        <input type="number" id="p_nominal" class="form-control" placeholder="Nominal Transaksi" name="p_nominal" value="{{ old('ket_nominal') }}" required="">
+                                        <span class="required"> *</span>
+                                        <div class="controls">
+                                          <input type="text" id="p_nominal" name="p_nominal" class="form-control" value="{{ old('p_nominal') }}" required data-validation-containsnumber-regex="(\d)+" data-validation-containsnumber-message="Hanya diisi oleh angka">
+                                        </div>
                                       </div>
                                     </div>
                                   </div>
@@ -230,29 +254,75 @@
                                   <div class="row">
                                     <div class="col-md-12">
                                       <div class="form-group">
-                                        <label for="projectinput8">Kantor Cabang</label>
-                                        <select class="form-control kcabang" id="cabang" name="p_cabang" required="">
-                                            <option value="0">--Pilih Kantor Cabang</option>
-                                          @foreach($kcabangs as $cabang)
-                                            <option value="{{ $cabang->DESCRIPTION }}">{{ $cabang->DESCRIPTION }}</option>
-                                          @endforeach
-                                        </select>
+                                        <label for="p_cabang">Kantor Cabang</label>
+                                        <span class="required"> *</span>
+                                        <div class="controls">
+                                          <select class="form-control kcabang" id="cabang" name="p_cabang" required>
+                                              <option value="0">--Pilih Kantor Cabang</option>
+                                            @foreach($kcabangs as $cabang)
+                                              <option value="{{ $cabang->DESCRIPTION }}">{{ $cabang->DESCRIPTION }}</option>
+                                            @endforeach
+                                          </select>
+                                        </div>
                                       </div>
                                     </div>
                                     <div class="col-md-6">
                                       <div class="form-group">
-                                        <label for="companyName">Nama Bank</label>
-                                        <select class="form-control akun_bank" id="akun_bank" name="p_akun_bank" disabled="" required="">
-                                            <option value="0">Pilih kantor cabang terlebih dahulu</option>
-                                        </select>
+                                        <label for="p_akun_bank">Nama Bank</label>
+                                        <span class="required"> *</span>
+                                        <div class="controls">
+                                          <select class="form-control akun_bank" id="akun_bank" name="p_akun_bank" disabled="" required>
+                                              <option value="0">Pilih kantor cabang terlebih dahulu</option>
+                                          </select>
+                                        </div>
                                       </div>
                                     </div>
                                     <div class="col-md-6">
                                       <div class="form-group">
-                                        <label for="companyName">Nomor Rekening</label>
-                                        <select class="form-control rekening" name="p_rek_bank" disabled="" required="">
-                                          <option>Pilih bank terlebih dahulu</option>
-                                        </select>
+                                        <label for="p_rek_bank">Nomor Rekening</label>
+                                        <span class="required"> *</span>
+                                        <div class="controls">
+                                          <select class="form-control rekening" name="p_rek_bank" disabled="" required>
+                                            <option>Pilih bank terlebih dahulu</option>
+                                          </select>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  {{-- <div class="text-xs-right">
+                                    <button type="submit" class="btn btn-success">Submit <i class="fa fa-thumbs-o-up position-right"></i></button>
+                                    <button type="reset" class="btn btn-danger">Reset <i class="fa fa-refresh position-right"></i></button>
+                                  </div> --}}
+                                  <h4 class="form-section">History Kesesuaian Dropping</h4>
+                                  <div class="row">
+                                    <div class="col-md-12">
+                                      <div class="form-group">
+                                        <div class="table-responsive">
+                                          <table class="table">
+                                            <thead>
+                                              <tr>
+                                                <th>Tanggal</th>
+                                                <th>Kantor Cabang</th>
+                                                <th>Nominal Penyesuaian</th>
+                                                <th>Status</th>
+                                              </tr>
+                                            </thead>
+                                            <tbody>
+                                              <tr>
+                                                @if(isset($kesesuaian))
+                                                  <td>{{ $kesesuaian->created_at }}</td>
+                                                  <td>{{ $kesesuaian->cabang }}</td>
+                                                  <td>{{ $kesesuaian->nominal }}</td>
+                                                  @if($kesesuaian->is_pengembalian == 1)
+                                                  <td>Pengembalian</td>
+                                                  @else
+                                                  <td>Penambahan</td>
+                                                  @endif
+                                                @endif
+                                              </tr>
+                                            </tbody>
+                                          </table>
+                                        </div>
                                       </div>
                                     </div>
                                   </div>
@@ -273,7 +343,7 @@
                                 <a href="{{ url('dropping') }}" class="btn btn-warning mr-1">
                                   <i class="ft-x"></i> Keluar
                                 </a>
-                                <button type="button" data-toggle="modal" data-target="#xSmall" class="btn btn-primary">
+                                <button type="submit" data-toggle="modal" data-target="#xSmall" class="btn btn-primary">
                                   <i class="fa fa-check-square-o"></i> Posting
                                 </button>
                               </div>  
@@ -312,16 +382,19 @@
                 @section('customjs')
                 <!-- BEGIN PAGE VENDOR JS-->
                 <script type="text/javascript" src="{{ asset('app-assets/vendors/js/ui/jquery.sticky.js') }}"></script>
-                <script src="{{ asset('app-assets/vendors/js/tables/jsgrid/jquery.validate.min.js') }}" type="text/javascript"></script>
                 <script src="{{ asset('app-assets/vendors/js/forms/select/select2.full.min.js') }}" type="text/javascript"></script>
                 <script src="{{ asset('app-assets/vendors/js/forms/toggle/bootstrap-checkbox.min.js') }}"></script>
                 <script src="{{ asset('app-assets/vendors/js/forms/toggle/switchery.min.js') }}" type="text/javascript"></script>
                 <script src="{{ asset('app-assets/vendors/js/extensions/toastr.min.js') }}" type="text/javascript"></script>
+                <script src="{{ asset('app-assets/vendors/js/forms/validation/jqBootstrapValidation.js') }}" type="text/javascript"></script>
+                <script src="{{ asset('app-assets/vendors/js/forms/validation/jquery.validate.min.js') }}" type="text/javascript"></script>
+                <script src="{{ asset('app-assets/vendors/js/forms/icheck/icheck.min.js') }}" type="text/javascript"></script>
                 <!-- END PAGE VENDOR JS-->
                 <!-- BEGIN PAGE LEVEL JS-->
                 <script type="text/javascript" src="{{ asset('app-assets/js/scripts/ui/breadcrumbs-with-stats.min.js') }}"></script>
                 <script src="{{ asset('app-assets/js/scripts/forms/select/form-select2.min.js') }}" type="text/javascript"></script>
                 <script src="{{ asset('app-assets/js/scripts/forms/switch.min.js') }}" type="text/javascript"></script>
+                <script src="{{ asset('app-assets/js/scripts/forms/validation/form-validation.js') }}" type="text/javascript"></script>
                 <script src="{{ asset('app-assets/js/scripts/modal/components-modal.min.js') }}" type="text/javascript"></script>
                 <script src="{{ asset('app-assets/js/scripts/extensions/toastr.min.js') }}" type="text/javascript"></script>
                 <!-- END PAGE LEVEL JS-->  
