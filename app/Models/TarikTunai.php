@@ -21,11 +21,17 @@ class TarikTunai extends Model
     	'created_by',
     	'tgl_dropping',
         'nominal_tarik',
-        'sisa_dropping'
+        'sisa_dropping',
+        'berkas_tariktunai'
     ];
 
     public function creator()
     {
     	return $this->belongsTo('App\User', 'created_by', 'id');
+    }
+
+    public function kesesuaianDropping()
+    {
+        return $this->hasOne('App\Models\PenyesuaianDropping', 'id', 'id_penyesuaian');
     }
 }

@@ -305,10 +305,10 @@
                             return this._editPicker = $("<input>").datepicker().datepicker("setDate", new Date(value));
                         },
                         insertValue: function() {                            
-                            return this._insertPicker.datepicker("getDate")!= null ? this._insertPicker.datepicker("getDate").toString() : '';
+                            return this._insertPicker.datepicker("getDate")!= null ? this._insertPicker.datepicker("getDate") : '';
                         },
                         editValue: function() {
-                            return this._editPicker.datepicker("getDate").toString();
+                            return this._editPicker.datepicker("getDate");
                         }
                     });
                      

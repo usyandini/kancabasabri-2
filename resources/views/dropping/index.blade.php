@@ -24,14 +24,6 @@
                 <div class="content-body"><!-- Basic scenario start -->
                     <section id="basic">
                         <div class="row">
-                            @if(session('success'))
-                            <div class="col-xs-7">
-                                <div class="alert alert-success">
-                                  <b>Data dropping berhasil dipost.</b>
-                                </div>
-                            </div>
-                            @endif
-                            </div>
                             <div class="col-xs-7">
                                 <div class="card">
                                     <div class="card-header">

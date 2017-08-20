@@ -24,4 +24,9 @@ class Dropping extends Model
         'KREDIT'
     ];
 
+    public function tarikTunai()
+    {
+        return $this->hasOne('App\Models\TarikTunai', 'id_dropping', 'RECID');
+    }
+
 }

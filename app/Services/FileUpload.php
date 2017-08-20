@@ -8,13 +8,15 @@ class FileUpload
 	{
 		$destinationPath = $name = '';
 		if (isset($request)) {
-			$extension = $request['berkas']->getClientOriginalExtension();
+			$file = $request;
+			$extension = $file->getClientOriginalExtension();
 			$destinationPath = $this->getDestinationPath( $routeName );		
 			//$name = $routeName.'-user:'.\Auth::user()->id.'-'.strtotime(date('Y-m-d H:i:s')).'.'.$extension;
-			$name = $routeName.'-'.strtotime(date('Y-m-d H:i:s')).'.'.$extension;
-			$request['file']->move( $destinationPath, $name );
+			//$name = $routeName.'-'.strtotime(date('Y-m-d H:i:s')).'.'.$extension;
+			$name = $file->getClientOriginalName();
+			$request->move( $destinationPath, $name );
 		}
-		else $name = null;
+		//else $name = null;
 		return $name;
 	}	
 
@@ -40,6 +42,9 @@ class FileUpload
 		switch ($routeName) {
 			case 'transaksi':
 				$path = public_path().'/file/transaksi/'; 
+				break;
+			case 'tariktunai':
+				$path = public_path().'/file/tariktunai/'; 
 				break;
 		}
 
