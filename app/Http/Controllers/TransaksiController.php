@@ -64,7 +64,7 @@ class TransaksiController extends Controller
         if ($this->current_batch) {
             $editable = $this->current_batch->isUpdatable();
             $berkas = BerkasTransaksi::where('batch_id', $this->current_batch['id'])->get();
-            $history = BatchStatus::where('batch_id', $this->current_batch['id'])->get();
+            $history = BatchStatus::where('batch_id', $this->current_batch['id'])->orderBy('updated_at', 'desc')->get();
             $jsGrid_url = 'transaksi/get/batch/'.$this->current_batch['id'];
             $empty_batch = false;
         }
@@ -301,16 +301,18 @@ class TransaksiController extends Controller
         $jsGrid_url = 'transaksi';
         $empty_batch = $editable = false;
         $valid_batch = Batch::where('id', $batch)->first();
-        
+
         if ($valid_batch) {
+            $verifiable = $valid_batch->verifiable();
             $berkas = BerkasTransaksi::where('batch_id', $valid_batch['id'])->get();
-            $history = BatchStatus::where('batch_id', $valid_batch['id'])->get();
+            $history = BatchStatus::where('batch_id', $valid_batch['id'])->orderBy('updated_at', 'desc')->get();
             $jsGrid_url = 'transaksi/get/batch/'.$valid_batch['id'];
         } 
 
         return view('transaksi.persetujuan', [
             'filters'       => null,
             'editable'      => false,
+            'verifiable'    => $verifiable,
             'active_batch'  => $valid_batch,
             'empty_batch'   => $empty_batch,
             'berkas'        => $berkas,
@@ -324,7 +326,7 @@ class TransaksiController extends Controller
         $input = $request->only('is_approved', 'reason');
         $this->approveOrReject($type, $batch_id, $input);
 
-        NotificationSystem::send($this->current_batch['id'], 3);
+        NotificationSystem::send($this->current_batch['id'], $request->is_approved ? 3 : 2);
 
         session()->flash('success', true);
         return redirect()->back();   

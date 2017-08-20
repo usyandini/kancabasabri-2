@@ -39,7 +39,7 @@ class BatchStatus extends Model
             case 2:
                 return "Submit verifikasi Kasmin";
             case 3:
-                return "Reject oleh Kasmin";
+                return "Rejected by Kasmin";
             case 4:
                 return "Mendapat approval dari Kasmin";
             default:

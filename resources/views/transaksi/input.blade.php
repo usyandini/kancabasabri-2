@@ -196,7 +196,8 @@
                                                     <table>
                                                       @forelse($batch_history as $hist)
                                                         <tr>
-                                                          <td><b class="text-danger">{{ $hist->status() }}</b></td>
+                                                          <td><b class="text-danger">{{ $hist->status() }}</b>
+                                                          </td>
                                                           <td>oleh <b class="text-warning">{{ $hist['submitter']['name'] }}</b></td>
                                                           <td>| <code>{{ $hist['updated_at'] }}</code></td>
                                                         </tr>
@@ -207,6 +208,7 @@
                                                   </div>
                                                 </div>
                                               </div>
+                                              <br>
                                               @if($editable)
                                               <div class="row">
                                                 <div class="col-xs-2 pull-right">
@@ -272,11 +274,9 @@
                 <script src="{{ asset('app-assets/vendors/js/tables/jsgrid/jsgrid.min.js') }}" type="text/javascript"></script>
                 <script src="{{ asset('app-assets/vendors/js/tables/jsgrid/griddata.js') }}" type="text/javascript"></script>
                 <script src="{{ asset('app-assets/vendors/js/tables/jsgrid/jquery.validate.min.js') }}" type="text/javascript"></script>
-                
                 <!-- END PAGE VENDOR JS-->
                 <!-- BEGIN PAGE LEVEL JS-->
                 <script type="text/javascript" src="{{ asset('app-assets/js/scripts/ui/breadcrumbs-with-stats.min.js') }}"></script>
-                {{--<script src="{{ asset('app-assets/js/scripts/tables/jsgrid/jsgrid.min.js') }}" type="text/javascript"></script>--}}
                 <!-- END PAGE LEVEL JS-->
                 <script type="text/javascript">
                   var inputs = [];

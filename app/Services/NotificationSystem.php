@@ -48,10 +48,10 @@ class NotificationSystem
 	public static function getAll($receiver_id = null)
 	{
 		if ($receiver_id) {
-			return Notification::where([['receiver_id', $receiver_id]])->get();
+			return Notification::where([['receiver_id', $receiver_id]])->orderBy('id', 'desc')->get();
 		}
 
-		return Notification::get();
+		return Notification::orderBy('id', 'desc')->get();
 	}
 
 	public static function markAsRead($id)
@@ -62,9 +62,9 @@ class NotificationSystem
 	public static function getUnreads($receiver_id = null)
 	{
 		if ($receiver_id) {
-			return Notification::where([['receiver_id', $receiver_id], ['is_read', 0]])->get();
+			return Notification::where([['receiver_id', $receiver_id], ['is_read', 0]])->orderBy('id', 'desc')->get();
 		}
 
-		return Notification::where('is_read', 0)->get();
+		return Notification::where('is_read', 0)->orderBy('id', 'desc')->get();
 	}
 }

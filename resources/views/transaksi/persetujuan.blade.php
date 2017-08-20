@@ -131,6 +131,7 @@
                                                 </div>
                                               </div>
                                               <br>
+                                              @if($verifiable)
                                               <div class="row">
                                                 <div class="col-md-3 pull-right">
                                                     <div class="form-group">
@@ -138,6 +139,7 @@
                                                     </div>
                                                 </div>
                                               </div>
+                                              @endif
                                           </div>
                                       </div>
                                   </div>

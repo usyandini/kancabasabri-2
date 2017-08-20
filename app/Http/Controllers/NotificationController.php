@@ -8,6 +8,12 @@ use App\Http\Requests;
 
 use App\Services\NotificationSystem;
 
+// ---------------- Types -------------
+// 1 = Submit verifikasi lvl 1 | Receiver : null (All Kasmin)
+// 2 = Submit verifikasi lvl 1 rejected | Reveiver : id batch submitter
+// 3 = Submit verifikasi lvl 1 approved | Receiver : id batch submitter
+// ------------------------------------
+
 class NotificationController extends Controller
 {
     public function get()
@@ -38,8 +44,10 @@ class NotificationController extends Controller
     	switch ($notifDetail->type) {
     		case 1:
     			return redirect('transaksi/persetujuan/'.$notifDetail->batch_id);
-			case 2:
-				return redirect('transaksi');
+            case 3:
+                return redirect('transaksi/verifikasi/'.$notifDetail->batch_id);
+			default:
+				return redirect('transaksi/');
     	}
     }
 }
