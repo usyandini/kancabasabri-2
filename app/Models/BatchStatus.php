@@ -4,6 +4,16 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+//  ----------- BATCH STAT DESC -------------
+//          0 = Inserted 
+//          1 = Updated
+//          2 = Posted / Submitted to Kasmin
+//          3 = Rejected for revision
+//          4 = Verified by Kasmin (lvl 1) / Submitted to Akuntansi 
+//          5 = Rejected for revision
+//          6 = Verified by Akuntansi (lvl 2)
+//  -----------------------------------------
+
 class BatchStatus extends Model
 {
     protected $connection = 'sqlsrv';
@@ -30,8 +40,7 @@ class BatchStatus extends Model
 
     public function status()
     {
-        $stat = $this->stat;
-        switch ($stat) {
+        switch ($this->stat) {
             case 0:
                 return "Pertama dibuat";
             case 1:
@@ -42,9 +51,10 @@ class BatchStatus extends Model
                 return "Rejected by Kasmin";
             case 4:
                 return "Mendapat approval dari Kasmin";
-            default:
-                break;
+            case 5:
+                return "Rejected by Akutansi";
+            case 6:
+                return "Mendapat approval dari Akutansi";
         }
-        return null;
     }
 }

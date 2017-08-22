@@ -9,6 +9,9 @@ use App\Models\Batch;
 // 1 = Submit verifikasi lvl 1 | Receiver : null (All Kasmin)
 // 2 = Submit verifikasi lvl 1 rejected | Reveiver : id batch submitter
 // 3 = Submit verifikasi lvl 1 approved | Receiver : id batch submitter
+// 4 = Submit verifikasi lvl 1 approved | Receiver : null (All Akutansi)
+// 5 = Submit verifikasi lvl 2 rejected | Reveiver : id batch submitter
+// 6 = Submit verifikasi lvl 2 approved | Receiver : id batch submitter
 // ------------------------------------
 class NotificationSystem
 {
@@ -18,15 +21,20 @@ class NotificationSystem
 			case 1:
 				$receiver_id = null;
 				break;
-			case 2:
-				$receiver_id = Batch::where('id', $id)->first()['creator']['id'];
-				break;
-			case 3:
+			default:
 				$receiver_id = Batch::where('id', $id)->first()['creator']['id'];
 				break;
 		}
 
 		$data = array('batch_id' => $id, 'type' => $type, 'receiver_id' => $receiver_id);
+		Notification::create($data);
+
+		if ($type == 3 ) $this->sendAlso($id, 4);
+	}
+
+	public static function sendAlso($id, $type)
+	{
+		$data = array('batch_id' => $id, 'type' => $type, 'receiver_id' => null);
 		Notification::create($data);
 	}
 

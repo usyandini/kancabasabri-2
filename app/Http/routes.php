@@ -61,12 +61,10 @@ Route::group(['middleware' => 'auth'], function() {
 		Route::get('/get/attributes/{type}', 'TransaksiController@getAttributes');
 		Route::post('/submit/verify', 'TransaksiController@submit');
 		Route::post('/berkas/remove', 'TransaksiController@removeBerkas');
-		
-		//Route::get('/viewtransaksi/{id_batch}', 'TransaksiController@view_transaksi');
-		
-		Route::get('/viewtransaksi', 'TransaksiController@view_transaksi');
+				
 		Route::get('/persetujuan/{id_batch}', 'TransaksiController@persetujuan');
-		Route::post('/verifikasi/{type}/{id_batch}', 'TransaksiController@submitVerification');
-		Route::get('/verifikasi', 'TransaksiController@verifikasi_transaksi');
+		Route::get('/verifikasi/{id_batch}', 'TransaksiController@verifikasi');
+
+		Route::post('/submit/verifikasi/{type}/{id_batch}', 'TransaksiController@submitVerification');
 	});
 });
