@@ -3,8 +3,15 @@
                 @section('additional-vendorcss')
                 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/tables/jsgrid/jsgrid-theme.min.css') }}">
                 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/tables/jsgrid/jsgrid.min.css') }}">
+                <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/forms/toggle/switchery.min.css') }}">
+                <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/plugins/forms/switch.min.css') }}">
+                <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/core/colors/palette-callout.min.css') }}">
                 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/forms/selects/select2.min.css') }}">
-                <link rel="stylesheet" type="text/css" href="https://pixinvent.com/stack-responsive-bootstrap-4-admin-template/app-assets/css/core/colors/palette-callout.min.css">
+                <style type="text/css">
+                  .hide {
+                    display: none;
+                  }
+                </style>
                 @endsection
 
                 @section('content')
@@ -23,36 +30,34 @@
                         </div>
                     </div>
                 </div>
-                <div class="content-body"><!-- Basic scenario start -->
+                 <div class="content-body"><!-- Basic scenario start -->
                     <section id="basic">
                         <div class="row">
                             <div class="col-xs-5">
                                 <div class="card">
                                     <div class="card-header">
-                                      <h4 class="card-title">Verifikasi Transaksi</h4>
+                                      <h4 class="card-title">Pencarian Transaksi by Batch</h4>
                                       <a class="heading-elements-toggle"><i class="ft-align-justify font-medium-3"></i></a>
                                     </div>
                                     <div class="card-body collapse in">
                                       <div class="card-block">
-                                        <form method="POST" action="{{ url('transaksi') }}">
-                                          <div class="row">
-                                            {{ csrf_field() }}
-                                            <div class="col-xs-6">
-                                                <div class="form-group">
-                                                  <label>Tanggal</label>
-                                                  <input class="form-control" type="date" placeholder="{{ date('d/m/Y') }}" name="tgl_transaksi" id="tgl_transaksi" value="{{ date('Y-m-d') }}" readonly="readonly">
-                                                </div>
-                                            </div>
-                                            <div class="col-xs-6">
-                                                <div class="form-group">
-                                                  <label>No. Batch</label>
-                                                  <input class="form-control" type="text" id="batch" readonly="readonly"></input>
-                                                </div>
-                                            </div>
-                                          </div>
-                                        </form>
+                                        <ul>
+                                          <li>Tanggal dibuat : <code>{{ date("d-m-Y", strtotime($active_batch->created_at)) }}</code>, diajukan oleh : <code>{{ $active_batch['creator']['name'] }}</code></li>
+                                          <li>Terkahir Update : <code>{{ $active_batch->updated_at }}</code></li>
+                                          <li>Banyak poin : <code id="totalRows"></code>, dengan <code>{{ count($berkas).' berkas lampiran' }}</code></li>
+                                          <li>Status terakhir : <code>{{ $active_batch->latestStat()->status() }}</code></li>
+                                        </ul>
                                       </div>
                                     </div>
+                                </div>
+                            </div>
+                            <div class="col-md-7">
+                                <div class="alert alert-warning alert-dismissible fade in mb-2" role="alert">
+                                  <h4 class="alert-heading mb-2">Perlu Diperhatikan!</h4>
+                                  <ul>
+                                    <li>Verifikasi akhir hanya bisa dilakukan oleh <b>Divisi Akuntansi</b>.</li>
+                                    <li>Jika <b>verifikasi ditolak</b>, maka tahapan akan kembali ke <b>tahap paling awal</b>.</li>
+                                  </ul>
                                 </div>
                             </div>
                         </div>
@@ -60,33 +65,124 @@
                             <div class="col-xs-12">
                                 <div class="card">
                                     <div class="card-header">
-                                        <h4 class="card-title">List Transaksi</h4>
+                                        <h4 class="card-title">List Transaksi</h4><br>
                                         <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
-                                    </div>
-                                    <div class="alert alert-warning mb-2" role="alert" id="alert-dropping" style="display: block;">
-                                      <strong>Perhatian!</strong> Verifikasi transaksi hanya dilakukan oleh <b>Divisi Akuntansi</b>.
                                     </div>
                                     <div class="card-body collapse in ">
                                         <div class="card-block card-dashboard ">
-                                            <!-- <p>Grid with filtering, editing, inserting, deleting, sorting and paging. Data provided by controller.</p> -->
+                                          <div class="row">
+                                            @if(session('success'))
+                                            <div class="col-xs-7">
+                                                <div class="alert alert-success">
+                                                    Batch ini berhasil ditindaklanjuti dan mengirimkan notifikasi ke user yang bersangkutan.
+                                                </div>
+                                              </div>
+                                            @endif
+                                          </div>
                                             <div id="basicScenario"></div><br>
-                                            <div class="col-xs-12 pull-right">
-                                              <label>Status<input type="text" class="form-control" id="status" readonly="readonly" value="Diverifikasi"></input></label>
-                                              <div class="form-groups">
-                                                  <button type="submit" class="btn btn-primary" id="button_status" value="Terima"><i class="fa fa-check"> Diverifikasi</i></button>
-                                                  <button type="submit" class="btn btn-danger" id="button_status" value="Tolak"><i class="fa fa-times"> Tidak Diverifikasi</i></button>
+                                              <div class="row">
+                                                <div class="col-lg-6 col-md-12">
+                                                  <div class="bs-callout-info callout-border-left callout-bordered callout-transparent mt-1 p-1">
+                                                    <h4 class="info">List Berkas</h4>
+                                                    <table>
+                                                      @forelse($berkas as $value)
+                                                        <tr>
+                                                          <td width="25%">File: <a href="{{ asset('file/transaksi').'/'.$value->file_name }}" target="_blank">{{ $value->file_name }}</a></td>
+                                                          <td width="25%">Diunggah: <b>{{ $value->created_at }}</b></td>
+                                                        </tr>
+                                                      @empty
+                                                        <code>Belum ada file terlampir</code>
+                                                      @endforelse
+                                                    </table>
+                                                  </div>
+                                                </div>
+                                                <div class="col-lg-6 col-md-12">
+                                                  <div class="bs-callout-danger callout-border-left callout-bordered mt-1 p-1">
+                                                    <h4 class="danger">History Batch </h4>
+                                                    <table>
+                                                      @forelse($batch_history as $hist)
+                                                        <tr>
+                                                          <td><b class="text-danger">{{ $hist->status() }}</b></td>
+                                                          <td>oleh <b class="text-warning">{{ $hist['submitter']['name'] }}</b></td>
+                                                          <td>| <code>{{ $hist['updated_at'] }}</code></td>
+                                                        </tr>
+                                                      @empty
+                                                        <code>Belum ada history batch terbaru.</code>
+                                                      @endforelse
+                                                    </table>
+                                                  </div>
+                                                </div>
                                               </div>
-                                              <div class="form-group">
-                                                <a href="#" class="btn btn-success pull-right"><i class="fa fa-check-square-o"></i> Kirim</a>
+                                              <br>
+                                              @if($verifiable)
+                                              <div class="row">
+                                                <div class="col-md-3 pull-right">
+                                                    <div class="form-group">
+                                                        <button onclick="checkBatchSubmit()" class="btn btn-primary pull-right" id="simpan" value="Simpan"><i class="fa fa-refresh"></i> Tindaklanjuti</button>
+                                                    </div>
+                                                </div>
                                               </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
+                                              @endif
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                      </section>
                     <!-- Basic scenario end -->
+                </div>
+
+                <!-- Modal -->
+                <div class="modal fade text-xs-left" id="xSmall" tabindex="-1" role="dialog" aria-labelledby="myModalLabel20"
+                aria-hidden="true">
+                  <div class="modal-dialog modal-md" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h4 class="modal-title" id="myModalLabel20">Box Konfirmasi Verifikasi lvl 1</h4>
+                      </div>
+                      <div class="modal-body" id="confirmation-msg">
+                        <div class="row">
+                          <div class="col-md-12">
+                              <form method="POST" action="{{ url('transaksi/submit/verifikasi').'/2/'.$active_batch->id }}" id="verification">
+                              {{ csrf_field() }}
+                              <p>Anda akan <b>memverifikasi batch ini</b> sebagai Kasmin. Informasi batch ini : 
+                              <ul>
+                                <li>Batch saat ini : <code>{{ date("d-m-Y", strtotime($active_batch->created_at)) }}</code></li>
+                                <li>Terkahir Update : <code>{{ $active_batch->updated_at }}</code> oleh <code>{{ $active_batch['creator']['name'] }}</code></li>
+                                <li>Banyak item : <code id="totalRows"></code>, dengan <code>{{ count($berkas).' berkas lampiran' }}</code></li>
+                              </ul>
+                              <div class="row">
+                                <div class="col-md-12">
+                                  <div class="form-group">
+                                    <label for="companyName">Apakah batch ini dapat dilanjutkan ke <b>verifikasi level 2</b>?</label><br>
+                                    <input type="checkbox" onchange="approveOrNot(this)" class="form-control switch" id="switch1" checked="checked" name="is_approved" value="1" data-on-label="Approve untuk verifikasi akhir" data-off-label="Reject dengan alasan, kembali ke tahap awal"/>
+                                  </div>
+                                </div>
+                                <div class="col-md-10" id="reason" style="display: none;">
+                                  <div class="form-group">
+                                    <label>Alasan <b>penolakan</b> (Isi hanya jika verifikasi bersifat <i>rejection</i>)</label>
+                                    <select class="form-control" name="reason">
+                                      <option value="0">Silahkan pilih alasan anda</option>
+                                      @foreach($reject_reasons as $res)
+                                        <option value="{{ $res->id }}">{{ $res->content }}</option>
+                                      @endforeach
+                                    </select>
+                                  </div>
+                                </div>
+                              </div>
+                            </form>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">Kembali</button>
+                        <button onclick="submitVer()" type="submit" class="btn btn-outline-primary">Submit verifikasi</button>
+                      </div>
+                    </div>
+                  </div>
                 </div>
                 @endsection
 
@@ -96,122 +192,293 @@
                 <script type="text/javascript" src="{{ asset('app-assets/vendors/js/charts/jquery.sparkline.min.js') }}"></script>
                 <script src="{{ asset('app-assets/vendors/js/tables/jsgrid/jsgrid.min.js') }}" type="text/javascript"></script>
                 <script src="{{ asset('app-assets/vendors/js/tables/jsgrid/griddata.js') }}" type="text/javascript"></script>
+                <script src="{{ asset('app-assets/vendors/js/forms/toggle/bootstrap-checkbox.min.js') }}"></script>
                 <script src="{{ asset('app-assets/vendors/js/tables/jsgrid/jquery.validate.min.js') }}" type="text/javascript"></script>
+                <script src="{{ asset('app-assets/vendors/js/forms/toggle/switchery.min.js') }}" type="text/javascript"></script>
                 <script src="{{ asset('app-assets/vendors/js/forms/select/select2.full.min.js') }}" type="text/javascript"></script>
+                <script src="{{ asset('app-assets/vendors/js/extensions/toastr.min.js') }}" type="text/javascript"></script>
                 <!-- END PAGE VENDOR JS-->
                 <!-- BEGIN PAGE LEVEL JS-->
                 <script type="text/javascript" src="{{ asset('app-assets/js/scripts/ui/breadcrumbs-with-stats.min.js') }}"></script>
                 {{--<script src="{{ asset('app-assets/js/scripts/tables/jsgrid/jsgrid.min.js') }}" type="text/javascript"></script>--}}
-                {{--<script src="{{ asset('app-assets/js/scripts/forms/select/form-select2.min.js') }}" type="text/javascript"></script>--}}
+                {{-- <script src="{{ asset('app-assets/js/scripts/forms/select/form-select2.min.js') }}" type="text/javascript"></script> --}}
+                <script src="{{ asset('app-assets/js/scripts/forms/switch.min.js') }}" type="text/javascript"></script>
                 <!-- END PAGE LEVEL JS-->
                 <script type="text/javascript" src="{{ asset('app-assets/js/scripts/ui/breadcrumbs-with-stats.min.js') }}"></script>
-                {{-- <script src="{{ asset('app-assets/js/scripts/tables/jsgrid/jsgrid.min.js') }}" type="text/javascript"></script> --}}
+                <script src="{{ asset('app-assets/js/scripts/extensions/toastr.min.js') }}" type="text/javascript"></script>
                 <script type="text/javascript">
-                  // $(document).ready(function() {
-                  //   $("#basicScenario").jsGrid( {
-                  //     width:"100%", 
-                  //     //height:"400px",
-                  //     // sorting:true, 
-                  //     autoload:true,
-                  //     paging:true,
-                  //     editButton:true,
-                  //     deleteButton:true,
-                  //     editing:true,
-
-                  //     deleteConfirm: "Apakah anda yakin untuk menghapus?",
-                  //     controller: {}                       
-                       
-                  //     fields: [
-                  //           { name: "tgl_trans", type: "text", title: "Tanggal" },
-                  //           { name: "item_trans", type: "select", title: "Item" }, 
-                  //           { name: "jml_item", type: "number", title: "Jumlah Item" },
-                  //           { name: "uraian", type: "text", title: "Uraian"},
-                  //           { name: "subpos", type: "select", title: "Sub Pos"},
-                  //           { name: "mata_anggaran", type: "select", title: "Mata Anggaran", width:200 }, 
-                  //           { name: "kasbank", type: "select", title: "Kas/Bank" }, 
-                  //           { name: "account", type: "text", title: "Account", items: db.countries, valueField: "id_akun", width:200 }, 
-                  //           { name: "anggaran", type: "text", title: "Anggaran Tersedia", width:200, sorting: !1 }, 
-                  //           { name: "jml_trans", type: "text", title: "Jumlah Transaksi", width:200, sorting: !1 }, 
-                  //           { type: "control" }
-                  //     ]
-                  //   })
-                  var x = [];
+                  var inputs = [];
+                  var item = m_anggaran = subpos = account_field = null;
+                  var tempIdCounter = totalRows = 0;
+                  var editableStat = {{ $editable ? 1 : 0 }};
 
                   $(document).ready(function() {
+                    var MyDateField = function(config) {
+                        jsGrid.Field.call(this, config);
+                    };
+                     
+                    MyDateField.prototype = new jsGrid.Field({
+                        css: "date-field", align: "center",
+                        myCustomProperty: "foo",
+                        sorter: function(date1, date2) {
+                            return new Date(date1) - new Date(date2);
+                        },
+                        itemTemplate: function(value) {
+                            return value ? ("0" + new Date(value).getDate()).slice(-2) + '/' + ("0" + (new Date(value).getMonth() + 1)).slice(-2) + '/' + new Date(value).getFullYear() : '';
+                        },
+                        insertTemplate: function(value) {
+                            return this._insertPicker = $("<input>").datepicker({ defaultDate: new Date() });
+                        },
+                        editTemplate: function(value) {
+                            return this._editPicker = $("<input>").datepicker().datepicker("setDate", new Date(value));
+                        },
+                        insertValue: function() {                            
+                            return this._insertPicker.datepicker("getDate")!= null ? this._insertPicker.datepicker("getDate").toString() : '';
+                        },
+                        editValue: function() {
+                            return this._editPicker.datepicker("getDate").toString();
+                        }
+                    });
+                     
+                    jsGrid.fields.date = MyDateField;
+
                     $("#basicScenario").jsGrid( {
                       width: "auto",
                
-                      sorting: true,
-                      paging: true,
-                      autoload: true,
-                      editing: false,
-                      inserting: false,
-                      align: "center",
+                      sorting: true, 
+                      paging: true, 
+                      autoload: true, 
+                      editing: editableStat == 1 ? true : false, 
+                      inserting: editableStat == 1 ? true : false,
                
-                      pageSize: 5,
-                      pageButtonCount: 10,
+                      pageSize: 10, pageButtonCount: 10,
                       
                       controller: {
                         loadData: function(filter) {
                           return $.ajax({
-                              type: "GET",
-                              url: "{{  url('transaksi/get')}}",
-                              data: filter,
-                              dataType: "JSON"
+                              type: "GET", url: "{{  url($jsGrid_url) }}", data: filter, dataType: "JSON"
                           })
                         },
                         insertItem: function (item) {
-                          item["type"] = 'insert';
-                          x.push(item);
-                          console.log(x);
-                          //   return $.ajax({
-                          //       type: "POST",
-                          //       url: "{{ url('transaksi/transaksi_process') }}",
-                          //       data: {
-                          //         "item" : item,
-                          //        "_token" : "{{ csrf_token() }}"
-                          //       }
-                          //   });
-                          /*$.extend(item, {
-                            tgl: $("#tgl").val(),
-                            item: parseInt($("#item").val(), 10),
-                            qty_item: parseInt($("#qty_item").val(), 10),
-                            desc: $("#desc").val(),
-                            sub_pos: parseInt($("#sub_pos").val(), 10),
-                            mata_anggaran: parseInt($("#mata_anggaran").val(), 10),
-                            bank: $("#bank").val(),
-                            account: $("#account").val(),
-                            anggaran: $("#anggaran").val(),
-                            total: $("#total").val()
-                          });
-                            $("#basicScenario").jsGrid(isNew ? "insertItem" : "loadData", item);*/
+                          item["isNew"] = true;
+                          item["tempId"] = ++tempIdCounter;
+                          inputs.push(item);
+                          console.log(item);
+                        },
+                        updateItem: function(item) {
+                          if (item["isNew"]) {
+                            inputs.splice(item["tempId"]-1, 1, item);  
+                          } else {
+                            inputs.push(item);
                           }
+                          console.log(item);  
+                        },
+                        deleteItem: function(item) {
 
+                        }
                       }, 
+                      onRefreshed: function(args) {
+                        var items = args.grid.option("data");
+                        items.forEach(function(item) {
+                          totalRows += 1;
+                        });
 
+                        $('code[id="totalRows"]').html(totalRows + " baris");
+                      },
                       fields: [
-                          { name: "tgl", type: "text", width: 100, title: "Tanggal" },
-                          { name: "item", width: 300, type: "select", items: getData('item'), valueField: "MAINACCOUNTID", textField: "NAME", title: "Item", align: "center" },
-                          { name: "qty_item", width: 100, type: "number", title: "Jumlah Item" },
-                          { name: "desc", width: 100, type: "text", title: "Uraian", align: "center" },
-                          { name: "sub_pos", width: 100, type: "select", items: getData('subpos'), valueField: "VALUE", textField: "DESCRIPTION", title: "Subpos"},
-                          { name: "mata_anggaran", width: 200, type: "select", items: getData('kegiatan'), valueField: "VALUE", textField: "DESCRIPTION", title: "Mata Anggaran"},
-                          { name: "bank", width: 200, type: "select", items: getData('bank'), valueField: "BANK", textField: "BANK_NAME", title: "Bank/Kas"},
-                          { name: "account", width: 200, type: "text", title: "Account" },
-                          { name: "anggaran", width: 200, type: "text", title: "Anggaran tersedia" },
-                          { name: "total", width: 100, type: "text", title: "Total" }
+                          {
+                            name: "id",
+                            css: "hide",
+                            width: 0,
+                            readOnly: true
+                          },
+                          { 
+                            type: "control", 
+                            width: 60,
+                            css: editableStat == 1 ? '' : "hide"
+                          },
+                          { 
+                            name: "account", 
+                            width: 200, 
+                            align: "left",
+                            type: "text", 
+                            title: "Account", 
+                            readOnly: true, 
+                            itemTemplate: function(value) {
+                              return "<span class='tag tag-default'><b>"+value+"</b></span>";
+                            },
+                            insertTemplate: function() {
+                              account_field = jsGrid.fields.text.prototype.insertTemplate.call(this);
+                              return account_field; },
+                            editTemplate: function(value) {
+                              account_field = jsGrid.fields.text.prototype.editTemplate.call(this);
+                              $(account_field).val(value);
+                              return account_field; } },
+                          { 
+                            name: "tgl", 
+                            type: "date", 
+                            width: 150, 
+                            title: "Tanggal", 
+                            align: "left",
+                            validate: {
+                              validator : "required",
+                              message : "Kolom tanggal tidak boleh kosong."  
+                            } },
+                          { 
+                            name: "item", 
+                            width: 300, 
+                            align: "left",
+                            type: "select", 
+                            items: getData('item'), 
+                            valueField: "MAINACCOUNTID", 
+                            textField: "NAME", 
+                            title: "Item", 
+                            selectedindex: 0,
+                            insertTemplate: function() {
+                                var result = jsGrid.fields.select.prototype.insertTemplate.call(this);
+                                result.on("change", function() {
+                                    populateAccount('item', $(this).val());
+                                });
+                                return result; },
+                            editTemplate: function(value) {
+                                var result = jsGrid.fields.select.prototype.editTemplate.call(this);
+                                $(result).val(value);
+                                populateAccount('item', value);
+
+                                result.on("change", function() {
+                                    populateAccount('item', $(this).val());
+                                });
+                                return result; } },
+                          { 
+                            name: "qty_item", 
+                            width: 100, 
+                            align: "left",
+                            type: "number", 
+                            title: "Jumlah Item",
+                            itemTemplate: function(value) {
+                              return value + " buah";
+                            },
+                            validate: {
+                              validator: "min",
+                              message: "Kolom jumlah item tidak boleh 0.",
+                              param: [0]
+                            }  },
+                          { 
+                            name: "desc", 
+                            width: 300, 
+                            type: "textarea", 
+                            title: "Uraian", 
+                            align: "left",
+                            validate: {
+                              validator: "required",
+                              message: "Kolom uraian tidak boleh kosong."  
+                            }  },
+                          { 
+                            name: "sub_pos", 
+                            width: 200, 
+                            align: "left",
+                            type: "select", 
+                            items: getData('subpos'), 
+                            valueField: "VALUE", 
+                            textField: "DESCRIPTION", 
+                            title: "Subpos", 
+                            insertTemplate: function() {
+                                var result = jsGrid.fields.select.prototype.insertTemplate.call(this);
+                                result.on("change", function() {
+                                    populateAccount('subpos', $(this).val());
+                                });
+                                return result; },
+                            editTemplate: function(value) {
+                                var result = jsGrid.fields.select.prototype.editTemplate.call(this);
+                                $(result).val(value);
+                                populateAccount('subpos', value);
+
+                                result.on("change", function() {
+                                    populateAccount('subpos', $(this).val());
+                                });
+                                return result; }
+                            }, 
+                          { 
+                            name: "mata_anggaran", 
+                            width: 200, 
+                            align: "left",
+                            type: "select", 
+                            items: getData('kegiatan'), 
+                            valueField: "VALUE", 
+                            textField: "DESCRIPTION", 
+                            title: "Mata Anggaran", 
+                            insertTemplate: function() {
+                                var result = jsGrid.fields.select.prototype.insertTemplate.call(this);
+                                result.on("change", function() {
+                                    populateAccount('m_anggaran', $(this).val());
+                                });
+                                return result; },
+                            editTemplate: function(value) {
+                                var result = jsGrid.fields.select.prototype.editTemplate.call(this);
+                                $(result).val(value);
+                                populateAccount('m_anggaran', value);
+
+                                result.on("change", function() {
+                                    populateAccount('m_anggaran', $(this).val());
+                                });
+                                return result; }
+                            }, 
+                          { 
+                            name: "bank", 
+                            width: 200,
+                            align: "left", 
+                            type: "select", 
+                            items: getData('bank'), 
+                            valueField: "BANK", 
+                            textField: "BANK_NAME", 
+                            title: "Bank/Kas", 
+                            valdiate: {
+                              validator: "min",
+                              message: "Kolom bank tidak boleh tidak dipilih.",
+                              param: [1]
+                             } },
+                          { 
+                            name: "anggaran", 
+                            width: 200, 
+                            align: "left",
+                            type: "number", 
+                            title: "Anggaran tersedia",
+                            itemTemplate: function(value) {
+                              return "<span class='tag tag-info'>IDR " + parseInt(value).toLocaleString() + ",00</span>";
+                            },
+                            valdiate: {
+                              validator: "min",
+                              message: "Kolom anggaran tidak boleh kosong.",
+                              param: [1]
+                             } },
+                          { 
+                            name: "total", 
+                            align: "left",
+                            width: 200, 
+                            type: "number", 
+                            title: "Total",
+                            itemTemplate: function(value) {
+                              return "<span class='tag tag-danger'><b>IDR " + parseInt(value).toLocaleString() + ",00</b></span>";
+                            },
+                            valdiate: {
+                              validator: "min",
+                              message: "Kolom total tidak boleh kosong.",
+                              param: [1]
+                             } },
+                          { 
+                            type: "control", 
+                            width: 60,
+                            css: editableStat == 1 ? '' : "hide"
+                          }
                         ]
                     });
                   });
-                  
+
                   function getData(type) {
                     var returned = function () {
                         var tmp = null;
                         $.ajax({
-                            'async': false,
-                            'type': "GET",
-                            'dataType': 'JSON',
-                            'url': "{{ url('transaksi/get/attributes') }}/" +type,
+                            'async': false, 'type': "GET", 'dataType': 'JSON', 'url': "{{ url('transaksi/get/attributes') }}/" +type,
                             'success': function (data) {
                                 tmp = data;
                             }
@@ -221,23 +488,70 @@
                     return returned;
                   };
 
-                  function simpan_jsgrid(){
-                    /*$('#basicScenario').each(function(){
-                        x.push($(this).html());
-                    });
-                    $('#button_status').click(function(){
-                        $.ajax({
-                          type : "POST",
-                          url : "{{ url('transaksi/transaksi_process') }}",
-                          data : "content="+x,
-                          success: function(item) {
-                              alert(item);// alert the data from the server
-                          },
-                          error : function() {
-                          }
-                         });
-                    });*/
-                    console.log(x);
+                  function populateAccount(type, value) {
+                    switch (type) {
+                      case 'item':
+                        item = value;
+                        break;
+                      case 'm_anggaran':
+                        m_anggaran = value;
+                        break;
+                      case 'subpos':
+                        subpos = value;
+                        break;
+                    }
+                    generateAccount(item, m_anggaran, subpos);
+                  }
+
+                  function generateAccount(item, m_anggaran, subpos) {
+                    var userId = {{ Auth::user()->id }};
+                    var account = item + '-THT-' + userId +'-00-' + subpos + '-' + m_anggaran;   
+                    $(account_field).val(account);
+                  };
+
+                  function deleteBerkas(file_id, file_name) {
+                    $('input[name="file_id"]').val(file_id);
+                    $('input[name="file_name"]').val(file_name);
+                    $('form[id="deleteBerkas"').submit();
+                  };
+
+                  function checkBatchSubmit() {
+                    if (totalRows > 0) {
+                      $('#xSmall').modal()
+                    } else {
+                      toastr.error("Silahkan input data yang hendak disubmit. Terima kasih.", "Data tidak boleh kosong", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});                      
+                    }
+                  };
+
+                  function approveOrNot(el) {
+                    if(el.checked) {
+                      document.getElementById("reason").style.display = 'none';
+                    } else {
+                      document.getElementById("reason").style.display = 'block';
+                      toastr.info("Silahkan input alasan penolakan anda untuk verifikasi lvl 1 ini. Terima kasih.", "Alasan penolakan dibutuhkan", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
+                    }
+                  };
+
+                  function submitVer() {
+                    var valid = true;
+                    if (!$('input[name="is_approved"]').is(':checked')) {
+                      if ($('select[name="reason"]').val() == '0') {
+                        valid = false;
+                        toastr.error("Silahkan input alasan penolakan anda untuk verifikasi lvl 1 ini. Terima kasih.", "Alasan penolakan dibutuhkan.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
+                      } 
+                    }
+                    if (valid) {
+                      $('form[id="verification"]').submit();
+                    }
+                  };
+
+                  function populateBatchInput(){
+                    if (inputs.length > 0 || $('input[name="berkas[]"]').val() != '') {
+                      $('input[name="batch_values"]').val(JSON.stringify(inputs));
+                      $('form[id="mainForm"]').submit();
+                    } else {
+                      toastr.error("Silahkan input perubahan pada tabel transaksi atau berkas transaksi untuk melakukan penyimpanan. Terima kasih.", "Input tidak boleh kosong.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
+                    }
                   };
                 </script>
                 @endsection

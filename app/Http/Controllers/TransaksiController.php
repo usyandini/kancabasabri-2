@@ -290,27 +290,22 @@ class TransaksiController extends Controller
         return redirect()->back();
     }
 
-    public function view_transaksi()
-    {
-        return view('transaksi.viewtransaksi');
-    }
-        
+    // lvl 1
     public function persetujuan($batch)
     {
-        $berkas = $history = [];
-        $jsGrid_url = 'transaksi';
+        $berkas      = $history = [];
+        $jsGrid_url  = 'transaksi';
         $empty_batch = $editable = false;
         $valid_batch = Batch::where('id', $batch)->first();
 
         if ($valid_batch) {
-            $verifiable = $valid_batch->verifiable();
-            $berkas = BerkasTransaksi::where('batch_id', $valid_batch['id'])->get();
-            $history = BatchStatus::where('batch_id', $valid_batch['id'])->orderBy('updated_at', 'desc')->get();
+            $verifiable = $valid_batch->lvl1Verifiable();
+            $berkas     = BerkasTransaksi::where('batch_id', $valid_batch['id'])->get();
+            $history    = BatchStatus::where('batch_id', $valid_batch['id'])->orderBy('updated_at', 'desc')->get();
             $jsGrid_url = 'transaksi/get/batch/'.$valid_batch['id'];
         } 
 
         return view('transaksi.persetujuan', [
-            'filters'       => null,
             'editable'      => false,
             'verifiable'    => $verifiable,
             'active_batch'  => $valid_batch,
@@ -321,19 +316,40 @@ class TransaksiController extends Controller
             'reject_reasons'    => RejectReason::where('type', 1)->get()]);
     }   
 
+    // lvl 2
+    public function verifikasi($batch)
+    {
+        $berkas         = $history = [];
+        $jsGrid_url     = 'transaksi';
+        $empty_batch    = $editable = false;
+        $valid_batch    = Batch::where('id', $batch)->first();
+
+        if ($valid_batch) {
+            $verifiable = $valid_batch->lvl2Verifiable();
+            $berkas     = BerkasTransaksi::where('batch_id', $valid_batch['id'])->get();
+            $history    = BatchStatus::where('batch_id', $valid_batch['id'])->orderBy('updated_at', 'desc')->get();
+            $jsGrid_url = 'transaksi/get/batch/'.$valid_batch['id'];
+        } 
+
+        return view('transaksi.verifikasi', [ 
+            'editable'      => false,
+            'verifiable'    => $verifiable,
+            'active_batch'  => $valid_batch,
+            'empty_batch'   => $empty_batch,
+            'berkas'        => $berkas,
+            'batch_history' => $history,
+            'jsGrid_url'    => $jsGrid_url,
+            'reject_reasons'    => RejectReason::where('type', 2)->get()]);
+    }
+
     public function submitVerification($type, $batch_id, Request $request)
     {
         $input = $request->only('is_approved', 'reason');
         $this->approveOrReject($type, $batch_id, $input);
 
-        NotificationSystem::send($this->current_batch['id'], $request->is_approved ? 3 : 2);
+        NotificationSystem::send($this->current_batch['id'], $type == 1 ? ($request->is_approved ? 3 : 2) : ($request->is_approved ? 6 : 5));
 
         session()->flash('success', true);
         return redirect()->back();   
-    }
-    
-    public function verifikasi_transaksi()
-    {
-        return view('transaksi.verifikasi');
     }      
 }

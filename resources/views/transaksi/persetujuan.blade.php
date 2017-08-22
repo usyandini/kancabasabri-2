@@ -36,35 +36,17 @@
                             <div class="col-xs-5">
                                 <div class="card">
                                     <div class="card-header">
-                                      <h4 class="card-title">Pencarian Transaksi by Batch</h4>
+                                      <h4 class="card-title">Detil Batch Transaksi</h4>
                                       <a class="heading-elements-toggle"><i class="ft-align-justify font-medium-3"></i></a>
                                     </div>
                                     <div class="card-body collapse in">
                                       <div class="card-block">
-                                        <form method="POST" action="{{ url('transaksi') }}">
-                                          <div class="row">
-                                            {{ csrf_field() }}
-                                            <div class="col-xs-6">
-                                                <div class="form-group">
-                                                  <label>Tanggal Batch</label>
-                                                  <input class="form-control" type="date" placeholder="{{ date('d/m/Y') }}" name="tgl_transaksi" id="tgl_transaksi" value="{{ date('Y-m-d') }}">
-                                                </div>
-                                            </div>
-                                            <div class="col-xs-6">
-                                                <div class="form-group">
-                                                  <label>No. Batch</label>
-                                                  <input class="form-control" type="text" id="batch"></input>
-                                                </div>
-                                            </div>
-                                          </div>
-                                          <div class="row">
-                                              <div class="col-xs-2">
-                                                <div class="form-group">
-                                                  <a href="#" class="btn btn-primary"><i class="fa fa-search"></i> Cari</a>
-                                                </div>
-                                              </div>
-                                          </div>
-                                        </form>
+                                        <ul>
+                                          <li>Tanggal dibuat : <code>{{ date("d-m-Y", strtotime($active_batch->created_at)) }}</code>, diajukan oleh : <code>{{ $active_batch['creator']['name'] }}</code></li>
+                                          <li>Terkahir Update : <code>{{ $active_batch->updated_at }}</code></li>
+                                          <li>Banyak poin : <code id="totalRows"></code>, dengan <code>{{ count($berkas).' berkas lampiran' }}</code></li>
+                                          <li>Status terakhir : <code>{{ $active_batch->latestStat()->status() }}</code></li>
+                                        </ul>
                                       </div>
                                     </div>
                                 </div>
@@ -73,7 +55,8 @@
                                 <div class="alert alert-info alert-dismissible fade in mb-2" role="alert">
                                   <h4 class="alert-heading mb-2">Perlu Diperhatikan!</h4>
                                   <ul>
-                                    <li>Verifikasi persetujuan hanya bisa dilakukan oleh <b>Divisi Kasmin</b>.</li>
+                                    <li>Persetujuan hanya bisa diberikan oleh <b>Divisi Kasmin</b>.</li>
+                                    <li>Persetujuan hanya bisa diberikan pada <b><i>batch</i> yang telah disubmit</b> oleh user.</li>
                                   </ul>
                                 </div>
                             </div>
@@ -163,7 +146,7 @@
                       <div class="modal-body" id="confirmation-msg">
                         <div class="row">
                           <div class="col-md-12">
-                              <form method="POST" action="{{ url('transaksi/verifikasi').'/1/'.$active_batch->id }}" id="verification">
+                              <form method="POST" action="{{ url('transaksi/submit/verifikasi').'/1/'.$active_batch->id }}" id="verification">
                               {{ csrf_field() }}
                               <p>Anda akan <b>memverifikasi batch ini</b> sebagai Kasmin. Informasi batch ini : 
                               <ul>

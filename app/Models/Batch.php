@@ -60,13 +60,23 @@ class Batch extends Model
         }
     }
 
-    public function verifiable()
+    public function lvl1Verifiable()
     {
     	switch ($this->latestStat()->stat) {
             case 2:
                 return true;
             default:
             	return false;
+        }
+    }
+
+    public function lvl2Verifiable()
+    {
+        switch ($this->latestStat()->stat) {
+            case 4:
+                return true;
+            default:
+                return false;
         }
     }
 }
