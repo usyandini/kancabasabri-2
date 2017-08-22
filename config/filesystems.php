@@ -54,6 +54,15 @@ return [
             'visibility' => 'public',
         ],
 
+        'ftp' => [
+            'driver' => 'ftp',
+            'root' => storage_path('app/public'),
+            'visibility' => 'public',
+            'host' => '172.25.3.20',
+            'username' => 'root',
+            'password' => 'asabr1.!!'
+        ],
+
         's3' => [
             'driver' => 's3',
             'key' => 'your-key',

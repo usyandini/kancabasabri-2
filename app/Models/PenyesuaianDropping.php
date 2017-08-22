@@ -17,6 +17,14 @@ class PenyesuaianDropping extends Model
     	'rek_bank', 
     	'cabang', 
     	'is_pengembalian',  
-    	'tgl_dropping'
+    	'tgl_dropping',
+        'id_dropping',
+        'created_by',
+        'nominal_dropping'
     ];
+
+    public function creator()
+    {
+        return $this->belongsTo('App\User', 'created_by', 'id');
+    }
 }

@@ -75,12 +75,17 @@
                           </div>
                           <div class="card-body collapse in">
                             <div class="card-block">
+                              <div class="card-text">
+                                <div class="alert alert-warning mb-2" role="alert" id="alert-dropping" style="display: block;">
+                                  <p><b>Perhatian ! </b>Sebelum melakukan <b>Tarik Tunai</b> harap melakukan <b>Penyesuaian Dropping</b> terlebih dahulu. Jika jumlah dropping sudah sesuai dengan pengajuan silahkan melakukan <b>Tarik Tunai</b>.</p>
+                                </div>
+                              </div>
                               <form class="form" id="tariktunai-form" method="POST" action="{{ url('dropping/tariktunai/'.$dropping->RECID) }}" enctype="multipart/form-data">
                               {{ csrf_field() }}
                                 <input type="hidden" name="sisa_dropping" value="{{ $dropping->tarikTunai['sisa_dropping'] }}">
 
                                 <div class="form-body">
-                                  <h4 class="form-section"> Kesesuaian Dropping</h4>
+                                  <h4 class="form-section"> Informasi Dropping</h4>
                                   <div class="row">
                                     <div class="col-md-6">
                                       <div class="form-group">
@@ -112,12 +117,6 @@
                                         <input type="text" readonly="" id="cabang" class="form-control" placeholder="Kantor Cabang" name="cabang" value="{{ $dropping->CABANG_DROPPING }}">
                                       </div>
                                     </div>
-                                    <div class="col-md-12">
-                                      <div class="form-group">
-                                        <label for="is_sesuai">Apakah anda ingin melanjutkan Tarik Tunai?</label><br>
-                                        <input type="checkbox" onchange="change_checkbox(this)" class="form-control switch" id="switch1" checked="checked" name="is_sesuai" value="1" data-on-label="Tarik Tunai" data-off-label="Penyesuaian Dropping"/>
-                                      </div>
-                                    </div>
                                   </div>
                                   <h4 class="form-section">Informasi Tarik Tunai</h4>
                                   <div class="row">
@@ -146,37 +145,6 @@
                                       </div>
                                     </div>
                                   </div>
-                                  <h4 class="form-section">History Tarik Tunai</h4>
-                                  <div class="row">
-                                    <div class="col-md-12">
-                                      <div class="form-group">
-                                        <div class="table-responsive">
-                                          <table class="table">
-                                            <thead>
-                                              <tr>
-                                                <th>Tanggal</th>
-                                                <th>Saldo</th>
-                                                <th>Nominal Tarik</th>
-                                                <th>Sisa Dropping</th>
-                                                <th>Attachment</th>
-                                              </tr>
-                                            </thead>
-                                            @foreach($tariktunai as $history)
-                                            <tbody>
-                                              <tr>
-                                                <th>{{ $history->created_at }}</th>
-                                                <td>{{ $history->nominal }}</td>
-                                                <td>{{ $history->nominal_tarik }}</td>
-                                                <td>{{ $history->sisa_dropping }}</td>
-                                                <td><a href="{{ asset('file/tariktunai').'/'.$history->berkas_tariktunai }}" target="_blank">{{ $history->berkas_tariktunai }}</a></td>
-                                              </tr>
-                                            </tbody>
-                                            @endforeach
-                                          </table>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
                                 </div>
                               </form>
                             </div>
@@ -185,9 +153,9 @@
                       </div>
 
                       <div class="col-md-6">
-                        <div class="card" id="kesesuaian" style="height: 1800px;display: none;">
+                        <div class="card" id="history" style="height: 1800px;display: block;">
                           <div class="card-header">
-                            <h4 class="card-title" id="basic-layout-colored-form-control">Form Pengembalian/Penambahan dropping</h4>
+                            <h4 class="card-title" id="basic-layout-colored-form-control">History Tarik Tunai</h4>
                             <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
                             <div class="heading-elements">
                               <ul class="list-inline mb-0">
@@ -197,137 +165,38 @@
                           </div>
                           <div class="card-body collapse in">
                             <div class="card-block">
-                              <div class="row">
-                                <div class="col-md-12">
-                                  <div class="alert alert-warning mb-2" role="alert" id="alert-dropping" style="display: block;">
-                                    <strong>Perhatian!</strong> Jika dropping tidak sesuai, silahkan melengkapi form <b>pengembalian kelebihan dropping</b> atau <b>penambahan kekurangan dropping</b>.
+                              <div class="form-body">
+                                <div class="row">
+                                  <div class="col-md-12">
+                                    <div class="form-group">
+                                      <div class="table-responsive">
+                                        <table class="table">
+                                          <thead>
+                                            <tr>
+                                              <th>Tanggal</th>
+                                              <th>Saldo</th>
+                                              <th>Nominal Tarik</th>
+                                              <th>Sisa Dropping</th>
+                                              <th>Attachment</th>
+                                            </tr>
+                                          </thead>
+                                          @foreach($tariktunai as $history)
+                                          <tbody>
+                                            <tr>
+                                              <th>{{ date('d-m-Y', strtotime($history->created_at)) }}</th>
+                                              <td>IDR {{ number_format($history->nominal, 2) }}</td>
+                                              <td>IDR {{ number_format($history->nominal_tarik, 2) }}</td>
+                                              <td>IDR {{ number_format($history->sisa_dropping, 2) }}</td>
+                                              <td><a href="{{ asset('file/tariktunai').'/'.$history->berkas_tariktunai }}" target="_blank">{{ $history->berkas_tariktunai }}</a></td>
+                                            </tr>
+                                          </tbody>
+                                          @endforeach
+                                        </table>
+                                      </div>
+                                    </div>
                                   </div>
                                 </div>
                               </div>
-                              <form class="form" method="POST" id="kesesuaian-form" action="{{ url('dropping/tariktunai/'.$dropping->RECID) }}">
-                              {{ csrf_field() }}
-                                <input type="hidden" name="tgl_dropping" value="{{ $dropping->TRANSDATE }}">
-                                <input type="hidden" name="nominal" value="{{ $dropping->DEBIT }}">
-                                <input type="hidden" name="akun_bank" value="{{ $dropping->BANK_DROPPING }}">
-                                <input type="hidden" name="rek_bank" value="{{ $dropping->REKENING_DROPPING }}">
-                                <input type="hidden" name="cabang" value="{{ $dropping->CABANG_DROPPING }}">
-                                <input type="hidden" name="is_sesuai" value="0">
-                                <input type="hidden" name="nominal_tarik" value="">
-                                <input type="hidden" name="sisa_dropping" value="">
-
-                                <div class="form-body">
-                                  <h4 class="form-section"> Pengembalian/Penambahan Dropping</h4>
-                                  <div class="row">
-                                    <div class="col-md-12">
-                                      <div class="form-group mt-1 pb-1">
-                                        <label for="switcherySize11" class="font-medium-2 text-bold-600 mr-1">Pengembalian kelebihan</label>
-                                        <input type="checkbox" onchange="change_title(this)" id="switcherySize11" class="switchery" checked="checked" name="p_is_pengembalian" value="1" />
-                                        <label for="switcherySize11" class="font-medium-2 text-bold-600 ml-1">Penambahan kekurangan</label>
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <div class="row">
-                                    <div class="col-md-12">
-                                      <div id="judul_kesesuaian">
-                                        <h4 class="form-section"> Informasi Penambahan</h4>
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <div class="row">
-                                    <div class="col-md-6">
-                                      <div class="form-group">
-                                        <label for="projectinput1">Tanggal Transaksi</label>
-                                        <input readonly="" type="date" id="p_tgl_dropping" class="form-control" placeholder="{{ date('d/m/Y') }}" name="p_tgl_dropping" value="{{ date('Y-m-d') }}">
-                                      </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                      <div class="form-group">
-                                        <label for="projectinput2">Nominal Transaksi (Dalam IDR)</label>
-                                        <span class="required"> *</span>
-                                        <div class="controls">
-                                          <input type="text" id="p_nominal" name="p_nominal" class="form-control" value="{{ old('p_nominal') }}" required data-validation-containsnumber-regex="(\d)+" data-validation-containsnumber-message="Hanya diisi oleh angka">
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <h4 class="form-section"> Informasi Bank</h4>
-                                  <div class="row">
-                                    <div class="col-md-12">
-                                      <div class="form-group">
-                                        <label for="p_cabang">Kantor Cabang</label>
-                                        <span class="required"> *</span>
-                                        <div class="controls">
-                                          <select class="form-control kcabang" id="cabang" name="p_cabang" required>
-                                              <option value="0">--Pilih Kantor Cabang</option>
-                                            @foreach($kcabangs as $cabang)
-                                              <option value="{{ $cabang->DESCRIPTION }}">{{ $cabang->DESCRIPTION }}</option>
-                                            @endforeach
-                                          </select>
-                                        </div>
-                                      </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                      <div class="form-group">
-                                        <label for="p_akun_bank">Nama Bank</label>
-                                        <span class="required"> *</span>
-                                        <div class="controls">
-                                          <select class="form-control akun_bank" id="akun_bank" name="p_akun_bank" disabled="" required>
-                                              <option value="0">Pilih kantor cabang terlebih dahulu</option>
-                                          </select>
-                                        </div>
-                                      </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                      <div class="form-group">
-                                        <label for="p_rek_bank">Nomor Rekening</label>
-                                        <span class="required"> *</span>
-                                        <div class="controls">
-                                          <select class="form-control rekening" name="p_rek_bank" disabled="" required>
-                                            <option>Pilih bank terlebih dahulu</option>
-                                          </select>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                  {{-- <div class="text-xs-right">
-                                    <button type="submit" class="btn btn-success">Submit <i class="fa fa-thumbs-o-up position-right"></i></button>
-                                    <button type="reset" class="btn btn-danger">Reset <i class="fa fa-refresh position-right"></i></button>
-                                  </div> --}}
-                                  <h4 class="form-section">History Kesesuaian Dropping</h4>
-                                  <div class="row">
-                                    <div class="col-md-12">
-                                      <div class="form-group">
-                                        <div class="table-responsive">
-                                          <table class="table">
-                                            <thead>
-                                              <tr>
-                                                <th>Tanggal</th>
-                                                <th>Kantor Cabang</th>
-                                                <th>Nominal Penyesuaian</th>
-                                                <th>Status</th>
-                                              </tr>
-                                            </thead>
-                                            <tbody>
-                                              <tr>
-                                                @if(isset($kesesuaian))
-                                                  <td>{{ $kesesuaian->created_at }}</td>
-                                                  <td>{{ $kesesuaian->cabang }}</td>
-                                                  <td>{{ $kesesuaian->nominal }}</td>
-                                                  @if($kesesuaian->is_pengembalian == 1)
-                                                  <td>Pengembalian</td>
-                                                  @else
-                                                  <td>Penambahan</td>
-                                                  @endif
-                                                @endif
-                                              </tr>
-                                            </tbody>
-                                          </table>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </form>
                             </div>
                           </div>
                         </div>
@@ -400,63 +269,8 @@
                 <!-- END PAGE LEVEL JS-->  
 
                 <script type="text/javascript">
-                  function change_checkbox(el) {
-                    if(el.checked) {
-                      document.getElementById("kesesuaian").style.display = 'none';
-                      document.getElementById("confirmation-msg").innerHTML = '<p>Apakah anda yakin untuk menyimpan <b>data tarik tunai dropping</b> yang anda input sudah sesuai?</p>';
-                    } else {
-                      document.getElementById("kesesuaian").style.display = 'block';
-                      document.getElementById("confirmation-msg").innerHTML = '<p>Apakah anda yakin untuk menyimpan <b>data ketidaksesuaian dropping</b> yang telah anda input?</p>';
-                    }
-                  };
-
-                  function change_title(t){
-                    if(t.checked){
-                      document.getElementById("kesesuaian-form").style.display = 'inline';
-                      document.getElementById("judul_kesesuaian").innerHTML = '<h4 class="form-section"> Informasi Penambahan</h4>';
-                    } else {
-                      document.getElementById("kesesuaian-form").style.display = 'block';
-                      document.getElementById("judul_kesesuaian").innerHTML = '<h4 class="form-section"> Informasi Pengembalian</h4>';
-                    }
-                  }
-
                   function forms_submit() {
-                    if(document.getElementById("switch1").checked){
                       document.getElementById("tariktunai-form").submit();
-                    } else{
-                      document.getElementById("kesesuaian-form").submit();
-                    }
                   };
-
-                  $('select.kcabang').on('change', function(){
-                      $.post('{{ url('/dropping/banks') }}', {_token: '{{ csrf_token() }}', type: 'bank', id: $(this).val()}, function(e){
-                        console.log(e);
-                          if (e != 0) {
-                            $('select[name="p_akun_bank"]').html(e);
-                            $('select[name="p_akun_bank"]').prop("disabled", false);
-                          } else {
-                            $('select[name="p_akun_bank"]').html("<option value='0'>Pilih kantor cabang terlebih dahulu</option>");
-                            $('select[name="p_akun_bank"]').prop("disabled", true);
-                            toastr.error("Daftar bank pada kantor cabang yang dimaksud tidak ditemukan. Silahkan pilih kantor cabang lain. Terima kasih.", "Perhatian", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
-                          }
-
-                          $('select[name="p_rek_bank"]').html("<option value='0'>Pilih bank terlebih dahulu</option>");
-                          $('select[name="p_rek_bank"]').prop("disabled", true);
-                      });
-                  });
-
-                  $('select.akun_bank').on('change', function(){
-                      $.post('{{ url('/dropping/banks') }}', {_token: '{{ csrf_token() }}', type: 'rekening', id: $(this).val()}, function(e){
-                        console.log(e);
-                          if (e != 0) {
-                            $('select[name="p_rek_bank"]').html(e);
-                            $('select[name="p_rek_bank"]').prop("disabled", false);
-                          } else {
-                            $('select[name="p_rek_bank"]').html("<option value='0'>Pilih bank terlebih dahulu</option>");
-                            $('select[name="p_rek_bank"]').prop("disabled", true);
-                            toastr.error("Daftar rekening pada bank yang dimaksud tidak ditemukan. Silahkan pilih bank lain. Terima kasih.", "Perhatian", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
-                          }
-                      });
-                  });
                 </script>
                 @endsection

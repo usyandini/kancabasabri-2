@@ -14,4 +14,9 @@ class PaymentJournalDropping extends Model
     {
     	return $this->hasOne('App\Models\TarikTunai', 'id_dropping', 'RECID');
     }
+
+    public function kesesuaianDropping()
+    {
+        return $this->hasOne('App\Models\PenyesuaianDropping', 'id', 'RECID');
+    }
 }

@@ -157,14 +157,21 @@
                           { name: "transdate", type: "text", title: "Tanggal Dropping", width: 100 },
                           { name: "debit", type: "text", title: "Nominal", width: 100 },
                           { name: "company", type: "text", title: "Kantor Cabang", width: 100 },
-                          { name: "stat", type: "text", title: "Status Posting", itemTemplate:function(e) {
-                            var content = e == '1' ? "Sesuai" : (e == '0' ? "Tidak sesuai" : 'Belum posting');
-                            var tag = e == '1' ? "tag-success" : (e == '0' ? "tag-default" : 'tag-info');
-                            return "<span class='tag "+tag+"'>"+content+"</span>" ;
+                          /*{ name: "stat", type: "text", title: "Status Posting", 
+                            itemTemplate:function(e) {
+                              var content = e == '1' ? "Sesuai" : (e == '0' ? "Tidak sesuai" : 'Belum posting');
+                              var tag = e == '1' ? "tag-success" : (e == '0' ? "tag-default" : 'tag-info');
+                              return "<span class='tag "+tag+"'>"+content+"</span>" ;
                             } 
+                          },*/
+                          { name: "id_dropping", type: "text", align:"center", title: "Penyesuaian",  
+                            itemTemplate:function(l) {
+                              return "<a href='{{ url('/dropping/penyesuaian') }}/"+ l +"' class='btn btn-warning btn-sm'>Pilih</a>"
+                            }
                           },
-                          { name: "id_dropping", type: "control", itemTemplate:function(e) {
-                            return "<a href='{{ url('/dropping/tariktunai') }}/"+ e +"' class='btn btn-success btn-sm'>Lanjut</a>"
+                          { name: "id_dropping", type: "text", align:"center", title: "Penarikan",  
+                            itemTemplate:function(e) {
+                              return "<a href='{{ url('/dropping/tariktunai') }}/"+ e +"' class='btn btn-success btn-sm'>Lanjut</a>"
                             }
                           }
                       ]

@@ -15,9 +15,7 @@ class TarikTunai extends Model
     	'nominal', 
     	'akun_bank', 
     	'rek_bank', 
-    	'cabang', 
-    	'is_sesuai', 
-    	'id_penyesuaian', 
+    	'cabang',
     	'created_by',
     	'tgl_dropping',
         'nominal_tarik',
@@ -30,8 +28,8 @@ class TarikTunai extends Model
     	return $this->belongsTo('App\User', 'created_by', 'id');
     }
 
-    public function kesesuaianDropping()
+    /*public function kesesuaianDropping()
     {
         return $this->hasOne('App\Models\PenyesuaianDropping', 'id', 'id_penyesuaian');
-    }
+    }*/
 }
