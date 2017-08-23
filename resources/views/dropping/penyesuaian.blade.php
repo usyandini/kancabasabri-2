@@ -149,15 +149,8 @@
                               </div>
                               <form class="form" method="POST" id="tidaksesuai-form" action="{{ url('dropping/penyesuaian/'.$dropping->RECID) }}">
                               {{ csrf_field() }}
-                                <input type="hidden" name="tgl_dropping" value="{{ $dropping->TRANSDATE }}">
-                                <input type="hidden" name="nominal" value="{{ $dropping->DEBIT }}">
-                                <input type="hidden" name="akun_bank" value="{{ $dropping->BANK_DROPPING }}">
-                                <input type="hidden" name="rek_bank" value="{{ $dropping->REKENING_DROPPING }}">
-                                <input type="hidden" name="cabang" value="{{ $dropping->CABANG_DROPPING }}">
-                                <input type="hidden" name="is_sesuai" value="0">
-                                <input type="hidden" name="nominal_tarik" value="">
-                                <input type="hidden" name="sisa_dropping" value="">
-
+                                <input type="hidden" name="nominal_dropping" value="{{ $dropping->DEBIT }}">
+                                
                                 <div class="form-body">
                                   <h4 class="form-section"> Pengembalian/Penambahan Dropping</h4>
                                   <div class="row">

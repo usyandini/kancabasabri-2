@@ -249,10 +249,10 @@ class DroppingController extends Controller
                 'p_rek_bank.required' => 'Pilihan nomor rekening tidak boleh dikosongkan !'
             ]);
 
-        $findstat = PenyesuaianDropping::where('id_dropping', $id_drop);
+        $findstat = PenyesuaianDropping::where('id_dropping', $id_drop)->first();
 
         if($findstat){
-            //session()->flash('fail', true);
+            session()->flash('fail', true);
         }else{
             if($validatorPD->passes())
             {
@@ -260,7 +260,7 @@ class DroppingController extends Controller
                 $inputsPD['id_dropping'] = $id_drop;     
                 
                 PenyesuaianDropping::create($inputsPD);   
-                //session()->flash('success', true);
+                session()->flash('success', true);
 
             }else{
                 return redirect()->back()->withErrors($validatorPD)->withInput();
