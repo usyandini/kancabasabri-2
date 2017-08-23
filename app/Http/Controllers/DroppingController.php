@@ -168,17 +168,22 @@ class DroppingController extends Controller
         $validatorTT = Validator::make($inputsTT,
             [
                 //'berkas' => 'required',
-                'nominal_tarik' => 'not_in:0|required|numeric'
+                'nominal_tarik' => 'not_in:0|required|regex:/^\d+([\,]\d+)*([\.]\d+)?$/'
+                //'nominal_tarik' => 'not_in:0|required|regex:/^[1-8](,[1-8])*$/'
             ], 
             [
                 'nominal_tarik.not_in'  => 'Nominal tarik tunai tidak boleh dikosongkan !',
-                'nominal_tarik.required'  => 'Nominal tarik tunai tidak boleh dikosongkan !',
-                'nominal_tarik.numeric'  => 'Nominal tarik tunai hanya bisa diisi oleh angka !',
+                'nominal_tarik.required'  => 'Nominal tarik tunai harus diisi !',
+                'nominal_tarik.regex'  => 'Nominal tarik tunai hanya bisa diisi oleh angka !'
                 //'berkas.required'  => 'Attachment bukti tarik tunai tidak boleh dikosongkan !'
             ]);
 
         //----- Fungsi tarik tunai, jika tidak ada record maka tariktunai berasal dari nominal awal - nominal tarik -----//
         //----- jika ada record maka tariktunai berasal dari (nominal = sisa dropping sebelumnya) - nominal tarik  -----//
+        //$tarik = floatval($request->nominal_tarik);
+        $string_tarik = $request->nominal_tarik;
+        $tarik = floatval(str_replace('.', ',', str_replace(',', '', $string_tarik)));
+
         if($validatorTT->passes()){
             if($temp_sisa){
                 $inputsTT['nominal'] = $temp_sisa['sisa_dropping'];
@@ -186,13 +191,15 @@ class DroppingController extends Controller
                 $inputsTT['nominal'] = $request->nominal;
                 $temp_sisa['sisa_dropping'] = $request->nominal;
             }
-            if($temp_sisa['sisa_dropping'] != 0 && $request->nominal_tarik <= $temp_sisa['sisa_dropping']){
-                $inputsTT['sisa_dropping'] = ($temp_sisa['sisa_dropping'] - $request->nominal_tarik);
+            if($temp_sisa['sisa_dropping'] != 0 && $tarik <= $temp_sisa['sisa_dropping']){
+                $inputsTT['sisa_dropping'] = ($temp_sisa['sisa_dropping'] - $tarik);
 
                 $inputsTT['created_by'] = \Auth::id();
                 $inputsTT['id_dropping'] = $id_drop;
+                $inputsTT['nominal_tarik'] = $tarik;
                 $inputsTT['berkas_tariktunai'] = $this->storeBerkas($request->berkas, 'tariktunai');      
 
+                //dd($request->all());
                 TarikTunai::create($inputsTT);
                
                 session()->flash('success', true);
@@ -200,6 +207,7 @@ class DroppingController extends Controller
                 session()->flash('offset', true);
             }   
         }else{
+            //dd($request->all());
             return redirect()->back()->withErrors($validatorTT)->withInput();
         }
         return redirect('/dropping/tariktunai/'.$id_drop);
@@ -219,27 +227,20 @@ class DroppingController extends Controller
     public function penyesuaian_process($id_drop, Request $request)
     {
         $inputsPD = $request->except('_method', '_token', 'p_akun_bank', 'p_cabang', 'is_pengembalian', 'p_nominal', 'p_rek_bank', 'p_tgl_dropping');
-        $inputsPD = array(
-            'akun_bank'         => $request->p_akun_bank, 
-            'cabang'            => $request->p_cabang,
-            'is_pengembalian'   => $request->p_is_pengembalian == "1" ? false : true,
-            'nominal'           => $request->p_nominal,
-            'rek_bank'          => $request->p_rek_bank,
-            'tgl_dropping'      => $request->p_tgl_dropping
-        );
 
         $validatorPD = Validator::make($request->all(),
             [
                 'p_akun_bank'       => 'not_in:0|required',
                 'p_cabang'          => 'not_in:0|required',
-                'p_nominal'         => 'not_in:0|required|numeric',
+                //'p_nominal'         => 'not_in:0|required|numeric',
+                'p_nominal'         => 'not_in:0|required|regex:/^\d+([\,]\d+)*([\.]\d+)?$/',
                 'p_rek_bank'        => 'not_in:0|required',
                 //'berkas'            => 'required'
             ],
             [
                 'p_nominal.not_in'    => 'Nominal transaksi penyesuaian dropping tidak boleh dikosongkan !',
-                'p_nominal.required'  => 'Nominal transaksi penyesuaian dropping tidak boleh dikosongkan !',
-                'p_nominal.numeric'   => 'Nominal transaksi penyesuaian dropping hanya bisa diisi oleh angka !',
+                'p_nominal.required'  => 'Nominal transaksi penyesuaian dropping harus diisi!',
+                'p_nominal.regex'     => 'Nominal transaksi penyesuaian dropping hanya bisa diisi oleh angka !',
                 'p_cabang.not_in'     => 'Pilihan kantor cabang tidak boleh dikosongkan !',
                 'p_cabang.required'   => 'Pilihan kantor cabang tidak boleh dikosongkan !',
                 'p_akun_bank.not_in'  => 'Pilihan nama bank tidak boleh dikosongkan !',
@@ -250,6 +251,17 @@ class DroppingController extends Controller
             ]);
 
         $findstat = PenyesuaianDropping::where('id_dropping', $id_drop)->first();
+        $string_penyesuaian = $request->p_nominal;
+        $penyesuaian = floatval(str_replace('.', ',', str_replace(',', '', $string_penyesuaian)));
+
+        $inputsPD = array(
+            'akun_bank'         => $request->p_akun_bank, 
+            'cabang'            => $request->p_cabang,
+            'is_pengembalian'   => $request->p_is_pengembalian == "1" ? false : true,
+            'nominal'           => $penyesuaian,
+            'rek_bank'          => $request->p_rek_bank,
+            'tgl_dropping'      => $request->p_tgl_dropping
+        );
 
         if($findstat){
             session()->flash('fail', true);

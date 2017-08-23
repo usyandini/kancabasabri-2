@@ -132,7 +132,7 @@
                                         <label for="nominal_tarik">Nominal Tarik Tunai(Dalam IDR)</label>
                                         <span class="required"> *</span>
                                         <div class="controls">
-                                          <input type="text" id="nominal_tarik" name="nominal_tarik" class="form-control" value="{{ old('nominal_tarik') }}" required data-validation-containsnumber-regex="(\d)+" data-validation-containsnumber-message="Hanya diisi oleh angka">
+                                          <input type="text" id="nominal_tarik" name="nominal_tarik" class="form-control" value="{{ old('nominal_tarik') }}" required>
                                         </div>
                                       </div>
                                     </div>
@@ -273,5 +273,45 @@
                   function forms_submit() {
                       document.getElementById("tariktunai-form").submit();
                   };
+
+                  // insert commas as thousands separators 
+                  function addCommas(n){
+                      var rx=  /(\d+)(\d{3})/;
+                      return String(n).replace(/^\d+/, function(w){
+                          while(rx.test(w)){
+                              w= w.replace(rx, '$1,$2');
+                          }
+                          return w;
+                      });
+                  }
+                  // return integers and decimal numbers from input
+                  // optionally truncates decimals- does not 'round' input
+                  function validDigits(n, dec){
+                      n= n.replace(/[^\d\.]+/g, '');
+                      var ax1= n.indexOf('.'), ax2= -1;
+                      if(ax1!= -1){
+                          ++ax1;
+                          ax2= n.indexOf('.', ax1);
+                          if(ax2> ax1) n= n.substring(0, ax2);
+                          if(typeof dec=== 'text') n= n.substring(0, ax1+dec);
+                      }
+                      return n;
+                  }
+                  window.onload= function(){
+                      var n2= document.getElementById('nominal_tarik');
+                      n2.value='';
+
+                      n2.onkeyup=n2.onchange= function(e){
+                          e=e|| window.event; 
+                          var who=e.target || e.srcElement,temp;
+                          if(who.id==='nominal_tarik')  temp= validDigits(who.value,2); 
+                          else temp= validDigits(who.value);
+                          who.value= addCommas(temp);
+                      }   
+                      n2.onblur = function(){
+                          var temp2=parseFloat(validDigits(n2.value));
+                          if(temp2)n2.value=addCommas(temp2.toFixed(2));
+                      }
+                  }
                 </script>
                 @endsection
