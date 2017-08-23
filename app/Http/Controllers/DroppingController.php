@@ -167,14 +167,14 @@ class DroppingController extends Controller
 
         $validatorTT = Validator::make($inputsTT,
             [
-                'berkas' => 'required',
+                //'berkas' => 'required',
                 'nominal_tarik' => 'not_in:0|required|numeric'
             ], 
             [
                 'nominal_tarik.not_in'  => 'Nominal tarik tunai tidak boleh dikosongkan !',
                 'nominal_tarik.required'  => 'Nominal tarik tunai tidak boleh dikosongkan !',
                 'nominal_tarik.numeric'  => 'Nominal tarik tunai hanya bisa diisi oleh angka !',
-                'berkas.required'  => 'Attachment bukti tarik tunai tidak boleh dikosongkan !'
+                //'berkas.required'  => 'Attachment bukti tarik tunai tidak boleh dikosongkan !'
             ]);
 
         //----- Fungsi tarik tunai, jika tidak ada record maka tariktunai berasal dari nominal awal - nominal tarik -----//
@@ -230,15 +230,13 @@ class DroppingController extends Controller
 
         $validatorPD = Validator::make($request->all(),
             [
-                //'is_sesuai'           => 'not_in:0',
                 'p_akun_bank'       => 'not_in:0|required',
                 'p_cabang'          => 'not_in:0|required',
                 'p_nominal'         => 'not_in:0|required|numeric',
                 'p_rek_bank'        => 'not_in:0|required',
-                'berkas'            => 'required'
+                //'berkas'            => 'required'
             ],
             [
-                //'is_sesuai.not_in'    => 'Anda sudah melakukan penyesuaian dropping',
                 'p_nominal.not_in'    => 'Nominal transaksi penyesuaian dropping tidak boleh dikosongkan !',
                 'p_nominal.required'  => 'Nominal transaksi penyesuaian dropping tidak boleh dikosongkan !',
                 'p_nominal.numeric'   => 'Nominal transaksi penyesuaian dropping hanya bisa diisi oleh angka !',
@@ -248,7 +246,7 @@ class DroppingController extends Controller
                 'p_akun_bank.required'=> 'Pilihan nama bank tidak boleh dikosongkan !',
                 'p_rek_bank.not_in'   => 'Pilihan nomor rekening tidak boleh dikosongkan !',
                 'p_rek_bank.required' => 'Pilihan nomor rekening tidak boleh dikosongkan !',
-                'berkas.required'     => 'Attachment bukti penyesuaian tidak boleh dikosongkan !'
+                //'berkas.required'     => 'Attachment bukti penyesuaian tidak boleh dikosongkan !'
             ]);
 
         $findstat = PenyesuaianDropping::where('id_dropping', $id_drop)->first();
