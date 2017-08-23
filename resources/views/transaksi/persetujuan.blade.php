@@ -243,7 +243,7 @@
                     jsGrid.fields.date = MyDateField;
 
                     $("#basicScenario").jsGrid( {
-                      width: "auto",
+                      width: "100%",
                
                       sorting: true, 
                       paging: true, 
