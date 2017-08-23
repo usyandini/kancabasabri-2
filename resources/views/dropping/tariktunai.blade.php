@@ -96,7 +96,8 @@
                                     <div class="col-md-6">
                                       <div class="form-group">
                                         <label for="nominal">Nominal Dropping (Dalam IDR)</label>
-                                          <input type="text" readonly="" id="nominal_dropping" class="form-control" placeholder="{{ $dropping->DEBIT }}" name="nominal" value="{{ $dropping->DEBIT }}">
+                                          <input type="text" readonly="" class="form-control" placeholder="{{ $dropping->DEBIT }}" name="nominal_dropping" value="{{ number_format($dropping->DEBIT, 2) }}">
+                                          <input type="hidden" id="nominal" name="nominal" value="{{ $dropping->DEBIT }}">
                                       </div>
                                     </div>
                                     <div class="col-md-6 pull-right">
@@ -183,7 +184,7 @@
                                           @foreach($tariktunai as $history)
                                           <tbody>
                                             <tr>
-                                              <th>{{ date('d-m-Y', strtotime($history->created_at)) }}</th>
+                                              <th>{{ date('d-m-Y H:i:s', strtotime($history->created_at)) }}</th>
                                               <td>IDR {{ number_format($history->nominal, 2) }}</td>
                                               <td>IDR {{ number_format($history->nominal_tarik, 2) }}</td>
                                               <td>IDR {{ number_format($history->sisa_dropping, 2) }}</td>

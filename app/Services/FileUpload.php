@@ -46,6 +46,9 @@ class FileUpload
 			case 'tariktunai':
 				$path = public_path().'/file/tariktunai/'; 
 				break;
+			case 'penyesuaian':
+				$path = public_path().'/file/penyesuaian/'; 
+				break;
 		}
 
 		return $path;

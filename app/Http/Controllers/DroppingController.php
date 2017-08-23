@@ -154,7 +154,7 @@ class DroppingController extends Controller
         $this->inputDrop($id_drop); 
 
         $dropping = $this->droppingModel->where([['RECID', $id_drop], ['DEBIT', '>', 0]])->firstOrFail();
-        $tariktunai = TarikTunai::where([['id_dropping', $id_drop], ['nominal_tarik', '>', 0]])->orderby('created_at', 'desc')->get(); 
+        $tariktunai = TarikTunai::where([['id_dropping', $id_drop], ['nominal_tarik', '>', 0]])->orderby('sisa_dropping', 'asc')->get(); 
 
         return view('dropping.tariktunai', ['tariktunai' => $tariktunai, 'dropping' => $dropping]);
     }
@@ -191,7 +191,7 @@ class DroppingController extends Controller
 
                 $inputsTT['created_by'] = \Auth::id();
                 $inputsTT['id_dropping'] = $id_drop;
-                $inputsTT['berkas_tariktunai'] = $this->storeBerkas($request->berkas);      
+                $inputsTT['berkas_tariktunai'] = $this->storeBerkas($request->berkas, 'tariktunai');      
 
                 TarikTunai::create($inputsTT);
                
@@ -231,10 +231,11 @@ class DroppingController extends Controller
         $validatorPD = Validator::make($request->all(),
             [
                 //'is_sesuai'           => 'not_in:0',
-                'p_akun_bank'         => 'not_in:0|required',
-                'p_cabang'            => 'not_in:0|required',
-                'p_nominal'           => 'not_in:0|required|numeric',
-                'p_rek_bank'          => 'not_in:0|required'
+                'p_akun_bank'       => 'not_in:0|required',
+                'p_cabang'          => 'not_in:0|required',
+                'p_nominal'         => 'not_in:0|required|numeric',
+                'p_rek_bank'        => 'not_in:0|required',
+                'berkas'            => 'required'
             ],
             [
                 //'is_sesuai.not_in'    => 'Anda sudah melakukan penyesuaian dropping',
@@ -246,7 +247,8 @@ class DroppingController extends Controller
                 'p_akun_bank.not_in'  => 'Pilihan nama bank tidak boleh dikosongkan !',
                 'p_akun_bank.required'=> 'Pilihan nama bank tidak boleh dikosongkan !',
                 'p_rek_bank.not_in'   => 'Pilihan nomor rekening tidak boleh dikosongkan !',
-                'p_rek_bank.required' => 'Pilihan nomor rekening tidak boleh dikosongkan !'
+                'p_rek_bank.required' => 'Pilihan nomor rekening tidak boleh dikosongkan !',
+                'berkas.required'     => 'Attachment bukti penyesuaian tidak boleh dikosongkan !'
             ]);
 
         $findstat = PenyesuaianDropping::where('id_dropping', $id_drop)->first();
@@ -257,10 +259,11 @@ class DroppingController extends Controller
             if($validatorPD->passes())
             {
                 $inputsPD['created_by'] = \Auth::id();
-                $inputsPD['id_dropping'] = $id_drop;   
+                $inputsPD['id_dropping'] = $id_drop;
                 $inputsPD['nominal_dropping']  = $request->nominal_dropping;
+                $inputsPD['berkas_penyesuaian'] = $this->storeBerkas($request->berkas, 'penyesuaian');
                 
-                //dd($request->all());
+                //dd($request->berkas);
                 PenyesuaianDropping::create($inputsPD);   
                 session()->flash('success', true);
 
@@ -271,11 +274,11 @@ class DroppingController extends Controller
         return redirect('/dropping/penyesuaian/'.$id_drop);
     }
 
-    public function storeBerkas($inputs)
+    public function storeBerkas($inputs, $route)
     {
         if ($inputs != null) {
             $fileUpload = new FileUpload();
-            $newNames = $fileUpload->upload($inputs, 'tariktunai');
+            $newNames = $fileUpload->upload($inputs, $route);
             return $newNames;
         }else{
             return null;
