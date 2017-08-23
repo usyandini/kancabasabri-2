@@ -77,11 +77,11 @@
                             <div class="card-block">
                               <div class="card-text">
                               </div>
-                              {{--<form class="form" id="tariktunai-form" method="POST" action="{{ url('dropping/penyesuaian/'.$dropping->RECID) }}" enctype="multipart/form-data">
-                              {{ csrf_field() }} --}}
+                              <form class="form" id="informasi-form" method="POST" action="{{ url('dropping/penyesuaian/'.$dropping->RECID) }}" >
+                              {{ csrf_field() }}
 
                                 <div class="form-body">
-                                  <h4 class="form-section"> Kesesuaian Dropping</h4>
+                                  <h4 class="form-section"> Informasi Dropping</h4>
                                   <div class="row">
                                     <div class="col-md-6">
                                       <div class="form-group">
@@ -121,7 +121,7 @@
                                     </div>--}}
                                   </div>
                                 </div>
-                              {{--</form>--}}
+                              </form>
                             </div>
                           </div>
                         </div>
@@ -147,7 +147,7 @@
                                   </div>
                                 </div>
                               </div>
-                              <form class="form" method="POST" id="tidaksesuai-form" action="{{ url('dropping/penyesuaian/'.$dropping->RECID) }}">
+                              <form class="form" method="POST" id="kesesuaian-form" action="{{ url('dropping/penyesuaian/'.$dropping->RECID) }}" enctype="multipart/form-data">
                               {{ csrf_field() }}
                                 <input type="hidden" name="nominal_dropping" value="{{ $dropping->DEBIT }}">
                                 
@@ -225,11 +225,7 @@
                                       </div>
                                     </div>
                                   </div>
-                                  {{-- <div class="text-xs-right">
-                                    <button type="submit" class="btn btn-success">Submit <i class="fa fa-thumbs-o-up position-right"></i></button>
-                                    <button type="reset" class="btn btn-danger">Reset <i class="fa fa-refresh position-right"></i></button>
-                                  </div> --}}
-                                  <h4 class="form-section">History Kesesuaian Dropping</h4>
+                                  {{--<h4 class="form-section">History Kesesuaian Dropping</h4>
                                   <div class="row">
                                     <div class="col-md-12">
                                       <div class="form-group">
@@ -246,9 +242,9 @@
                                             <tbody>
                                               <tr>
                                                 @if(isset($kesesuaian))
-                                                  <td>{{ $kesesuaian->created_at }}</td>
+                                                  <td>{{ date('d-m-Y', strtotime($kesesuaian->created_at)) }}</td>
                                                   <td>{{ $kesesuaian->cabang }}</td>
-                                                  <td>{{ $kesesuaian->nominal }}</td>
+                                                  <td>IDR {{ number_format($kesesuaian->nominal, 2) }}</td>
                                                   @if($kesesuaian->is_pengembalian == 1)
                                                   <td>Pengembalian</td>
                                                   @else
@@ -261,7 +257,7 @@
                                         </div>
                                       </div>
                                     </div>
-                                  </div>
+                                  </div>--}}
                                 </div>
                               </form>
                             </div>
@@ -269,6 +265,59 @@
                         </div>
                       </div>
                     </div>
+
+                    <div class="row match-height">
+                      <div class="col-md-12">
+                        <div class="card" id="history">
+                          <div class="card-header">
+                            <h4 class="card-title" id="basic-layout-colored-form-control"><b>History Kesesuaian dropping</b></h4>
+                            {{--<a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
+                            <div class="heading-elements">
+                              <ul class="list-inline mb-0">
+                                <li><a data-action="collapse"><i class="ft-minus"></i></a></li>
+                              </ul>
+                            </div>--}}
+                            <div class="card-body">
+                              <div class="card-block">
+                                <div class="row">
+                                  <div class="col-md-12">
+                                    <div class="form-group">
+                                      <div class="table-responsive">
+                                        <table class="table">
+                                          <thead>
+                                            <tr>
+                                              <th>Tanggal</th>
+                                              <th>Kantor Cabang</th>
+                                              <th>Nominal Penyesuaian</th>
+                                              <th>Status</th>
+                                            </tr>
+                                          </thead>
+                                          <tbody>
+                                            <tr>
+                                              @if(isset($kesesuaian))
+                                                <td>{{ date('d-m-Y', strtotime($kesesuaian->created_at)) }}</td>
+                                                <td>{{ $kesesuaian->cabang }}</td>
+                                                <td>IDR {{ number_format($kesesuaian->nominal, 2) }}</td>
+                                                @if($kesesuaian->is_pengembalian == 1)
+                                                <td>Pengembalian</td>
+                                                @else
+                                                <td>Penambahan</td>
+                                                @endif
+                                              @endif
+                                            </tr>
+                                          </tbody>
+                                        </table>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
                     <div class="row match-height">
                       <div class="col-md-12">
                         <div class="card">
@@ -348,18 +397,18 @@
 
                   function change_title(t){
                     if(t.checked){
-                      document.getElementById("tidaksesuai-form").style.display = 'inline';
+                      document.getElementById("kesesuaian-form").style.display = 'inline';
                       document.getElementById("judul_kesesuaian").innerHTML = '<h4 class="form-section"> Informasi Penambahan</h4>';
                       document.getElementById("confirmation-msg").innerHTML = '<p>Apakah anda yakin dengan <b>data penambahan dropping</b> yang anda input sudah benar?</p>';
                     } else {
-                      document.getElementById("tidaksesuai-form").style.display = 'block';
+                      document.getElementById("kesesuaian-form").style.display = 'block';
                       document.getElementById("judul_kesesuaian").innerHTML = '<h4 class="form-section"> Informasi Pengembalian</h4>';
                       document.getElementById("confirmation-msg").innerHTML = '<p>Apakah anda yakin dengan <b>data pengembalian dropping</b> yang anda input sudah benar?</p>';
                     }
                   }
 
                   function forms_submit() {
-                    document.getElementById("tidaksesuai-form").submit();
+                    document.getElementById("kesesuaian-form").submit();
                   };
 
                   $('select.kcabang').on('change', function(){

@@ -257,8 +257,10 @@ class DroppingController extends Controller
             if($validatorPD->passes())
             {
                 $inputsPD['created_by'] = \Auth::id();
-                $inputsPD['id_dropping'] = $id_drop;     
+                $inputsPD['id_dropping'] = $id_drop;   
+                $inputsPD['nominal_dropping']  = $request->nominal_dropping;
                 
+                //dd($request->all());
                 PenyesuaianDropping::create($inputsPD);   
                 session()->flash('success', true);
 
