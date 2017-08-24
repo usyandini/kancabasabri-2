@@ -20,7 +20,8 @@ class PenyesuaianDropping extends Model
     	'tgl_dropping',
         'id_dropping',
         'created_by',
-        'nominal_dropping'
+        'nominal_dropping',
+        'berkas_penyesuaian'
     ];
 
     public function creator()

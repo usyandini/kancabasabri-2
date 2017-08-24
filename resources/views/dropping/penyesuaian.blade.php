@@ -77,11 +77,11 @@
                             <div class="card-block">
                               <div class="card-text">
                               </div>
-                              {{--<form class="form" id="tariktunai-form" method="POST" action="{{ url('dropping/penyesuaian/'.$dropping->RECID) }}" enctype="multipart/form-data">
-                              {{ csrf_field() }} --}}
+                              <form class="form" id="informasi-form" method="POST" action="{{ url('dropping/penyesuaian/'.$dropping->RECID) }}" >
+                              {{ csrf_field() }}
 
                                 <div class="form-body">
-                                  <h4 class="form-section"> Kesesuaian Dropping</h4>
+                                  <h4 class="form-section"> Informasi Dropping</h4>
                                   <div class="row">
                                     <div class="col-md-6">
                                       <div class="form-group">
@@ -121,7 +121,7 @@
                                     </div>--}}
                                   </div>
                                 </div>
-                              {{--</form>--}}
+                              </form>
                             </div>
                           </div>
                         </div>
@@ -147,17 +147,10 @@
                                   </div>
                                 </div>
                               </div>
-                              <form class="form" method="POST" id="tidaksesuai-form" action="{{ url('dropping/penyesuaian/'.$dropping->RECID) }}">
+                              <form class="form" method="POST" id="kesesuaian-form" action="{{ url('dropping/penyesuaian/'.$dropping->RECID) }}" enctype="multipart/form-data">
                               {{ csrf_field() }}
-                                <input type="hidden" name="tgl_dropping" value="{{ $dropping->TRANSDATE }}">
-                                <input type="hidden" name="nominal" value="{{ $dropping->DEBIT }}">
-                                <input type="hidden" name="akun_bank" value="{{ $dropping->BANK_DROPPING }}">
-                                <input type="hidden" name="rek_bank" value="{{ $dropping->REKENING_DROPPING }}">
-                                <input type="hidden" name="cabang" value="{{ $dropping->CABANG_DROPPING }}">
-                                <input type="hidden" name="is_sesuai" value="0">
-                                <input type="hidden" name="nominal_tarik" value="">
-                                <input type="hidden" name="sisa_dropping" value="">
-
+                                <input type="hidden" name="nominal_dropping" value="{{ $dropping->DEBIT }}">
+                                
                                 <div class="form-body">
                                   <h4 class="form-section"> Pengembalian/Penambahan Dropping</h4>
                                   <div class="row">
@@ -188,7 +181,7 @@
                                         <label for="projectinput2">Nominal Transaksi (Dalam IDR)</label>
                                         <span class="required"> *</span>
                                         <div class="controls">
-                                          <input type="text" id="p_nominal" name="p_nominal" class="form-control" value="{{ old('p_nominal') }}" required data-validation-containsnumber-regex="(\d)+" data-validation-containsnumber-message="Hanya diisi oleh angka">
+                                          <input type="text" id="p_nominal" name="p_nominal" class="form-control" value="{{ old('p_nominal') }}" required>
                                         </div>
                                       </div>
                                     </div>
@@ -232,11 +225,18 @@
                                       </div>
                                     </div>
                                   </div>
-                                  {{-- <div class="text-xs-right">
-                                    <button type="submit" class="btn btn-success">Submit <i class="fa fa-thumbs-o-up position-right"></i></button>
-                                    <button type="reset" class="btn btn-danger">Reset <i class="fa fa-refresh position-right"></i></button>
-                                  </div> --}}
-                                  <h4 class="form-section">History Kesesuaian Dropping</h4>
+                                  <div class="row">
+                                    <div class="col-md-12">
+                                      <div class="form-group">
+                                        <label for="berkas">Upload berkas tarik tunai</label>
+                                        <span class="required"> *</span>
+                                        <div class="controls">
+                                          <input type="file" class="form-control-file" id="berkas" name="berkas" value="" required>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  {{--<h4 class="form-section">History Kesesuaian Dropping</h4>
                                   <div class="row">
                                     <div class="col-md-12">
                                       <div class="form-group">
@@ -248,19 +248,21 @@
                                                 <th>Kantor Cabang</th>
                                                 <th>Nominal Penyesuaian</th>
                                                 <th>Status</th>
+                                                <th>Attachment</th>
                                               </tr>
                                             </thead>
                                             <tbody>
                                               <tr>
                                                 @if(isset($kesesuaian))
-                                                  <td>{{ $kesesuaian->created_at }}</td>
+                                                  <td>{{ date('d-m-Y', strtotime($kesesuaian->created_at)) }}</td>
                                                   <td>{{ $kesesuaian->cabang }}</td>
-                                                  <td>{{ $kesesuaian->nominal }}</td>
+                                                  <td>IDR {{ number_format($kesesuaian->nominal, 2) }}</td>
                                                   @if($kesesuaian->is_pengembalian == 1)
                                                   <td>Pengembalian</td>
                                                   @else
                                                   <td>Penambahan</td>
                                                   @endif
+                                                  <td><a href="{{ asset('file/penyesuaian').'/'.$history->berkas_penyesuaian }}" target="_blank">{{ $kesesuaian->berkas_penyesuaian }}</a></td>
                                                 @endif
                                               </tr>
                                             </tbody>
@@ -268,7 +270,7 @@
                                         </div>
                                       </div>
                                     </div>
-                                  </div>
+                                  </div>--}}
                                 </div>
                               </form>
                             </div>
@@ -276,6 +278,61 @@
                         </div>
                       </div>
                     </div>
+
+                    <div class="row match-height">
+                      <div class="col-md-12">
+                        <div class="card" id="history">
+                          <div class="card-header">
+                            <h4 class="card-title" id="basic-layout-colored-form-control"><b>History Kesesuaian dropping</b></h4>
+                            {{--<a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
+                            <div class="heading-elements">
+                              <ul class="list-inline mb-0">
+                                <li><a data-action="collapse"><i class="ft-minus"></i></a></li>
+                              </ul>
+                            </div>--}}
+                            <div class="card-body">
+                              <div class="card-block">
+                                <div class="row">
+                                  <div class="col-md-12">
+                                    <div class="form-group">
+                                      <div class="table-responsive">
+                                        <table class="table">
+                                          <thead>
+                                            <tr>
+                                              <th>Tanggal</th>
+                                              <th>Kantor Cabang</th>
+                                              <th>Nominal Penyesuaian</th>
+                                              <th>Status</th>
+                                              <th>Attachment</th>
+                                            </tr>
+                                          </thead>
+                                          <tbody>
+                                            <tr>
+                                              @if(isset($kesesuaian))
+                                                <td><b>{{ date('d-m-Y H:i:s', strtotime($kesesuaian->created_at)) }}</b></td>
+                                                <td>{{ $kesesuaian->cabang }}</td>
+                                                <td>IDR {{ number_format($kesesuaian->nominal, 2) }}</td>
+                                                @if($kesesuaian->is_pengembalian == 1)
+                                                <td>Pengembalian</td>
+                                                @else
+                                                <td>Penambahan</td>
+                                                @endif
+                                                <td><a href="{{ asset('file/penyesuaian').'/'.$kesesuaian->berkas_penyesuaian }}" target="_blank">{{ $kesesuaian->berkas_penyesuaian }}</a></td>
+                                              @endif
+                                            </tr>
+                                          </tbody>
+                                        </table>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
                     <div class="row match-height">
                       <div class="col-md-12">
                         <div class="card">
@@ -343,7 +400,7 @@
                 <!-- END PAGE LEVEL JS-->  
 
                 <script type="text/javascript">
-                  function change_checkbox(el) {
+                  /*function change_checkbox(el) {
                     if(el.checked) {
                       document.getElementById("kesesuaian").style.display = 'none';
                       document.getElementById("confirmation-msg").innerHTML = '<p>Apakah anda yakin untuk menyimpan <b>data tarik tunai dropping</b> yang anda input sudah sesuai?</p>';
@@ -351,22 +408,61 @@
                       document.getElementById("kesesuaian").style.display = 'block';
                       document.getElementById("confirmation-msg").innerHTML = '<p>Apakah anda yakin untuk menyimpan <b>data ketidaksesuaian dropping</b> yang telah anda input?</p>';
                     }
-                  };
+                  };*/
+
+                  function addCommas(n){
+                      var rx=  /(\d+)(\d{3})/;
+                      return String(n).replace(/^\d+/, function(w){
+                          while(rx.test(w)){
+                              w= w.replace(rx, '$1,$2');
+                          }
+                          return w;
+                      });
+                  }
+                  // return integers and decimal numbers from input
+                  // optionally truncates decimals- does not 'round' input
+                  function validDigits(n, dec){
+                      n= n.replace(/[^\d\.]+/g, '');
+                      var ax1= n.indexOf('.'), ax2= -1;
+                      if(ax1!= -1){
+                          ++ax1;
+                          ax2= n.indexOf('.', ax1);
+                          if(ax2> ax1) n= n.substring(0, ax2);
+                          if(typeof dec=== 'text') n= n.substring(0, ax1+dec);
+                      }
+                      return n;
+                  }
+                  window.onload= function(){
+                      var n2= document.getElementById('p_nominal');
+                      n2.value='';
+
+                      n2.onkeyup=n2.onchange= function(e){
+                          e=e|| window.event; 
+                          var who=e.target || e.srcElement,temp;
+                          if(who.id==='nominal_tarik')  temp= validDigits(who.value,2); 
+                          else temp= validDigits(who.value);
+                          who.value= addCommas(temp);
+                      }   
+                      n2.onblur = function(){
+                          var temp2=parseFloat(validDigits(n2.value));
+                          if(temp2)n2.value=addCommas(temp2.toFixed(2));
+                      }
+                  }
 
                   function change_title(t){
                     if(t.checked){
-                      document.getElementById("tidaksesuai-form").style.display = 'inline';
+                      document.getElementById("kesesuaian-form").style.display = 'inline';
                       document.getElementById("judul_kesesuaian").innerHTML = '<h4 class="form-section"> Informasi Penambahan</h4>';
                       document.getElementById("confirmation-msg").innerHTML = '<p>Apakah anda yakin dengan <b>data penambahan dropping</b> yang anda input sudah benar?</p>';
                     } else {
-                      document.getElementById("tidaksesuai-form").style.display = 'block';
+                      document.getElementById("kesesuaian-form").style.display = 'block';
                       document.getElementById("judul_kesesuaian").innerHTML = '<h4 class="form-section"> Informasi Pengembalian</h4>';
                       document.getElementById("confirmation-msg").innerHTML = '<p>Apakah anda yakin dengan <b>data pengembalian dropping</b> yang anda input sudah benar?</p>';
                     }
-                  }
+                  };
 
                   function forms_submit() {
-                    document.getElementById("tidaksesuai-form").submit();
+                    document.getElementById("kesesuaian-form").submit();
                   };
 
                   $('select.kcabang').on('change', function(){
