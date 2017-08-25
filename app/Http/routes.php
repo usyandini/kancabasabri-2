@@ -64,6 +64,7 @@ Route::group(['middleware' => 'auth'], function() {
 		Route::get('/get/attributes/{type}', 'TransaksiController@getAttributes');
 		Route::post('/submit/verify', 'TransaksiController@submit');
 		Route::post('/berkas/remove', 'TransaksiController@removeBerkas');
+		Route::get('/berkas/download/{id}', 'TransaksiController@downloadBerkas');
 				
 		Route::get('/persetujuan/{id_batch}', 'TransaksiController@persetujuan');
 		Route::get('/verifikasi/{id_batch}', 'TransaksiController@verifikasi');

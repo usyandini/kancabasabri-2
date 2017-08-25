@@ -265,15 +265,45 @@ class TransaksiController extends Controller
     public function storeBerkas($inputs, $current_batch)
     {
         if ($inputs[0] != null) {
-            $fileUpload = new FileUpload();
-            $newNames = $fileUpload->multipleUpload($inputs, 'transaksi');
+            // phpinfo();
+            $file = $inputs[0];
+            // dd($file);            
+            $contents = base64_encode(file_get_contents($inputs[0]));
+            // dd($contents);
+            // $contents = base64_encode(file_get_contents($file->getRealPath()));
+            $store = ['file_name' => 'tes', 'file' => $contents,'batch_id' => $current_batch, 'created_at' => \Carbon\Carbon::now(), 'updated_at' => \Carbon\Carbon::now()];
 
-            $store = array();
-            foreach (explode('||', $newNames) as $value) {
-                array_push($store, ['file_name' => $value, 'batch_id' => $current_batch, 'created_at' => \Carbon\Carbon::now(), 'updated_at' => \Carbon\Carbon::now()]);
-            }
+            // dd($inputs[0]);
+            // $fileUpload = new FileUpload();
+            // $newNames = $fileUpload->multipleUpload($inputs, 'transaksi');
+
+            // $store = array();
+            // foreach (explode('||', $newNames) as $value) {
+            //     array_push($store, ['file_name' => $value, 'batch_id' => $current_batch, 'created_at' => \Carbon\Carbon::now(), 'updated_at' => \Carbon\Carbon::now()]);
+            // }
 
             BerkasTransaksi::insert($store);
+
+        }
+    }
+
+    public function downloadBerkas($berkas_id)
+    {
+        $berkas = BerkasTransaksi::where('id', $berkas_id)->first();
+        $decoded = base64_decode($berkas->file);
+        $file = 'test.pdf';
+        file_put_contents($file, $decoded);
+
+        if (file_exists($file)) {
+            header('Content-Description: File Transfer');
+            header('Content-Type: application/octet-stream');
+            header('Content-Disposition: attachment; filename="'.basename($file).'"');
+            header('Expires: 0');
+            header('Cache-Control: must-revalidate');
+            header('Pragma: public');
+            header('Content-Length: ' . filesize($file));
+            readfile($file);
+            exit;
         }
     }
 
