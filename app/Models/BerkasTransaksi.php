@@ -10,12 +10,13 @@ class BerkasTransaksi extends Model
 
     protected $table = 'berkas_transaksi';
 
-    //protected $dateFormat = 'Y-m-d H:i:s';
-    protected $dates =['dob'];
+    protected $dateFormat = 'Y-m-d H:i:s';
+    // protected $dates =['dob'];
 
 
     protected $fillable = [
     	'batch_id',
-    	'file_name'
+    	'file_name',
+    	'file'
     ];   
 }
