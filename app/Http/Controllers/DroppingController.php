@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
 use App\Http\Requests;
+
 use App\User;
 use App\Models\PaymentJournalDropping;
 use App\Models\KantorCabang;
@@ -12,9 +12,11 @@ use App\Models\AkunBank;
 use App\Models\TarikTunai;
 use App\Models\PenyesuaianDropping;
 use App\Models\Dropping;
+use App\Models\BerkasTarikTunai;
 
 use Validator;
 use App\Services\FileUpload;
+use App\Services\NotificationSystem;
 
 class DroppingController extends Controller
 {
@@ -154,7 +156,8 @@ class DroppingController extends Controller
         $this->inputDrop($id_drop); 
 
         $dropping = $this->droppingModel->where([['RECID', $id_drop], ['DEBIT', '>', 0]])->firstOrFail();
-        $tariktunai = TarikTunai::where([['id_dropping', $id_drop], ['nominal_tarik', '>', 0]])->orderby('sisa_dropping', 'asc')->get(); 
+        $tariktunai = TarikTunai::where([['id_dropping', $id_drop], ['nominal_tarik', '>', 0]])->orderby('sisa_dropping', 'asc')->get();
+        $file = BerkasTarikTunai::where('id', $tariktunai->berkas_tariktunai);
 
         return view('dropping.tariktunai', ['tariktunai' => $tariktunai, 'dropping' => $dropping]);
     }
@@ -164,6 +167,8 @@ class DroppingController extends Controller
         $temp_sisa = TarikTunai::where('id_dropping', $id_drop)->orderby('created_at', 'desc')->first();
 
         $inputsTT = $request->except('_method', '_token', 'nominal');
+        $bank = AkunBank::where('BANK', $request->akun_bank)->get();
+        $kpkc = KantorCabang::where('DESCRIPTION', $request->cabang)->get();
 
         $validatorTT = Validator::make($inputsTT,
             [
@@ -180,7 +185,7 @@ class DroppingController extends Controller
 
         //----- Fungsi tarik tunai, jika tidak ada record maka tariktunai berasal dari nominal awal - nominal tarik -----//
         //----- jika ada record maka tariktunai berasal dari (nominal = sisa dropping sebelumnya) - nominal tarik  -----//
-        //$tarik = floatval($request->nominal_tarik);
+
         $string_tarik = $request->nominal_tarik;
         $tarik = floatval(str_replace('.', ',', str_replace(',', '', $string_tarik)));
 
@@ -197,9 +202,10 @@ class DroppingController extends Controller
                 $inputsTT['created_by'] = \Auth::id();
                 $inputsTT['id_dropping'] = $id_drop;
                 $inputsTT['nominal_tarik'] = $tarik;
-                $inputsTT['berkas_tariktunai'] = $this->storeBerkas($request->berkas, 'tariktunai');      
-
-                //dd($request->all());
+                
+                
+                $attach = $this->storeBerkas($request->berkas, 'tariktunai');
+                $inputsTT['berkas_tariktunai'] = $attach->id;
                 TarikTunai::create($inputsTT);
                
                 session()->flash('success', true);
@@ -286,10 +292,61 @@ class DroppingController extends Controller
 
     public function storeBerkas($inputs, $route)
     {
+        // $serverName = 'ASABRI\axapta'; //serverName\instanceName
+        // $connectionInfo = array( 'Database' => 'DBCabang', 'UID' => 'user_cabang', 'PWD' => 'cabang123!');
+        // $conn = sqlsrv_connect( $serverName, $connectionInfo);
+        $temp = file_get_contents($inputs);
+        $content = unpack('H*hex', $temp);
+        $data = '0x'.$content['hex'];
+
         if ($inputs != null) {
             $fileUpload = new FileUpload();
-            $newNames = $fileUpload->upload($inputs, $route);
-            return $newNames;
+            $newFile = $fileUpload->uploadDb($inputs);
+            $upload['name'] = $inputs->getClientOriginalName();
+            $upload['type'] = $inputs->getClientMimeType();
+            $upload['size'] = $inputs->getClientSize();
+            $upload['data'] = $data;
+            
+            // $name = $upload['name'] = $inputs->getClientOriginalName();
+            // $size = $upload['size'] = $inputs->getClientSize();
+            // $type = $upload['type'] = $_FILES['berkas']['type'];
+            // $temp = file_get_contents($inputs);
+            // $blob = base64_encode($temp);
+
+            // $data = fopen($_FILES['berkas']['tmp_name'], "rb");
+            // $content = fread($fp, $_FILES['berkas']['size']);
+            // fclose($fp);     
+            // $content = addslashes(fread($data, $_FILES['berkas']['size']));
+            // $content = hexdec($content);
+            // $content = unpack('H*hex', $temp);
+            // $data = $upload['data'] = '0x'.$content['hex'];
+
+            // $sql = 'INSERT INTO berkas_transaksi VALUES ('.$name.', '.$size.', '.$type.', CONVERT(VARBINARY(max), '.$data.'))';
+            // $params = array(1, "some data");
+            
+            switch($route){
+                case 'tariktunai':
+                   return BerkasTarikTunai::create($upload);
+                   // $upload = BerkasTarikTunai::insert('insert into berkas_tariktunai values(?, ?, ?, ?)', [$name, $size, $type, 'CONVERT(VARBINARY(max), $temp)']);
+
+                   // $upload = BerkasTarikTunai::insert(
+                   //  [
+                   //      'name' => $name,
+                   //      'size' => $size,
+                   //      'type' => $type,
+                   //      //'data' => 'CONVERT(VARCHAR(max), '.'0x'.$content['hex'].')'         
+                   //      'data' => addslashes($temp)         
+                   //  ]);
+                   // ('INSERT INTO BLOBTest(name, size, type, data)
+                   //      SELECT '$name', '$size', '$type', 
+                   //          BulkColumn FROM OPENROWSET(
+                   //          Bulk '$temp', SINGLE_BLOB) AS BLOB"');
+
+                   // $upload = mssql_query( $conn, $sql, $params);
+                   // return $upload;
+
+                   break;
+            }
         }else{
             return null;
         }

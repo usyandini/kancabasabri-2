@@ -20,6 +20,18 @@ class FileUpload
 		return $name;
 	}	
 
+	public function uploadDb($file)
+	{
+		$name = $size = $type = $data = '';
+		if(isset($file)) {
+			$name = $file->getClientOriginalName();
+			$size = $file->getClientSize();
+			$type = $file->getClientOriginalExtension();
+			$data = $file;
+		} 
+		return array($name, $size, $type, $data);
+	}
+
 	public function multipleUpload( $request, $routeName )
 	{
 		$destinationPath = $name = $names = '';
