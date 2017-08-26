@@ -19,6 +19,15 @@ use Validator;
 use App\Services\FileUpload;
 use App\Services\NotificationSystem;
 
+//  ----------- DROPPING STAT DESC --------------
+//          0 = Posted / Submitted to Akuntansi
+//          1 = Rejected for re-input Tarik Tunai
+//          2 = Verified Tarik Tunai by Akuntansi 
+//          3 = Rejected for re-input Penyesuaian
+//          4 = Verified Penyesuaian by Akuntansi 
+//  ----------------------------------------------
+
+
 class DroppingController extends Controller
 {
 
@@ -62,11 +71,11 @@ class DroppingController extends Controller
                 'bank'          => $dropping->BANK_DROPPING, 
                 'journalnum'    => $dropping->JOURNALNUM, 
                 'transdate'     => date("d-m-Y", strtotime($dropping->TRANSDATE)), 
-                'debit'         => 'IDR '. number_format($dropping->DEBIT, 2),
-                'credit'        => 'IDR '. number_format($dropping->KREDIT, 2),
+                'debit'         => 'IDR '. number_format($dropping->DEBIT),
+                'credit'        => 'IDR '. number_format($dropping->KREDIT),
                 'banknum'       => $dropping->REKENING_DROPPING,
                 'company'       => $dropping->CABANG_DROPPING,
-                'sisa'          => 'IDR '. number_format($dropping->tarikTunai['sisa_dropping'], 2)
+                'sisa'          => 'IDR '. number_format($dropping->tarikTunai['sisa_dropping'])
             ];
         }
         return response()->json($result);
@@ -114,11 +123,11 @@ class DroppingController extends Controller
                 'bank'          => $dropping->BANK_DROPPING, 
                 'journalnum'    => $dropping->JOURNALNUM, 
                 'transdate'     => date("d-m-Y", strtotime($dropping->TRANSDATE)), 
-                'debit'         => 'IDR '. number_format($dropping->DEBIT, 2),
-                'credit'        => 'IDR '. number_format($dropping->KREDIT, 2),
+                'debit'         => 'IDR '. number_format($dropping->DEBIT),
+                'credit'        => 'IDR '. number_format($dropping->KREDIT),
                 'banknum'       => $dropping->REKENING_DROPPING,
                 'company'       => $dropping->CABANG_DROPPING,
-                'sisa'          => 'IDR '. number_format($dropping->tarikTunai['sisa_dropping'], 2)
+                'sisa'          => 'IDR '. number_format($dropping->tarikTunai['sisa_dropping'])
             ];
         }
 
@@ -271,30 +280,30 @@ class DroppingController extends Controller
         $string_penyesuaian = $request->p_nominal;
         $penyesuaian = floatval(str_replace('.', ',', str_replace(',', '', $string_penyesuaian)));
 
-        $bank = AkunBank::where('BANK_NAME', $request->p_akun_bank)->first();
-        $kpkc = KantorCabang::where('DESCRIPTION', $request->p_cabang)->first();
-
-        $inputsPD = array(
-            'akun_bank'         => $request->p_akun_bank, 
-            'cabang'            => $request->p_cabang,
-            'is_pengembalian'   => $request->p_is_pengembalian == "1" ? false : true,
-            'nominal'           => $penyesuaian,
-            'rek_bank'          => $request->p_rek_bank,
-            'tgl_dropping'      => $request->p_tgl_dropping,
-            'SEGMEN#1'          => $bank->ACCOUNT,
-            'SEGMEN#2'          => 'THT',
-            'SEGMEN#3'          => $kpkc->VALUE,
-            'SEGMEN#4'          => '00',
-            'SEGMEN#5'          => '000',
-            'SEGMEN#6'          => '0000',
-            'ACCOUNT'           => $bank->ACCOUNT.'-THT-'.$kpkc->VALUE.'00-000-0000'
-        );
-
         if($findstat){
             session()->flash('fail', true);
         }else{
             if($validatorPD->passes())
-            {
+            {   
+                $bank = AkunBank::where('BANK', $request->p_akun_bank)->first();
+                $kpkc = KantorCabang::where('DESCRIPTION', $request->p_cabang)->first();
+
+                $inputsPD = array(
+                    'akun_bank'         => $request->p_akun_bank, 
+                    'cabang'            => $request->p_cabang,
+                    'is_pengembalian'   => $request->p_is_pengembalian == "1" ? false : true,
+                    'nominal'           => $penyesuaian,
+                    'rek_bank'          => $request->p_rek_bank,
+                    'tgl_dropping'      => $request->p_tgl_dropping,
+                    'SEGMEN#1'          => $bank->ACCOUNT,
+                    'SEGMEN#2'          => 'THT',
+                    'SEGMEN#3'          => $kpkc->VALUE,
+                    'SEGMEN#4'          => '00',
+                    'SEGMEN#5'          => '000',
+                    'SEGMEN#6'          => '0000',
+                    'ACCOUNT'           => $bank->ACCOUNT.'-THT-'.$kpkc->VALUE.'00-000-0000'
+                );
+
                 $inputsPD['created_by'] = \Auth::id();
                 $inputsPD['id_dropping'] = $id_drop;
                 $inputsPD['nominal_dropping']  = $request->nominal_dropping;
@@ -337,7 +346,7 @@ class DroppingController extends Controller
         }
     }
 
-    public function viewBerkas($routes, $berkas_id)
+    public function downloadBerkas($routes, $berkas_id)
     {
         switch($routes){
             case 'tariktunai':
@@ -373,10 +382,10 @@ class DroppingController extends Controller
                 if (count($banks) > 0) {
                     $return = '<option value="0">Pilih Bank</option>';
                     foreach($banks as $temp) 
-                        $return .= "<option value='$temp->BANK_NAME'>".$temp->BANK_NAME."</option>";
+                        $return .= "<option value='$temp->BANK'>".$temp->BANK_NAME."</option>";
                 } 
             case 'rekening':
-                $rekening = $this->akunBankModel->where('BANK_NAME', $request->input('id'))->get();
+                $rekening = $this->akunBankModel->where('BANK', $request->input('id'))->get();
                 if (count($rekening) > 0) {
                     $return = '<option value="0">Pilih Rekening</option>';
                     foreach($rekening as $temp) 

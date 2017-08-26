@@ -76,9 +76,6 @@
                           <div class="card-body collapse in">
                             <div class="card-block">
                               <div class="card-text">
-                                <div class="alert alert-warning mb-2" role="alert" id="alert-dropping" style="display: block;">
-                                  <p><b>Perhatian ! </b>Sebelum melakukan <b>Tarik Tunai</b> harap melakukan <b>Penyesuaian Dropping</b> terlebih dahulu. Jika jumlah dropping sudah sesuai dengan pengajuan silahkan melakukan <b>Tarik Tunai</b>.</p>
-                                </div>
                               </div>
                               <form class="form" id="tariktunai-form" method="POST" action="{{ url('dropping/tariktunai/'.$dropping->RECID) }}" enctype="multipart/form-data">
                               {{ csrf_field() }}
@@ -96,7 +93,7 @@
                                     <div class="col-md-6">
                                       <div class="form-group">
                                         <label for="nominal">Nominal Dropping (Dalam IDR)</label>
-                                          <input type="text" readonly="" class="form-control" placeholder="{{ $dropping->DEBIT }}" name="nominal_dropping" value="{{ number_format($dropping->DEBIT, 2) }}">
+                                          <input type="text" readonly="" class="form-control" placeholder="{{ $dropping->DEBIT }}" name="nominal_dropping" value="{{ number_format($dropping->DEBIT) }}">
                                           <input type="hidden" id="nominal" name="nominal" value="{{ $dropping->DEBIT }}">
                                       </div>
                                     </div>
@@ -119,7 +116,7 @@
                                       </div>
                                     </div>
                                   </div>
-                                  <h4 class="form-section">Informasi Tarik Tunai</h4>
+                                  <h4 class="form-section">Tarik Tunai</h4>
                                   <div class="row">
                                     <div class="col-md-6">
                                       <div class="form-group">
@@ -185,9 +182,9 @@
                                           <tbody>
                                             <tr>
                                               <th>{{ date('d-m-Y H:i:s', strtotime($history->created_at)) }}</th>
-                                              <td>IDR {{ number_format($history->nominal, 2) }}</td>
-                                              <td>IDR {{ number_format($history->nominal_tarik, 2) }}</td>
-                                              <td>IDR {{ number_format($history->sisa_dropping, 2) }}</td>
+                                              <td>IDR {{ number_format($history->nominal) }}</td>
+                                              <td>IDR {{ number_format($history->nominal_tarik) }}</td>
+                                              <td>IDR {{ number_format($history->sisa_dropping) }}</td>
                                               <td><a href="{{ url('dropping/tariktunai/berkas/download').'/'.$history->fileTarikTunai['id'] }}" target="_blank">{{ $history->fileTarikTunai['name'] }}</a></td>
                                             </tr>
                                           </tbody>
@@ -214,7 +211,7 @@
                                   <i class="ft-x"></i> Keluar
                                 </a>
                                 <button type="submit" data-toggle="modal" data-target="#xSmall" class="btn btn-primary">
-                                  <i class="fa fa-check-square-o"></i> Posting
+                                  <i class="fa fa-check-square-o"></i> Submit
                                 </button>
                               </div>  
                               <!-- Modal -->
@@ -233,7 +230,7 @@
                                     </div>
                                     <div class="modal-footer">
                                       <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">Tidak, kembali</button>
-                                      <button type="submit" id="post" onclick="forms_submit()" class="btn btn-outline-primary">Ya, simpan post</button>
+                                      <button type="submit" id="post" onclick="forms_submit()" class="btn btn-outline-primary">Ya, kirim</button>
                                     </div>
                                   </div>
                                 </div>
@@ -287,13 +284,14 @@
                   // return integers and decimal numbers from input
                   // optionally truncates decimals- does not 'round' input
                   function validDigits(n, dec){
-                      n= n.replace(/[^\d\.]+/g, '');
+                      //n= n.replace(/[^\d\.]+/g, '');
+                      n= n.replace(/[^\d]+/g, '');
                       var ax1= n.indexOf('.'), ax2= -1;
                       if(ax1!= -1){
                           ++ax1;
                           ax2= n.indexOf('.', ax1);
                           if(ax2> ax1) n= n.substring(0, ax2);
-                          if(typeof dec=== 'text') n= n.substring(0, ax1+dec);
+                          if(typeof dec=== 'number') n= n.substring(0, ax1+dec);
                       }
                       return n;
                   }
@@ -304,13 +302,13 @@
                       n2.onkeyup=n2.onchange= function(e){
                           e=e|| window.event; 
                           var who=e.target || e.srcElement,temp;
-                          if(who.id==='nominal_tarik')  temp= validDigits(who.value,2); 
+                          if(who.id==='nominal_tarik')  temp= validDigits(who.value); 
                           else temp= validDigits(who.value);
                           who.value= addCommas(temp);
                       }   
                       n2.onblur = function(){
                           var temp2=parseFloat(validDigits(n2.value));
-                          if(temp2)n2.value=addCommas(temp2.toFixed(2));
+                          if(temp2)n2.value=addCommas(temp2.toFixed());
                       }
                   }
                 </script>

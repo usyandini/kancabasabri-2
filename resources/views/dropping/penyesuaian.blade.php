@@ -92,7 +92,7 @@
                                     <div class="col-md-6">
                                       <div class="form-group">
                                         <label for="nominal">Nominal Dropping (Dalam IDR)</label>
-                                          <input type="text" readonly="" id="nominal_dropping" class="form-control" placeholder="{{ $dropping->DEBIT }}" name="nominal" value="{{ number_format($dropping->DEBIT, 2) }}">
+                                          <input type="text" readonly="" id="nominal_dropping" class="form-control" placeholder="{{ $dropping->DEBIT }}" name="nominal" value="{{ number_format($dropping->DEBIT) }}">
                                       </div>
                                     </div>
                                     <div class="col-md-6 pull-right">
@@ -256,7 +256,7 @@
                                                 @if(isset($kesesuaian))
                                                   <td>{{ date('d-m-Y', strtotime($kesesuaian->created_at)) }}</td>
                                                   <td>{{ $kesesuaian->cabang }}</td>
-                                                  <td>IDR {{ number_format($kesesuaian->nominal, 2) }}</td>
+                                                  <td>IDR {{ number_format($kesesuaian->nominal) }}</td>
                                                   @if($kesesuaian->is_pengembalian == 1)
                                                   <td>Pengembalian</td>
                                                   @else
@@ -311,7 +311,7 @@
                                               @if(isset($kesesuaian))
                                                 <td><b>{{ date('d-m-Y H:i:s', strtotime($kesesuaian->created_at)) }}</b></td>
                                                 <td>{{ $kesesuaian->cabang }}</td>
-                                                <td>IDR {{ number_format($kesesuaian->nominal, 2) }}</td>
+                                                <td>IDR {{ number_format($kesesuaian->nominal) }}</td>
                                                 @if($kesesuaian->is_pengembalian == 1)
                                                 <td>Pengembalian</td>
                                                 @else
@@ -344,7 +344,7 @@
                                   <i class="ft-x"></i> Keluar
                                 </a>
                                 <button type="submit" data-toggle="modal" data-target="#xSmall" class="btn btn-primary">
-                                  <i class="fa fa-check-square-o"></i> Posting
+                                  <i class="fa fa-check-square-o"></i> Submit
                                 </button>
                               </div>  
                               <!-- Modal -->
@@ -363,7 +363,7 @@
                                     </div>
                                     <div class="modal-footer">
                                       <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">Tidak, kembali</button>
-                                      <button type="submit" id="post" onclick="forms_submit()" class="btn btn-outline-primary">Ya, simpan post</button>
+                                      <button type="submit" id="post" onclick="forms_submit()" class="btn btn-outline-primary">Ya, kirim</button>
                                     </div>
                                   </div>
                                 </div>
@@ -422,13 +422,13 @@
                   // return integers and decimal numbers from input
                   // optionally truncates decimals- does not 'round' input
                   function validDigits(n, dec){
-                      n= n.replace(/[^\d\.]+/g, '');
+                      n= n.replace(/[^\d]+/g, '');
                       var ax1= n.indexOf('.'), ax2= -1;
                       if(ax1!= -1){
                           ++ax1;
                           ax2= n.indexOf('.', ax1);
                           if(ax2> ax1) n= n.substring(0, ax2);
-                          if(typeof dec=== 'text') n= n.substring(0, ax1+dec);
+                          if(typeof dec=== 'number') n= n.substring(0, ax1+dec);
                       }
                       return n;
                   }
@@ -439,13 +439,13 @@
                       n2.onkeyup=n2.onchange= function(e){
                           e=e|| window.event; 
                           var who=e.target || e.srcElement,temp;
-                          if(who.id==='nominal_tarik')  temp= validDigits(who.value,2); 
+                          if(who.id==='nominal_tarik')  temp= validDigits(who.value); 
                           else temp= validDigits(who.value);
                           who.value= addCommas(temp);
                       }   
                       n2.onblur = function(){
                           var temp2=parseFloat(validDigits(n2.value));
-                          if(temp2)n2.value=addCommas(temp2.toFixed(2));
+                          if(temp2)n2.value=addCommas(temp2.toFixed());
                       }
                   }
 
