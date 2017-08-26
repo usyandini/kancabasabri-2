@@ -47,15 +47,15 @@ class BatchStatus extends Model
             case 1:
                 return "Terakhir diupdate";
             case 2:
-                return "Submit verifikasi Kasmin";
+                return "Submit persetujuan ke Kasmin";
             case 3:
-                return "Rejected by Kasmin";
+                return "Tidak disetujui Kasmin";
             case 4:
-                return "Mendapat approval dari Kasmin";
+                return "Mendapat persetujuan dari Kasmin";
             case 5:
-                return "Rejected by Akutansi";
+                return "Tidak diverifikasi Akutansi";
             case 6:
-                return "Mendapat approval dari Akutansi";
+                return "Mendapat verifikasi dari Akutansi";
         }
     }
 }
