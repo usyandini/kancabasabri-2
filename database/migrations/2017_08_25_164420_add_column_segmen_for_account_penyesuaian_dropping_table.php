@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddColumnSegmenForAccountTarikTunaiTable extends Migration
+class AddColumnSegmenForAccountPenyesuaianDroppingTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,7 +12,7 @@ class AddColumnSegmenForAccountTarikTunaiTable extends Migration
      */
     public function up()
     {
-        Schema::table('tarik_tunai', function(Blueprint $table) {
+        Schema::table('penyesuaian_dropping', function(Blueprint $table) {
             $table->string('SEGMEN#1')->nullable();
             $table->string('SEGMEN#2')->nullable();
             $table->string('SEGMEN#3')->nullable();
@@ -30,7 +30,7 @@ class AddColumnSegmenForAccountTarikTunaiTable extends Migration
      */
     public function down()
     {
-        Schema::table('tarik_tunai', function(Blueprint $table) {
+        Schema::table('penyesuaian_dropping', function(Blueprint $table) {
             $table->dropColumn('SEGMEN#1');
             $table->dropColumn('SEGMEN#2');
             $table->dropColumn('SEGMEN#3');

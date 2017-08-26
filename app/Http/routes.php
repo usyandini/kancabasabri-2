@@ -50,6 +50,8 @@ Route::group(['middleware' => 'auth'], function() {
 		
 	    Route::get('/tariktunai/{id_dropping}', 'DroppingController@tarik_tunai');
 	    Route::post('/tariktunai/{id_dropping}', 'DroppingController@tarik_tunai_process');
+		
+		Route::get('/{routes}/berkas/download/{id}', 'DroppingController@viewBerkas');
 
 	    Route::post('/banks/', 'DroppingController@getChainedBank');
 	});

@@ -317,7 +317,7 @@
                                                 @else
                                                 <td>Penambahan</td>
                                                 @endif
-                                                <td><a href="{{ asset('file/penyesuaian').'/'.$kesesuaian->berkas_penyesuaian }}" target="_blank">{{ $kesesuaian->berkas_penyesuaian }}</a></td>
+                                                <td><a href="{{ url('dropping/penyesuaian/berkas/download').'/'.$kesesuaian->filePenyesuaian['id'] }}" target="_blank">{{ $kesesuaian->filePenyesuaian['name'] }}</a></td>
                                               @endif
                                             </tr>
                                           </tbody>

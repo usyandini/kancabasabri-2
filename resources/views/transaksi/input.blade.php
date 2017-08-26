@@ -377,7 +377,7 @@
                             title: "Account", 
                             readOnly: true, 
                             itemTemplate: function(value) {
-                              return "<span class='tag grey tag-default'><b>"+value+"</b></span>";
+                              return "<span class='tag tag-default'><b>"+value+"</b></span>";
                             },
                             insertTemplate: function() {
                               account_field = jsGrid.fields.text.prototype.insertTemplate.call(this);

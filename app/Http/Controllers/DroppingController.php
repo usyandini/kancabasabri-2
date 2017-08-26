@@ -13,6 +13,7 @@ use App\Models\TarikTunai;
 use App\Models\PenyesuaianDropping;
 use App\Models\Dropping;
 use App\Models\BerkasTarikTunai;
+use App\Models\BerkasPenyesuaian;
 
 use Validator;
 use App\Services\FileUpload;
@@ -157,7 +158,7 @@ class DroppingController extends Controller
 
         $dropping = $this->droppingModel->where([['RECID', $id_drop], ['DEBIT', '>', 0]])->firstOrFail();
         $tariktunai = TarikTunai::where([['id_dropping', $id_drop], ['nominal_tarik', '>', 0]])->orderby('sisa_dropping', 'asc')->get();
-        $file = BerkasTarikTunai::where('id', $tariktunai->berkas_tariktunai);
+        //$file = BerkasTarikTunai::where(['id', $tariktunai->fileTarikTunai['name']])->firstOrFail();
 
         return view('dropping.tariktunai', ['tariktunai' => $tariktunai, 'dropping' => $dropping]);
     }
@@ -167,8 +168,8 @@ class DroppingController extends Controller
         $temp_sisa = TarikTunai::where('id_dropping', $id_drop)->orderby('created_at', 'desc')->first();
 
         $inputsTT = $request->except('_method', '_token', 'nominal');
-        $bank = AkunBank::where('BANK', $request->akun_bank)->get();
-        $kpkc = KantorCabang::where('DESCRIPTION', $request->cabang)->get();
+        $bank = AkunBank::where('BANK', $request->akun_bank)->first();
+        $kpkc = KantorCabang::where('DESCRIPTION', $request->cabang)->first();
 
         $validatorTT = Validator::make($inputsTT,
             [
@@ -202,10 +203,20 @@ class DroppingController extends Controller
                 $inputsTT['created_by'] = \Auth::id();
                 $inputsTT['id_dropping'] = $id_drop;
                 $inputsTT['nominal_tarik'] = $tarik;
-                
-                
+
+                $seg1 = $inputsTT['SEGMEN#1'] = $bank->ACCOUNT;
+                $seg2 = $inputsTT['SEGMEN#2'] = 'THT';
+                $seg3 = $inputsTT['SEGMEN#3'] = $kpkc->VALUE;
+                $seg4 = $inputsTT['SEGMEN#4'] = '00';
+                $seg5 = $inputsTT['SEGMEN#5'] = '000';
+                $seg6 = $inputsTT['SEGMEN#6'] = '0000';
+                $inputsTT['ACCOUNT'] = $seg1.'-'.$seg2.'-'.$seg3.'-'.$seg4.'-'.$seg5.'-'.$seg6;
+
+
                 $attach = $this->storeBerkas($request->berkas, 'tariktunai');
-                $inputsTT['berkas_tariktunai'] = $attach->id;
+                $inputsTT['berkas_tariktunai'] = $attach['id'];
+
+                //dd($inputsTT);
                 TarikTunai::create($inputsTT);
                
                 session()->flash('success', true);
@@ -260,13 +271,23 @@ class DroppingController extends Controller
         $string_penyesuaian = $request->p_nominal;
         $penyesuaian = floatval(str_replace('.', ',', str_replace(',', '', $string_penyesuaian)));
 
+        $bank = AkunBank::where('BANK_NAME', $request->p_akun_bank)->first();
+        $kpkc = KantorCabang::where('DESCRIPTION', $request->p_cabang)->first();
+
         $inputsPD = array(
             'akun_bank'         => $request->p_akun_bank, 
             'cabang'            => $request->p_cabang,
             'is_pengembalian'   => $request->p_is_pengembalian == "1" ? false : true,
             'nominal'           => $penyesuaian,
             'rek_bank'          => $request->p_rek_bank,
-            'tgl_dropping'      => $request->p_tgl_dropping
+            'tgl_dropping'      => $request->p_tgl_dropping,
+            'SEGMEN#1'          => $bank->ACCOUNT,
+            'SEGMEN#2'          => 'THT',
+            'SEGMEN#3'          => $kpkc->VALUE,
+            'SEGMEN#4'          => '00',
+            'SEGMEN#5'          => '000',
+            'SEGMEN#6'          => '0000',
+            'ACCOUNT'           => $bank->ACCOUNT.'-THT-'.$kpkc->VALUE.'00-000-0000'
         );
 
         if($findstat){
@@ -277,9 +298,10 @@ class DroppingController extends Controller
                 $inputsPD['created_by'] = \Auth::id();
                 $inputsPD['id_dropping'] = $id_drop;
                 $inputsPD['nominal_dropping']  = $request->nominal_dropping;
-                $inputsPD['berkas_penyesuaian'] = $this->storeBerkas($request->berkas, 'penyesuaian');
+                $attach = $this->storeBerkas($request->berkas, 'penyesuaian');
+                $inputsPD['berkas_penyesuaian'] = $attach['id'];
                 
-                //dd($request->berkas);
+                //dd($inputsPD);
                 PenyesuaianDropping::create($inputsPD);   
                 session()->flash('success', true);
 
@@ -292,63 +314,53 @@ class DroppingController extends Controller
 
     public function storeBerkas($inputs, $route)
     {
-        // $serverName = 'ASABRI\axapta'; //serverName\instanceName
-        // $connectionInfo = array( 'Database' => 'DBCabang', 'UID' => 'user_cabang', 'PWD' => 'cabang123!');
-        // $conn = sqlsrv_connect( $serverName, $connectionInfo);
-        $temp = file_get_contents($inputs);
-        $content = unpack('H*hex', $temp);
-        $data = '0x'.$content['hex'];
-
-        if ($inputs != null) {
-            $fileUpload = new FileUpload();
-            $newFile = $fileUpload->uploadDb($inputs);
-            $upload['name'] = $inputs->getClientOriginalName();
-            $upload['type'] = $inputs->getClientMimeType();
-            $upload['size'] = $inputs->getClientSize();
-            $upload['data'] = $data;
-            
-            // $name = $upload['name'] = $inputs->getClientOriginalName();
-            // $size = $upload['size'] = $inputs->getClientSize();
-            // $type = $upload['type'] = $_FILES['berkas']['type'];
-            // $temp = file_get_contents($inputs);
-            // $blob = base64_encode($temp);
-
-            // $data = fopen($_FILES['berkas']['tmp_name'], "rb");
-            // $content = fread($fp, $_FILES['berkas']['size']);
-            // fclose($fp);     
-            // $content = addslashes(fread($data, $_FILES['berkas']['size']));
-            // $content = hexdec($content);
-            // $content = unpack('H*hex', $temp);
-            // $data = $upload['data'] = '0x'.$content['hex'];
-
-            // $sql = 'INSERT INTO berkas_transaksi VALUES ('.$name.', '.$size.', '.$type.', CONVERT(VARBINARY(max), '.$data.'))';
-            // $params = array(1, "some data");
+        if ($inputs != null) {   
+            $temp = file_get_contents($inputs);
+            $encode = base64_encode($temp);        
+            $upload = [
+                'name' => $inputs->getClientOriginalName(),
+                'size' => $inputs->getClientSize(),
+                'type' => $inputs->getClientMimeType(),
+                'data' => $encode
+            ];
             
             switch($route){
                 case 'tariktunai':
                    return BerkasTarikTunai::create($upload);
-                   // $upload = BerkasTarikTunai::insert('insert into berkas_tariktunai values(?, ?, ?, ?)', [$name, $size, $type, 'CONVERT(VARBINARY(max), $temp)']);
-
-                   // $upload = BerkasTarikTunai::insert(
-                   //  [
-                   //      'name' => $name,
-                   //      'size' => $size,
-                   //      'type' => $type,
-                   //      //'data' => 'CONVERT(VARCHAR(max), '.'0x'.$content['hex'].')'         
-                   //      'data' => addslashes($temp)         
-                   //  ]);
-                   // ('INSERT INTO BLOBTest(name, size, type, data)
-                   //      SELECT '$name', '$size', '$type', 
-                   //          BulkColumn FROM OPENROWSET(
-                   //          Bulk '$temp', SINGLE_BLOB) AS BLOB"');
-
-                   // $upload = mssql_query( $conn, $sql, $params);
-                   // return $upload;
-
+                   break;
+                case 'penyesuaian':
+                   return BerkasPenyesuaian::create($upload);
                    break;
             }
         }else{
             return null;
+        }
+    }
+
+    public function viewBerkas($routes, $berkas_id)
+    {
+        switch($routes){
+            case 'tariktunai':
+               $berkas = BerkasTariktunai::where('id', $berkas_id)->first();
+               break;
+            case 'penyesuaian':
+               $berkas = BerkasPenyesuaian::where('id', $berkas_id)->first();
+               break;
+        }
+        $decoded = base64_decode($berkas->data);
+        $file = $berkas->name;
+        file_put_contents($file, $decoded);
+
+        if (file_exists($file)) {
+            header('Content-Description: File Transfer');
+            header('Content-Type: '.$berkas->type);
+            header('Content-Disposition: inline; filename="'.basename($file).'"');
+            header('Expires: 0');
+            header('Cache-Control: must-revalidate');
+            header('Pragma: public');
+            header('Content-Length: '.$berkas->size);
+            readfile($file);
+            exit;
         }
     }
 

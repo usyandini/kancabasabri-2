@@ -188,7 +188,7 @@
                                               <td>IDR {{ number_format($history->nominal, 2) }}</td>
                                               <td>IDR {{ number_format($history->nominal_tarik, 2) }}</td>
                                               <td>IDR {{ number_format($history->sisa_dropping, 2) }}</td>
-                                              <td><a href="{{ asset('file/tariktunai').'/'.$history->berkas_tariktunai }}" target="_blank">{{ $history->berkas_tariktunai }}</a></td>
+                                              <td><a href="{{ url('dropping/tariktunai/berkas/download').'/'.$history->fileTarikTunai['id'] }}" target="_blank">{{ $history->fileTarikTunai['name'] }}</a></td>
                                             </tr>
                                           </tbody>
                                           @endforeach

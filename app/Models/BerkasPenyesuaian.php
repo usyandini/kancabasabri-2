@@ -4,11 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class BerkasTarikTunai extends Model
+class BerkasPenyesuaian extends Model
 {
     protected $connection = 'sqlsrv';
 
-    protected $table = 'berkas_tariktunai';
+    protected $table = 'berkas_penyesuaian';
 
     //protected $dateFormat = 'Y-m-d H:i:s';
     protected $dates =['dob'];
@@ -20,9 +20,4 @@ class BerkasTarikTunai extends Model
     	'type',
     	'data'
     ];
-
-    // public function fileTarikTunai()
-    // {
-    //     return $this->hasOne('App\Models\TarikTunai', 'berkas_tariktunai', 'id');
-    // }
 }
