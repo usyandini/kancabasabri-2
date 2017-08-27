@@ -1,8 +1,8 @@
-              <script type="text/javascript">
+                <script type="text/javascript">
                   var inputs = [];
                   var item = m_anggaran = subpos = account_field = null;
                   var tempIdCounter = totalRows = 0;
-                  var editableStat = {{ !$pending_batch ? 1 : 0 }};
+                  var editableStat = {{ $editable ? 1 : 0 }};
 
                   $(document).ready(function() {
                     var MyDateField = function(config) {
@@ -25,17 +25,17 @@
                             return this._editPicker = $("<input>").datepicker().datepicker("setDate", new Date(value));
                         },
                         insertValue: function() {                            
-                            return this._insertPicker.datepicker("getDate")!= null ? this._insertPicker.datepicker("getDate").toString() : '';
+                            return this._insertPicker.datepicker("getDate")!= null ? this._insertPicker.datepicker("getDate") : '';
                         },
                         editValue: function() {
-                            return this._editPicker.datepicker("getDate").toString();
+                            return this._editPicker.datepicker("getDate");
                         }
                     });
                      
                     jsGrid.fields.date = MyDateField;
 
                     $("#basicScenario").jsGrid( {
-                      width: "auto",
+                      width: "100%",
                
                       sorting: true, 
                       paging: true, 
@@ -97,7 +97,7 @@
                             title: "Account", 
                             readOnly: true, 
                             itemTemplate: function(value) {
-                              return "<span class='tag tag-default'><b>"+value+"</b></span>";
+                              return "<span class='tag tag-default'>"+value+"</span>";
                             },
                             insertTemplate: function() {
                               account_field = jsGrid.fields.text.prototype.insertTemplate.call(this);
@@ -147,9 +147,6 @@
                             align: "left",
                             type: "number", 
                             title: "Jumlah Item",
-                            itemTemplate: function(value) {
-                              return value + " buah";
-                            },
                             validate: {
                               validator: "min",
                               message: "Kolom jumlah item tidak boleh 0.",
@@ -250,7 +247,7 @@
                             type: "number", 
                             title: "Total",
                             itemTemplate: function(value) {
-                              return "<span class='tag tag-danger'><b>IDR " + parseInt(value).toLocaleString() + ",00</b></span>";
+                              return "<span class='tag tag-danger'>IDR " + parseInt(value).toLocaleString() + ",00</span>";
                             },
                             valdiate: {
                               validator: "min",
@@ -307,8 +304,34 @@
                     $('form[id="deleteBerkas"').submit();
                   };
 
-                  function checkBatchSubmit() {
+                  function approveOrNot(el) {
+                    if(el.checked) {
+                      document.getElementById("reason").style.display = 'none';
+                    } else {
+                      document.getElementById("reason").style.display = 'block';
+                      toastr.info("Silahkan input alasan penolakan anda untuk verifikasi lvl 1 ini. Terima kasih.", "Alasan penolakan dibutuhkan", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
+                    }
+                  };
 
+                  function submitVer() {
+                    var valid = true;
+                    if (!$('input[name="is_approved"]').is(':checked')) {
+                      if ($('select[name="reason"]').val() == '0') {
+                        valid = false;
+                        toastr.error("Silahkan input alasan penolakan anda untuk verifikasi lvl 1 ini. Terima kasih.", "Alasan penolakan dibutuhkan.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
+                      } 
+                    }
+                    if (valid) {
+                      $('form[id="verification"]').submit();
+                    }
+                  };
+
+                  function checkBatchSubmit() {
+                    if (totalRows > 0) {
+                      $('#xSmall').modal()
+                    } else {
+                      toastr.error("Silahkan input data yang hendak disubmit. Terima kasih.", "Data tidak boleh kosong", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});                      
+                    }
                   };
 
                   function populateBatchInput(){
@@ -316,7 +339,7 @@
                       $('input[name="batch_values"]').val(JSON.stringify(inputs));
                       $('form[id="mainForm"]').submit();
                     } else {
-                      toastr.error("Silahkan input perubahan pada tabel transaksi atau berkas transaksi untuk melakukan penyimpanan. Terima kasih.", "Perhatian", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
+                      toastr.error("Silahkan input perubahan pada tabel transaksi atau berkas transaksi untuk melakukan penyimpanan. Terima kasih.", "Input tidak boleh kosong.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
                     }
                   };
                 </script>
