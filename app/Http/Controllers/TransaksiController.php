@@ -265,25 +265,12 @@ class TransaksiController extends Controller
     public function storeBerkas($inputs, $current_batch)
     {
         if ($inputs[0] != null) {
-            // phpinfo();
-            $file = $inputs[0];
-            // dd($file);            
-            $contents = base64_encode(file_get_contents($inputs[0]));
-            // dd($contents);
-            // $contents = base64_encode(file_get_contents($file->getRealPath()));
-            $store = ['file_name' => 'tes', 'file' => $contents,'batch_id' => $current_batch, 'created_at' => \Carbon\Carbon::now(), 'updated_at' => \Carbon\Carbon::now()];
-
-            // dd($inputs[0]);
-            // $fileUpload = new FileUpload();
-            // $newNames = $fileUpload->multipleUpload($inputs, 'transaksi');
-
-            // $store = array();
-            // foreach (explode('||', $newNames) as $value) {
-            //     array_push($store, ['file_name' => $value, 'batch_id' => $current_batch, 'created_at' => \Carbon\Carbon::now(), 'updated_at' => \Carbon\Carbon::now()]);
-            // }
-
-            BerkasTransaksi::insert($store);
-
+            $fileUpload = new FileUpload();
+            $store = $fileUpload->multipleBase64Upload($inputs);
+            foreach ($store as $key => $value) {
+                $value['batch_id'] = $current_batch;
+                BerkasTransaksi::insert($value);
+            }
         }
     }
 
@@ -291,7 +278,8 @@ class TransaksiController extends Controller
     {
         $berkas = BerkasTransaksi::where('id', $berkas_id)->first();
         $decoded = base64_decode($berkas->file);
-        $file = 'test.pdf';
+        $mime_type = explode('/', finfo_buffer(finfo_open(), $decoded, FILEINFO_MIME_TYPE)) ;
+        $file = $berkas->file_name.'.'.$mime_type[1];
         file_put_contents($file, $decoded);
 
         if (file_exists($file)) {
@@ -300,7 +288,7 @@ class TransaksiController extends Controller
             header('Content-Disposition: attachment; filename="'.basename($file).'"');
             header('Expires: 0');
             header('Cache-Control: must-revalidate');
-            header('Pragma: public');
+            // header('Pragma: public');
             header('Content-Length: ' . filesize($file));
             readfile($file);
             exit;
@@ -309,11 +297,6 @@ class TransaksiController extends Controller
 
     public function removeBerkas(Request $request)
     {
-        $file_path = public_path('file/transaksi/'.$request->file_name);
-        if (\File::exists($file_path)) {
-            unlink($file_path);
-        }
-
         BerkasTransaksi::where('id', $request->file_id)->delete();
 
         session()->flash('success_deletion', $request->file_name);

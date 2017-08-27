@@ -20,6 +20,27 @@ class FileUpload
 		return $name;
 	}	
 
+	public function base64Upload()
+	{
+
+	}
+
+	public function multipleBase64Upload($inputs)
+	{
+		$results = [];
+		if (isset($inputs)) {
+			foreach ($inputs as $value) {
+				$results[] = [
+				'file_name' => $value->getClientOriginalName(), 
+				'file' => base64_encode(file_get_contents($value)), 
+				'created_at' => \Carbon\Carbon::now(), 
+				'updated_at' => \Carbon\Carbon::now()];
+			}
+		}
+
+		return $results;
+	}
+
 	public function uploadDb($file)
 	{
 		$name = $size = $type = $data = '';
