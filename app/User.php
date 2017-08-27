@@ -3,26 +3,22 @@
 namespace App;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class User extends Authenticatable
 {
+    use SoftDeletes;
+
     protected $connection = 'sqlsrv';
 
     protected $dateFormat = 'Y-m-d H:i:s';
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
+    
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password', 'username', 'is_admin', 'created_by', 'updated_by'
     ];
 
-    /**
-     * The attributes that should be hidden for arrays.
-     *
-     * @var array
-     */
+    
     protected $hidden = [
         'password', 'remember_token',
     ];

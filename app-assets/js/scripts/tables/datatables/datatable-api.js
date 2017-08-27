@@ -71,7 +71,7 @@ $('.datatable-select-inputs').DataTable( {
     initComplete: function () {
         this.api().columns().every( function () {
             var column = this;
-            var select = $('<select><option value="">Select option</option></select>')
+            var select = $('<select><option value="">Silahkan pilih</option></select>')
                 .appendTo( $(column.footer()).empty() )
                 .on( 'change', function () {
                     var val = $.fn.dataTable.util.escapeRegex(

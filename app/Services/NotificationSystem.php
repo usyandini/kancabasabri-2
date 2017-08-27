@@ -29,7 +29,7 @@ class NotificationSystem
 		$data = array('batch_id' => $id, 'type' => $type, 'receiver_id' => $receiver_id);
 		Notification::create($data);
 
-		if ($type == 3 ) $this->sendAlso($id, 4);
+		if ($type == 3 ) static::sendAlso($id, 4);
 	}
 
 	public static function sendAlso($id, $type)
