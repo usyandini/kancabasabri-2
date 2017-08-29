@@ -7,24 +7,31 @@ use App\Http\Requests;
 
 use App\User;
 use App\Models\PaymentJournalDropping;
-use App\Models\KantorCabang;
-use App\Models\AkunBank;
+
+use App\Models\Dropping;
 use App\Models\TarikTunai;
 use App\Models\PenyesuaianDropping;
-use App\Models\Dropping;
 use App\Models\BerkasTarikTunai;
 use App\Models\BerkasPenyesuaian;
+
+use App\Models\AkunBank;
+use App\Models\KantorCabang;
+use App\Models\Program;
+use App\Models\Divisi;
+use App\Models\SubPos;
+use App\Models\Kegiatan;
 
 use Validator;
 use App\Services\FileUpload;
 use App\Services\NotificationSystem;
 
 //  ----------- DROPPING STAT DESC --------------
-//          0 = Posted / Submitted to Akuntansi
+//          0 = Submitted tarik tunai to Akuntansi
 //          1 = Rejected for re-input Tarik Tunai
-//          2 = Verified Tarik Tunai by Akuntansi 
-//          3 = Rejected for re-input Penyesuaian
-//          4 = Verified Penyesuaian by Akuntansi 
+//          2 = Verified Tarik Tunai by Akuntansi
+//          3 = Submited penyesuaian to Akuntansi 
+//          4 = Rejected for re-input Penyesuaian
+//          5 = Verified Penyesuaian by Akuntansi 
 //  ----------------------------------------------
 
 
@@ -177,20 +184,25 @@ class DroppingController extends Controller
         $temp_sisa = TarikTunai::where('id_dropping', $id_drop)->orderby('created_at', 'desc')->first();
 
         $inputsTT = $request->except('_method', '_token', 'nominal');
+
         $bank = AkunBank::where('BANK', $request->akun_bank)->first();
+        $program = Program::where('DESCRIPTION', 'Tabungan Hari Tua')->first();
         $kpkc = KantorCabang::where('DESCRIPTION', $request->cabang)->first();
+        $divisi = Divisi::where('DESCRIPTION', '')->first();
+        $subpos = SubPos::where('DESCRIPTION', 'None')->first();
+        $kegiatan = Kegiatan::where('DESCRIPTION', 'None')->first();
 
         $validatorTT = Validator::make($inputsTT,
             [
-                //'berkas' => 'required',
+                'berkas' => 'required',
                 'nominal_tarik' => 'not_in:0|required|regex:/^\d+([\,]\d+)*([\.]\d+)?$/'
                 //'nominal_tarik' => 'not_in:0|required|regex:/^[1-8](,[1-8])*$/'
             ], 
             [
                 'nominal_tarik.not_in'  => 'Nominal tarik tunai tidak boleh dikosongkan !',
                 'nominal_tarik.required'  => 'Nominal tarik tunai harus diisi !',
-                'nominal_tarik.regex'  => 'Nominal tarik tunai hanya bisa diisi oleh angka !'
-                //'berkas.required'  => 'Attachment bukti tarik tunai tidak boleh dikosongkan !'
+                'nominal_tarik.regex'  => 'Nominal tarik tunai hanya bisa diisi oleh angka !',
+                'berkas.required'  => 'Attachment bukti tarik tunai tidak boleh dikosongkan !'
             ]);
 
         //----- Fungsi tarik tunai, jika tidak ada record maka tariktunai berasal dari nominal awal - nominal tarik -----//
@@ -213,21 +225,25 @@ class DroppingController extends Controller
                 $inputsTT['id_dropping'] = $id_drop;
                 $inputsTT['nominal_tarik'] = $tarik;
 
-                $seg1 = $inputsTT['SEGMEN#1'] = $bank->ACCOUNT;
-                $seg2 = $inputsTT['SEGMEN#2'] = 'THT';
-                $seg3 = $inputsTT['SEGMEN#3'] = $kpkc->VALUE;
-                $seg4 = $inputsTT['SEGMEN#4'] = '00';
-                $seg5 = $inputsTT['SEGMEN#5'] = '000';
-                $seg6 = $inputsTT['SEGMEN#6'] = '0000';
+                $seg1 = $inputsTT['SEGMEN_1'] = $bank->ACCOUNT;
+                $seg2 = $inputsTT['SEGMEN_2'] = $program->VALUE;
+                $seg3 = $inputsTT['SEGMEN_3'] = $kpkc->VALUE;
+                $seg4 = $inputsTT['SEGMEN_4'] = $divisi->VALUE;
+                $seg5 = $inputsTT['SEGMEN_5'] = $subpos->VALUE;
+                $seg6 = $inputsTT['SEGMEN_6'] = $kegiatan->VALUE;
                 $inputsTT['ACCOUNT'] = $seg1.'-'.$seg2.'-'.$seg3.'-'.$seg4.'-'.$seg5.'-'.$seg6;
 
 
                 $attach = $this->storeBerkas($request->berkas, 'tariktunai');
                 $inputsTT['berkas_tariktunai'] = $attach['id'];
+                $inputsTT['stat'] = 0;
 
                 //dd($inputsTT);
-                TarikTunai::create($inputsTT);
-               
+                
+                $TT = TarikTunai::create($inputsTT);
+
+                //NotificationSystem::send($TT->id, 7);
+
                 session()->flash('success', true);
             } else {
                 session()->flash('offset', true);
@@ -258,10 +274,9 @@ class DroppingController extends Controller
             [
                 'p_akun_bank'       => 'not_in:0|required',
                 'p_cabang'          => 'not_in:0|required',
-                //'p_nominal'         => 'not_in:0|required|numeric',
                 'p_nominal'         => 'not_in:0|required|regex:/^\d+([\,]\d+)*([\.]\d+)?$/',
                 'p_rek_bank'        => 'not_in:0|required',
-                //'berkas'            => 'required'
+                'berkas'            => 'required'
             ],
             [
                 'p_nominal.not_in'    => 'Nominal transaksi penyesuaian dropping tidak boleh dikosongkan !',
@@ -273,7 +288,7 @@ class DroppingController extends Controller
                 'p_akun_bank.required'=> 'Pilihan nama bank tidak boleh dikosongkan !',
                 'p_rek_bank.not_in'   => 'Pilihan nomor rekening tidak boleh dikosongkan !',
                 'p_rek_bank.required' => 'Pilihan nomor rekening tidak boleh dikosongkan !',
-                //'berkas.required'     => 'Attachment bukti penyesuaian tidak boleh dikosongkan !'
+                'berkas.required'     => 'Attachment bukti penyesuaian tidak boleh dikosongkan !'
             ]);
 
         $findstat = PenyesuaianDropping::where('id_dropping', $id_drop)->first();
@@ -323,22 +338,16 @@ class DroppingController extends Controller
 
     public function storeBerkas($inputs, $route)
     {
-        if ($inputs != null) {   
-            $temp = file_get_contents($inputs);
-            $encode = base64_encode($temp);        
-            $upload = [
-                'name' => $inputs->getClientOriginalName(),
-                'size' => $inputs->getClientSize(),
-                'type' => $inputs->getClientMimeType(),
-                'data' => $encode
-            ];
-            
+        if ($inputs != null) {
+            $fileUpload = new FileUpload();
+            $store = $fileUpload->base64Upload($inputs);
+                        
             switch($route){
                 case 'tariktunai':
-                   return BerkasTarikTunai::create($upload);
-                   break;
+                    return BerkasTarikTunai::create($store);
+                    break;
                 case 'penyesuaian':
-                   return BerkasPenyesuaian::create($upload);
+                   return BerkasPenyesuaian::create($store);
                    break;
             }
         }else{
@@ -359,17 +368,18 @@ class DroppingController extends Controller
         $decoded = base64_decode($berkas->data);
         $file = $berkas->name;
         file_put_contents($file, $decoded);
+        $data = bin2hex($decoded);
 
         if (file_exists($file)) {
             header('Content-Description: File Transfer');
             header('Content-Type: '.$berkas->type);
-            header('Content-Disposition: inline; filename="'.basename($file).'"');
+            header('Content-Disposition: attachment; filename="'.basename($file).'"');
             header('Expires: 0');
             header('Cache-Control: must-revalidate');
-            header('Pragma: public');
+            //header('Pragma: public');
             header('Content-Length: '.$berkas->size);
             readfile($file);
-            exit;
+            exit($data);
         }
     }
 
@@ -394,6 +404,29 @@ class DroppingController extends Controller
                 break;
         }
         return $return;
+    }
+
+    public function verifikasi($id){
+        $dataTT = TarikTunai::where('id', $id)->first();
+
+        if($dataTT){
+            $bank = AkunBank::where('BANK', $dataTT->SEGMEN_1)->first();
+            $program = Program::where('VALUE', $dataTT->SEGMEN_2)->first();
+            $kpkc = KantorCabang::where('VALUE', $dataTT->SEGMEN_3)->first();
+            $divisi = Divisi::where('VALUE', $dataTT->SEGMEN_4)->first();
+            $subpos = SubPos::where('VALUE', $dataTT->SEGMEN_5)->first();
+            $kegiatan = Kegiatan::where('VALUE', $dataTT->SEGMEN_6)->first();
+        }
+
+        return view('dropping.verifikasi', [
+            'tariktunai' => $dataTT,
+            'bank' => $bank,
+            'program' => $program,
+            'kpkc' => $kpkc,
+            'divisi' => $divisi,
+            'subpos' => $subpos,
+            'kegiatan' => $kegiatan
+            ]);
     }
 
     public function redirect($url, $statusCode = 303)

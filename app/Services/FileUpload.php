@@ -20,9 +20,18 @@ class FileUpload
 		return $name;
 	}	
 
-	public function base64Upload()
+	public function base64Upload($inputs)
 	{
-
+		$results = '';
+		if(isset($inputs)){
+			$results = [
+				'name' => $inputs->getClientOriginalName(),
+				'size' => $inputs->getClientSize(),
+				'type' => $inputs->getClientMimeType(),
+				'data' => base64_encode(file_get_contents($inputs))
+			];
+		}
+		return $results;
 	}
 
 	public function multipleBase64Upload($inputs)
@@ -39,18 +48,6 @@ class FileUpload
 		}
 
 		return $results;
-	}
-
-	public function uploadDb($file)
-	{
-		$name = $size = $type = $data = '';
-		if(isset($file)) {
-			$name = $file->getClientOriginalName();
-			$size = $file->getClientSize();
-			$type = $file->getClientOriginalExtension();
-			$data = $file;
-		} 
-		return array($name, $size, $type, $data);
 	}
 
 	public function multipleUpload( $request, $routeName )

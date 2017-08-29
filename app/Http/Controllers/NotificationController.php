@@ -49,6 +49,8 @@ class NotificationController extends Controller
     			return redirect('transaksi/persetujuan/'.$notifDetail->batch_id);
             case 4:
                 return redirect('transaksi/verifikasi/'.$notifDetail->batch_id);
+            case 7:
+                return redirect('dropping/verifikasi/tariktunai/');
 			default:
 				return redirect('transaksi/');
     	}

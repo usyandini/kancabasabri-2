@@ -34,6 +34,11 @@ class Notification extends Model
     	return $this->belongsTo('App\Models\Batch', 'batch_id', 'id');
     }
 
+    public function idTarikTunai()
+    {
+        return $this->belongsTo('App\Models\TarikTunai', 'batch_id', 'id');
+    }
+
     public function wording()
     {
         switch ($this->type) {
@@ -49,6 +54,12 @@ class Notification extends Model
                 return 'Batch <b>'.date('d-m-Y', strtotime($this->batch->created_at)).' </b> anda ditolak dengan perbaikan oleh user Akutansi. Silahkan lakukan perubahan dan submit kembali.';
             case 6: 
                 return 'Batch <b>'.date('d-m-Y', strtotime($this->batch->created_at)).' </b> anda telah diverifikasi oleh user Akutansi. Harap menunggu konfirmasi dari Pusat.';
+            case 7: 
+                return 'Tarik Tunai dilakukan oleh <b>'.$this->idTarikTunai->cabang.'</b>. Mohon review untuk verifikasi anda sebagai user Akutansi.';
+            case 8:
+                return 'Tarik Tunai oleh <b>'.$this->idTarikTunai->cabang.'</b> pada tanggal '.$this->idTarikTunai->created_at.' ditolak oleh Kantor Pusat. Silahkan melakukan Tarik Tunai kembali.'
+            case 9:
+                return 'Tarik Tunai oleh <b>'.$this->idTarikTunai->cabang.'</b> pada tanggal '.$this->idTarikTunai->created_at.' telah diverifikasi oleh Kantor Pusat.'
         }
     }
 }
