@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Notification;
 use App\Models\Batch;
+use App\User;
 
 // ---------------- Types -------------
 // 1 = Submit verifikasi lvl 1 | Receiver : null (All Kasmin)
@@ -21,6 +22,8 @@ class NotificationSystem
 			case 1:
 				$receiver_id = null;
 				break;
+			case 7:
+				$receiver_id = User::where('id', 5)->first();
 			default:
 				$receiver_id = Batch::where('id', $id)->first()['creator']['id'];
 				break;

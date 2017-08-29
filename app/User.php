@@ -12,7 +12,8 @@ class User extends Authenticatable
 
     protected $connection = 'sqlsrv';
 
-    protected $dateFormat = 'Y-m-d H:i:s';
+    //protected $dateFormat = 'Y-m-d H:i:s';
+    protected $dates = ['dob'];
     
     protected $fillable = [
         'name', 'email', 'password', 'username', 'is_admin', 'created_by', 'updated_by'

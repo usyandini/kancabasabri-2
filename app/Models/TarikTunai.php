@@ -22,19 +22,23 @@ class TarikTunai extends Model
         'sisa_dropping',
         'berkas_tariktunai',
 
-        'SEGMEN#1',
-        'SEGMEN#2',
-        'SEGMEN#3',
-        'SEGMEN#4',
-        'SEGMEN#5',
-        'SEGMEN#6',
-        'ACCOUNT'
+        'SEGMEN_1',
+        'SEGMEN_2',
+        'SEGMEN_3',
+        'SEGMEN_4',
+        'SEGMEN_5',
+        'SEGMEN_6',
+        'ACCOUNT',
+
+        'stat'
     ];
 
     public function creator()
     {
     	return $this->belongsTo('App\User', 'created_by', 'id');
     }
+
+    
 
     public function fileTarikTunai()
     {
