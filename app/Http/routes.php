@@ -39,6 +39,7 @@ Route::group(['middleware' => 'auth'], function() {
 		Route::get('/{routes}/berkas/download/{id}', 'DroppingController@downloadBerkas');
 
 		Route::get('/verifikasi/tariktunai/{id}', 'DroppingController@verifikasi');
+		Route::get('/verifikasi/tariktunai/{reaction}/{id}', 'DroppingController@submitVerification');
 
 	    Route::post('/banks/', 'DroppingController@getChainedBank');
 	});

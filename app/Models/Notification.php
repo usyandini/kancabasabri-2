@@ -43,23 +43,23 @@ class Notification extends Model
     {
         switch ($this->type) {
             case 1:
-                return 'Batch <b>'.date('d-m-Y', strtotime($this->batch->created_at)).' </b> butuh review anda untuk approval sebagai Kasmin.';
+                return 'Batch <b>'.date('d-m-Y', strtotime($this->batch['created_at'])).' </b> butuh review anda untuk approval sebagai Kasmin.';
             case 2:
-                return 'Batch <b>'.date('d-m-Y', strtotime($this->batch->created_at)).' </b> anda ditolak dengan perbaikan oleh Kasmin. Silahkan lakukan perubahan dan submit kembali.';
+                return 'Batch <b>'.date('d-m-Y', strtotime($this->batch['created_at'])).' </b> anda ditolak dengan perbaikan oleh Kasmin. Silahkan lakukan perubahan dan submit kembali.';
             case 3:
-                return 'Batch <b>'.date('d-m-Y', strtotime($this->batch->created_at)).' </b> anda telah <b>disetujui oleh Kasmin</b>. Silahkan Menunggu verifikasi dari user Akutansi.';
+                return 'Batch <b>'.date('d-m-Y', strtotime($this->batch['created_at'])).' </b> anda telah <b>disetujui oleh Kasmin</b>. Silahkan Menunggu verifikasi dari user Akutansi.';
             case 4:
-                return 'Batch <b>'.date('d-m-Y', strtotime($this->batch->created_at)).' </b> telah disetujui oleh user Kasmin. Mohon review untuk verifikasi akhir anda sebagai user Akutansi.';
+                return 'Batch <b>'.date('d-m-Y', strtotime($this->batch['created_at'])).' </b> telah disetujui oleh user Kasmin. Mohon review untuk verifikasi akhir anda sebagai user Akutansi.';
             case 5:
-                return 'Batch <b>'.date('d-m-Y', strtotime($this->batch->created_at)).' </b> anda ditolak dengan perbaikan oleh user Akutansi. Silahkan lakukan perubahan dan submit kembali.';
+                return 'Batch <b>'.date('d-m-Y', strtotime($this->batch['created_at'])).' </b> anda ditolak dengan perbaikan oleh user Akutansi. Silahkan lakukan perubahan dan submit kembali.';
             case 6: 
-                return 'Batch <b>'.date('d-m-Y', strtotime($this->batch->created_at)).' </b> anda telah diverifikasi oleh user Akutansi. Harap menunggu konfirmasi dari Pusat.';
+                return 'Batch <b>'.date('d-m-Y', strtotime($this->batch['created_at'])).' </b> anda telah diverifikasi oleh user Akutansi. Harap menunggu konfirmasi dari Pusat.';
             case 7: 
                 return 'Tarik Tunai dilakukan oleh <b>'.$this->idTarikTunai->cabang.'</b>. Mohon review untuk verifikasi anda sebagai user Akutansi.';
             case 8:
-                return 'Tarik Tunai oleh <b>'.$this->idTarikTunai->cabang.'</b> pada tanggal '.$this->idTarikTunai->created_at.' ditolak oleh Kantor Pusat. Silahkan melakukan Tarik Tunai kembali.'
+                return 'Tarik Tunai oleh <b>'.$this->idTarikTunai->cabang.'</b> pada tanggal '.date('d F Y', strtotime($this->idTarikTunai->created_at)).' ditolak oleh Kantor Pusat. Silahkan melakukan Tarik Tunai kembali.';
             case 9:
-                return 'Tarik Tunai oleh <b>'.$this->idTarikTunai->cabang.'</b> pada tanggal '.$this->idTarikTunai->created_at.' telah diverifikasi oleh Kantor Pusat.'
+                return 'Tarik Tunai oleh <b>'.$this->idTarikTunai->cabang.'</b> pada tanggal '.date('d F Y', strtotime($this->idTarikTunai->created_at)).' telah diverifikasi oleh Kantor Pusat.';
         }
     }
 }

@@ -47,6 +47,12 @@
                               <b>Data tarik tunai gagal dikirim. Nominal tarik tunai melebihi dana dropping.</b>
                             </div>
                         </div>
+                        @elseif(session('confirm'))
+                        <div class="col-xs-7">
+                            <div class="alert alert-warning">
+                              <b>Anda sudah melakukan konfirmasi Tarik Tunai, harap menunggu konfirmasi dari Kantor Pusat.</b>
+                            </div>
+                        </div>
                         @endif
 
                         @if (count($errors) > 0)

@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 
+use App\Models\TarikTunai;
+
 use App\Services\NotificationSystem;
 
 // ---------------- Types -------------
@@ -42,15 +44,19 @@ class NotificationController extends Controller
     public function redirect($id)
     {
     	NotificationSystem::markAsRead($id);
+        
+        $notifDetail = NotificationSystem::get($id);
+        $tariktunai = TarikTunai::where('id', $notifDetail->batch_id)->first();
     	
-    	$notifDetail = NotificationSystem::get($id);
     	switch ($notifDetail->type) {
     		case 1:
     			return redirect('transaksi/persetujuan/'.$notifDetail->batch_id);
             case 4:
                 return redirect('transaksi/verifikasi/'.$notifDetail->batch_id);
             case 7:
-                return redirect('dropping/verifikasi/tariktunai/');
+                return redirect('dropping/verifikasi/tariktunai/'.$notifDetail->batch_id);
+            case 8 || 9 :
+                return redirect('dropping/tariktunai/'.$tariktunai->id_dropping);
 			default:
 				return redirect('transaksi/');
     	}

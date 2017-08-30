@@ -173,7 +173,7 @@ class DroppingController extends Controller
         $this->inputDrop($id_drop); 
 
         $dropping = $this->droppingModel->where([['RECID', $id_drop], ['DEBIT', '>', 0]])->firstOrFail();
-        $tariktunai = TarikTunai::where([['id_dropping', $id_drop], ['nominal_tarik', '>', 0]])->orderby('sisa_dropping', 'asc')->get();
+        $tariktunai = TarikTunai::where([['id_dropping', $id_drop], ['nominal_tarik', '>', 0], ['stat', 2]])->orderby('sisa_dropping', 'asc')->get();
         //$file = BerkasTarikTunai::where(['id', $tariktunai->fileTarikTunai['name']])->firstOrFail();
 
         return view('dropping.tariktunai', ['tariktunai' => $tariktunai, 'dropping' => $dropping]);
@@ -205,13 +205,21 @@ class DroppingController extends Controller
                 'berkas.required'  => 'Attachment bukti tarik tunai tidak boleh dikosongkan !'
             ]);
 
+            // $doTarikTunai = Validator::make($temp_sisa, 
+            //     [
+            //         'stat' => 'not_in:0'
+            //     ], 
+            //     [
+            //         'stat.not_in' => 'Anda sudah melakukan konfirmasi Tarik Tunai, harap menunggu konfirmasi dari Kantor Pusat'
+            //     ]);
+
         //----- Fungsi tarik tunai, jika tidak ada record maka tariktunai berasal dari nominal awal - nominal tarik -----//
         //----- jika ada record maka tariktunai berasal dari (nominal = sisa dropping sebelumnya) - nominal tarik  -----//
 
         $string_tarik = $request->nominal_tarik;
         $tarik = floatval(str_replace('.', ',', str_replace(',', '', $string_tarik)));
 
-        if($validatorTT->passes()){
+        if($validatorTT->passes() && $temp_sisa['stat'] !=0){
             if($temp_sisa){
                 $inputsTT['nominal'] = $temp_sisa['sisa_dropping'];
             }else{
@@ -242,13 +250,16 @@ class DroppingController extends Controller
                 
                 $TT = TarikTunai::create($inputsTT);
 
-                //NotificationSystem::send($TT->id, 7);
+                NotificationSystem::send($TT->id, 7);
 
                 session()->flash('success', true);
             } else {
                 session()->flash('offset', true);
             }   
-        }else{
+        }elseif($temp_sisa['stat'] == 0){
+            session()->flash('confirm', true);
+        }
+        else{
             //dd($request->all());
             return redirect()->back()->withErrors($validatorTT)->withInput();
         }
@@ -410,7 +421,7 @@ class DroppingController extends Controller
         $dataTT = TarikTunai::where('id', $id)->first();
 
         if($dataTT){
-            $bank = AkunBank::where('BANK', $dataTT->SEGMEN_1)->first();
+            $bank = AkunBank::where('ACCOUNT', $dataTT->SEGMEN_1)->first();
             $program = Program::where('VALUE', $dataTT->SEGMEN_2)->first();
             $kpkc = KantorCabang::where('VALUE', $dataTT->SEGMEN_3)->first();
             $divisi = Divisi::where('VALUE', $dataTT->SEGMEN_4)->first();
@@ -427,6 +438,36 @@ class DroppingController extends Controller
             'subpos' => $subpos,
             'kegiatan' => $kegiatan
             ]);
+    }
+
+    public function submitVerification($reaction, $id_tarik, Request $request)
+    {
+        $verification = TarikTunai::where([['id', $id_tarik], ['stat', 0]])->first();
+
+        if($verification)
+        {
+            switch($reaction){
+                case 'verified':
+                    TarikTunai::where('id', $id_tarik)->update(array('stat' => 2));
+                    session()->flash('success', true);
+                    NotificationSystem::send($id_tarik, 9);
+                    break;
+                    //update dengan data tarik tunai sebelumnya // url rejected belum bisa
+                case 'rejected':
+                    TarikTunai::where('id', $id_tarik)
+                    ->update(array(
+                        'nominal' => $verification->nominal,
+                        'nominal_tarik' => 0,
+                        'sisa_dropping' => $verification->nominal,
+                        'stat' => 1));
+                    //BerkasTarikTunai::where('id', $verification->berkas_tariktunai)->delete();
+                    NotificationSystem::send($id_tarik, 8);
+                    session()->flash('reject', true);
+                    break;
+            }
+        }
+        session()->flash('done', true);
+        return redirect()->back();
     }
 
     public function redirect($url, $statusCode = 303)

@@ -21,7 +21,7 @@
                                 <ol class="breadcrumb">
                                     <li class="breadcrumb-item"><a href="{{ url('/') }}">Dashboard</a>
                                     </li>
-                                    <li class="breadcrumb-item active">Verifiaksi Tarik Tunai
+                                    <li class="breadcrumb-item active">Verifikasi Tarik Tunai
                                     </li>
 
                                 </ol>
@@ -37,13 +37,19 @@
                         @if(session('success'))
                         <div class="col-xs-7">
                             <div class="alert alert-success">
-                              <b>Data tarik tunai berhasil dikirim.</b>
+                              <b>Data tarik tunai {{ $tariktunai->cabang }} sudah diverifikasi.</b>
                             </div>
                         </div>
-                        @elseif(session('offset'))
+                        @elseif(session('reject'))
                         <div class="col-xs-7">
                             <div class="alert alert-warning">
-                              <b>Data tarik tunai gagal dikirim. Nominal tarik tunai melebihi dana dropping.</b>
+                              <b>Data tarik tunai {{ $tariktunai->cabang }} ditolak.</b>
+                            </div>
+                        </div>
+                        @elseif(session('done'))
+                        <div class="col-xs-7">
+                            <div class="alert alert-warning">
+                              <b>Data tarik tunai {{ $tariktunai->cabang }} sudah dilakukan verifikasi.</b>
                             </div>
                         </div>
                         @endif
@@ -76,10 +82,8 @@
                             <div class="card-block">
                               <div class="card-text">
                               </div>
-                              <form class="form" id="tariktunai-form" method="POST" action="{{ url('dropping/verifikasi/') }}" enctype="multipart/form-data">
+                              <form class="form" id="tariktunai-form" method="GET" action="{{ url('dropping/verifikasi/tariktunai/verified/'.$tariktunai->id) }}">
                               {{ csrf_field() }}
-                                <input type="hidden" name="sisa_dropping" value="">
-
                                 <div class="form-body">
                                   <h4 class="form-section"> Informasi Tarik Tunai</h4>
                                   <div class="row">
@@ -93,18 +97,21 @@
                                       <div class="form-group">
                                         <label for="nominal">Saldo (Dalam IDR)</label>
                                           <input type="text" readonly="" class="form-control" placeholder="Saldo" name="nominal" value="{{ number_format($tariktunai->nominal) }}" disabled>
+                                          <input type="hidden" name="v_nominal" value="{{ $tariktunai->nominal }}">
                                       </div>
                                     </div>
                                     <div class="col-md-6 pull-right">
                                       <div class="form-group">
                                         <label for="nominal_tarik">Sisa Dropping (Dalam IDR)</label>
                                           <input type="text" id="sisa_dropping" readonly="" name="sisa_dropping" placeholder="Sisa Dropping" class="form-control" value="{{ number_format($tariktunai->sisa_dropping) }}" disabled>
+                                          <input type="hidden" name="v_sisa_dropping" value="{{ $tariktunai->sisa_dropping }}">
                                       </div>
                                     </div>
                                     <div class="col-md-6">
                                       <div class="form-group">
                                         <label for="nominal_tarik">Nominal Tarik Tunai (Dalam IDR)</label>
                                           <input type="text" id="nominal_tarik" readonly="" name="nominal_tarik" class="form-control" placeholder="Nominal Tarik Tunai" value="{{ number_format($tariktunai->nominal_tarik) }}" disabled>
+                                          <input type="hidden" name="v_nominal_tarik" value="{{ $tariktunai->nominal_tarik }}">
                                       </div>
                                     </div>
                                     <div class="col-md-6 pull-right">
@@ -141,7 +148,7 @@
                       <div class="col-md-6">
                         <div class="card" id="history" style="height: 1800px;display: block;">
                           <div class="card-header">
-                            <h4 class="card-title" id="basic-layout-colored-form-control">Account Dimension</h4>
+                            <h4 class="card-title" id="basic-layout-colored-form-control">Financial Dimension</h4>
                             <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
                             <div class="heading-elements">
                               <ul class="list-inline mb-0">
@@ -157,47 +164,69 @@
                                     <form class="form form-horizontal striped-rows" id="acountDim" method="POST">
                                     	<div class="form-group row">
       				                          <label class="col-md-3 label-control" for="segmen1">Account Bank</label>
-      				                          <div class="col-md-9">
+      				                          <div class="col-md-3">
       				                            <input type="text" id="segmen1" class="form-control" placeholder="Account Bank"
       				                            name="segmen1" value="{{ $tariktunai->SEGMEN_1 }}" disabled>
-                                          {{--<input type="text" class="form-control" placeholder="Account Bank"
-                                          name="segmen1" value="{{ $bank->BANK_NAME }}" disabled>--}}
       				                          </div>
+                                        <div class="col-md-6">
+                                          <input type="text" id="account" class="form-control" placeholder="Account Bank"
+                                          name="account" value="{{ $bank->DESC_ACCOUNT }}" disabled>
+                                        </div>
       				                        </div>
       				                        <div class="form-group row">
       				                          <label class="col-md-3 label-control" for="segmen2">Program</label>
-      				                          <div class="col-md-9">
+      				                          <div class="col-md-3">
       				                            <input type="text" id="segmen2" class="form-control" placeholder="Program"
       				                            name="segmen2" value="{{ $tariktunai->SEGMEN_2 }}" disabled>
       				                          </div>
+                                        <div class="col-md-6">
+                                          <input type="text" id="program" class="form-control" placeholder="Program"
+                                          name="program" value="{{ $program->DESCRIPTION }}" disabled>
+                                        </div>
       				                        </div>
       				                        <div class="form-group row">
       				                          <label class="col-md-3 label-control" for="segmen3">KPKC</label>
-      				                          <div class="col-md-9">
+      				                          <div class="col-md-3">
       				                            <input type="text" id="segmen3" class="form-control" placeholder="KPKC"
       				                            name="segmen3" value="{{ $tariktunai->SEGMEN_3 }}" disabled>
       				                          </div>
+                                        <div class="col-md-6">
+                                          <input type="text" id="kpkc" class="form-control" placeholder="KPKC"
+                                          name="kpkc" value="{{ $kpkc->DESCRIPTION }}" disabled>
+                                        </div>
       				                        </div>
       				                        <div class="form-group row">
       				                          <label class="col-md-3 label-control" for="segmen4">Divisi</label>
-      				                          <div class="col-md-9">
+      				                          <div class="col-md-3">
       				                            <input type="text" id="segmen4" class="form-control" placeholder="Divisi"
       				                            name="segmen4" value="{{ $tariktunai->SEGMEN_4 }}" disabled>
       				                          </div>
+                                        <div class="col-md-6">
+                                          <input type="text" id="divisi" class="form-control" placeholder="Divisi"
+                                          name="divisi" value="{{ $divisi->DESCRIPTION }}" disabled>
+                                        </div>
       				                        </div>
       				                        <div class="form-group row">
       				                          <label class="col-md-3 label-control" for="segmen5">Sub Pos</label>
-      				                          <div class="col-md-9">
+      				                          <div class="col-md-3">
       				                            <input type="text" id="segmen5" class="form-control" placeholder="Subpos"
       				                            name="segmen5" value="{{ $tariktunai->SEGMEN_5 }}" disabled>
       				                          </div>
+                                        <div class="col-md-6">
+                                          <input type="text" id="subpos" class="form-control" placeholder="Sub Pos"
+                                          name="subpos" value="{{ $subpos->DESCRIPTION }}" disabled>
+                                        </div>
       				                        </div>
                                       <div class="form-group row">
-      				                          <label class="col-md-3 label-control" for="segmen6">Kegiatan</label>
-      				                          <div class="col-md-9">
+      				                          <label class="col-md-3 label-control" for="segmen6">Mata Anggaran</label>
+      				                          <div class="col-md-3">
       				                            <input type="text" id="segmen6" class="form-control" placeholder="Mata Anggaran"
       				                            name="segmen6" value="{{ $tariktunai->SEGMEN_6 }}" disabled>
       				                          </div>
+                                        <div class="col-md-6">
+                                          <input type="text" id="kegiatan" class="form-control" placeholder="Mata Anggaran"
+                                          name="kegiatan" value="{{ $kegiatan->DESCRIPTION }}" disabled>
+                                        </div>
       				                        </div>
                                       {{--<div class="form-group row">
                                         <label class="col-md-3 label-control" for="account">Account</label>
@@ -213,8 +242,7 @@
                             </div>
                           </div>
                         </div>
-                      </div>
-                      
+                      </div>                      
                     <div class="row">
                       <div class="col-md-12">
                         <div class="card">
@@ -222,9 +250,12 @@
                           <div class="card-body collapse in">
                             <div class="card-block">
                               <div class="form-actions">
-                                <a href="{{ url('dropping') }}" class="btn btn-warning mr-1">
+                                {{--<a href="{{ url('dropping/verifikasi/tariktunai/rejected/'.$tariktunai->id) }}" class="btn btn-warning mr-1">
                                   <i class="ft-x"></i> Tolak
-                                </a>
+                                </a>--}}
+                                <button type="submit" data-toggle="modal" data-target="#tolak" class="btn btn-warning mr-1">
+                                  <i class="ft-x"></i> Tolak
+                                </button>
                                 <button type="submit" data-toggle="modal" data-target="#xSmall" class="btn btn-success">
                                   <i class="fa fa-check-square-o"></i> Verifikasi
                                 </button>
@@ -241,7 +272,8 @@
                                       <h4 class="modal-title" id="myModalLabel20">Box Konfirmasi</h4>
                                     </div>
                                     <div class="modal-body" id="confirmation-msg">
-                                      <p>Apakah anda yakin dengan <b>data tarik tunai dropping</b> yang anda input sudah sesuai?</p>
+                                      <p>Apakah anda yakin mengirim <b>verifikasi</b> untuk tarik tunai {{ $tariktunai->cabang }} ?</p>
+                                      <input type="hidden" name="v_nominal" value="{{ $tariktunai->nominal }}">
                                     </div>
                                     <div class="modal-footer">
                                       <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">Tidak, kembali</button>
@@ -250,6 +282,27 @@
                                   </div>
                                 </div>
                               </div>
+                              <div class="modal fade text-xs-left" id="tolak" tabindex="-1" role="dialog" aria-labelledby="myModalLabel20"
+                              aria-hidden="true">
+                                <div class="modal-dialog modal-md" role="document">
+                                  <div class="modal-content">
+                                    <div class="modal-header">
+                                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                      </button>
+                                      <h4 class="modal-title" id="myModalLabel20">Box Konfirmasi</h4>
+                                    </div>
+                                    <div class="modal-body" id="confirmation-msg">
+                                      <p>Apakah anda yakin <b>menolak verifikasi</b> untuk tarik tunai {{ $tariktunai->cabang }} ?</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                      <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">Tidak, kembali</button>
+                                      <a href="{{ url('dropping/verifikasi/tariktunai/rejected/'.$tariktunai->id) }}" class="btn btn-outline-danger">Ya, tolak</a>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <!-- Modal End-->
                             </div>
                           </div>
                         </div>
@@ -276,7 +329,7 @@
                 <script type="text/javascript" src="{{ asset('app-assets/js/scripts/ui/breadcrumbs-with-stats.min.js') }}"></script>
                 <script src="{{ asset('app-assets/js/scripts/forms/select/form-select2.min.js') }}" type="text/javascript"></script>
                 <script src="{{ asset('app-assets/js/scripts/forms/switch.min.js') }}" type="text/javascript"></script>
-                <script src="{{ asset('app-assets/js/scripts/forms/validation/form-validation.js') }}" type="text/javascript"></script>
+                {{--<script src="{{ asset('app-assets/js/scripts/forms/validation/form-validation.js') }}" type="text/javascript"></script>--}}
                 <script src="{{ asset('app-assets/js/scripts/modal/components-modal.min.js') }}" type="text/javascript"></script>
                 <script src="{{ asset('app-assets/js/scripts/extensions/toastr.min.js') }}" type="text/javascript"></script>
                 <!-- END PAGE LEVEL JS-->  
