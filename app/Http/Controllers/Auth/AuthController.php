@@ -5,8 +5,11 @@ namespace App\Http\Controllers\Auth;
 use App\User;
 use Validator;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
+use Adldap\Laravel\Facades\Adldap;
+
 
 class AuthController extends Controller
 {
@@ -29,7 +32,8 @@ class AuthController extends Controller
      * @var string
      */
     protected $redirectTo = '/dropping';
-    protected $loginPath  = '/login';
+    protected $loginPath  = '/';
+    protected $username = 'username';
 
     /**
      * Create a new authentication controller instance.
@@ -73,5 +77,67 @@ class AuthController extends Controller
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
         ]);
+    }
+
+    public function username() {
+        return config('adldap_auth.usernames.eloquent');
+    }
+
+
+
+    // public function login(Request $request)
+    // {
+    //     $match = \Auth::attempt(['username' => $request->username, 'password' => $request->password]);
+    //     if ($match) {
+    //         return redirect()->intended('/');
+    //     } else {
+    //         return \Redirect::back()->withErrors(['Username atau password salah']);
+    //     }
+    // }
+
+    public function login(Request $request)
+    {
+        // $credentials = $request->only($this->username(), 'password');
+        // $username = $credentials[$this->username()];
+        // $password = $credentials['password'];
+        
+        // $user_format = env('ADLDAP_USER_FORMAT', 'cn=%s,'.env('ADLDAP_BASEDN', ''));
+        // $userdn = sprintf($user_format, $username);
+        // // if (Adldap::authenticate($username, $password)) {
+        // if(Adldap::auth()->attempt($userdn, $password, $bindAsUser = true)) {
+        //     $user = \App\User::where($this->username(), $username) -> first();
+        //     if ( !$user ) {
+        //         $user = new \App\User();
+        //         $user->name = $username;
+        //         $user->username = $username;
+        //         $user->password = '';
+        //     }
+        //     $this->guard()->login($user, true);
+        //     return true;
+        // }
+        
+        // return false;
+
+        $credentials = $request->only($this->username(), 'password');
+        $username = $credentials[$this->username()];
+        $password = $credentials['password'];
+        
+        $user_format = env('ADLDAP_USER_FORMAT', 'cn=%s,'.env('ADLDAP_BASEDN', ''));
+        $userdn = sprintf($user_format, $username);
+        
+        if(Adldap::auth()->attempt($userdn, $password, $bindAsUser = true)) {
+            $user = \App\User::where($this->username(), $username) -> first();
+            if ( !$user ) {
+                $user = new \App\User();
+                $user->name = $username;
+                $user->username = $username;
+                $user->password = '';
+            }
+            \Auth::login($user);
+            return redirect()->intended('/');
+        }
+        
+        return redirect()->back()
+            ->withInput($request->only($this->username));
     }
 }

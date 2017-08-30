@@ -50,16 +50,26 @@
                                 </div>
                                 <div class="card-body collapse in">
                                     <div class="card-block">
+                                        @if(isset(\Auth::user()->name))
+                                            {{ \Auth::user()->name }}
+                                        @endif
+                                        @if($errors->all())
+                                        <div class="alert alert-danger">
+                                            @foreach($errors->all() as $err)
+                                                {{ $err.'<br>' }}
+                                            @endforeach
+                                        </div>
+                                        @endif
                                         <form class="form-horizontal form-simple" method="POST" action="{{ url('login') }}" novalidate>
                                         	{{ csrf_field() }}
                                             <fieldset class="form-group position-relative has-icon-left mb-0">
-                                                <input type="email" name="email" value="{{ old('email', $default = null) }}" class="form-control form-control-lg input-lg" id="user-name" placeholder="Your E-mail" required>
+                                                <input type="text" name="username" value="{{ old('email', $default = null) }}" class="form-control form-control-lg input-lg" id="user-name" placeholder="Username anda" required>
                                                 <div class="form-control-position">
                                                     <i class="ft-user"></i>
                                                 </div>
                                             </fieldset>
                                             <fieldset class="form-group position-relative has-icon-left">
-                                                <input type="password" name="password" class="form-control form-control-lg input-lg" id="user-password" placeholder="Enter Password" required>
+                                                <input type="password" name="password" class="form-control form-control-lg input-lg" id="user-password" placeholder="Masukkan password" required>
                                                 <div class="form-control-position">
                                                     <i class="fa fa-key"></i>
                                                 </div>
