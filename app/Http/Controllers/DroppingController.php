@@ -182,7 +182,7 @@ class DroppingController extends Controller
         if($tariktunai){
             foreach($tariktunai as $value){
                 //$berkas = BerkasTarikTunai::where('id_tariktunai', $this->tarikTunaiModel['id'])->get();   
-                $berkas = BerkasTarikTunai::where('id_tariktunai', $value['id'])->get();      
+                $berkas = BerkasTarikTunai::where('id_tariktunai', $value->id)->get();      
             }
         }
 
@@ -314,9 +314,9 @@ class DroppingController extends Controller
         }else{
             if($validatorPD->passes())
             {   
-                $bank = AkunBank::where('BANK', $request->akun_bank)->first();
+                $bank = AkunBank::where('BANK', $request->p_akun_bank)->first();
                 $program = Program::where('DESCRIPTION', 'Tabungan Hari Tua')->first();
-                $kpkc = KantorCabang::where('DESCRIPTION', $request->cabang)->first();
+                $kpkc = KantorCabang::where('DESCRIPTION', $request->p_cabang)->first();
                 $divisi = Divisi::where('DESCRIPTION', '')->first();
                 $subpos = SubPos::where('DESCRIPTION', 'None')->first();
                 $kegiatan = Kegiatan::where('DESCRIPTION', 'None')->first();
@@ -334,17 +334,18 @@ class DroppingController extends Controller
                     'SEGMEN_4'          => $divisi->VALUE,
                     'SEGMEN_5'          => $subpos->VALUE,
                     'SEGMEN_6'          => $kegiatan->VALUE,
-                    'ACCOUNT'           => $bank->ACCOUNT.' - '.$program->VALUE.' - '.$kpkc->VALUE.' - '.$divisi->VALUE.' - '.$subpos->VALUE.' - '.$kegiatan->VALUE
+                    'ACCOUNT'           => $bank->ACCOUNT.'-'.$program->VALUE.'-'.$kpkc->VALUE.'-'.$divisi->VALUE.'-'.$subpos->VALUE.'-'.$kegiatan->VALUE
                 );
 
                 $inputsPD['created_by'] = \Auth::id();
                 $inputsPD['id_dropping'] = $id_drop;
                 $inputsPD['nominal_dropping']  = $request->nominal_dropping;
-                $attach = $this->storeBerkas($request->berkas, 'penyesuaian');
-                $inputsPD['berkas_penyesuaian'] = $attach['id'];
+                // $attach = $this->storeBerkas($request->berkas, 'penyesuaian');
+                // $inputsPD['berkas_penyesuaian'] = $attach['id'];
                 
-                dd($inputsPD);
-                PenyesuaianDropping::create($inputsPD);   
+                //dd($inputsPD);
+                $PD = PenyesuaianDropping::create($inputsPD); 
+                $this->storeBerkas($request->berkas, 'penyesuaian', $PD->id);  
                 session()->flash('success', true);
 
             }else{
@@ -362,14 +363,13 @@ class DroppingController extends Controller
             
             foreach($store as $key => $value){
                 switch($route){
-                    case 'tariktunai':
-                        $value['id_tariktunai'] = $id;
-                        return BerkasTarikTunai::insert($value);
-                        break;
-                    case 'penyesuaian':
-                       return BerkasPenyesuaian::create($value);
-                       break;
-                }   
+                     case 'tariktunai':
+                         $value['id_tariktunai'] = $id;
+                         BerkasTarikTunai::insert($value);
+                //     case 'penyesuaian':
+                //        return BerkasPenyesuaian::create($value);
+                }
+                   
             }
         }
     }
