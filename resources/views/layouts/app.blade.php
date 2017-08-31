@@ -104,7 +104,7 @@
                     <li class="navigation-header">
                     </li>
                     <li class="navigation-header">
-                        <span >Main Menus</span><i data-toggle="tooltip" data-placement="right" data-original-title="General"
+                        <span >Menu Utama</span><i data-toggle="tooltip" data-placement="right" data-original-title="General"
                                                class=" ft-minus"></i>
                     </li>
                     <li class="nav-item {{ checkActiveMenu('dropping') }}"><a href="{{ url('/dropping', $parameters = [], $secure = null) }}"><i class="ft-box"></i><span data-i18n="" class="menu-title">Dropping</span></a>

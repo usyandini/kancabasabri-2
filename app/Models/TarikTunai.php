@@ -42,6 +42,6 @@ class TarikTunai extends Model
 
     public function fileTarikTunai()
     {
-        return $this->hasOne('App\Models\BerkasTarikTunai', 'id', 'berkas_tariktunai');
+        return $this->hasOne('App\Models\BerkasTarikTunai', 'id_tariktunai', 'id');
     }
 }

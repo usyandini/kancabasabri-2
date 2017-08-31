@@ -124,7 +124,7 @@
                             items: getData('item'), 
                             valueField: "MAINACCOUNTID", 
                             textField: "NAME", 
-                            title: "Item", 
+                            title: "Jenis Barang/Jasa", 
                             selectedindex: 0,
                             insertTemplate: function() {
                                 var result = jsGrid.fields.select.prototype.insertTemplate.call(this);
@@ -146,7 +146,7 @@
                             width: 100, 
                             align: "left",
                             type: "number", 
-                            title: "Jumlah Item",
+                            title: "Jumlah",
                             validate: {
                               validator: "min",
                               message: "Kolom jumlah item tidak boleh 0.",

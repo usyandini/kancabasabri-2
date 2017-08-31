@@ -15,14 +15,15 @@ class BerkasTarikTunai extends Model
 
 
     protected $fillable = [
-    	'name',
+        'id_tariktunai',
+        'name',
     	'size',
     	'type',
     	'data'
     ];
 
-    // public function fileTarikTunai()
-    // {
-    //     return $this->hasOne('App\Models\TarikTunai', 'berkas_tariktunai', 'id');
-    // }
+    public function fileTarikTunai()
+    {
+        return $this->hasOne('App\Models\TarikTunai', 'id', 'id_tariktunai');
+    }
 }

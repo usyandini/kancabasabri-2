@@ -55,11 +55,11 @@ class Notification extends Model
             case 6: 
                 return 'Batch <b>'.date('d-m-Y', strtotime($this->batch['created_at'])).' </b> anda telah diverifikasi oleh user Akutansi. Harap menunggu konfirmasi dari Pusat.';
             case 7: 
-                return 'Tarik Tunai dilakukan oleh <b>'.$this->idTarikTunai->cabang.'</b>. Mohon review untuk verifikasi anda sebagai user Akutansi.';
+                return 'Tarik Tunai dilakukan oleh <b>'.$this->idTarikTunai['cabang'].'</b>. Mohon review untuk verifikasi anda sebagai user Akutansi.';
             case 8:
-                return 'Tarik Tunai oleh <b>'.$this->idTarikTunai->cabang.'</b> pada tanggal '.date('d F Y', strtotime($this->idTarikTunai->created_at)).' ditolak oleh Kantor Pusat. Silahkan melakukan Tarik Tunai kembali.';
+                return 'Tarik Tunai oleh <b>'.$this->idTarikTunai['cabang'].'</b> pada tanggal '.date('d F Y', strtotime($this->idTarikTunai['created_at'])).' ditolak oleh Kantor Pusat. Silahkan melakukan Tarik Tunai kembali.';
             case 9:
-                return 'Tarik Tunai oleh <b>'.$this->idTarikTunai->cabang.'</b> pada tanggal '.date('d F Y', strtotime($this->idTarikTunai->created_at)).' telah diverifikasi oleh Kantor Pusat.';
+                return 'Tarik Tunai oleh <b>'.$this->idTarikTunai['cabang'].'</b> pada tanggal '.date('d F Y', strtotime($this->idTarikTunai['created_at'])).' telah diverifikasi oleh Kantor Pusat.';
         }
     }
 }

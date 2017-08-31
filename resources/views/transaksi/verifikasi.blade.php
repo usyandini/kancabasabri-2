@@ -65,7 +65,7 @@
                             <div class="col-xs-12">
                                 <div class="card">
                                     <div class="card-header">
-                                        <h4 class="card-title">List Transaksi</h4><br>
+                                        <h4 class="card-title">Daftar Transaksi</h4><br>
                                         <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
                                     </div>
                                     <div class="card-body collapse in ">
@@ -83,7 +83,7 @@
                                               <div class="row">
                                                 <div class="col-lg-6 col-md-12">
                                                   <div class="bs-callout-info callout-border-left callout-bordered callout-transparent mt-1 p-1">
-                                                    <h4 class="info">List Berkas</h4>
+                                                    <h4 class="info">Daftar Berkas</h4>
                                                     <table>
                                                       @forelse($berkas as $value)
                                                         <tr>
@@ -148,7 +148,7 @@
                           <div class="col-md-12">
                               <form method="POST" action="{{ url('transaksi/submit/verifikasi').'/2/'.$active_batch->id }}" id="verification">
                               {{ csrf_field() }}
-                              <p>Anda akan <b>memverifikasi batch ini</b> sebagai Kasmin. Informasi batch ini : 
+                              <p>Anda akan <b>memverifikasi batch ini</b> sebagai Kasimin. Informasi batch ini : 
                               <ul>
                                 <li>Batch saat ini : <code>{{ date("d-m-Y", strtotime($active_batch->created_at)) }}</code></li>
                                 <li>Terkahir Update : <code>{{ $active_batch->updated_at }}</code> oleh <code>{{ $active_batch['creator']['name'] }}</code></li>

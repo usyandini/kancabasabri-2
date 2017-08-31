@@ -61,13 +61,13 @@
                                           <div class="row">
                                             <div class="col-xs-2">
                                               <div class="form-group">
-                                                <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i> Filter</a>
+                                                <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i> Cari</a>
                                               </div>
                                             </div>
                                             @if($filters)
                                             <div class="col-xs-2">
                                               <div class="form-group">
-                                                <a href="{{ url('transaksi') }}" class="btn btn-danger"><i class="fa fa-times"></i> Reset Filter</a>
+                                                <a href="{{ url('transaksi') }}" class="btn btn-danger"><i class="fa fa-times"></i> Atur Ulang Pencarianr</a>
                                               </div>
                                             </div>
                                             @endif
@@ -96,7 +96,7 @@
                                         @if ($filters)
                                           <h4 class="card-title">Hasil Pencarian Transaksi</h4><br>
                                         @else
-                                          <h4 class="card-title">List Transaksi</h4><br>
+                                          <h4 class="card-title">Daftar Transaksi</h4><br>
                                         @endif
                                         <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
                                     </div>
@@ -128,7 +128,7 @@
                                             @if(session('success_deletion'))
                                               <div class="col-xs-6">
                                                 <div class="alert alert-success">
-                                                  File <code>{{ session('success_deletion') }}</code> berhasil dihapus.
+                                                  Berkas <code>{{ session('success_deletion') }}</code> berhasil dihapus.
                                                 </div>
                                               </div>
                                             @endif
@@ -160,16 +160,16 @@
                                                   <div class="col-lg-6 col-md-12">
                                                     @if($editable)
                                                       <fieldset class="form-group">
-                                                        <label for="basicInputFile">Upload berkas</label>
+                                                        <label for="basicInputFile">Unggah berkas</label>
                                                         <input type="file" class="form-control-file" id="basicInputFile" multiple="" name="berkas[]">
                                                       </fieldset>
                                                     @endif
                                                     <div class="bs-callout-info callout-border-left callout-bordered callout-transparent mt-1 p-1">
-                                                      <h4 class="info">List Berkas</h4>
+                                                      <h4 class="info">Daftar Berkas</h4>
                                                         <table>
                                                           @forelse($berkas as $value)
                                                             <tr>
-                                                              <td width="25%">File: <a href="{{ url('transaksi/berkas/download').'/'.$value->id }}" target="_blank">{{ $value->file_name }}</a></td>
+                                                              <td width="25%">Berkas: <a href="{{ url('transaksi/berkas/download').'/'.$value->id }}" target="_blank">{{ $value->file_name }}</a></td>
                                                               <td width="25%">Diunggah: <b>{{ $value->created_at }}</b></td>
                                                               <td width="5%">
                                                               @if($editable)
