@@ -83,41 +83,8 @@ class AuthController extends Controller
         return config('adldap_auth.usernames.eloquent');
     }
 
-
-
-    // public function login(Request $request)
-    // {
-    //     $match = \Auth::attempt(['username' => $request->username, 'password' => $request->password]);
-    //     if ($match) {
-    //         return redirect()->intended('/');
-    //     } else {
-    //         return \Redirect::back()->withErrors(['Username atau password salah']);
-    //     }
-    // }
-
     public function login(Request $request)
     {
-        // $credentials = $request->only($this->username(), 'password');
-        // $username = $credentials[$this->username()];
-        // $password = $credentials['password'];
-        
-        // $user_format = env('ADLDAP_USER_FORMAT', 'cn=%s,'.env('ADLDAP_BASEDN', ''));
-        // $userdn = sprintf($user_format, $username);
-        // // if (Adldap::authenticate($username, $password)) {
-        // if(Adldap::auth()->attempt($userdn, $password, $bindAsUser = true)) {
-        //     $user = \App\User::where($this->username(), $username) -> first();
-        //     if ( !$user ) {
-        //         $user = new \App\User();
-        //         $user->name = $username;
-        //         $user->username = $username;
-        //         $user->password = '';
-        //     }
-        //     $this->guard()->login($user, true);
-        //     return true;
-        // }
-        
-        // return false;
-
         $credentials = $request->only($this->username(), 'password');
         $username = $credentials[$this->username()];
         $password = $credentials['password'];
