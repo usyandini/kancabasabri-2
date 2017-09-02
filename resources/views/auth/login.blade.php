@@ -50,13 +50,10 @@
                                 </div>
                                 <div class="card-body collapse in">
                                     <div class="card-block">
-                                        @if(isset(\Auth::user()->name))
-                                            {{ \Auth::user()->name }}
-                                        @endif
                                         @if($errors->all())
                                         <div class="alert alert-danger">
                                             @foreach($errors->all() as $err)
-                                                {{ $err.'<br>' }}
+                                                {!! $err.'<br>' !!}
                                             @endforeach
                                         </div>
                                         @endif

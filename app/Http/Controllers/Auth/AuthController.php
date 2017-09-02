@@ -79,32 +79,32 @@ class AuthController extends Controller
         ]);
     }
 
-    public function username() {
-        return config('adldap_auth.usernames.eloquent');
-    }
-
     public function login(Request $request)
     {
-        $credentials = $request->only($this->username(), 'password');
-        $username = $credentials[$this->username()];
+        $credentials = $request->only('username', 'password');
+        $username = $credentials['username'];
         $password = $credentials['password'];
         
-        $user_format = env('ADLDAP_USER_FORMAT', 'cn=%s,'.env('ADLDAP_BASEDN', ''));
-        $userdn = sprintf($user_format, $username);
-        
-        if(Adldap::auth()->attempt($userdn, $password, $bindAsUser = true)) {
-            $user = \App\User::where($this->username(), $username) -> first();
+        if(Adldap::auth()->attempt($username, $password, $bindAsUser = true)) {
+            if (strpos($username, '@') != false) {
+                $exp = explode('@', $username);
+                $username = $exp[0];
+            } 
+
+            $user = \App\User::where('username', $username)->first();
             if ( !$user ) {
-                $user = new \App\User();
-                $user->name = $username;
-                $user->username = $username;
-                $user->password = '';
-            }
+                $new = ['username' => $username, 'name' => $username, 'password' => bcrypt($password)];
+                $user = User::create($new);
+            } 
+
+            \Auth::login($user);
+            return redirect()->intended('/');
+        } elseif (\Auth::attempt(['username' => $username, 'password' => $password])) {
+            $user = \App\User::where('username', $username)->first();
             \Auth::login($user);
             return redirect()->intended('/');
         }
         
-        return redirect()->back()
-            ->withInput($request->only($this->username));
+        return redirect()->back()->withInput()->withErrors(['username' => '<b>Username atau password tidak cocok.</b> Silahkan coba lagi.']);
     }
 }
