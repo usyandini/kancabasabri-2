@@ -57,9 +57,9 @@ class Notification extends Model
             case 7: 
                 return 'Tarik Tunai dilakukan oleh <b>'.$this->idTarikTunai->cabang.'</b>. Mohon review untuk verifikasi anda sebagai user Akutansi.';
             case 8:
-                return 'Tarik Tunai oleh <b>'.$this->idTarikTunai->cabang.'</b> pada tanggal '.$this->idTarikTunai->created_at.' ditolak oleh Kantor Pusat. Silahkan melakukan Tarik Tunai kembali.'
+                return 'Tarik Tunai oleh <b>'.$this->idTarikTunai->cabang.'</b> pada tanggal '.$this->idTarikTunai->created_at.' ditolak oleh Kantor Pusat. Silahkan melakukan Tarik Tunai kembali.';
             case 9:
-                return 'Tarik Tunai oleh <b>'.$this->idTarikTunai->cabang.'</b> pada tanggal '.$this->idTarikTunai->created_at.' telah diverifikasi oleh Kantor Pusat.'
+                return 'Tarik Tunai oleh <b>'.$this->idTarikTunai->cabang.'</b> pada tanggal '.$this->idTarikTunai->created_at.' telah diverifikasi oleh Kantor Pusat.';
         }
     }
 }
