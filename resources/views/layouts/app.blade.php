@@ -117,7 +117,12 @@
                         </ul>
                     </li>
                     @if(\Auth::user()->is_admin)
-                        <li class="nav-item {{ checkActiveMenu('user') }}"><a href="{{ url('/user', $parameters = [], $secure = null) }}"><i class="ft-user"></i><span data-i18n="" class="menu-title">Manajemen User</span></a>
+                        <li class="nav-item has-sub {{ checkActiveMenu('user') }}"><a href=""><i class="ft-user"></i><span data-i18n="" class="menu-title">Manajemen User</span></a>
+                        <ul class="menu-content">
+                            <li class="is-shown {{ checkActiveMenu('user') }}"><a href="{{ url('/user', $parameters = [], $secure = null) }}" class="menu-item">Informasi User</a>
+                            <li class="is-shown {{ checkActiveMenu('create') }}"><a href="{{ url('/user/create', $parameters = [], $secure = null) }}" class="menu-item">Tambah User</a>
+                            <li class="is-shown {{ checkActiveMenu('persetujuan') }}"><a href="{{ url('/user', $parameters = [], $secure = null) }}" class="menu-item">Informasi Cabang dan Divisi</a>
+                        </ul>
                     @endif
                 </ul>
             </div>

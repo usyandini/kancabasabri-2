@@ -12,15 +12,36 @@ class User extends Authenticatable
 
     protected $connection = 'sqlsrv';
 
-    //protected $dateFormat = 'Y-m-d H:i:s';
+    protected $dateFormat = 'Y-m-d H:i:s';
     protected $dates = ['dob'];
     
     protected $fillable = [
-        'name', 'email', 'password', 'username', 'is_admin', 'created_by', 'updated_by'
+        'name', 
+        'email', 
+        'password', 
+        'username', 
+        'is_admin', 
+        'created_by', 
+        'updated_by', 
+        'divisi', 
+        'cabang', 
+        'perizinan_dropping', 
+        'perizinan_transaksi', 
+        'perizinan_anggaran'
     ];
 
     
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    public function divisi()
+    {
+        return $this->hasOne('App\Models\Divisi', 'VALUE', 'divisi');
+    }
+
+    public function kantorCabang()
+    {
+        return $this->hasOne('App\Models\KantorCabang', 'VALUE', 'cabang');
+    }
 }
