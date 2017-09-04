@@ -55,7 +55,7 @@
                                 <div class="alert alert-info alert-dismissible fade in mb-2" role="alert">
                                   <h4 class="alert-heading mb-2">Perlu Diperhatikan!</h4>
                                   <ul>
-                                    <li>Persetujuan hanya bisa diberikan oleh <b>Divisi Kasmin</b>.</li>
+                                    <li>Persetujuan hanya bisa diberikan oleh <b>Kasimin</b>.</li>
                                     <li>Persetujuan hanya bisa diberikan pada <b><i>batch</i> yang telah disubmit</b> oleh user.</li>
                                   </ul>
                                 </div>
@@ -148,7 +148,7 @@
                           <div class="col-md-12">
                               <form method="POST" action="{{ url('transaksi/submit/verifikasi').'/1/'.$active_batch->id }}" id="verification">
                               {{ csrf_field() }}
-                              <p>Anda akan <b>memverifikasi batch ini</b> sebagai Kasmin. Informasi batch ini : 
+                              <p>Anda akan <b>memverifikasi batch ini</b> sebagai Kasimin. Informasi batch ini : 
                               <ul>
                                 <li>Batch saat ini : <code>{{ date("d-m-Y", strtotime($active_batch->created_at)) }}</code></li>
                                 <li>Terkahir Update : <code>{{ $active_batch->updated_at }}</code> oleh <code>{{ $active_batch['submitter']['name'] }}</code></li>

@@ -124,7 +124,7 @@
                             items: getData('item'), 
                             valueField: "MAINACCOUNTID", 
                             textField: "NAME", 
-                            title: "Item", 
+                            title: "Jenis Barang/Jasa", 
                             selectedindex: 0,
                             insertTemplate: function() {
                                 var result = jsGrid.fields.select.prototype.insertTemplate.call(this);
@@ -146,7 +146,7 @@
                             width: 100, 
                             align: "left",
                             type: "number", 
-                            title: "Jumlah Item",
+                            title: "Jumlah",
                             validate: {
                               validator: "min",
                               message: "Kolom jumlah item tidak boleh 0.",
@@ -309,7 +309,7 @@
                       document.getElementById("reason").style.display = 'none';
                     } else {
                       document.getElementById("reason").style.display = 'block';
-                      toastr.info("Silahkan input alasan penolakan anda untuk verifikasi lvl 1 ini. Terima kasih.", "Alasan penolakan dibutuhkan", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
+                      toastr.info("Silahkan input alasan penolakan anda untuk verifikasi lvl 1 ini. Terima kasih.", "Alasan penolakan dibutuhkan", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:10e3});
                     }
                   };
 
@@ -318,7 +318,7 @@
                     if (!$('input[name="is_approved"]').is(':checked')) {
                       if ($('select[name="reason"]').val() == '0') {
                         valid = false;
-                        toastr.error("Silahkan input alasan penolakan anda untuk verifikasi lvl 1 ini. Terima kasih.", "Alasan penolakan dibutuhkan.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
+                        toastr.error("Silahkan input alasan penolakan anda untuk verifikasi lvl 1 ini. Terima kasih.", "Alasan penolakan dibutuhkan.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:10e3});
                       } 
                     }
                     if (valid) {
@@ -330,7 +330,7 @@
                     if (totalRows > 0) {
                       $('#xSmall').modal()
                     } else {
-                      toastr.error("Silahkan input data yang hendak disubmit. Terima kasih.", "Data tidak boleh kosong", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});                      
+                      toastr.error("Silahkan input data yang hendak disubmit. Terima kasih.", "Data tidak boleh kosong", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:10e3});                      
                     }
                   };
 
@@ -339,7 +339,7 @@
                       $('input[name="batch_values"]').val(JSON.stringify(inputs));
                       $('form[id="mainForm"]').submit();
                     } else {
-                      toastr.error("Silahkan input perubahan pada tabel transaksi atau berkas transaksi untuk melakukan penyimpanan. Terima kasih.", "Input tidak boleh kosong.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
+                      toastr.error("Silahkan input perubahan pada tabel transaksi atau berkas transaksi untuk melakukan penyimpanan. Terima kasih.", "Input tidak boleh kosong.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:10e3});
                     }
                   };
                 </script>

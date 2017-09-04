@@ -23,13 +23,15 @@ class PenyesuaianDropping extends Model
         'nominal_dropping',
         'berkas_penyesuaian',
 
-        'SEGMEN#1',
-        'SEGMEN#2',
-        'SEGMEN#3',
-        'SEGMEN#4',
-        'SEGMEN#5',
-        'SEGMEN#6',
+        'SEGMEN_1',
+        'SEGMEN_2',
+        'SEGMEN_3',
+        'SEGMEN_4',
+        'SEGMEN_5',
+        'SEGMEN_6',
         'ACCOUNT'
+
+        //'stat'
     ];
 
     public function creator()

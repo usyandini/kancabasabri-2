@@ -47,6 +47,12 @@
                               <b>Data tarik tunai gagal dikirim. Nominal tarik tunai melebihi dana dropping.</b>
                             </div>
                         </div>
+                        @elseif(session('confirm'))
+                        <div class="col-xs-7">
+                            <div class="alert alert-warning">
+                              <b>Anda sudah melakukan konfirmasi Tarik Tunai, harap menunggu konfirmasi dari Kantor Pusat.</b>
+                            </div>
+                        </div>
                         @endif
 
                         @if (count($errors) > 0)
@@ -136,10 +142,10 @@
                                   </div>
                                   <div class="col-md-12">
                                     <div class="form-group">
-                                      <label for="berkas">Upload berkas tarik tunai</label>
+                                      <label for="berkas">Unggah berkas tarik tunai</label>
                                       <span class="required"> *</span>
                                       <div class="controls">
-                                        <input type="file" class="form-control-file" id="berkas" name="berkas" value="" required>
+                                        <input type="file" class="form-control-file" id="berkas" name="berkas[]" multiple="" value="" required>
                                       </div>
                                     </div>
                                   </div>
@@ -185,7 +191,12 @@
                                               <td>IDR {{ number_format($history->nominal) }}</td>
                                               <td>IDR {{ number_format($history->nominal_tarik) }}</td>
                                               <td>IDR {{ number_format($history->sisa_dropping) }}</td>
-                                              <td><a href="{{ url('dropping/tariktunai/berkas/download').'/'.$history->fileTarikTunai['id'] }}" target="_blank">{{ $history->fileTarikTunai['name'] }}</a></td>
+                                              <td>
+                                              <li><a href="{{ url('dropping/tariktunai/berkas/download').'/'.$history->fileTarikTunai->id }}" target="_blank">{{ $history->fileTarikTunai->name }}</a></li>
+                                              <!-- @foreach($berkas as $value)
+                                                <li><a href="{{ url('dropping/tariktunai/berkas/download').'/'.$value->id }}" target="_blank">{{ $value->name }}</a></li>
+                                              @endforeach -->
+                                              </td>
                                             </tr>
                                           </tbody>
                                           @endforeach

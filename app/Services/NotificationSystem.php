@@ -14,6 +14,7 @@ use App\User;
 // 5 = Submit verifikasi lvl 2 rejected | Reveiver : id batch submitter
 // 6 = Submit verifikasi lvl 2 approved | Receiver : id batch submitter
 // ------------------------------------
+// 7 = Submit verifikasi tarik tunai 
 class NotificationSystem
 {
 	public static function send($id, $type)
@@ -22,8 +23,6 @@ class NotificationSystem
 			case 1:
 				$receiver_id = null;
 				break;
-			case 7:
-				$receiver_id = User::where('id', 5)->first();
 			default:
 				$receiver_id = Batch::where('id', $id)->first()['creator']['id'];
 				break;
