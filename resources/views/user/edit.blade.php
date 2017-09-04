@@ -19,9 +19,7 @@
                                 <ol class="breadcrumb">
                                     <li class="breadcrumb-item"><a href="{{ url('user') }}">Manajemen User</a>
                                     </li>
-                                    <li class="breadcrumb-item active">Edit User
-                                    </li>
-                                    <li class="breadcrumb-item active">{{ $user->name }}
+                                    <li class="breadcrumb-item active">Input User
                                     </li>
                                 </ol>
                             </div>
@@ -31,18 +29,13 @@
                 <div class="content-body">
                     <div class="row">
                         <div class="col-md-6 offset-md-3">
+                        <form class="form" action="{{ url('user').'/'.$user->id }}" method="POST">
+                          {{ csrf_field() }}
+                          {{ method_field('PUT') }}
                           <div class="card">
                             <div class="card-header">
-                              <h4 class="card-title" id="basic-layout-card-center">Edit User</h4>
+                              <h4 class="card-title" id="basic-layout-card-center">Data Dasar</h4>
                               <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
-                              <div class="heading-elements">
-                                <ul class="list-inline mb-0">
-                                  <li><a data-action="collapse"><i class="ft-minus"></i></a></li>
-                                  <li><a data-action="reload"><i class="ft-rotate-cw"></i></a></li>
-                                  <li><a data-action="expand"><i class="ft-maximize"></i></a></li>
-                                  <li><a data-action="close"><i class="ft-x"></i></a></li>
-                                </ul>
-                              </div>
                             </div>
                             <div class="card-body collapse in">
                               <div class="card-block">
@@ -53,37 +46,86 @@
                                         @endforeach
                                     </div>
                                 @endif
-                                <form class="form" action="{{ url('user').'/'.$user->id }}" method="POST">
-                                  {{ csrf_field() }}
-                                  {{ method_field('PUT') }}
                                   <div class="form-body">
                                     <div class="form-group">
                                       <label for="eventRegInput1">Username</label>
-                                      <input type="text" required="" class="form-control" placeholder="Username" name="username" value="{{ old('username') ? old('username') : $user->username }}">
+                                      <input type="text" required="" class="form-control" placeholder="Username" name="username" value="{{ $user->username }}">
                                     </div>
                                     <div class="form-group">
                                       <label for="eventRegInput2">Nama Lengkap</label>
-                                      <input type="text" required="" class="form-control" placeholder="Nama" name="name" value="{{ old('name') ? old('name') : $user->name }}">
+                                      <input type="text" required="" class="form-control" placeholder="Nama" name="name" value="{{ $user->name }}">
                                     </div>
                                     <div class="form-group">
                                       <label for="eventRegInput4">Email</label>
-                                      <input type="email" required="" class="form-control" placeholder="Email" name="email" value="{{ old('email') ? old('email') : $user->email }}">
+                                      <input type="email" required="" class="form-control" placeholder="Email" name="email" value="{{ $user->email }}">
+                                    </div>
+                                    <div class="form-group">
+                                      <label>Cabang</label>
+                                      <select class="select2 form-control" name="cabang">
+                                        <option selected disabled="">Cabang</option>
+                                        @foreach($cabang as $cab)
+                                          <option {{ $user->cabang == $cab->VALUE ? 'selected=""' : '' }} value="{{ $cab->VALUE }}">{{ $cab->DESCRIPTION }}</option>
+                                        @endforeach
+                                      </select>
+                                    </div>
+                                    <div class="form-group">
+                                      <label>Divisi</label>
+                                      <select class="select2 form-control" name="divisi" >
+                                        <option selected disabled="">Divisi</option>
+                                        @foreach($divisi as $div)
+                                          <option {{ $user->divisi == $div->VALUE ? 'selected=""' : '' }} value="{{ $div->VALUE }}">{{ $div->DESCRIPTION }}</option>
+                                        @endforeach
+                                      </select>
                                     </div>
                                     <div class="form-group">
                                       <label>Jadikan administrator?</label>
                                       <div class="input-group">
                                         <label class="display-inline-block custom-control custom-radio ml-1">
-                                          <input type="radio" name="is_admin" class="custom-control-input" value="1" {{ $user->is_admin ? 'checked=""' : '' }}>
+                                          <input type="radio" name="is_admin" class="custom-control-input" value="1" {{ $user->is_admin == 1 ? 'checked=""' : '' }}>
                                           <span class="custom-control-indicator"></span>
                                           <span class="custom-control-description ml-0">Ya</span>
                                         </label>
                                         <label class="display-inline-block custom-control custom-radio">
-                                          <input type="radio" name="is_admin" class="custom-control-input" value="0" {{ $user->is_admin ? '' : 'checked=""' }}>
+                                          <input type="radio" name="is_admin" {{ $user->is_admin == 0 ? 'checked=""' : '' }} class="custom-control-input" value="0">
                                           <span class="custom-control-indicator"></span>
                                           <span class="custom-control-description ml-0">Tidak</span>
                                         </label>
                                       </div>
                                     </div>
+                                  </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="card">
+                            <div class="card-header">
+                              <h4 class="card-title" id="basic-layout-card-center">Pengaturan Perizinan</h4>
+                              <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
+                            </div>
+                            <div class="card-body collapse in">
+                              <div class="card-block">
+                                  <div class="form-group">
+                                    <label>Menu Dropping</label>
+                                    <select class="select2 form-control menu" name="perizinan_dropping[]" multiple="" data-placeholder="Perizinan untuk Menu Dropping">
+                                      <option {{ collect($user->perizinan('dropping'))->contains("1") ? 'selected="selected"' : '' }} value="1">Staff</option>
+                                      <option {{ collect($user->perizinan('dropping'))->contains("2") ? 'selected="selected"' : '' }} value="2">Approver</option>
+                                      <option {{ collect($user->perizinan('dropping'))->contains("4") ? 'selected="selected"' : '' }} value="4">Superuser</option>
+                                    </select>
+                                  </div>
+                                  <div class="form-group">
+                                    <label>Menu Transaksi</label>
+                                    <select class="select2 form-control menu" name="perizinan_transaksi[]" multiple="" data-placeholder="Perizinan untuk Menu Transaksi">
+                                      <option {{ collect($user->perizinan('transaksi'))->contains("1") ? 'selected="selected"' : '' }} value="1">Staff</option>
+                                      <option {{ collect($user->perizinan('transaksi'))->contains("2") ? 'selected="selected"' : '' }} value="2">Approver</option>
+                                      <option {{ collect($user->perizinan('transaksi'))->contains("4") ? 'selected="selected"' : '' }} value="4">Superuser</option>
+                                    </select>
+                                  </div>
+                                  <div class="form-group">
+                                    <label>Menu Anggaran</label>
+                                    <select class="select2 form-control menu" name="perizinan_anggaran[]" multiple="" data-placeholder="Perizinan untuk Menu Anggaran">
+                                      <option {{ collect($user->perizinan('anggaran'))->contains("1") ? 'selected="selected"' : '' }} value="1">Staff</option>
+                                      <option {{ collect($user->perizinan('anggaran'))->contains("2") ? 'selected="selected"' : '' }} value="2">Approver</option>
+                                      <option {{ collect($user->perizinan('anggaran'))->contains("4") ? 'selected="selected"' : '' }} value="4">Superuser</option>
+                                    </select>
                                   </div>
                                   <div class="form-actions center">
                                     <a href="{{ url('user') }}" class="btn btn-warning mr-1">
@@ -93,10 +135,10 @@
                                       <i class="fa fa-check-square-o"></i> Simpan
                                     </button>
                                   </div>
-                                </form>
                               </div>
                             </div>
                           </div>
+                          </form>
                         </div>
                       </div>
                 </div>
@@ -113,4 +155,22 @@
                 <!-- BEGIN PAGE LEVEL JS-->
                 <script type="text/javascript" src="{{ asset('app-assets/js/scripts/ui/breadcrumbs-with-stats.min.js') }}"></script>
                 <!-- END PAGE LEVEL JS-->
+                <script type="text/javascript">
+                $(document).ready(function() {
+                  if ($('select[name="cabang"]').val() == '00') {
+                    $('select[name="divisi"]').prop("disabled", true);
+                    toastr.info("Divisi tidak perlu dipilih jika Kantor Cabang yang dipilih adalah <b>Kantor pusat</b>.", "Kantor Pusat dipilih", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:10e3});
+                  } else {
+                    $('select[name="divisi"]').prop("disabled", false);
+                  }
+                  $('select[name="cabang"]').on('change', function() {
+                    if ($(this).val() == '00') {
+                      $('select[name="divisi"]').prop("disabled", true);
+                      toastr.info("Divisi tidak perlu dipilih jika Kantor Cabang yang dipilih adalah <b>Kantor pusat</b>.", "Kantor Pusat dipilih", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:10e3});
+                    } else {
+                      $('select[name="divisi"]').prop("disabled", false);
+                    }
+                  });
+                });
+                </script>
                 @endsection

@@ -43,7 +43,6 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
-        // dd($request->all());
     	$input = $request->except('_method', '_token');
     	$validator = Validator::make($input, 
             [
@@ -77,22 +76,36 @@ class UserController extends Controller
     public function edit($id)
     {
     	$user = User::withTrashed()->where('id', $id)->first();
-    	return view('user.edit', ['user' => $user]);
+    	return view('user.edit', [
+            'user' => $user, 
+            'cabang' => KantorCabang::get(),
+            'divisi' => Divisi::get()]);
     }
 
     public function update(Request $request, $id)
     {    	
+        // dd($request->all());
     	$input = $request->except('_token' , '_method');
     	$validator = Validator::make($input, 
             [
             	'username'	=> 'required|unique:users,username,'.$id,
-            	'name'	=> 'required',
-                'email' => 'required|email|unique:users,email,'.$id],
+            	'name'	    => 'required',
+                'email'     => 'required|email|unique:users,email,'.$id,
+                'cabang'    => 'required'
+                ],
             [
             	'username.required' => 'Kolom <b>username</b> tidak boleh kosong.',
-                'username.unique' => '<b>Usename</b> yang anda masukkan sudah terdaftar di database sistem.',
-                'email.unique' => '<b>E-mail</b> yang anda masukkan sudah terdaftar di database sistem.']);
+                'username.unique'   => '<b>Usename</b> yang anda masukkan sudah terdaftar di database sistem.',
+                'email.unique'      => '<b>E-mail</b> yang anda masukkan sudah terdaftar di database sistem.',
+                'cabang.required'   => 'Kolom <b>Kantor Cabang</b> tidak boleh kosong.', 
+                'divisi.required'   => 'Kolom <b>Divisi</b> tidak boleh kosong.']);
+
     	if ($validator->passes()) {
+            $input['perizinan_dropping'] = array_sum($input['perizinan_dropping']);
+            $input['perizinan_transaksi'] = array_sum($input['perizinan_transaksi']);
+            $input['perizinan_anggaran'] = array_sum($input['perizinan_anggaran']);
+            $input['updated_by'] = \Auth::user()->id;
+
     		User::where('id', $id)->update($input);
 	    	$user = User::withTrashed()->where('id', $id)->first()->name;
 
