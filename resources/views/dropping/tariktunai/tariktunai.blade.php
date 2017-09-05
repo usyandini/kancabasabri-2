@@ -145,7 +145,7 @@
                                       <label for="berkas">Unggah berkas tarik tunai</label>
                                       <span class="required"> *</span>
                                       <div class="controls">
-                                        <input type="file" class="form-control-file" id="berkas" name="berkas[]" multiple="" value="" required>
+                                        <input type="file" class="form-control-file" id="berkasInput" name="berkas[]" multiple="" required>
                                       </div>
                                     </div>
                                   </div>
@@ -192,7 +192,7 @@
                                               <td>IDR {{ number_format($history->nominal_tarik) }}</td>
                                               <td>IDR {{ number_format($history->sisa_dropping) }}</td>
                                               <td>
-                                              <li><a href="{{ url('dropping/tariktunai/berkas/download').'/'.$history->fileTarikTunai->id }}" target="_blank">{{ $history->fileTarikTunai->name }}</a></li>
+                                              <li><a href="{{ url('dropping/tariktunai/berkas/download').'/'.$history->fileTarikTunai['id'] }}" target="_blank">{{ $history->fileTarikTunai['name'] }}</a></li>
                                               <!-- @foreach($berkas as $value)
                                                 <li><a href="{{ url('dropping/tariktunai/berkas/download').'/'.$value->id }}" target="_blank">{{ $value->name }}</a></li>
                                               @endforeach -->

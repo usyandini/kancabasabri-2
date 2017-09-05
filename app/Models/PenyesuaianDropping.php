@@ -29,9 +29,9 @@ class PenyesuaianDropping extends Model
         'SEGMEN_4',
         'SEGMEN_5',
         'SEGMEN_6',
-        'ACCOUNT'
+        'ACCOUNT',
 
-        //'stat'
+        'stat'
     ];
 
     public function creator()

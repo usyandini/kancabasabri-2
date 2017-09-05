@@ -38,8 +38,12 @@ Route::group(['middleware' => 'auth'], function() {
 		
 		Route::get('/{routes}/berkas/download/{id}', 'DroppingController@downloadBerkas');
 
-		Route::get('/verifikasi/tariktunai/{id}', 'DroppingController@verifikasi');
+		Route::get('/verifikasi/tariktunai/{id}', 'DroppingController@verifikasiTarikTunai');
 		Route::get('/verifikasi/tariktunai/{reaction}/{id}', 'DroppingController@submitVerification');
+
+		Route::get('/verifikasi/penyesuaian/{id}', 'DroppingController@verifikasiPenyesuaian');
+		Route::get('/verifikasi/penyesuaian/final/{id}', 'DroppingController@verifikasiPenyesuaianLv2');
+		Route::get('/verifikasi/penyesuaian/{level}/{reaction}/{id}', 'DroppingController@submitVerificationPenyesuaian');
 
 	    Route::post('/banks/', 'DroppingController@getChainedBank');
 	});

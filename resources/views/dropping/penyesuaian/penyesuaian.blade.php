@@ -36,15 +36,27 @@
                     <div class="row match-height">
                     <div class="row">
                         @if(session('success'))
-                        <div class="col-xs-7">
+                        <div class="col-xs-8">
                             <div class="alert alert-success">
                               <b>Informasi penyesuaian dropping berhasil dikirim.</b>
                             </div>
                         </div>
                         @elseif(session('fail'))
-                        <div class="col-xs-7">
+                        <div class="col-xs-8">
                             <div class="alert alert-warning">
-                              <b>Penyesuaian dropping hanya bisa dilakukan sekali.</b>
+                              <b>Anda sudah melakukan penyesuaian dropping. Harap menunggu verifikasi Kantor Pusat</b>
+                            </div>
+                        </div>
+                        @elseif(session('verifikasi1'))
+                        <div class="col-xs-8">
+                            <div class="alert alert-warning">
+                              <b>Anda sudah melakukan penyesuaian dropping. Telah diverifikasi oleh <i>Bia</i> dan diteruskan ke <i>Akuntansi</i></b>
+                            </div>
+                        </div>
+                        @elseif(session('verifikasi2'))
+                        <div class="col-xs-8">
+                            <div class="alert alert-warning">
+                              <b>Anda sudah melakukan penyesuaian dropping. Penyesuaian dropping hanya bisa dilakukan sekali.</b>
                             </div>
                         </div>
                         @endif
@@ -130,7 +142,7 @@
                       <div class="col-md-6">
                         <div class="card" id="kesesuaian" style="height: 1800px;">
                           <div class="card-header">
-                            <h4 class="card-title" id="basic-layout-colored-form-control">Form Pengembalian/Penambahan dropping</h4>
+                            <h4 class="card-title" id="basic-layout-colored-form-control">Form Penyesuaian Dropping</h4>
                             <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
                             <div class="heading-elements">
                               <ul class="list-inline mb-0">
@@ -152,7 +164,7 @@
                                 <input type="hidden" name="nominal_dropping" value="{{ $dropping->DEBIT }}">
                                 
                                 <div class="form-body">
-                                  <h4 class="form-section"> Pengembalian/Penambahan Dropping</h4>
+                                  <h4 class="form-section"> Penyesuaian Dropping</h4>
                                   <div class="row">
                                     <div class="col-md-12">
                                       <div class="form-group mt-1 pb-1">
@@ -228,49 +240,14 @@
                                   <div class="row">
                                     <div class="col-md-12">
                                       <div class="form-group">
-                                        <label for="berkas">Upload berkas tarik tunai</label>
+                                        <label for="berkas">Upload berkas penyesuaian dropping</label>
                                         <span class="required"> *</span>
                                         <div class="controls">
-                                          <input type="file" class="form-control-file" id="berkas" name="berkas" value="" required>
+                                          <input type="file" class="form-control-file" id="berkas" name="berkas[]" multiple="" required>
                                         </div>
                                       </div>
                                     </div>
                                   </div>
-                                  {{--<h4 class="form-section">History Kesesuaian Dropping</h4>
-                                  <div class="row">
-                                    <div class="col-md-12">
-                                      <div class="form-group">
-                                        <div class="table-responsive">
-                                          <table class="table">
-                                            <thead>
-                                              <tr>
-                                                <th>Tanggal</th>
-                                                <th>Kantor Cabang</th>
-                                                <th>Nominal Penyesuaian</th>
-                                                <th>Status</th>
-                                                <th>Attachment</th>
-                                              </tr>
-                                            </thead>
-                                            <tbody>
-                                              <tr>
-                                                @if(isset($kesesuaian))
-                                                  <td>{{ date('d-m-Y', strtotime($kesesuaian->created_at)) }}</td>
-                                                  <td>{{ $kesesuaian->cabang }}</td>
-                                                  <td>IDR {{ number_format($kesesuaian->nominal) }}</td>
-                                                  @if($kesesuaian->is_pengembalian == 1)
-                                                  <td>Pengembalian</td>
-                                                  @else
-                                                  <td>Penambahan</td>
-                                                  @endif
-                                                  <td><a href="{{ asset('file/penyesuaian').'/'.$history->berkas_penyesuaian }}" target="_blank">{{ $kesesuaian->berkas_penyesuaian }}</a></td>
-                                                @endif
-                                              </tr>
-                                            </tbody>
-                                          </table>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>--}}
                                 </div>
                               </form>
                             </div>
@@ -317,7 +294,11 @@
                                                 @else
                                                 <td>Penambahan</td>
                                                 @endif
-                                                <td><a href="{{ url('dropping/penyesuaian/berkas/download').'/'.$kesesuaian->filePenyesuaian['id'] }}" target="_blank">{{ $kesesuaian->filePenyesuaian['name'] }}</a></td>
+                                                <td>
+                                                @foreach($berkas as $value)
+                                                <li><a href="{{ url('dropping/penyesuaian/berkas/download').'/'.$value->id }}" target="_blank">{{ $value->name }}</a></li>
+                                                @endforeach
+                                                </td>
                                               @endif
                                             </tr>
                                           </tbody>

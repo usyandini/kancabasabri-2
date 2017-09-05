@@ -32,7 +32,7 @@
                             <div class="col-xs-5">
                                 <div class="card">
                                     <div class="card-header">
-                                      <h4 class="card-title">Pencarian Transaksi by Batch</h4>
+                                      <h4 class="card-title">Pencarian Transaksi</h4>
                                       <a class="heading-elements-toggle"><i class="ft-align-justify font-medium-3"></i></a>
                                     </div>
                                     <div class="card-body collapse in">
@@ -67,7 +67,7 @@
                                             @if($filters)
                                             <div class="col-xs-2">
                                               <div class="form-group">
-                                                <a href="{{ url('transaksi') }}" class="btn btn-danger"><i class="fa fa-times"></i> Atur Ulang Pencarianr</a>
+                                                <a href="{{ url('transaksi') }}" class="btn btn-danger"><i class="fa fa-times"></i> Atur Ulang Pencarian</a>
                                               </div>
                                             </div>
                                             @endif
