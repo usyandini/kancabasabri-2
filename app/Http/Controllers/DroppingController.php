@@ -283,13 +283,9 @@ class DroppingController extends Controller
         $akunBank = $this->akunBankModel->get();
         $kesesuaian = PenyesuaianDropping::where([['id_dropping', $id_drop], ['stat', 8]])->first();
         $berkas = [];
-        $berkas = BerkasPenyesuaian::where('id_penyesuaian', $kesesuaian->id)->get();
-        // if($kesesuaian){
-        //     foreach($kesesuaian as $value){
-        //         //$berkas = BerkasTarikTunai::where('id_tariktunai', $this->tarikTunaiModel['id'])->get();   
-                      
-        //     }
-        // }
+        if($kesesuaian){
+            $berkas = BerkasPenyesuaian::where('id_penyesuaian', $kesesuaian->id)->get();
+         }
         //dd($berkas);
         return view('dropping.penyesuaian.penyesuaian', ['dropping' => $dropping, 'kesesuaian' => $kesesuaian, 'kcabangs' => $this->kantorCabangs, 'berkas' => $berkas]); 
     }

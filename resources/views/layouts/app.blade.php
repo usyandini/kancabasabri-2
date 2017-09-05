@@ -112,8 +112,8 @@
                     <li class="nav-item has-sub {{ checkOpenedMenu('transaksi') }}"><a href=""><i class="ft-layout"></i><span data-i18n="" class="menu-title">Transaksi</span></a>
                         <ul class="menu-content">
                             <li class="is-shown {{ checkActiveMenu('transaksi') }}"><a href="{{ url('/transaksi', $parameters = [], $secure = null) }}" class="menu-item">Informasi Transaksi</a>
-                            <li class="is-shown {{ checkActiveMenu('persetujuan') }}"><a href="{{ url('/transaksi/persetujuan', $parameters = [], $secure = null) }}" class="menu-item">Persetujuan Transaksi</a>
-                            <li class="is-shown {{ checkActiveMenu('verifikasi') }}"><a href="{{ url('/transaksi/verifikasi', $parameters = [], $secure = null) }}" class="menu-item">Verifikasi Transaksi</a>
+                            {{--<li class="is-shown {{ checkActiveMenu('persetujuan') }}"><a href="{{ url('/transaksi/persetujuan', $parameters = [], $secure = null) }}" class="menu-item">Persetujuan Transaksi</a>
+                            <li class="is-shown {{ checkActiveMenu('verifikasi') }}"><a href="{{ url('/transaksi/verifikasi', $parameters = [], $secure = null) }}" class="menu-item">Verifikasi Transaksi</a>--}}
                         </ul>
                     </li>
                     @if(\Auth::user()->is_admin)
