@@ -174,6 +174,14 @@
                             <li class="is-shown {{ checkActiveMenu('verifikasi') }}"><a href="{{ url('/transaksi/verifikasi', $parameters = [], $secure = null) }}" class="menu-item">Verifikasi Transaksi</a>
                         </ul>
                     </li>
+                    <li class="nav-item has-sub {{ checkOpenedMenu('anggaran') }}"><a href=""><i class="ft-edit"></i><span data-i18n="" class="menu-title">Anggaran Kegiatan</span></a>
+                        <ul class="menu-content">
+                            <li class="is-shown {{ checkActiveMenu('anggaran') }}"><a href="{{ url('/anggaran', $parameters = [], $secure = null) }}" class="menu-item">Informasi Anggaran</a>
+                            <li class="is-shown {{ checkActiveMenu('persetujuan') }}"><a href="{{ url('/anggaran/persetujuan/333/1', $parameters = [], $secure = null) }}" class="menu-item">Persetujuan Rembang</a>
+                            <li class="is-shown {{ checkActiveMenu('persetujuan') }}"><a href="{{ url('/anggaran/persetujuan/333/2', $parameters = [], $secure = null) }}" class="menu-item">Persetujuan Manajemen</a>
+                            <li class="is-shown {{ checkActiveMenu('persetujuan') }}"><a href="{{ url('/anggaran/riwayat', $parameters = [], $secure = null) }}" class="menu-item">Riwayat Anggaran</a>
+                        </ul>
+                    </li>
                 </ul>
             </div>
         </div>
