@@ -34,6 +34,11 @@
                   <section id ="basic-form-layouts">
                     <div class="row match-height">
                     <div class="row">
+                      <div class="col-xs-5">
+                          <div class="alert alert-info alert-dismissible fade in mb-2" role="alert">
+                            <b>Verifikasi hanya dilakukan oleh user <i>Bia</i></b>
+                          </div>
+                      </div>
                         @if(session('success'))
                         <div class="col-xs-7">
                             <div class="alert alert-success">
