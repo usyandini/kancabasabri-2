@@ -50,7 +50,7 @@
 			                            <th id="filterable" width="200px">Nama Lengkap</th>
 			                            <th id="filterable">Username</th>
 			                            <th id="filterable">Email</th>
-			                            <th>Dibuat pada</th>
+			                            <th id="filterable">Kantor Cabang</th>
 			                            <th>Terakhir diperbarui</th>
 			                            <th>Administrator</th>
 			                            <th id="filterable">Status</th>
@@ -61,29 +61,24 @@
 			                        	@forelse($users as $user)
 			                        		<tr>
 			                        			<td>{!! $user->name !!}</td>
-			                        			<td>{!! $user->username !!}</td>
-			                        			<td>{{ $user->email }}</td>
-			                        			<td>{{ date('Y-m-d, H:m', strtotime($user->created_at)) }}</td>
+			                        			<td>{!! $user->username ? $user->username : '-' !!}</td>
+			                        			<td>{!! $user->email ? $user->email : '-' !!}</td>
+			                        			<td>{!! $user['kantorCabang']['DESCRIPTION'] ? $user['kantorCabang']['DESCRIPTION'] : '-' !!}</td>
 			                        			<td>{{ date('Y-m-d, H:m', strtotime($user->updated_at)) }}</td>
 			                        			<td>{{ $user->is_admin == 1 ? 'Administrator' : '-' }}</td>
 			                        			{!! $user->deleted_at ? '<td class="red">Deleted</td>' : '<td class="blue">Aktif</td>' !!}
 			                        			<td>
 			                        				<a class="btn btn-sm btn-primary" href="{{ url('user').'/'.$user->id }}"><i class="fa fa-info"></i> Detil</a>
-			                        				@if(Auth::user()->id != $user->id)
-				                        				<a class="btn btn-sm btn-danger" href="#" onclick="deleteUser()"><i class="fa fa-times"></i> Hapus</a>
-				                        			@elseif(!$user->deleted_at)
+			                        				@if(!$user->deleted_at)
 			                        					<a class="btn btn-sm btn-primary" href="{{ url('user').'/'.$user->id.'/edit' }}"><i class="fa fa-edit"></i> Edit</a>
 		                        					@endif
+		                        					@if(Auth::user()->id != $user->id && !$user->deleted_at)
+				                        				<a class="btn btn-sm btn-danger" href="#" onclick="deleteUser({{ $user->id }}, false)"><i class="fa fa-times"></i> Hapus</a>
+				                        			@endif
 				                        			@if($user->deleted_at)
-				                        				<a class="btn btn-sm btn-warning" href="#" onclick="restoreUser()"><i class="fa fa-backward"></i> Restore</a>
+				                        				<a class="btn btn-sm btn-warning" href="#" onclick="restoreUser({{ $user->id }})"><i class="fa fa-backward"></i> Restore</a>
+				                        				<a class="btn btn-sm btn-danger" href="#" onclick="deleteUser({{ $user->id }}, true)"><i class="fa fa-times"></i> Hapus permanen</a>
 			                        				@endif
-			                        				<form method="post" action="{{ url('user/restore').'/'.$user->id }}" id="restoreU">
-			                        					{{ csrf_field() }}
-			                        				</form>
-			                        				<form method="post" action="{{ url('user').'/'.$user->id }}" id="deleteU">
-			                        					{{ csrf_field() }}
-			                        					<input type="hidden" name="_method" value="delete">
-			                        				</form>
 		                        				</td>
 			                        		</tr>
 			                        	@empty
@@ -94,7 +89,7 @@
 			                          	<th>Nama Lengkap</th>
 			                            <th>Username</th>
 			                            <th>Email</th>
-			                            <th></th>
+			                            <th>Kantor Cabang</th>
 			                            <th></th>
 			                            <th></th>
 			                            <th>Deleted</th>
@@ -102,6 +97,14 @@
 			                          </tr>
 			                        </tfoot>
 			                      </table>
+			                      <form method="post" action="#" id="restoreU">
+                					 {{ csrf_field() }}
+	                			  </form>
+	                			  <form method="post" action="#" id="deleteU">
+                					 {{ csrf_field() }}
+                					 {{ method_field('DELETE') }}
+                					 <input type="hidden" name="is_force" value="0">
+                				   </form>
 			                    </div>
 			                  </div>
 			                </div>
@@ -127,12 +130,23 @@
 				<script src="{{ asset('app-assets/vendors/js/tables/datatable/dataTables.responsive.min.js') }}"
 				  type="text/javascript"></script>
 				<script type="text/javascript">
-					function deleteUser() {
-						$('form[id="deleteU"').submit();
+					function deleteUser(id, is_force) {
+						if (is_force == true) {
+							$('input[name="is_force"]').val('1');
+						}
+						$('form[id="deleteU"').attr('action', '{{ url('user') }}' + '/' + id);
+						var con = confirm("Apakah anda yakin untuk menghapus user ini?");
+						if (con) {
+							$('form[id="deleteU"').submit();	
+						}
 					}
 
-					function restoreUser() {
-						$('form[id="restoreU"').submit();
+					function restoreUser(id) {
+						$('form[id="restoreU"').attr('action', '{{ url('user/restore') }}' + '/' + id);
+						var con = confirm("Apakah anda yakin untuk melakukan restore user ini?");
+						if (con) {
+							$('form[id="restoreU"').submit();	
+						}
 					}
 					$('.datatable-select-inputs').DataTable( {
 							scrollX: true,

@@ -14,7 +14,7 @@
 Route::auth();
 Route::group(['middleware' => 'guest'], function() {
 	Route::get('/', 'Auth\AuthController@showLoginForm'); 
-	Route::get('/login', 'Auth\AuthController@postLogin');
+	Route::get('/login', 'Auth\AuthController@showLoginForm');
 });
 
 Route::group(['middleware' => 'auth'], function() {
