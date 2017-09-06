@@ -391,6 +391,18 @@
                     }
                   };*/
 
+                  function forms_submit() {
+                    var num = document.getElementById('p_nominal').value;
+                      var val = parseFloat(num.replace(/,/g, ''));
+                      var mod = val%100
+
+                      if(mod != 0 || val < 100){
+                        alert("Nominal tidak valid. Silahkan input nominal kembali.");
+                      }else{
+                        document.getElementById("kesesuaian-form").submit();
+                      }
+                  };
+
                   function addCommas(n){
                       var rx=  /(\d+)(\d{3})/;
                       return String(n).replace(/^\d+/, function(w){
@@ -440,10 +452,6 @@
                       document.getElementById("judul_kesesuaian").innerHTML = '<h4 class="form-section"> Informasi Pengembalian</h4>';
                       document.getElementById("confirmation-msg").innerHTML = '<p>Apakah anda yakin dengan <b>data pengembalian dropping</b> yang anda input sudah benar?</p>';
                     }
-                  };
-
-                  function forms_submit() {
-                    document.getElementById("kesesuaian-form").submit();
                   };
 
                   $('select.kcabang').on('change', function(){

@@ -50,7 +50,7 @@
                         @elseif(session('confirm'))
                         <div class="col-xs-7">
                             <div class="alert alert-warning">
-                              <b>Anda sudah melakukan konfirmasi Tarik Tunai, harap menunggu konfirmasi dari Kantor Pusat.</b>
+                              <b>Anda sudah melakukan konfirmasi Tarik Tunai, harap menunggu verifikasi dari Kantor Pusat.</b>
                             </div>
                         </div>
                         @endif
@@ -279,7 +279,15 @@
 
                 <script type="text/javascript">
                   function forms_submit() {
-                      document.getElementById("tariktunai-form").submit();
+                      var num = document.getElementById('nominal_tarik').value;
+                      var val = parseFloat(num.replace(/,/g, ''));
+                      var mod = val%100
+
+                      if(mod != 0 || val < 100){
+                        alert("Nominal tidak valid. Silahkan input nominal kembali.");
+                      }else{
+                        document.getElementById("tariktunai-form").submit();
+                      }
                   };
 
                   // insert commas as thousands separators 

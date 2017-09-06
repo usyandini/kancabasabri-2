@@ -185,7 +185,9 @@ class DroppingController extends Controller
         if($tariktunai){
             foreach($tariktunai as $value){
                 //$berkas = BerkasTarikTunai::where('id_tariktunai', $this->tarikTunaiModel['id'])->get();   
-                $berkas = BerkasTarikTunai::where('id_tariktunai', $value->id)->get();      
+                $berkas = BerkasTarikTunai::where('id_tariktunai', $value->id)->get();    
+                
+                //$berkas = $tariktunai->fileTarikTunai;  
             }
         }
 
