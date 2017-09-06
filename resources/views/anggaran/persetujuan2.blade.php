@@ -93,7 +93,7 @@
                                     <div id="basicScenario"></div>
                                     <input type="hidden" name="setuju" id="setuju" >
                                     <br />
-                                    <div class="row col-xs-12" id="grup_r" style="display:{{$display['rembang']}}">
+                                    <div class="row col-xs-12" id="grup_r" style="display:none">
 
                                       <div class="col-xs-6 ">
                                         <div class="col-xs-4 ">
@@ -115,13 +115,13 @@
                                         <div class="col-xs-3 pull-right">
                                           <div class="form-group">
                                             <!-- <button type="submit" class="btn btn-success"><i class="fa fa-send"></i> Kirim</button> -->
-                                            <div id="send_r" name="send_r" class="btn btn-success"><i class="fa fa-send"></i> Kirim</div>
+                                            <div id="send_r" name="send_r" class="btn btn-success" style="display:none"><i class="fa fa-send"></i> Kirim</div>
                                           </div>
                                         </div>
                                         <div class="col-xs-3 pull-right">
                                           <div class="form-group">
                                             <!-- <button type="submit" class="btn btn-warning"><i class="fa fa-edit"></i> Edit</button> -->
-                                            <a href="{{url('anggaran/persetujuan/'.$filters['nd_surat'].'/4')}}" id="edit_r" name="edit_r"  class="btn btn-warning"><i class="fa fa-edit"></i> Edit</a>
+                                            <a href="{{url('anggaran/persetujuan/'.$filters['nd_surat'].'/3')}}" id="edit_r" name="edit_r"  class="btn btn-warning"><i class="fa fa-edit"></i> Edit</a>
                                             <div style="display:none" onclick="saveAnggaran()" id="save_r" name="save_r"  class="btn btn-primary"><i class="fa fa-save"></i> Simpan</div>
                                           
                                           </div>
@@ -129,7 +129,7 @@
                                       </div>
                                     </div>
 
-                                    <div class="row col-xs-12" id="grup_m" style="display:{{$display['manajemen']}}">
+                                    <div class="row col-xs-12" id="grup_m" style="display:none">
 
                                       <div class="col-xs-6 ">
                                         <div class="form-group">
@@ -790,27 +790,44 @@
                       $.ajax({
                           'async': false, 'type': "GET", 'dataType': 'JSON', 'url': "{{ url('anggaran/get/filtered/') }}/"+nd_surat+"/anggaran",
                           'success': function (data) {
+
+                              var persetujuan = status_anggaran = "";
+                              switch(data[0].persetujuan){
+                                case "-1" : persetujuan="";break;
+                                case "0" : persetujuan="Kirim";break;
+                                case "1" : persetujuan="Persetujuan Kanit Kerja";break;
+                                case "2" : persetujuan="Persetujuan Renbang";break;
+                                case "3" : persetujuan="Persetujuan Direksi";break;
+                                case "4" : persetujuan="Persetujuan Dekom";break;
+                                case "5" : persetujuan="Persetujuan Ratek";break;
+                                case "6" : persetujuan="Persetujuan RUPS";break;
+                                case "7" : persetujuan="Persetujuan FinRUPS";break;
+                                case "8" : persetujuan="Persetujuan Risalah RUPS";break;
+                                case "89" : persetujuan="Disetujuai dan Ditandatangani";break;
+                              }
+                              switch(data[0].status_anggaran){
+                                case "1" : status_anggaran="Draft";break;
+                                case "2" : status_anggaran="Transfer";break;
+                                case "3" : status_anggaran="Complete";break;
+                              }
                               var tgl = data[0].tanggal;
                               var tgl_split = tgl.split("-");
                               document.getElementById("nd_surat").value = nd_surat;
-                              document.getElementById("stat_anggaran").value = data[0].status_anggaran;
-                              document.getElementById("persetujuan").value = data[0].persetujuan;
+                              document.getElementById("stat_anggaran").value = status_anggaran;
+                              document.getElementById("persetujuan").value = persetujuan;
                               document.getElementById("tipe_anggaran").value = data[0].tipe_anggaran;
                               document.getElementById("unit_kerja").value = data[0].unit_kerja;
                               document.getElementById("tanggal").value = tgl_split[2]+"/"+tgl_split[1]+"/"+tgl_split[0];
-                              if(data[0].persetujuan == "Disetujui dan Ditandatangani"||data[0].persetujuan == ""){
+                              if(data[0].persetujuan == "9"||data[0].persetujuan == "-1"){
                                 document.getElementById("grup_m").style.display="none";
                                 document.getElementById("grup_r").style.display="none";
-                              }else if(data[0].persetujuan =="Persetujuan Renbang"){
+                              }else if(data[0].persetujuan =="1"){
                                 document.getElementById("grup_m").style.display="none";
                                 document.getElementById("grup_r").style.display="block";
                               }else{
                                 document.getElementById("grup_m").style.display="block";
                                 document.getElementById("grup_r").style.display="none";
                               }
-                              // alert(editableStat);
-
-                                // alert({{$reject}});
                               if(editableStat){
                                 document.getElementById("accept_r").style.display="none";
                                 document.getElementById("download_r").style.display="none";
@@ -915,22 +932,21 @@
 
                   function changeButton(status){
                     if(status == 'setuju'){
-                      // setTimeout(function() {
-                        // document.getElementById("send_r").setAttribute("onclick", acceptAnggaran());
-                      // }, 3000);
                       document.getElementById("send_r").addEventListener("click", function(event) {
                         acceptAnggaran();
                         event.preventDefault();
                       });
-                      document.getElementById("accept_r").style.display="block";
-                      document.getElementById("edit_r").style.display="block";
-                      var edit_href = document.getElementById('edit_r'); //or grab it by tagname etc
-                        edit_href.href = "{{url('anggaran/persetujuan/'.$filters['nd_surat'].'/3')}}"
-                    }else if(status == 'edit'){
-                      document.getElementById("send_r").setAttribute("onclick", rejectAnggaran());
                       document.getElementById("accept_r").style.display="none";
                       document.getElementById("edit_r").style.display="block";
+                      document.getElementById("send_r").style.display="block";
+                      var edit_href = document.getElementById('edit_r'); //or grab it by tagname etc
+                        edit_href.href = "{{url('anggaran/persetujuan/'.$filters['nd_surat'].'/2')}}"
                     }
+                    // else if(status == 'edit'){
+                    //   document.getElementById("send_r").setAttribute("onclick", rejectAnggaran());
+                    //   document.getElementById("accept_r").style.display="none";
+                    //   document.getElementById("edit_r").style.display="block";
+                    // }
                     
                   }
 

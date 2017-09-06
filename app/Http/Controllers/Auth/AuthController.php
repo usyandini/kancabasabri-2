@@ -5,8 +5,11 @@ namespace App\Http\Controllers\Auth;
 use App\User;
 use Validator;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
+use Adldap\Laravel\Facades\Adldap;
+
 
 class AuthController extends Controller
 {
@@ -29,7 +32,8 @@ class AuthController extends Controller
      * @var string
      */
     protected $redirectTo = '/dropping';
-    protected $loginPath  = '/login';
+    protected $loginPath  = '/';
+    protected $username = 'username';
 
     /**
      * Create a new authentication controller instance.
@@ -73,5 +77,34 @@ class AuthController extends Controller
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
         ]);
+    }
+
+    public function login(Request $request)
+    {
+        $credentials = $request->only('username', 'password');
+        $username = $credentials['username'];
+        $password = $credentials['password'];
+        
+        if(Adldap::auth()->attempt($username, $password, $bindAsUser = true)) {
+            if (strpos($username, '@') != false) {
+                $exp = explode('@', $username);
+                $username = $exp[0];
+            } 
+
+            $user = \App\User::where('username', $username)->first();
+            if ( !$user ) {
+                $new = ['username' => $username, 'name' => $username, 'password' => bcrypt($password)];
+                $user = User::create($new);
+            } 
+
+            \Auth::login($user);
+            return redirect()->intended('/');
+        } elseif (\Auth::attempt(['username' => $username, 'password' => $password])) {
+            $user = \App\User::where('username', $username)->first();
+            \Auth::login($user);
+            return redirect()->intended('/');
+        }
+        
+        return redirect()->back()->withInput()->withErrors(['username' => '<b>Username atau password tidak cocok.</b> Silahkan coba lagi.']);
     }
 }

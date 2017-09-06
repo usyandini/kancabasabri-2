@@ -78,64 +78,6 @@
                                   </h6>
                                 </li>
                                 <li class="list-group scrollable-container" id="notifList">
-                                  {{-- <a href="javascript:void(0)" class="list-group-item">
-                                    <div class="media">
-                                      <div class="media-left valign-middle"><i class="ft-plus-square icon-bg-circle bg-cyan"></i></div>
-                                      <div class="media-body">
-                                        <h6 class="media-heading">You have new order!</h6>
-                                        <p class="notification-text font-small-3 text-muted">Lorem ipsum dolor sit amet, consectetuer elit.</p>
-                                        <small>
-                                          <time datetime="2015-06-11T18:29:20+08:00" class="media-meta text-muted">30 minutes ago</time>
-                                        </small>
-                                      </div>
-                                    </div>
-                                  </a>
-                                  <a href="javascript:void(0)" class="list-group-item">
-                                    <div class="media">
-                                      <div class="media-left valign-middle"><i class="ft-download-cloud icon-bg-circle bg-red bg-darken-1"></i></div>
-                                      <div class="media-body">
-                                        <h6 class="media-heading red darken-1">99% Server load</h6>
-                                        <p class="notification-text font-small-3 text-muted">Aliquam tincidunt mauris eu risus.</p>
-                                        <small>
-                                          <time datetime="2015-06-11T18:29:20+08:00" class="media-meta text-muted">Five hour ago</time>
-                                        </small>
-                                      </div>
-                                    </div>
-                                  </a>
-                                  <a href="javascript:void(0)" class="list-group-item">
-                                    <div class="media">
-                                      <div class="media-left valign-middle"><i class="ft-alert-triangle icon-bg-circle bg-yellow bg-darken-3"></i></div>
-                                      <div class="media-body">
-                                        <h6 class="media-heading yellow darken-3">Warning notifixation</h6>
-                                        <p class="notification-text font-small-3 text-muted">Vestibulum auctor dapibus neque.</p>
-                                        <small>
-                                          <time datetime="2015-06-11T18:29:20+08:00" class="media-meta text-muted">Today</time>
-                                        </small>
-                                      </div>
-                                    </div>
-                                  </a>
-                                  <a href="javascript:void(0)" class="list-group-item">
-                                    <div class="media">
-                                      <div class="media-left valign-middle"><i class="ft-check-circle icon-bg-circle bg-cyan"></i></div>
-                                      <div class="media-body">
-                                        <h6 class="media-heading">Complete the task</h6>
-                                        <small>
-                                          <time datetime="2015-06-11T18:29:20+08:00" class="media-meta text-muted">Last week</time>
-                                        </small>
-                                      </div>
-                                    </div>
-                                  </a>
-                                  <a href="javascript:void(0)" class="list-group-item">
-                                    <div class="media">
-                                      <div class="media-left valign-middle"><i class="ft-file icon-bg-circle bg-teal"></i></div>
-                                      <div class="media-body">
-                                        <h6 class="media-heading">Generate monthly report</h6>
-                                        <small>
-                                          <time datetime="2015-06-11T18:29:20+08:00" class="media-meta text-muted">Last month</time>
-                                        </small>
-                                      </div>
-                                    </div>
-                                  </a> --}}
                                 </li>
                                 <li class="dropdown-menu-footer"><a href="javascript:void(0)" class="dropdown-item text-muted text-xs-center">Read all notifications</a></li>
                               </ul>
@@ -162,7 +104,7 @@
                     <li class="navigation-header">
                     </li>
                     <li class="navigation-header">
-                        <span >Main Menus</span><i data-toggle="tooltip" data-placement="right" data-original-title="General"
+                        <span >Menu Utama</span><i data-toggle="tooltip" data-placement="right" data-original-title="General"
                                                class=" ft-minus"></i>
                     </li>
                     <li class="nav-item {{ checkActiveMenu('dropping') }}"><a href="{{ url('/dropping', $parameters = [], $secure = null) }}"><i class="ft-box"></i><span data-i18n="" class="menu-title">Dropping</span></a>
@@ -170,10 +112,11 @@
                     <li class="nav-item has-sub {{ checkOpenedMenu('transaksi') }}"><a href=""><i class="ft-layout"></i><span data-i18n="" class="menu-title">Transaksi</span></a>
                         <ul class="menu-content">
                             <li class="is-shown {{ checkActiveMenu('transaksi') }}"><a href="{{ url('/transaksi', $parameters = [], $secure = null) }}" class="menu-item">Informasi Transaksi</a>
-                            <li class="is-shown {{ checkActiveMenu('persetujuan') }}"><a href="{{ url('/transaksi/persetujuan', $parameters = [], $secure = null) }}" class="menu-item">Persetujuan Transaksi</a>
-                            <li class="is-shown {{ checkActiveMenu('verifikasi') }}"><a href="{{ url('/transaksi/verifikasi', $parameters = [], $secure = null) }}" class="menu-item">Verifikasi Transaksi</a>
+                            {{--<li class="is-shown {{ checkActiveMenu('persetujuan') }}"><a href="{{ url('/transaksi/persetujuan', $parameters = [], $secure = null) }}" class="menu-item">Persetujuan Transaksi</a>
+                            <li class="is-shown {{ checkActiveMenu('verifikasi') }}"><a href="{{ url('/transaksi/verifikasi', $parameters = [], $secure = null) }}" class="menu-item">Verifikasi Transaksi</a>--}}
                         </ul>
                     </li>
+
                     <li class="nav-item has-sub {{ checkOpenedMenu('anggaran') }}"><a href=""><i class="ft-edit"></i><span data-i18n="" class="menu-title">Anggaran Kegiatan</span></a>
                         <ul class="menu-content">
                             <li class="is-shown {{ checkActiveMenu('anggaran') }}"><a href="{{ url('/anggaran', $parameters = [], $secure = null) }}" class="menu-item">Informasi Anggaran</a>
@@ -182,6 +125,16 @@
                             <li class="is-shown {{ checkActiveMenu('persetujuan') }}"><a href="{{ url('/anggaran/riwayat', $parameters = [], $secure = null) }}" class="menu-item">Riwayat Anggaran</a>
                         </ul>
                     </li>
+
+                    @if(\Auth::user()->is_admin)
+                        <li class="nav-item has-sub {{ checkActiveMenu('user') }}"><a href=""><i class="ft-user"></i><span data-i18n="" class="menu-title">Manajemen User</span></a>
+                        <ul class="menu-content">
+                            <li class="is-shown {{ checkActiveMenu('user') }}"><a href="{{ url('/user', $parameters = [], $secure = null) }}" class="menu-item">Informasi User</a>
+                            <li class="is-shown {{ checkActiveMenu('create') }}"><a href="{{ url('/user/create', $parameters = [], $secure = null) }}" class="menu-item">Tambah User</a>
+                            <li class="is-shown {{ checkActiveMenu('persetujuan') }}"><a href="{{ url('/user', $parameters = [], $secure = null) }}" class="menu-item">Informasi Cabang dan Divisi</a>
+                        </ul>
+                    @endif
+
                 </ul>
             </div>
         </div>

@@ -34,6 +34,26 @@ class FileUpload
 		return $results;
 	}
 
+
+	public function base64Uploads($inputs)
+	{
+		$results = [];
+		if(isset($inputs)){
+			foreach ($inputs as $value){
+				$results[] = [
+					'name' => $value->getClientOriginalName(),
+					'size' => $value->getClientSize(),
+					'type' => $value->getClientMimeType(),
+					'data' => base64_encode(file_get_contents($value)),
+					'created_at' => \Carbon\Carbon::now(), 
+					'updated_at' => \Carbon\Carbon::now()
+				];
+			}
+		}
+		return $results;
+	}
+
+
 	public function multipleBase64Upload($inputs)
 	{
 		$results = [];

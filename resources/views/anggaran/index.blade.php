@@ -782,8 +782,6 @@
                                   var twiv_val = $(twiv_field).val() == "" ? 0:parseInt($(twiv_field).val());
                                   var anggaran_val = parseInt($(anggarant_field).val());
                                   var sum = twi_val+twii_val+twiii_val+twiv_val;
-                                  // alert(sum+"=="+anggaran_val);
-                                  // return (twi_val+twii_val)+" dan "+ anggaran_val;
                                   return  "Jumlah Anggaran yang di minta di semua periode "+ (sum > anggaran_val ? status1: status2)+" dari Anggaran Setahun" ;
                               },
                               validator :function(value, item) {
@@ -840,7 +838,7 @@
                                 jumlah_file = upload_file.length;
                                 for(i=1; i <= upload_file.length;i++){
 
-                                  readerPrev(i);
+                                  readerPrev(i,tempIdCounter);
                                   
                                 }
 
@@ -880,6 +878,7 @@
                   });
 
                   function readerPrev(index, tempIdCount){
+                    tempIdCount++;
                     var reader = new FileReader();
                     reader.readAsDataURL(upload_file[index-1]);
                     reader.onload = function () {
@@ -950,14 +949,33 @@
                           'async': false, 'type': "GET", 'dataType': 'JSON', 'url': "{{ url('anggaran/get/filtered/') }}/"+nd_surat+"/anggaran",
                           'success': function (data) {
                               // alert(document.getElementById("stat_anggaran").value);
+                                var persetujuan = status_anggaran = "";
+                                switch(data[0].persetujuan){
+                                  case "-1" : persetujuan="";break;
+                                  case "0" : persetujuan="Kirim";break;
+                                  case "1" : persetujuan="Persetujuan Kanit Kerja";break;
+                                  case "2" : persetujuan="Persetujuan Renbang";break;
+                                  case "3" : persetujuan="Persetujuan Direksi";break;
+                                  case "4" : persetujuan="Persetujuan Dekom";break;
+                                  case "5" : persetujuan="Persetujuan Ratek";break;
+                                  case "6" : persetujuan="Persetujuan RUPS";break;
+                                  case "7" : persetujuan="Persetujuan FinRUPS";break;
+                                  case "8" : persetujuan="Persetujuan Risalah RUPS";break;
+                                  case "89" : persetujuan="Disetujuai dan Ditandatangani";break;
+                                }
+                                switch(data[0].status_anggaran){
+                                  case "1" : status_anggaran="Draft";break;
+                                  case "2" : status_anggaran="Transfer";break;
+                                  case "3" : status_anggaran="Complete";break;
+                                }
                                 var tgl = data[0].tanggal;
                                 var tgl_split = tgl.split("-");
                                 document.getElementById("nd_surat").value = nd_surat;
-                                document.getElementById("stat_anggaran").value = data[0].status_anggaran;
-                                document.getElementById("persetujuan").value = data[0].persetujuan;
+                                document.getElementById("stat_anggaran").value = status_anggaran;
+                                document.getElementById("persetujuan").value = persetujuan;
                                 document.getElementById("tipe_anggaran").value = data[0].tipe_anggaran;
                                 document.getElementById("tanggal").value = tgl_split[2]+"/"+tgl_split[1]+"/"+tgl_split[0];
-                                if(data[0].status_anggaran != "Draft"&&data[0].persetujuan !="Persetujuan Renbang"){
+                                if(data[0].status_anggaran != "1"&&data[0].persetujuan !="2"){
                                   document.getElementById("edit_button").style.display = "none";
                                   document.getElementById("save_button").style.display = "none";
                                   document.getElementById("send_button").style.display = "none";

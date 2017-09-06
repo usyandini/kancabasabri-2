@@ -34,7 +34,7 @@ return [
             |
             */
 
-            'auto_connect' => true,
+            'auto_connect' => false,
 
             /*
             |--------------------------------------------------------------------------
@@ -187,8 +187,8 @@ return [
                 |
                 */
 
-                'admin_username' => env('ADLDAP_ADMIN_USERNAME', 'username'),
-                'admin_password' => env('ADLDAP_ADMIN_PASSWORD', 'password'),
+                'admin_username' => env('ADLDAP_ADMIN_USERNAME', ''),
+                'admin_password' => env('ADLDAP_ADMIN_PASSWORD', ''),
 
                 /*
                 |--------------------------------------------------------------------------
@@ -204,7 +204,7 @@ return [
                 |
                 */
 
-                'follow_referrals' => false,
+                'follow_referrals' => true,
 
                 /*
                 |--------------------------------------------------------------------------

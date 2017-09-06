@@ -7,7 +7,7 @@
         <meta name="description" content="Stack admin is super flexible, powerful, clean &amp; modern responsive bootstrap 4 admin template with unlimited possibilities.">
         <meta name="keywords" content="admin template, stack admin template, dashboard template, flat admin template, responsive admin template, web app">
         <meta name="author" content="PIXINVENT">
-        <title>Aplikasi Kantor Cabang PT. Asabri (Persero)</title>
+        <title>Aplikasi Keuangan Kantor Cabang PT. Asabri (Persero)</title>
         <link rel="apple-touch-icon" href="{{ asset('app-assets/images/ico/apple-icon-120.png') }}">
         <link rel="shortcut icon" type="image/x-icon" href="app-assets/images/ico/favicon.ico">
         <link href="https://fonts.googleapis.com/css?family=Montserrat:300,300i,400,400i,500,500i%7COpen+Sans:300,300i,400,400i,600,600i,700,700i" rel="stylesheet">
@@ -50,16 +50,23 @@
                                 </div>
                                 <div class="card-body collapse in">
                                     <div class="card-block">
+                                        @if($errors->all())
+                                        <div class="alert alert-danger">
+                                            @foreach($errors->all() as $err)
+                                                {!! $err.'<br>' !!}
+                                            @endforeach
+                                        </div>
+                                        @endif
                                         <form class="form-horizontal form-simple" method="POST" action="{{ url('login') }}" novalidate>
                                         	{{ csrf_field() }}
                                             <fieldset class="form-group position-relative has-icon-left mb-0">
-                                                <input type="email" name="email" value="{{ old('email', $default = null) }}" class="form-control form-control-lg input-lg" id="user-name" placeholder="Your E-mail" required>
+                                                <input type="text" name="username" value="{{ old('email', $default = null) }}" class="form-control form-control-lg input-lg" id="user-name" placeholder="Username anda" required>
                                                 <div class="form-control-position">
                                                     <i class="ft-user"></i>
                                                 </div>
                                             </fieldset>
                                             <fieldset class="form-group position-relative has-icon-left">
-                                                <input type="password" name="password" class="form-control form-control-lg input-lg" id="user-password" placeholder="Enter Password" required>
+                                                <input type="password" name="password" class="form-control form-control-lg input-lg" id="user-password" placeholder="Masukkan password" required>
                                                 <div class="form-control-position">
                                                     <i class="fa fa-key"></i>
                                                 </div>

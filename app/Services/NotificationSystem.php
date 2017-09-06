@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Notification;
 use App\Models\Batch;
+use App\User;
 
 // ---------------- Types -------------
 // 1 = Submit verifikasi lvl 1 | Receiver : null (All Kasmin)
@@ -13,6 +14,7 @@ use App\Models\Batch;
 // 5 = Submit verifikasi lvl 2 rejected | Reveiver : id batch submitter
 // 6 = Submit verifikasi lvl 2 approved | Receiver : id batch submitter
 // ------------------------------------
+// 7 = Submit verifikasi tarik tunai 
 class NotificationSystem
 {
 	public static function send($id, $type)
@@ -29,7 +31,7 @@ class NotificationSystem
 		$data = array('batch_id' => $id, 'type' => $type, 'receiver_id' => $receiver_id);
 		Notification::create($data);
 
-		if ($type == 3 ) $this->sendAlso($id, 4);
+		if ($type == 3 ) static::sendAlso($id, 4);
 	}
 
 	public static function sendAlso($id, $type)

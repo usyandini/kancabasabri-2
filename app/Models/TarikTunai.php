@@ -20,7 +20,17 @@ class TarikTunai extends Model
     	'tgl_dropping',
         'nominal_tarik',
         'sisa_dropping',
-        'berkas_tariktunai'
+        'berkas_tariktunai',
+
+        'SEGMEN_1',
+        'SEGMEN_2',
+        'SEGMEN_3',
+        'SEGMEN_4',
+        'SEGMEN_5',
+        'SEGMEN_6',
+        'ACCOUNT',
+
+        'stat'
     ];
 
     public function creator()
@@ -28,8 +38,10 @@ class TarikTunai extends Model
     	return $this->belongsTo('App\User', 'created_by', 'id');
     }
 
-    /*public function kesesuaianDropping()
+    
+
+    public function fileTarikTunai()
     {
-        return $this->hasOne('App\Models\PenyesuaianDropping', 'id', 'id_penyesuaian');
-    }*/
+        return $this->hasOne('App\Models\BerkasTarikTunai', 'id_tariktunai', 'id');
+    }
 }

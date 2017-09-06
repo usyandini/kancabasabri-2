@@ -16,6 +16,7 @@ class BerkasTransaksi extends Model
 
     protected $fillable = [
     	'batch_id',
-    	'file_name'
+    	'file_name',
+    	'file'
     ];   
 }

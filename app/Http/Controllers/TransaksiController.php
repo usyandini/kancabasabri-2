@@ -266,24 +266,37 @@ class TransaksiController extends Controller
     {
         if ($inputs[0] != null) {
             $fileUpload = new FileUpload();
-            $newNames = $fileUpload->multipleUpload($inputs, 'transaksi');
-
-            $store = array();
-            foreach (explode('||', $newNames) as $value) {
-                array_push($store, ['file_name' => $value, 'batch_id' => $current_batch, 'created_at' => \Carbon\Carbon::now(), 'updated_at' => \Carbon\Carbon::now()]);
+            $store = $fileUpload->multipleBase64Upload($inputs);
+            foreach ($store as $key => $value) {
+                $value['batch_id'] = $current_batch;
+                BerkasTransaksi::insert($value);
             }
+        }
+    }
 
-            BerkasTransaksi::insert($store);
+    public function downloadBerkas($berkas_id)
+    {
+        $berkas = BerkasTransaksi::where('id', $berkas_id)->first();
+        $decoded = base64_decode($berkas->file);
+        $mime_type = explode('/', finfo_buffer(finfo_open(), $decoded, FILEINFO_MIME_TYPE)) ;
+        $file = $berkas->file_name.'.'.$mime_type[1];
+        file_put_contents($file, $decoded);
+
+        if (file_exists($file)) {
+            header('Content-Description: File Transfer');
+            header('Content-Type: application/octet-stream');
+            header('Content-Disposition: attachment; filename="'.basename($file).'"');
+            header('Expires: 0');
+            header('Cache-Control: must-revalidate');
+            // header('Pragma: public');
+            header('Content-Length: ' . filesize($file));
+            readfile($file);
+            exit;
         }
     }
 
     public function removeBerkas(Request $request)
     {
-        $file_path = public_path('file/transaksi/'.$request->file_name);
-        if (\File::exists($file_path)) {
-            unlink($file_path);
-        }
-
         BerkasTransaksi::where('id', $request->file_id)->delete();
 
         session()->flash('success_deletion', $request->file_name);

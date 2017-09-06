@@ -13,6 +13,34 @@ use App\Models\Divisi;
 use App\Models\KantorCabang;
 
 use App\Services\FileUpload;
+/**
+*
+*-------Status Data :----------
+*1 = "Tambah"
+*2 = "Edit"
+*3 = "Kirim"
+*4 = "Setuju"
+*5 = "Tolak"
+*
+*-------Status Anggaran :----------
+*1 = "Draft"
+*2 = "Transfer"
+*3 = "Complete"
+*
+*-------LVL Persetujuan :----------
+*-1 = ""
+*0 = "Kirim"
+*1 = "Persetujuan Kanit Kerja"
+*2 = "Persetujuan Renbang"
+*3 = "Persetujuan Direksi"
+*4 = "Persetujuan Dekom"
+*5 = "Persetujuan Ratek"
+*6 = "Persetujuan RUPS"
+*7 = "Persetujuan FinRUPS"
+*8 = "Persetujuan Risalah RUPS"
+*9 = "Disetujui dan Ditandatangani"
+*
+*/
 
 class AnggaranController extends Controller
 {
@@ -118,33 +146,21 @@ class AnggaranController extends Controller
     public function persetujuan_anggaran($nd_surat,$status) 
     {
         $editable = false;
-        $displayRembang = 'none';
-        $displayManajemen = 'block';
         $reject = false;
-        if($status == '1'){
-            $displayRembang = 'block';
-            $displayManajemen = 'none';
-        }else if($status == '3'||$status == '4'){
-            $displayRembang = 'block';
-            $displayManajemen = 'none';
+        if($status == '2'||$status == '3'){
             $editable = true;
-            if($status == '4'){
+            if($status == '3'){
                 $reject = true;
             }
 
         }
-
-
-
         return view('anggaran.persetujuan2', [
             'title' => 'Persetujuan Kegiatan dan Anggaran',
             'userCabang' =>$this->userCabang,
             'userDivisi' =>$this->userDivisi,
             'reject' => $reject,
             'editable' => $editable , 
-            'filters' => array('nd_surat' => $nd_surat),
-            'display' => array('rembang' => $displayRembang,
-                    'manajemen' => $displayManajemen)]);
+            'filters' => array('nd_surat' => $nd_surat)]);
     }
 
     public function riwayat() 
@@ -161,44 +177,73 @@ class AnggaranController extends Controller
         $anggaran_insert = $anggaran_update = [];
         $anggaran_insert_list = $anggaran_update_list = [];
         $anggaran_insert_file_list  = $anggaran_insert_file_list = [];
-        $status = $request->stat_anggaran;
-        $setuju = $request->persetujuan;
+        $status = "";
+        $setuju = "";
+
+        switch($request->persetujuan){
+          case ""                               : $setuju="-1";break;
+          case "Kirim"                          : $setuju="0";break;
+          case "Persetujuan Kanit Kerja"        : $setuju="1";break;
+          case "Persetujuan Renbang"            : $setuju="2";break;
+          case "Persetujuan Direksi"            : $setuju="3";break;
+          case "Persetujuan Dekom"              : $setuju="4";break;
+          case "Persetujuan Ratek"              : $setuju="5";break;
+          case "Persetujuan RUPS"               : $setuju="6";break;
+          case "Persetujuan FinRUPS"            : $setuju="7";break;
+          case "Persetujuan Risalah RUPS"       : $setuju="8";break;
+          case "Disetujuai dan Ditandatangani"  : $setuju="9";break;
+        }
+
+        switch($request->stat_anggaran){
+          case "Draft"      : $status="1";break;
+          case "Transfer"   : $status="2";break;
+          case "Complete"   : $status="3";break;
+        }
+
+
         if($request->setuju =='Kirim'){
-            $status = "Transfer";
-            if($setuju == ""){
-                $setuju = $request->setuju;
-            }else if($setuju == "Kirim"){
-                $setuju = "Persetujuan Kanit Kerja";
-            }else if($setuju == "Persetujuan Kanit Kerja"){
-                $status = "Draft";
-                $setuju = "Persetujuan Renbang";
-            }else if($setuju == "Persetujuan Renbang"){
-                $setuju = "Persetujuan Direksi";
-            }else if($setuju == "Persetujuan Direksi"){
-                $setuju = "Persetujuan Dekom";
-            }else if($setuju == "Persetujuan Dekom"){
-                $setuju = "Persetujuan Ratek";
-            }else if($setuju == "Persetujuan Ratek"){
-                $setuju = "Persetujuan RUPS";
-            }else if($setuju == "Persetujuan RUPS"){
-                $setuju = "Persetujuan FinRUPS";
-            }else if($setuju == "Persetujuan FinRUPS"){
-                $setuju = "Persetujuan Risalah RUPS";
-            }else if($setuju == "Persetujuan Risalah RUPS"){
-                $status = "Complete";
-                $setuju = "Disetujui dan Ditandatangani";
+            $status = "2";
+            // if()
+            $setuju = (int)$setuju+1;
+            if($setuju == 2){
+                $status = "1";
+            }else if($setuju == 9){
+                $status = "3";
             }
+
+            // if($setuju == "-1"){
+            //     $setuju = "0";
+            // }else if($setuju == "0"){
+            //     $setuju = "1";
+            // }else if($setuju == "1"){
+            //     $status = "1";
+            //     $setuju = "2";
+            // }else if($setuju == "2"){
+            //     $setuju = "3";
+            // }else if($setuju == "3"){
+            //     $setuju = "4";
+            // }else if($setuju == "4"){
+            //     $setuju = "5";
+            // }else if($setuju == "5"){
+            //     $setuju = "6";
+            // }else if($setuju == "6"){
+            //     $setuju = "7";
+            // }else if($setuju == "7"){
+            //     $setuju = "8";
+            // }else if($setuju == "8"){
+            //     $status = "3";
+            //     $setuju = "9";
+            // }
         }else if($request->setuju =='Simpan'){
-            $status = "Draft";
+            $status = "1";
 
         }else if($request->setuju =='Tolak'){
-            $status = "Draft";
-            if($setuju == "Persetujuan Kanit Kerja"||$setuju == "Kirim"||$setuju == "Persetujuan Renbang"){
-                $setuju="";
-            }else if($setuju != "Persetujuan Renbang"){
-                $setuju="Persetujuan Renbang";
+            $status = "1";
+            if($setuju == "1"||$setuju == "0"){
+                $setuju="-1";
+            }else if($setuju != "3"||$setuju == "3"){
+                $setuju="1";
             }
-            
         }
         if($request->setuju != 'Simpan' || $request->status == 'tambah'){
             $anggaran_insert = [
@@ -315,13 +360,9 @@ class AnggaranController extends Controller
                 $LAnggaranUpdate  = ListAnggaran::where('id', $value->id)->where('active', '1')->update($anggaran_update_list);
             }
 
-            // unset($store_list_values['id']);
-            // $LAnggaran = ListAnggaran::create($anggaran_insert_list);
-            // echo $LAnggaran->id;
             if($request->status == 'tambah'){
                 $index2 = 1;
                 foreach ($value->files as $values){
-                   // echo $values->name."<br />"; 
                     $data = $_POST['file_'.$index."_".$index2];
                     $base64 = explode(";base64,", $data);
                     $store_file_list_values = [
@@ -351,13 +392,15 @@ class AnggaranController extends Controller
         }
         $status_view = redirect('anggaran/edit/'.$request->nd_surat.'/0'); 
         // echo $setuju;
-        if($setuju == "Kirim"){
+        if($setuju != "-1"){
             $status_view = redirect('anggaran/persetujuan/'.$request->nd_surat.'/1');
-        }else if($setuju == ""){
-            $status_view = redirect('anggaran/edit/'.$request->nd_surat.'/0');
-        }else{
-            $status_view = redirect('anggaran/persetujuan/'.$request->nd_surat.'/2');
         }
+        // else if($request->setuju =='Tolak'&&)
+        // else if($setuju == ""){
+        //     $status_view = redirect('anggaran/edit/'.$request->nd_surat.'/0');
+        // }else{
+        //     $status_view = redirect('anggaran/persetujuan/'.$request->nd_surat.'/2');
+        // }
         return $status_view;
         // return redirect('anggaran/persetujuan/'.$request->nd_surat.'/1');
     }
