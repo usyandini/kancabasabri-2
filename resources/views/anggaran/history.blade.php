@@ -54,7 +54,7 @@
                                         <div class="form-group">
                                           <label>Unit Kerja</label>
                                           <select class="select2 form-control " name="cari_unit_kerja" id="cari_unit_kerja">
-                                            <option value="Semua">Semua Unit Kerja</option>
+                                            <option value="0">None</option>
                                           </select>
                                         </div>
                                     </div>
@@ -181,7 +181,7 @@
                         loadData: function(filter) {
                           return $.ajax({
                               type: "GET",
-                              url:"{{ (checkActiveMenu('anggaran') == 'active' ? url('anggaran') : url('anggaran/get/filtered/'.$filters['nd_surat'].'/list_anggaran') ) }}",
+                              url:"{{ (checkActiveMenu('anggaran') == 'active' ? url('anggaran') : url('anggaran/get/filteredHistory') ) }}",
                               data: filter,
                               dataType: "JSON"
                           })
@@ -222,42 +222,98 @@
                           { name: "input_anggaran", 
                             type: "number", 
                             title: "Input Anggaran dan kegiatan",
-                            width: 220
+                            width: 220,
+                            itemTemplate: function(value) {
+                              var display ="<span class='tag tag-info'>IDR " + parseInt(value).toLocaleString() + ",00</span>";
+                              if(parseInt(value).toLocaleString() < 1){
+                                display = "<span >---</span>";
+                              }
+                              return display;
+                            }
                           },
                           { name: "clearing_house", 
                             type: "number", 
                             title: "Clearing House",
-                            width: 130
+                            width: 130,
+                            itemTemplate: function(value) {
+                              var display ="<span class='tag tag-info'>IDR " + parseInt(value).toLocaleString() + ",00</span>";
+                              if(parseInt(value).toLocaleString() < 1){
+                                display = "<span >---</span>";
+                              }
+                              return display;
+                            }
                           },
                           { name: "naskah_rkap", 
                             type: "number", 
                             title: "Naskah RKAP",
-                            width: 130
+                            width: 130,
+                            itemTemplate: function(value) {
+                              var display ="<span class='tag tag-info'>IDR " + parseInt(value).toLocaleString() + ",00</span>";
+                              if(parseInt(value).toLocaleString() < 1){
+                                display = "<span >---</span>";
+                              }
+                              return display;
+                            }
                           },
                           { name: "dewan_komisaris", 
                             type: "number", 
                             title: "Persetujuan Dewan Komisaris",
-                            width: 220
+                            width: 220,
+                            itemTemplate: function(value) {
+                              var display ="<span class='tag tag-info'>IDR " + parseInt(value).toLocaleString() + ",00</span>";
+                              if(parseInt(value).toLocaleString() < 1){
+                                display = "<span >---</span>";
+                              }
+                              return display;
+                            }
                           },
                           { name: "rapat_teknis", 
                             type: "number", 
                             title: "Rapat Teknis",
-                            width: 130
+                            width: 130,
+                            itemTemplate: function(value) {
+                              var display ="<span class='tag tag-info'>IDR " + parseInt(value).toLocaleString() + ",00</span>";
+                              if(parseInt(value).toLocaleString() < 1){
+                                display = "<span >---</span>";
+                              }
+                              return display;
+                            }
                           },
                           { name: "rups", 
                             type: "number", 
                             title: "RUPS",
-                            width: 130
+                            width: 130,
+                            itemTemplate: function(value) {
+                              var display ="<span class='tag tag-info'>IDR " + parseInt(value).toLocaleString() + ",00</span>";
+                              if(parseInt(value).toLocaleString() < 1){
+                                display = "<span >---</span>";
+                              }
+                              return display;
+                            }
                           },
                           { name: "finalisasi_rups", 
                             type: "number", 
                             title: "Finalisasi RUPS",
-                            width: 130
+                            width: 130,
+                            itemTemplate: function(value) {
+                              var display ="<span class='tag tag-info'>IDR " + parseInt(value).toLocaleString() + ",00</span>";
+                              if(parseInt(value).toLocaleString() < 1){
+                                display = "<span >---</span>";
+                              }
+                              return display;
+                            }
                           },
                           { name: "risalah_rups", 
                             type: "number", 
                             title: "Risalah RUPS",
-                            width: 130
+                            width: 130,
+                            itemTemplate: function(value) {
+                              var display ="<span class='tag tag-info'>IDR " + parseInt(value).toLocaleString() + ",00</span>";
+                              if(parseInt(value).toLocaleString() < 1){
+                                display = "<span >---</span>";
+                              }
+                              return display;
+                            }
                           },
                           { name: "file", align:"center", title: "Berkas",  width: 150 ,
 
@@ -268,24 +324,16 @@
 
                               if(value.length > 0){
 
-
-                                if(database_file.length >0 ){
-                                  for(i = 0;i<database_file.length;i++){
-                                    name_file+=(i+1)+". "+database_file[i]["name"]+"<br /> ";
-                                  }
-                                }
                                 for(j = 0;j<value.length;j++){
                                   name_file+=(j+1)+". "+value[j]["name"]+"<br /> ";
                                   if(value[j]['id_list_anggaran']!=null){
                                     id_list = value[j]['id_list_anggaran'];
-                                    status = true;
                                   }
                                 }
                               }
-                              if(status)
-                                return "<span > <a href='{{url('anggaran/get/download')}}/"+id_list+"/{{$filters['nd_surat']}}' >Unduh Berkas</a>:<br />"+ name_file+" </span>";
-                              else
-                                return "<span > Unggah Berkas:<br />"+ name_file+" </span>";
+                              // if(status)
+                              return "<span > <a class='btn btn-primary' href='{{url('anggaran/get/download')}}/"+id_list+"' >Unduh Berkas</a>:<br /> </span>";
+                              
                             }
                           }
                       ]
@@ -307,5 +355,32 @@
                     }();
                     return returned;
                   }
+
+                  function setUnitKerja(){
+                    $.ajax({
+                        'async': false, 'type': "GET", 'dataType': 'JSON', 'url': "{{ url('anggaran/get/attributes/unitkerja/1') }}",
+                        'success': function (data) {
+
+                          unit_kerja = document.getElementById('cari_unit_kerja');
+
+                         
+                          for(i =0 ;i<data.length;i++){
+                            var value = "";
+                            var desc = data[i].DESCRIPTION;
+                            if(desc.split("Cabang").length > 0 ){
+                              value = data[i].VALUE+"00";
+                            }else{
+                              value = "00"+data[i].VALUE;
+                            }
+                            unit_kerja.options[unit_kerja.options.length] = new Option(desc, value);
+                          }
+                             
+                        }
+                    });
+                  }
+
+                  window.setUnitKerja();
+
+
                 </script>
                 @endsection

@@ -210,30 +210,6 @@ class AnggaranController extends Controller
             }else if($setuju == 9){
                 $status = "3";
             }
-
-            // if($setuju == "-1"){
-            //     $setuju = "0";
-            // }else if($setuju == "0"){
-            //     $setuju = "1";
-            // }else if($setuju == "1"){
-            //     $status = "1";
-            //     $setuju = "2";
-            // }else if($setuju == "2"){
-            //     $setuju = "3";
-            // }else if($setuju == "3"){
-            //     $setuju = "4";
-            // }else if($setuju == "4"){
-            //     $setuju = "5";
-            // }else if($setuju == "5"){
-            //     $setuju = "6";
-            // }else if($setuju == "6"){
-            //     $setuju = "7";
-            // }else if($setuju == "7"){
-            //     $setuju = "8";
-            // }else if($setuju == "8"){
-            //     $status = "3";
-            //     $setuju = "9";
-            // }
         }else if($request->setuju =='Simpan'){
             $status = "1";
 
@@ -254,9 +230,7 @@ class AnggaranController extends Controller
             'status_anggaran'   => $status,
             'persetujuan'       => $setuju,
             'keterangan'        => '',
-            'active'            => '1',
-            'created_at'        => \Carbon\Carbon::now(),
-            'updated_at'        => \Carbon\Carbon::now()];
+            'active'            => '1'];
         }
         
         $active = '0';
@@ -275,14 +249,14 @@ class AnggaranController extends Controller
         
         // echo $request->status;
         // echo $request->setuju;
-       
+        $AnggaranData;
         if($request->status == 'tambah'){
-            Anggaran::insert($anggaran_insert);
+            $AnggaranData=Anggaran::create($anggaran_insert);
         }else if($request->status == 'edit' && $request->setuju == 'Simpan'){
             Anggaran::where('nd_surat', $request->nd_surat)->where('active', '1')->update($anggaran_update);
         }else{
             Anggaran::where('nd_surat', $request->nd_surat)->where('active', '1')->update($anggaran_update);
-            Anggaran::insert($anggaran_insert);
+            $AnggaranData=Anggaran::create($anggaran_insert);
         }
             
         $index = 1;
@@ -314,7 +288,7 @@ class AnggaranController extends Controller
                     'TWIV'    => (double)$value->tw_iv,
                     'anggaran_setahun'      => (double)$value->anggarana_setahun,
                     'id_first'      => $idBefore,
-                    'nd_surat'            => $request->nd_surat,
+                    'id_list_anggaran'            => $AnggaranData->id,
                     'active'            => '1'
                     ];
             }
@@ -340,8 +314,8 @@ class AnggaranController extends Controller
                 'TWIII'    => (double)$value->tw_iii,
                 'TWIV'    => (double)$value->tw_iv,
                 'anggaran_setahun'      => (double)$value->anggarana_setahun,
-                'nd_surat'            => $request->nd_surat,
-                'active'            => $active_list
+                'active'            => $active_list,
+                'updated_at'        => \Carbon\Carbon::now()
                 ];
 
             $LAnggaranInsert;
@@ -395,32 +369,77 @@ class AnggaranController extends Controller
         if($setuju != "-1"){
             $status_view = redirect('anggaran/persetujuan/'.$request->nd_surat.'/1');
         }
-        // else if($request->setuju =='Tolak'&&)
-        // else if($setuju == ""){
-        //     $status_view = redirect('anggaran/edit/'.$request->nd_surat.'/0');
-        // }else{
-        //     $status_view = redirect('anggaran/persetujuan/'.$request->nd_surat.'/2');
-        // }
         return $status_view;
-        // return redirect('anggaran/persetujuan/'.$request->nd_surat.'/1');
     }
 
-    public function inactive($nd_surat){
-
-    }
 
     public function getFiltered($nd_surat,$type){
         $result = [];
 
         if($type == "anggaran"){
-            $result = $this->anggaranModel->where('nd_surat', $nd_surat)->where('active', '1')->get();
+            $result = $this->anggaranModel->where('nd_surat', $nd_surat)->orderBy('id', 'DESC')->take(5)->get();
 
         }else if($type == "list_anggaran"){
-            $listAnggaran = $this->listAnggaranModel->where('nd_surat', $nd_surat)->where('active', '1');
-            $fileListAnggaran = $this->fileListAnggaranModel;
-            
-            foreach ($listAnggaran->get() as $list_anggaran) {
 
+            $Anggaran = $this->anggaranModel->where('nd_surat', $nd_surat)->where('active', '1');
+            foreach ($Anggaran->get() as $anggaran) {
+                $listAnggaran = $this->listAnggaranModel->where('id_list_anggaran', $anggaran->id)->where('active', '1');
+                $fileListAnggaran = $this->fileListAnggaranModel;
+                
+                foreach ($listAnggaran->get() as $list_anggaran) {
+
+                    $fileList = [];
+                    foreach ($fileListAnggaran->get() as $file_list_anggaran) {
+                        if($file_list_anggaran->id_list_anggaran == $list_anggaran->id||$file_list_anggaran->id_list_anggaran == $list_anggaran->id_first){
+                            $fileList[] = [
+                                'id_list_anggaran'   => $file_list_anggaran->id_list_anggaran,
+                                'name' => $file_list_anggaran->name,
+                                'type' => $file_list_anggaran->type,
+                                'size' => $file_list_anggaran->size
+                            ];
+                        }
+                    }
+
+                    $result[] = [
+                        'id'            => $list_anggaran->id,
+                        'jenis'           => $list_anggaran->jenis,
+                        'kelompok'          => $list_anggaran->kelompok,
+                        'pos_anggaran'      => $list_anggaran->pos_anggaran,
+                        'sub_pos'       => $list_anggaran->sub_pos,
+                        'mata_anggaran' => $list_anggaran->mata_anggaran,
+                        'kuantitas'     => $list_anggaran->kuantitas,
+                        'satuan'     => $list_anggaran->satuan,
+                        'nilai_persatuan'       => $list_anggaran->nilai_persatuan,
+                        'terpusat'      => $list_anggaran->terpusat,
+                        'unit_kerja'         => $list_anggaran->unit_kerja,
+                        'tw_i'    => $list_anggaran->TWI,
+                        'tw_ii'    => $list_anggaran->TWII,
+                        'tw_iii'    => $list_anggaran->TWIII,
+                        'tw_iv'    => $list_anggaran->TWIV,
+                        'id_first'    => $list_anggaran->id_first,
+                        'anggarana_setahun'      => $list_anggaran->anggaran_setahun,
+                        'file'  => $fileList
+                        
+                    ];
+                }  
+            }
+            
+        }
+
+        
+        return response()->json($result);
+    }
+
+    // public function getFilteredHistory($tahun, $unitkerja, $kategori, $kata_kunci){
+    public function getFilteredHistory(){
+        $result = [];
+
+        $Anggaran = $this->anggaranModel->where('active', '1')->get();
+        foreach($Anggaran as $anggaran){
+            $listAnggaran = $this->listAnggaranModel->where('id_list_anggaran', $anggaran->id)->where('active', '1');
+            $fileListAnggaran = $this->fileListAnggaranModel;
+            // echo "Terbaru<br/>";
+            foreach ($listAnggaran->get() as $list_anggaran) {
                 $fileList = [];
                 foreach ($fileListAnggaran->get() as $file_list_anggaran) {
                     if($file_list_anggaran->id_list_anggaran == $list_anggaran->id||$file_list_anggaran->id_list_anggaran == $list_anggaran->id_first){
@@ -433,27 +452,59 @@ class AnggaranController extends Controller
                     }
                 }
 
+                $Value=array(
+                            'input_anggaran'    =>0,
+                            'clearing_house'    =>0,
+                            'naskah_rkap'       =>0,
+                            'dewan_komisaris'   =>0,
+                            'rapat_teknis'      =>0,
+                            'rups'              =>0,
+                            'finalisasi_rups'   =>0,
+                            'risalah_rups'      =>0
+                            );
+                $AnggaranValue = $this->anggaranModel->where('nd_surat', $anggaran->nd_surat);
+                foreach ($AnggaranValue->get() as $anggaran_value) {
+
+                    $listAnggaranValue = $this->listAnggaranModel->where('id_list_anggaran', $anggaran_value->id)->orderBy('updated_at', 'DESC');
+                    $setValue = $anggaran->persetujuan;
+                    foreach ($listAnggaranValue->get() as $list_anggaran_value) {
+                        if((int)$anggaran_value->persetujuan <= (int)$setValue){
+                            $persetujuan = $anggaran_value->persetujuan;
+                            if($persetujuan == "1"&&$Value['input_anggaran']==0){
+                                $Value['input_anggaran'] = $list_anggaran_value->anggaran_setahun;
+                            }else if($persetujuan == "2"&&$Value['clearing_house']==0){
+                                $Value['clearing_house']= $list_anggaran_value->anggaran_setahun;
+                            }else if($persetujuan == "3"&&$Value['naskah_rkap']==0){
+                                $Value['naskah_rkap']= $list_anggaran_value->anggaran_setahun;
+                            }else if($persetujuan == "4"&&$Value['dewan_komisaris']==0){
+                                $Value['dewan_komisaris']= $list_anggaran_value->anggaran_setahun;
+                            }else if($persetujuan == "5"&&$Value['rapat_teknis']==0){
+                                $Value['rapat_teknis']= $list_anggaran_value->anggaran_setahun;
+                            }else if($persetujuan == "6"&&$Value['rups']==0){
+                                $Value['rups']= $list_anggaran_value->anggaran_setahun;
+                            }else if($persetujuan == "7"&&$Value['finalisasi_rups']==0){
+                                $Value['finalisasi_rups']= $list_anggaran_value->anggaran_setahun;
+                            }else if($persetujuan == "8"&&$Value['risalah_rups']==0){
+                                $Value['risalah_rups']= $list_anggaran_value->anggaran_setahun;
+                            }
+                        }
+                    }
+                }
                 $result[] = [
-                    'id'            => $list_anggaran->id,
-                    'jenis'           => $list_anggaran->jenis,
+                    'jenis'             => $list_anggaran->jenis,
                     'kelompok'          => $list_anggaran->kelompok,
                     'pos_anggaran'      => $list_anggaran->pos_anggaran,
-                    'sub_pos'       => $list_anggaran->sub_pos,
-                    'mata_anggaran' => $list_anggaran->mata_anggaran,
-                    'kuantitas'     => $list_anggaran->kuantitas,
-                    'satuan'     => $list_anggaran->satuan,
-                    'nilai_persatuan'       => $list_anggaran->nilai_persatuan,
-                    'terpusat'      => $list_anggaran->terpusat,
-                    'unit_kerja'         => $list_anggaran->unit_kerja,
-                    'tw_i'    => $list_anggaran->TWI,
-                    'tw_ii'    => $list_anggaran->TWII,
-                    'tw_iii'    => $list_anggaran->TWIII,
-                    'tw_iv'    => $list_anggaran->TWIV,
-                    'id_first'    => $list_anggaran->id_first,
-                    'anggarana_setahun'      => $list_anggaran->anggaran_setahun,
-                    'file'  => $fileList
-                    // 'file'  => 0
-                    
+                    'sub_pos'           => $list_anggaran->sub_pos,
+                    'mata_anggaran'     => $list_anggaran->mata_anggaran,
+                    'input_anggaran'    =>$Value['input_anggaran'],
+                    'clearing_house'    =>$Value['clearing_house'],
+                    'naskah_rkap'       =>$Value['naskah_rkap'],
+                    'dewan_komisaris'   =>$Value['dewan_komisaris'],
+                    'rapat_teknis'      =>$Value['rapat_teknis'],
+                    'rups'              =>$Value['rups'],
+                    'finalisasi_rups'   =>$Value['finalisasi_rups'],
+                    'risalah_rups'      =>$Value['risalah_rups'],
+                    'file'              => $fileList
                 ];
             }
         }
@@ -461,8 +512,6 @@ class AnggaranController extends Controller
         
         return response()->json($result);
     }
-
-    
 
     public function getAttributes($type,$id)
     {
@@ -472,9 +521,6 @@ class AnggaranController extends Controller
                 $second="SELECT * 
                     FROM (SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_DIVISI] WHERE VALUE!='00') AS A UNION ALL SELECT * FROM (SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_KPKC]  WHERE VALUE!='00') AS B";
                 $return = \DB::select($second);
-
-                // $second = $this->divisiModel->select('DESCRIPTION', 'VALUE');
-                // $return = $this->kanCabModel->select('DESCRIPTION', 'VALUE')->union($second)->get();
                 break;
             case 'divisi':
                 $return = $this->divisiModel->select('DESCRIPTION', 'VALUE')->where("VALUE",$id)->get();
@@ -489,24 +535,22 @@ class AnggaranController extends Controller
         return response()->json($return);
     }
 
-    public function unduh_file($id,$nd_surat){
+    public function unduh_file($id){
 
         ignore_user_abort(true);
-
-        $anggaran = $this->anggaranModel->where('nd_surat',$nd_surat);
         $tanggal = "";
-
-        foreach ($anggaran->get() as $value) {
-
-            $tanggal = $value->tanggal;
-        }
-
-        $listAnggaran = $this->listAnggaranModel->where('id',$id)->where('nd_surat',$nd_surat);
+        $listAnggaran = $this->listAnggaranModel->where('id',$id);
         $mata_anggaran = "";
 
         foreach ($listAnggaran->get() as $list_anggaran) {
 
             $mata_anggaran = $list_anggaran->mata_anggaran;
+            $anggaran = $this->anggaranModel->where('id',$list_anggaran->id_list_anggaran);
+            foreach ($anggaran->get() as $value) {
+
+                $tanggal = $value->tanggal;
+            }
+
         }
 
         $fileListAnggaran = $this->fileListAnggaranModel->where('id_list_anggaran',$id);
@@ -519,15 +563,18 @@ class AnggaranController extends Controller
             file_put_contents($file, $decoded);
         }
 
-        $zipname = rand(1000,10000)."-".$tanggal."-".$nd_surat.'-'.$mata_anggaran."-".".zip";
+        // $zipname = rand(1000,10000)."-".$tanggal.'-'.$mata_anggaran."-".".zip";
+        $zipname = rand(1000,10000)."-".$tanggal."-".".zip";
+
+        echo $zipname;
         $zip = new \ZipArchive;
         // $count = 0;
         foreach ($files as $f) {
             // $count++;
             if($zip->open($zipname, \ZipArchive::CREATE) === TRUE) {
-                // $new_filename = substr($f,strrpos($f,'/') + 1);
-                // $zip->addFile($f,$new_filename);
-                $zip->addFile($f);
+                $new_filename = substr($f,strrpos($f,'/') + 1);
+                $zip->addFile($f,$new_filename);
+                // $zip->addFile($f);
 
                 // unlink($f);
             } else {

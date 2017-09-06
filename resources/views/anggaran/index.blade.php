@@ -67,7 +67,7 @@
                                             <div class="form-group">
                                               <label>Status Anggaran</label>
                                               <select class="select2 form-control" name="cari_stat_anggaran" id="cari_stat_anggaran">
-                                                <option value="0">Status Anggaran</option>
+                                                <option value="0">None</option>
                                                 <option value="1">Draft</option>
                                                 <option value="2">Transfer</option>
                                                 <option value="3">Complate</option>
@@ -78,7 +78,7 @@
                                             <div class="form-group">
                                               <label>Unit Kerja</label>
                                               <select class="select2 form-control " name="cari_unit_kerja" id="cari_unit_kerja">
-                                                <option value="0">Tipe Anggaran</option>
+                                                <option value="0">None</option>
                                               </select>
                                             </div>
                                         </div>

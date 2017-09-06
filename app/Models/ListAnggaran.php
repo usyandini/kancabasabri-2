@@ -29,7 +29,7 @@ class ListAnggaran extends Model
     		'TWIV',
     		'anggaran_setahun',
     		'id_first',
-            'nd_surat',
+            'id_list_anggaran',
     		'active',
     		'created_at', 
     		'updated_at'];

@@ -99,7 +99,7 @@
                                         <div class="col-xs-4 ">
                                           <div class="form-group">
                                             <!-- <button type="submit" class="btn btn-info"><i class="fa fa-check"></i> Disetujui</button> -->
-                                            <div id="accept_r" name="accept_r" onclick="changeButton('setuju')" class="btn btn-success"><i class="fa fa-check"></i> Disetujui</div>
+                                            <div id="accept_r" name="accept_r" onclick="changeButton()" class="btn btn-success"><i class="fa fa-check"></i> Disetujui</div>
                                           
                                           </div>
                                         </div>
@@ -790,57 +790,70 @@
                       $.ajax({
                           'async': false, 'type': "GET", 'dataType': 'JSON', 'url': "{{ url('anggaran/get/filtered/') }}/"+nd_surat+"/anggaran",
                           'success': function (data) {
-
-                              var persetujuan = status_anggaran = "";
-                              switch(data[0].persetujuan){
-                                case "-1" : persetujuan="";break;
-                                case "0" : persetujuan="Kirim";break;
-                                case "1" : persetujuan="Persetujuan Kanit Kerja";break;
-                                case "2" : persetujuan="Persetujuan Renbang";break;
-                                case "3" : persetujuan="Persetujuan Direksi";break;
-                                case "4" : persetujuan="Persetujuan Dekom";break;
-                                case "5" : persetujuan="Persetujuan Ratek";break;
-                                case "6" : persetujuan="Persetujuan RUPS";break;
-                                case "7" : persetujuan="Persetujuan FinRUPS";break;
-                                case "8" : persetujuan="Persetujuan Risalah RUPS";break;
-                                case "89" : persetujuan="Disetujuai dan Ditandatangani";break;
-                              }
-                              switch(data[0].status_anggaran){
-                                case "1" : status_anggaran="Draft";break;
-                                case "2" : status_anggaran="Transfer";break;
-                                case "3" : status_anggaran="Complete";break;
-                              }
-                              var tgl = data[0].tanggal;
-                              var tgl_split = tgl.split("-");
-                              document.getElementById("nd_surat").value = nd_surat;
-                              document.getElementById("stat_anggaran").value = status_anggaran;
-                              document.getElementById("persetujuan").value = persetujuan;
-                              document.getElementById("tipe_anggaran").value = data[0].tipe_anggaran;
-                              document.getElementById("unit_kerja").value = data[0].unit_kerja;
-                              document.getElementById("tanggal").value = tgl_split[2]+"/"+tgl_split[1]+"/"+tgl_split[0];
-                              if(data[0].persetujuan == "9"||data[0].persetujuan == "-1"){
-                                document.getElementById("grup_m").style.display="none";
-                                document.getElementById("grup_r").style.display="none";
-                              }else if(data[0].persetujuan =="1"){
-                                document.getElementById("grup_m").style.display="none";
-                                document.getElementById("grup_r").style.display="block";
-                              }else{
-                                document.getElementById("grup_m").style.display="block";
-                                document.getElementById("grup_r").style.display="none";
-                              }
-                              if(editableStat){
-                                document.getElementById("accept_r").style.display="none";
-                                document.getElementById("download_r").style.display="none";
-                                document.getElementById("edit_r").style.display="none";
-                                document.getElementById("save_r").style.display="block";
-                                // alert({{$reject}});
-                                var reject = {{$reject ? 1:0}};
-                                if(reject == 1)
-                                  document.getElementById("send_r").setAttribute('onclick','rejectAnggaran();');
-                                else{
-                                  document.getElementById("send_r").setAttribute('onclick','acceptAnggaran();');
+                              // alert(data[0].active);
+                              if(data[0].active == 1){
+                                var persetujuan = status_anggaran = "";
+                                switch(data[0].persetujuan){
+                                  case "-1" : persetujuan="";break;
+                                  case "0" : persetujuan="Kirim";break;
+                                  case "1" : persetujuan="Persetujuan Kanit Kerja";break;
+                                  case "2" : persetujuan="Persetujuan Renbang";break;
+                                  case "3" : persetujuan="Persetujuan Direksi";break;
+                                  case "4" : persetujuan="Persetujuan Dekom";break;
+                                  case "5" : persetujuan="Persetujuan Ratek";break;
+                                  case "6" : persetujuan="Persetujuan RUPS";break;
+                                  case "7" : persetujuan="Persetujuan FinRUPS";break;
+                                  case "8" : persetujuan="Persetujuan Risalah RUPS";break;
+                                  case "89" : persetujuan="Disetujuai dan Ditandatangani";break;
                                 }
-                                
+                                switch(data[0].status_anggaran){
+                                  case "1" : status_anggaran="Draft";break;
+                                  case "2" : status_anggaran="Transfer";break;
+                                  case "3" : status_anggaran="Complete";break;
+                                }
+                                var tgl = data[0].tanggal;
+                                var tgl_split = tgl.split("-");
+                                document.getElementById("nd_surat").value = nd_surat;
+                                document.getElementById("stat_anggaran").value = status_anggaran;
+                                document.getElementById("persetujuan").value = persetujuan;
+                                document.getElementById("tipe_anggaran").value = data[0].tipe_anggaran;
+                                document.getElementById("unit_kerja").value = data[0].unit_kerja;
+                                document.getElementById("tanggal").value = tgl_split[2]+"/"+tgl_split[1]+"/"+tgl_split[0];
+                                if(data[0].persetujuan == "9"||data[0].persetujuan == "-1"){
+                                  document.getElementById("grup_m").style.display="none";
+                                  document.getElementById("grup_r").style.display="none";
+                                }else if(data[0].persetujuan =="1"){
+                                  document.getElementById("grup_m").style.display="none";
+                                  document.getElementById("grup_r").style.display="block";
+                                }else{
+                                  document.getElementById("grup_m").style.display="block";
+                                  document.getElementById("grup_r").style.display="none";
+                                }
+                                if(editableStat){
+                                  document.getElementById("accept_r").style.display="none";
+                                  document.getElementById("download_r").style.display="none";
+                                  document.getElementById("edit_r").style.display="none";
+                                  document.getElementById("save_r").style.display="block";
+                                  document.getElementById("send_r").style.display="block";
+                                  // alert({{$reject}});
+                                  var reject = {{$reject ? 1:0}};
+                                  if(reject == 1)
+                                    document.getElementById("send_r").setAttribute('onclick','rejectAnggaran();');
+                                  else{
+                                    document.getElementById("send_r").setAttribute('onclick','acceptAnggaran();');
+                                  }
+                                  
+                                }
+                              }
+                              for(i=1;i<data.length;i++){
+                                // alert(data[0].persetujuan+"???"+data[i].persetujuan);
+                                if(parseInt(data[0].persetujuan) < parseInt(data[i].persetujuan)){
+
+                                  changeButton();
+                                  document.getElementById("send_r").style.display="none";
+                                  document.getElementById("accept_r").style.display="none";
+                                  break;
+                                }
                               }
                           }
                       });
@@ -930,24 +943,16 @@
                     }
                   };
 
-                  function changeButton(status){
-                    if(status == 'setuju'){
-                      document.getElementById("send_r").addEventListener("click", function(event) {
-                        acceptAnggaran();
-                        event.preventDefault();
-                      });
-                      document.getElementById("accept_r").style.display="none";
-                      document.getElementById("edit_r").style.display="block";
-                      document.getElementById("send_r").style.display="block";
-                      var edit_href = document.getElementById('edit_r'); //or grab it by tagname etc
-                        edit_href.href = "{{url('anggaran/persetujuan/'.$filters['nd_surat'].'/2')}}"
-                    }
-                    // else if(status == 'edit'){
-                    //   document.getElementById("send_r").setAttribute("onclick", rejectAnggaran());
-                    //   document.getElementById("accept_r").style.display="none";
-                    //   document.getElementById("edit_r").style.display="block";
-                    // }
-                    
+                  function changeButton(){
+                    document.getElementById("send_r").addEventListener("click", function(event) {
+                      acceptAnggaran();
+                      event.preventDefault();
+                    });
+                    document.getElementById("accept_r").style.display="none";
+                    document.getElementById("edit_r").style.display="block";
+                    document.getElementById("send_r").style.display="block";
+                    var edit_href = document.getElementById('edit_r'); //or grab it by tagname etc
+                    edit_href.href = "{{url('anggaran/persetujuan/'.$filters['nd_surat'].'/2')}}"
                   }
 
 
