@@ -192,10 +192,10 @@
                                               <td>IDR {{ number_format($history->nominal_tarik) }}</td>
                                               <td>IDR {{ number_format($history->sisa_dropping) }}</td>
                                               <td>
-                                              <li><a href="{{ url('dropping/tariktunai/berkas/download').'/'.$history->fileTarikTunai['id'] }}" target="_blank">{{ $history->fileTarikTunai['name'] }}</a></li>
-                                              <!-- @foreach($berkas as $value)
-                                                <li><a href="{{ url('dropping/tariktunai/berkas/download').'/'.$value->id }}" target="_blank">{{ $value->name }}</a></li>
-                                              @endforeach -->
+                                              <!-- <li><a href="{{ url('dropping/tariktunai/berkas/download').'/'.$history->fileTarikTunai['id'] }}" target="_blank">{{ $history->fileTarikTunai['name'] }}</a></li> -->
+                                              @foreach($berkas as $value)
+                                                <li><a href="{{ url('dropping/tariktunai/berkas/download').'/'.$history->fileTarikTunai['id'] }}" target="_blank">{{ $history->fileTarikTunai['name'] }}</a></li>
+                                              @endforeach
                                               </td>
                                             </tr>
                                           </tbody>

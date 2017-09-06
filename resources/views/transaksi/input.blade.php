@@ -178,7 +178,7 @@
                                                               </td>
                                                             </tr>
                                                           @empty
-                                                            <code>Belum ada file terlampir</code>
+                                                            <code>Belum ada berkas terlampir</code>
                                                           @endforelse
                                                         </table>
                                                     </div>

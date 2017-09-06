@@ -181,7 +181,7 @@ class DroppingController extends Controller
 
         $dropping = $this->droppingModel->where([['RECID', $id_drop], ['DEBIT', '>', 0]])->firstOrFail();
         $tariktunai = TarikTunai::where([['id_dropping', $id_drop], ['nominal_tarik', '>', 0], ['stat', 3]])->orderby('sisa_dropping', 'asc')->get();
-        $berkas = [];
+        //$berkas = [];
         if($tariktunai){
             foreach($tariktunai as $value){
                 //$berkas = BerkasTarikTunai::where('id_tariktunai', $this->tarikTunaiModel['id'])->get();   
@@ -190,7 +190,7 @@ class DroppingController extends Controller
                 //$berkas = $tariktunai->fileTarikTunai;  
             }
         }
-
+        //dd($tariktunai, $berkas);
         return view('dropping.tariktunai.tariktunai', ['tariktunai' => $tariktunai, 'dropping' => $dropping, 'berkas' => $berkas]);
     }
 
@@ -416,8 +416,9 @@ class DroppingController extends Controller
         if (file_exists($file)) {
             header('Content-Description: File Transfer');
             header('Content-Type: '.$berkas->type);
-            header('Content-Disposition: attachment; filename="'.basename($file).'"');
-            header('Expires: 0');
+            header('Content-Disposition: inline; filename="'.basename($file).'"');
+            //header('Expires: 0');
+            header('Expires: '.gmdate('D, d M Y H:i:s \G\M\T', time() + (60))); // 1 hour
             header('Cache-Control: must-revalidate');
             //header('Pragma: public');
             header('Content-Length: '.$berkas->size);

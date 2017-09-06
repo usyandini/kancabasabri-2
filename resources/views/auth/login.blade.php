@@ -75,11 +75,11 @@
                                                 <div class="col-md-6 col-xs-12 text-xs-center text-md-left">
                                                     <fieldset>
                                                         <input type="checkbox" id="remember-me" class="chk-remember" name="remember">
-                                                        <label for="remember-me"> Remember Me</label>
+                                                        <label for="remember-me"> Ingat Saya</label>
                                                     </fieldset>
                                                 </div>
                                             </fieldset>
-                                            <button type="submit" class="btn btn-primary btn-lg btn-block"><i class="ft-unlock"></i> Login</button>
+                                            <button type="submit" class="btn btn-primary btn-lg btn-block"><i class="ft-unlock"></i> Masuk</button>
                                         </form>
                                     </div>
                                 </div>
