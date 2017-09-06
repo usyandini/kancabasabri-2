@@ -21,6 +21,7 @@ class PenyesuaianDropping extends Model
         'id_dropping',
         'created_by',
         'nominal_dropping',
+
         'berkas_penyesuaian',
 
         'SEGMEN_1',
@@ -32,6 +33,7 @@ class PenyesuaianDropping extends Model
         'ACCOUNT',
 
         'stat'
+
     ];
 
     public function creator()

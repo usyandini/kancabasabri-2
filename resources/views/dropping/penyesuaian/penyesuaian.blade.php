@@ -237,6 +237,7 @@
                                       </div>
                                     </div>
                                   </div>
+
                                   <div class="row">
                                     <div class="col-md-12">
                                       <div class="form-group">
@@ -244,6 +245,7 @@
                                         <span class="required"> *</span>
                                         <div class="controls">
                                           <input type="file" class="form-control-file" id="berkas" name="berkas[]" multiple="" required>
+
                                         </div>
                                       </div>
                                     </div>
@@ -294,11 +296,13 @@
                                                 @else
                                                 <td>Penambahan</td>
                                                 @endif
+
                                                 <td>
                                                 @foreach($berkas as $value)
                                                 <li><a href="{{ url('dropping/penyesuaian/berkas/download').'/'.$value->id }}" target="_blank">{{ $value->name }}</a></li>
                                                 @endforeach
                                                 </td>
+
                                               @endif
                                             </tr>
                                           </tbody>
@@ -441,6 +445,7 @@
                           if(temp2)n2.value=addCommas(temp2.toFixed());
                       }
                   }
+
 
                   function change_title(t){
                     if(t.checked){

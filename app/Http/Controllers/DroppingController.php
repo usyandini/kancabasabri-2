@@ -180,6 +180,7 @@ class DroppingController extends Controller
         $this->inputDrop($id_drop); 
 
         $dropping = $this->droppingModel->where([['RECID', $id_drop], ['DEBIT', '>', 0]])->firstOrFail();
+
         $tariktunai = TarikTunai::where([['id_dropping', $id_drop], ['nominal_tarik', '>', 0], ['stat', 3]])->orderby('sisa_dropping', 'asc')->get();
         //$berkas = [];
         if($tariktunai){
@@ -241,6 +242,7 @@ class DroppingController extends Controller
 
                 $inputsTT['created_by'] = \Auth::id();
                 $inputsTT['id_dropping'] = $id_drop;
+
                 $inputsTT['nominal_tarik'] = $tarik;
 
                 $seg1 = $inputsTT['SEGMEN_1'] = $bank->ACCOUNT;
@@ -262,6 +264,7 @@ class DroppingController extends Controller
 
                 $this->storeBerkas($request->berkas, 'tariktunai', $TT->id);
                 NotificationSystem::send($TT->id, 7);
+
 
                 session()->flash('success', true);
             } else {
@@ -298,6 +301,7 @@ class DroppingController extends Controller
 
         $validatorPD = Validator::make($request->all(),
             [
+
                 'p_akun_bank'       => 'not_in:0|required',
                 'p_cabang'          => 'not_in:0|required',
                 'p_nominal'         => 'not_in:0|required|regex:/^\d+([\,]\d+)*([\.]\d+)?$/',
@@ -314,7 +318,9 @@ class DroppingController extends Controller
                 'p_akun_bank.required'=> 'Pilihan nama bank tidak boleh dikosongkan !',
                 'p_rek_bank.not_in'   => 'Pilihan nomor rekening tidak boleh dikosongkan !',
                 'p_rek_bank.required' => 'Pilihan nomor rekening tidak boleh dikosongkan !',
+
                 'berkas.*.required'   => 'Attachment bukti penyesuaian tidak boleh dikosongkan !'
+
             ]);
 
         $submitted = PenyesuaianDropping::where([['id_dropping', $id_drop], ['stat', 4]])->orderby('created_at', 'desc')->first();
@@ -359,6 +365,7 @@ class DroppingController extends Controller
                 $inputsPD['created_by'] = \Auth::id();
                 $inputsPD['id_dropping'] = $id_drop;
                 $inputsPD['nominal_dropping']  = $request->nominal_dropping;
+
                 $inputsPD['stat'] = 4;
                 // $attach = $this->storeBerkas($request->berkas, 'penyesuaian');
                 // $inputsPD['berkas_penyesuaian'] = $attach['id'];
@@ -367,6 +374,7 @@ class DroppingController extends Controller
                 $PD = PenyesuaianDropping::create($inputsPD); 
                 $this->storeBerkas($request->berkas, 'penyesuaian', $PD->id); 
                 NotificationSystem::send($PD->id, 10);
+
                 session()->flash('success', true);
             }else{
                 return redirect()->back()->withErrors($validatorPD)->withInput();
@@ -375,10 +383,13 @@ class DroppingController extends Controller
         return redirect('/dropping/penyesuaian/'.$id_drop);
     }
 
+
     public function storeBerkas($inputs, $route, $id)
+
     {
         if ($inputs[0] != null) {
             $fileUpload = new FileUpload();
+
             $store = $fileUpload->base64Uploads($inputs);
                         
             switch($route){
@@ -424,6 +435,7 @@ class DroppingController extends Controller
             header('Content-Length: '.$berkas->size);
             readfile($file);
             exit($data);
+
         }
     }
 

@@ -99,7 +99,9 @@
                                     <div class="col-md-6">
                                       <div class="form-group">
                                         <label for="nominal">Nominal Dropping (Dalam IDR)</label>
+
                                           <input type="text" readonly="" class="form-control" placeholder="{{ $dropping->DEBIT }}" name="nominal_dropping" value="{{ number_format($dropping->DEBIT) }}">
+
                                           <input type="hidden" id="nominal" name="nominal" value="{{ $dropping->DEBIT }}">
                                       </div>
                                     </div>
@@ -188,6 +190,7 @@
                                           <tbody>
                                             <tr>
                                               <th>{{ date('d-m-Y H:i:s', strtotime($history->created_at)) }}</th>
+
                                               <td>IDR {{ number_format($history->nominal) }}</td>
                                               <td>IDR {{ number_format($history->nominal_tarik) }}</td>
                                               <td>IDR {{ number_format($history->sisa_dropping) }}</td>
@@ -197,6 +200,7 @@
                                                 <li><a href="{{ url('dropping/tariktunai/berkas/download').'/'.$history->fileTarikTunai['id'] }}" target="_blank">{{ $history->fileTarikTunai['name'] }}</a></li>
                                               @endforeach
                                               </td>
+
                                             </tr>
                                           </tbody>
                                           @endforeach
