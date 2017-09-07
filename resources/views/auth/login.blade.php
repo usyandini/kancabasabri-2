@@ -46,7 +46,7 @@
                                     <div class="card-title text-xs-center">
                                         <div class="p-1"><img src="{{ asset('app-assets/images/asabri-logo.png') }}" width="50%"><h2 class="brand-text">SELAMAT DATANG</h2></div>
                                     </div>
-                                    <h6 class="card-subtitle line-on-side text-muted text-xs-center font-small-3 pt-2"><span>Aplikasi Anggaran dan Belanja</span></h6>
+                                    <h3 class="card-subtitle text-muted text-xs-center"><span>Aplikasi Anggaran dan Belanja</span></h3>
                                 </div>
                                 <div class="card-body collapse in">
                                     <div class="card-block">
