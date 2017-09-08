@@ -21,9 +21,4 @@ class BerkasTarikTunai extends Model
     	'type',
     	'data'
     ];
-
-    public function fileTarikTunai()
-    {
-        return $this->hasOne('App\Models\TarikTunai', 'id', 'id_tariktunai');
-    }
 }

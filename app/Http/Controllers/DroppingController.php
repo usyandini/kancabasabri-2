@@ -30,9 +30,12 @@ use App\Services\NotificationSystem;
 //          1 = Submitted tarik tunai to Akuntansi
 //          2 = Rejected for re-input Tarik Tunai
 //          3 = Verified Tarik Tunai by Akuntansi
-//          4 = Submited penyesuaian to Akuntansi 
-//          5 = Rejected for re-input Penyesuaian
-//          6 = Verified Penyesuaian by Akuntansi 
+//
+//          4 = Submitted penyesuaian to BIA 
+//          5 = Rejected oleh BIA for re-input Penyesuaian
+//          6 = Verified Penyesuaian by BIA (lvl 1) / Submitted penyesuaian to Akuntansi 
+//          7 = Rejected oleh Akuntansi for re-input Penyesuaian
+//          8 = Verified Penyesuaian by Akuntansi (lvl 2)
 //  ----------------------------------------------
 
 
@@ -177,16 +180,19 @@ class DroppingController extends Controller
         $this->inputDrop($id_drop); 
 
         $dropping = $this->droppingModel->where([['RECID', $id_drop], ['DEBIT', '>', 0]])->firstOrFail();
+
         $tariktunai = TarikTunai::where([['id_dropping', $id_drop], ['nominal_tarik', '>', 0], ['stat', 3]])->orderby('sisa_dropping', 'asc')->get();
-        $berkas = [];
+        //$berkas = [];
         if($tariktunai){
             foreach($tariktunai as $value){
                 //$berkas = BerkasTarikTunai::where('id_tariktunai', $this->tarikTunaiModel['id'])->get();   
-                $berkas = BerkasTarikTunai::where('id_tariktunai', $value->id)->get();      
+                $berkas = BerkasTarikTunai::where('id_tariktunai', $value->id)->get();    
+                
+                //$berkas = $tariktunai->fileTarikTunai;  
             }
         }
-
-        return view('dropping.tariktunai', ['tariktunai' => $tariktunai, 'dropping' => $dropping, 'berkas' => $berkas]);
+        //dd($tariktunai, $berkas);
+        return view('dropping.tariktunai.tariktunai', ['tariktunai' => $tariktunai, 'dropping' => $dropping, 'berkas' => $berkas]);
     }
 
     public function tarik_tunai_process($id_drop, Request $request)
@@ -202,9 +208,12 @@ class DroppingController extends Controller
         $subpos = SubPos::where('DESCRIPTION', 'None')->first();
         $kegiatan = Kegiatan::where('DESCRIPTION', 'None')->first();
 
+        //dd($request->all());
+
         $validatorTT = Validator::make($inputsTT,
             [
-                'berkas' => 'required',
+                'berkas.*' => 'required',
+                //'berkas.*' => 'required|mimes:jpg,jpeg,png,bmp|max:20000', // batasan image file max 20 mb
                 'nominal_tarik' => 'not_in:0|required|regex:/^\d+([\,]\d+)*([\.]\d+)?$/'
                 //'nominal_tarik' => 'not_in:0|required|regex:/^[1-8](,[1-8])*$/'
             ], 
@@ -212,7 +221,7 @@ class DroppingController extends Controller
                 'nominal_tarik.not_in'  => 'Nominal tarik tunai tidak boleh dikosongkan !',
                 'nominal_tarik.required'  => 'Nominal tarik tunai harus diisi !',
                 'nominal_tarik.regex'  => 'Nominal tarik tunai hanya bisa diisi oleh angka !',
-                'berkas.required'  => 'Attachment bukti tarik tunai tidak boleh dikosongkan !'
+                'berkas.*.required'  => 'Attachment bukti tarik tunai tidak boleh dikosongkan !'
             ]);
 
         //----- Fungsi tarik tunai, jika tidak ada record maka tariktunai berasal dari nominal awal - nominal tarik -----//
@@ -233,6 +242,7 @@ class DroppingController extends Controller
 
                 $inputsTT['created_by'] = \Auth::id();
                 $inputsTT['id_dropping'] = $id_drop;
+
                 $inputsTT['nominal_tarik'] = $tarik;
 
                 $seg1 = $inputsTT['SEGMEN_1'] = $bank->ACCOUNT;
@@ -255,6 +265,7 @@ class DroppingController extends Controller
                 $this->storeBerkas($request->berkas, 'tariktunai', $TT->id);
                 NotificationSystem::send($TT->id, 7);
 
+
                 session()->flash('success', true);
             } else {
                 session()->flash('offset', true);
@@ -275,9 +286,13 @@ class DroppingController extends Controller
 
         $dropping = $this->droppingModel->where([['RECID', $id_drop], ['DEBIT', '>', 0]])->firstOrFail();
         $akunBank = $this->akunBankModel->get();
-        $kesesuaian = PenyesuaianDropping::where('id_dropping', $id_drop)->first();
-
-        return view('dropping.penyesuaian', ['dropping' => $dropping, 'kesesuaian' => $kesesuaian, 'kcabangs' => $this->kantorCabangs]);
+        $kesesuaian = PenyesuaianDropping::where([['id_dropping', $id_drop], ['stat', 8]])->first();
+        $berkas = [];
+        if($kesesuaian){
+            $berkas = BerkasPenyesuaian::where('id_penyesuaian', $kesesuaian->id)->get();
+         }
+        //dd($berkas);
+        return view('dropping.penyesuaian.penyesuaian', ['dropping' => $dropping, 'kesesuaian' => $kesesuaian, 'kcabangs' => $this->kantorCabangs, 'berkas' => $berkas]); 
     }
 
     public function penyesuaian_process($id_drop, Request $request)
@@ -286,11 +301,12 @@ class DroppingController extends Controller
 
         $validatorPD = Validator::make($request->all(),
             [
+
                 'p_akun_bank'       => 'not_in:0|required',
                 'p_cabang'          => 'not_in:0|required',
                 'p_nominal'         => 'not_in:0|required|regex:/^\d+([\,]\d+)*([\.]\d+)?$/',
                 'p_rek_bank'        => 'not_in:0|required',
-                'berkas'            => 'required'
+                'berkas.*'          => 'required'
             ],
             [
                 'p_nominal.not_in'    => 'Nominal transaksi penyesuaian dropping tidak boleh dikosongkan !',
@@ -302,15 +318,24 @@ class DroppingController extends Controller
                 'p_akun_bank.required'=> 'Pilihan nama bank tidak boleh dikosongkan !',
                 'p_rek_bank.not_in'   => 'Pilihan nomor rekening tidak boleh dikosongkan !',
                 'p_rek_bank.required' => 'Pilihan nomor rekening tidak boleh dikosongkan !',
-                'berkas.required'     => 'Attachment bukti penyesuaian tidak boleh dikosongkan !'
+
+                'berkas.*.required'   => 'Attachment bukti penyesuaian tidak boleh dikosongkan !'
+
             ]);
 
-        $findstat = PenyesuaianDropping::where('id_dropping', $id_drop)->first();
+        $submitted = PenyesuaianDropping::where([['id_dropping', $id_drop], ['stat', 4]])->orderby('created_at', 'desc')->first();
+        $verLv1 = PenyesuaianDropping::where([['id_dropping', $id_drop], ['stat', 6]])->orderby('created_at', 'desc')->first();
+        $verLv2 = PenyesuaianDropping::where([['id_dropping', $id_drop], ['stat', 8]])->orderby('created_at', 'desc')->first();
+        //dd($findstat1);
         $string_penyesuaian = $request->p_nominal;
         $penyesuaian = floatval(str_replace('.', ',', str_replace(',', '', $string_penyesuaian)));
 
-        if($findstat){
+        if($submitted){
             session()->flash('fail', true);
+        }elseif($verLv1){
+            session()->flash('verifikasi1', true);
+        }elseif($verLv2){
+            session()->flash('verifikasi2', true);
         }else{
             if($validatorPD->passes())
             {   
@@ -340,14 +365,17 @@ class DroppingController extends Controller
                 $inputsPD['created_by'] = \Auth::id();
                 $inputsPD['id_dropping'] = $id_drop;
                 $inputsPD['nominal_dropping']  = $request->nominal_dropping;
+
+                $inputsPD['stat'] = 4;
                 // $attach = $this->storeBerkas($request->berkas, 'penyesuaian');
                 // $inputsPD['berkas_penyesuaian'] = $attach['id'];
                 
                 //dd($inputsPD);
                 $PD = PenyesuaianDropping::create($inputsPD); 
-                $this->storeBerkas($request->berkas, 'penyesuaian', $PD->id);  
-                session()->flash('success', true);
+                $this->storeBerkas($request->berkas, 'penyesuaian', $PD->id); 
+                NotificationSystem::send($PD->id, 10);
 
+                session()->flash('success', true);
             }else{
                 return redirect()->back()->withErrors($validatorPD)->withInput();
             }
@@ -355,21 +383,28 @@ class DroppingController extends Controller
         return redirect('/dropping/penyesuaian/'.$id_drop);
     }
 
+
     public function storeBerkas($inputs, $route, $id)
+
     {
         if ($inputs[0] != null) {
             $fileUpload = new FileUpload();
+
             $store = $fileUpload->base64Uploads($inputs);
-            
-            foreach($store as $key => $value){
-                switch($route){
-                     case 'tariktunai':
-                         $value['id_tariktunai'] = $id;
-                         BerkasTarikTunai::insert($value);
-                //     case 'penyesuaian':
-                //        return BerkasPenyesuaian::create($value);
+                        
+            switch($route){
+                case 'tariktunai':
+                foreach($store as $key => $value){
+                    $value['id_tariktunai'] = $id;
+                    BerkasTarikTunai::insert($value);
                 }
-                   
+                break;
+                case 'penyesuaian':
+                foreach($store as $key => $value){
+                    $value['id_penyesuaian'] = $id;
+                    BerkasPenyesuaian::insert($value);
+                }
+                break;
             }
         }
     }
@@ -392,13 +427,15 @@ class DroppingController extends Controller
         if (file_exists($file)) {
             header('Content-Description: File Transfer');
             header('Content-Type: '.$berkas->type);
-            header('Content-Disposition: attachment; filename="'.basename($file).'"');
-            header('Expires: 0');
+            header('Content-Disposition: inline; filename="'.basename($file).'"');
+            //header('Expires: 0');
+            header('Expires: '.gmdate('D, d M Y H:i:s \G\M\T', time() + (60))); // 1 hour
             header('Cache-Control: must-revalidate');
             //header('Pragma: public');
             header('Content-Length: '.$berkas->size);
             readfile($file);
             exit($data);
+
         }
     }
 
@@ -425,7 +462,7 @@ class DroppingController extends Controller
         return $return;
     }
 
-    public function verifikasi($id){
+    public function verifikasiTarikTunai ($id){
         $dataTT = TarikTunai::where('id', $id)->first();
         $berkas = [] ;
 
@@ -439,7 +476,7 @@ class DroppingController extends Controller
             $kegiatan = Kegiatan::where('VALUE', $dataTT->SEGMEN_6)->first();
         }
 
-        return view('dropping.verifikasi', [
+        return view('dropping.tariktunai.verifikasi', [
             'tariktunai' => $dataTT,
             'berkas' => $berkas,
             'bank' => $bank,
@@ -463,7 +500,7 @@ class DroppingController extends Controller
                     session()->flash('success', true);
                     NotificationSystem::send($id_tarik, 9);
                     break;
-                    //update dengan data tarik tunai sebelumnya // url rejected belum bisa
+                    //update dengan data tarik tunai sebelumnya
                 case 'rejected':
                     TarikTunai::where('id', $id_tarik)
                     ->update(array(
@@ -475,6 +512,107 @@ class DroppingController extends Controller
                     NotificationSystem::send($id_tarik, 8);
                     session()->flash('reject', true);
                     break;
+            }
+        }
+        session()->flash('done', true);
+        return redirect()->back();
+    }
+
+    public function verifikasiPenyesuaian ($id){
+        $dataPD = PenyesuaianDropping::where('id', $id)->first();
+        $berkas = [] ;
+
+        if($dataPD){
+            $berkas= BerkasPenyesuaian::where('id_penyesuaian', $id)->get();
+            $bank = AkunBank::where('ACCOUNT', $dataPD->SEGMEN_1)->first();
+            $program = Program::where('VALUE', $dataPD->SEGMEN_2)->first();
+            $kpkc = KantorCabang::where('VALUE', $dataPD->SEGMEN_3)->first();
+            $divisi = Divisi::where('VALUE', $dataPD->SEGMEN_4)->first();
+            $subpos = SubPos::where('VALUE', $dataPD->SEGMEN_5)->first();
+            $kegiatan = Kegiatan::where('VALUE', $dataPD->SEGMEN_6)->first();
+        }
+
+        return view('dropping.penyesuaian.verifikasilv1', [
+            'penyesuaian' => $dataPD,
+            'berkas' => $berkas,
+            'bank' => $bank,
+            'program' => $program,
+            'kpkc' => $kpkc,
+            'divisi' => $divisi,
+            'subpos' => $subpos,
+            'kegiatan' => $kegiatan
+            ]);
+    }
+
+    public function verifikasiPenyesuaianLv2 ($id){
+        $dataPD = PenyesuaianDropping::where('id', $id)->first();
+        $berkas = [] ;
+
+        if($dataPD){
+            $berkas= BerkasPenyesuaian::where('id_penyesuaian', $id)->get();
+            $bank = AkunBank::where('ACCOUNT', $dataPD->SEGMEN_1)->first();
+            $program = Program::where('VALUE', $dataPD->SEGMEN_2)->first();
+            $kpkc = KantorCabang::where('VALUE', $dataPD->SEGMEN_3)->first();
+            $divisi = Divisi::where('VALUE', $dataPD->SEGMEN_4)->first();
+            $subpos = SubPos::where('VALUE', $dataPD->SEGMEN_5)->first();
+            $kegiatan = Kegiatan::where('VALUE', $dataPD->SEGMEN_6)->first();
+        }
+
+        return view('dropping.penyesuaian.verifikasilv2', [
+            'penyesuaian' => $dataPD,
+            'berkas' => $berkas,
+            'bank' => $bank,
+            'program' => $program,
+            'kpkc' => $kpkc,
+            'divisi' => $divisi,
+            'subpos' => $subpos,
+            'kegiatan' => $kegiatan
+            ]);
+    }
+
+    public function submitVerificationPenyesuaian($lvl, $reaction, $id_penyesuaian, Request $request)
+    {
+        if($lvl == 1) // verification by Bia
+        {
+            $verificationlv1 = PenyesuaianDropping::where([['id', $id_penyesuaian], ['stat', 4]])->first();
+            if($verificationlv1)
+            {
+                switch($reaction){
+                    case 'verified':
+                        PenyesuaianDropping::where('id', $id_penyesuaian)->update(array('stat' => 6));
+                        session()->flash('success', true);
+                        NotificationSystem::send($id_penyesuaian, 12);
+                        break;
+                    case 'rejected':
+                        PenyesuaianDropping::where('id', $id_penyesuaian)
+                        ->update(array(
+                            'stat' => 5));
+                        //BerkasTarikTunai::where('id', $verification->berkas_tariktunai)->delete();
+                        NotificationSystem::send($id_penyesuaian, 11);
+                        session()->flash('reject', true);
+                        break;
+                }
+            }   
+        }elseif($lvl == 2) // Verification by Akun
+        {
+            $verificationlv2 = PenyesuaianDropping::where([['id', $id_penyesuaian], ['stat', 6]])->first();
+            if($verificationlv2)
+            {
+                switch($reaction){
+                    case 'verified':
+                        PenyesuaianDropping::where('id', $id_penyesuaian)->update(array('stat' => 8));
+                        session()->flash('success', true);
+                        NotificationSystem::send($id_penyesuaian, 14);
+                        break;
+                    case 'rejected':
+                        PenyesuaianDropping::where('id', $id_penyesuaian)
+                        ->update(array(
+                            'stat' => 7));
+                        //BerkasTarikTunai::where('id', $verification->berkas_tariktunai)->delete();
+                        NotificationSystem::send($id_penyesuaian, 13);
+                        session()->flash('reject', true);
+                        break;
+                }
             }
         }
         session()->flash('done', true);

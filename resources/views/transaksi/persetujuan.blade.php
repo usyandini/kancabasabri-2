@@ -87,11 +87,11 @@
                                                     <table>
                                                       @forelse($berkas as $value)
                                                         <tr>
-                                                          <td width="25%">File: <a href="{{ asset('file/transaksi').'/'.$value->file_name }}" target="_blank">{{ $value->file_name }}</a></td>
+                                                          <td width="25%">Berkas: <a href="{{ asset('file/transaksi').'/'.$value->file_name }}" target="_blank">{{ $value->file_name }}</a></td>
                                                           <td width="25%">Diunggah: <b>{{ $value->created_at }}</b></td>
                                                         </tr>
                                                       @empty
-                                                        <code>Belum ada file terlampir</code>
+                                                        <code>Belum ada berkas terlampir</code>
                                                       @endforelse
                                                     </table>
                                                   </div>

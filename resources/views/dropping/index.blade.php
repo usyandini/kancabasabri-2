@@ -12,7 +12,7 @@
                         <div class="row breadcrumbs-top">
                             <div class="breadcrumb-wrapper col-xs-12">
                                 <ol class="breadcrumb">
-                                    <li class="breadcrumb-item"><a href="index-2.html">Dashboard</a>
+                                    <li class="breadcrumb-item"><a href="">Dropping</a>
                                     </li>
                                     <li class="breadcrumb-item active">Informasi Dropping
                                     </li>

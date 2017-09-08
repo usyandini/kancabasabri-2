@@ -19,7 +19,7 @@ class Notification extends Model
 
     protected $table = 'notifications';
 
-    protected $dateFormat = 'Y-m-d H:i:s';
+    //protected $dateFormat = 'Y-m-d H:i:s';
     protected $dates = ['dob'];
 
     protected $fillable = ['receiver_id', 'type', 'batch_id', 'is_read'];
@@ -39,15 +39,20 @@ class Notification extends Model
         return $this->belongsTo('App\Models\TarikTunai', 'batch_id', 'id');
     }
 
+    public function idPenyesuaian()
+    {
+        return $this->belongsTo('App\Models\PenyesuaianDropping', 'batch_id', 'id');
+    }
+
     public function wording()
     {
         switch ($this->type) {
             case 1:
-                return 'Batch <b>'.date('d-m-Y', strtotime($this->batch['created_at'])).' </b> butuh review anda untuk approval sebagai Kasmin.';
+                return 'Batch <b>'.date('d-m-Y', strtotime($this->batch['created_at'])).' </b> butuh review anda untuk approval sebagai Kasimin.';
             case 2:
-                return 'Batch <b>'.date('d-m-Y', strtotime($this->batch['created_at'])).' </b> anda ditolak dengan perbaikan oleh Kasmin. Silahkan lakukan perubahan dan submit kembali.';
+                return 'Batch <b>'.date('d-m-Y', strtotime($this->batch['created_at'])).' </b> anda ditolak dengan perbaikan oleh Kasimin. Silahkan lakukan perubahan dan submit kembali.';
             case 3:
-                return 'Batch <b>'.date('d-m-Y', strtotime($this->batch['created_at'])).' </b> anda telah <b>disetujui oleh Kasmin</b>. Silahkan Menunggu verifikasi dari user Akutansi.';
+                return 'Batch <b>'.date('d-m-Y', strtotime($this->batch['created_at'])).' </b> anda telah <b>disetujui oleh Kasimin</b>. Silahkan Menunggu verifikasi dari user Akutansi.';
             case 4:
                 return 'Batch <b>'.date('d-m-Y', strtotime($this->batch['created_at'])).' </b> telah disetujui oleh user Kasmin. Mohon review untuk verifikasi akhir anda sebagai user Akutansi.';
             case 5:
@@ -55,11 +60,21 @@ class Notification extends Model
             case 6: 
                 return 'Batch <b>'.date('d-m-Y', strtotime($this->batch['created_at'])).' </b> anda telah diverifikasi oleh user Akutansi. Harap menunggu konfirmasi dari Pusat.';
             case 7: 
-                return 'Tarik Tunai dilakukan oleh <b>'.$this->idTarikTunai['cabang'].'</b>. Mohon review untuk verifikasi anda sebagai user Akutansi.';
+                return 'Tarik Tunai dilakukan oleh <b>'.$this->idTarikTunai['cabang'].'</b>. Mohon review untuk verifikasi anda sebagai user Akuntansi.';
             case 8:
-                return 'Tarik Tunai oleh <b>'.$this->idTarikTunai['cabang'].'</b> pada tanggal '.date('d F Y', strtotime($this->idTarikTunai['created_at'])).' ditolak oleh Kantor Pusat. Silahkan melakukan Tarik Tunai kembali.';
+                return 'Tarik Tunai oleh <b>'.$this->idTarikTunai['cabang'].'</b> pada tanggal '.date('d F Y', strtotime($this->idTarikTunai['created_at'])).' ditolak oleh Divisi Akuntansi. Silahkan melakukan Tarik Tunai kembali.';
             case 9:
-                return 'Tarik Tunai oleh <b>'.$this->idTarikTunai['cabang'].'</b> pada tanggal '.date('d F Y', strtotime($this->idTarikTunai['created_at'])).' telah diverifikasi oleh Kantor Pusat.';
+                return 'Tarik Tunai oleh <b>'.$this->idTarikTunai['cabang'].'</b> pada tanggal '.date('d F Y', strtotime($this->idTarikTunai['created_at'])).' telah diverifikasi oleh Divisi Akuntansi.';
+            case 10: 
+                return 'Penyesuaian dropping dilakukan oleh <b>'.$this->idPenyesuaian['cabang'].'</b>. Mohon review untuk verifikasi anda sebagai user Bia.';
+            case 11:
+                return 'Penyesuaian dropping oleh <b>'.$this->idPenyesuaian['cabang'].'</b> pada tanggal '.date('d F Y', strtotime($this->idPenyesuaian['created_at'])).' ditolak oleh Bia. Silahkan melakukan Penyesuaian Dropping kembali.';
+            case 12:
+                return 'Penyesuaian dropping oleh <b>'.$this->idPenyesuaian['cabang'].'</b> pada tanggal '.date('d F Y', strtotime($this->idPenyesuaian['created_at'])).' telah diverifikasi oleh Bia. Mohon review untuk verifikasi anda sebagai user Akuntansi.';
+            case 13:
+                return 'Penyesuaian dropping oleh <b>'.$this->idPenyesuaian['cabang'].'</b> pada tanggal '.date('d F Y', strtotime($this->idPenyesuaian['created_at'])).' ditolak oleh Divisi Akuntansi. Silahkan melakukan Penyesuaian Dropping kembali.';
+            case 14:
+                return 'Penyesuaian dropping oleh <b>'.$this->idPenyesuaian['cabang'].'</b> pada tanggal '.date('d F Y', strtotime($this->idPenyesuaian['created_at'])).' telah diverifikasi oleh Divisi Akuntansi.';
         }
     }
 }

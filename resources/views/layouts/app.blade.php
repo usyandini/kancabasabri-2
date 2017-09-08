@@ -7,7 +7,7 @@
         <meta name="description" content="Stack admin is super flexible, powerful, clean &amp; modern responsive bootstrap 4 admin template with unlimited possibilities.">
         <meta name="keywords" content="admin template, stack admin template, dashboard template, flat admin template, responsive admin template, web app">
         <meta name="author" content="PIXINVENT">
-        <title>Aplikasi Keuangan Kantor Cabang PT. Asabri (Persero)</title>
+        <title>Aplikasi Anggaran dan Belanja PT. Asabri (Persero)</title>
         <link rel="apple-touch-icon" href="{{ asset('app-assets/images/ico/apple-icon-120.png') }}">
         <link rel="shortcut icon" type="image/x-icon" href="{{ asset('app-assets/images/ico/favicon.ico') }}">
         <link href="https://fonts.googleapis.com/css?family=Montserrat:300,300i,400,400i,500,500i%7COpen+Sans:300,300i,400,400i,600,600i,700,700i" rel="stylesheet">
@@ -124,6 +124,15 @@
                             </ul>
                         </li>
                     @endif
+
+                    <li class="nav-item has-sub {{ checkOpenedMenu('anggaran') }}"><a href=""><i class="ft-edit"></i><span data-i18n="" class="menu-title">Anggaran Kegiatan</span></a>
+                        <ul class="menu-content">
+                            <li class="is-shown {{ checkActiveMenu('anggaran') }}"><a href="{{ url('/anggaran', $parameters = [], $secure = null) }}" class="menu-item">Informasi Anggaran</a>
+                            <li class="is-shown {{ checkActiveMenu('persetujuan') }}"><a href="{{ url('/anggaran/persetujuan/333/1', $parameters = [], $secure = null) }}" class="menu-item">Persetujuan Rembang</a>
+                            <li class="is-shown {{ checkActiveMenu('persetujuan') }}"><a href="{{ url('/anggaran/persetujuan/333/2', $parameters = [], $secure = null) }}" class="menu-item">Persetujuan Manajemen</a>
+                            <li class="is-shown {{ checkActiveMenu('persetujuan') }}"><a href="{{ url('/anggaran/riwayat', $parameters = [], $secure = null) }}" class="menu-item">Riwayat Anggaran</a>
+                        </ul>
+                    </li>
                     @if(\Auth::user()->is_admin)
                         <li class="nav-item has-sub {{ checkActiveMenu('user') }}"><a href=""><i class="ft-user"></i><span data-i18n="" class="menu-title">Manajemen User</span></a>
                         <ul class="menu-content">
@@ -132,6 +141,7 @@
                             <li class="is-shown {{ checkActiveMenu('persetujuan') }}"><a href="{{ url('/user', $parameters = [], $secure = null) }}" class="menu-item">Informasi Cabang dan Divisi</a>
                         </ul>
                     @endif
+
                 </ul>
             </div>
         </div>

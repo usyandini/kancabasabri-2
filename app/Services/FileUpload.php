@@ -34,6 +34,7 @@ class FileUpload
 		return $results;
 	}
 
+
 	public function base64Uploads($inputs)
 	{
 		$results = [];
@@ -51,6 +52,7 @@ class FileUpload
 		}
 		return $results;
 	}
+
 
 	public function multipleBase64Upload($inputs)
 	{
@@ -88,6 +90,10 @@ class FileUpload
 	public static function getDestinationPath( $routeName )
 	{
 		switch ($routeName) {
+
+			case 'anggaran':
+				$path = public_path().'/file/anggaran/'; 
+				break;
 			case 'transaksi':
 				$path = public_path().'/file/transaksi/'; 
 				break;
