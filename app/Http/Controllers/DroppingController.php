@@ -182,16 +182,20 @@ class DroppingController extends Controller
         $dropping = $this->droppingModel->where([['RECID', $id_drop], ['DEBIT', '>', 0]])->firstOrFail();
 
         $tariktunai = TarikTunai::where([['id_dropping', $id_drop], ['nominal_tarik', '>', 0], ['stat', 3]])->orderby('sisa_dropping', 'asc')->get();
-        //$berkas = [];
         if($tariktunai){
+            $berkas = [];
+            $berkas = $this->berkasTTModel;
             foreach($tariktunai as $value){
                 //$berkas = BerkasTarikTunai::where('id_tariktunai', $this->tarikTunaiModel['id'])->get();   
-                $berkas = BerkasTarikTunai::where('id_tariktunai', $value->id)->get();    
+                //$berkas = BerkasTarikTunai::where('id_tariktunai', $value->id)->get();    
+                // $berkasTT = BerkasTarikTunai::with('tarikTunai')->first();
+                // $berkas = $berkasTT->where('id_tariktunai', $value->id)->get();    
                 
-                //$berkas = $tariktunai->fileTarikTunai;  
+                //$berkas = $tariktunai->TarikTunai->files;
+                //$berkas = BerkasTarikTunai::get();      
             }
         }
-        //dd($tariktunai, $berkas);
+        //dd($berkas);
         return view('dropping.tariktunai.tariktunai', ['tariktunai' => $tariktunai, 'dropping' => $dropping, 'berkas' => $berkas]);
     }
 

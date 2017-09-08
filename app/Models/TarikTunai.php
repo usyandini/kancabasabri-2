@@ -37,11 +37,4 @@ class TarikTunai extends Model
     {
     	return $this->belongsTo('App\User', 'created_by', 'id');
     }
-
-    
-
-    public function fileTarikTunai()
-    {
-        return $this->hasOne('App\Models\BerkasTarikTunai', 'id_tariktunai', 'id');
-    }
 }

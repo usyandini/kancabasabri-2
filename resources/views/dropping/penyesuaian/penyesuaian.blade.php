@@ -258,6 +258,7 @@
                       </div>
                     </div>
 
+                    @if(isset($kesesuaian))
                     <div class="row match-height">
                       <div class="col-md-12">
                         <div class="card" id="history">
@@ -287,7 +288,6 @@
                                           </thead>
                                           <tbody>
                                             <tr>
-                                              @if(isset($kesesuaian))
                                                 <td><b>{{ date('d-m-Y H:i:s', strtotime($kesesuaian->created_at)) }}</b></td>
                                                 <td>{{ $kesesuaian->cabang }}</td>
                                                 <td>IDR {{ number_format($kesesuaian->nominal) }}</td>
@@ -296,14 +296,11 @@
                                                 @else
                                                 <td>Penambahan</td>
                                                 @endif
-
                                                 <td>
-                                                @foreach($berkas as $value)
-                                                <li><a href="{{ url('dropping/penyesuaian/berkas/download').'/'.$value->id }}" target="_blank">{{ $value->name }}</a></li>
-                                                @endforeach
+                                                  @foreach($berkas as $value)
+                                                  <li><a href="{{ url('dropping/penyesuaian/berkas/download').'/'.$value->id }}" target="_blank">{{ $value->name }}</a></li>
+                                                  @endforeach
                                                 </td>
-
-                                              @endif
                                             </tr>
                                           </tbody>
                                         </table>
@@ -317,6 +314,7 @@
                         </div>
                       </div>
                     </div>
+                    @endif
 
                     <div class="row match-height">
                       <div class="col-md-12">
@@ -401,7 +399,7 @@
                       var mod = val%100
 
                       if(mod != 0 || val < 100){
-                        alert("Nominal tidak valid. Silahkan input nominal kembali.");
+                        alert("Nominal tidak valid! Silahkan input nominal kembali.\nMinimal input nominal IDR 100 dengan kelipatan 100.");
                       }else{
                         document.getElementById("kesesuaian-form").submit();
                       }
