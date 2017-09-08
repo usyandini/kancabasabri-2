@@ -107,15 +107,23 @@
                         <span >Menu Utama</span><i data-toggle="tooltip" data-placement="right" data-original-title="General"
                                                class=" ft-minus"></i>
                     </li>
-                    <li class="nav-item {{ checkActiveMenu('dropping') }}"><a href="{{ url('/dropping', $parameters = [], $secure = null) }}"><i class="ft-box"></i><span data-i18n="" class="menu-title">Dropping</span></a>
+                    @if (\Auth::user()->perizinan_dropping > 0)
+                        <li class="nav-item {{ checkActiveMenu('dropping') }}"><a href="{{ url('/dropping', $parameters = [], $secure = null) }}"><i class="ft-box"></i><span data-i18n="" class="menu-title">Dropping</span></a>
+                    @endif
                     </li>
-                    <li class="nav-item has-sub {{ checkOpenedMenu('transaksi') }}"><a href=""><i class="ft-layout"></i><span data-i18n="" class="menu-title">Transaksi</span></a>
-                        <ul class="menu-content">
-                            <li class="is-shown {{ checkActiveMenu('transaksi') }}"><a href="{{ url('/transaksi', $parameters = [], $secure = null) }}" class="menu-item">Informasi Transaksi</a>
-                            <li class="is-shown {{ checkActiveMenu('persetujuan') }}"><a href="{{ url('/transaksi/persetujuan', $parameters = [], $secure = null) }}" class="menu-item">Persetujuan Transaksi</a>
-                            <li class="is-shown {{ checkActiveMenu('verifikasi') }}"><a href="{{ url('/transaksi/verifikasi', $parameters = [], $secure = null) }}" class="menu-item">Verifikasi Transaksi</a>
-                        </ul>
-                    </li>
+                    @if (\Auth::user()->perizinan_transaksi > 0)
+                        <li class="nav-item has-sub {{ checkOpenedMenu('transaksi') }}"><a href=""><i class="ft-layout"></i><span data-i18n="" class="menu-title">Transaksi</span></a>
+                            <ul class="menu-content">
+                                @if (collect(\Auth::user()->perizinan('transaksi'))->contains("1") || collect(\Auth::user()->perizinan('transaksi'))->contains("3") || collect(\Auth::user()->perizinan('transaksi'))->contains("5") || collect(\Auth::user()->perizinan('transaksi'))->contains("7"))
+                                    <li class="is-shown {{ checkActiveMenu('transaksi') }}"><a href="{{ url('/transaksi', $parameters = [], $secure = null) }}" class="menu-item">Informasi Transaksi</a>
+                                @endif
+                                @if (collect(\Auth::user()->perizinan('transaksi'))->contains("2") || collect(\Auth::user()->perizinan('transaksi'))->contains("3") || collect(\Auth::user()->perizinan('transaksi'))->contains("6") || collect(\Auth::user()->perizinan('transaksi'))->contains("7"))
+                                    <li class="is-shown {{ checkActiveMenu('persetujuan') }}"><a href="{{ url('/transaksi/persetujuan', $parameters = [], $secure = null) }}" class="menu-item">Persetujuan Transaksi</a>
+                                    <li class="is-shown {{ checkActiveMenu('verifikasi') }}"><a href="{{ url('/transaksi/verifikasi', $parameters = [], $secure = null) }}" class="menu-item">Verifikasi Transaksi</a>
+                                @endif
+                            </ul>
+                        </li>
+                    @endif
                     @if(\Auth::user()->is_admin)
                         <li class="nav-item has-sub {{ checkActiveMenu('user') }}"><a href=""><i class="ft-user"></i><span data-i18n="" class="menu-title">Manajemen User</span></a>
                         <ul class="menu-content">
