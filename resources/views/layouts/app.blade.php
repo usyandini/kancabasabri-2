@@ -125,14 +125,20 @@
                         </li>
                     @endif
 
-                    <li class="nav-item has-sub {{ checkOpenedMenu('anggaran') }}"><a href=""><i class="ft-edit"></i><span data-i18n="" class="menu-title">Anggaran Kegiatan</span></a>
-                        <ul class="menu-content">
-                            <li class="is-shown {{ checkActiveMenu('anggaran') }}"><a href="{{ url('/anggaran', $parameters = [], $secure = null) }}" class="menu-item">Informasi Anggaran</a>
-                            <li class="is-shown {{ checkActiveMenu('persetujuan') }}"><a href="{{ url('/anggaran/persetujuan/333/1', $parameters = [], $secure = null) }}" class="menu-item">Persetujuan Rembang</a>
-                            <li class="is-shown {{ checkActiveMenu('persetujuan') }}"><a href="{{ url('/anggaran/persetujuan/333/2', $parameters = [], $secure = null) }}" class="menu-item">Persetujuan Manajemen</a>
-                            <li class="is-shown {{ checkActiveMenu('persetujuan') }}"><a href="{{ url('/anggaran/riwayat', $parameters = [], $secure = null) }}" class="menu-item">Riwayat Anggaran</a>
-                        </ul>
-                    </li>
+                    @if (\Auth::user()->perizinan_anggaran > 0)
+                        <li class="nav-item has-sub {{ checkOpenedMenu('anggaran') }}"><a href=""><i class="ft-edit"></i><span data-i18n="" class="menu-title">Anggaran Kegiatan</span></a>
+                            <ul class="menu-content">
+                                @if (collect(\Auth::user()->perizinan('anggaran'))->contains("1") || collect(\Auth::user()->perizinan('anggaran'))->contains("3") || collect(\Auth::user()->perizinan('anggaran'))->contains("5") || collect(\Auth::user()->perizinan('anggaran'))->contains("7"))
+                                    <li class="is-shown {{ checkActiveMenu('anggaran') }}"><a href="{{ url('/anggaran', $parameters = [], $secure = null) }}" class="menu-item">Informasi Anggaran</a>
+                                    <li class="is-shown {{ checkActiveMenu('persetujuan') }}"><a href="{{ url('/anggaran/riwayat', $parameters = [], $secure = null) }}" class="menu-item">Riwayat Anggaran</a>
+                                @endif
+                                @if (collect(\Auth::user()->perizinan('anggaran'))->contains("2") || collect(\Auth::user()->perizinan('anggaran'))->contains("3") || collect(\Auth::user()->perizinan('anggaran'))->contains("6") || collect(\Auth::user()->perizinan('anggaran'))->contains("7"))
+                                    <li class="is-shown {{ checkActiveMenu('persetujuan') }}"><a href="{{ url('/anggaran/persetujuan/333/1', $parameters = [], $secure = null) }}" class="menu-item">Persetujuan Rembang</a>
+                                    <li class="is-shown {{ checkActiveMenu('persetujuan') }}"><a href="{{ url('/anggaran/persetujuan/333/2', $parameters = [], $secure = null) }}" class="menu-item">Persetujuan Manajemen</a>
+                                @endif
+                            </ul>
+                        </li>
+                    @endif
                     @if(\Auth::user()->is_admin)
                         <li class="nav-item has-sub {{ checkActiveMenu('user') }}"><a href=""><i class="ft-user"></i><span data-i18n="" class="menu-title">Manajemen User</span></a>
                         <ul class="menu-content">
@@ -141,7 +147,6 @@
                             <li class="is-shown {{ checkActiveMenu('persetujuan') }}"><a href="{{ url('/user', $parameters = [], $secure = null) }}" class="menu-item">Informasi Cabang dan Divisi</a>
                         </ul>
                     @endif
-
                 </ul>
             </div>
         </div>

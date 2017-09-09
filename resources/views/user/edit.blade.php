@@ -49,15 +49,15 @@
                               <div class="form-body">
                                 <div class="form-group">
                                   <label for="eventRegInput1">Username</label>
-                                  <input type="text" required="" class="form-control" placeholder="Username" name="username" value="{{ $user->username }}">
+                                  <input type="text" required="" class="form-control" placeholder="Username" name="username" value="{{ old('username') == '' ? $user->username : old('username') }}">
                                 </div>
                                 <div class="form-group">
                                   <label for="eventRegInput2">Nama Lengkap</label>
-                                  <input type="text" required="" class="form-control" placeholder="Nama" name="name" value="{{ $user->name }}">
+                                  <input type="text" required="" class="form-control" placeholder="Nama" name="name" value="{{ old('name') == '' ? $user->name : old('name') }}">
                                 </div>
                                 <div class="form-group">
                                   <label for="eventRegInput4">Email</label>
-                                  <input type="email" required="" class="form-control" placeholder="Email" name="email" value="{{ $user->email }}">
+                                  <input type="email" required="" class="form-control" placeholder="Email" name="email" value="{{ old('email') == '' ? $user->email : old('email') }}">
                                 </div>
                                 <div class="form-group">
                                   <label>Cabang</label>

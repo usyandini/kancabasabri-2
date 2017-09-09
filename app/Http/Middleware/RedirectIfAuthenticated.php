@@ -59,6 +59,8 @@ class RedirectIfAuthenticated
                 } elseif (collect($su_arr)->contains($user->perizinan_anggaran)) {
                     return abort(404); // BELUM FIX
                 } 
+            } elseif ($user->is_admin == 1) {
+                return redirect('/user');
             } else { abort(404); }
         }
 
