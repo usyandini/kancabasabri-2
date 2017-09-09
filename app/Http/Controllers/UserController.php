@@ -12,7 +12,7 @@ use App\Models\KantorCabang;
 use Validator;
 
 // ------- PERIZINAN --------
-//  0 = Not authorized
+//  0 = Not authorized at all
 //  1 = Staff
 //  2 = Approver
 //  3 = Staff + Approver
@@ -44,23 +44,12 @@ class UserController extends Controller
     public function store(Request $request)
     {
     	$input = $request->except('_method', '_token');
-    	$validator = Validator::make($input, 
-            [
-            	'username'	=> 'required|unique:users',
-            	'name'	=> 'required',
-                'email' => 'required|email|unique:users',
-                'password' => 'required|min:4|confirmed'],
-            [
-            	'username.required' => 'Kolom <b>username</b> tidak boleh kosong.',
-                'username.unique' => '<b>Usename</b> yang anda masukkan sudah terdaftar di database sistem.',
-                'email.unique' => '<b>E-mail</b> yang anda masukkan sudah terdaftar di database sistem.',
-                'password.min' => 'Panjang isian di kolom <b>password</b> minimal 4 karakter.',
-                'password.confirmed' => 'Kolom <b>password dan konfirmasi password</b> tidak sesuai.']);
+    	$validator = $this->validateInputs($input);
 
     	if ($validator->passes()) {
-    		$input['perizinan_dropping'] = array_sum($input['perizinan_dropping']);
-            $input['perizinan_transaksi'] = array_sum($input['perizinan_transaksi']);
-            $input['perizinan_anggaran'] = array_sum($input['perizinan_anggaran']);
+		    $input['perizinan_dropping'] = isset($input['perizinan_dropping']) ? array_sum($input['perizinan_dropping']) : 0;
+            $input['perizinan_transaksi'] = isset($input['perizinan_transaksi']) ? array_sum($input['perizinan_transaksi']) : 0;
+            $input['perizinan_anggaran'] = isset($input['perizinan_anggaran']) ? array_sum($input['perizinan_anggaran']) : 0;
 
             $input['password'] = bcrypt($input['password']);
             $input['created_by'] = \Auth::user()->id;
@@ -84,26 +73,14 @@ class UserController extends Controller
 
     public function update(Request $request, $id)
     {    	
-        // dd($request->all());
     	$input = $request->except('_token' , '_method');
-    	$validator = Validator::make($input, 
-            [
-            	'username'	=> 'required|unique:users,username,'.$id,
-            	'name'	    => 'required',
-                'email'     => 'required|email|unique:users,email,'.$id,
-                'cabang'    => 'required'
-                ],
-            [
-            	'username.required' => 'Kolom <b>username</b> tidak boleh kosong.',
-                'username.unique'   => '<b>Usename</b> yang anda masukkan sudah terdaftar di database sistem.',
-                'email.unique'      => '<b>E-mail</b> yang anda masukkan sudah terdaftar di database sistem.',
-                'cabang.required'   => 'Kolom <b>Kantor Cabang</b> tidak boleh kosong.', 
-                'divisi.required'   => 'Kolom <b>Divisi</b> tidak boleh kosong.']);
+        if ($input['password'] == '') { unset($input['password']); unset($input['password_confirmation']); }
+        $validator = $this->validateInputs($input, $id);
 
     	if ($validator->passes()) {
-            $input['perizinan_dropping'] = array_sum($input['perizinan_dropping']);
-            $input['perizinan_transaksi'] = array_sum($input['perizinan_transaksi']);
-            $input['perizinan_anggaran'] = array_sum($input['perizinan_anggaran']);
+            $input['perizinan_dropping'] = isset($input['perizinan_dropping']) ? array_sum($input['perizinan_dropping']) : 0;
+            $input['perizinan_transaksi'] = isset($input['perizinan_transaksi']) ? array_sum($input['perizinan_transaksi']) : 0;
+            $input['perizinan_anggaran'] = isset($input['perizinan_anggaran']) ? array_sum($input['perizinan_anggaran']) : 0;
             $input['updated_by'] = \Auth::user()->id;
 
     		User::where('id', $id)->update($input);
@@ -114,6 +91,27 @@ class UserController extends Controller
     	}
 
     	return redirect()->back()->withInput()->withErrors($validator);
+    }
+
+    public function validateInputs($input, $id = null)
+    {
+        return Validator::make($input, 
+            [
+                'username'  => 'required|unique:users,username,'.$id,
+                'name'      => 'required',
+                'email'     => 'required|email|unique:users,email,'.$id,
+                'cabang'    => 'required',
+                'divisi'    => 'required_if:cabang,00',
+                'password'  => 'sometimes|required|min:4|confirmed'
+            ], [
+                'username.required' => 'Kolom <b>username</b> tidak boleh kosong.',
+                'username.unique'   => '<b>Usename</b> yang anda masukkan sudah terdaftar di database sistem.',
+                'email.unique'      => '<b>E-mail</b> yang anda masukkan sudah terdaftar di database sistem.',
+                'cabang.required'   => 'Kolom <b>Kantor Cabang</b> tidak boleh kosong.', 
+                'divisi.required_if'   => 'Kolom <b>Divisi</b> tidak boleh kosong jika cabang yang dipilih <b>kantor pusat</b>.',
+                'password.required'   => 'Kolom <b>password</b> tidak boleh kosong.',
+                'password.min'      => 'Panjang isian kolom <b>password</b> minimal 4 karakter.',
+                'password.confirmed' => 'Kolom <b>password dan konfirmasi password</b> harus cocok.']);
     }
 
     public function restore(Request $request, $id)
@@ -134,8 +132,7 @@ class UserController extends Controller
         } else {
             User::where('id', $id)->delete();
         }
-    	
-    	
+    
     	session()->flash('success', 'User atas nama <b>'.$user.'</b> berhasil dihapus');
     	return redirect()->back();
     }

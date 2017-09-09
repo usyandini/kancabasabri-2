@@ -68,7 +68,7 @@
 			                        			<td>{{ $user->is_admin == 1 ? 'Administrator' : '-' }}</td>
 			                        			{!! $user->deleted_at ? '<td class="red">Deleted</td>' : '<td class="blue">Aktif</td>' !!}
 			                        			<td>
-			                        				<a class="btn btn-sm btn-primary" href="{{ url('user').'/'.$user->id }}"><i class="fa fa-info"></i> Detil</a>
+			                        				{{-- <a class="btn btn-sm btn-primary" href="{{ url('user').'/'.$user->id }}"><i class="fa fa-info"></i> Detil</a> --}}
 			                        				@if(!$user->deleted_at)
 			                        					<a class="btn btn-sm btn-primary" href="{{ url('user').'/'.$user->id.'/edit' }}"><i class="fa fa-edit"></i> Edit</a>
 		                        					@endif
