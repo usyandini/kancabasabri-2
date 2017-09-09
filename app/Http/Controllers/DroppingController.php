@@ -13,6 +13,9 @@ use App\Models\TarikTunai;
 use App\Models\PenyesuaianDropping;
 use App\Models\BerkasTarikTunai;
 use App\Models\BerkasPenyesuaian;
+use App\Models\RejectReason;
+use App\Models\RejectTarikTunai;
+use App\Models\RejectPenyesuaian;
 
 use App\Models\AkunBank;
 use App\Models\KantorCabang;
@@ -185,15 +188,6 @@ class DroppingController extends Controller
         if($tariktunai){
             $berkas = [];
             $berkas = $this->berkasTTModel;
-            foreach($tariktunai as $value){
-                //$berkas = BerkasTarikTunai::where('id_tariktunai', $this->tarikTunaiModel['id'])->get();   
-                //$berkas = BerkasTarikTunai::where('id_tariktunai', $value->id)->get();    
-                // $berkasTT = BerkasTarikTunai::with('tarikTunai')->first();
-                // $berkas = $berkasTT->where('id_tariktunai', $value->id)->get();    
-                
-                //$berkas = $tariktunai->TarikTunai->files;
-                //$berkas = BerkasTarikTunai::get();      
-            }
         }
         //dd($berkas);
         return view('dropping.tariktunai.tariktunai', ['tariktunai' => $tariktunai, 'dropping' => $dropping, 'berkas' => $berkas]);
@@ -488,7 +482,8 @@ class DroppingController extends Controller
             'kpkc' => $kpkc,
             'divisi' => $divisi,
             'subpos' => $subpos,
-            'kegiatan' => $kegiatan
+            'kegiatan' => $kegiatan,
+            'reject_reasons' => RejectReason::where('type', 3)->get()
             ]);
     }
 
@@ -512,7 +507,8 @@ class DroppingController extends Controller
                         'nominal_tarik' => 0,
                         'sisa_dropping' => $verification->nominal,
                         'stat' => 2));
-                    //BerkasTarikTunai::where('id', $verification->berkas_tariktunai)->delete();
+                    $reject_reason = ['id_tariktunai' => $id_tarik, 'reject_reason' => $request->reason];
+                    RejectTarikTunai::create($reject_reason);
                     NotificationSystem::send($id_tarik, 8);
                     session()->flash('reject', true);
                     break;
@@ -522,7 +518,7 @@ class DroppingController extends Controller
         return redirect()->back();
     }
 
-    public function verifikasiPenyesuaian ($id){
+    public function verifikasiPenyesuaian ($id, Request $request){
         $dataPD = PenyesuaianDropping::where('id', $id)->first();
         $berkas = [] ;
 
@@ -544,7 +540,8 @@ class DroppingController extends Controller
             'kpkc' => $kpkc,
             'divisi' => $divisi,
             'subpos' => $subpos,
-            'kegiatan' => $kegiatan
+            'kegiatan' => $kegiatan,
+            'reject_reasons' => RejectReason::where('type', 4)->get()
             ]);
     }
 
@@ -570,7 +567,8 @@ class DroppingController extends Controller
             'kpkc' => $kpkc,
             'divisi' => $divisi,
             'subpos' => $subpos,
-            'kegiatan' => $kegiatan
+            'kegiatan' => $kegiatan,
+            'reject_reasons' => RejectReason::where('type', 5)->get()
             ]);
     }
 
@@ -592,6 +590,8 @@ class DroppingController extends Controller
                         ->update(array(
                             'stat' => 5));
                         //BerkasTarikTunai::where('id', $verification->berkas_tariktunai)->delete();
+                        $reject_reason = ['id_penyesuaian' => $id_penyesuaian, 'reject_reason' => $request->reason];
+                        RejectPenyesuaian::create($reject_reason);
                         NotificationSystem::send($id_penyesuaian, 11);
                         session()->flash('reject', true);
                         break;
@@ -613,6 +613,8 @@ class DroppingController extends Controller
                         ->update(array(
                             'stat' => 7));
                         //BerkasTarikTunai::where('id', $verification->berkas_tariktunai)->delete();
+                        $reject_reason = ['id_penyesuaian' => $id_penyesuaian, 'reject_reason' => $request->reason];
+                        RejectPenyesuaian::create($reject_reason);
                         NotificationSystem::send($id_penyesuaian, 13);
                         session()->flash('reject', true);
                         break;

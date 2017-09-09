@@ -125,12 +125,6 @@
                                         <input type="text" readonly="" id="cabang" class="form-control" placeholder="Kantor Cabang" name="cabang" value="{{ $dropping->CABANG_DROPPING }}">
                                       </div>
                                     </div>
-                                    {{--<div class="col-md-12">
-                                      <div class="form-group">
-                                        <label for="is_sesuai">Apakah jumlah dropping sudah sesuai dengan pengajuan?</label><br>
-                                        <input type="checkbox" onchange="change_checkbox(this)" class="form-control switch" id="switch1" checked="checked" name="is_sesuai" value="1" data-on-label="Sesuai" data-off-label="Tidak Sesuai"/>
-                                      </div>
-                                    </div>--}}
                                   </div>
                                 </div>
                               </form>
