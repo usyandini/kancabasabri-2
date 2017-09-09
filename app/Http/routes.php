@@ -89,7 +89,9 @@ Route::group(['middleware' => 'auth'], function() {
 		Route::post('/submit/tambah', 'AnggaranController@store');
 	});
 
-	Route::resource('/user', 'UserController');
-	Route::post('/user/restore/{id}', 'UserController@restore');
+	Route::group(['middleware' => 'previlege:admin,1'], function() {
+		Route::resource('/user', 'UserController');
+		Route::post('/user/restore/{id}', 'UserController@restore');
+	});
 
 });
