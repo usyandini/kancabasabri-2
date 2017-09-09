@@ -38,11 +38,6 @@
 			                </div>
 			                <div class="card-body collapse in">
 			                  <div class="card-block">
-		                  		@if(session('success'))
-				                  	<div class="alert alert-success">
-				                  		{!! session('success') !!}
-				                	</div>
-				                @endif
 			                    <div class="table-responsive">
 			                      <table class="table table-striped table-bordered datatable-select-inputs nowrap" cellspacing="0" width="100%">
 			                        <thead>
@@ -130,6 +125,11 @@
 				<script src="{{ asset('app-assets/vendors/js/tables/datatable/dataTables.responsive.min.js') }}"
 				  type="text/javascript"></script>
 				<script type="text/javascript">
+					$(document).ready(function() {
+						@if (session('success'))
+							toastr.info("{!! session('success') !!}", "Update Berhasil", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:10e3});
+						@endif
+					});
 					function deleteUser(id, is_force) {
 						if (is_force == true) {
 							$('input[name="is_force"]').val('1');

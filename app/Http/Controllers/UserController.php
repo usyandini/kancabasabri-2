@@ -84,9 +84,9 @@ class UserController extends Controller
             $input['updated_by'] = \Auth::user()->id;
 
     		User::where('id', $id)->update($input);
-	    	$user = User::withTrashed()->where('id', $id)->first()->name;
+	    	$user = User::withTrashed()->where('id', $id)->first();
 
-	    	session()->flash('success', 'User atas nama <b>'.$user.'</b> berhasil diperbarui');
+	    	session()->flash('success', 'User atas nama <b>'.$user->name.' ('.$user->username.')</b> berhasil diperbarui.');
 	    	return redirect('user');
     	}
 
