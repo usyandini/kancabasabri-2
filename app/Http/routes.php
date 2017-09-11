@@ -82,9 +82,12 @@ Route::group(['middleware' => 'auth'], function() {
 		Route::get('/persetujuan/{nd}/{status}', 'AnggaranController@persetujuan_anggaran');
 		Route::get('/get/attributes/{type}/{id}', 'AnggaranController@getAttributes');
 		Route::get('/get/filtered/{nd_surat}/{type}', 'AnggaranController@getFiltered');
-		Route::get('/get/filteredHistory', 'AnggaranController@getFilteredHistory');
+		Route::get('/get/filteredHistory/{tahun}/{unit}/{kategori}/{keyword}', 'AnggaranController@getFilteredHistory');
+		Route::get('/get/filteredAnggaran/{nd_surat}/{status}/{unit}', 'AnggaranController@getFilteredAnggaran');
 		Route::get('/get/download/{id}', 'AnggaranController@unduh_file');
 		Route::get('/riwayat/', 'AnggaranController@riwayat');
+		Route::post('/riwayat/', 'AnggaranController@riwayat');
+		Route::post('/cari/', 'AnggaranController@index');
 		Route::get('/removeAnggaran/', 'AnggaranController@removeAnggaranAll');
 		Route::post('/submit/tambah', 'AnggaranController@store');
 	});

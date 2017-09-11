@@ -28,76 +28,6 @@
                 </div>
                 <div class="content-body"><!-- Basic scenario start -->
                     <section id="basic">
-                        <div class="row" style="display:{{$display['search']}}">
-                            <div class="card">
-                                <div class="card-header">
-                                  <h4 class="card-title">Pencarian Anggaran dan Kegiatan</h4>
-                                  <a class="heading-elements-toggle"><i class="ft-align-justify font-medium-3"></i></a>
-                                </div>
-                                <div class="card-body collapse in">
-                                  <div class="card-block ">
-                                    <form method="POST" action="">
-                                      <div class="row col-xs-12">
-                                        {{ csrf_field() }}
-                                        <div class="col-xs-3">
-                                            <div class="form-group">
-                                              <label>ND/Surat</label>
-                                              <input id="cari_nd_surat" name="cari_nd_surat" class="form-control">
-                                              
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-3">
-                                            <div class="form-group">
-                                              <label>Tipe Anggaran</label>
-                                              <select class="select2 form-control" name="cari_tipe_anggaran" id="cari_tipe_anggaran">
-                                                <option value="0">Tipe Anggaran</option>
-                                                <option value="1">Kirim</option>
-                                                <option value="2">Persetujuan Kanit Kerja</option>
-                                                <option value="3">Persetujuan Renbang</option>
-                                                <option value="4">Persetujuan Direksi</option>
-                                                <option value="5">Persetujuan Dekom</option>
-                                                <option value="6">Persetujuan Ratek</option>
-                                                <option value="7">Persetujuan RUPS</option>
-                                                <option value="8">Persetujuan Finalisasi RUPS</option>
-                                                <option value="9">Persetujuan Risalah RUPS</option>
-                                              </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-3">
-                                            <div class="form-group">
-                                              <label>Status Anggaran</label>
-                                              <select class="select2 form-control" name="cari_stat_anggaran" id="cari_stat_anggaran">
-                                                <option value="0">None</option>
-                                                <option value="1">Draft</option>
-                                                <option value="2">Transfer</option>
-                                                <option value="3">Complate</option>
-                                              </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-3">
-                                            <div class="form-group">
-                                              <label>Unit Kerja</label>
-                                              <select class="select2 form-control " name="cari_unit_kerja" id="cari_unit_kerja">
-                                                <option value="0">None</option>
-                                              </select>
-                                            </div>
-                                        </div>
-                                      </div>
-                                      <div class="row col-xs-12">
-                                          <div class="col-xs-9 ">
-                                          </div>
-                                          <div class="col-xs-1">
-                                              <a href="{{ url('anggaran/edit/333/1') }}" class="btn btn-primary"><i class="fa fa-search"></i> Cari</a>                                            
-                                          </div>
-                                          <div class="col-xs-2" >
-                                              <a href="{{ url('anggaran/tambah') }}" class="btn btn-success"><i class="fa fa-plus"></i> Tambah</a>                                   
-                                          </div>
-                                      </div>
-                                    </form>
-                                  </div>
-                                </div>
-                            </div>
-                        </div>
                         <div class="row">
                           
                           <div class="card">
@@ -146,9 +76,7 @@
                                           <div class="form-grpup">
                                             <label>Tipe Anggaran</label>
                                             @if($status=='tambah')
-                                              <select class="select2 form-control" id="tipe_anggaran" name="tipe_anggaran">
-                                                <option value="Tipe Anggaran">Tipe Anggaran</option>
-                                              </select>
+                                              <input id="tipe_anggaran" name="tipe_anggaran" class="form-control" readonly value="Default Original Budget">
                                             @else
                                                 <input id="tipe_anggaran" name="tipe_anggaran" class="form-control" readonly>
                                             @endif
@@ -210,25 +138,86 @@
                                     <div id="basicScenario"></div>
 
                                     <br />
-                                    <div class="row col-xs-12">
+                                    <div class="row col-xs-12" id="grup_uk">
 
                                       <div class="col-xs-3 ">
                                       </div>
                                       <div class="col-xs-2 ">
                                         <div class="form-group" id="save_button" style="display:{{$display['save']}}">
-                                          <div id="save" name="save" onclick="saveAnggaran()"class="btn btn-primary"><i class="fa fa-save"></i> Simpan</div>
+                                          <div id="save" name="save" onclick="check('Simpan')"class="btn btn-primary"><i class="fa fa-save"></i> Simpan</div>
                                         </div>
                                       </div>
                                       <div class="col-xs-3 ">
                                       </div>
                                       <div class="col-xs-2" style="horizontal-align:center">
                                         <div class="form-group" id="send_button" style="display:{{$display['send']}}">
-                                          <div id="send" name="send" onclick="sendAnggaran()" class="btn btn-success"><i class="fa fa-send"></i> Kirim</div>
+                                          <div id="send" name="send" onclick="check('Kirim')" class="btn btn-success"><i class="fa fa-send"></i> Kirim</div>
                                         </div>
                                       </div>
                                       <div class="col-xs-2 ">
                                         <div class="form-group" id="edit_button" style="display:{{$display['edit']}}">
                                           <a href="{{ url('anggaran/edit/'.$filters['nd_surat'].'/1') }}" id="edit" name="edit" class="btn btn-primary"><i class="fa fa-edit"></i> Ubah</a>
+                                        </div>
+                                      </div>
+                                    </div>
+
+                                    <div class="row col-xs-12" id="grup_r" style="display:none">
+
+                                      <div class="col-xs-6 ">
+                                        <div class="col-xs-4 ">
+                                          <div class="form-group">
+                                            <!-- <button type="submit" class="btn btn-info"><i class="fa fa-check"></i> Disetujui</button> -->
+                                            <div id="accept_r" name="accept_r" onclick="changeButton()" class="btn btn-success"><i class="fa fa-check"></i> Disetujui</div>
+                                          
+                                          </div>
+                                        </div>
+                                        <div class="col-xs-2 ">
+                                          <div class="form-group">
+                                            <!-- <button type="submit" class="btn btn-secondary"><i class="fa fa-download"></i> Unduh</button> -->
+                                            <div id="download_r" name="download_r" class="btn btn-secondary"><i class="fa fa-download"></i> Unduh</div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div class="col-xs-6 " >
+
+                                        <div class="col-xs-3 pull-right">
+                                          <div class="form-group">
+                                            <!-- <button type="submit" class="btn btn-success"><i class="fa fa-send"></i> Kirim</button> -->
+                                            <div id="send_r" name="send_r" class="btn btn-success" style="display:none"><i class="fa fa-send"></i> Kirim</div>
+                                          </div>
+                                        </div>
+                                        <div class="col-xs-3 pull-right">
+                                          <div class="form-group">
+                                            <!-- <button type="submit" class="btn btn-warning"><i class="fa fa-edit"></i> Edit</button> -->
+                                            <a href="{{url('anggaran/persetujuan/'.$filters['nd_surat'].'/3')}}" id="edit_r" name="edit_r"  class="btn btn-warning"><i class="fa fa-edit"></i> Edit</a>
+                                            <div style="display:none" onclick="check('Simpan')" id="save_r" name="save_r"  class="btn btn-primary"><i class="fa fa-save"></i> Simpan</div>
+                                          
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+
+                                    <div class="row col-xs-12" id="grup_m" style="display:none">
+
+                                      <div class="col-xs-6 ">
+                                        <div class="form-group">
+                                          <!-- <button type="submit" class="btn btn-secondary"><i class="fa fa-download"></i> Unduh</button> -->
+                                            <a href="" id="download_m" name="download_m" class="btn btn-secondary"><i class="fa fa-download"></i> Unduh</a>
+                                        </div>
+                                      </div>
+                                      <div class="col-xs-6 " >
+
+                                        <div class="col-xs-3 pull-right">
+                                          <div class="form-group">
+                                            <!-- <button type="submit" class="btn btn-danger"><i class="fa fa-send"></i> Ditolak</button> -->
+                                            <div id="reject_m" name="reject_m" onclick="check('Tolak')" class="btn btn-danger"><i class="fa fa-close"></i> Ditolak</div>
+                                          </div>
+                                        </div>
+                                        <div class="col-xs-3 pull-right">
+                                          <div class="form-group">
+                                            <!-- <button type="submit" class="btn btn-success"><i class="fa fa-edit"></i> Disetujui</button> -->
+                                            <div id="accept_m" name="accept_m" onclick="check('Setuju')" class="btn btn-success"><i class="fa fa-check"></i> Disetujui</div>
+                                          </div>
                                         </div>
                                       </div>
                                     </div>
@@ -241,6 +230,74 @@
                     </section>
                     <!-- Basic scenario end -->
                 </div>
+
+                <div class="modal fade text-xs-left" id="modal_berkas" tabindex="-1" role="dialog" aria-labelledby="myModalLabel20"
+                aria-hidden="true">
+                  <div class="modal-dialog modal-md" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                          </button>
+                          @if($editable)
+                          <h4 class="modal-title" id="titleModal">Unggah Berkas</h4>
+                          @else
+                          <h4 class="modal-title" id="titleModal">Unduh Berkas</h4>
+                          @endif
+                      </div>
+                      <div class="modal-body" id="confirmation-msg">
+                        <div class="row">
+                          <div class="col-md-12" id="list_download">
+                          </div>
+                          <div class="col-md-12" id="list_file">
+                          </div>
+                          <br />
+                          <br />
+                          @if($editable)
+                          <input type="file" id="files" name="files" multiple>
+                          @endif
+                        </div>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">Kembali</button>
+                        @if($editable)
+                        <button id="simpan_file" class="btn btn-outline-primary">Simpan</button>
+                        @endif
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="modal fade text-xs-left" id="modal_pernyataan" tabindex="-1" role="dialog" aria-labelledby="myModalLabel20"
+                aria-hidden="true">
+                  <div class="modal-dialog modal-md" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h4 class="modal-title" id="title_modal_pernyataan">Pernyataan Anggaran Kegiatan</h4>
+                      </div>
+                      <div class="modal-body" id="confirmation-msg">
+                        <div class="row">
+                          <div class="col-md-12" id="teks_pernyataan">
+                            <p>Apakah anda yakin Akan Mengajukan Anggaran Kegiatan dengan Nomor Dinas/Surat RTO?</p>
+                          </div>
+                          <div class="col-md-12" id="form_penolakan">
+                            <textarea rows="4" value="" style="float: left" class="col-md-12" id="alasan_penolakan" name="alasan_penolakan">
+                            </textarea>
+                          </div>
+                          
+                        </div>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">Tidak, kembali</button>
+                        <button type="button" id="button_peryataan" onclick="sumbit_post()" class="btn btn-outline-primary">Ya, kirim</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
                 @endsection
 
                 @section('customjs')
@@ -307,14 +364,54 @@
                   }
                 </script>
                 <script type="text/javascript">
-                  var inputs = upload_file = convert_file =[];
-                  var database_file= [];
+                  var inputs = [];
+                  var hasil=[];
+                  var upload_file = []
+                  var convert_file =[];
+                  var database_file= []
+                  var list_berkas=[];
                   var editableStat = {{ $editable ? 1 : 0 }};
-                  var jenis_field = kelompok_field = pos_field = sub_field = satuan_field = null;
-                  var unitk_field = kuantitas_field = nilai_field = null;
-                  var twi_field = twii_field = twiii_field = twiv_field = anggarant_field= null
+                  var insertableStat = {{ $status=='edit' ? 1 : 0 }};
+                  var id_field_item = id_field_edit = jenis_field_insert = jenis_field_edit = null;
+                  var kelompok_field_insert = kelompok_field_edit = pos_field_insert = pos_field_edit = null;
+                  var sub_field_insert = sub_field_edit = satuan_field_insert = satuan_field_edit = null;
+                  var unitk_field_insert = kuantitas_field_insert = nilai_field_insert = null;
+                  var unitk_field_edit = kuantitas_field_edit = nilai_field_edit= null;
+                  var twi_field_insert = twii_field_insert = twiii_field_insert = twiv_field_insert = anggarant_field_insert = null
+                  var twi_field_edit = twii_field_edit = twiii_field_edit = twiv_field_edit = anggarant_field_edit = null
                   var item =  null;
-                  var tempIdCounter = totalRows  = jumlah_file= 0;
+                  var tempIdCounter = totalRows  = jumlah_file=0
+                  var simpan_file =false;
+                  var index_modal = -1;
+                  var isInput = false;
+                  var statusTable = "null";
+                  var countFile = 0;
+                  $('#modal_berkas').on('hidden.bs.modal', function () {
+                      if(!simpan_file){
+                        hasil=[];
+                        for(i = 0; i < upload_file.length ; i++){
+                          for(j = 0; j < upload_file[i].length ; j++){
+                            if(convert_file[i]==null){
+                              if(convert_file[i][j]==null){
+                                // alert("null");
+                                upload_file[i][j]==null
+                                document.getElementById('file_'+i+'_'+j).value="null";
+                                document.getElementById('file_name_'+i+'_'+j).value = "null";
+                                document.getElementById('file_type_'+i+'_'+j).value = "null";
+                                document.getElementById('file_size_'+i+'_'+j).value = "null";
+                              }else{
+
+                                // alert(convert_file[i][j].name);
+                              }
+                            }
+                          }
+                        }
+                        
+                      }
+                      simpan_file = false;
+                      // alert("close");
+                  })
+
                   
                   $(document).ready(function() {
 
@@ -342,40 +439,34 @@
                           })
                         },
                         insertItem: function (item) {
+
+                          item['file'] = tempIdCounter;
                           item["isNew"] = true;
                           item["tempId"] = ++tempIdCounter;
-
-                          item["files"] = [];
-                          for(i = 0; i<upload_file.length;i++){
-                            var index = i;
-                            var newFile ={
-                              'name' : upload_file[i]["name"],
-                              'type' : upload_file[i]["type"],
-                              'size' : upload_file[i]["size"]
-                            }
-                            item["files"][index] = newFile;
-                          }
                                                       
                           inputs.push(item);
-                          console.log(item);
+                          // console.log(item);
+
                         },
                         updateItem: function(item) {
-                          item["files"] = [];
-                          for(i = 0; i<upload_file.length;i++){
-                            var index = i;
-                            var newFile ={
-                              'name' : upload_file[i]["name"],
-                              'type' : upload_file[i]["type"],
-                              'size' : upload_file[i]["size"]
-                            }
-                            item["files"][index] = newFile;
-                          }
+
+                          // console.log(item);
+                          // alert("update");
                           if (item["isNew"]) {
                             inputs.splice(item["tempId"]-1, 1, item);  
                           } else {
-                            inputs.push(item);
+
+                            for(i=0;i<inputs.length;i++){
+                              if(inputs[i]['id']==item['id']){
+                                inputs[i]=item;
+                                // alert("change "+item['id']);
+                              }else{
+                                // alert("not "+item['id']);
+                              }
+                            }
+                            // inputs.push(item);
                           }
-                          console.log(item);  
+                          // console.log(item);  
                         },
                       }, 
                       onRefreshed: function(args) {
@@ -383,17 +474,54 @@
                         items.forEach(function(item) {
                           totalRows += 1;
 
-                          // inputs.push(item);
-                          // console.log(item);
                         });
+                      },
+                      onItemInsert:function(args){
+                        statusTable = "null";
+                      },
+                      onItemEditing: function(args) {
+                        // alert($row.length)
+                          statusTable = "edit";
+                          // alert("editing");
+                           window.setTimeout(function() {
+                              $('.jsgrid-cancel-edit-button').one('click.avoidAuthorClickHandler', function() {
+                                  // alert("cancel");
+                                  // document.getElementById('button_'+index_modal).innerHTML = countFile+" Berkas";
+                                  statusTable = "null";
+
+                              });
+                           }, 200);
+
+                          
+                      },
+                      onItemUpdated: function(args) {
+                          // alert("updated");
+                          // document.getElementB yId('button_'+index_modal).innerHTML = countFile+" Berkas";
+                          statusTable = "null";
                       },
                       fields: [
                           {
                             name: "id",
                             css: "hide",
+                            type: "number", 
                             width: 0,
-                            readOnly: true
+                            readOnly: true,
+                            itemTemplate: function(value) {
 
+                              // alert("item "+value);
+                              id_field_item = jsGrid.fields.text.prototype.itemTemplate.call(this);
+                              $(id_field_item).val(value);
+                              return id_field_item; 
+                            },
+                            editTemplate: function(value) {
+                              // alert("edit "+value);
+                              id_field_edit = jsGrid.fields.text.prototype.editTemplate.call(this);
+                              $(id_field_edit).val(value);
+                              return id_field_edit; 
+                            },  
+                            insertValue: function() {
+                                return (tempIdCounter); 
+                            }
                           },
                           {
                             name: "id_first",
@@ -404,22 +532,39 @@
 
                           },
                           { type: "control",
-                            width: 50,
-                            css: editableStat == 1? "":"hide"
+                            width: 90,
+                            css: editableStat == 1? "":"hide",
+                            headerTemplate: function() {
+                                var control_field = jsGrid.fields.control.prototype.headerTemplate.call(this);
+                                // alert("add");
+                                window.setTimeout(function() {
+                                    $('.jsgrid-insert-mode-button').on('click', function() {
+                                        if($('.jsgrid-mode-on-button').length==0){
+                                          // statusTable = "insert";
+                                          statusTable = "null";
+                                          // alert("null");
+                                        }else{
+                                          // alert("insert");
+                                          statusTable = "insert";
+                                          // statusTable = "null";
+                                        }
+                                    });
+                                 }, 10);
+                                return control_field;
+                            }
                           },
                           { name: "jenis", 
                             type: "text", 
                             title: "Jenis", 
                             width: 90,
-                            readOnly:true,
                             insertTemplate: function() {
-                              jenis_field = jsGrid.fields.text.prototype.insertTemplate.call(this);
-                              return jenis_field; 
+                              jenis_field_insert = jsGrid.fields.text.prototype.insertTemplate.call(this);
+                              return jenis_field_insert; 
                             },
                             editTemplate: function(value) {
-                              jenis_field = jsGrid.fields.text.prototype.editTemplate.call(this);
-                              $(jenis_field).val(value);
-                              return jenis_field; 
+                              jenis_field_edit = jsGrid.fields.text.prototype.editTemplate.call(this);
+                              $(jenis_field_edit).val(value);
+                              return jenis_field_edit; 
                             } 
                           },
                           { name: "kelompok", 
@@ -428,13 +573,13 @@
                             width: 90,
                             readOnly:true,
                             insertTemplate: function() {
-                              kelompok_field = jsGrid.fields.text.prototype.insertTemplate.call(this);
-                              return kelompok_field; 
+                              kelompok_field_insert = jsGrid.fields.text.prototype.insertTemplate.call(this);
+                              return kelompok_field_insert; 
                             },
                             editTemplate: function(value) {
-                              kelompok_field = jsGrid.fields.text.prototype.editTemplate.call(this);
-                              $(kelompok_field).val(value);
-                              return kelompok_field; 
+                              kelompok_field_edit = jsGrid.fields.text.prototype.editTemplate.call(this);
+                              $(kelompok_field_edit).val(value);
+                              return kelompok_field_edit; 
                             } 
                           },
                           { name: "pos_anggaran", 
@@ -443,13 +588,13 @@
                             width: 120,
                             readOnly:true,
                             insertTemplate: function() {
-                              pos_field = jsGrid.fields.text.prototype.insertTemplate.call(this);
-                              return pos_field; 
+                              pos_field_insert = jsGrid.fields.text.prototype.insertTemplate.call(this);
+                              return pos_field_insert; 
                             },
                             editTemplate: function(value) {
-                              pos_field = jsGrid.fields.text.prototype.editTemplate.call(this);
-                              $(pos_field).val(value);
-                              return pos_field; 
+                              pos_field_edit = jsGrid.fields.text.prototype.editTemplate.call(this);
+                              $(pos_field_edit).val(value);
+                              return pos_field_edit; 
                             } 
                           },
                           { name: "sub_pos", 
@@ -458,13 +603,13 @@
                             width: 70,
                             readOnly:true,
                             insertTemplate: function() {
-                              sub_pos = jsGrid.fields.text.prototype.insertTemplate.call(this);
-                              return sub_pos; 
+                              sub_field_insert = jsGrid.fields.text.prototype.insertTemplate.call(this);
+                              return sub_field_insert; 
                             },
                             editTemplate: function(value) {
-                              sub_pos = jsGrid.fields.text.prototype.editTemplate.call(this);
-                              $(sub_pos).val(value);
-                              return sub_pos; 
+                              sub_field_edit= jsGrid.fields.text.prototype.editTemplate.call(this);
+                              $(sub_field_edit).val(value);
+                              return sub_field_edit; 
                             } 
                           },
                           { name: "mata_anggaran", 
@@ -477,7 +622,7 @@
                             insertTemplate: function() {
                               var result = jsGrid.fields.select.prototype.insertTemplate.call(this);
                               result.on("change", function() {
-                                  changeData($(this).val());
+                                  changeData($(this).val(),"insert");
                               });
                               return result; 
                             },
@@ -485,7 +630,7 @@
                               var result = jsGrid.fields.select.prototype.editTemplate.call(this);
                               $(result).val(value);
                               result.on("change", function() {
-                                  changeData($(this).val());
+                                  changeData($(this).val(),"edit");
                               });
                               return result; 
                             },
@@ -501,21 +646,25 @@
                             title: "Kuantitas", 
                             width: 90, 
                             insertTemplate: function() {
-                              kuantitas_field = jsGrid.fields.text.prototype.insertTemplate.call(this);
-                              kuantitas_field.on("change", function() {
-                                  $(kuantitas_field).val($(this).val());
-                                  changeAnggaranSetahun();
+                              kuantitas_field_insert = jsGrid.fields.text.prototype.insertTemplate.call(this);
+                              kuantitas_field_insert.on("change", function() {
+                                  $(kuantitas_field_insert).val($(this).val());
+                                  changeAnggaranSetahun("insert");
+
                               });
-                              return kuantitas_field; 
+                              return kuantitas_field_insert; 
                             },
                             editTemplate: function(value) {
-                              kuantitas_field = jsGrid.fields.text.prototype.editTemplate.call(this);
-                              $(kuantitas_field).val(value);
-                              kuantitas_field.on("change", function() {
-                                  $(kuantitas_field).val($(this).val());
-                                  changeAnggaranSetahun();
+                              kuantitas_field_edit = jsGrid.fields.text.prototype.editTemplate.call(this);
+                              $(kuantitas_field_edit).val(value);
+                              // alert("Sebelum "+$(kuantitas_field_edit).val());
+                              kuantitas_field_edit.on("change", function() {
+                                  $(kuantitas_field_edit).val($(this).val());
+                                  changeAnggaranSetahun("edit");
+
+                                   // alert("Berubah "+$(kuantitas_field_edit).val());
                               });
-                              return kuantitas_field; 
+                              return kuantitas_field_edit; 
                             },
                             validate: {
                               message : "Isi Kolom Kuantitas terlebih dahulu." ,
@@ -530,13 +679,13 @@
                             width: 80,
                             readOnly:true,
                             insertTemplate: function() {
-                              satuan_field = jsGrid.fields.text.prototype.insertTemplate.call(this);
-                              return satuan_field; 
+                              satuan_field_insert = jsGrid.fields.text.prototype.insertTemplate.call(this);
+                              return satuan_field_insert; 
                             },
                             editTemplate: function(value) {
-                              satuan_field = jsGrid.fields.text.prototype.editTemplate.call(this);
-                              $(satuan_field).val(value);
-                              return satuan_field; 
+                              satuan_field_edit = jsGrid.fields.text.prototype.editTemplate.call(this);
+                              $(satuan_field_edit).val(value);
+                              return satuan_field_edit; 
                             } 
                           },
                           { name: "nilai_persatuan", 
@@ -549,22 +698,25 @@
                               return display;
                             },
                             insertTemplate: function() {
-                              nilai_field = jsGrid.fields.text.prototype.insertTemplate.call(this);
-                              nilai_field.on("change", function() {
-                                  $(nilai_field).val($(this).val());
-                                  changeAnggaranSetahun();
+                              nilai_field_insert= jsGrid.fields.text.prototype.insertTemplate.call(this);
+                              nilai_field_insert.on("change", function() {
+                                  $(nilai_field_insert).val($(this).val());
+                                  changeAnggaranSetahun("insert");
                               });
-                              return nilai_field; 
+                              return nilai_field_insert; 
                             },
                             editTemplate: function(value) {
-                              nilai_field = jsGrid.fields.text.prototype.editTemplate.call(this);
-                              $(nilai_field).val(value);
-                              nilai_field.on("change", function() {
-                                  $(nilai_field).val($(this).val());
-                                  changeAnggaranSetahun();
+                              nilai_field_edit= jsGrid.fields.text.prototype.editTemplate.call(this);
+                              $(nilai_field_edit).val(value);
+                               // alert("Sebelum "+$(nilai_field_edit).val());
+                              nilai_field_edit.on("change", function() {
+                                  $(nilai_field_edit).val($(this).val());
+                                  changeAnggaranSetahun("edit");
+
+                                   // alert("Berubah "+$(nilai_field_edit).val());
                               });
-                              return nilai_field; 
-                            },
+                              return nilai_field_edit; 
+                            }, 
                             validate: {
                                 message : "Isi Kolom Nilai Per Satuan.",
                                 validator :function(value, item) {
@@ -585,7 +737,7 @@
                             insertTemplate: function() {
                               var result = jsGrid.fields.select.prototype.insertTemplate.call(this);
                               result.on("change", function() {
-                                  changeDataUnitKerjaLine($(this).val());
+                                  changeDataUnitKerjaLine($(this).val(),"insert");
                               });
                               return result; 
                             },
@@ -593,7 +745,7 @@
                               var result = jsGrid.fields.select.prototype.editTemplate.call(this);
                               $(result).val(value);
                               result.on("change", function() {
-                                  changeDataUnitKerjaLine($(this).val());
+                                  changeDataUnitKerjaLine($(this).val(),"edit");
                               });
                               return result; 
                             },
@@ -610,13 +762,13 @@
                             width: 100, 
                             readOnly:true,
                             insertTemplate: function() {
-                              unitk_field = jsGrid.fields.text.prototype.insertTemplate.call(this);
-                              return unitk_field; 
+                              unitk_field_insert = jsGrid.fields.text.prototype.insertTemplate.call(this);
+                              return unitk_field_insert; 
                             },
                             editTemplate: function(value) {
-                              unitk_field = jsGrid.fields.text.prototype.editTemplate.call(this);
-                              $(unitk_field).val(value);
-                              return unitk_field; 
+                              unitk_field_edit = jsGrid.fields.text.prototype.editTemplate.call(this);
+                              $(unitk_field_edit).val(value);
+                              return unitk_field_edit; 
 
                             } 
                           },
@@ -630,36 +782,45 @@
                               if(parseInt(value).toLocaleString() < 1){
                                 display = "<span >---</span>";
                               }
+
                               return display;
                             },
                             insertTemplate: function() {
                               // var valField=this._grid.fields[12];
-                              twi_field = jsGrid.fields.text.prototype.insertTemplate.call(this);
-                              twi_field.on("change", function(e) {
-                                  $(twi_field).val($(this).val());
-                                  changeAnggaranSetahun();
+                              twi_field_insert = jsGrid.fields.text.prototype.insertTemplate.call(this);
+                              twi_field_insert.on("change", function(e) {
+                                  $(twi_field_insert).val($(this).val());
+                                  changeAnggaranSetahun("insert");
                               });
-                              return twi_field; 
+                              return twi_field_insert; 
                             },
                             editTemplate: function(value) {
-                              twi_field = jsGrid.fields.text.prototype.editTemplate.call(this);
-                              $(twi_field).val(value);
-                              twi_field.on("change", function() {
-                                  $(twi_field).val($(this).val());
-                                  changeAnggaranSetahun();
+                              twi_field_edit = jsGrid.fields.text.prototype.editTemplate.call(this);
+                              $(twi_field_edit).val(value);
+                              twi_field_edit.on("change", function() {
+                                  $(twi_field_edit).val($(this).val());
+                                  changeAnggaranSetahun("edit");
                               });
-                              return twi_field; 
+                              return twi_field_edit; 
                             },
                             validate: {
                               message : "Isi minimal pada salah satu Kolom dari TWI, TWII, TWIII, TWIV.",
                               validator :function(value, item) {
-                                  var twi_val = $(twi_field).val() == "" ? 0:parseInt($(twi_field).val())
-                                  var twii_val = $(twii_field).val() == "" ? 0:parseInt($(twii_field).val())
-                                  var twiii_val = $(twiii_field).val() == "" ? 0:parseInt($(twiii_field).val())
-                                  var twiv_val = $(twiv_field).val() == "" ? 0:parseInt($(twiv_field).val())
-                                  var sum = twi_val+twii_val+twiii_val+twiv_val;
-                                  // alert(twi_val+","+twii_val+","+twiii_val+","+twiv_val+"="+sum);
-                                  return sum > 0 ;
+                                  var twi_val_ins = $(twi_field_insert).val() == "" ? 0:parseInt($(twi_field_insert).val());
+                                  var twii_val_ins = $(twii_field_insert).val() == "" ? 0:parseInt($(twii_field_insert).val());
+                                  var twiii_val_ins = $(twiii_field_insert).val() == "" ? 0:parseInt($(twiii_field_insert).val());
+                                  var twiv_val_ins = $(twiv_field_insert).val() == "" ? 0:parseInt($(twiv_field_insert).val());
+                                  var anggaran_val_ins = parseInt($(anggarant_field_insert).val());
+                                  var sum_ins = twi_val_ins+twii_val_ins+twiii_val_ins+twiv_val_ins;
+
+                                  var twi_val_edt = $(twi_field_edit).val() == "" ? 0:parseInt($(twi_field_edit).val());
+                                  var twii_val_edt = $(twii_field_edit).val() == "" ? 0:parseInt($(twii_field_edit).val());
+                                  var twiii_val_edt = $(twiii_field_edit).val() == "" ? 0:parseInt($(twiii_field_edit).val());
+                                  var twiv_val_edt = $(twiv_field_edit).val() == "" ? 0:parseInt($(twiv_field_edit).val());
+                                  var anggaran_val_edt = parseInt($(anggarant_field_edit).val());
+                                  var sum_edt = twi_val_edt+twii_val_edt+twiii_val_edt+twiv_val_edt;
+                                  // alert(twi_val_edt+"+"+twii_val_edt+"+"+twiii_val_edt+"+"+twiv_val_edt);
+                                  return (sum_ins <= anggaran_val_ins && sum_ins >= anggaran_val_ins) || (sum_edt <= anggaran_val_edt && sum_edt >= anggaran_val_edt) ;
                               }
                             }
                           },
@@ -676,21 +837,21 @@
                               return display;
                             },
                             insertTemplate: function() {
-                              twii_field = jsGrid.fields.text.prototype.insertTemplate.call(this);
-                              twii_field.on("change", function() {
-                                  $(twii_field).val($(this).val());
-                                  changeAnggaranSetahun();
+                              twii_field_insert = jsGrid.fields.text.prototype.insertTemplate.call(this);
+                              twii_field_insert.on("change", function() {
+                                  $(twii_field_insert).val($(this).val());
+                                  changeAnggaranSetahun("insert");
                               });
-                              return twii_field; 
+                              return twii_field_insert; 
                             },
                             editTemplate: function(value) {
-                              twii_field = jsGrid.fields.text.prototype.editTemplate.call(this);
-                              $(twii_field).val(value);
-                              twii_field.on("change", function() {
-                                  $(twii_field).val($(this).val());
-                                  changeAnggaranSetahun();
+                              twii_field_edit = jsGrid.fields.text.prototype.editTemplate.call(this);
+                              $(twii_field_edit).val(value);
+                              twii_field_edit.on("change", function() {
+                                  $(twii_field_edit).val($(this).val());
+                                  changeAnggaranSetahun("edit");
                               });
-                              return twii_field; 
+                              return twii_field_edit; 
                             }
                           },
                           { name: "tw_iii", 
@@ -706,21 +867,21 @@
                               return display;
                             },
                             insertTemplate: function() {
-                              twiii_field = jsGrid.fields.text.prototype.insertTemplate.call(this);
-                              twiii_field.on("change", function() {
-                                  $(twiii_field).val($(this).val());
-                                  changeAnggaranSetahun();
+                              twiii_field_insert = jsGrid.fields.text.prototype.insertTemplate.call(this);
+                              twiii_field_insert.on("change", function() {
+                                  $(twiii_field_insert).val($(this).val());
+                                  changeAnggaranSetahun("insert");
                               });
-                              return twiii_field; 
+                              return twiii_field_insert; 
                             },
                             editTemplate: function(value) {
-                              twiii_field = jsGrid.fields.text.prototype.editTemplate.call(this);
-                              $(twiii_field).val(value);
-                              twiii_field.on("change", function() {
-                                  $(twiii_field).val($(this).val());
-                                  changeAnggaranSetahun();
+                              twiii_field_edit= jsGrid.fields.text.prototype.editTemplate.call(this);
+                              $(twiii_field_edit).val(value);
+                              twiii_field_edit.on("change", function() {
+                                  $(twiii_field_edit).val($(this).val());
+                                  changeAnggaranSetahun("edit");
                               });
-                              return twiii_field; 
+                              return twiii_field_edit; 
                             }
                           },
                           { name: "tw_iv", 
@@ -736,21 +897,21 @@
                               return display;
                             },
                             insertTemplate: function() {
-                              twiv_field = jsGrid.fields.text.prototype.insertTemplate.call(this);
-                              twiv_field.on("change", function() {
-                                  $(twiv_field).val($(this).val());
-                                  changeAnggaranSetahun();
+                              twiv_field_insert = jsGrid.fields.text.prototype.insertTemplate.call(this);
+                              twiv_field_insert.on("change", function() {
+                                  $(twiv_field_insert).val($(this).val());
+                                  changeAnggaranSetahun("insert");
                               });
-                              return twiv_field; 
+                              return twiv_field_insert; 
                             },
                             editTemplate: function(value) {
-                              twiv_field = jsGrid.fields.text.prototype.editTemplate.call(this);
-                              $(twiv_field).val(value);
-                              twiv_field.on("change", function() {
-                                  $(twiv_field).val($(this).val());
-                                  changeAnggaranSetahun();
+                              twiv_field_edit = jsGrid.fields.text.prototype.editTemplate.call(this);
+                              $(twiv_field_edit).val(value);
+                              twiv_field_edit.on("change", function() {
+                                  $(twiv_field_edit).val($(this).val());
+                                  changeAnggaranSetahun("edit");
                               });
-                              return twiv_field; 
+                              return twiv_field_edit; 
                             }
                            },
                           { name: "anggarana_setahun", 
@@ -764,132 +925,125 @@
                               return display;
                             },
                             insertTemplate: function() {
-                              anggarant_field = jsGrid.fields.text.prototype.insertTemplate.call(this);
-                              return anggarant_field; 
+                              anggarant_field_insert = jsGrid.fields.text.prototype.insertTemplate.call(this);
+                              return anggarant_field_insert; 
                             },
                             editTemplate: function(value) {
-                              anggarant_field = jsGrid.fields.text.prototype.editTemplate.call(this);
-                              $(anggarant_field).val(value);
-                              return anggarant_field; 
+                              anggarant_field_edit = jsGrid.fields.text.prototype.editTemplate.call(this);
+                              $(anggarant_field_edit).val(value);
+                              return anggarant_field_edit; 
                             },
                             validate: {
                               message :function(value, item) {
                                   var status1 = "lebih";
                                   var status2 = "kurang";
-                                  var twi_val = $(twi_field).val() == "" ? 0:parseInt($(twi_field).val());
-                                  var twii_val = $(twii_field).val() == "" ? 0:parseInt($(twii_field).val());
-                                  var twiii_val = $(twiii_field).val() == "" ? 0:parseInt($(twiii_field).val());
-                                  var twiv_val = $(twiv_field).val() == "" ? 0:parseInt($(twiv_field).val());
-                                  var anggaran_val = parseInt($(anggarant_field).val());
-                                  var sum = twi_val+twii_val+twiii_val+twiv_val;
-                                  return  "Jumlah Anggaran yang di minta di semua periode "+ (sum > anggaran_val ? status1: status2)+" dari Anggaran Setahun" ;
+                                  var twi_val_ins = $(twi_field_insert).val() == "" ? 0:parseInt($(twi_field_insert).val());
+                                  var twii_val_ins = $(twii_field_insert).val() == "" ? 0:parseInt($(twii_field_insert).val());
+                                  var twiii_val_ins = $(twiii_field_insert).val() == "" ? 0:parseInt($(twiii_field_insert).val());
+                                  var twiv_val_ins = $(twiv_field_insert).val() == "" ? 0:parseInt($(twiv_field_insert).val());
+                                  var anggaran_val_ins = parseInt($(anggarant_field_insert).val());
+                                  var sum_ins = twi_val_ins+twii_val_ins+twiii_val_ins+twiv_val_ins;
+
+                                  var twi_val_edt = $(twi_field_edit).val() == "" ? 0:parseInt($(twi_field_edit).val());
+                                  var twii_val_edt = $(twii_field_edit).val() == "" ? 0:parseInt($(twii_field_edit).val());
+                                  var twiii_val_edt = $(twiii_field_edit).val() == "" ? 0:parseInt($(twiii_field_edit).val());
+                                  var twiv_val_edt = $(twiv_field_edit).val() == "" ? 0:parseInt($(twiv_field_edit).val());
+                                  var anggaran_val_edt = parseInt($(anggarant_field_edit).val());
+                                  var sum_edt = twi_val_edt+twii_val_edt+twiii_val_edt+twiv_val_edt;
+                                  return  "Jumlah Anggaran yang di minta di semua periode "+ ((sum_ins > anggaran_val_ins || sum_edt > anggaran_val_edt) ? status1: status2)+" dari Anggaran Setahun" ;
                               },
                               validator :function(value, item) {
-                                  var twi_val = $(twi_field).val() == "" ? 0:parseInt($(twi_field).val());
-                                  var twii_val = $(twii_field).val() == "" ? 0:parseInt($(twii_field).val());
-                                  var twiii_val = $(twiii_field).val() == "" ? 0:parseInt($(twiii_field).val());
-                                  var twiv_val = $(twiv_field).val() == "" ? 0:parseInt($(twiv_field).val());
-                                  var anggaran_val = parseInt($(anggarant_field).val());
-                                  var sum = twi_val+twii_val+twiii_val+twiv_val;
+                                  var twi_val_ins = $(twi_field_insert).val() == "" ? 0:parseInt($(twi_field_insert).val());
+                                  var twii_val_ins = $(twii_field_insert).val() == "" ? 0:parseInt($(twii_field_insert).val());
+                                  var twiii_val_ins = $(twiii_field_insert).val() == "" ? 0:parseInt($(twiii_field_insert).val());
+                                  var twiv_val_ins = $(twiv_field_insert).val() == "" ? 0:parseInt($(twiv_field_insert).val());
+                                  var anggaran_val_ins = parseInt($(anggarant_field_insert).val());
+                                  var sum_ins = twi_val_ins+twii_val_ins+twiii_val_ins+twiv_val_ins;
+
+                                  var twi_val_edt = $(twi_field_edit).val() == "" ? 0:parseInt($(twi_field_edit).val());
+                                  var twii_val_edt = $(twii_field_edit).val() == "" ? 0:parseInt($(twii_field_edit).val());
+                                  var twiii_val_edt = $(twiii_field_edit).val() == "" ? 0:parseInt($(twiii_field_edit).val());
+                                  var twiv_val_edt = $(twiv_field_edit).val() == "" ? 0:parseInt($(twiv_field_edit).val());
+                                  var anggaran_val_edt = parseInt($(anggarant_field_edit).val());
+                                  var sum_edt = twi_val_edt+twii_val_edt+twiii_val_edt+twiv_val_edt;
                                   
-                                  return sum <= anggaran_val && sum >= anggaran_val ;
+                                  return (sum_ins <= anggaran_val_ins && sum_ins >= anggaran_val_ins) || (sum_edt <= anggaran_val_edt && sum_edt >= anggaran_val_edt) ;
                               }
                             }
                           },
-                          
                           { name: "file", align:"center", title: "Berkas",  width: 150 ,
 
                             itemTemplate: function(value) {
-                              var name_file = "";
-                              var id_list;
-                              var status = false;
-
-                              if(value.length > 0){
-
-                                for(j = 0;j<value.length;j++){
-                                  name_file+=(j+1)+". "+value[j]["name"]+"<br /> ";
-                                  if(value[j]['id_list_anggaran']!=null){
-                                    id_list = value[j]['id_list_anggaran'];
-                                    status = true;
+                              // alert("null");
+                              var id_list=0;
+                              var count_berkas=0;
+                              if(value.length>0){
+                                for(i =0;i<value.length;i++){
+                                  id_list = value[i]['count'];
+                                  count_berkas++;
+                                }
+                              }else{
+                                id_list=value
+                              }
+                              if(upload_file[id_list] != null){
+                                for(i=0;i<upload_file[id_list].length;i++){
+                                  file_name = document.getElementById("file_name_"+index_modal+"_"+i).value;
+                                  // alert(file_name);
+                                  if(file_name !="null"){
+                                    count_berkas++;
                                   }
                                 }
-                                if(jumlah_file == 0 && value.length>0){
-                                  // for (var key in value) {
-                                  //   if (key == 'id_list_anggaran') {
-                                  //     alert(key);
-                                  //       myArray.splice(key, 1);
-                                  //   }
-                                  // }
-                                  upload_file = value;
-                                }
                               }
-                              if(status)
-                                return "<span > <a href='{{url('anggaran/get/download')}}/"+id_list+"/{{$filters['nd_surat']}}' >Unduh Berkas</a>:<br />"+ name_file+" </span>";
-                              else
-                                return "<span > Unggah Berkas:<br />"+ name_file+" </span>";
-                            },
-                            insertTemplate: function() {
-                                var insertControl = this.insertControl = $("<input>").prop("type", "file").attr("multiple", "multiple").attr("id", "file");
-        
-                                return  insertControl;
-                            },
-                            insertValue: function() {
-                                upload_file = this.insertControl[0].files;
-                                jumlah_file = upload_file.length;
-                                for(i=1; i <= upload_file.length;i++){
-
-                                  readerPrev(i,tempIdCounter);
-                                  
-                                }
-
-                                return upload_file; 
-                            },
-                            editTemplate: function(value) {
-                                var editControl = this.editControl = $("<input>").prop("type", "file").attr("multiple", "multiple");
-                                
-                                return editControl;
-                            },
-                            editValue: function() {
-
-                                var upload_data_file= this.editControl[0].files;
-                                jumlah_data_file = upload_data_file.length; 
-                                // alert
-                                for(i=1; i <= jumlah_data_file.length;i++){
-                                  // if(jumlah_data_file.length>0){
-                                  //   upload_file.push(upload_data_file[i-1]);
-                                    readerPrev((upload_file.length+i),tempIdCounter);
-                                  // }
-                                  
-                                }
-                                return upload_data_file; 
+                              
+                              var title="";
+                              // document.getElementById('button_'+index_modal).innerHTML = countFile+" Berkas";
+                              if(count_berkas==0){
+                                title = "Unggah";
+                              }else{
+                                title = count_berkas;
+                              }
+                              var button = "<span class='btn btn-primary' id='button_"+id_list+"' onclick='setModalFile("+id_list+")' >"+count_berkas+" Berkas</span>";
+                              return button;
                             },
                             
-                            validate: {
-                              message : "Silahkan Upload File pendukung",
-                              validator :function(value, item) {
-                                  return upload_file.length > 0 ;
-                              } 
-                            }
-
+                            editTemplate: function(value) {
+                              // alert("update");
+                              var id_list=0;
+                              var count_berkas=0;
+                              if(value.length>0){
+                                for(i =0;i<value.length;i++){
+                                  id_list = value[i]['count'];
+                                  count_berkas++;
+                                }
+                              }else{
+                                id_list=value
+                              }
+                              if(upload_file[id_list] != null){
+                                for(i=0;i<upload_file[id_list].length;i++){
+                                  file_name = document.getElementById("file_name_"+index_modal+"_"+i).value;
+                                  // alert(file_name);
+                                  if(file_name !="null"){
+                                    count_berkas++;
+                                  }
+                                }
+                              }
+                              var title="";if(count_berkas==0){
+                                title = "Unggah";
+                              }else{
+                                title = count_berkas;
+                              }
+                              var button = "<span class='btn btn-primary' id='button_"+id_list+"' onclick='setModalFile("+id_list+")' >"+count_berkas+" Berkas</span>";
+                              return button;
+                            },
+                          },
+                          { type: "control",
+                            width: 50,
+                            css: editableStat == 1? "":"hide"
                           }
                       ]
                     })
                     
                   });
-
-                  function readerPrev(index, tempIdCount){
-                    tempIdCount++;
-                    var reader = new FileReader();
-                    reader.readAsDataURL(upload_file[index-1]);
-                    reader.onload = function () {
-                      var hiddenInput = $('<input/>',{type:'hidden',id:('file_'+tempIdCount+'_'+index),
-                        name:('file_'+tempIdCount+'_'+index),value:reader.result});
-                      hiddenInput.appendTo("#file_grid");
-
-                    };
-
-                  }
-
                   function getData(type) {
                     var returned = function () {
                         var tmp = null;
@@ -904,7 +1058,6 @@
                     }();
                     return returned;
                   }
-
                   function setUnitKerja(id_type,id_unit){
                     var type = "";
                     if(id_type == "00 "){
@@ -939,10 +1092,7 @@
                              
                         }
                     });
-
-
                   }
-
                   function setDetailAnggaran(nd_surat){
                     if(nd_surat!=null)
                       $.ajax({
@@ -961,7 +1111,7 @@
                                   case "6" : persetujuan="Persetujuan RUPS";break;
                                   case "7" : persetujuan="Persetujuan FinRUPS";break;
                                   case "8" : persetujuan="Persetujuan Risalah RUPS";break;
-                                  case "89" : persetujuan="Disetujuai dan Ditandatangani";break;
+                                  case "9" : persetujuan="Disetujuai dan Ditandatangani";break;
                                 }
                                 switch(data[0].status_anggaran){
                                   case "1" : status_anggaran="Draft";break;
@@ -975,96 +1125,365 @@
                                 document.getElementById("persetujuan").value = persetujuan;
                                 document.getElementById("tipe_anggaran").value = data[0].tipe_anggaran;
                                 document.getElementById("tanggal").value = tgl_split[2]+"/"+tgl_split[1]+"/"+tgl_split[0];
-                                if(data[0].status_anggaran != "1"&&data[0].persetujuan !="2"){
-                                  document.getElementById("edit_button").style.display = "none";
-                                  document.getElementById("save_button").style.display = "none";
-                                  document.getElementById("send_button").style.display = "none";
+                                // alert(data[0].persetujuan);
+                                if(data[0].persetujuan == "-1"){
+                                  document.getElementById("grup_m").style.display="none";
+                                  document.getElementById("grup_r").style.display="none";
+                                  document.getElementById("grup_uk").style.display="block";
+                                  // document.getElementById("edit_button").style.display = "none";
+                                  // document.getElementById("save_button").style.display = "none";
+                                  // document.getElementById("send_button").style.display = "none";
+                                }else if(data[0].persetujuan == "9"){
+                                  document.getElementById("grup_m").style.display="none";
+                                  document.getElementById("grup_r").style.display="none";
+                                  document.getElementById("grup_uk").style.display="none";
+                                }else if(data[0].persetujuan =="1"){
+                                  document.getElementById("grup_m").style.display="none";
+                                  if({{$status == 'edit' ? 1 : 0}}){
+                                    document.getElementById("grup_r").style.display="none";
+                                  }else{
+                                    document.getElementById("grup_r").style.display="block";
+                                  }
+                                  document.getElementById("grup_uk").style.display="none";
+                                }else{
+                                  if({{$status=='edit'?1:0}}){
+                                    document.getElementById("grup_m").style.display="none";
+                                  }else{
+                                    document.getElementById("grup_m").style.display="block";
+                                  }
+                                  document.getElementById("grup_r").style.display="none";
+                                  document.getElementById("grup_uk").style.display="none";
+                                }
+
+                                if(editableStat){
+                                  document.getElementById("accept_r").style.display="none";
+                                  document.getElementById("download_r").style.display="none";
+                                  document.getElementById("edit_r").style.display="none";
+                                  document.getElementById("save_r").style.display="block";
+                                  document.getElementById("send_r").style.display="block";
+                                  // alert({{$reject}});
+                                  var reject = {{$reject ? 1:0}};
+                                  if(reject == 1)
+                                    document.getElementById("send_r").setAttribute('onclick','check("Tolak");');
+                                  else{
+                                    document.getElementById("send_r").setAttribute('onclick','check("Setuju");');
+                                  }
+                                  
+                                }else{
+                                  for(i=1;i<data.length;i++){
+                                // alert(data[0].persetujuan+"???"+data[i].persetujuan);
+                                    if(parseInt(data[0].persetujuan) < parseInt(data[i].persetujuan)){
+
+                                      changeButton();
+                                      document.getElementById("send_r").style.display="none";
+                                      document.getElementById("accept_r").style.display="none";
+                                      break;
+                                    }
+                                  }
                                 }
                               
                           }
                       });
-
                   }
-
-                  function changeDataUnitKerjaLine(type){
-
-                    if(type == 1){
-                      $(unitk_field).val();
-                    }else{
-                      $(unitk_field).val(document.getElementById("unit_kerja").value);
+                  function changeDataUnitKerjaLine(type,type2){
+                    if(type2 == "insert"){
+                      if(type == 1){
+                        $(unitk_field_insert).val("");
+                      }else{
+                        $(unitk_field_insert).val(document.getElementById("unit_kerja").value);
+                      } 
+                    }else if(type2 == "edit"){
+                      if(type == 1){
+                        $(unitk_field_edit).val("");
+                      }else{
+                        $(unitk_field_edit).val(document.getElementById("unit_kerja").value);
+                      } 
                     }
-                          
+                        
                   }
-
                   function getListData() {
                     $.ajax({
                           'async': false, 'type': "GET", 'dataType': 'JSON', 'url': "{{ url('anggaran/get/filtered/'.$filters['nd_surat'].'/list_anggaran') }}",
                           'success': function (data) {
                               inputs = data;
+                              download="";
+                              for(i=0;i<data.length;i++){
+                                list_berkas[i] = [];
+                                list_berkas[i] = data[i]["file"];
+                                for(j=0;j<list_berkas[i].length;j++){
+                                  download+=list_berkas[i][j]["id"]+":db-";
+                                }
+                                // alert(JSON.stringify(data[i]["file"]));
+                              }
+                              var downloadHidden = $('<input/>',{type:'hidden',id:('db_file'),
+                              name:('db_file'),value:download});
+                              downloadHidden.appendTo("#file_grid");
                           }
                       });
                   }
-
-                  function changeData(kegiatan){
+                  function changeData(kegiatan,type){
                     var tmp = null;
                     $.ajax({
                         'async': false, 'type': "GET", 'dataType': 'JSON', 'url': "{{ url('anggaran/get/attributes') }}/mataanggaran/-1",
                         'success': function (data) {
-                            tmp = data;
 
-                            $(jenis_field).val("Contoh Jenis");
-                            $(kelompok_field).val("Contoh Kelompok");
-                            $(pos_field).val("Contoh Pos Anggaran");
-                            $(sub_pos).val("Contoh Sub Pos");
-                            $(satuan_field).val("Contoh Satuan");
+                            // alert("berhasil");
+                            tmp = data;
+                            if(type == "edit"){
+                              $(jenis_field_edit).val("Contoh Jenis");
+                              $(kelompok_field_edit).val("Contoh Kelompok");
+                              $(pos_field_edit).val("Contoh Pos Anggaran");
+                              $(sub_field_edit).val("Contoh Sub Pos");
+                              $(satuan_field_edit).val("Contoh Satuan");
+                            }else if(type == "insert"){
+                              $(jenis_field_insert).val("Contoh Jenis");
+                              $(kelompok_field_insert).val("Contoh Kelompok");
+                              $(pos_field_insert).val("Contoh Pos Anggaran");
+                              $(sub_field_insert).val("Contoh Sub Pos");
+                              $(satuan_field_insert).val("Contoh Satuan");
+                            }
+                            
                             // $(unitk_field).val("Contoh Unit Kerja");
                         }
                     });
                   }
-
-                  function changeAnggaranSetahun(){
-                    if($(kuantitas_field).val() !="" && $(nilai_field).val()!= ""){
-                      var qty = $(kuantitas_field).val();
-                      var nilai = $(nilai_field).val();
-                      $(anggarant_field).val(qty*nilai);
-                      // alert(qty*nilai);
-                    }else{
-                      // alert("masih kosong");
+                  function changeAnggaranSetahun(type){
+                    if(type == "insert"){
+                      if($(kuantitas_field_insert).val() !="" && $(nilai_field_insert).val()!= ""){
+                        qty = $(kuantitas_field_insert).val();
+                        nilai = $(nilai_field_insert).val();
+                        $(anggarant_field_insert).val(qty*nilai);
+                      }
+                    }else if(type=="edit"){
+                      if($(kuantitas_field_edit).val() !=0 && $(nilai_field_edit).val()!= 0){
+                        qty = $(kuantitas_field_edit).val();
+                        nilai = $(nilai_field_edit).val();
+                        $(anggarant_field_edit).val(qty*nilai);
+                      }
                     }
                   }
-                  function saveAnggaran(){
+                  function check(type){
                     if(document.getElementById("nd_surat").value==""){
                       toastr.error("Silahkan Isi Form Nomor Surat Terlebih Dahulu. Terima kasih.", "Perhatian.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
                     } else if(inputs.length < 1){
                       toastr.error("Silahkan tambahkan minimal 1 daftar anggaran untuk melakukan penyimpanan. Terima kasih.", "Minimal satu anggaran yang diisi.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
                     }else{
+                      var stop = false;
 
-                      document.getElementById("setuju").value = "Simpan";
-                      $('input[name="list_anggaran_values"]').val(JSON.stringify(inputs));
+                      status = {{ $status=='edit' ? 1 : 0 }};
+                      for(i=0;i<inputs.length;i++){
+                        nameClass = $('.file_'+i);
+                        if(nameClass.length == 0){
+                          // alert("kosong")
+                          // toastr.error("Silahkan tambahkan berkas minimal 1 pada anggaran baris ke-"+(i+1)+" untuk melakukan penyimpanan. Terima kasih.", "Minimal satu berkas yang diunggah.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
+                          stop = true;
+                          break;
+                        }else{
+                          count=0;
+                          for(j=0;j<inputs.length;j++){
+                            file = document.getElementById("file_name_"+i+"_"+j).value;
+                            if(file=="null"){
+                              count++;
+                            }
+                          }
+                          if(count==nameClass.length){
+                            // alert("null semua");
+                            // toastr.error("Silahkan tambahkan berkas minimal 1 pada anggaran baris ke-"+(i+1)+" untuk melakukan penyimpanan. Terima kasih.", "Minimal satu berkas yang diunggah.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
+                            stop=true;
+                          }
+                        }
+                        if(!stop){
+                          var countFile = $('<input/>',{type:'hidden',id:('count_file_'+i),
+                          name:('count_file_'+i),value:nameClass.length});
+                          countFile.appendTo("#file_grid");
+                        }
+                      }
+                      // alert(status==1);
+                      if(status == 1){
+                        stop = false;
+                      }
 
-                      $('form[id="insertAnggaran"]').submit();
+                      if(stop){
+                        toastr.error("Silahkan tambahkan berkas minimal 1 pada anggaran untuk melakukan penyimpanan. Terima kasih.", "Minimal satu berkas yang diunggah.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
+                      }else{
+                        if(statusTable!="null"){
+                          tampilan="";
+                          judul="";
+                          if(statusTable == "edit"){
+                            judul = "Terdapat Anggaran masih dalam perubahan";
+                            tampilan= "Silahkan Rubah dengan menekan tombol centang terlebih tahulu atau Batalkan dengan menekan tombol silang. Terima kasih.";
+                          }else if("insert"){
+                            judul = "Terdapat form masukan anggaran yang aktif";
+                            tampilan= "Silahkan isi pada form masukkan anggaran dan tekan tombol tambah pada baris anggaran atau Batalkan dengan menekan tombol tambah di kepala tabel anggaran. Terima kasih.";
+                          }
+
+                          toastr.error(tampilan, judul, { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
+                        }else{
+                          document.getElementById("setuju").value = type;
+                          var title_modal="";
+                          var pernyataan_modal="";
+                          var form_penolakan="none";
+                          var nd_surat = document.getElementById("nd_surat").value;
+                          if(type=="Simpan"){
+                            title_modal="Pernyimpanan Anggaran dan Kegiatan";
+                            pernyataan_modal = "<p>Apakah anda yakin Akan Menyimpan Anggaran dan Kegiatan dengan Nomor Dinas/Surat "+nd_surat+"?</p>";
+                          }else if(type=="Kirim"){
+                            title_modal="Pengajuan Anggaran dan Kegiatan";
+                            pernyataan_modal = "<p>Apakah anda yakin Akan Mengajukan Anggaran dan Kegiatan dengan Nomor Dinas/Surat "+nd_surat+"?</p>";
+                          }else if(type=="Setuju"){
+                            title_modal="Persetujuan Anggaran dan Kegiatan";
+                            pernyataan_modal = "<p>Apakah anda yakin Akan Menyetujui Pengajuan dan Anggaran Kegiatan dengan Nomor Dinas/Surat "+nd_surat+"?</p>";
+                          }else if(type=="Tolak"){
+                            title_modal="Penolakkan Anggaran dan Kegiatan";
+                            pernyataan_modal = "<p>Apakah anda yakin Akan Menolak Pengajuan Anggaran dan Kegiatan dengan Nomor Dinas/Surat "+nd_surat+"?</p>";
+                            pernyataan_modal += "<p>Silahkan Isi Alasan Penolakan DIbawah ini : </p>";
+                            form_penolakan = "block";
+                          }
+                          document.getElementById("title_modal_pernyataan").innerHTML = title_modal;
+                          document.getElementById("teks_pernyataan").value = pernyataan_modal;
+                          document.getElementById("form_penolakan").style.display = form_penolakan;
+                          document.getElementById("button_peryataan").innerHTML = "Ya, "+type;
+
+                          // $('input[name="list_anggaran_values"]').val(JSON.stringify(inputs));
+                          // alert(JSON.stringify(inputs));
+                          // $('form[id="insertAnggaran"]').submit();
+                          if(type == "Tolak"&&document.getElementById("alasan_penolakan".value="")){
+                            toastr.error("Silahkan Isi Alasan Penolakan Anda. Terima kasih.", "Alasan Penolakan Kosong.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
+                          }else{
+                            $('#modal_pernyataan').modal({
+                                backdrop: 'static'
+                            });
+                          }
+                          
+                        } 
+                      }
                     }
-                  };
+                  }
+                  function sumbit_post(){
+                    $('input[name="list_anggaran_values"]').val(JSON.stringify(inputs));
+                    // alert(JSON.stringify(inputs));
+                    $('form[id="insertAnggaran"]').submit();
+                  }
+                  function changeButton(){
+                    document.getElementById("send_r").addEventListener("click", function(event) {
+                      check('Setuju');
+                      event.preventDefault();
+                    });
+                    document.getElementById("accept_r").style.display="none";
+                    document.getElementById("edit_r").style.display="block";
+                    document.getElementById("send_r").style.display="block";
+                    var edit_href = document.getElementById('edit_r'); //or grab it by tagname etc
+                    edit_href.href = "{{url('anggaran/persetujuan/'.$filters['nd_surat'].'/2')}}"
+                  }
+                  function readerPrev(index, tempIdCount){
+                    // tempIdCount++;
+                    var reader = new FileReader();
+                    // alert(tempIdCount+";"+index);
+                    reader.readAsDataURL(upload_file[tempIdCount][index]);
+                    reader.onload = function () {
+                      if(document.getElementById('file_'+tempIdCount+'_'+index)==null){
+                        var hiddenInput = $('<input/>',{type:'hidden',id:('file_'+tempIdCount+'_'+index),
+                        name:('file_'+tempIdCount+'_'+index),value:reader.result});
+                        var hiddenInput2 = $('<input/>',{type:'hidden',id:('file_name_'+tempIdCount+'_'+index),
+                        name:('file_name_'+tempIdCount+'_'+index),value:upload_file[tempIdCount][index]["name"]}).addClass("file_"+tempIdCount);;
+                        var hiddenInput3 = $('<input/>',{type:'hidden',id:('file_type_'+tempIdCount+'_'+index),
+                        name:('file_type_'+tempIdCount+'_'+index),value:upload_file[tempIdCount][index]["type"]});
+                        var hiddenInput4 = $('<input/>',{type:'hidden',id:('file_size_'+tempIdCount+'_'+index),
+                        name:('file_size_'+tempIdCount+'_'+index),value:upload_file[tempIdCount][index]["size"]});
+                        hiddenInput.appendTo("#file_grid");
+                        hiddenInput2.appendTo("#file_grid");
+                        hiddenInput3.appendTo("#file_grid");
+                        hiddenInput4.appendTo("#file_grid");
+                      }else{
+                        document.getElementById('file_'+tempIdCount+'_'+index).value = reader.result;
+                        document.getElementById('file_name_'+tempIdCount+'_'+index).value = upload_file[tempIdCount][index]["name"];
+                        document.getElementById('file_type_'+tempIdCount+'_'+index).value = upload_file[tempIdCount][index]["type"];
+                        document.getElementById('file_size_'+tempIdCount+'_'+index).value = upload_file[tempIdCount][index]["size"];
+                      }
+                      
 
-                  function sendAnggaran(){
-                    // alert(inputs.length );
-                    if(document.getElementById("nd_surat").value==""){
-                      toastr.error("Silahkan Isi Form Nomor Surat Terlebih Dahulu. Terima kasih.", "Perhatian.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
-                    } else if(inputs.length < 1){
-                      toastr.error("Silahkan tambahkan minimal 1 daftar anggaran untuk melakukan penyimpanan. Terima kasih.", "Minimal satu anggaran yang diisi.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
-                    }else{
-
-                      document.getElementById("setuju").value = "Kirim";
-                      $('input[name="list_anggaran_values"]').val(JSON.stringify(inputs));
-                      // alert(JSON.stringify(inputs));
-                      $('form[id="insertAnggaran"]').submit();
+                    };
+                  }
+                  function setModalFile(index) {
+                    $('#files').replaceWith($('#files').val('').clone(true));
+                    $('#list_file').empty();
+                    $('#list_download').empty();
+                    banyak = 0;
+                    hasil2 = []
+                    if(list_berkas.length>0){
+                      for(i = 0; i<list_berkas[index].length; i++){
+                        link = "{{url('anggaran/get/download')}}/"+list_berkas[index][i]['id'];
+                        hasil2[i] = '<div class="col-xs-10"><a href="'+link+'" ><li>'+list_berkas[index][i]['name']+'</li></div>';
+                        hasil2[i] += '<div class="col-xs-1"><i class="fa fa-download "></i></div></a><br/><br/>';
+                        // hasil2[i] += '<div class="col-xs-1" onclick="deleteRowFile('+i+','+index+')"><i class="fa fa-close " style="color:red"></i></div><br/><br/>';
+                      }
+                      $("#list_download").append(hasil2);
                     }
-                  };
-                  
+                    if(convert_file[index]!=null){
+                      var nameCon = "";
+                      for(i = 0; i<convert_file[index].length; i++){
+                        if(convert_file[index][i]!=null){
+                          nameCon += '<div id="upload_'+i+'" ><div class="col-xs-10"> <li> '+convert_file[index][i]['name']+'</li></div>';
+                          nameCon += '<div class="col-xs-2" onclick="deleteRowFile('+i+','+index+')"><i class="fa fa-close "></i></div><br/><br/></div>';
+                          
+                        }
+                      }
+                     $("#list_file").append(nameCon);
+                    }
+                    index_modal = index;
+                    if(document.getElementById('files') !=null ){
+                      document.getElementById('files').onchange = function () {;
+                        // hasil=[];
+                        $('#list_file').empty();
+                        value = this.files;
+                        upload_file[index]=[];
+                        for(i = banyak; i<(banyak+value.length); i++){
+                          hasil[i] = '<div id="upload_'+i+'" ><div class="col-xs-10"> <li> '+value[(i-banyak)]['name']+'</li></div>';
+                          hasil[i] += '<div class="col-xs-2" onclick="deleteRowFile('+i+','+index+')"><i class="fa fa-close "></i></div><br/><br/></div>';
+                          upload_file[index][i]=value[(i-banyak)];
+                          readerPrev(i,index);
+                        }
+                        
+                        banyak+=value.length; 
+                        $("#list_file").append(hasil);
+                      };
+                    }
+                      
+                    $('#modal_berkas').modal({
+                        backdrop: 'static'
+                    })
+                  }
+                  function deleteRowFile(i,index){
+                      $("#upload_"+i).remove();
+                      hasil[i] = "";
+                      upload_file[index][i] = null;
+                      // alert(upload_file[0].length);
+                      document.getElementById('file_'+index+'_'+i).value="null";
+                      document.getElementById('file_name_'+tempIdCount+'_'+index).value = "null";
+                      document.getElementById('file_type_'+tempIdCount+'_'+index).value = "null";
+                      document.getElementById('file_size_'+tempIdCount+'_'+index).value = "null";
+                  }
+                  $('#simpan_file').click(function() {
+                    simpan_file =true;
+                    convert_file[index_modal]=[];
+                    convert_file[index_modal]=upload_file[index_modal];
+                    countFile=0;
+                    for(i=0;i<upload_file[index_modal].length;i++){
+                      file_name = document.getElementById("file_name_"+index_modal+"_"+i).value;
+                      // alert(file_name);
+                      if(file_name !="null"){
+                        countFile++;
+                      }
+                    }
+                    document.getElementById('button_'+index_modal).innerHTML = countFile+" Berkas";
+                    $('#modal_berkas').modal('hide');
+                  });
+
+                  $("#alasan_penolakan").click(function(){
+                    document.getElementById("alasan_penolakan").value="";
+                  });
                   window.setUnitKerja({{$userCabang.",".$userDivisi}});
-                  window.setDetailAnggaran({{$filters['nd_surat']}});
+                  window.setDetailAnggaran('{{$filters['nd_surat']}}');
                   window.getListData();
-                  
-
                 </script>
                 @endsection
