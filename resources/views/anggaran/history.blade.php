@@ -30,6 +30,7 @@
                     <section id="basic">
                       <div class="row">
                         <div class="card">
+                          <form method="POST" action="{{url('anggaran/riwayat') }}" id="filterAnggaran" name="filterAnggaran" >
                             <div class="card-header">
                               <h4 class="card-title">Pencarian Riwayat Anggaran dan Kegiatan</h4>
                               <a class="heading-elements-toggle"><i class="ft-align-justify font-medium-3"></i></a>
@@ -44,7 +45,9 @@
                                           <label>Tahun</label>
                                           <select class="select2 form-control" name="cari_tahun" id="cari_tahun">
                                             <option value="0">Semua Tahun</option>
-                                            <option value="1">2017</option>
+                                            <option value="2017">2017</option>
+                                            <option value="2016">2016</option>
+                                            <option value="2015">2015</option>
                                           </select>
                                         </div>
                                     </div>
@@ -63,7 +66,12 @@
                                         <div class="form-group">
                                           <label>Kategori</label>
                                           <select class="select2 form-control" name="cari_kategori" id="cari_kategori">
-                                            <option value="Semua">Semua Kategori</option>
+                                            <option value="semua">Semua Kategori</option>
+                                            <option value="jenis">Jenis</option>
+                                            <option value="kelompk">Kelompok</option>
+                                            <option value="pos_anggaran">Pos Anggaran</option>
+                                            <option value="sub_pos">Sub Pos</option>
+                                            <option value="mata_anggaran">Mata Anggaran</option>
                                           </select>
                                         </div>
                                     </div>
@@ -73,24 +81,23 @@
                                     <div class="col-xs-3">
                                         <div class="form-group">
                                           <label>Kata Kunci</label>
-                                          <input id="cari_query" name="cari_query" class="form-control">
+                                          <input id="cari_keyword" name="cari_keyword" class="form-control">
                                           
                                         </div>
                                     </div>
                                     <div class="col-xs-2" >
                                       <div class="form-group">
                                           <label style="visibility:hidden">Kata Kunci</label>
-                                          <a href="{{ url('anggaran/edit/123/1') }}" class="btn btn-primary"><i class="fa fa-search"></i> Cari</a>                                            
+                                          <div onclick="cariRiwayat()" id="cari_button" name="cari_button" class="btn btn-primary"><i class="fa fa-search"></i> Cari</div>
                                       </div>
                                     </div>
                                   </div>
                                 </form>
                               </div>
                             </div>
+                          </form>
                         </div>
                       </div>
-
-
                       <div class="row">
                         <div class="card">
                             <div class="card-header">
@@ -106,7 +113,7 @@
                                       <div class="col-xs-2">
                                           <div class="form-group">
                                             <label>Tahun</label>
-                                            <input id="tanggal" name="tanggal" class="form-control" value="<?php echo  date("Y");?>" readonly>
+                                            <input id="tahun" name="tahun" class="form-control" value="" readonly>
                                             
                                           </div>
                                       </div>
@@ -145,6 +152,29 @@
                     </section>
                     <!-- Basic scenario end -->
                 </div>
+
+                <div class="modal fade text-xs-left" id="modal_berkas" tabindex="-1" role="dialog" aria-labelledby="myModalLabel20"
+                aria-hidden="true">
+                  <div class="modal-dialog modal-md" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h4 class="modal-title" id="myModalLabel20">Unduh Berkas</h4>
+                      </div>
+                      <div class="modal-body" id="confirmation-msg">
+                        <div class="row">
+                          <div class="col-md-12" id="list_file">
+
+                          </div>
+                        </div>
+                      </div>
+                      <div class="modal-footer">
+                       </div>
+                    </div>
+                  </div>
+                </div>
                 @endsection
 
                 @section('customjs')
@@ -162,7 +192,8 @@
                 <script src="{{ asset('app-assets/js/scripts/forms/select/form-select2.min.js') }}" type="text/javascript"></script>
                 <!-- END PAGE LEVEL JS-->
                 <script type="text/javascript">
-                  
+                  var list_berkas = [];
+                  var count_file=0;
                   $(document).ready(function() {
 
                     $("#basicScenario").jsGrid( {
@@ -181,7 +212,7 @@
                         loadData: function(filter) {
                           return $.ajax({
                               type: "GET",
-                              url:"{{ (checkActiveMenu('anggaran') == 'active' ? url('anggaran') : url('anggaran/get/filteredHistory') ) }}",
+                              url:"{{ (checkActiveMenu('anggaran') == 'active' ? url('anggaran') : url('anggaran/get/filteredHistory/'.$filters['tahun'].'/'.urlencode(strtolower($filters['unit_kerja'])).'/'.$filters['kategori'].'/'.urlencode(strtolower($filters['keyword'])) ) ) }}",
                               data: filter,
                               dataType: "JSON"
                           })
@@ -318,21 +349,19 @@
                           { name: "file", align:"center", title: "Berkas",  width: 150 ,
 
                             itemTemplate: function(value) {
-                              var name_file = "";
-                              var id_list;
-                              var status = false;
-
-                              if(value.length > 0){
-
-                                for(j = 0;j<value.length;j++){
-                                  name_file+=(j+1)+". "+value[j]["name"]+"<br /> ";
-                                  if(value[j]['id_list_anggaran']!=null){
-                                    id_list = value[j]['id_list_anggaran'];
-                                  }
-                                }
+                              // var index = count_file;
+                              // list_berkas[index]=value;
+                              // alert(value.length)
+                              id_list=count_file;
+                              for(i =0;i<value.length;i++){
+                                id_list = value[i]['count'];
+                                // alert(value[i]['count']);
                               }
-                              // if(status)
-                              return "<span > <a class='btn btn-primary' href='{{url('anggaran/get/download')}}/"+id_list+"' >Unduh Berkas</a>:<br /> </span>";
+                              list_berkas[id_list]=[];
+                              list_berkas[id_list]=value;
+                              var button = "<span class='btn btn-primary' onclick='setBerkas("+id_list+")' >Unduh Berkas</span>";
+                              count_file++;
+                              return button;
                               
                             }
                           }
@@ -357,6 +386,12 @@
                   }
 
                   function setUnitKerja(){
+                    var tahun = '{{$filters["tahun"]}}';
+                    if(tahun == '0'){
+                      tahun = '2015 sampai 2017';
+                    }
+                    document.getElementById('tahun').value = tahun;
+                    document.getElementById('unit_kerja').value = '{{$filters["unit_kerja"]}}';
                     $.ajax({
                         'async': false, 'type': "GET", 'dataType': 'JSON', 'url': "{{ url('anggaran/get/attributes/unitkerja/1') }}",
                         'success': function (data) {
@@ -367,16 +402,43 @@
                           for(i =0 ;i<data.length;i++){
                             var value = "";
                             var desc = data[i].DESCRIPTION;
-                            if(desc.split("Cabang").length > 0 ){
-                              value = data[i].VALUE+"00";
-                            }else{
-                              value = "00"+data[i].VALUE;
-                            }
+                            value = data[i].DESCRIPTION;
+                            // if(desc.split("Cabang").length > 1 ){
+                            //   value = data[i].VALUE+"00";
+                            // }else{
+                            //   value = "00"+data[i].VALUE;
+                            // }
                             unit_kerja.options[unit_kerja.options.length] = new Option(desc, value);
                           }
                              
                         }
                     });
+                  }
+
+                  function setBerkas(index) {
+                    $('#list_file').empty();
+                    var name="";
+                      for(i = 0; i<list_berkas[index].length; i++){
+                        link = "{{url('anggaran/get/download')}}/"+list_berkas[index][i]['id'];
+                        name += '<div class="col-xs-10"><a href="'+link+'" >'+list_berkas[index][i]['name']+'</div>';
+                        name += '<div class="col-xs-2"><i class="fa fa-download "></i></div></a><br/><br/>';
+                      }
+
+                     $("#list_file").append(name);
+
+
+                      $('#modal_berkas').modal('show');
+                  };
+
+                  function cariRiwayat(){
+                    if(document.getElementById("cari_keyword").value==""){
+                      toastr.error("Silahkan Isi Kata Kunci Pencarian. Terima kasih.", "Kata Kunci Pencarian Kosong.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
+                    }else if(document.getElementById("cari_unit_kerja").value=="0"){
+                      toastr.error("Silahkan Pilih Salah Satu Unit Kerja. Terima kasih.", "Unit Kerja Belum Dipilih.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
+                    }else{
+                      $('form[id="filterAnggaran"]').submit();
+                    }
+                    // alert(JSON.stringify(inputs));
                   }
 
                   window.setUnitKerja();
