@@ -295,11 +295,26 @@
                                       <h4 class="modal-title" id="myModalLabel20">Box Konfirmasi</h4>
                                     </div>
                                     <div class="modal-body" id="confirmation-msg">
-                                      <p>Apakah anda yakin <b>menolak verifikasi</b> untuk tarik tunai {{ $tariktunai->cabang }} ?</p>
+                                      <div class="row">
+                                        <div class="col-md-10" id="reason">
+                                          <form method="GET" action="{{ url('dropping/verifikasi/tariktunai/rejected/'.$tariktunai->id) }}" id="verification">
+                                            <div class="form-group">
+                                              <label>Alasan <b>penolakan</b></label>
+                                              <select class="form-control" name="reason">
+                                                <option value="0">Silahkan pilih alasan anda</option>
+                                                @foreach($reject_reasons as $res)
+                                                  <option value="{{ $res->id }}">{{ $res->content }}</option>
+                                                @endforeach
+                                              </select>
+                                            </div>
+                                          </form>
+                                        </div>
+                                      </div>
                                     </div>
                                     <div class="modal-footer">
-                                      <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">Tidak, kembali</button>
-                                      <a href="{{ url('dropping/verifikasi/tariktunai/rejected/'.$tariktunai->id) }}" class="btn btn-outline-danger">Ya, tolak</a>
+                                      <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">Kembali</button>
+                                      <button onclick="attent()" type="submit" class="btn btn-outline-primary">Submit penolakan</button>
+                                      <!-- <a href="{{ url('dropping/verifikasi/tariktunai/rejected/'.$tariktunai->id) }}" class="btn btn-outline-danger" onclick="attent()" id="tolak1">Ya, tolak</a> -->
                                     </div>
                                   </div>
                                 </div>
@@ -339,6 +354,14 @@
                 <script type="text/javascript">
                   function forms_submit() {
                       document.getElementById("tariktunai-form").submit();
+                  };
+
+                  function attent() {
+                    if ($('select[name="reason"]').val() == '0') {
+                      toastr.error("Silahkan input alasan penolakan anda untuk verifikasi lvl 1 ini. Terima kasih.", "Alasan penolakan dibutuhkan.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:10e3});
+                    }else {
+                      $('form[id="verification"]').submit();
+                    }
                   };
                 </script>
                 @endsection

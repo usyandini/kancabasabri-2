@@ -195,12 +195,10 @@
                                               <td>IDR {{ number_format($history->nominal_tarik) }}</td>
                                               <td>IDR {{ number_format($history->sisa_dropping) }}</td>
                                               <td>
-                                              <!-- <li><a href="{{ url('dropping/tariktunai/berkas/download').'/'.$history->fileTarikTunai['id'] }}" target="_blank">{{ $history->fileTarikTunai['name'] }}</a></li> -->
-                                              @foreach($berkas as $value)
-                                                <li><a href="{{ url('dropping/tariktunai/berkas/download').'/'.$history->fileTarikTunai['id'] }}" target="_blank">{{ $history->fileTarikTunai['name'] }}</a></li>
+                                              @foreach($berkas->where('id_tariktunai', $history->id)->get() as $value)
+                                                <li><a href="{{ url('dropping/tariktunai/berkas/download').'/'.$value['id'] }}" target="_blank">{{ $value['name'] }}</a></li>
                                               @endforeach
                                               </td>
-
                                             </tr>
                                           </tbody>
                                           @endforeach
@@ -288,7 +286,7 @@
                       var mod = val%100
 
                       if(mod != 0 || val < 100){
-                        alert("Nominal tidak valid. Silahkan input nominal kembali.");
+                        alert("Nominal tidak valid! Silahkan input nominal kembali.\nMinimal input nominal IDR 100 dengan kelipatan 100.");
                       }else{
                         document.getElementById("tariktunai-form").submit();
                       }
