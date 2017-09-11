@@ -185,12 +185,19 @@ class DroppingController extends Controller
         $dropping = $this->droppingModel->where([['RECID', $id_drop], ['DEBIT', '>', 0]])->firstOrFail();
 
         $tariktunai = TarikTunai::where([['id_dropping', $id_drop], ['nominal_tarik', '>', 0], ['stat', 3]])->orderby('sisa_dropping', 'asc')->get();
-        if($tariktunai){
+
+        $status = TarikTunai::where('id_dropping', $id_drop)->orderby('created_at', 'desc')->first();
+        $notif = '';
+        if($status){
             $berkas = [];
             $berkas = $this->berkasTTModel;
+            if($status['stat'] == 2){
+                $notif = RejectTarikTunai::where('id_tariktunai', $status['id'])->orderby('created_at', 'desc')->first();
+                session()->flash('reject1', true);
+            }            
         }
         //dd($berkas);
-        return view('dropping.tariktunai.tariktunai', ['tariktunai' => $tariktunai, 'dropping' => $dropping, 'berkas' => $berkas]);
+        return view('dropping.tariktunai.tariktunai', ['tariktunai' => $tariktunai, 'dropping' => $dropping, 'berkas' => $berkas, 'notif' => $notif]);
     }
 
     public function tarik_tunai_process($id_drop, Request $request)
@@ -284,13 +291,25 @@ class DroppingController extends Controller
 
         $dropping = $this->droppingModel->where([['RECID', $id_drop], ['DEBIT', '>', 0]])->firstOrFail();
         $akunBank = $this->akunBankModel->get();
-        $kesesuaian = PenyesuaianDropping::where([['id_dropping', $id_drop], ['stat', 8]])->first();
+        $kesesuaian = PenyesuaianDropping::where([['id_dropping', $id_drop], ['stat', 8]])->orderby('updated_at', 'desc')->first();
+        $status = PenyesuaianDropping::where('id_dropping', $id_drop)->orderby('updated_at', 'desc')->first();
+        $notif = '';
         $berkas = [];
-        if($kesesuaian){
-            $berkas = BerkasPenyesuaian::where('id_penyesuaian', $kesesuaian->id)->get();
-         }
-        //dd($berkas);
-        return view('dropping.penyesuaian.penyesuaian', ['dropping' => $dropping, 'kesesuaian' => $kesesuaian, 'kcabangs' => $this->kantorCabangs, 'berkas' => $berkas]); 
+
+        if($status){
+            if($status['stat'] == 8){
+                $berkas = BerkasPenyesuaian::where('id_penyesuaian', $status->id)->get();
+             }elseif($status['stat'] == 5){
+                $notif = RejectPenyesuaian::where('id_penyesuaian', $status['id'])->orderby('created_at', 'desc')->first();
+                session()->flash('reject1', true);
+             }elseif($status['stat'] == 7){
+                $notif = RejectPenyesuaian::where('id_penyesuaian', $status['id'])->orderby('created_at', 'desc')->first();
+                session()->flash('reject2', true);
+             }
+        }
+
+        //dd($notif);
+        return view('dropping.penyesuaian.penyesuaian', ['dropping' => $dropping, 'kesesuaian' => $kesesuaian, 'kcabangs' => $this->kantorCabangs, 'berkas' => $berkas, 'notif' => $notif]); 
     }
 
     public function penyesuaian_process($id_drop, Request $request)
