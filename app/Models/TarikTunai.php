@@ -30,11 +30,17 @@ class TarikTunai extends Model
         'SEGMEN_6',
         'ACCOUNT',
 
-        'stat'
+        'stat',
+        'verified_by'
     ];
 
     public function creator()
     {
     	return $this->belongsTo('App\User', 'created_by', 'id');
+    }
+
+    public function dropping()
+    {
+        return $this->hasOne('App\Models\Dropping', 'RECID', 'id_dropping');
     }
 }

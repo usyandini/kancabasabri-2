@@ -24,6 +24,8 @@ use App\Models\Divisi;
 use App\Models\SubPos;
 use App\Models\Kegiatan;
 
+use App\Models\StagingTarikTunai;
+
 use Validator;
 use App\Services\FileUpload;
 use App\Services\NotificationSystem;
@@ -184,11 +186,13 @@ class DroppingController extends Controller
 
         $dropping = $this->droppingModel->where([['RECID', $id_drop], ['DEBIT', '>', 0]])->firstOrFail();
 
+        //dd(StagingTarikTunai::get());
+
         $tariktunai = TarikTunai::where([['id_dropping', $id_drop], ['nominal_tarik', '>', 0], ['stat', 3]])->orderby('sisa_dropping', 'asc')->get();
 
         $status = TarikTunai::where('id_dropping', $id_drop)->orderby('created_at', 'desc')->first();
         $notif = '';
-        if($status){
+        if($tariktunai){
             $berkas = [];
             $berkas = $this->berkasTTModel;
             if($status['stat'] == 2){
@@ -514,9 +518,10 @@ class DroppingController extends Controller
         {
             switch($reaction){
                 case 'verified':
-                    TarikTunai::where('id', $id_tarik)->update(array('stat' => 3));
+                    TarikTunai::where('id', $id_tarik)->update(array('stat' => 3, 'verified_by' => \Auth::id()));
                     session()->flash('success', true);
                     NotificationSystem::send($id_tarik, 9);
+                    $this->insertStagingTarikTunai($id_tarik);
                     break;
                     //update dengan data tarik tunai sebelumnya
                 case 'rejected':
@@ -525,7 +530,8 @@ class DroppingController extends Controller
                         'nominal' => $verification->nominal,
                         'nominal_tarik' => 0,
                         'sisa_dropping' => $verification->nominal,
-                        'stat' => 2));
+                        'stat' => 2,
+                        'verified_by' => \Auth::id()));
                     $reject_reason = ['id_tariktunai' => $id_tarik, 'reject_reason' => $request->reason];
                     RejectTarikTunai::create($reject_reason);
                     NotificationSystem::send($id_tarik, 8);
@@ -600,7 +606,7 @@ class DroppingController extends Controller
             {
                 switch($reaction){
                     case 'verified':
-                        PenyesuaianDropping::where('id', $id_penyesuaian)->update(array('stat' => 6));
+                        PenyesuaianDropping::where('id', $id_penyesuaian)->update(array('stat' => 6, '1_verified_by' => \Auth::id()));
                         session()->flash('success', true);
                         NotificationSystem::send($id_penyesuaian, 12);
                         break;
@@ -609,7 +615,7 @@ class DroppingController extends Controller
                         ->update(array(
                             'stat' => 5));
                         //BerkasTarikTunai::where('id', $verification->berkas_tariktunai)->delete();
-                        $reject_reason = ['id_penyesuaian' => $id_penyesuaian, 'reject_reason' => $request->reason];
+                        $reject_reason = ['id_penyesuaian' => $id_penyesuaian, 'level' => $lvl, 'rejected_by' => \Auth::id() ,'reject_reason' => $request->reason];
                         RejectPenyesuaian::create($reject_reason);
                         NotificationSystem::send($id_penyesuaian, 11);
                         session()->flash('reject', true);
@@ -623,7 +629,7 @@ class DroppingController extends Controller
             {
                 switch($reaction){
                     case 'verified':
-                        PenyesuaianDropping::where('id', $id_penyesuaian)->update(array('stat' => 8));
+                        PenyesuaianDropping::where('id', $id_penyesuaian)->update(array('stat' => 8, '2_verified_by' => \Auth::id()));
                         session()->flash('success', true);
                         NotificationSystem::send($id_penyesuaian, 14);
                         break;
@@ -632,7 +638,7 @@ class DroppingController extends Controller
                         ->update(array(
                             'stat' => 7));
                         //BerkasTarikTunai::where('id', $verification->berkas_tariktunai)->delete();
-                        $reject_reason = ['id_penyesuaian' => $id_penyesuaian, 'reject_reason' => $request->reason];
+                        $reject_reason = ['id_penyesuaian' => $id_penyesuaian, 'level' => $lvl, 'rejected_by' => \Auth::id() ,'reject_reason' => $request->reason];
                         RejectPenyesuaian::create($reject_reason);
                         NotificationSystem::send($id_penyesuaian, 13);
                         session()->flash('reject', true);
@@ -642,6 +648,32 @@ class DroppingController extends Controller
         }
         session()->flash('done', true);
         return redirect()->back();
+    }
+
+    public function insertStagingTarikTunai($id_tarik)
+    {
+        $tariktunai = TarikTunai::where([['id', $id_tarik], ['stat', 3]])->first();
+
+        $inputStagingTT = [
+            // 'DATAAREAID'
+            // 'RECVERSION'
+            // 'PARTITION'
+            'RECID'             => $tariktunai['id_dropping'],
+            'PIL_TRANSDATE'     => $tariktunai['updated_at'],
+            'PIL_TXT'           => $tariktunai['dropping']['TXT'],
+            'PIL_JOURNALNUM'    => $tariktunai['dropping']['JOURNALNUM'],
+            'PIL_AMOUNT'        => $tariktunai['nominal_tarik'],
+            'PIL_BANK'          => $tariktunai['akun_bank'],
+            'PIL_ACCOUNT'       => $tariktunai['SEGMEN_1'],
+            'PIL_VOUCHER'       => $tariktunai['dropping']['JOURNALNAME']
+        ];
+
+        $exist = StagingTarikTunai::where('RECID', $tariktunai['id_dropping'])->first();
+        if($exist){
+            StagingTarikTunai::where('RECID', $exist['RECID'])->update($inputStagingTT);
+        }else{
+            StagingTariktunai::insert($inputStagingTT);   
+        }
     }
 
     public function redirect($url, $statusCode = 303)

@@ -10,7 +10,7 @@ class RejectPenyesuaian extends Model
 
     protected $table = 'reject_penyesuaian';
 
-    protected $fillable = ['id_penyesuaian', 'reject_reason'];
+    protected $fillable = ['id_penyesuaian', 'reject_reason', 'level', 'rejected_by'];
 
     public function reason()
     {
