@@ -423,6 +423,12 @@
                           item["isNew"] = true;
                           item["tempId"] = ++tempIdCounter;
                           item["id"] = -1;
+                          item["nilai_persatuan"]= validDigits(item.nilai_persatuan);
+                          item["tw_i"]= validDigits(item.tw_i);
+                          item["tw_ii"]= validDigits(item.tw_ii);
+                          item["tw_iii"]= validDigits(item.tw_iii);
+                          item["tw_iv"]= validDigits(item.tw_iv);
+                          item["anggarana_setahun"]= validDigits(item.anggarana_setahun);
                                                       
                           inputs.push(item);
                           // console.log(item);
@@ -432,6 +438,13 @@
 
                           // console.log(item);
                           // alert("update");
+
+                          item["nilai_persatuan"]= validDigits(item.nilai_persatuan);
+                          item["tw_i"]= validDigits(item.tw_i);
+                          item["tw_ii"]= validDigits(item.tw_ii);
+                          item["tw_iii"]= validDigits(item.tw_iii);
+                          item["tw_iv"]= validDigits(item.tw_iv);
+                          item["anggarana_setahun"]= validDigits(item.anggarana_setahun);
                           if (item["isNew"]) {
                             inputs.splice(item["tempId"]-1, 1, item);  
                           } else {
@@ -506,6 +519,7 @@
                             count_berkas++;
                           }
                         }
+
                         if(count_berkas == 0){
                           args.cancel = true;
                           alert("Harap Disertai minimal 1 berkas");
@@ -693,7 +707,7 @@
                             title: "Nilai Per Satuan", 
                             width: 130, 
                             itemTemplate: function(value) {
-                              var display ="<span class='tag tag-info'>IDR " + parseInt(value).toLocaleString() + ",00</span>";
+                              var display ="<span class='tag tag-info'>IDR " + addCommas(value)+ ",00</span>";
                               
                               return display;
                             },
@@ -718,7 +732,7 @@
                             },
                             editTemplate: function(value,item) {
                               nilai_field_edit= jsGrid.fields.text.prototype.editTemplate.call(this);
-                              $(nilai_field_edit).val(value);
+                              $(nilai_field_edit).val(addCommas(value));
                               nilai_field_edit.on("change", function() {
                                 $(nilai_field_edit).val($(this).val());
                                 var persatuan = validDigits($(this).val());
@@ -737,6 +751,7 @@
 
                               return nilai_field_edit; 
                             }, 
+                            // itemInsert()
                             validate: {
                                 message : "Isi Kolom Nilai Per Satuan.",
                                 validator :function(value, item) {
@@ -799,13 +814,9 @@
                             title: "TW I", 
                             width: 100,
                             itemTemplate: function(value) {
-                              var val=0
-                              if(value !=""){
-                                val;
-                              }
-                              var display ="<span class='tag tag-info'>IDR " + parseInt(val).toLocaleString() + ",00</span>";
+                              var display ="<span class='tag tag-info'>IDR " + addCommas(value) + ",00</span>";
                               
-                              if(parseInt(val).toLocaleString() < 1){
+                              if(parseInt(value).toLocaleString() < 1||value == ""){
                                 display = "<span >---</span>";
                               }
 
@@ -824,7 +835,7 @@
                             },
                             editTemplate: function(value,item) {
                               twi_field_edit = jsGrid.fields.text.prototype.editTemplate.call(this);
-                              $(twi_field_edit).val(value);
+                              $(twi_field_edit).val(addCommas(value));
                               twi_field_edit.on("keyup", function() {
                                   var nilai = validDigits($(this).val());
                                   var val = addCommas(nilai);
@@ -860,14 +871,10 @@
                             title: "TW II", 
                             width: 100 ,
                             itemTemplate: function(value) {
-                              var val=0
-                              if(value !=""){
-                                val;
-                              }
-                              var display ="<span class='tag tag-info'>IDR " + parseInt(val).toLocaleString() + ",00</span>";
+                              var display ="<span class='tag tag-info'>IDR " + addCommas(value) + ",00</span>";
                               
-                              if(parseInt(val).toLocaleString() < 1){
-                                display = "<span>---</span>";
+                              if(parseInt(value).toLocaleString() < 1||value == ""){
+                                display = "<span >---</span>";
                               }
                               return display;
                             },
@@ -882,7 +889,7 @@
                             },
                             editTemplate: function(value) {
                               twii_field_edit = jsGrid.fields.text.prototype.editTemplate.call(this);
-                              $(twii_field_edit).val(value);
+                              $(twii_field_edit).val(addCommas(value));
                               twii_field_edit.on("keyup", function() {
                                   var nilai = validDigits($(this).val());
                                   var val = addCommas(nilai);
@@ -896,14 +903,10 @@
                             title: "TW III", 
                             width: 100 ,
                             itemTemplate: function(value) {
-                              var val=0
-                              if(value !=""){
-                                val;
-                              }
-                              var display ="<span class='tag tag-info'>IDR " + parseInt(val).toLocaleString() + ",00</span>";
+                              var display ="<span class='tag tag-info'>IDR " + addCommas(value) + ",00</span>";
                               
-                              if(parseInt(val).toLocaleString() < 1){
-                                display = "<span>---</span>";
+                              if(parseInt(value).toLocaleString() < 1||value == ""){
+                                display = "<span >---</span>";
                               }
                               return display;
                             },
@@ -918,7 +921,7 @@
                             },
                             editTemplate: function(value) {
                               twiii_field_edit= jsGrid.fields.text.prototype.editTemplate.call(this);
-                              $(twiii_field_edit).val(value);
+                              $(twiii_field_edit).val(addCommas(value));
                               twiii_field_edit.on("keyup", function() {
                                   var nilai = validDigits($(this).val());
                                   var val = addCommas(nilai);
@@ -932,14 +935,10 @@
                             title: "TW IV",
                             width: 100,
                             itemTemplate: function(value) {
-                              var val=0
-                              if(value !=""){
-                                val;
-                              }
-                              var display ="<span class='tag tag-info'>IDR " + parseInt(val).toLocaleString() + ",00</span>";
+                              var display ="<span class='tag tag-info'>IDR " + addCommas(value) + ",00</span>";
                               
-                              if(parseInt(val).toLocaleString() < 1){
-                                display = "<span>---</span>";
+                              if(parseInt(value).toLocaleString() < 1||value == ""){
+                                display = "<span >---</span>";
                               }
                               return display;
                             },
@@ -954,7 +953,7 @@
                             },
                             editTemplate: function(value) {
                               twiv_field_edit = jsGrid.fields.text.prototype.editTemplate.call(this);
-                              $(twiv_field_edit).val(value);
+                              $(twiv_field_edit).val(addCommas(value));
                               twiv_field_edit.on("keyup", function() {
                                   var nilai = validDigits($(this).val());
                                   var val = addCommas(nilai);
@@ -969,9 +968,12 @@
                             title: "Anggaran Setahun", 
                             width: 150 ,
                             readOnly:true,
-                            itemTemplate: function(value) {
-                              var display ="<span class='tag tag-info'>IDR " + parseInt(value).toLocaleString() + ",00</span>";
+                            itemTemplate: function(value) {var val=0
+                              var display ="<span class='tag tag-info'>IDR " + addCommas(value) + ",00</span>";
                               
+                              if(parseInt(value).toLocaleString() < 1||value == ""){
+                                display = "<span >---</span>";
+                              }
                               return display;
                             },
                             insertTemplate: function() {
@@ -980,7 +982,7 @@
                             },
                             editTemplate: function(value) {
                               anggarant_field_edit = jsGrid.fields.text.prototype.editTemplate.call(this);
-                              $(anggarant_field_edit).val(value);
+                              $(anggarant_field_edit).val(addCommas(value));
                               return anggarant_field_edit; 
                             },
                             validate: {
@@ -1283,7 +1285,7 @@
                     var rx=  /(\d+)(\d{3})/;
                     return String(n).replace(/^\d+/, function(w){
                       while(rx.test(w)){
-                        w= w.replace(rx, '$1,$2');
+                        w= w.replace(rx, '$1.$2');
                       }
                       return w;
                     });
