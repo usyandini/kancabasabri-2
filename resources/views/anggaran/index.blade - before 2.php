@@ -367,7 +367,7 @@
                   var inputs = [];
                   var hasil=[];
                   var upload_file = [];
-                  var temp_file = [];
+                  var convert_file =[];
                   var list_berkas=[];
                   var editableStat = {{ $editable ? 1 : 0 }};
                   var insertableStat = {{ $status=='edit' ? 1 : 0 }};
@@ -385,6 +385,32 @@
                   var isInput = false;
                   var statusTable = "null";
                   var countFile = 0;
+                  $('#modal_berkas').on('hidden.bs.modal', function () {
+                      if(!simpan_file){
+                        hasil=[];
+                        for(i = 0; i < upload_file.length ; i++){
+                          for(j = 0; j < upload_file[i].length ; j++){
+                            if(convert_file[i]==null){
+                              if(convert_file[i][j]==null){
+                                // alert("null");
+                                upload_file[i][j]==null
+                                // document.getElementById('file_'+i+'_'+j).value="null";
+                                // document.getElementById('file_name_'+i+'_'+j).value = "null";
+                                // document.getElementById('file_type_'+i+'_'+j).value = "null";
+                                // document.getElementById('file_size_'+i+'_'+j).value = "null";
+                              }else{
+
+                                // alert(convert_file[i][j].name);
+                              }
+                            }
+                          }
+                        }
+                        
+                      }
+                      simpan_file = false;
+                      // alert("close");
+                  })
+
                   
                   $(document).ready(function() {
 
@@ -449,36 +475,17 @@
 
                         });
                       },
-                      onItemInserted:function(args){
+                      onItemInsert:function(args){
                         statusTable = "null";
                       },
-                      onItemInserting:function(args){
-                        var count_berkas = 0;
-                        if(upload_file[tempIdCounter] != null){
-                          for(i=0;i<upload_file[tempIdCounter].length;i++){
-                            if(upload_file[tempIdCounter][i]!=null){
-                              count_berkas++;
-                              readerPrev(i,index_modal);
-                            }
-                          }
-                        }
-                        if(count_berkas == 0){
-                          args.cancel = true;
-                          alert("Harap Disertai minimal 1 berkas");
-                        }
-                      },
                       onItemEditing: function(args) {
-                        // if(statusTable=="edit"){
-                          // alert("Anggaran Sedang Di Perbarui Setujui Terlebih dahulu sebelum mengubah yang lain");
-                        // }
-                        // alert("edit-"+args.item.file);
-                          if(statusTable=="edit"){
-                            // console.log ("Cancel",     ); 
-                            args.cancel =true;
-                          }
+                        // alert($row.length)
                           statusTable = "edit";
+                          // alert("editing");
                            window.setTimeout(function() {
                               $('.jsgrid-cancel-edit-button').one('click.avoidAuthorClickHandler', function() {
+                                  // alert("cancel");
+                                  // document.getElementById('button_'+index_modal).innerHTML = countFile+" Berkas";
                                   statusTable = "null";
 
                               });
@@ -486,32 +493,14 @@
 
                           
                       },
-                      onItemUpdating:function(args){
-                        var count_berkas = 0;
-                        if(upload_file[args.item.file] != null){
-                          for(i=0;i<upload_file[args.item.file].length;i++){
-                            if(upload_file[args.item.file][i]!=null){
-                              count_berkas++;
-                              readerPrev(i,index_modal);
-                            }
-                          }
-                        }
-                        if(args.item.file.length>0){
-                          for(i =0;i<args.item.file.length;i++){
-                            count_berkas++;
-                          }
-                        }
-                        if(count_berkas == 0){
-                          args.cancel = true;
-                          alert("Harap Disertai minimal 1 berkas");
-                        }
-                      },
                       onItemUpdated: function(args) {
-                        // alert("updated-"+args.item.file);
+                          // alert("updated");
+                          // document.getElementB yId('button_'+index_modal).innerHTML = countFile+" Berkas";
                           statusTable = "null";
                       },
                       fields: [
-                          { name: "id",
+                          {
+                            name: "id",
                             css: "hide",
                             type: "number", 
                             width: 0,
@@ -533,11 +522,13 @@
                                 return (tempIdCounter); 
                             }
                           },
-                          {name: "id_first",
+                          {
+                            name: "id_first",
                             css: "hide",
                             width: 0,
                             type: "number",
                             readOnly: true
+
                           },
                           { type: "control",
                             width: 90,
@@ -548,9 +539,13 @@
                                 window.setTimeout(function() {
                                     $('.jsgrid-insert-mode-button').on('click', function() {
                                         if($('.jsgrid-mode-on-button').length==0){
+                                          // statusTable = "insert";
                                           statusTable = "null";
+                                          // alert("null");
                                         }else{
+                                          // alert("insert");
                                           statusTable = "insert";
+                                          // statusTable = "null";
                                         }
                                     });
                                  }, 10);
@@ -653,12 +648,7 @@
                               kuantitas_field_insert = jsGrid.fields.text.prototype.insertTemplate.call(this);
                               kuantitas_field_insert.on("change", function() {
                                   $(kuantitas_field_insert).val($(this).val());
-                                  var qty = $(this).val();
-                                  var persatuan = validDigits($(nilai_field_insert).val());
-
-                                  var nilai = persatuan*qty;
-                                  var val = addCommas(nilai);
-                                  $(anggarant_field_insert).val(val);
+                                  changeAnggaranSetahun("insert");
 
                               });
                               return kuantitas_field_insert; 
@@ -666,14 +656,12 @@
                             editTemplate: function(value) {
                               kuantitas_field_edit = jsGrid.fields.text.prototype.editTemplate.call(this);
                               $(kuantitas_field_edit).val(value);
+                              // alert("Sebelum "+$(kuantitas_field_edit).val());
                               kuantitas_field_edit.on("change", function() {
                                   $(kuantitas_field_edit).val($(this).val());
-                                  var qty = $(this).val();
-                                  var persatuan = validDigits($(nilai_field_edit).val());
-                                  
-                                  var nilai = persatuan*qty;
-                                  var val = addCommas(nilai);
-                                  $(anggarant_field_edit).val(val);
+                                  changeAnggaranSetahun("edit");
+
+                                   // alert("Berubah "+$(kuantitas_field_edit).val());
                               });
                               return kuantitas_field_edit; 
                             },
@@ -700,7 +688,7 @@
                             } 
                           },
                           { name: "nilai_persatuan", 
-                            type: "text", 
+                            type: "number", 
                             title: "Nilai Per Satuan", 
                             width: 130, 
                             itemTemplate: function(value) {
@@ -711,50 +699,27 @@
                             insertTemplate: function() {
                               nilai_field_insert= jsGrid.fields.text.prototype.insertTemplate.call(this);
                               nilai_field_insert.on("change", function() {
-                                $(nilai_field_insert).val($(this).val());
-                                var persatuan = validDigits($(this).val());
-                                var qty= $(kuantitas_field_insert).val();
-
-                                var nilai = persatuan*qty;
-                                var val = addCommas(nilai);
-                                $(anggarant_field_insert).val(val);
-                              });
-
-                              nilai_field_insert.on("keyup", function() {
-                                  var nilai = validDigits($(this).val());
-                                  var val = addCommas(nilai);
-                                  $(nilai_field_insert).val(val);
+                                  $(nilai_field_insert).val($(this).val());
+                                  changeAnggaranSetahun("insert");
                               });
                               return nilai_field_insert; 
                             },
-                            editTemplate: function(value,item) {
+                            editTemplate: function(value) {
                               nilai_field_edit= jsGrid.fields.text.prototype.editTemplate.call(this);
                               $(nilai_field_edit).val(value);
+                               // alert("Sebelum "+$(nilai_field_edit).val());
                               nilai_field_edit.on("change", function() {
-                                $(nilai_field_edit).val($(this).val());
-                                var persatuan = validDigits($(this).val());
-                                var qty= $(kuantitas_field_edit).val();
-                                var nilai = persatuan*qty;
-                                var val = addCommas(nilai);
-                                $(anggarant_field_edit).val(val);
+                                  $(nilai_field_edit).val($(this).val());
+                                  changeAnggaranSetahun("edit");
+
+                                   // alert("Berubah "+$(nilai_field_edit).val());
                               });
-
-                              nilai_field_edit.on("keyup", function() {
-                                  var nilai = validDigits($(this).val());
-                                  var val = addCommas(nilai);
-                                  $(nilai_field_edit).val(val);
-                              });
-
-
                               return nilai_field_edit; 
                             }, 
                             validate: {
                                 message : "Isi Kolom Nilai Per Satuan.",
                                 validator :function(value, item) {
-
-                                    var val = validDigits(value);
-                                    alert(val > 0);
-                                    return val > 0 ;
+                                    return value > 0 ;
                                 } 
                               }
                           },
@@ -807,7 +772,7 @@
                             } 
                           },
                           { name: "tw_i", 
-                            type: "text", 
+                            type: "number", 
                             title: "TW I", 
                             width: 100,
                             itemTemplate: function(value) {
@@ -822,51 +787,44 @@
                             insertTemplate: function() {
                               // var valField=this._grid.fields[12];
                               twi_field_insert = jsGrid.fields.text.prototype.insertTemplate.call(this);
-                              twi_field_insert.on("keyup", function() {
-                                  var nilai = validDigits($(this).val());
-                                  var val = addCommas(nilai);
-                                  $(twi_field_insert).val(val);
+                              twi_field_insert.on("change", function(e) {
+                                  $(twi_field_insert).val($(this).val());
+                                  changeAnggaranSetahun("insert");
                               });
                               return twi_field_insert; 
                             },
-                            editTemplate: function(value,item) {
+                            editTemplate: function(value) {
                               twi_field_edit = jsGrid.fields.text.prototype.editTemplate.call(this);
                               $(twi_field_edit).val(value);
-                              twi_field_edit.on("keyup", function() {
-                                  var nilai = validDigits($(this).val());
-                                  var val = addCommas(nilai);
-                                  $(twi_field_edit).val(val);
+                              twi_field_edit.on("change", function() {
+                                  $(twi_field_edit).val($(this).val());
+                                  changeAnggaranSetahun("edit");
                               });
                               return twi_field_edit; 
                             },
                             validate: {
                               message : "Isi minimal pada salah satu Kolom dari TWI, TWII, TWIII, TWIV.",
                               validator :function(value, item) {
-                                // alert(item.terpusat);
-                                  var twi_val_ins = $(twi_field_insert).val() == "" ? 0:validDigits($(twi_field_insert).val());
-                                  var twii_val_ins = $(twii_field_insert).val() == "" ? 0:validDigits($(twii_field_insert).val());
-                                  var twiii_val_ins = $(twiii_field_insert).val() == "" ? 0:validDigits($(twiii_field_insert).val());
-                                  var twiv_val_ins = $(twiv_field_insert).val() == "" ? 0:validDigits($(twiv_field_insert).val());
-                                  var anggaran_val_ins = validDigits($(anggarant_field_insert).val());
+                                  var twi_val_ins = $(twi_field_insert).val() == "" ? 0:parseInt($(twi_field_insert).val());
+                                  var twii_val_ins = $(twii_field_insert).val() == "" ? 0:parseInt($(twii_field_insert).val());
+                                  var twiii_val_ins = $(twiii_field_insert).val() == "" ? 0:parseInt($(twiii_field_insert).val());
+                                  var twiv_val_ins = $(twiv_field_insert).val() == "" ? 0:parseInt($(twiv_field_insert).val());
+                                  var anggaran_val_ins = parseInt($(anggarant_field_insert).val());
                                   var sum_ins = twi_val_ins+twii_val_ins+twiii_val_ins+twiv_val_ins;
 
-                                  var twi_val_edt = $(twi_field_edit).val() == "" ? 0:validDigits($(twi_field_edit).val());
-                                  var twii_val_edt = $(twii_field_edit).val() == "" ? 0:validDigits($(twii_field_edit).val());
-                                  var twiii_val_edt = $(twiii_field_edit).val() == "" ? 0:validDigits($(twiii_field_edit).val());
-                                  var twiv_val_edt = $(twiv_field_edit).val() == "" ? 0:validDigits($(twiv_field_edit).val());
-                                  var anggaran_val_edt = validDigits($(anggarant_field_edit).val());
+                                  var twi_val_edt = $(twi_field_edit).val() == "" ? 0:parseInt($(twi_field_edit).val());
+                                  var twii_val_edt = $(twii_field_edit).val() == "" ? 0:parseInt($(twii_field_edit).val());
+                                  var twiii_val_edt = $(twiii_field_edit).val() == "" ? 0:parseInt($(twiii_field_edit).val());
+                                  var twiv_val_edt = $(twiv_field_edit).val() == "" ? 0:parseInt($(twiv_field_edit).val());
+                                  var anggaran_val_edt = parseInt($(anggarant_field_edit).val());
                                   var sum_edt = twi_val_edt+twii_val_edt+twiii_val_edt+twiv_val_edt;
                                   // alert(twi_val_edt+"+"+twii_val_edt+"+"+twiii_val_edt+"+"+twiv_val_edt);
-                                  if(item.terpusat == 1){
-                                    return true;
-                                  }else{
-                                    return (sum_ins <= anggaran_val_ins && sum_ins >= anggaran_val_ins) || (sum_edt <= anggaran_val_edt && sum_edt >= anggaran_val_edt) ;
-                                  }
+                                  return (sum_ins <= anggaran_val_ins && sum_ins >= anggaran_val_ins) || (sum_edt <= anggaran_val_edt && sum_edt >= anggaran_val_edt) ;
                               }
                             }
                           },
                           { name: "tw_ii", 
-                            type: "text", 
+                            type: "number", 
                             title: "TW II", 
                             width: 100 ,
                             itemTemplate: function(value) {
@@ -879,26 +837,24 @@
                             },
                             insertTemplate: function() {
                               twii_field_insert = jsGrid.fields.text.prototype.insertTemplate.call(this);
-                              twii_field_insert.on("keyup", function() {
-                                  var nilai = validDigits($(this).val());
-                                  var val = addCommas(nilai);
-                                  $(twii_field_insert).val(val);
+                              twii_field_insert.on("change", function() {
+                                  $(twii_field_insert).val($(this).val());
+                                  changeAnggaranSetahun("insert");
                               });
                               return twii_field_insert; 
                             },
                             editTemplate: function(value) {
                               twii_field_edit = jsGrid.fields.text.prototype.editTemplate.call(this);
                               $(twii_field_edit).val(value);
-                              twii_field_edit.on("keyup", function() {
-                                  var nilai = validDigits($(this).val());
-                                  var val = addCommas(nilai);
-                                  $(twii_field_edit).val(val);
+                              twii_field_edit.on("change", function() {
+                                  $(twii_field_edit).val($(this).val());
+                                  changeAnggaranSetahun("edit");
                               });
                               return twii_field_edit; 
                             }
                           },
                           { name: "tw_iii", 
-                            type: "text", 
+                            type: "number", 
                             title: "TW III", 
                             width: 100 ,
                             itemTemplate: function(value) {
@@ -911,26 +867,24 @@
                             },
                             insertTemplate: function() {
                               twiii_field_insert = jsGrid.fields.text.prototype.insertTemplate.call(this);
-                              twiii_field_insert.on("keyup", function() {
-                                  var nilai = validDigits($(this).val());
-                                  var val = addCommas(nilai);
-                                  $(twiii_field_insert).val(val);
+                              twiii_field_insert.on("change", function() {
+                                  $(twiii_field_insert).val($(this).val());
+                                  changeAnggaranSetahun("insert");
                               });
                               return twiii_field_insert; 
                             },
                             editTemplate: function(value) {
                               twiii_field_edit= jsGrid.fields.text.prototype.editTemplate.call(this);
                               $(twiii_field_edit).val(value);
-                              twiii_field_edit.on("keyup", function() {
-                                  var nilai = validDigits($(this).val());
-                                  var val = addCommas(nilai);
-                                  $(twiii_field_edit).val(val);
+                              twiii_field_edit.on("change", function() {
+                                  $(twiii_field_edit).val($(this).val());
+                                  changeAnggaranSetahun("edit");
                               });
                               return twiii_field_edit; 
                             }
                           },
                           { name: "tw_iv", 
-                            type: "text", 
+                            type: "number", 
                             title: "TW IV",
                             width: 100,
                             itemTemplate: function(value) {
@@ -943,27 +897,24 @@
                             },
                             insertTemplate: function() {
                               twiv_field_insert = jsGrid.fields.text.prototype.insertTemplate.call(this);
-                              twiv_field_insert.on("keyup", function() {
-                                  var nilai = validDigits($(this).val());
-                                  var val = addCommas(nilai);
-                                  $(twiv_field_insert).val(val);
+                              twiv_field_insert.on("change", function() {
+                                  $(twiv_field_insert).val($(this).val());
+                                  changeAnggaranSetahun("insert");
                               });
                               return twiv_field_insert; 
                             },
                             editTemplate: function(value) {
                               twiv_field_edit = jsGrid.fields.text.prototype.editTemplate.call(this);
                               $(twiv_field_edit).val(value);
-                              twiv_field_edit.on("keyup", function() {
-                                  var nilai = validDigits($(this).val());
-                                  var val = addCommas(nilai);
-
-                                  $(twiv_field_edit).val(val);
+                              twiv_field_edit.on("change", function() {
+                                  $(twiv_field_edit).val($(this).val());
+                                  changeAnggaranSetahun("edit");
                               });
                               return twiv_field_edit; 
                             }
                            },
                           { name: "anggarana_setahun", 
-                            type: "text", 
+                            type: "number", 
                             title: "Anggaran Setahun", 
                             width: 150 ,
                             readOnly:true,
@@ -985,40 +936,37 @@
                               message :function(value, item) {
                                   var status1 = "lebih";
                                   var status2 = "kurang";
-                                  var twi_val_ins = $(twi_field_insert).val() == "" ? 0:validDigits($(twi_field_insert).val());
-                                  var twii_val_ins = $(twii_field_insert).val() == "" ? 0:validDigits($(twii_field_insert).val());
-                                  var twiii_val_ins = $(twiii_field_insert).val() == "" ? 0:validDigits($(twiii_field_insert).val());
-                                  var twiv_val_ins = $(twiv_field_insert).val() == "" ? 0:validDigits($(twiv_field_insert).val());
-                                  var anggaran_val_ins = validDigits($(anggarant_field_insert).val());
+                                  var twi_val_ins = $(twi_field_insert).val() == "" ? 0:parseInt($(twi_field_insert).val());
+                                  var twii_val_ins = $(twii_field_insert).val() == "" ? 0:parseInt($(twii_field_insert).val());
+                                  var twiii_val_ins = $(twiii_field_insert).val() == "" ? 0:parseInt($(twiii_field_insert).val());
+                                  var twiv_val_ins = $(twiv_field_insert).val() == "" ? 0:parseInt($(twiv_field_insert).val());
+                                  var anggaran_val_ins = parseInt($(anggarant_field_insert).val());
                                   var sum_ins = twi_val_ins+twii_val_ins+twiii_val_ins+twiv_val_ins;
 
-                                  var twi_val_edt = $(twi_field_edit).val() == "" ? 0:validDigits($(twi_field_edit).val());
-                                  var twii_val_edt = $(twii_field_edit).val() == "" ? 0:validDigits($(twii_field_edit).val());
-                                  var twiii_val_edt = $(twiii_field_edit).val() == "" ? 0:validDigits($(twiii_field_edit).val());
-                                  var twiv_val_edt = $(twiv_field_edit).val() == "" ? 0:validDigits($(twiv_field_edit).val());
-                                  var anggaran_val_edt = validDigits($(anggarant_field_edit).val());
+                                  var twi_val_edt = $(twi_field_edit).val() == "" ? 0:parseInt($(twi_field_edit).val());
+                                  var twii_val_edt = $(twii_field_edit).val() == "" ? 0:parseInt($(twii_field_edit).val());
+                                  var twiii_val_edt = $(twiii_field_edit).val() == "" ? 0:parseInt($(twiii_field_edit).val());
+                                  var twiv_val_edt = $(twiv_field_edit).val() == "" ? 0:parseInt($(twiv_field_edit).val());
+                                  var anggaran_val_edt = parseInt($(anggarant_field_edit).val());
                                   var sum_edt = twi_val_edt+twii_val_edt+twiii_val_edt+twiv_val_edt;
                                   return  "Jumlah Anggaran yang di minta di semua periode "+ ((sum_ins > anggaran_val_ins || sum_edt > anggaran_val_edt) ? status1: status2)+" dari Anggaran Setahun" ;
                               },
                               validator :function(value, item) {
-                                  var twi_val_ins = $(twi_field_insert).val() == "" ? 0:validDigits($(twi_field_insert).val());
-                                  var twii_val_ins = $(twii_field_insert).val() == "" ? 0:validDigits($(twii_field_insert).val());
-                                  var twiii_val_ins = $(twiii_field_insert).val() == "" ? 0:validDigits($(twiii_field_insert).val());
-                                  var twiv_val_ins = $(twiv_field_insert).val() == "" ? 0:validDigits($(twiv_field_insert).val());
-                                  var anggaran_val_ins = validDigits($(anggarant_field_insert).val());
+                                  var twi_val_ins = $(twi_field_insert).val() == "" ? 0:parseInt($(twi_field_insert).val());
+                                  var twii_val_ins = $(twii_field_insert).val() == "" ? 0:parseInt($(twii_field_insert).val());
+                                  var twiii_val_ins = $(twiii_field_insert).val() == "" ? 0:parseInt($(twiii_field_insert).val());
+                                  var twiv_val_ins = $(twiv_field_insert).val() == "" ? 0:parseInt($(twiv_field_insert).val());
+                                  var anggaran_val_ins = parseInt($(anggarant_field_insert).val());
                                   var sum_ins = twi_val_ins+twii_val_ins+twiii_val_ins+twiv_val_ins;
 
-                                  var twi_val_edt = $(twi_field_edit).val() == "" ? 0:validDigits($(twi_field_edit).val());
-                                  var twii_val_edt = $(twii_field_edit).val() == "" ? 0:validDigits($(twii_field_edit).val());
-                                  var twiii_val_edt = $(twiii_field_edit).val() == "" ? 0:validDigits($(twiii_field_edit).val());
-                                  var twiv_val_edt = $(twiv_field_edit).val() == "" ? 0:validDigits($(twiv_field_edit).val());
-                                  var anggaran_val_edt = validDigits($(anggarant_field_edit).val());
+                                  var twi_val_edt = $(twi_field_edit).val() == "" ? 0:parseInt($(twi_field_edit).val());
+                                  var twii_val_edt = $(twii_field_edit).val() == "" ? 0:parseInt($(twii_field_edit).val());
+                                  var twiii_val_edt = $(twiii_field_edit).val() == "" ? 0:parseInt($(twiii_field_edit).val());
+                                  var twiv_val_edt = $(twiv_field_edit).val() == "" ? 0:parseInt($(twiv_field_edit).val());
+                                  var anggaran_val_edt = parseInt($(anggarant_field_edit).val());
                                   var sum_edt = twi_val_edt+twii_val_edt+twiii_val_edt+twiv_val_edt;
-                                  if(item.terpusat == 1){
-                                    return true;
-                                  }else{
-                                    return (sum_ins <= anggaran_val_ins && sum_ins >= anggaran_val_ins) || (sum_edt <= anggaran_val_edt && sum_edt >= anggaran_val_edt) ;
-                                  }
+                                  
+                                  return (sum_ins <= anggaran_val_ins && sum_ins >= anggaran_val_ins) || (sum_edt <= anggaran_val_edt && sum_edt >= anggaran_val_edt) ;
                               }
                             }
                           },
@@ -1038,7 +986,10 @@
                               }
                               if(upload_file[id_list] != null){
                                 for(i=0;i<upload_file[id_list].length;i++){
-                                  if(upload_file[id_list][i]!=null){
+                                  alert
+                                  file_name = document.getElementById("file_name_"+id_list+"_"+i).value;
+                                  // alert(file_name);
+                                  if(file_name !="null"){
                                     count_berkas++;
                                   }
                                 }
@@ -1049,7 +1000,7 @@
                               if(count_berkas==0){
                                 title = "Unggah Berkas";
                               }else{
-                                title = count_berkas+" Berkas";
+                                title = "Berkas Siap";
                               }
                               var button = "<span class='btn btn-primary' id='button_"+id_list+"' onclick='setModalFile("+id_list+")' >"+title+"</span>";
                               return button;
@@ -1060,7 +1011,9 @@
                               var count_berkas=0;
                               if(upload_file[id_list] != null){
                                 for(i=0;i<upload_file[id_list].length;i++){
-                                  if(upload_file[id_list][i]!=null){
+                                  file_name = document.getElementById("file_name_"+id_list+"_"+i).value;
+                                  // alert(file_name);
+                                  if(file_name !="null"){
                                     count_berkas++;
                                   }
                                 }
@@ -1069,7 +1022,7 @@
                               if(count_berkas == 0){
                                 title = "Unggah Berkas";
                               }else{
-                                title = count_berkas+" Berkas";
+                                title = "Berkas Siap";
                               }
                               var button = "<span class='btn btn-primary' id='button_"+id_list+"' onclick='setModalFile("+id_list+")' >"+title+"</span>";
                               return button;
@@ -1089,7 +1042,9 @@
                               }
                               if(upload_file[id_list] != null){
                                 for(i=0;i<upload_file[id_list].length;i++){
-                                  if(upload_file[id_list][i]!=null){
+                                  file_name = document.getElementById("file_name_"+id_list+"_"+i).value;
+                                  // alert(file_name);
+                                  if(file_name !="null"){
                                     count_berkas++;
                                   }
                                 }
@@ -1098,7 +1053,7 @@
                               if(count_berkas==0){
                                 title = "Unggah Berkas";
                               }else{
-                                title = count_berkas+" Berkas";
+                                title = "Berkas Siap";
                               }
                               var button = "<span class='btn btn-primary' id='button_"+id_list+"' onclick='setModalFile("+id_list+")' >"+title+"</span>";
                               return button;
@@ -1236,68 +1191,17 @@
                     if(type2 == "insert"){
                       if(type == 1){
                         $(unitk_field_insert).val("");
-                        $(twi_field_insert).val("");
-                        $(twi_field_insert).attr("readOnly", true);
-                        $(twii_field_insert).val("");
-                        $(twii_field_insert).attr("readOnly", true);
-                        $(twiii_field_insert).val("");
-                        $(twiii_field_insert).attr("readOnly", true);
-                        $(twiv_field_insert).val("");
-                        $(twiv_field_insert).attr("readOnly", true);
                       }else{
                         $(unitk_field_insert).val(document.getElementById("unit_kerja").value);
-                        $(twi_field_insert).val("");
-                        $(twi_field_insert).attr("readOnly", false);
-                        $(twii_field_insert).val("");
-                        $(twii_field_insert).attr("readOnly", false);
-                        $(twiii_field_insert).val("");
-                        $(twiii_field_insert).attr("readOnly", false);
-                        $(twiv_field_insert).val("");
-                        $(twiv_field_insert).attr("readOnly", false);
                       } 
                     }else if(type2 == "edit"){
                       if(type == 1){
                         $(unitk_field_edit).val("");
-                        $(twi_field_edit).val("");
-                        $(twi_field_edit).attr("readOnly", true);
-                        $(twii_field_edit).val("");
-                        $(twii_field_edit).attr("readOnly", true);
-                        $(twiii_field_edit).val("");
-                        $(twiii_field_edit).attr("readOnly", true);
-                        $(twiv_field_edit).val("");
-                        $(twiv_field_edit).attr("readOnly", true);
                       }else{
                         $(unitk_field_edit).val(document.getElementById("unit_kerja").value);
-                        $(twi_field_edit).val("");
-                        $(twi_field_edit).attr("readOnly", false);
-                        $(twii_field_edit).val("");
-                        $(twii_field_edit).attr("readOnly", false);
-                        $(twiii_field_edit).val("");
-                        $(twiii_field_edit).attr("readOnly", false);
-                        $(twiv_field_edit).val("");
-                        $(twiv_field_edit).attr("readOnly", false);
                       } 
-                    }        
-                  }
-                  function addCommas(n){
-                    var rx=  /(\d+)(\d{3})/;
-                    return String(n).replace(/^\d+/, function(w){
-                      while(rx.test(w)){
-                        w= w.replace(rx, '$1,$2');
-                      }
-                      return w;
-                    });
-                  }
-                  function validDigits(n, dec){
-                    n= n.replace(/[^\d]+/g, '');
-                    var ax1= n.indexOf('.'), ax2= -1;
-                    if(ax1!= -1){
-                      ++ax1;
-                      ax2= n.indexOf('.', ax1);
-                      if(ax2> ax1) n= n.substring(0, ax2);
-                      if(typeof dec=== 'number') n= n.substring(0, ax1+dec);
                     }
-                    return n;
+                        
                   }
                   function getListData() {
                     $.ajax({
@@ -1344,6 +1248,21 @@
                             // $(unitk_field).val("Contoh Unit Kerja");
                         }
                     });
+                  }
+                  function changeAnggaranSetahun(type){
+                    if(type == "insert"){
+                      if($(kuantitas_field_insert).val() !="" && $(nilai_field_insert).val()!= ""){
+                        qty = $(kuantitas_field_insert).val();
+                        nilai = $(nilai_field_insert).val();
+                        $(anggarant_field_insert).val(qty*nilai);
+                      }
+                    }else if(type=="edit"){
+                      if($(kuantitas_field_edit).val() !=0 && $(nilai_field_edit).val()!= 0){
+                        qty = $(kuantitas_field_edit).val();
+                        nilai = $(nilai_field_edit).val();
+                        $(anggarant_field_edit).val(qty*nilai);
+                      }
+                    }
                   }
                   function check(type){
                     if(document.getElementById("nd_surat").value==""){
@@ -1498,34 +1417,32 @@
                         link = "{{url('anggaran/get/download')}}/"+list_berkas[index][i]['id'];
                         hasil2[i] = '<div class="col-xs-10"><a href="'+link+'" ><li>'+list_berkas[index][i]['name']+'</li></div>';
                         hasil2[i] += '<div class="col-xs-1"><i class="fa fa-download "></i></div></a><br/><br/>';
+                        // hasil2[i] += '<div class="col-xs-1" onclick="deleteRowFile('+i+','+index+')"><i class="fa fa-close " style="color:red"></i></div><br/><br/>';
                       }
                       $("#list_download").append(hasil2);
                     }
-
-                    if(upload_file[index]!=null){
-                      alert(upload_file[index].length);
+                    if(convert_file[index]!=null){
                       var nameCon = "";
-                      for(i = 0; i<upload_file[index].length; i++){
-                        if(upload_file[index][i]!=null){
-                          nameCon += '<div id="upload_'+i+'" ><div class="col-xs-10"> <li> '+upload_file[index][i]['name']+'</li></div>';
+                      for(i = 0; i<convert_file[index].length; i++){
+                        if(convert_file[index][i]!=null){
+                          nameCon += '<div id="upload_'+i+'" ><div class="col-xs-10"> <li> '+convert_file[index][i]['name']+'</li></div>';
                           nameCon += '<div class="col-xs-2" onclick="deleteRowFile('+i+','+index+')"><i class="fa fa-close "></i></div><br/><br/></div>';
-                          temp_file[i]=upload_file[index][i];
+                          
                         }
                       }
-                      banyak+=upload_file[index].length;
                      $("#list_file").append(nameCon);
                     }
-
-                    //;
                     index_modal = index;
                     if(document.getElementById('files') !=null ){
                       document.getElementById('files').onchange = function () {;
-                        // $('#list_file').empty();
+                        // hasil=[];
+                        $('#list_file').empty();
                         value = this.files;
+                        upload_file[index]=[];
                         for(i = banyak; i<(banyak+value.length); i++){
                           hasil[i] = '<div id="upload_'+i+'" ><div class="col-xs-10"> <li> '+value[(i-banyak)]['name']+'</li></div>';
                           hasil[i] += '<div class="col-xs-2" onclick="deleteRowFile('+i+','+index+')"><i class="fa fa-close "></i></div><br/><br/></div>';
-                          temp_file[i]=value[(i-banyak)];
+                          upload_file[index][i]=value[(i-banyak)];
                         }
                         
                         banyak+=value.length; 
@@ -1540,37 +1457,30 @@
                   function deleteRowFile(i,index){
                       $("#upload_"+i).remove();
                       hasil[i] = "";
-                      temp_file[i] = null;
+                      upload_file[index][i] = null;
+                      // alert(upload_file[0].length);
+                      document.getElementById('file_'+index+'_'+i).value="null";
+                      document.getElementById('file_name_'+tempIdCount+'_'+index).value = "null";
+                      document.getElementById('file_type_'+tempIdCount+'_'+index).value = "null";
+                      document.getElementById('file_size_'+tempIdCount+'_'+index).value = "null";
                   }
                   $('#simpan_file').click(function() {
                     simpan_file =true;
+                    convert_file[index_modal]=[];
+                    convert_file[index_modal]=upload_file[index_modal];
                     countFile=0;
-                    hasil=[];
-                    // temp_file=[];
-                     upload_file[index_modal]=[];
-                    for(i=0;i<temp_file.length;i++){
+                    for(i=0;i<upload_file[index_modal].length;i++){
 
-                        // readerPrev(i,index_modal);
-                        upload_file[index_modal][i]=temp_file[i];
-                        if(temp_file[i]!=null){
-                          countFile++;
-                        }
+                        readerPrev(i,index_modal);
+                        countFile++;
                     }
                     var title = "Unggah Berkas";
                     if(countFile>0){
-                      title=countFile+" Berkas"
+                      title="Berkas Siap"
                     }
-                    temp_file=[];
                     document.getElementById('button_'+index_modal).innerHTML = title;
                     $('#modal_berkas').modal('hide');
                   });
-                  $('#modal_berkas').on('hidden.bs.modal', function () {
-                      if(!simpan_file){
-                        hasil=[];
-                        temp_file=[];
-                      }
-                      simpan_file = false;
-                  })
 
                   $("#alasan_penolakan").click(function(){
                     document.getElementById("alasan_penolakan").value="";
