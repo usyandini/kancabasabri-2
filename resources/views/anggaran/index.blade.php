@@ -656,7 +656,9 @@
                                   var qty = $(this).val();
                                   var persatuan = validDigits($(nilai_field_insert).val());
 
-                                  $(anggarant_field_insert).val(qty*persatuan);
+                                  var nilai = persatuan*qty;
+                                  var val = addCommas(nilai);
+                                  $(anggarant_field_insert).val(val);
 
                               });
                               return kuantitas_field_insert; 
@@ -668,8 +670,10 @@
                                   $(kuantitas_field_edit).val($(this).val());
                                   var qty = $(this).val();
                                   var persatuan = validDigits($(nilai_field_edit).val());
-
-                                  $(anggarant_field_edit).val(qty*persatuan);
+                                  
+                                  var nilai = persatuan*qty;
+                                  var val = addCommas(nilai);
+                                  $(anggarant_field_edit).val(val);
                               });
                               return kuantitas_field_edit; 
                             },
@@ -708,10 +712,12 @@
                               nilai_field_insert= jsGrid.fields.text.prototype.insertTemplate.call(this);
                               nilai_field_insert.on("change", function() {
                                 $(nilai_field_insert).val($(this).val());
-                                var persatuan = $(this).val();
-                                var qty= validDigits($(kuantitas_field_insert).val());
+                                var persatuan = validDigits($(this).val());
+                                var qty= $(kuantitas_field_insert).val();
 
-                                $(anggarant_field_insert).val(qty*persatuan);
+                                var nilai = persatuan*qty;
+                                var val = addCommas(nilai);
+                                $(anggarant_field_insert).val(val);
                               });
 
                               nilai_field_insert.on("keyup", function() {
@@ -726,10 +732,11 @@
                               $(nilai_field_edit).val(value);
                               nilai_field_edit.on("change", function() {
                                 $(nilai_field_edit).val($(this).val());
-                                var persatuan = $(this).val();
-                                var qty= validDigits($(kuantitas_field_edit).val());
-
-                                $(anggarant_field_edit).val(qty*persatuan);
+                                var persatuan = validDigits($(this).val());
+                                var qty= $(kuantitas_field_edit).val();
+                                var nilai = persatuan*qty;
+                                var val = addCommas(nilai);
+                                $(anggarant_field_edit).val(val);
                               });
 
                               nilai_field_edit.on("keyup", function() {
@@ -744,7 +751,10 @@
                             validate: {
                                 message : "Isi Kolom Nilai Per Satuan.",
                                 validator :function(value, item) {
-                                    return value > 0 ;
+
+                                    var val = validDigits(value);
+                                    alert(val > 0);
+                                    return val > 0 ;
                                 } 
                               }
                           },
@@ -833,18 +843,18 @@
                               message : "Isi minimal pada salah satu Kolom dari TWI, TWII, TWIII, TWIV.",
                               validator :function(value, item) {
                                 // alert(item.terpusat);
-                                  var twi_val_ins = $(twi_field_insert).val() == "" ? 0:parseInt($(twi_field_insert).val());
-                                  var twii_val_ins = $(twii_field_insert).val() == "" ? 0:parseInt($(twii_field_insert).val());
-                                  var twiii_val_ins = $(twiii_field_insert).val() == "" ? 0:parseInt($(twiii_field_insert).val());
-                                  var twiv_val_ins = $(twiv_field_insert).val() == "" ? 0:parseInt($(twiv_field_insert).val());
-                                  var anggaran_val_ins = parseInt($(anggarant_field_insert).val());
+                                  var twi_val_ins = $(twi_field_insert).val() == "" ? 0:validDigits($(twi_field_insert).val());
+                                  var twii_val_ins = $(twii_field_insert).val() == "" ? 0:validDigits($(twii_field_insert).val());
+                                  var twiii_val_ins = $(twiii_field_insert).val() == "" ? 0:validDigits($(twiii_field_insert).val());
+                                  var twiv_val_ins = $(twiv_field_insert).val() == "" ? 0:validDigits($(twiv_field_insert).val());
+                                  var anggaran_val_ins = validDigits($(anggarant_field_insert).val());
                                   var sum_ins = twi_val_ins+twii_val_ins+twiii_val_ins+twiv_val_ins;
 
-                                  var twi_val_edt = $(twi_field_edit).val() == "" ? 0:parseInt($(twi_field_edit).val());
-                                  var twii_val_edt = $(twii_field_edit).val() == "" ? 0:parseInt($(twii_field_edit).val());
-                                  var twiii_val_edt = $(twiii_field_edit).val() == "" ? 0:parseInt($(twiii_field_edit).val());
-                                  var twiv_val_edt = $(twiv_field_edit).val() == "" ? 0:parseInt($(twiv_field_edit).val());
-                                  var anggaran_val_edt = parseInt($(anggarant_field_edit).val());
+                                  var twi_val_edt = $(twi_field_edit).val() == "" ? 0:validDigits($(twi_field_edit).val());
+                                  var twii_val_edt = $(twii_field_edit).val() == "" ? 0:validDigits($(twii_field_edit).val());
+                                  var twiii_val_edt = $(twiii_field_edit).val() == "" ? 0:validDigits($(twiii_field_edit).val());
+                                  var twiv_val_edt = $(twiv_field_edit).val() == "" ? 0:validDigits($(twiv_field_edit).val());
+                                  var anggaran_val_edt = validDigits($(anggarant_field_edit).val());
                                   var sum_edt = twi_val_edt+twii_val_edt+twiii_val_edt+twiv_val_edt;
                                   // alert(twi_val_edt+"+"+twii_val_edt+"+"+twiii_val_edt+"+"+twiv_val_edt);
                                   if(item.terpusat == 1){
@@ -953,7 +963,7 @@
                             }
                            },
                           { name: "anggarana_setahun", 
-                            type: "number", 
+                            type: "text", 
                             title: "Anggaran Setahun", 
                             width: 150 ,
                             readOnly:true,
@@ -975,34 +985,34 @@
                               message :function(value, item) {
                                   var status1 = "lebih";
                                   var status2 = "kurang";
-                                  var twi_val_ins = $(twi_field_insert).val() == "" ? 0:parseInt($(twi_field_insert).val());
-                                  var twii_val_ins = $(twii_field_insert).val() == "" ? 0:parseInt($(twii_field_insert).val());
-                                  var twiii_val_ins = $(twiii_field_insert).val() == "" ? 0:parseInt($(twiii_field_insert).val());
-                                  var twiv_val_ins = $(twiv_field_insert).val() == "" ? 0:parseInt($(twiv_field_insert).val());
-                                  var anggaran_val_ins = parseInt($(anggarant_field_insert).val());
+                                  var twi_val_ins = $(twi_field_insert).val() == "" ? 0:validDigits($(twi_field_insert).val());
+                                  var twii_val_ins = $(twii_field_insert).val() == "" ? 0:validDigits($(twii_field_insert).val());
+                                  var twiii_val_ins = $(twiii_field_insert).val() == "" ? 0:validDigits($(twiii_field_insert).val());
+                                  var twiv_val_ins = $(twiv_field_insert).val() == "" ? 0:validDigits($(twiv_field_insert).val());
+                                  var anggaran_val_ins = validDigits($(anggarant_field_insert).val());
                                   var sum_ins = twi_val_ins+twii_val_ins+twiii_val_ins+twiv_val_ins;
 
-                                  var twi_val_edt = $(twi_field_edit).val() == "" ? 0:parseInt($(twi_field_edit).val());
-                                  var twii_val_edt = $(twii_field_edit).val() == "" ? 0:parseInt($(twii_field_edit).val());
-                                  var twiii_val_edt = $(twiii_field_edit).val() == "" ? 0:parseInt($(twiii_field_edit).val());
-                                  var twiv_val_edt = $(twiv_field_edit).val() == "" ? 0:parseInt($(twiv_field_edit).val());
-                                  var anggaran_val_edt = parseInt($(anggarant_field_edit).val());
+                                  var twi_val_edt = $(twi_field_edit).val() == "" ? 0:validDigits($(twi_field_edit).val());
+                                  var twii_val_edt = $(twii_field_edit).val() == "" ? 0:validDigits($(twii_field_edit).val());
+                                  var twiii_val_edt = $(twiii_field_edit).val() == "" ? 0:validDigits($(twiii_field_edit).val());
+                                  var twiv_val_edt = $(twiv_field_edit).val() == "" ? 0:validDigits($(twiv_field_edit).val());
+                                  var anggaran_val_edt = validDigits($(anggarant_field_edit).val());
                                   var sum_edt = twi_val_edt+twii_val_edt+twiii_val_edt+twiv_val_edt;
                                   return  "Jumlah Anggaran yang di minta di semua periode "+ ((sum_ins > anggaran_val_ins || sum_edt > anggaran_val_edt) ? status1: status2)+" dari Anggaran Setahun" ;
                               },
                               validator :function(value, item) {
-                                  var twi_val_ins = $(twi_field_insert).val() == "" ? 0:parseInt($(twi_field_insert).val());
-                                  var twii_val_ins = $(twii_field_insert).val() == "" ? 0:parseInt($(twii_field_insert).val());
-                                  var twiii_val_ins = $(twiii_field_insert).val() == "" ? 0:parseInt($(twiii_field_insert).val());
-                                  var twiv_val_ins = $(twiv_field_insert).val() == "" ? 0:parseInt($(twiv_field_insert).val());
-                                  var anggaran_val_ins = parseInt($(anggarant_field_insert).val());
+                                  var twi_val_ins = $(twi_field_insert).val() == "" ? 0:validDigits($(twi_field_insert).val());
+                                  var twii_val_ins = $(twii_field_insert).val() == "" ? 0:validDigits($(twii_field_insert).val());
+                                  var twiii_val_ins = $(twiii_field_insert).val() == "" ? 0:validDigits($(twiii_field_insert).val());
+                                  var twiv_val_ins = $(twiv_field_insert).val() == "" ? 0:validDigits($(twiv_field_insert).val());
+                                  var anggaran_val_ins = validDigits($(anggarant_field_insert).val());
                                   var sum_ins = twi_val_ins+twii_val_ins+twiii_val_ins+twiv_val_ins;
 
-                                  var twi_val_edt = $(twi_field_edit).val() == "" ? 0:parseInt($(twi_field_edit).val());
-                                  var twii_val_edt = $(twii_field_edit).val() == "" ? 0:parseInt($(twii_field_edit).val());
-                                  var twiii_val_edt = $(twiii_field_edit).val() == "" ? 0:parseInt($(twiii_field_edit).val());
-                                  var twiv_val_edt = $(twiv_field_edit).val() == "" ? 0:parseInt($(twiv_field_edit).val());
-                                  var anggaran_val_edt = parseInt($(anggarant_field_edit).val());
+                                  var twi_val_edt = $(twi_field_edit).val() == "" ? 0:validDigits($(twi_field_edit).val());
+                                  var twii_val_edt = $(twii_field_edit).val() == "" ? 0:validDigits($(twii_field_edit).val());
+                                  var twiii_val_edt = $(twiii_field_edit).val() == "" ? 0:validDigits($(twiii_field_edit).val());
+                                  var twiv_val_edt = $(twiv_field_edit).val() == "" ? 0:validDigits($(twiv_field_edit).val());
+                                  var anggaran_val_edt = validDigits($(anggarant_field_edit).val());
                                   var sum_edt = twi_val_edt+twii_val_edt+twiii_val_edt+twiv_val_edt;
                                   if(item.terpusat == 1){
                                     return true;
