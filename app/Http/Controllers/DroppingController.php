@@ -658,7 +658,7 @@ class DroppingController extends Controller
             // 'DATAAREAID'
             // 'RECVERSION'
             // 'PARTITION'
-            'RECID'             => $tariktunai['id_dropping'],
+            'RECID'             => $tariktunai['id'],
             'PIL_TRANSDATE'     => $tariktunai['updated_at'],
             'PIL_TXT'           => $tariktunai['dropping']['TXT'],
             'PIL_JOURNALNUM'    => $tariktunai['dropping']['JOURNALNUM'],
@@ -667,13 +667,8 @@ class DroppingController extends Controller
             'PIL_ACCOUNT'       => $tariktunai['SEGMEN_1'],
             'PIL_VOUCHER'       => $tariktunai['dropping']['JOURNALNAME']
         ];
-
-        $exist = StagingTarikTunai::where('RECID', $tariktunai['id_dropping'])->first();
-        if($exist){
-            StagingTarikTunai::where('RECID', $exist['RECID'])->update($inputStagingTT);
-        }else{
-            StagingTariktunai::insert($inputStagingTT);   
-        }
+        
+        StagingTariktunai::insert($inputStagingTT);   
     }
 
     public function redirect($url, $statusCode = 303)
