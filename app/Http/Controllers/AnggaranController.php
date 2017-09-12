@@ -446,15 +446,15 @@ class AnggaranController extends Controller
                         'mata_anggaran' => $list_anggaran->mata_anggaran,
                         'kuantitas'     => $list_anggaran->kuantitas,
                         'satuan'     => $list_anggaran->satuan,
-                        'nilai_persatuan'       => $list_anggaran->nilai_persatuan,
+                        'nilai_persatuan'       => (int)$list_anggaran->nilai_persatuan,
                         'terpusat'      => $list_anggaran->terpusat,
                         'unit_kerja'         => $list_anggaran->unit_kerja,
-                        'tw_i'    => $list_anggaran->TWI,
-                        'tw_ii'    => $list_anggaran->TWII,
-                        'tw_iii'    => $list_anggaran->TWIII,
-                        'tw_iv'    => $list_anggaran->TWIV,
+                        'tw_i'    => (int)$list_anggaran->TWI,
+                        'tw_ii'    => (int)$list_anggaran->TWII,
+                        'tw_iii'    => (int)$list_anggaran->TWIII,
+                        'tw_iv'    => (int)$list_anggaran->TWIV,
                         'id_first'    => $list_anggaran->id_first,
-                        'anggarana_setahun'      => $list_anggaran->anggaran_setahun,
+                        'anggarana_setahun'      => (int)$list_anggaran->anggaran_setahun,
                         'file'  => $fileList
                         
                     ];
