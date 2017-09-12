@@ -61,6 +61,8 @@
                                             @else
                                                 <input id="nd_surat" name="nd_surat" class="form-control" readonly>
                                             @endif
+
+                                            <input id="id_anggaran" name="id_anggaran" type="hidden"/>
                                            
                                             
                                           </div>
@@ -412,10 +414,15 @@
                           })
                         },
                         insertItem: function (item) {
-
-                          item['file'] = tempIdCounter;
+                          if(inputs.length >0){
+                            item['file'] = inputs.length;
+                          }else{
+                            item['file'] = tempIdCounter;
+                          }
+                          
                           item["isNew"] = true;
                           item["tempId"] = ++tempIdCounter;
+                          item["id"] = -1;
                                                       
                           inputs.push(item);
                           // console.log(item);
@@ -437,9 +444,7 @@
                                 // alert("not "+item['id']);
                               }
                             }
-                            // inputs.push(item);
                           }
-                          // console.log(item);  
                         },
                       }, 
                       onRefreshed: function(args) {
@@ -454,9 +459,9 @@
                       },
                       onItemInserting:function(args){
                         var count_berkas = 0;
-                        if(upload_file[tempIdCounter] != null){
-                          for(i=0;i<upload_file[tempIdCounter].length;i++){
-                            if(upload_file[tempIdCounter][i]!=null){
+                        if(upload_file[inputs.length] != null){
+                          for(i=0;i<upload_file[inputs.length].length;i++){
+                            if(upload_file[inputs.length][i]!=null){
                               count_berkas++;
                               readerPrev(i,index_modal);
                             }
@@ -515,23 +520,7 @@
                             css: "hide",
                             type: "number", 
                             width: 0,
-                            readOnly: true,
-                            itemTemplate: function(value) {
-
-                              // alert("item "+value);
-                              id_field_item = jsGrid.fields.text.prototype.itemTemplate.call(this);
-                              $(id_field_item).val(value);
-                              return id_field_item; 
-                            },
-                            editTemplate: function(value) {
-                              // alert("edit "+value);
-                              id_field_edit = jsGrid.fields.text.prototype.editTemplate.call(this);
-                              $(id_field_edit).val(value);
-                              return id_field_edit; 
-                            },  
-                            insertValue: function() {
-                                return (tempIdCounter); 
-                            }
+                            readOnly: true
                           },
                           {name: "id_first",
                             css: "hide",
@@ -753,7 +742,6 @@
                                 validator :function(value, item) {
 
                                     var val = validDigits(value);
-                                    alert(val > 0);
                                     return val > 0 ;
                                 } 
                               }
@@ -811,12 +799,17 @@
                             title: "TW I", 
                             width: 100,
                             itemTemplate: function(value) {
-                              var display ="<span class='tag tag-info'>IDR " + parseInt(value).toLocaleString() + ",00</span>";
+                              var val=0
+                              if(value !=""){
+                                val;
+                              }
+                              var display ="<span class='tag tag-info'>IDR " + parseInt(val).toLocaleString() + ",00</span>";
                               
-                              if(parseInt(value).toLocaleString() < 1){
+                              if(parseInt(val).toLocaleString() < 1){
                                 display = "<span >---</span>";
                               }
 
+                              // alert(parseInt(value).toLocaleString());
                               return display;
                             },
                             insertTemplate: function() {
@@ -843,24 +836,21 @@
                               message : "Isi minimal pada salah satu Kolom dari TWI, TWII, TWIII, TWIV.",
                               validator :function(value, item) {
                                 // alert(item.terpusat);
-                                  var twi_val_ins = $(twi_field_insert).val() == "" ? 0:validDigits($(twi_field_insert).val());
-                                  var twii_val_ins = $(twii_field_insert).val() == "" ? 0:validDigits($(twii_field_insert).val());
-                                  var twiii_val_ins = $(twiii_field_insert).val() == "" ? 0:validDigits($(twiii_field_insert).val());
-                                  var twiv_val_ins = $(twiv_field_insert).val() == "" ? 0:validDigits($(twiv_field_insert).val());
-                                  var anggaran_val_ins = validDigits($(anggarant_field_insert).val());
-                                  var sum_ins = twi_val_ins+twii_val_ins+twiii_val_ins+twiv_val_ins;
-
-                                  var twi_val_edt = $(twi_field_edit).val() == "" ? 0:validDigits($(twi_field_edit).val());
-                                  var twii_val_edt = $(twii_field_edit).val() == "" ? 0:validDigits($(twii_field_edit).val());
-                                  var twiii_val_edt = $(twiii_field_edit).val() == "" ? 0:validDigits($(twiii_field_edit).val());
-                                  var twiv_val_edt = $(twiv_field_edit).val() == "" ? 0:validDigits($(twiv_field_edit).val());
-                                  var anggaran_val_edt = validDigits($(anggarant_field_edit).val());
-                                  var sum_edt = twi_val_edt+twii_val_edt+twiii_val_edt+twiv_val_edt;
-                                  // alert(twi_val_edt+"+"+twii_val_edt+"+"+twiii_val_edt+"+"+twiv_val_edt);
+                                  // alert("sebelum");
+                                  var twi_val = item.tw_i == "" ? 0:parseInt(validDigits(item.tw_i ));
+                                  var twii_val = item.tw_ii == "" ? 0:parseInt(validDigits(item.tw_ii));
+                                  var twiii_val = item.tw_iii == "" ? 0:parseInt(validDigits(item.tw_iii));
+                                  var twiv_val = item.tw_iv == "" ? 0:parseInt(validDigits(item.tw_iv));
+                                  // alert("sebelum tw");
+                                  var anggaran_val = parseInt(validDigits(item.anggarana_setahun));
+                                  // alert("anggarant");
+                                  var sum = twi_val+twii_val+twiii_val+twiv_val;
+                                  
+                                  // alert(twi_val+"+"+twii_val+"+"+twiii_val+"+"+twiv_val);
                                   if(item.terpusat == 1){
                                     return true;
                                   }else{
-                                    return (sum_ins <= anggaran_val_ins && sum_ins >= anggaran_val_ins) || (sum_edt <= anggaran_val_edt && sum_edt >= anggaran_val_edt) ;
+                                    return (sum <= anggaran_val && sum >= anggaran_val) ;
                                   }
                               }
                             }
@@ -870,9 +860,13 @@
                             title: "TW II", 
                             width: 100 ,
                             itemTemplate: function(value) {
-                              var display ="<span class='tag tag-info'>IDR " + parseInt(value).toLocaleString() + ",00</span>";
+                              var val=0
+                              if(value !=""){
+                                val;
+                              }
+                              var display ="<span class='tag tag-info'>IDR " + parseInt(val).toLocaleString() + ",00</span>";
                               
-                              if(parseInt(value).toLocaleString() < 1){
+                              if(parseInt(val).toLocaleString() < 1){
                                 display = "<span>---</span>";
                               }
                               return display;
@@ -902,9 +896,13 @@
                             title: "TW III", 
                             width: 100 ,
                             itemTemplate: function(value) {
-                              var display ="<span class='tag tag-info'>IDR " + parseInt(value).toLocaleString() + ",00</span>";
+                              var val=0
+                              if(value !=""){
+                                val;
+                              }
+                              var display ="<span class='tag tag-info'>IDR " + parseInt(val).toLocaleString() + ",00</span>";
                               
-                              if(parseInt(value).toLocaleString() < 1){
+                              if(parseInt(val).toLocaleString() < 1){
                                 display = "<span>---</span>";
                               }
                               return display;
@@ -934,9 +932,13 @@
                             title: "TW IV",
                             width: 100,
                             itemTemplate: function(value) {
-                              var display ="<span class='tag tag-info'>IDR " + parseInt(value).toLocaleString() + ",00</span>";
+                              var val=0
+                              if(value !=""){
+                                val;
+                              }
+                              var display ="<span class='tag tag-info'>IDR " + parseInt(val).toLocaleString() + ",00</span>";
                               
-                              if(parseInt(value).toLocaleString() < 1){
+                              if(parseInt(val).toLocaleString() < 1){
                                 display = "<span>---</span>";
                               }
                               return display;
@@ -985,39 +987,31 @@
                               message :function(value, item) {
                                   var status1 = "lebih";
                                   var status2 = "kurang";
-                                  var twi_val_ins = $(twi_field_insert).val() == "" ? 0:validDigits($(twi_field_insert).val());
-                                  var twii_val_ins = $(twii_field_insert).val() == "" ? 0:validDigits($(twii_field_insert).val());
-                                  var twiii_val_ins = $(twiii_field_insert).val() == "" ? 0:validDigits($(twiii_field_insert).val());
-                                  var twiv_val_ins = $(twiv_field_insert).val() == "" ? 0:validDigits($(twiv_field_insert).val());
-                                  var anggaran_val_ins = validDigits($(anggarant_field_insert).val());
-                                  var sum_ins = twi_val_ins+twii_val_ins+twiii_val_ins+twiv_val_ins;
+                                  var twi_val = item.tw_i == "" ? 0:parseInt(validDigits(item.tw_i ));
+                                  var twii_val = item.tw_ii == "" ? 0:parseInt(validDigits(item.tw_ii));
+                                  var twiii_val = item.tw_iii == "" ? 0:parseInt(validDigits(item.tw_iii));
+                                  var twiv_val = item.tw_iv == "" ? 0:parseInt(validDigits(item.tw_iv));
+                                  // alert("sebelum tw");
+                                  var anggaran_val = parseInt(validDigits(item.anggarana_setahun));
+                                  // alert("anggarant");
+                                  var sum = twi_val+twii_val+twiii_val+twiv_val;
 
-                                  var twi_val_edt = $(twi_field_edit).val() == "" ? 0:validDigits($(twi_field_edit).val());
-                                  var twii_val_edt = $(twii_field_edit).val() == "" ? 0:validDigits($(twii_field_edit).val());
-                                  var twiii_val_edt = $(twiii_field_edit).val() == "" ? 0:validDigits($(twiii_field_edit).val());
-                                  var twiv_val_edt = $(twiv_field_edit).val() == "" ? 0:validDigits($(twiv_field_edit).val());
-                                  var anggaran_val_edt = validDigits($(anggarant_field_edit).val());
-                                  var sum_edt = twi_val_edt+twii_val_edt+twiii_val_edt+twiv_val_edt;
-                                  return  "Jumlah Anggaran yang di minta di semua periode "+ ((sum_ins > anggaran_val_ins || sum_edt > anggaran_val_edt) ? status1: status2)+" dari Anggaran Setahun" ;
+                                  return  "Jumlah Anggaran yang di minta di semua periode "+ (sum> anggaran_val ? status1: status2)+" dari Anggaran Setahun" ;
                               },
                               validator :function(value, item) {
-                                  var twi_val_ins = $(twi_field_insert).val() == "" ? 0:validDigits($(twi_field_insert).val());
-                                  var twii_val_ins = $(twii_field_insert).val() == "" ? 0:validDigits($(twii_field_insert).val());
-                                  var twiii_val_ins = $(twiii_field_insert).val() == "" ? 0:validDigits($(twiii_field_insert).val());
-                                  var twiv_val_ins = $(twiv_field_insert).val() == "" ? 0:validDigits($(twiv_field_insert).val());
-                                  var anggaran_val_ins = validDigits($(anggarant_field_insert).val());
-                                  var sum_ins = twi_val_ins+twii_val_ins+twiii_val_ins+twiv_val_ins;
-
-                                  var twi_val_edt = $(twi_field_edit).val() == "" ? 0:validDigits($(twi_field_edit).val());
-                                  var twii_val_edt = $(twii_field_edit).val() == "" ? 0:validDigits($(twii_field_edit).val());
-                                  var twiii_val_edt = $(twiii_field_edit).val() == "" ? 0:validDigits($(twiii_field_edit).val());
-                                  var twiv_val_edt = $(twiv_field_edit).val() == "" ? 0:validDigits($(twiv_field_edit).val());
-                                  var anggaran_val_edt = validDigits($(anggarant_field_edit).val());
-                                  var sum_edt = twi_val_edt+twii_val_edt+twiii_val_edt+twiv_val_edt;
+                                  var twi_val = item.tw_i == "" ? 0:parseInt(validDigits(item.tw_i ));
+                                  var twii_val = item.tw_ii == "" ? 0:parseInt(validDigits(item.tw_ii));
+                                  var twiii_val = item.tw_iii == "" ? 0:parseInt(validDigits(item.tw_iii));
+                                  var twiv_val = item.tw_iv == "" ? 0:parseInt(validDigits(item.tw_iv));
+                                  // alert("sebelum tw");
+                                  var anggaran_val = parseInt(validDigits(item.anggarana_setahun));
+                                  // alert("anggarant");
+                                  var sum = twi_val+twii_val+twiii_val+twiv_val;
+                                  // alert(sum);
                                   if(item.terpusat == 1){
                                     return true;
                                   }else{
-                                    return (sum_ins <= anggaran_val_ins && sum_ins >= anggaran_val_ins) || (sum_edt <= anggaran_val_edt && sum_edt >= anggaran_val_edt) ;
+                                    return (sum <= anggaran_val && sum >= anggaran_val) ;
                                   }
                               }
                             }
@@ -1056,7 +1050,12 @@
                             },
 
                             insertTemplate: function() {
-                              var id_list=tempIdCounter;
+                              var id_list;
+                              if(inputs.length>0){
+                                id_list=inputs.length;
+                              }else{
+                                id_list=tempIdCounter;
+                              }
                               var count_berkas=0;
                               if(upload_file[id_list] != null){
                                 for(i=0;i<upload_file[id_list].length;i++){
@@ -1168,6 +1167,7 @@
                                 var tgl = data[0].tanggal;
                                 var tgl_split = tgl.split("-");
                                 document.getElementById("nd_surat").value = nd_surat;
+                                document.getElementById("id_anggaran").value = data[0].id;
                                 document.getElementById("stat_anggaran").value = status_anggaran;
                                 document.getElementById("persetujuan").value = persetujuan;
                                 document.getElementById("tipe_anggaran").value = data[0].tipe_anggaran;
@@ -1356,14 +1356,14 @@
                       status = {{ $status=='edit' ? 1 : 0 }};
                       for(i=0;i<inputs.length;i++){
                         nameClass = $('.file_'+i);
-                        if(nameClass.length == 0){
-                          // alert("kosong")
-                          // toastr.error("Silahkan tambahkan berkas minimal 1 pada anggaran baris ke-"+(i+1)+" untuk melakukan penyimpanan. Terima kasih.", "Minimal satu berkas yang diunggah.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
-                          stop = true;
-                          break;
-                        }else{
+                        if(nameClass.length != 0){
+                        //   // alert("kosong")
+                        //   // toastr.error("Silahkan tambahkan berkas minimal 1 pada anggaran baris ke-"+(i+1)+" untuk melakukan penyimpanan. Terima kasih.", "Minimal satu berkas yang diunggah.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
+                        //   stop = true;
+                        //   break;
+                        // }else{
                           count=0;
-                          for(j=0;j<inputs.length;j++){
+                          for(j=0;j<nameClass.length;j++){
                             file = document.getElementById("file_name_"+i+"_"+j).value;
                             if(file=="null"){
                               count++;
@@ -1494,16 +1494,18 @@
                     banyak = 0;
                     hasil2 = []
                     if(list_berkas.length>0){
-                      for(i = 0; i<list_berkas[index].length; i++){
-                        link = "{{url('anggaran/get/download')}}/"+list_berkas[index][i]['id'];
-                        hasil2[i] = '<div class="col-xs-10"><a href="'+link+'" ><li>'+list_berkas[index][i]['name']+'</li></div>';
-                        hasil2[i] += '<div class="col-xs-1"><i class="fa fa-download "></i></div></a><br/><br/>';
+                      if(list_berkas[index]!=null){
+                        for(i = 0; i<list_berkas[index].length; i++){
+                          link = "{{url('anggaran/get/download')}}/"+list_berkas[index][i]['id'];
+                          hasil2[i] = '<div class="col-xs-10"><a href="'+link+'" ><li>'+list_berkas[index][i]['name']+'</li></div>';
+                          hasil2[i] += '<div class="col-xs-1"><i class="fa fa-download "></i></div></a><br/><br/>';
+                        }
+                        $("#list_download").append(hasil2);
                       }
-                      $("#list_download").append(hasil2);
                     }
 
                     if(upload_file[index]!=null){
-                      alert(upload_file[index].length);
+                      // alert(upload_file[index].length);
                       var nameCon = "";
                       for(i = 0; i<upload_file[index].length; i++){
                         if(upload_file[index][i]!=null){
