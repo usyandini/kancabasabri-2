@@ -53,6 +53,12 @@
                               <b>Anda sudah melakukan konfirmasi Tarik Tunai, harap menunggu verifikasi dari Kantor Pusat.</b>
                             </div>
                         </div>
+                        @elseif(session('reject1'))
+                        <div class="col-xs-8">
+                            <div class="alert alert-warning">
+                              <b>Tarik tunai anda ditolak oleh Akuntansi dengan alasan {{ $notif->reason['content'] }}.<br>Silahkan melakukan <i>tarik tunai</i> kembali.</b>
+                            </div>
+                        </div>
                         @endif
 
                         @if (count($errors) > 0)

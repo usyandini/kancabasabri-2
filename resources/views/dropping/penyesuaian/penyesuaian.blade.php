@@ -59,6 +59,18 @@
                               <b>Anda sudah melakukan penyesuaian dropping. Penyesuaian dropping hanya bisa dilakukan sekali.</b>
                             </div>
                         </div>
+                        @elseif(session('reject1'))
+                        <div class="col-xs-8">
+                            <div class="alert alert-warning">
+                              <b>Penyesuaian dropping anda ditolak oleh Bia dengan alasan {{ $notif->reason['content'] }}.<br>Silahkan melakukan <i>penyesuaian dropping</i> kembali.</b>
+                            </div>
+                        </div>
+                        @elseif(session('reject2'))
+                        <div class="col-xs-8">
+                            <div class="alert alert-warning">
+                              <b>Penyesuaian dropping anda ditolak oleh Akuntansi dengan alasan {{ $notif->reason['content'] }}.<br>Silahkan melakukan <i>penyesuaian dropping</i> kembali.</b>
+                            </div>
+                        </div>
                         @endif
 
                         @if (count($errors) > 0)
