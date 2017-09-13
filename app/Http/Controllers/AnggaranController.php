@@ -292,7 +292,7 @@ class AnggaranController extends Controller
                 if($anggaranId == "" && $request->status == 'tambah'){
                     $anggaranId = $AnggaranData->id;
                 }
-                if($value->id == -1){
+                if($request->setuju != 'Simpan' || ($request->setuju == 'Simpan' && $value->id == -1)){
                     // echo "baru";
                     $anggaran_insert_list = [
                     // 'id'            => $value->id,
@@ -345,17 +345,24 @@ class AnggaranController extends Controller
 
             $LAnggaranInsert;
             $LAnggaranUpdate;
-            if($request->status == 'tambah'){
-                $LAnggaranInsert  = ListAnggaran::create($anggaran_insert_list);
-            }else if($request->status == 'edit'&& $request->setuju == 'Simpan'){
-                if($value->id == -1){
-                    // echo "save";
+            if($value->delete == "none"){
+                if($request->status == 'tambah'){
                     $LAnggaranInsert  = ListAnggaran::create($anggaran_insert_list);
+                }else if($request->status == 'edit'&& $request->setuju == 'Simpan'){
+                    if($value->id == -1){
+                        $LAnggaranInsert  = ListAnggaran::create($anggaran_insert_list);
+                    }else{
+                        $LAnggaranUpdate  = ListAnggaran::where('id', $value->id)->where('active', '1')->update($anggaran_update_list);
+                    }
+                }else{
+                    $LAnggaranInsert  = ListAnggaran::create($anggaran_insert_list);
+                    $LAnggaranUpdate  = ListAnggaran::where('id', $value->id)->where('active', '1')->update($anggaran_update_list);
                 }
-                $LAnggaranUpdate  = ListAnggaran::where('id', $value->id)->where('active', '1')->update($anggaran_update_list);
-            }else{
-                $LAnggaranInsert  = ListAnggaran::create($anggaran_insert_list);
-                $LAnggaranUpdate  = ListAnggaran::where('id', $value->id)->where('active', '1')->update($anggaran_update_list);
+            }else if($value->delete == "delete"){
+                if($value->id != -1){
+                    ListAnggaran::where('id', $value->id)->delete();
+                    // FileListAnggaran::where('id_list_anggaran', $value->id)->update(["active" =>'1']);
+                }
             }
 
             if($request->status == 'tambah'||($request->status == 'edit')){
@@ -377,28 +384,29 @@ class AnggaranController extends Controller
                 }
 
 
-                
-                if(isset($_POST['count_file_'.$index])){
-                    echo $index."<br />";
-                    for($i=0;$i<$_POST['count_file_'.$index];$i++){
-                        $data = $_POST['file_'.$index."_".$index2];
-                        if($data!="null"){
-                            // echo $index."_".$index2;
-                            $file_name = $_POST['file_name_'.$index."_".$index2];
-                            $file_type = $_POST['file_type_'.$index."_".$index2];
-                            $file_size = $_POST['file_size_'.$index."_".$index2];
-                            $base64 = explode(";base64,", $data);
-                            $store_file_list_values = [
-                                'id_list_anggaran' => $id_list_anggaran,
-                                'name'            => $file_name,
-                                'type'           => $file_type,
-                                'size'           => $file_size,
-                                'data'           => $base64[1],
-                                'created_at'    => \Carbon\Carbon::now(),
-                                'updated_at'    => \Carbon\Carbon::now()];
+                if($value->delete == "none"){
+                    if(isset($_POST['count_file_'.$index])){
+                        // echo $index."<br />";
+                        for($i=0;$i<$_POST['count_file_'.$index];$i++){
+                            $data = $_POST['file_'.$index."_".$index2];
+                            if($data!="null"){
+                                // echo $index."_".$index2;
+                                $file_name = $_POST['file_name_'.$index."_".$index2];
+                                $file_type = $_POST['file_type_'.$index."_".$index2];
+                                $file_size = $_POST['file_size_'.$index."_".$index2];
+                                $base64 = explode(";base64,", $data);
+                                $store_file_list_values = [
+                                    'id_list_anggaran' => $id_list_anggaran,
+                                    'name'            => $file_name,
+                                    'type'           => $file_type,
+                                    'size'           => $file_size,
+                                    'data'           => $base64[1],
+                                    'created_at'    => \Carbon\Carbon::now(),
+                                    'updated_at'    => \Carbon\Carbon::now()];
 
-                            FileListAnggaran::insert($store_file_list_values);
-                            $index2++;
+                                FileListAnggaran::insert($store_file_list_values);
+                                $index2++;
+                            }
                         }
                     }
                 }
