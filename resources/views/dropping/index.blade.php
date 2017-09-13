@@ -76,7 +76,7 @@
                                           <div class="row">
                                               <div class="col-xs-2 pull-right">
                                                 <div class="form-group">
-                                                  <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i> Filter</button>
+                                                  <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i> Cari</button>
                                                 </div>
                                               </div>
                                             @if (checkActiveMenu('dropping') != 'active')

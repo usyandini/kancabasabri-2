@@ -142,7 +142,7 @@
                                       <div class="form-group">
                                         <h4 class="form-section">Daftar Berkas</h4>
                                         <table>
-                                            @forelse($berkas as $value)
+                                          @forelse($berkas as $value)
                                             <tr>
                                               <li><a href="{{ url('dropping/tariktunai/berkas/download').'/'.$value->id }}" target="_blank">{{ $value->name }}</a></li>
                                             </tr>

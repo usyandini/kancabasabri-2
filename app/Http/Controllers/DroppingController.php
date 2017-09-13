@@ -25,6 +25,7 @@ use App\Models\SubPos;
 use App\Models\Kegiatan;
 
 use App\Models\StagingTarikTunai;
+use App\Models\StagingPengembalian;
 
 use Validator;
 use App\Services\FileUpload;
@@ -629,9 +630,10 @@ class DroppingController extends Controller
             {
                 switch($reaction){
                     case 'verified':
-                        PenyesuaianDropping::where('id', $id_penyesuaian)->update(array('stat' => 8, '2_verified_by' => \Auth::id()));
+                        $type = PenyesuaianDropping::where('id', $id_penyesuaian)->update(array('stat' => 8, '2_verified_by' => \Auth::id()));
                         session()->flash('success', true);
                         NotificationSystem::send($id_penyesuaian, 14);
+                        $this->insertStagingPengembalian($id_penyesuaian);
                         break;
                     case 'rejected':
                         PenyesuaianDropping::where('id', $id_penyesuaian)
@@ -655,20 +657,50 @@ class DroppingController extends Controller
         $tariktunai = TarikTunai::where([['id', $id_tarik], ['stat', 3]])->first();
 
         $inputStagingTT = [
-            // 'DATAAREAID'
+            'DATAAREAID'       => 'asbr',
             // 'RECVERSION'
             // 'PARTITION'
             'RECID'             => $tariktunai['id'],
             'PIL_TRANSDATE'     => $tariktunai['updated_at'],
-            'PIL_TXT'           => $tariktunai['dropping']['TXT'],
-            'PIL_JOURNALNUM'    => $tariktunai['dropping']['JOURNALNUM'],
+            'PIL_TXT'           => $tariktunai['cabang'], //deskripsi optional
+            //'PIL_JOURNALNUM'    => $tariktunai['dropping']['JOURNALNUM'], //kosong
             'PIL_AMOUNT'        => $tariktunai['nominal_tarik'],
             'PIL_BANK'          => $tariktunai['akun_bank'],
             'PIL_ACCOUNT'       => $tariktunai['SEGMEN_1'],
-            'PIL_VOUCHER'       => $tariktunai['dropping']['JOURNALNAME']
+            //'PIL_VOUCHER'       => $tariktunai['dropping']['JOURNALNAME'] //kosong
+            //'PIL_POSTED'
+            'PIL_PROGRAM'       => $tariktunai['SEGMEN_2'],
+            'PIL_KPKC'          => $tariktunai['SEGMEN_3'],
+            'PIL_DIVISI'        => $tariktunai['SEGMEN_4'],
+            'PIL_SUBPOS'        => $tariktunai['SEGMEN_5'],
+            'PIL_MATAANGGARAN'  => $tariktunai['SEGMEN_6']
         ];
         
         StagingTariktunai::insert($inputStagingTT);   
+    }
+
+    public function insertStagingPengembalian($id_pengembalian)
+    {
+        $pengembalian = PenyesuaianDropping::where([['id', $id_pengembalian], ['is_pengembalian', 1], ['stat', 8]])->first();
+
+        if($pengembalian){
+            $inputStagingPL = [
+                'DATAAREAID'        => 'asbr',
+                'RECID'             => $pengembalian['id'],
+                'PIL_TRANSDATE'     => $pengembalian['updated_at'],
+                'PIL_TXT'           => $pengembalian['cabang'], //deskripsi optional
+                'PIL_AMOUNT'        => $pengembalian['nominal'],
+                'PIL_BANK'          => $pengembalian['akun_bank'],
+                'PIL_ACCOUNT'       => $pengembalian['SEGMEN_1'],
+                'PIL_PROGRAM'       => $pengembalian['SEGMEN_2'],
+                'PIL_KPKC'          => $pengembalian['SEGMEN_3'],
+                'PIL_DIVISI'        => $pengembalian['SEGMEN_4'],
+                'PIL_SUBPOS'        => $pengembalian['SEGMEN_5'],
+                'PIL_MATAANGGARAN'  => $pengembalian['SEGMEN_6']
+            ];
+        
+            StagingPengembalian::insert($inputStagingPL);   
+        }
     }
 
     public function redirect($url, $statusCode = 303)
