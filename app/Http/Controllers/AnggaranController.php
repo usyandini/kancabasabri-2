@@ -283,8 +283,18 @@ class AnggaranController extends Controller
                     $idBefore = $value->id_first;
                 }
             }
-            if($request->setuju != 'Simpan' || $request->status == 'tambah'){
-                $anggaran_insert_list = [
+            // if($request->setuju != 'Simpan' || $request->status == 'tambah'){
+                $anggaranId = $request->id_anggaran;
+                // if($request->setuju == 'Simpan'){
+
+                // }
+
+                if($anggaranId == "" && $request->status == 'tambah'){
+                    $anggaranId = $AnggaranData->id;
+                }
+                if($request->setuju != 'Simpan' || ($request->setuju == 'Simpan' && $value->id == -1)){
+                    // echo "baru";
+                    $anggaran_insert_list = [
                     // 'id'            => $value->id,
                     'jenis'           => $value->jenis,
                     'kelompok'          => $value->kelompok,
@@ -302,10 +312,11 @@ class AnggaranController extends Controller
                     'TWIV'    => (double)$value->tw_iv,
                     'anggaran_setahun'      => (double)$value->anggarana_setahun,
                     'id_first'      => $idBefore,
-                    'id_list_anggaran'            => $AnggaranData->id,
+                    'id_list_anggaran'            => $anggaranId,
                     'active'            => '1'
                     ];
-            }
+                }
+            // }
 
             $active_list = '0';
             if($request->setuju == 'Simpan'){
@@ -334,13 +345,24 @@ class AnggaranController extends Controller
 
             $LAnggaranInsert;
             $LAnggaranUpdate;
-            if($request->status == 'tambah'){
-                $LAnggaranInsert  = ListAnggaran::create($anggaran_insert_list);
-            }else if($request->status == 'edit'&& $request->setuju == 'Simpan'){
-                $LAnggaranUpdate  = ListAnggaran::where('id', $value->id)->where('active', '1')->update($anggaran_update_list);
-            }else{
-                $LAnggaranInsert  = ListAnggaran::create($anggaran_insert_list);
-                $LAnggaranUpdate  = ListAnggaran::where('id', $value->id)->where('active', '1')->update($anggaran_update_list);
+            if($value->delete == "none"){
+                if($request->status == 'tambah'){
+                    $LAnggaranInsert  = ListAnggaran::create($anggaran_insert_list);
+                }else if($request->status == 'edit'&& $request->setuju == 'Simpan'){
+                    if($value->id == -1){
+                        $LAnggaranInsert  = ListAnggaran::create($anggaran_insert_list);
+                    }else{
+                        $LAnggaranUpdate  = ListAnggaran::where('id', $value->id)->where('active', '1')->update($anggaran_update_list);
+                    }
+                }else{
+                    $LAnggaranInsert  = ListAnggaran::create($anggaran_insert_list);
+                    $LAnggaranUpdate  = ListAnggaran::where('id', $value->id)->where('active', '1')->update($anggaran_update_list);
+                }
+            }else if($value->delete == "delete"){
+                if($value->id != -1){
+                    ListAnggaran::where('id', $value->id)->delete();
+                    // FileListAnggaran::where('id_list_anggaran', $value->id)->update(["active" =>'1']);
+                }
             }
 
             if($request->status == 'tambah'||($request->status == 'edit')){
@@ -349,33 +371,42 @@ class AnggaranController extends Controller
                 if($request->status == 'edit'){
                     if($value->id_first== 0){
                         $id_list_anggaran = $value->id;
+
+                        
+                        if($value->id == -1){
+                            $id_list_anggaran = $LAnggaranInsert->id;
+                        }
                     }else{
                         $id_list_anggaran = $value->id_first;
                     }  
                 }else if($request->status == 'tambah'){
                     $id_list_anggaran = $LAnggaranInsert->id;
                 }
-                
-                if(isset($_POST['count_file_'.$index])){
-                    for($i=0;$i<$_POST['count_file_'.$index];$i++){
-                        $data = $_POST['file_'.$index."_".$index2];
-                        if($data!="null"){
-                            // echo $index."_".$index2;
-                            $file_name = $_POST['file_name_'.$index."_".$index2];
-                            $file_type = $_POST['file_type_'.$index."_".$index2];
-                            $file_size = $_POST['file_size_'.$index."_".$index2];
-                            $base64 = explode(";base64,", $data);
-                            $store_file_list_values = [
-                                'id_list_anggaran' => $id_list_anggaran,
-                                'name'            => $file_name,
-                                'type'           => $file_type,
-                                'size'           => $file_size,
-                                'data'           => $base64[1],
-                                'created_at'    => \Carbon\Carbon::now(),
-                                'updated_at'    => \Carbon\Carbon::now()];
 
-                            FileListAnggaran::insert($store_file_list_values);
-                            $index2++;
+
+                if($value->delete == "none"){
+                    if(isset($_POST['count_file_'.$index])){
+                        // echo $index."<br />";
+                        for($i=0;$i<$_POST['count_file_'.$index];$i++){
+                            $data = $_POST['file_'.$index."_".$index2];
+                            if($data!="null"){
+                                // echo $index."_".$index2;
+                                $file_name = $_POST['file_name_'.$index."_".$index2];
+                                $file_type = $_POST['file_type_'.$index."_".$index2];
+                                $file_size = $_POST['file_size_'.$index."_".$index2];
+                                $base64 = explode(";base64,", $data);
+                                $store_file_list_values = [
+                                    'id_list_anggaran' => $id_list_anggaran,
+                                    'name'            => $file_name,
+                                    'type'           => $file_type,
+                                    'size'           => $file_size,
+                                    'data'           => $base64[1],
+                                    'created_at'    => \Carbon\Carbon::now(),
+                                    'updated_at'    => \Carbon\Carbon::now()];
+
+                                FileListAnggaran::insert($store_file_list_values);
+                                $index2++;
+                            }
                         }
                     }
                 }
@@ -383,17 +414,17 @@ class AnggaranController extends Controller
             $index++;
 
         }
-        if($request->status == 'tambah'){
-            session()->flash('tambah', true);
-        }else if($request->setuju =='Tolak'){
-            session()->flash('tolak', true);
-        }else if($request->setuju =='Simpan'){
-            session()->flash('simpan', true);
-        }else if($request->setuju =='Kirim'){
-            session()->flash('kirim', true);
-        }else if($request->setuju =='Setuju'){
-            session()->flash('setuju', true);
-        }
+        // if($request->status == 'tambah'){
+        //     session()->flash('tambah', true);
+        // }else if($request->setuju =='Tolak'){
+        //     session()->flash('tolak', true);
+        // }else if($request->setuju =='Simpan'){
+        //     session()->flash('simpan', true);
+        // }else if($request->setuju =='Kirim'){
+        //     session()->flash('kirim', true);
+        // }else if($request->setuju =='Setuju'){
+        //     session()->flash('setuju', true);
+        // }
         $status_view = redirect('anggaran/edit/'.$request->nd_surat.'/0'); 
         // echo $setuju;
         if($setuju != "-1"){
@@ -406,7 +437,8 @@ class AnggaranController extends Controller
         $result = [];
 
         if($type == "anggaran"){
-            $result = $this->anggaranModel->where('nd_surat', $nd_surat)->orderBy('id', 'DESC')->take(5)->get();
+            // $result = $this->anggaranModel->where('nd_surat', $nd_surat)->orderBy('id', 'DESC')->take(5)->get();
+            $result = $this->anggaranModel->where('nd_surat', $nd_surat)->where('active','1')->get();
 
         }else if($type == "list_anggaran"){
 
@@ -486,6 +518,8 @@ class AnggaranController extends Controller
         $Anggaran = $query->where('active', '1')->orderBy('updated_at','DESC');
         
         // $Anggaran = $this->anggaranModel->where('active', '1')->orderBy('updated_at','DESC')->get();
+        
+        $countIndex=-1;
         foreach($Anggaran->get() as $anggaran){
             $listAnggaran = $this->listAnggaranModel->where('id_list_anggaran', $anggaran->id)->where('active', '1');
             
@@ -508,7 +542,6 @@ class AnggaranController extends Controller
 
             $fileListAnggaran = $this->fileListAnggaranModel;
             // echo "Terbaru<br/>";
-            $countIndex=0;
             foreach ($listAnggaran->get() as $list_anggaran) {
                 $fileList = [];
                 $id_list_anggaran;
@@ -517,8 +550,10 @@ class AnggaranController extends Controller
                 }else{
                     $id_list_anggaran = $list_anggaran->id_first;
                 }
+                $countIndex++;
                 foreach ($fileListAnggaran->get() as $file_list_anggaran) {
                     if($file_list_anggaran->id_list_anggaran == $id_list_anggaran){
+                        // echo $countIndex;
                         $fileList[] = [
                             'id'   => $file_list_anggaran->id,
                             'count' => $countIndex,
@@ -528,6 +563,7 @@ class AnggaranController extends Controller
                         ];
                     }
                 }
+                // echo "<br />";
 
                 $Value=array(
                             'input_anggaran'    =>0,
@@ -539,6 +575,8 @@ class AnggaranController extends Controller
                             'finalisasi_rups'   =>0,
                             'risalah_rups'      =>0
                             );
+
+                
                 $AnggaranValue = $this->anggaranModel->where('nd_surat', $anggaran->nd_surat)->orderBy('id', 'DESC');
                 foreach ($AnggaranValue->get() as $anggaran_value) {
 
@@ -594,7 +632,6 @@ class AnggaranController extends Controller
                             }
                         }
                     }
-                    $countIndex++;
                 }
                 $result[] = [
                     'id'             => $list_anggaran->id,
