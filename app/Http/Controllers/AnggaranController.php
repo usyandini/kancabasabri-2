@@ -361,7 +361,7 @@ class AnggaranController extends Controller
             }else if($value->delete == "delete"){
                 if($value->id != -1){
                     ListAnggaran::where('id', $value->id)->delete();
-                    // FileListAnggaran::where('id_list_anggaran', $value->id)->update(["active" =>'1']);
+                    FileListAnggaran::where('id_list_anggaran', $value->id)->update(["active" =>'1']);
                 }
             }
 
@@ -390,7 +390,7 @@ class AnggaranController extends Controller
                         for($i=0;$i<$_POST['count_file_'.$index];$i++){
                             $data = $_POST['file_'.$index."_".$index2];
                             if($data!="null"){
-                                // echo $index."_".$index2;
+                                echo $index."_".$index2."<br />";
                                 $file_name = $_POST['file_name_'.$index."_".$index2];
                                 $file_type = $_POST['file_type_'.$index."_".$index2];
                                 $file_size = $_POST['file_size_'.$index."_".$index2];
@@ -732,6 +732,12 @@ class AnggaranController extends Controller
                 \DB::table('anggaran')->delete();
                 \DB::table('list_anggaran')->delete();
                 \DB::table('file_list_anggaran')->delete();
+    }
+
+
+    public function activeFileListAnggaranAll(){
+
+                \DB::table('file_list_anggaran')->update(['active'=>'1']);
     }
 
 }

@@ -226,32 +226,38 @@
 
                           },
                           { name: "jenis", 
-                            type: "text", 
+                            type: "text",
+                            align: "left", 
                             title: "Jenis", 
                             width: 90
                           },
                           { name: "kelompok", 
-                            type: "text", 
+                            type: "text",
+                            align: "left", 
                             title: "Kelompok", 
                             width: 90
                           },
                           { name: "pos_anggaran", 
                             type: "text", 
+                            align: "left",
                             title: "Pos Anggaran", 
                             width: 120
                           },
                           { name: "sub_pos", 
                             type: "text", 
+                            align: "left",
                             title: "Sub Pos", 
                             width: 70
                           },
                           { name: "mata_anggaran", 
                             type: "text", 
+                            align: "left",
                             title: "Mata Anggaran",
                             width: 130
                           },
                           { name: "input_anggaran", 
                             type: "number", 
+                            align: "left",
                             title: "Input Anggaran dan kegiatan",
                             width: 220,
                             itemTemplate: function(value) {
@@ -264,6 +270,7 @@
                           },
                           { name: "clearing_house", 
                             type: "number", 
+                            align: "left",
                             title: "Clearing House",
                             width: 130,
                             itemTemplate: function(value) {
@@ -276,6 +283,7 @@
                           },
                           { name: "naskah_rkap", 
                             type: "number", 
+                            align: "left",
                             title: "Naskah RKAP",
                             width: 130,
                             itemTemplate: function(value) {
@@ -288,6 +296,7 @@
                           },
                           { name: "dewan_komisaris", 
                             type: "number", 
+                            align: "left",
                             title: "Persetujuan Dewan Komisaris",
                             width: 220,
                             itemTemplate: function(value) {
@@ -300,6 +309,7 @@
                           },
                           { name: "rapat_teknis", 
                             type: "number", 
+                            align: "left",
                             title: "Rapat Teknis",
                             width: 130,
                             itemTemplate: function(value) {
@@ -312,6 +322,7 @@
                           },
                           { name: "rups", 
                             type: "number", 
+                            align: "left",
                             title: "RUPS",
                             width: 130,
                             itemTemplate: function(value) {
@@ -324,6 +335,7 @@
                           },
                           { name: "finalisasi_rups", 
                             type: "number", 
+                            align: "left",
                             title: "Finalisasi RUPS",
                             width: 130,
                             itemTemplate: function(value) {
@@ -336,6 +348,7 @@
                           },
                           { name: "risalah_rups", 
                             type: "number", 
+                            align: "left",
                             title: "Risalah RUPS",
                             width: 130,
                             itemTemplate: function(value) {

@@ -435,34 +435,17 @@
                           item["delete"]="none";
                                                       
                           inputs.push(item);
-                          // console.log(item);
 
                         },
                         updateItem: function(item) {
-
-                          // console.log(item);
-                          // alert("update");
-
                           item["nilai_persatuan"]= validDigits(item.nilai_persatuan);
                           item["tw_i"]= validDigits(item.tw_i);
                           item["tw_ii"]= validDigits(item.tw_ii);
                           item["tw_iii"]= validDigits(item.tw_iii);
                           item["tw_iv"]= validDigits(item.tw_iv);
                           item["anggarana_setahun"]= validDigits(item.anggarana_setahun);
-                          // if (item["isNew"]) {
+                          item["delete"]="none";
                           inputs.splice(item["tempId"]-1, 1, item);  
-                          // } else {
-
-                          //   for(i=0;i<inputs.length;i++){
-                          //     if(inputs[i]['id']==item['id']){
-                          //       inputs[i]=item;
-                          //       // alert("change "+item['id']);
-                          //       // if(inputs[i][])
-                          //     }else{
-                          //       // alert("not "+item['id']);
-                          //     }
-                          //   }
-                          // }
                         },
                       }, 
                       onRefreshed: function(args) {
@@ -491,6 +474,8 @@
                         }
                       },
                       onItemEditing: function(args) {
+
+                          delete_temp = [];
                           if(statusTable=="edit"){
                             // console.log ("Cancel",     ); 
                             args.cancel =true;
@@ -499,7 +484,7 @@
                            window.setTimeout(function() {
                               $('.jsgrid-cancel-edit-button').one('click.avoidAuthorClickHandler', function() {
                                   statusTable = "null";
-
+                                  
                               });
                            }, 200);
                       },
@@ -523,13 +508,35 @@
                             // alert("not "+item['id']);
                           }
                         }
+                          statusTable = "null";
 
                       },
                       onItemUpdating:function(args){
                         var count_berkas = 0;
-                        if(upload_file[args.item.file] != null){
-                          for(i=0;i<upload_file[args.item.file].length;i++){
-                            if(upload_file[args.item.file][i]!=null){
+                        // delete_file[index_modal] = [];
+                        for(i=0;i<delete_temp.length;i++){
+                          // delete_file[index_modal][i]= {};
+                          if(delete_temp[i]['name'] == 'delete'){
+
+                              delete_file.push(delete_temp[i]);
+                              list_berkas[index_modal][i] = null;
+                          }
+                          // delete_file[index_modal][i]["id"]= delete_temp[i]["id"];
+                        }
+                        delete_temp = [];
+                          // alert(JSON.stringify(upload_file[args.item.file]));
+
+                        // if(upload_file[args.item.file] != null){
+                        //   for(i=0;i<upload_file[args.item.file].length;i++){
+                        //     if(upload_file[args.item.file][i]!=null){
+                        //       count_berkas++;
+                        //       readerPrev(i,index_modal);
+                        //     }
+                        //   }
+                        // }
+                        if(upload_file[index_modal] != null){
+                          for(i=0;i<upload_file[index_modal].length;i++){
+                            if(upload_file[index_modal][i]!=null){
                               count_berkas++;
                               readerPrev(i,index_modal);
                             }
@@ -585,6 +592,7 @@
                             type: "text", 
                             title: "Jenis", 
                             width: 90,
+                            align: "left",
                             insertTemplate: function() {
                               jenis_field_insert = jsGrid.fields.text.prototype.insertTemplate.call(this);
                               return jenis_field_insert; 
@@ -599,6 +607,7 @@
                             type: "text", 
                             title: "Kelompok", 
                             width: 90,
+                            align: "left",
                             readOnly:true,
                             insertTemplate: function() {
                               kelompok_field_insert = jsGrid.fields.text.prototype.insertTemplate.call(this);
@@ -614,6 +623,7 @@
                             type: "text", 
                             title: "Pos Anggaran", 
                             width: 120,
+                            align: "left",
                             readOnly:true,
                             insertTemplate: function() {
                               pos_field_insert = jsGrid.fields.text.prototype.insertTemplate.call(this);
@@ -629,6 +639,7 @@
                             type: "text", 
                             title: "Sub Pos", 
                             width: 70,
+                            align: "left",
                             readOnly:true,
                             insertTemplate: function() {
                               sub_field_insert = jsGrid.fields.text.prototype.insertTemplate.call(this);
@@ -644,6 +655,7 @@
                             type: "select", 
                             title: "Mata Anggaran",
                             width: 130,
+                            align: "left",
                             valueField: "DESCRIPTION", 
                             textField: "DESCRIPTION", 
                             items: getData('mataanggaran'),
@@ -671,6 +683,7 @@
                           },
                           { name: "kuantitas", 
                             type: "number", 
+                            align: "left",
                             title: "Kuantitas", 
                             width: 90, 
                             insertTemplate: function() {
@@ -710,6 +723,7 @@
                           },
                           { name: "satuan", 
                             type: "text", 
+                            align: "left",
                             title: "Satuan", 
                             width: 80,
                             readOnly:true,
@@ -725,10 +739,11 @@
                           },
                           { name: "nilai_persatuan", 
                             type: "text", 
+                            align: "left",
                             title: "Nilai Per Satuan", 
                             width: 130, 
                             itemTemplate: function(value) {
-                              var display ="<span class='tag tag-info'>IDR " + addCommas(value)+ ",00</span>";
+                              var display ="<span class='tag tag-info'>IDR " + addCommas(value)+ "</span>";
                               
                               return display;
                             },
@@ -784,6 +799,7 @@
                           },
                           { name: "terpusat", 
                             type: "select", 
+                            align: "left",
                             title: "Terpusat", 
                             width: 80, items:[
                                 { Name: "None", Id: 0 },
@@ -816,6 +832,7 @@
                           },
                           { name: "unit_kerja", 
                             type: "text", 
+                            align: "left",
                             title: "Unit Kerja", 
                             width: 100, 
                             readOnly:true,
@@ -832,10 +849,11 @@
                           },
                           { name: "tw_i", 
                             type: "text", 
+                            align: "left",
                             title: "TW I", 
                             width: 100,
                             itemTemplate: function(value) {
-                              var display ="<span class='tag tag-info'>IDR " + addCommas(value) + ",00</span>";
+                              var display ="<span class='tag tag-info'>IDR " + addCommas(value) + "</span>";
                               
                               if(parseInt(value).toLocaleString() < 1||value == ""){
                                 display = "<span >---</span>";
@@ -889,10 +907,11 @@
                           },
                           { name: "tw_ii", 
                             type: "text", 
+                            align: "left",
                             title: "TW II", 
                             width: 100 ,
                             itemTemplate: function(value) {
-                              var display ="<span class='tag tag-info'>IDR " + addCommas(value) + ",00</span>";
+                              var display ="<span class='tag tag-info'>IDR " + addCommas(value) + "</span>";
                               
                               if(parseInt(value).toLocaleString() < 1||value == ""){
                                 display = "<span >---</span>";
@@ -921,10 +940,11 @@
                           },
                           { name: "tw_iii", 
                             type: "text", 
+                            align: "left",
                             title: "TW III", 
                             width: 100 ,
                             itemTemplate: function(value) {
-                              var display ="<span class='tag tag-info'>IDR " + addCommas(value) + ",00</span>";
+                              var display ="<span class='tag tag-info'>IDR " + addCommas(value) + "</span>";
                               
                               if(parseInt(value).toLocaleString() < 1||value == ""){
                                 display = "<span >---</span>";
@@ -953,10 +973,11 @@
                           },
                           { name: "tw_iv", 
                             type: "text", 
+                            align: "left",
                             title: "TW IV",
                             width: 100,
                             itemTemplate: function(value) {
-                              var display ="<span class='tag tag-info'>IDR " + addCommas(value) + ",00</span>";
+                              var display ="<span class='tag tag-info'>IDR " + addCommas(value) + "</span>";
                               
                               if(parseInt(value).toLocaleString() < 1||value == ""){
                                 display = "<span >---</span>";
@@ -986,11 +1007,12 @@
                            },
                           { name: "anggarana_setahun", 
                             type: "text", 
+                            align: "left",
                             title: "Anggaran Setahun", 
                             width: 150 ,
                             readOnly:true,
                             itemTemplate: function(value) {var val=0
-                              var display ="<span class='tag tag-info'>IDR " + addCommas(value) + ",00</span>";
+                              var display ="<span class='tag tag-info'>IDR " + addCommas(value) + "</span>";
                               
                               if(parseInt(value).toLocaleString() < 1||value == ""){
                                 display = "<span >---</span>";
@@ -1378,11 +1400,6 @@
                       for(i=0;i<inputs.length;i++){
                         nameClass = $('.file_'+i);
                         if(nameClass.length != 0){
-                        //   // alert("kosong")
-                        //   // toastr.error("Silahkan tambahkan berkas minimal 1 pada anggaran baris ke-"+(i+1)+" untuk melakukan penyimpanan. Terima kasih.", "Minimal satu berkas yang diunggah.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
-                        //   stop = true;
-                        //   break;
-                        // }else{
                           count=0;
                           for(j=0;j<nameClass.length;j++){
                             file = document.getElementById("file_name_"+i+"_"+j).value;
@@ -1391,15 +1408,16 @@
                             }
                           }
                           if(count==nameClass.length){
-                            // alert("null semua");
-                            // toastr.error("Silahkan tambahkan berkas minimal 1 pada anggaran baris ke-"+(i+1)+" untuk melakukan penyimpanan. Terima kasih.", "Minimal satu berkas yang diunggah.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
                             stop=true;
                           }
                         }
                         if(!stop){
-                          var countFile = $('<input/>',{type:'hidden',id:('count_file_'+i),
-                          name:('count_file_'+i),value:nameClass.length});
-                          countFile.appendTo("#file_grid");
+                          if(nameClass.length!=0){
+                            var countFile = $('<input/>',{type:'hidden',id:('count_file_'+i),
+                            name:('count_file_'+i),value:nameClass.length});
+                            countFile.appendTo("#file_grid");
+                          }
+                          
                         }
                       }
                       // alert(status==1);
@@ -1514,24 +1532,27 @@
                     $('#list_download').empty();
                     banyak = 0;
                     hasil2 = [];
-                    // if(delete_temp.length==0){
-                    //   delete_temp = [];
-                    //   delete_temp = list_berkas[index]; 
-                    // }
+                    if(delete_temp.length==0){
+                      delete_temp = list_berkas[index]; 
+                    }
                     
-                    if(list_berkas[index].length>0){
-                      if(list_berkas[index]!=null){
-                        for(i = 0; i<list_berkas[index].length; i++){
-                          if(list_berkas[index][i]!=null){
-                            link = "{{url('anggaran/get/download')}}/"+list_berkas[index][i]['id'];
-                            hasil2[i] = '<div id="db_file_'+i+'"><div class="col-xs-10"><a href="'+link+'" ><li>'+list_berkas[index][i]['name']+'</li></div>';
-                            hasil2[i] += '<div class="col-xs-1"><i class="fa fa-download "></i></div></a></div>';
-                            // hasil2[i] += '<div class="col-xs-1" onclick="deleteFileDB('+i+')"><i style="color:red" class="fa fa-close "></i></div><br/><br/></div>';
+                    // if(delete_temp!=null){
+                      if(delete_temp.length>0){
+                        for(i = 0; i<delete_temp.length; i++){
+                          if(delete_temp[i]!=null){
+                            // if(delete_temp[i]['name'] == 'delete'){
+                            //   delete_temp[i] = null;
+                            // }else{
+                              link = "{{url('anggaran/get/download')}}/"+delete_temp[i]['id'];
+                              hasil2[i] = '<div id="db_file_'+i+'"><div class="col-xs-10"><a href="'+link+'" ><li>'+delete_temp[i]['name']+'</li></div>';
+                              hasil2[i] += '<div class="col-xs-1"><i class="fa fa-download "></i></div></a></div>';
+                              // hasil2[i] += '<div class="col-xs-1" onclick="deleteFileDB('+i+')"><i style="color:red" class="fa fa-close "></i></div><br/><br/></div>';
+                            // }
                           }
                         }
                         $("#list_download").append(hasil2);
                       }
-                    }
+                    // }
 
                     if(upload_file[index]!=null){
                       // alert(upload_file[index].length);
@@ -1575,7 +1596,7 @@
                   function deleteFileDB(i){
                       $("#db_file_"+i).remove();
                       hasil2[i] = "";
-                      delete_temp[i] = null;
+                      delete_temp[i]['name'] = "delete";
                   }
                   $('#simpan_file').click(function() {
                     simpan_file =true;

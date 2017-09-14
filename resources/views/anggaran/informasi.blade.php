@@ -148,26 +148,31 @@
                           },
                           { name: "tanggal", 
                             type: "text", 
+                            align: "left",
                             title: "Tanggal", 
                             width: 90
                           },
                           { name: "nd_surat", 
                             type: "text", 
+                            align: "left",
                             title: "ND/Surat", 
                             width: 90
                           },
                           { name: "unit_kerja", 
                             type: "text", 
+                            align: "left",
                             title: "Unit Kerja", 
                             width: 100
                           },
                           { name: "tipe_anggaran", 
                             type: "text", 
+                            align: "left",
                             title: "Tipe Anggaran", 
                             width: 100
                           },
                           { name: "status_anggaran", 
                             type: "text", 
+                            align: "left",
                             title: "Status Anggaran", 
                             width: 100,
                             itemTemplate:function(value){
@@ -182,6 +187,7 @@
                           },
                           { name: "persetujuan", 
                             type: "text", 
+                            align: "left",
                             title: "Persetujuan", 
                             width: 100,
                             itemTemplate:function(value){

@@ -89,7 +89,12 @@ Route::group(['middleware' => 'auth'], function() {
 		Route::post('/riwayat/', 'AnggaranController@riwayat');
 		Route::post('/cari/', 'AnggaranController@index');
 		Route::get('/removeAnggaran/', 'AnggaranController@removeAnggaranAll');
+		Route::get('/activeFileListAnggaran/', 'AnggaranController@activeFileListAnggaranAll');
 		Route::post('/submit/tambah', 'AnggaranController@store');
+	});
+
+	Route::group(['prefix' => 'pelaporan'], function() {
+   		Route::resource('/', 'PelaporanController');
 	});
 
 	Route::resource('/user', 'UserController');

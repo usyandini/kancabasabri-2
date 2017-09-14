@@ -108,18 +108,18 @@
                                                class=" ft-minus"></i>
                     </li>
                     @if (\Auth::user()->perizinan_dropping > 0)
-                        <li class="nav-item {{ checkActiveMenu('dropping') }}"><a href="{{ url('/dropping', $parameters = [], $secure = null) }}"><i class="ft-box"></i><span data-i18n="" class="menu-title">Dropping</span></a>
+                        <li class="nav-item {{ checkActiveMenu('dropping') }}"><a href="{{ url('/dropping', $parameters = [], $secure = null) }}"><i class="ft-box"></i><span data-i18n="" class="menu-title">Dropping</span></a></li>
                     @endif
                     </li>
                     @if (\Auth::user()->perizinan_transaksi > 0)
                         <li class="nav-item has-sub {{ checkOpenedMenu('transaksi') }}"><a href=""><i class="ft-layout"></i><span data-i18n="" class="menu-title">Transaksi</span></a>
                             <ul class="menu-content">
                                 @if (collect(\Auth::user()->perizinan('transaksi'))->contains("1") || collect(\Auth::user()->perizinan('transaksi'))->contains("3") || collect(\Auth::user()->perizinan('transaksi'))->contains("5") || collect(\Auth::user()->perizinan('transaksi'))->contains("7"))
-                                    <li class="is-shown {{ checkActiveMenu('transaksi') }}"><a href="{{ url('/transaksi', $parameters = [], $secure = null) }}" class="menu-item">Informasi Transaksi</a>
+                                    <li class="is-shown {{ checkActiveMenu('transaksi') }}"><a href="{{ url('/transaksi', $parameters = [], $secure = null) }}" class="menu-item">Informasi Transaksi</a></li>
                                 @endif
                                 @if (collect(\Auth::user()->perizinan('transaksi'))->contains("2") || collect(\Auth::user()->perizinan('transaksi'))->contains("3") || collect(\Auth::user()->perizinan('transaksi'))->contains("6") || collect(\Auth::user()->perizinan('transaksi'))->contains("7"))
-                                    <li class="is-shown {{ checkActiveMenu('persetujuan') }}"><a href="{{ url('/transaksi/persetujuan', $parameters = [], $secure = null) }}" class="menu-item">Persetujuan Transaksi</a>
-                                    <li class="is-shown {{ checkActiveMenu('verifikasi') }}"><a href="{{ url('/transaksi/verifikasi', $parameters = [], $secure = null) }}" class="menu-item">Verifikasi Transaksi</a>
+                                    <li class="is-shown {{ checkActiveMenu('persetujuan') }}"><a href="{{ url('/transaksi/persetujuan', $parameters = [], $secure = null) }}" class="menu-item">Persetujuan Transaksi</a></li>
+                                    <li class="is-shown {{ checkActiveMenu('verifikasi') }}"><a href="{{ url('/transaksi/verifikasi', $parameters = [], $secure = null) }}" class="menu-item">Verifikasi Transaksi</a></li>
                                 @endif
                             </ul>
                         </li>
@@ -127,8 +127,15 @@
 
                     <li class="nav-item has-sub {{ checkOpenedMenu('anggaran') }}"><a href=""><i class="ft-edit"></i><span data-i18n="" class="menu-title">Anggaran Kegiatan</span></a>
                         <ul class="menu-content">
-                            <li class="is-shown {{ checkActiveMenu('anggaran') }}"><a href="{{ url('/anggaran', $parameters = [], $secure = null) }}" class="menu-item">Informasi Anggaran</a>
-                            <li class="is-shown {{ checkActiveMenu('persetujuan') }}"><a href="{{ url('/anggaran/riwayat', $parameters = [], $secure = null) }}" class="menu-item">Riwayat Anggaran</a>
+                            <li class="is-shown {{ checkActiveMenu('anggaran') }}"><a href="{{ url('/anggaran', $parameters = [], $secure = null) }}" class="menu-item">Informasi Anggaran</a></li>
+                            <li class="is-shown {{ checkActiveMenu('riwayat') }}"><a href="{{ url('/anggaran/riwayat', $parameters = [], $secure = null) }}" class="menu-item">Riwayat Anggaran</a></li>
+                            <li class="is-shown nav-item has-sub{{ checkOpenedMenu('master') }}"><a href="" class="menu-title">Form Master</a>
+                                <ul class="menu-content">
+                                    <li class="is-shown {{ checkActiveMenu('pelaporan') }}"><a href="{{ url('/pelaporan', $parameters = [], $secure = null) }}" class="menu-item">Pelaporan Anggaran Kegiatan</a></li>
+                                    <li class="is-shown {{ checkActiveMenu('arahan') }}"><a href="{{ url('/pelaporan', $parameters = [], $secure = null) }}" class="menu-item">Arahan RUPS</a></li>
+                                    <li class="is-shown {{ checkActiveMenu('usulan') }}"><a href="{{ url('/pelaporan', $parameters = [], $secure = null) }}" class="menu-item">Usulan Program Prioritas</a></li>
+                                </ul>
+                            </li>
                         </ul>
                     </li>
                     @if(\Auth::user()->is_admin)
