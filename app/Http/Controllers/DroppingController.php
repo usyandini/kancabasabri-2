@@ -191,18 +191,34 @@ class DroppingController extends Controller
 
         $tariktunai = TarikTunai::where([['id_dropping', $id_drop], ['nominal_tarik', '>', 0], ['stat', 3]])->orderby('sisa_dropping', 'asc')->get();
 
-        $status = TarikTunai::where('id_dropping', $id_drop)->orderby('created_at', 'desc')->first();
+        $status = TarikTunai::where('id_dropping', $id_drop)->orderby('updated_at', 'desc')->first();
         $notif = '';
         if($tariktunai){
             $berkas = [];
             $berkas = $this->berkasTTModel;
+            $integrated = StagingTarikTunai::where('PIL_POSTED', 1);
             if($status['stat'] == 2){
-                $notif = RejectTarikTunai::where('id_tariktunai', $status['id'])->orderby('created_at', 'desc')->first();
+                $notif = RejectTarikTunai::where('id_tariktunai', $status['id'])->orderby('updated_at', 'desc')->first();
                 session()->flash('reject1', true);
-            }            
+            }
+            // elseif($status['stat'] == 3){
+            //     $integrated = StagingTarikTunai::where([['RECID', $status['id']],['PIL_POSTED', 1]])->orderby('PIL_TRANSDATE', 'desc')->first();
+            //     if($integrated){
+            //         session()->flash('integrated', true);
+            //     }else{
+            //         session()->flash('notintegrated', true);
+            //     }
+            // }
         }
         //dd($berkas);
-        return view('dropping.tariktunai.tariktunai', ['tariktunai' => $tariktunai, 'dropping' => $dropping, 'berkas' => $berkas, 'notif' => $notif]);
+        return view(
+            'dropping.tariktunai.tariktunai', 
+                ['tariktunai' => $tariktunai, 
+                 'dropping' => $dropping, 
+                 'berkas' => $berkas, 
+                 'notif' => $notif,
+                 'integrated' => $integrated
+                ]);
     }
 
     public function tarik_tunai_process($id_drop, Request $request)
@@ -500,6 +516,13 @@ class DroppingController extends Controller
             $kegiatan = Kegiatan::where('VALUE', $dataTT->SEGMEN_6)->first();
         }
 
+        $integrated = StagingTarikTunai::where([['RECID', $id], ['PIL_POSTED', 1]])->first();
+        if($integrated){
+            session()->flash('integrated', true);
+        }else{
+            session()->flash('integrated', false);
+        }
+
         return view('dropping.tariktunai.verifikasi', [
             'tariktunai' => $dataTT,
             'berkas' => $berkas,
@@ -585,6 +608,13 @@ class DroppingController extends Controller
             $divisi = Divisi::where('VALUE', $dataPD->SEGMEN_4)->first();
             $subpos = SubPos::where('VALUE', $dataPD->SEGMEN_5)->first();
             $kegiatan = Kegiatan::where('VALUE', $dataPD->SEGMEN_6)->first();
+        }
+
+        $integrated = StagingTarikTunai::where([['RECID', $id], ['PIL_POSTED', 1]])->first();
+        if($integrated){
+            session()->flash('integrated', true);
+        }else{
+            session()->flash('integrated', false);
         }
 
         return view('dropping.penyesuaian.verifikasilv2', [

@@ -60,6 +60,20 @@
                         </div>
                         @endif
 
+                        @if(session('integrated'))
+                        <div class="col-xs-7">
+                            <div class="alert alert-success">
+                              <b>Data penyesuaian dropping {{ $penyesuaian->cabang }} sudah tercatat journal di Axapta.</b>
+                            </div>
+                        </div>
+                        @elseif(!session('integrated'))
+                        <div class="col-xs-7">
+                            <div class="alert alert-warning">
+                              <b>Data penyesuaian dropping {{ $penyesuaian->cabang }} belum tercatat journal di Axapta.</b>
+                            </div>
+                        </div>
+                        @endif
+
                         @if (count($errors) > 0)
                             <div class="col-xs-7">
                                 <div class="alert alert-danger alert-dismissible" role="alert">
@@ -329,19 +343,10 @@
                 @section('customjs')
                 <!-- BEGIN PAGE VENDOR JS-->
                 <script type="text/javascript" src="{{ asset('app-assets/vendors/js/ui/jquery.sticky.js') }}"></script>
-                <script src="{{ asset('app-assets/vendors/js/forms/select/select2.full.min.js') }}" type="text/javascript"></script>
-                <script src="{{ asset('app-assets/vendors/js/forms/toggle/bootstrap-checkbox.min.js') }}"></script>
-                <script src="{{ asset('app-assets/vendors/js/forms/toggle/switchery.min.js') }}" type="text/javascript"></script>
                 <script src="{{ asset('app-assets/vendors/js/extensions/toastr.min.js') }}" type="text/javascript"></script>
-                <script src="{{ asset('app-assets/vendors/js/forms/validation/jqBootstrapValidation.js') }}" type="text/javascript"></script>
-                <script src="{{ asset('app-assets/vendors/js/forms/validation/jquery.validate.min.js') }}" type="text/javascript"></script>
-                <script src="{{ asset('app-assets/vendors/js/forms/icheck/icheck.min.js') }}" type="text/javascript"></script>
                 <!-- END PAGE VENDOR JS-->
                 <!-- BEGIN PAGE LEVEL JS-->
                 <script type="text/javascript" src="{{ asset('app-assets/js/scripts/ui/breadcrumbs-with-stats.min.js') }}"></script>
-                <script src="{{ asset('app-assets/js/scripts/forms/select/form-select2.min.js') }}" type="text/javascript"></script>
-                <script src="{{ asset('app-assets/js/scripts/forms/switch.min.js') }}" type="text/javascript"></script>
-                {{--<script src="{{ asset('app-assets/js/scripts/forms/validation/form-validation.js') }}" type="text/javascript"></script>--}}
                 <script src="{{ asset('app-assets/js/scripts/modal/components-modal.min.js') }}" type="text/javascript"></script>
                 <script src="{{ asset('app-assets/js/scripts/extensions/toastr.min.js') }}" type="text/javascript"></script>
                 <!-- END PAGE LEVEL JS-->  
