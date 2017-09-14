@@ -10,7 +10,7 @@ class Transaksi extends Model
 
     protected $table = 'transaksi';
 
-    protected $dateFormat = 'Y-m-d H:i:s';
+    protected $dateFormat;
     protected $dates = ['dob'];
 
     protected $fillable = [
@@ -27,6 +27,13 @@ class Transaksi extends Model
     	'created_by',
         'batch_id'
     ];
+
+    public function __construct()
+    {
+        if (\App::environment('local-ilyas')) {
+            $this->dateFormat = 'Y-m-d H:i:s';
+        }
+    }
 
     public function stat()
     {

@@ -19,10 +19,17 @@ class Notification extends Model
 
     protected $table = 'notifications';
 
-    protected $dateFormat = 'Y-m-d H:i:s';
+    protected $dateFormat;
     protected $dates = ['dob'];
 
     protected $fillable = ['receiver_id', 'type', 'batch_id', 'is_read'];
+
+    public function __construct()
+    {
+        if (\App::environment('local-ilyas')) {
+            $this->dateFormat = 'Y-m-d H:i:s';
+        }
+    }
 
     public function receiver()
     {

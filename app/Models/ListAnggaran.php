@@ -6,8 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class ListAnggaran extends Model
 {
-    //
-
     protected $connection = 'sqlsrv';
 
     protected $table = 'list_anggaran';

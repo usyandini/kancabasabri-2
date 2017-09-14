@@ -20,7 +20,7 @@ class BatchStatus extends Model
 
     protected $table = 'batches_status';
 
-    protected $dateFormat = 'Y-m-d H:i:s';
+    protected $dateFormat;
     protected $dates =['dob'];
 
     protected $fillable = [
@@ -28,6 +28,13 @@ class BatchStatus extends Model
     	'stat',
     	'submitted_by'
     ];
+    
+    public function __construct()
+    {
+        if (\App::environment('local-ilyas')) {
+            $this->dateFormat = 'Y-m-d H:i:s';
+        }
+    }
 
     public function submitter()
     {
