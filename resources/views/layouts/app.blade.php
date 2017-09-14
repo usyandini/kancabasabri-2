@@ -139,11 +139,17 @@
                         </ul>
                     </li>
                     @if(\Auth::user()->is_admin)
-                        <li class="nav-item has-sub {{ checkActiveMenu('user') }}"><a href=""><i class="ft-user"></i><span data-i18n="" class="menu-title">Manajemen User</span></a>
+                        <li class="nav-item has-sub {{ checkOpenedMenu('user') }}"><a href=""><i class="ft-user"></i><span data-i18n="" class="menu-title">Manajemen User</span></a>
                         <ul class="menu-content">
                             <li class="is-shown {{ checkActiveMenu('user') }}"><a href="{{ url('/user', $parameters = [], $secure = null) }}" class="menu-item">Informasi User</a>
-                            <li class="is-shown {{ checkActiveMenu('create') }}"><a href="{{ url('/user/create', $parameters = [], $secure = null) }}" class="menu-item">Tambah User</a>
+                            <li class="is-shown {{ checkActiveMenu('user/create') }}"><a href="{{ url('/user/create', $parameters = [], $secure = null) }}" class="menu-item">Tambah User</a>
                             <li class="is-shown {{ checkActiveMenu('persetujuan') }}"><a href="{{ url('/user', $parameters = [], $secure = null) }}" class="menu-item">Informasi Cabang dan Divisi</a>
+                        </ul>
+
+                        <li class="nav-item has-sub {{ checkOpenedMenu('item') }}"><a href=""><i class="ft-file"></i><span data-i18n="" class="menu-title">Manajemen Item</span></a>
+                        <ul class="menu-content">
+                            <li class="is-shown {{ checkActiveMenu('item') }}"><a href="{{ url('/item', $parameters = [], $secure = null) }}" class="menu-item">Manajemen Kombinasi Item</a>
+                            <li class="is-shown {{ checkActiveMenu('reason') }}"><a href="{{ url('/reason', $parameters = [], $secure = null) }}" class="menu-item">Manajemen Alasan Menolak</a>
                         </ul>
                     @endif
 
@@ -157,7 +163,7 @@
         </div>
         <!-- ////////////////////////////////////////////////////////////////////////////-->
 
-        <footer class="footer footer-static footer-dark navbar-border" style="">
+        <footer class="footer navbar-fixed-bottom footer-dark navbar-border" style="">
             <p class="clearfix blue-grey lighten-2 text-sm-center mb-0 px-2">
                 <span class="float-md-left d-xs-block d-md-inline-block">Copyright &copy; 2017 <a href="https://gumcode.net/"
                                                                                                   target="_blank" class="text-bold-800 grey darken-2">Gumcode </a>, All rights

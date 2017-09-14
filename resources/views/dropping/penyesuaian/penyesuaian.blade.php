@@ -116,7 +116,7 @@
                                     <div class="col-md-6">
                                       <div class="form-group">
                                         <label for="nominal">Nominal Dropping (Dalam IDR)</label>
-                                          <input type="text" readonly="" id="nominal_dropping" class="form-control" placeholder="{{ $dropping->DEBIT }}" name="nominal" value="{{ number_format($dropping->DEBIT) }}">
+                                          <input type="text" readonly="" id="nominal_dropping" class="form-control" placeholder="{{ $dropping->DEBIT }}" name="nominal_dropping" value="{{ number_format($dropping->DEBIT, 0, '', '.') }}">
                                       </div>
                                     </div>
                                     <div class="col-md-6 pull-right">
@@ -296,7 +296,7 @@
                                             <tr>
                                                 <td><b>{{ date('d-m-Y H:i:s', strtotime($kesesuaian->created_at)) }}</b></td>
                                                 <td>{{ $kesesuaian->cabang }}</td>
-                                                <td>IDR {{ number_format($kesesuaian->nominal) }}</td>
+                                                <td>IDR {{ number_format($kesesuaian->nominal, 0, '', '.') }}</td>
                                                 @if($kesesuaian->is_pengembalian == 1)
                                                 <td>Pengembalian</td>
                                                 @else
@@ -401,7 +401,7 @@
 
                   function forms_submit() {
                     var num = document.getElementById('p_nominal').value;
-                      var val = parseFloat(num.replace(/,/g, ''));
+                      var val = parseFloat(validDigits(num));
                       var mod = val%100
 
                       if(mod != 0 || val < 100){
@@ -415,7 +415,7 @@
                       var rx=  /(\d+)(\d{3})/;
                       return String(n).replace(/^\d+/, function(w){
                           while(rx.test(w)){
-                              w= w.replace(rx, '$1,$2');
+                              w= w.replace(rx, '$1.$2');
                           }
                           return w;
                       });

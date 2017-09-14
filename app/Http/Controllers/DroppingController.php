@@ -25,6 +25,7 @@ use App\Models\SubPos;
 use App\Models\Kegiatan;
 
 use App\Models\StagingTarikTunai;
+use App\Models\StagingPengembalian;
 
 use Validator;
 use App\Services\FileUpload;
@@ -142,7 +143,7 @@ class DroppingController extends Controller
                 'bank'          => $dropping->BANK_DROPPING, 
                 'journalnum'    => $dropping->JOURNALNUM, 
                 'transdate'     => date("d-m-Y", strtotime($dropping->TRANSDATE)), 
-                'debit'         => 'IDR '. number_format($dropping->DEBIT),
+                'debit'         => 'IDR '. number_format($dropping->DEBIT, 0, '','.'),
                 'credit'        => 'IDR '. number_format($dropping->KREDIT),
                 'banknum'       => $dropping->REKENING_DROPPING,
                 'company'       => $dropping->CABANG_DROPPING,
@@ -223,7 +224,8 @@ class DroppingController extends Controller
             [
                 'berkas.*' => 'required',
                 //'berkas.*' => 'required|mimes:jpg,jpeg,png,bmp|max:20000', // batasan image file max 20 mb
-                'nominal_tarik' => 'not_in:0|required|regex:/^\d+([\,]\d+)*([\.]\d+)?$/'
+                'nominal_tarik' => 'not_in:0|required|regex:/^\d+([\.]\d+)*([\,]\d+)?$/' //titik separator
+                //'nominal_tarik' => 'not_in:0|required|regex:/^\d+([\,]\d+)*([\.]\d+)?$/' //koma separator
                 //'nominal_tarik' => 'not_in:0|required|regex:/^[1-8](,[1-8])*$/'
             ], 
             [
@@ -237,7 +239,8 @@ class DroppingController extends Controller
         //----- jika ada record maka tariktunai berasal dari (nominal = sisa dropping sebelumnya) - nominal tarik  -----//
 
         $string_tarik = $request->nominal_tarik;
-        $tarik = floatval(str_replace('.', ',', str_replace(',', '', $string_tarik)));
+        $tarik = floatval(str_replace('.', '', $string_tarik));
+        //dd($tarik);
 
         if($validatorTT->passes() && $temp_sisa['stat'] !=1){
             if($temp_sisa){
@@ -450,7 +453,7 @@ class DroppingController extends Controller
             header('Content-Type: '.$berkas->type);
             header('Content-Disposition: inline; filename="'.basename($file).'"');
             //header('Expires: 0');
-            header('Expires: '.gmdate('D, d M Y H:i:s \G\M\T', time() + (60))); // 1 hour
+            header('Expires: '.gmdate('D, d M Y H:i:s \G\M\T', time() + (60*60))); // 1 hour
             header('Cache-Control: must-revalidate');
             //header('Pragma: public');
             header('Content-Length: '.$berkas->size);
@@ -629,9 +632,10 @@ class DroppingController extends Controller
             {
                 switch($reaction){
                     case 'verified':
-                        PenyesuaianDropping::where('id', $id_penyesuaian)->update(array('stat' => 8, '2_verified_by' => \Auth::id()));
+                        $type = PenyesuaianDropping::where('id', $id_penyesuaian)->update(array('stat' => 8, '2_verified_by' => \Auth::id()));
                         session()->flash('success', true);
                         NotificationSystem::send($id_penyesuaian, 14);
+                        $this->insertStagingPengembalian($id_penyesuaian);
                         break;
                     case 'rejected':
                         PenyesuaianDropping::where('id', $id_penyesuaian)
@@ -655,20 +659,50 @@ class DroppingController extends Controller
         $tariktunai = TarikTunai::where([['id', $id_tarik], ['stat', 3]])->first();
 
         $inputStagingTT = [
-            // 'DATAAREAID'
+            'DATAAREAID'       => 'asbr',
             // 'RECVERSION'
             // 'PARTITION'
             'RECID'             => $tariktunai['id'],
             'PIL_TRANSDATE'     => $tariktunai['updated_at'],
-            'PIL_TXT'           => $tariktunai['dropping']['TXT'],
-            'PIL_JOURNALNUM'    => $tariktunai['dropping']['JOURNALNUM'],
+            'PIL_TXT'           => $tariktunai['cabang'], //deskripsi optional
+            //'PIL_JOURNALNUM'    => $tariktunai['dropping']['JOURNALNUM'], //kosong
             'PIL_AMOUNT'        => $tariktunai['nominal_tarik'],
             'PIL_BANK'          => $tariktunai['akun_bank'],
             'PIL_ACCOUNT'       => $tariktunai['SEGMEN_1'],
-            'PIL_VOUCHER'       => $tariktunai['dropping']['JOURNALNAME']
+            //'PIL_VOUCHER'       => $tariktunai['dropping']['JOURNALNAME'] //kosong
+            //'PIL_POSTED'
+            'PIL_PROGRAM'       => $tariktunai['SEGMEN_2'],
+            'PIL_KPKC'          => $tariktunai['SEGMEN_3'],
+            'PIL_DIVISI'        => $tariktunai['SEGMEN_4'],
+            'PIL_SUBPOS'        => $tariktunai['SEGMEN_5'],
+            'PIL_MATAANGGARAN'  => $tariktunai['SEGMEN_6']
         ];
         
         StagingTariktunai::insert($inputStagingTT);   
+    }
+
+    public function insertStagingPengembalian($id_pengembalian)
+    {
+        $pengembalian = PenyesuaianDropping::where([['id', $id_pengembalian], ['is_pengembalian', 1], ['stat', 8]])->first();
+
+        if($pengembalian){
+            $inputStagingPL = [
+                'DATAAREAID'        => 'asbr',
+                'RECID'             => $pengembalian['id'],
+                'PIL_TRANSDATE'     => $pengembalian['updated_at'],
+                'PIL_TXT'           => $pengembalian['cabang'], //deskripsi optional
+                'PIL_AMOUNT'        => $pengembalian['nominal'],
+                'PIL_BANK'          => $pengembalian['akun_bank'],
+                'PIL_ACCOUNT'       => $pengembalian['SEGMEN_1'],
+                'PIL_PROGRAM'       => $pengembalian['SEGMEN_2'],
+                'PIL_KPKC'          => $pengembalian['SEGMEN_3'],
+                'PIL_DIVISI'        => $pengembalian['SEGMEN_4'],
+                'PIL_SUBPOS'        => $pengembalian['SEGMEN_5'],
+                'PIL_MATAANGGARAN'  => $pengembalian['SEGMEN_6']
+            ];
+        
+            StagingPengembalian::insert($inputStagingPL);   
+        }
     }
 
     public function redirect($url, $statusCode = 303)
