@@ -143,7 +143,7 @@ class DroppingController extends Controller
                 'bank'          => $dropping->BANK_DROPPING, 
                 'journalnum'    => $dropping->JOURNALNUM, 
                 'transdate'     => date("d-m-Y", strtotime($dropping->TRANSDATE)), 
-                'debit'         => 'IDR '. number_format($dropping->DEBIT),
+                'debit'         => 'IDR '. number_format($dropping->DEBIT, 0, '','.'),
                 'credit'        => 'IDR '. number_format($dropping->KREDIT),
                 'banknum'       => $dropping->REKENING_DROPPING,
                 'company'       => $dropping->CABANG_DROPPING,
@@ -224,7 +224,8 @@ class DroppingController extends Controller
             [
                 'berkas.*' => 'required',
                 //'berkas.*' => 'required|mimes:jpg,jpeg,png,bmp|max:20000', // batasan image file max 20 mb
-                'nominal_tarik' => 'not_in:0|required|regex:/^\d+([\,]\d+)*([\.]\d+)?$/'
+                'nominal_tarik' => 'not_in:0|required|regex:/^\d+([\.]\d+)*([\,]\d+)?$/' //titik separator
+                //'nominal_tarik' => 'not_in:0|required|regex:/^\d+([\,]\d+)*([\.]\d+)?$/' //koma separator
                 //'nominal_tarik' => 'not_in:0|required|regex:/^[1-8](,[1-8])*$/'
             ], 
             [
@@ -238,7 +239,8 @@ class DroppingController extends Controller
         //----- jika ada record maka tariktunai berasal dari (nominal = sisa dropping sebelumnya) - nominal tarik  -----//
 
         $string_tarik = $request->nominal_tarik;
-        $tarik = floatval(str_replace('.', ',', str_replace(',', '', $string_tarik)));
+        $tarik = floatval(str_replace('.', '', $string_tarik));
+        //dd($tarik);
 
         if($validatorTT->passes() && $temp_sisa['stat'] !=1){
             if($temp_sisa){
@@ -451,7 +453,7 @@ class DroppingController extends Controller
             header('Content-Type: '.$berkas->type);
             header('Content-Disposition: inline; filename="'.basename($file).'"');
             //header('Expires: 0');
-            header('Expires: '.gmdate('D, d M Y H:i:s \G\M\T', time() + (60))); // 1 hour
+            header('Expires: '.gmdate('D, d M Y H:i:s \G\M\T', time() + (60*60))); // 1 hour
             header('Cache-Control: must-revalidate');
             //header('Pragma: public');
             header('Content-Length: '.$berkas->size);

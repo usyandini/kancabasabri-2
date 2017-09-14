@@ -109,13 +109,13 @@
                                     <div class="col-md-6 pull-right">
                                       <div class="form-group">
                                         <label for="nominal_tarik">Nominal Penyesuaian (Dalam IDR)</label>
-                                          <input type="text" id="nominal" readonly="" name="nominal" placeholder="Nominal Penyesuaian" class="form-control" value="{{ number_format($penyesuaian->nominal) }}" disabled>
+                                          <input type="text" id="nominal" readonly="" name="nominal" placeholder="Nominal Penyesuaian" class="form-control" value="{{ number_format($penyesuaian->nominal, 0, '', '.') }}" disabled>
                                       </div>
                                     </div>
                                     <div class="col-md-6">
                                       <div class="form-group">
                                         <label for="nominal_tarik">Nominal Awal Dropping (Dalam IDR)</label>
-                                          <input type="text" id="nominal_dropping" readonly="" name="nominal_dropping" class="form-control" placeholder="Nominal Dropping" value="{{ number_format($penyesuaian->nominal_dropping) }}" disabled>
+                                          <input type="text" id="nominal_dropping" readonly="" name="nominal_dropping" class="form-control" placeholder="Nominal Dropping" value="{{ number_format($penyesuaian->nominal_dropping, 0, '', '.') }}" disabled>
                                       </div>
                                     </div>
                                     <div class="col-md-6 pull-right">
