@@ -303,6 +303,15 @@ class TransaksiController extends Controller
         return redirect()->back();
     }
 
+
+    public function persetujuan2()
+    {
+        
+        return view('transaksi.persetujuan2');
+    }   
+
+
+
     // lvl 1
     public function persetujuan($batch)
     {

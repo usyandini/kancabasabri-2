@@ -65,11 +65,9 @@
                                               </div>
                                             </div>
                                             @if($filters)
-                                            <div class="col-xs-2">
-                                              <div class="form-group">
-                                                <a href="{{ url('transaksi') }}" class="btn btn-danger"><i class="fa fa-times"></i> Atur Ulang Pencarian</a>
-                                              </div>
-                                            </div>
+                                            &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                                            
+                                            <a href="{{ url('transaksi') }}"><button type="button" class="btn btn-danger" ><i class="fa fa-times"></i> Atur Ulang Pencarian</button></a>
                                             @endif
                                           </div>
                                         </form>
@@ -216,9 +214,14 @@
                                                         <button onclick="populateBatchInput()" class="btn btn-primary pull-right" id="simpan" value="Simpan"><i class="fa fa-check"></i> Simpan perubahan batch</button>
                                                     </div>
                                                 </div>
-                                                <div class="col-xs-3 pull-right">
+                                                <div class="col-xs-6">
                                                   <div class="form-group">
-                                                      <button onclick="checkBatchSubmit()" class="btn btn-danger pull-right" id="button_status"><i class="fa fa-check-circle"></i> Submit batch untuk Verifikasi</button>
+                                                      
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-4">
+                                                  <div class="form-group">
+                                                      <button onclick="checkBatchSubmit()" class="btn btn-danger" id="button_status"><i class="fa fa-check-circle"></i> Submit batch untuk Verifikasi </button>
                                                     </div>
                                                 </div>
                                               </div>

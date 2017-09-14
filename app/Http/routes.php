@@ -57,6 +57,7 @@ Route::group(['middleware' => 'auth'], function() {
 
 		Route::group(['middleware' => 'previlege:transaksi,2,3,4,6,7'], function() {
    			Route::get('/persetujuan/{id_batch}', 'TransaksiController@persetujuan');
+   			Route::get('/persetujuan/', 'TransaksiController@persetujuan2');
 			Route::get('/verifikasi/{id_batch}', 'TransaksiController@verifikasi');
 
 			Route::post('/submit/verifikasi/{type}/{id_batch}', 'TransaksiController@submitVerification');
@@ -94,5 +95,7 @@ Route::group(['middleware' => 'auth'], function() {
 
 	Route::resource('/user', 'UserController');
 	Route::post('/user/restore/{id}', 'UserController@restore');
+
+	//Route::resource('/item', 'ItemController');
 
 });
