@@ -10,29 +10,12 @@ class JenisUser extends Model
     use SoftDeletes;
     
     protected $connection = 'sqlsrv';
+    protected $table = 'jenis_user';
 
-	protected $dateFormat;
+	protected $dateFormat = 'Y-m-d H:i:s';
     protected $dates = ['dob'];
 
     protected $casts = ['perizinan' => 'array'];
     
-    protected $fillable = [
-        'name', 
-        'email', 
-        'password', 
-        'username', 
-        'created_by', 
-        'updated_by', 
-        'divisi', 
-        'cabang',
-        'perizinan',
-        'jenis_user'
-    ];
-
-    public function __construct()
-    {
-        if (\App::environment('local-ilyas')) {
-            $this->dateFormat = 'Y-m-d H:i:s';
-        }
-    }
+    protected $fillable = ['nama', 'perizinan', 'desc', 'created_by', 'updated_by'];
 }

@@ -20,17 +20,10 @@ class Batch extends Model
 
 	protected $table = 'batches';
 
-    protected $dateFormat;
+    protected $dateFormat = 'Y-m-d H:i:s';
     protected $dates = ['dob'];
 
 	protected $fillable = ['created_by'];    
-
-    public function __construct()
-    {
-        if (\App::environment('local-ilyas')) {
-            $this->dateFormat = 'Y-m-d H:i:s';
-        }
-    }
 
 	public function creator()
 	{

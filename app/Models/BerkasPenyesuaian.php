@@ -10,8 +10,8 @@ class BerkasPenyesuaian extends Model
 
     protected $table = 'berkas_penyesuaian';
 
-    protected $dateFormat;
-    protected $dates =['dob'];
+    protected $dateFormat = 'Y-m-d H:i:s';
+    protected $dates = ['dob'];
 
     protected $fillable = [
     	'name',
@@ -19,11 +19,4 @@ class BerkasPenyesuaian extends Model
     	'type',
     	'data'
     ];
-
-    public function __construct()
-    {
-        if (\App::environment('local-ilyas')) {
-            $this->dateFormat = 'Y-m-d H:i:s';
-        }
-    }
 }

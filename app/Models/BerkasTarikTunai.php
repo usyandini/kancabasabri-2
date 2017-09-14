@@ -10,7 +10,7 @@ class BerkasTarikTunai extends Model
 
     protected $table = 'berkas_tariktunai';
 
-    protected $dateFormat;
+    protected $dateFormat = 'Y-m-d H:i:s';
     protected $dates =['dob'];
 
     protected $fillable = [
@@ -20,11 +20,4 @@ class BerkasTarikTunai extends Model
     	'type',
     	'data'
     ];
-
-    public function __construct()
-    {
-        if (\App::environment('local-ilyas')) {
-            $this->dateFormat = 'Y-m-d H:i:s';
-        }
-    }
 }
