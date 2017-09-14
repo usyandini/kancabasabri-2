@@ -106,7 +106,7 @@
                                       <div class="form-group">
                                         <label for="nominal">Nominal Dropping (Dalam IDR)</label>
 
-                                          <input type="text" readonly="" class="form-control" placeholder="{{ $dropping->DEBIT }}" name="nominal_dropping" value="{{ number_format($dropping->DEBIT) }}">
+                                          <input type="text" readonly="" class="form-control" placeholder="{{ $dropping->DEBIT }}" name="nominal_dropping" value="{{ number_format($dropping->DEBIT, 0, '','.') }}">
 
                                           <input type="hidden" id="nominal" name="nominal" value="{{ $dropping->DEBIT }}">
                                       </div>
@@ -197,9 +197,9 @@
                                             <tr>
                                               <th>{{ date('d-m-Y H:i:s', strtotime($history->created_at)) }}</th>
 
-                                              <td>IDR {{ number_format($history->nominal) }}</td>
-                                              <td>IDR {{ number_format($history->nominal_tarik) }}</td>
-                                              <td>IDR {{ number_format($history->sisa_dropping) }}</td>
+                                              <td>IDR {{ number_format($history->nominal, 0, '','.') }}</td>
+                                              <td>IDR {{ number_format($history->nominal_tarik, 0, '','.') }}</td>
+                                              <td>IDR {{ number_format($history->sisa_dropping, 0, '','.') }}</td>
                                               <td>
                                               @foreach($berkas->where('id_tariktunai', $history->id)->get() as $value)
                                                 <li><a href="{{ url('dropping/tariktunai/berkas/download').'/'.$value['id'] }}" target="_blank">{{ $value['name'] }}</a></li>
@@ -288,7 +288,8 @@
                 <script type="text/javascript">
                   function forms_submit() {
                       var num = document.getElementById('nominal_tarik').value;
-                      var val = parseFloat(num.replace(/,/g, ''));
+                      //var val = parseFloat(num.replace(/./g, ''));
+                      var val = parseFloat(validDigits(num));
                       var mod = val%100
 
                       if(mod != 0 || val < 100){
@@ -303,7 +304,7 @@
                       var rx=  /(\d+)(\d{3})/;
                       return String(n).replace(/^\d+/, function(w){
                           while(rx.test(w)){
-                              w= w.replace(rx, '$1,$2');
+                              w= w.replace(rx, '$1.$2');
                           }
                           return w;
                       });

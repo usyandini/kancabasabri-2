@@ -102,21 +102,21 @@
                                     <div class="col-md-6">
                                       <div class="form-group">
                                         <label for="nominal">Saldo (Dalam IDR)</label>
-                                          <input type="text" readonly="" class="form-control" placeholder="Saldo" name="nominal" value="{{ number_format($tariktunai->nominal) }}" disabled>
+                                          <input type="text" readonly="" class="form-control" placeholder="Saldo" name="nominal" value="{{ number_format($tariktunai->nominal, 0, '', '.') }}" disabled>
                                           <input type="hidden" name="v_nominal" value="{{ $tariktunai->nominal }}">
                                       </div>
                                     </div>
                                     <div class="col-md-6 pull-right">
                                       <div class="form-group">
                                         <label for="nominal_tarik">Sisa Dropping (Dalam IDR)</label>
-                                          <input type="text" id="sisa_dropping" readonly="" name="sisa_dropping" placeholder="Sisa Dropping" class="form-control" value="{{ number_format($tariktunai->sisa_dropping) }}" disabled>
+                                          <input type="text" id="sisa_dropping" readonly="" name="sisa_dropping" placeholder="Sisa Dropping" class="form-control" value="{{ number_format($tariktunai->sisa_dropping, 0, '', '.') }}" disabled>
                                           <input type="hidden" name="v_sisa_dropping" value="{{ $tariktunai->sisa_dropping }}">
                                       </div>
                                     </div>
                                     <div class="col-md-6">
                                       <div class="form-group">
                                         <label for="nominal_tarik">Nominal Tarik Tunai (Dalam IDR)</label>
-                                          <input type="text" id="nominal_tarik" readonly="" name="nominal_tarik" class="form-control" placeholder="Nominal Tarik Tunai" value="{{ number_format($tariktunai->nominal_tarik) }}" disabled>
+                                          <input type="text" id="nominal_tarik" readonly="" name="nominal_tarik" class="form-control" placeholder="Nominal Tarik Tunai" value="{{ number_format($tariktunai->nominal_tarik, 0, '', '.') }}" disabled>
                                           <input type="hidden" name="v_nominal_tarik" value="{{ $tariktunai->nominal_tarik }}">
                                       </div>
                                     </div>
@@ -142,7 +142,7 @@
                                       <div class="form-group">
                                         <h4 class="form-section">Daftar Berkas</h4>
                                         <table>
-                                            @forelse($berkas as $value)
+                                          @forelse($berkas as $value)
                                             <tr>
                                               <li><a href="{{ url('dropping/tariktunai/berkas/download').'/'.$value->id }}" target="_blank">{{ $value->name }}</a></li>
                                             </tr>

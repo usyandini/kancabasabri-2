@@ -4,11 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class StagingTarikTunai extends Model
+class StagingPengembalian extends Model
 {
     protected $connection = 'sqlsrv2';
 
-    protected $table = 'PIL_KCTARIKTUNAI';
+    protected $table = 'PIL_KCPENGEMBALIAN';
 
     public $timestamps = false;
 
