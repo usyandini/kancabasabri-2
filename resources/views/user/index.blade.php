@@ -47,7 +47,6 @@
 			                            <th id="filterable">Email</th>
 			                            <th id="filterable">Kantor Cabang</th>
 			                            <th>Terakhir diperbarui</th>
-			                            <th>Administrator</th>
 			                            <th id="filterable">Status</th>
 			                            <th>Aksi</th>
 			                          </tr>
@@ -60,10 +59,8 @@
 			                        			<td>{!! $user->email ? $user->email : '-' !!}</td>
 			                        			<td>{!! $user['kantorCabang']['DESCRIPTION'] ? $user['kantorCabang']['DESCRIPTION'] : '-' !!}</td>
 			                        			<td>{{ date('Y-m-d, H:m', strtotime($user->updated_at)) }}</td>
-			                        			<td>{{ $user->is_admin == 1 ? 'Administrator' : '-' }}</td>
 			                        			{!! $user->deleted_at ? '<td class="red">Deleted</td>' : '<td class="blue">Aktif</td>' !!}
 			                        			<td>
-			                        				{{-- <a class="btn btn-sm btn-primary" href="{{ url('user').'/'.$user->id }}"><i class="fa fa-info"></i> Detil</a> --}}
 			                        				@if(!$user->deleted_at)
 			                        					<a class="btn btn-sm btn-primary" href="{{ url('user').'/'.$user->id.'/edit' }}"><i class="fa fa-edit"></i> Edit</a>
 		                        					@endif
@@ -85,7 +82,6 @@
 			                            <th>Username</th>
 			                            <th>Email</th>
 			                            <th>Kantor Cabang</th>
-			                            <th></th>
 			                            <th></th>
 			                            <th>Deleted</th>
 			                            <th></th>

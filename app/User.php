@@ -24,6 +24,8 @@ class User extends Authenticatable
 
     protected $dateFormat = 'Y-m-d H:i:s';
     protected $dates = ['dob'];
+
+    protected $casts = ['perizinan' => 'array'];
     
     protected $fillable = [
         'name', 
@@ -34,7 +36,8 @@ class User extends Authenticatable
         'updated_by', 
         'divisi', 
         'cabang',
-        'perizinan'
+        'perizinan',
+        'jenis_user'
     ];
 
     

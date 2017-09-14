@@ -11,16 +11,6 @@ use App\Models\Divisi;
 use App\Models\KantorCabang;
 use Validator;
 
-// ------- PERIZINAN --------
-//  0 = Not authorized at all
-//  1 = Staff
-//  2 = Approver
-//  3 = Staff + Approver
-//  4 = Superuser
-//  5 = Staff + Superuser
-//  6 = Approver + Superuser
-//  7 = Staff + Approver + Superuser
-// --------------------------
 class UserController extends Controller
 {
     public function __construct()
@@ -43,15 +33,13 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
+        // dd($request->all());
     	$input = $request->except('_method', '_token');
     	$validator = $this->validateInputs($input);
 
     	if ($validator->passes()) {
-		    $input['perizinan_dropping'] = isset($input['perizinan_dropping']) ? array_sum($input['perizinan_dropping']) : 0;
-            $input['perizinan_transaksi'] = isset($input['perizinan_transaksi']) ? array_sum($input['perizinan_transaksi']) : 0;
-            $input['perizinan_anggaran'] = isset($input['perizinan_anggaran']) ? array_sum($input['perizinan_anggaran']) : 0;
-
-            $input['password'] = bcrypt($input['password']);
+            // $input['password'] = bcrypt($input['password']);
+            $input['password'] = bcrypt('rahasia');
             $input['created_by'] = \Auth::user()->id;
     		User::create($input);
 
@@ -65,6 +53,7 @@ class UserController extends Controller
     public function edit($id)
     {
     	$user = User::withTrashed()->where('id', $id)->first();
+        // dd($user->perizinan[info-t]);
     	return view('user.edit', [
             'user' => $user, 
             'cabang' => KantorCabang::get(),
@@ -73,16 +62,19 @@ class UserController extends Controller
 
     public function update(Request $request, $id)
     {    	
+        // dd($request->all());
     	$input = $request->except('_token' , '_method');
-        if ($input['password'] == '') { unset($input['password']); unset($input['password_confirmation']); }
+        // if ($input['password'] == '') { unset($input['password']); unset($input['password_confirmation']); }
         $validator = $this->validateInputs($input, $id);
 
     	if ($validator->passes()) {
-            $input['perizinan_dropping'] = isset($input['perizinan_dropping']) ? array_sum($input['perizinan_dropping']) : 0;
-            $input['perizinan_transaksi'] = isset($input['perizinan_transaksi']) ? array_sum($input['perizinan_transaksi']) : 0;
-            $input['perizinan_anggaran'] = isset($input['perizinan_anggaran']) ? array_sum($input['perizinan_anggaran']) : 0;
             $input['updated_by'] = \Auth::user()->id;
+            if ($input['perizinan']['data-cabang'] == 'off') { unset($input['perizinan']['data-cabang']); }
 
+            $user = User::withTrashed()->where('id', $id)->first();
+            $user->perizinan = $input['perizinan'];
+            $user->save();
+            unset($input['perizinan']);
     		User::where('id', $id)->update($input);
 	    	$user = User::withTrashed()->where('id', $id)->first();
 
