@@ -401,6 +401,7 @@ class AnggaranController extends Controller
                                     'type'           => $file_type,
                                     'size'           => $file_size,
                                     'data'           => $base64[1],
+                                    'active'         => '1',
                                     'created_at'    => \Carbon\Carbon::now(),
                                     'updated_at'    => \Carbon\Carbon::now()];
 
@@ -694,7 +695,10 @@ class AnggaranController extends Controller
                 $return = $this->kanCabModel->select('DESCRIPTION', 'VALUE')->where("VALUE",$id)->get();
                 break;
             case 'mataanggaran':
-                $return = $this->kegiatanModel->get();
+                $return = $this->kegiatanModel->orderBy('DESCRIPTION','ASC')->get();
+                break;
+            case 'nd_surat':
+                $return = $this->anggaranModel->select('nd_surat')->orderBy('nd_surat','ASC')->get();
                 break;
         }
         return response()->json($return);

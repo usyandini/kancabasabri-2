@@ -129,13 +129,10 @@
                         <ul class="menu-content">
                             <li class="is-shown {{ checkActiveMenu('anggaran') }}"><a href="{{ url('/anggaran', $parameters = [], $secure = null) }}" class="menu-item">Informasi Anggaran</a></li>
                             <li class="is-shown {{ checkActiveMenu('riwayat') }}"><a href="{{ url('/anggaran/riwayat', $parameters = [], $secure = null) }}" class="menu-item">Riwayat Anggaran</a></li>
-                            <li class="is-shown nav-item has-sub{{ checkOpenedMenu('master') }}"><a href="" class="menu-title">Form Master</a>
-                                <ul class="menu-content">
-                                    <li class="is-shown {{ checkActiveMenu('pelaporan') }}"><a href="{{ url('/pelaporan', $parameters = [], $secure = null) }}" class="menu-item">Pelaporan Anggaran Kegiatan</a></li>
-                                    <li class="is-shown {{ checkActiveMenu('arahan') }}"><a href="{{ url('/pelaporan', $parameters = [], $secure = null) }}" class="menu-item">Arahan RUPS</a></li>
-                                    <li class="is-shown {{ checkActiveMenu('usulan') }}"><a href="{{ url('/pelaporan', $parameters = [], $secure = null) }}" class="menu-item">Usulan Program Prioritas</a></li>
-                                </ul>
-                            </li>
+                            <li class="is-shown {{ checkActiveMenu('pelaporan') }}"><a href="{{ url('/anggaran/pelaporan/laporan_anggaran', $parameters = [], $secure = null) }}" class="menu-item">Pelaporan Anggaran Kegiatan</a></li>
+                            <li class="is-shown {{ checkActiveMenu('arahan') }}"><a href="{{ url('/anggaran/pelaporan/arahan_rups', $parameters = [], $secure = null) }}" class="menu-item">Arahan RUPS</a></li>
+                            <li class="is-shown {{ checkActiveMenu('usulan') }}"><a href="{{ url('/anggaran/pelaporan/usulan_program', $parameters = [], $secure = null) }}" class="menu-item">Usulan Program Prioritas</a></li>
+                              
                         </ul>
                     </li>
                     @if(\Auth::user()->is_admin)

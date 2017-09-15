@@ -117,26 +117,38 @@
                         <div class="card">
                             <div class="card-body collapse in">
                                 <div class="card-block">
-                                  <form method="POST" action="" id="insertAnggaran" name="insertAnggaran" enctype="multipart/form-data">
+                                  <form method="POST" action="{{url('anggaran/submit/tambah_pelaporan') }}" id="insertLaporanAnggaran" name="insertLaporanAnggaran" enctype="multipart/form-data">
                                   <div class="row">
                                   <div class="col-xs-12">
                                     {{ csrf_field() }}
                                     <div class="col-xs-2">
                                         <div class="form-group">
                                           <label>Tanggal</label>
+                                          @if($setting['insert'])
                                           <input id="tanggal" name="tanggal" class="form-control" value="{{date('d/m/Y')}}"readOnly>
+                                          @else
+                                          <input id="tanggal" name="tanggal" class="form-control" readOnly>
+                                          @endif
                                         </div>
                                     </div>
                                     <div class="col-xs-3">
                                         <div class="form-group">
                                           <label>Tanggal Mulai</label>
+                                          @if($setting['insert'])
                                           <input type="date" id="tanggal_mulai" name="tanggal_mulai" min = <?php echo date('Y-m-d')?> onchange="startDate()" class="form-control">
+                                          @else
+                                          <input id="tanggal_mulai" name="tanggal_mulai" class="form-control" readOnly>
+                                          @endif
                                         </div>
                                     </div>
                                     <div class="col-xs-3">
                                         <div class="form-group">
                                           <label>Durasi</label>
-                                          <input type="date"  id="durasi" name="durasi" class="date form-control">
+                                          @if($setting['insert'])
+                                          <input type="date"  id="tanggal_selesai" name="tanggal_selesai" class="date form-control">
+                                          @else
+                                          <input id="tanggal_selesai" name="tanggal_selesai" class="form-control" readOnly>
+                                          @endif
                                         </div>
                                     </div>
                                   </div>
@@ -145,6 +157,8 @@
                                     <div class="col-xs-2">
                                       <div class="form-group">
                                         <label>TW</label>
+
+                                        @if($setting['insert'])
                                         <select class="select2 form-control" name="tw_dari" id="tw_dari">
                                           <option value="0">None</option>
                                           <option value="1">I</option>
@@ -152,6 +166,9 @@
                                           <option value="3">III</option>
                                           <option value="4">IV</option>
                                         </select>
+                                        @else
+                                        <input id="tw_dari" name="tw_dari" class="form-control"readOnly>
+                                        @endif
                                       </div>
                                     </div>
                                     <div class="col-xs-1">
@@ -164,6 +181,7 @@
                                     <div class="col-xs-2">
                                       <div class="form-group">
                                         <label>TW</label>
+                                         @if($setting['insert'])
                                         <select class="select2 form-control" name="tw_ke" id="tw_ke">
                                           <option value="0">None</option>
                                           <option value="1">I</option>
@@ -171,19 +189,30 @@
                                           <option value="3">III</option>
                                           <option value="4">IV</option>
                                         </select>
+                                        @else
+                                        <input id="tw_ke" name="tw_ke" class="form-control" readOnly>
+                                        @endif
                                       </div>
                                     </div>
                                     <div class="col-xs-7">
                                       <div class="form-group">
                                         <label>Unit Kerja</label>
+                                        @if($setting['insert'])
                                         <select class="select2 form-control" name="unit_kerja" id="unit_kerja" onchange="changeUnitKerja()">
-                                          <option value="0">None</option>
+                                          <option value="None">None</option>
                                         </select>
+                                         @else
+                                        <input id="unit_kerja" name="unit_kerja" class="form-control" readOnly>
+                                        @endif
                                       </div>
                                     </div>
                                   </div>
                                   <div class="col-xs-12">
-                                    <input type="hidden" name="list_anggaran_values" id="list_anggaran_values">
+                                    <input type="hidden" name="list_laporan_anggaran" id="list_laporan_anggaran">
+                                    <input type="hidden" name="kategori" id="kategori" value="{{$setting['kategori']}}">
+                                    <input type="hidden" name="status" id="status" value="{{$setting['status']}}">
+                                    <input type="hidden" name="id_form_master" id="id_form_master" value="-1">
+                                    <input type="hidden" name="jenis_berkas" id="jenis_berkas" value="{{$setting['jenis_berkas']}}">
                                     <div id="file_grid"></div>
                                       <!-- <p>Grid with filtering, editing, inserting, deleting, sorting and paging. Data provided by controller.</p> -->
                                     <div class="col-xs-12">
@@ -193,15 +222,16 @@
                                     </div>
                                   </div>
 
-                                  
+                                  @if($setting['insert'])
                                   <div class="row col-xs-12" style="display:block">
                                     <br />
                                     <div class="pull-right">
                                       <div class="form-group">
-                                        <div class="btn btn-success"><i class="fa fa-send"></i> Kirim</div>
+                                        <div class="btn btn-success" onclick="check()"><i class="fa fa-send"></i> Kirim</div>
                                       </div>
                                     </div>
                                   </div>
+                                  @endif
                                 </div>
                                 
                                 </form>
@@ -220,11 +250,7 @@
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                           <span aria-hidden="true">&times;</span>
                           </button>
-                          @if($editable)
-                          <h4 class="modal-title" id="titleModal">Unggah Berkas</h4>
-                          @else
-                          <h4 class="modal-title" id="titleModal">Unduh Berkas</h4>
-                          @endif
+                          <h4 class="modal-title" id="titleModal">Berkas Pendukung</h4>
                       </div>
                       <div class="modal-body" id="confirmation-msg">
                         <div class="row">
@@ -234,21 +260,43 @@
                           </div>
                           <br />
                           <br />
-                          @if($editable)
                           <input type="file" id="files" name="files" multiple>
-                          @endif
                         </div>
                       </div>
                       <div class="modal-footer">
                         <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">Kembali</button>
-                        @if($editable)
                         <button id="simpan_file" class="btn btn-outline-primary">Simpan</button>
-                        @endif
                       </div>
                     </div>
                   </div>
                 </div>
                 @endsection
+
+                <div class="modal fade text-xs-left" id="modal_pernyataan" tabindex="-1" role="dialog" aria-labelledby="myModalLabel20"
+                aria-hidden="true">
+                  <div class="modal-dialog modal-md" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h4 class="modal-title" id="title_modal_pernyataan">Pernyataan Pengiriman Form Master Laporan Anggaran Kegiatan</h4>
+                      </div>
+                      <div class="modal-body" id="confirmation-msg">
+                        <div class="row">
+                          <div class="col-md-12" id="teks_pernyataan">
+                            <p>Apakah anda yakin Akan Mengirim Form Master Laporan Anggaran Kegiatan Kepada Unit Kerja Renbang?</p>
+                          </div>
+                          
+                        </div>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">Tidak, kembali</button>
+                        <button type="button" id="button_peryataan" onclick="sumbit_post()" class="btn btn-outline-primary">Ya, kirim</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
 
                 @section('customjs')
                 <!-- BEGIN PAGE VENDOR JS-->
@@ -272,7 +320,10 @@
                   var hasil = [];
                   var count_file=0;
                   var tempIdCounter = 0;
+                  var insertAble = {{$setting['insert']?1:0}};
+                  var editAble = {{$setting['edit']?1:0}};
                   var unit_field_insert,unit_field_edit = null;
+                  var click_berkas = true;
                   $(document).ready(function() {
 
                     $("#basicScenario").jsGrid( {
@@ -282,8 +333,8 @@
                       paging: true,
                       autoload: true,
 
-                      editing: true,
-                      inserting: true,
+                      editing: insertAble == 1 ? true : false,
+                      inserting: insertAble == 1 ? true : false,
                       pageSize: 5,
                       pageButtonCount: 10,
                       deleteConfirm: "Apalakh anda yakin akan menghapus anggaran baris ini?",
@@ -307,19 +358,39 @@
                           item["isNew"] = true;
                           item["tempId"] = tempIdCounter++;
                           item["id"] = -1;
+                          item["id_before"] = 0;
                           item["delete"]="none";
                                                       
                           inputs.push(item);
+                          click_berkas = true;
+                          if(upload_file[item["tempId"]]!=null){
+                            for(i = 0 ;i< upload_file[item["tempId"]].length;i++){
+                              readerPrev(i,item["tempId"]);
+                            }
+                          } 
+                          
 
                         },
                         updateItem: function(item) {
                           item["delete"]="none";
                           inputs.splice(item["tempId"]-1, 1, item);  
+                          click_berkas = true;
+                          if(upload_file[item["tempId"]]!=null){
+                            for(i = 0 ;i< upload_file[item["tempId"]].length;i++){
+                              readerPrev(i,item["tempId"]);
+                            }
+                          } 
                         },
                       }, 
                       fields: [
                           {
                             name: "id",
+                            css: "hide",
+                            width: 0,
+
+                          },
+                          {
+                            name: "id_before",
                             css: "hide",
                             width: 0,
 
@@ -338,12 +409,12 @@
                             validate: {
                               message : "Pilih Unit Kerja Terlebih Dahulu." ,
                               validator :function(value, item) {
-                                  return value != "" ;
+                                  return value != "None" ;
                               } 
                             },
                             insertTemplate: function() {
                               unit_field_insert = jsGrid.fields.text.prototype.insertTemplate.call(this);
-                              $(unit_field_insert).val(document.getElementById("unit_kerja").text);
+                              $(unit_field_insert).val(document.getElementById("unit_kerja").value);
                               return unit_field_insert; 
                             },
                             editTemplate: function(value) {
@@ -355,7 +426,7 @@
                           { name: "program_prioritas", 
                             type: "select", 
                             title: "Program Prioritas", 
-                            width: 140,
+                            width: 170,
                             valueField: "Id", 
                             textField: "Name",
                             items:[
@@ -373,15 +444,31 @@
                               } 
                             }
                           },
-                          { name: "saran_dicapai", 
+                          { name: "sasaran_dicapai", 
                             type: "textarea", 
-                            title: "Saran Yang ingin Di Capai", 
-                            width: 300
+                            title: "Sasaran Yang ingin Di Capai", 
+                            width: 300,
+                            validate: {
+                              message : "Isi Saran yang ingin di capai terlebih dahulu." ,
+                              validator :function(value, item) {
+                                  return value != "" ;
+                              } 
+                            }
                           },
                           { name: "uraian_progress", 
                             type: "textarea", 
                             title: "Uraian Progress", 
-                            width: 300
+                            readOnly:true,
+                            width: 300,
+                            validate: {
+                              message : "Isi Uraian Progress yang ingin di capai terlebih dahulu." ,
+                              validator :function(value, item) {
+
+                                  // if()
+                                  // return value != "" ;
+                                  return true;
+                              } 
+                            }
                           },
                           { name: "file", align:"center", title: "Berkas",  width: 150 ,
 
@@ -536,15 +623,33 @@
                       $('#modal_berkas').modal('show');
                   };
 
-                  function cariRiwayat(){
-                    if(document.getElementById("cari_keyword").value==""){
-                      toastr.error("Silahkan Isi Kata Kunci Pencarian. Terima kasih.", "Kata Kunci Pencarian Kosong.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
-                    }else if(document.getElementById("cari_unit_kerja").value=="0"){
-                      toastr.error("Silahkan Pilih Salah Satu Unit Kerja. Terima kasih.", "Unit Kerja Belum Dipilih.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
+                  function check(){
+
+                    if(document.getElementById("tanggal_mulai").value == ""){
+                      toastr.error("Silahkan Isi Tanggal Mulai Untuk memulai Pelaporan Anggaran Kegiatan. Terima kasih.", "Perhatian.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
+                    }else if(document.getElementById("durasi").value == ""){
+                      toastr.error("Silahkan Isi Durasi sebagai acuan berakhirnya Pelaporan Anggaran Kegiatan. Terima kasih.", "Perhatian.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
+                    }else if(document.getElementById("tw_dari").value == "0"){
+                      toastr.error("Pilih TW Pelaporan Anggaran Kegiatan. Terima kasih.", "Perhatian.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
+                    }else if(document.getElementById("unit_kerja").value == "None"){
+                      toastr.error("Pilih Unit Kerja untuk Pelaporan Anggaran Kegiatan. Terima kasih.", "Perhatian.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
+                    }else if(inputs.length == 0 ){
+                      toastr.error("Silahkan Isi Minimal Satu daftar Pelaporan Anggaran Kegiatan. Terima kasih.", "Perhatian.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
                     }else{
-                      $('form[id="filterAnggaran"]').submit();
+                      var stop = false;
+
+                      for(i=0;i<inputs.length;i++){
+                        nameClass = $('.file_'+i);
+                        if(nameClass.length!=0){
+                          var countFile = $('<input/>',{type:'hidden',id:('count_file_'+i),
+                          name:('count_file_'+i),value:nameClass.length});
+                          countFile.appendTo("#file_grid");
+                        }
+                      }
+                      $('#modal_pernyataan').modal({
+                                backdrop: 'static'
+                            });
                     }
-                    // alert(JSON.stringify(inputs));
                   }
 
                   function startDate(){
@@ -572,66 +677,75 @@
                     // tempIdCount++;
                     var reader = new FileReader();
                     // alert(tempIdCount+";"+index);
-                    reader.readAsDataURL(upload_file[tempIdCount][index]);
-                    reader.onload = function () {
-                      if(document.getElementById('file_'+tempIdCount+'_'+index)==null){
-                        var hiddenInput = $('<input/>',{type:'hidden',id:('file_'+tempIdCount+'_'+index),
-                        name:('file_'+tempIdCount+'_'+index),value:reader.result});
-                        var hiddenInput2 = $('<input/>',{type:'hidden',id:('file_name_'+tempIdCount+'_'+index),
-                        name:('file_name_'+tempIdCount+'_'+index),value:upload_file[tempIdCount][index]["name"]}).addClass("file_"+tempIdCount);;
-                        var hiddenInput3 = $('<input/>',{type:'hidden',id:('file_type_'+tempIdCount+'_'+index),
-                        name:('file_type_'+tempIdCount+'_'+index),value:upload_file[tempIdCount][index]["type"]});
-                        var hiddenInput4 = $('<input/>',{type:'hidden',id:('file_size_'+tempIdCount+'_'+index),
-                        name:('file_size_'+tempIdCount+'_'+index),value:upload_file[tempIdCount][index]["size"]});
-                        hiddenInput.appendTo("#file_grid");
-                        hiddenInput2.appendTo("#file_grid");
-                        hiddenInput3.appendTo("#file_grid");
-                        hiddenInput4.appendTo("#file_grid");
-                      }else{
-                        document.getElementById('file_'+tempIdCount+'_'+index).value = reader.result;
-                        document.getElementById('file_name_'+tempIdCount+'_'+index).value = upload_file[tempIdCount][index]["name"];
-                        document.getElementById('file_type_'+tempIdCount+'_'+index).value = upload_file[tempIdCount][index]["type"];
-                        document.getElementById('file_size_'+tempIdCount+'_'+index).value = upload_file[tempIdCount][index]["size"];
+                    if(upload_file[tempIdCount][index]!=null){
+                      reader.readAsDataURL(upload_file[tempIdCount][index]);
+                      reader.onload = function () {
+                        if(document.getElementById('file_'+tempIdCount+'_'+index)==null){
+                          var hiddenInput = $('<input/>',{type:'hidden',id:('file_'+tempIdCount+'_'+index),
+                          name:('file_'+tempIdCount+'_'+index),value:reader.result});
+                          var hiddenInput2 = $('<input/>',{type:'hidden',id:('file_name_'+tempIdCount+'_'+index),
+                          name:('file_name_'+tempIdCount+'_'+index),value:upload_file[tempIdCount][index]["name"]}).addClass("file_"+tempIdCount);;
+                          var hiddenInput3 = $('<input/>',{type:'hidden',id:('file_type_'+tempIdCount+'_'+index),
+                          name:('file_type_'+tempIdCount+'_'+index),value:upload_file[tempIdCount][index]["type"]});
+                          var hiddenInput4 = $('<input/>',{type:'hidden',id:('file_size_'+tempIdCount+'_'+index),
+                          name:('file_size_'+tempIdCount+'_'+index),value:upload_file[tempIdCount][index]["size"]});
+                          hiddenInput.appendTo("#file_grid");
+                          hiddenInput2.appendTo("#file_grid");
+                          hiddenInput3.appendTo("#file_grid");
+                          hiddenInput4.appendTo("#file_grid");
+                        }else{
+                          document.getElementById('file_'+tempIdCount+'_'+index).value = reader.result;
+                          document.getElementById('file_name_'+tempIdCount+'_'+index).value = upload_file[tempIdCount][index]["name"];
+                          document.getElementById('file_type_'+tempIdCount+'_'+index).value = upload_file[tempIdCount][index]["type"];
+                          document.getElementById('file_size_'+tempIdCount+'_'+index).value = upload_file[tempIdCount][index]["size"];
+                        }
+                      };
+                    }else{
+                      if(document.getElementById('file_'+tempIdCount+'_'+index)!=null){
+                         document.getElementById('file_'+tempIdCount+'_'+index).value = "null";
+                          document.getElementById('file_name_'+tempIdCount+'_'+index).value = "null";
+                          document.getElementById('file_type_'+tempIdCount+'_'+index).value = "null";
+                          document.getElementById('file_size_'+tempIdCount+'_'+index).value = "null";
                       }
-                      
-
-                    };
+                    }
+                    
                   }
                   function setModalFile(index) {
-                    $('#files').replaceWith($('#files').val('').clone(true));
-                    $('#list_file').empty();
-                    $('#list_download').empty();
-                    banyak = 0;
-                    hasil2 = [];
-                    
-                    if(list_berkas[index]!=null){
-                      if(list_berkas[index].length>0){
-                        for(i = 0; i<list_berkas[index].length; i++){
-                          link = "{{url('anggaran/get/download')}}/"+list_berkas[index][i]['id'];
-                          hasil2[i] = '<div id="db_file_'+i+'"><div class="col-xs-10"><a href="'+link+'" ><li>'+delete_temp[i]['name']+'</li></div>';
-                          hasil2[i] += '<div class="col-xs-1"><i class="fa fa-download "></i></div></a></div>';
-                        }
-                        $("#list_download").append(hasil2);
-                      }
-                    }
 
-                    if(upload_file[index]!=null){;
-                      var nameCon = "";
-                      for(i = 0; i<upload_file[index].length; i++){
-                        if(upload_file[index][i]!=null){
-                          nameCon += '<div id="upload_'+i+'" ><div class="col-xs-10"> <li> '+upload_file[index][i]['name']+'</li></div>';
-                          nameCon += '<div class="col-xs-2" onclick="deleteRowFile('+i+','+index+')"><i class="fa fa-close "></i></div><br/><br/></div>';
-                          temp_file[i]=upload_file[index][i];
+                    if(click_berkas){
+                      $('#files').replaceWith($('#files').val('').clone(true));
+                      $('#list_file').empty();
+                      $('#list_download').empty();
+                      banyak = 0;
+                      hasil2 = [];
+                      
+                      if(list_berkas[index]!=null){
+                        if(list_berkas[index].length>0){
+                          for(i = 0; i<list_berkas[index].length; i++){
+                            link = "{{url('anggaran/get/download')}}/"+list_berkas[index][i]['id'];
+                            hasil2[i] = '<div id="db_file_'+i+'"><div class="col-xs-10"><a href="'+link+'" ><li>'+delete_temp[i]['name']+'</li></div>';
+                            hasil2[i] += '<div class="col-xs-1"><i class="fa fa-download "></i></div></a></div>';
+                          }
+                          $("#list_download").append(hasil2);
                         }
                       }
-                      banyak+=upload_file[index].length;
-                     $("#list_file").append(nameCon);
-                    }
 
-                    //;
-                    index_modal = index;
-                    if(document.getElementById('files') !=null ){
-                      document.getElementById('files').onchange = function () {;
+                      if(upload_file[index]!=null){;
+                        var nameCon = "";
+                        for(i = 0; i<upload_file[index].length; i++){
+                          if(upload_file[index][i]!=null){
+                            nameCon += '<div id="upload_'+i+'" ><div class="col-xs-10"> <li> '+upload_file[index][i]['name']+'</li></div>';
+                            nameCon += '<div class="col-xs-2" onclick="deleteRowFile('+i+','+index+')"><i class="fa fa-close "></i></div><br/><br/></div>';
+                            temp_file[i]=upload_file[index][i];
+                          }
+                        }
+                        banyak+=upload_file[index].length;
+                       $("#list_file").append(nameCon);
+                      }
+
+                      //;
+                      index_modal = index;
+                      document.getElementById('files').onchange = function () {
                         // $('#list_file').empty();
                         value = this.files;
                         for(i = banyak; i<(banyak+value.length); i++){
@@ -642,34 +756,48 @@
                         
                         banyak+=value.length; 
                         $("#list_file").append(hasil);
-                      };
+                      }
+                      $('#modal_berkas').modal({
+                          backdrop: 'static'
+                      })
+                    }else{
+                      alert("Silahkan simpan atau batalkan perubahan data untuk menambah atau menghapus berkas kembali");
                     }
-                    $('#modal_berkas').modal({
-                        backdrop: 'static'
-                    })
+                  }
+                  function deleteRowFile(i,index){
+                      $("#upload_"+i).remove();
+                      hasil[i] = "";
+                      temp_file[i] = null;
                   }
                   $('#simpan_file').click(function() {
                     simpan_file =true;
                     countFile=0;
                     hasil=[];
                     // temp_file=[];
-                     upload_file[index_modal]=[];
+                    upload_file[index_modal]=[];
                     for(i=0;i<temp_file.length;i++){
 
-                        // readerPrev(i,index_modal);
                         upload_file[index_modal][i]=temp_file[i];
                         if(temp_file[i]!=null){
                           countFile++;
                         }
                     }
+                    // alert(JSON.stringify(temp_file));
                     var title = "Unggah Berkas";
                     if(countFile>0){
                       title=countFile+" Berkas"
                     }
                     temp_file=[];
                     document.getElementById('button_'+index_modal).innerHTML = title;
+                    click_berkas = false;
                     $('#modal_berkas').modal('hide');
                   });
+
+                  function sumbit_post(){
+                    $('input[name="list_laporan_anggaran"]').val(JSON.stringify(inputs));
+                    // alert(JSON.stringify(inputs));
+                    $('form[id="insertLaporanAnggaran"]').submit();
+                  }
                   $('#modal_berkas').on('hidden.bs.modal', function () {
                       if(!simpan_file){
                         hasil=[];

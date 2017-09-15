@@ -91,10 +91,17 @@ Route::group(['middleware' => 'auth'], function() {
 		Route::get('/removeAnggaran/', 'AnggaranController@removeAnggaranAll');
 		Route::get('/activeFileListAnggaran/', 'AnggaranController@activeFileListAnggaranAll');
 		Route::post('/submit/tambah', 'AnggaranController@store');
+
+		Route::post('/submit/tambah_pelaporan', 'PelaporanController@store');
+		Route::get('/pelaporan/{kategori}/{id}/{type}', 'PelaporanController@form_master');
+		Route::get('/pelaporan/{kategori}', 'PelaporanController@pelaporan');
 	});
 
 	Route::group(['prefix' => 'pelaporan'], function() {
    		Route::resource('/', 'PelaporanController');
+
+		Route::post('/submit/tambah', 'PelaporanController@store');
+		Route::post('/pelaporan/{kategori}/{id}/{type}', 'PelaporanController@form_master');
 	});
 
 	Route::resource('/user', 'UserController');
