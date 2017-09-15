@@ -43,4 +43,9 @@ class TarikTunai extends Model
     {
         return $this->hasOne('App\Models\Dropping', 'RECID', 'id_dropping');
     }
+
+    public function integrated()
+    {
+        return $this->hasOne('App\Models\StagingTarikTunai', 'RECID', 'id');
+    }
 }

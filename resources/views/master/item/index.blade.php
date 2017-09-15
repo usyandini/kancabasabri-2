@@ -38,7 +38,7 @@
 			                  <h4 class="card-title">Daftar Item</h4>
 			                  <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
 			                  <div class="col-md-12" >
-	                              <a href="{{ url('item/tambah') }}" class="btn btn-success pull-right"><i class="fa fa-plus"></i> Tambah</a>
+	                              <a href="{{ url('item/create') }}" class="btn btn-success pull-right"><i class="fa fa-plus"></i> Tambah</a>
 	                          </div>
 			                </div>
 			                <div class="card-body collapse in">			                
@@ -87,14 +87,14 @@
 			                        		</tr>
 			                        </tbody>
 			                      </table>
-			                      <form method="post" action="#" id="restoreU">
+			                      {{-- <form method="post" action="#" id="restoreU">
                 					 {{ csrf_field() }}
 	                			  </form>
 	                			  <form method="post" action="#" id="deleteU">
                 					 {{ csrf_field() }}
                 					 {{ method_field('DELETE') }}
                 					 <input type="hidden" name="is_force" value="0">
-                				   </form>
+                				   </form> --}}
 			                    </div>
 			                  </div>
 			                </div>
