@@ -265,10 +265,13 @@ class AnggaranController extends Controller
         // echo $request->setuju;
         $AnggaranData;
         if($request->status == 'tambah'){
+            // echo "tambah";
             $AnggaranData=Anggaran::create($anggaran_insert);
-        }else if($request->status == 'edit' && $request->setuju == 'Simpan'){
+        }else if($request->status == 'edit' || $request->setuju == 'Simpan'){
+            // echo $active;
             Anggaran::where('nd_surat', $request->nd_surat)->where('active', '1')->update($anggaran_update);
         }else{
+            // echo "lain";
             Anggaran::where('nd_surat', $request->nd_surat)->where('active', '1')->update($anggaran_update);
             $AnggaranData=Anggaran::create($anggaran_insert);
         }
@@ -350,14 +353,17 @@ class AnggaranController extends Controller
             $LAnggaranUpdate;
             if($value->delete == "none"){
                 if($request->status == 'tambah'){
+                    // echo $active_list;
                     $LAnggaranInsert  = ListAnggaran::create($anggaran_insert_list);
-                }else if($request->status == 'edit'&& $request->setuju == 'Simpan'){
+                }else if($request->status == 'edit'|| $request->setuju == 'Simpan'){
+                    // echo $active_list;
                     if($value->id == -1){
                         $LAnggaranInsert  = ListAnggaran::create($anggaran_insert_list);
                     }else{
                         $LAnggaranUpdate  = ListAnggaran::where('id', $value->id)->where('active', '1')->update($anggaran_update_list);
                     }
                 }else{
+                    // echo $active_list;
                     $LAnggaranInsert  = ListAnggaran::create($anggaran_insert_list);
                     $LAnggaranUpdate  = ListAnggaran::where('id', $value->id)->where('active', '1')->update($anggaran_update_list);
                 }
