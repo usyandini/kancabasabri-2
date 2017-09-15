@@ -468,10 +468,10 @@
                             }
                           }
                         }
-                        if(count_berkas == 0){
-                          args.cancel = true;
-                          alert("Harap Disertai minimal 1 berkas");
-                        }
+                        // if(count_berkas == 0){
+                        //   args.cancel = true;
+                        //   alert("Harap Disertai minimal 1 berkas");
+                        // }
                       },
                       onItemEditing: function(args) {
 
@@ -548,10 +548,10 @@
                           }
                         }
 
-                        if(count_berkas == 0){
-                          args.cancel = true;
-                          alert("Harap Disertai minimal 1 berkas");
-                        }
+                        // if(count_berkas == 0){
+                        //   args.cancel = true;
+                        //   alert("Harap Disertai minimal 1 berkas");
+                        // }
                       },
                       onItemUpdated: function(args) {
                         // alert("updated-"+args.item.file);
@@ -834,7 +834,7 @@
                             type: "text", 
                             align: "left",
                             title: "Unit Kerja", 
-                            width: 100, 
+                            width: 200, 
                             readOnly:true,
                             insertTemplate: function() {
                               unitk_field_insert = jsGrid.fields.text.prototype.insertTemplate.call(this);
@@ -851,7 +851,7 @@
                             type: "text", 
                             align: "left",
                             title: "TW I", 
-                            width: 100,
+                            width: 200,
                             itemTemplate: function(value) {
                               var display ="<span class='tag tag-info'>IDR " + addCommas(value) + "</span>";
                               
@@ -909,7 +909,7 @@
                             type: "text", 
                             align: "left",
                             title: "TW II", 
-                            width: 100 ,
+                            width: 200 ,
                             itemTemplate: function(value) {
                               var display ="<span class='tag tag-info'>IDR " + addCommas(value) + "</span>";
                               
@@ -942,7 +942,7 @@
                             type: "text", 
                             align: "left",
                             title: "TW III", 
-                            width: 100 ,
+                            width: 200 ,
                             itemTemplate: function(value) {
                               var display ="<span class='tag tag-info'>IDR " + addCommas(value) + "</span>";
                               
@@ -975,7 +975,7 @@
                             type: "text", 
                             align: "left",
                             title: "TW IV",
-                            width: 100,
+                            width: 200,
                             itemTemplate: function(value) {
                               var display ="<span class='tag tag-info'>IDR " + addCommas(value) + "</span>";
                               
@@ -1009,7 +1009,7 @@
                             type: "text", 
                             align: "left",
                             title: "Anggaran Setahun", 
-                            width: 150 ,
+                            width: 200 ,
                             readOnly:true,
                             itemTemplate: function(value) {var val=0
                               var display ="<span class='tag tag-info'>IDR " + addCommas(value) + "</span>";
@@ -1423,6 +1423,8 @@
                       // alert(status==1);
                       if(status == 1){
                         stop = false;
+                      }else{
+                        stop = false;
                       }
 
                       if(stop){
@@ -1536,7 +1538,7 @@
                       delete_temp = list_berkas[index]; 
                     }
                     
-                    // if(delete_temp!=null){
+                    if(delete_temp!=null){
                       if(delete_temp.length>0){
                         for(i = 0; i<delete_temp.length; i++){
                           if(delete_temp[i]!=null){
@@ -1552,7 +1554,7 @@
                         }
                         $("#list_download").append(hasil2);
                       }
-                    // }
+                    }
 
                     if(upload_file[index]!=null){
                       // alert(upload_file[index].length);
