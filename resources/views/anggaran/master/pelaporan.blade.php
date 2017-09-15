@@ -391,16 +391,11 @@
                           },
                           { name: "unit_kerja", 
                             type: "select",
-                            data:getData('unit_kerja')
-                            readOnly:true,
                             title: "Unit Kerja", 
+                            data:getData('unit_kerja'),
+                            valueField: "DESCRIPTION", 
+                            textField: "DESCRIPTION",
                             width: 100,
-                            validate: {
-                              message : "Pilih Unit Kerja Terlebih Dahulu." ,
-                              validator :function(value, item) {
-                                  return value != "None" ;
-                              } 
-                            },
                           },
                           { name: "program_prioritas", 
                             type: "select", 

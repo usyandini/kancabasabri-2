@@ -438,6 +438,7 @@
 
                         },
                         updateItem: function(item) {
+
                           item["nilai_persatuan"]= validDigits(item.nilai_persatuan);
                           item["tw_i"]= validDigits(item.tw_i);
                           item["tw_ii"]= validDigits(item.tw_ii);
@@ -445,7 +446,21 @@
                           item["tw_iv"]= validDigits(item.tw_iv);
                           item["anggarana_setahun"]= validDigits(item.anggarana_setahun);
                           item["delete"]="none";
-                          inputs.splice(item["tempId"]-1, 1, item);  
+                          if(item["isNew"]){
+                            inputs.splice(item["tempId"], 1, item); 
+                          }else{
+                            if(inputs.length>0){
+                              for(i=0;i<inputs.length;i++){
+                                if(inputs[i]["id"]==item.id){
+                                  item["tempId"]=inputs[i]["tempId"];
+                                  inputs[i] = item;
+                                }
+                              }
+                            }
+                          }
+                          
+                          // inputs.splice(item["tempId"], 1, item);  
+                          // alert(validDigits(item.nilai_persatuan)+":"+JSON.stringify(inputs));
                         },
                       }, 
                       onRefreshed: function(args) {
