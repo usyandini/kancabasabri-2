@@ -194,18 +194,6 @@
                                         @endif
                                       </div>
                                     </div>
-                                    <div class="col-xs-7">
-                                      <div class="form-group">
-                                        <label>Unit Kerja</label>
-                                        @if($setting['insert'])
-                                        <select class="select2 form-control" name="unit_kerja" id="unit_kerja" onchange="changeUnitKerja()">
-                                          <option value="None">None</option>
-                                        </select>
-                                         @else
-                                        <input id="unit_kerja" name="unit_kerja" class="form-control" readOnly>
-                                        @endif
-                                      </div>
-                                    </div>
                                   </div>
                                   <div class="col-xs-12">
                                     <input type="hidden" name="list_laporan_anggaran" id="list_laporan_anggaran">
@@ -402,7 +390,8 @@
 
                           },
                           { name: "unit_kerja", 
-                            type: "text",
+                            type: "select",
+                            data:getData('unit_kerja')
                             readOnly:true,
                             title: "Unit Kerja", 
                             width: 100,
@@ -412,16 +401,6 @@
                                   return value != "None" ;
                               } 
                             },
-                            insertTemplate: function() {
-                              unit_field_insert = jsGrid.fields.text.prototype.insertTemplate.call(this);
-                              $(unit_field_insert).val(document.getElementById("unit_kerja").value);
-                              return unit_field_insert; 
-                            },
-                            editTemplate: function(value) {
-                              unit_field_edit = jsGrid.fields.text.prototype.editTemplate.call(this);
-                              $(unit_field_edit).val(value);
-                              return unit_field_edit; 
-                            } 
                           },
                           { name: "program_prioritas", 
                             type: "select", 
@@ -595,12 +574,10 @@
                         'success': function (data) {
 
                           cari_unit_kerja = document.getElementById('cari_unit_kerja');
-                          unit_kerja = document.getElementById('unit_kerja');
                           for(i =0 ;i<data.length;i++){
                             var value = "";
                             var desc = data[i].DESCRIPTION;
                             value = data[i].DESCRIPTION;
-                            unit_kerja.options[unit_kerja.options.length] = new Option(desc, value);
                             cari_unit_kerja.options[cari_unit_kerja.options.length] = new Option(desc, value);
                           }
                              

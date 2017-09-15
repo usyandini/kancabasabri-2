@@ -276,7 +276,10 @@ class AnggaranController extends Controller
         $index = 0;
         foreach (json_decode($request->list_anggaran_values) as $value) {
             $idBefore = '0';
+            $anggaranId = $request->id_anggaran;
             if(($request->setuju == 'Kirim'||$request->setuju == 'Setuju')||$request->setuju == 'Tolak'){
+
+                $anggaranId = $AnggaranData->id;
                 if($value->id_first == '0'){
                     $idBefore = $value->id;
                 }else{
@@ -284,7 +287,7 @@ class AnggaranController extends Controller
                 }
             }
             // if($request->setuju != 'Simpan' || $request->status == 'tambah'){
-                $anggaranId = $request->id_anggaran;
+                
                 // if($request->setuju == 'Simpan'){
 
                 // }
