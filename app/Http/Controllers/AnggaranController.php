@@ -698,7 +698,7 @@ class AnggaranController extends Controller
                 $return = $this->kegiatanModel->orderBy('DESCRIPTION','ASC')->get();
                 break;
             case 'nd_surat':
-                $return = $this->anggaranModel->select('nd_surat')->orderBy('nd_surat','ASC')->get();
+                $return = $this->anggaranModel->select('nd_surat')->where('active','1')->orderBy('nd_surat','ASC')->get();
                 break;
         }
         return response()->json($return);

@@ -247,12 +247,21 @@
                              
                         }
                     });
+                    
+
+                  }
+
+                  function set_nd_surat(){
+                    // for (i = 0; i < nd_surat_option.options.length; i++) {
+                    //   nd_surat_option.options[i] = null;
+                    // }
                     $.ajax({
                         'async': false, 'type': "GET", 'dataType': 'JSON', 'url': "{{ url('anggaran/get/attributes/nd_surat/1') }}",
                         'success': function (data) {
 
-                          daySelect = document.getElementById('cari_nd_surat');
+                          // nd_surat_option = document.getElementById('cari_nd_surat');
 
+                          nd_surat_option = document.getElementById('cari_nd_surat');
                          
                           for(i =0 ;i<data.length;i++){
                             var value = data[i].nd_surat;
@@ -262,12 +271,11 @@
                             // }else{
                             //   value = "00"+data[i].VALUE;
                             // }
-                            daySelect.options[daySelect.options.length] = new Option(desc, value);
+                            nd_surat_option.options[nd_surat_option.options.length] = new Option(desc, value);
                           }
                              
                         }
                     });
-
                   }
                   function cariAnggaran(){
                     // if(document.getElementById("cari_keyword").value==""){
@@ -281,5 +289,6 @@
                     // alert(JSON.stringify(inputs));
                   }
                   window.setUnitKerja({{$userCabang.",".$userDivisi}});
+                  window.set_nd_surat();
                 </script>
                 @endsection
