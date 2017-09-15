@@ -46,4 +46,9 @@ class PenyesuaianDropping extends Model
     {
         return $this->hasOne('App\Models\BerkasPenyesuaian', 'id', 'berkas_penyesuaian');
     }
+
+    public function integrated()
+    {
+        return $this->hasOne('App\Models\StagingPenyesuaian', 'RECID', 'id');
+    }
 }

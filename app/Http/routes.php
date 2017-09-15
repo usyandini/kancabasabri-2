@@ -97,7 +97,19 @@ Route::group(['middleware' => 'auth'], function() {
 	Route::post('/user/restore/{id}', 'UserController@restore');
 
 
+
 	Route::resource('/item', 'ItemController');
 	Route::get('/item/tambah', 'ItemController@tambahItem');
 
+	Route::group(['prefix' => 'item'], function(){
+		Route::resource('/', 'ItemController');
+		Route::get('/create', 'ItemController@create');
+	});
+
+
+	Route::group(['prefix' => 'reason'], function(){
+		Route::resource('/', 'ItemController@reason');
+		Route::post('/store', 'ItemController@store');
+		
+	});
 });
