@@ -89,6 +89,7 @@
                                     <span class="user-name">{{ Auth::user()->name }}</span>
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right">
+                                    <a href="{{ url('user/profile').'/'.Auth::user()->id }}" class="dropdown-item"><i class="ft-user"></i> Edit Profile</a>
                                     <div class="dropdown-divider"></div><a href="{{ url('logout', $parameters = [], $secure = null) }}" class="dropdown-item"><i class="ft-power"></i> Logout</a>
                                 </div>
                             </li>

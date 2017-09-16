@@ -85,6 +85,7 @@ Route::group(['middleware' => 'auth'], function() {
 	});
 
 	Route::resource('/user', 'UserController');
+	Route::get('/user/profile/{id}', 'UserController@profile');
 	Route::post('/user/restore/{id}', 'UserController@restore');
 
 	Route::resource('/jenis_user', 'JenisUserController');

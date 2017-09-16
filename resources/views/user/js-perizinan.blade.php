@@ -13,18 +13,25 @@
     }
 
     if ($('#anggaran input').filter(':checked').length > $('#anggaran input').length/2) {
-      console.log('tes')
       $('label#anggaran').html('Hilangkan centang')
     } else {
       $('label#anggaran').html('Centang semua')
     }
 
     if ($('#user input').filter(':checked').length > $('#user input').length/2) {
-      console.log('tes')
       $('label#user').html('Hilangkan centang')
     } else {
       $('label#user').html('Centang semua')
     }
+
+    @if (isset($profile_edit))
+    $('input[type="checkbox"]').iCheck('disable')
+    $('label#transaksi').html('')
+    $('label#anggaran').html('')
+    $('label#notifikasi').html('')
+    $('label#user').html('')
+    $('input[type="radio"]').iCheck('disable')
+    @endif
   })
   function checkAll(e) {
     var content = $(e).html()
