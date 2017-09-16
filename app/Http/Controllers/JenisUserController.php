@@ -23,8 +23,7 @@ class JenisUserController extends Controller
 
     public function create()
     {
-    	return view('user.input-jenis', [
-    		'jenis_user' => true ]);
+    	return view('user.input-jenis');
     }
 
     public function edit($id)

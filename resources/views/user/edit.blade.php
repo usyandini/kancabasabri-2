@@ -22,7 +22,7 @@
                         <ol class="breadcrumb">
                           <li class="breadcrumb-item"><a href="{{ url('user') }}">Manajemen User</a>
                           </li>
-                          <li class="breadcrumb-item active">Input User
+                          <li class="breadcrumb-item active">Edit User
                           </li>
                         </ol>
                       </div>
