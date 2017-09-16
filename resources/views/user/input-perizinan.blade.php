@@ -147,7 +147,7 @@
             </fieldset>
           </div>
           <h5>Sub-menu</h5>
-          <div class="form-group skin skin-square">
+          <div class="form-group skin skin-square" id="user">
             <fieldset>
               <input type="checkbox" name="perizinan[edit_u]" {{ isset(old("perizinan")['edit_u']) ? 'checked=""' : '' }}>
               <label>Edit user</label>

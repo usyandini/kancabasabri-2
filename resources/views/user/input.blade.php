@@ -114,12 +114,12 @@
                             <h4 class="card-title" id="basic-layout-card-center">Perizinan <code>Notifikasi</code></h4>
                             <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
                             <div class="heading-elements">
-                              <a href="">deselect all</a>
+                              <label class="text-primary" onclick="checkAll(this)" id="notifikasi">Centang semua</label>
                             </div>
                           </div>
                           <div class="card-body">
                             <div class="card-block">
-                              <div class="form-group skin skin-square">
+                              <div class="form-group skin skin-square" id="notifikasi">
                                 <fieldset>
                                   <input type="checkbox" name="perizinan[verifikasi-notif]" value="1">
                                   <label>Pemintaan verifikasi persetujuan transaksi</label>
@@ -171,4 +171,5 @@
                           });
                         });
                       </script>
+                      @include('user.js-perizinan')
                       @endsection

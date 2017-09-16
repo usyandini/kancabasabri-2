@@ -94,7 +94,7 @@
                             <h4 class="card-title" id="basic-layout-card-center">Perizinan <code>Notifikasi</code></h4>
                             <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
                             <div class="heading-elements">
-                            <label class="text-primary" onclick="checkAll(this)" id="notifikasi">Centang semua</label>
+                              <label class="text-primary" onclick="checkAll(this)" id="notifikasi">Centang semua</label>
                             </div>
                           </div>
                           <div class="card-body">
