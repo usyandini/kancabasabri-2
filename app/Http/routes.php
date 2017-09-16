@@ -88,4 +88,5 @@ Route::group(['middleware' => 'auth'], function() {
 	Route::post('/user/restore/{id}', 'UserController@restore');
 
 	Route::resource('/jenis_user', 'JenisUserController');
+	Route::post('/jenis_user/handle', 'JenisUserController@handleCombo');
 });
