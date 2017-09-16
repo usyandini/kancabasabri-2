@@ -58,12 +58,20 @@
                 <label>Update poin daftar transaksi</label>
               </fieldset>
               <fieldset>
+              <input type="checkbox" name="perizinan[berkas_t]" {{ isset(old("perizinan")['berkas_t']) ? 'checked=""' : '' }}>
+                <label>Upload dan edit berkas transaksi</label>
+              </fieldset>
+              <fieldset>
                 <input type="checkbox" name="perizinan[hapus_t]" {{ isset(old("perizinan")['hapus_t']) ? 'checked=""' : '' }}>
                 <label>Hapus poin daftar transaksi</label>
               </fieldset>
               <fieldset>
                 <input type="checkbox" name="perizinan[cari_t]" {{ isset(old("perizinan")['cari_t']) ? 'checked=""' : '' }}>
                 <label>Pencarian batch transaksi</label>
+              </fieldset>
+              <fieldset>
+                <input type="checkbox" name="perizinan[submit_t]" {{ isset(old("perizinan")['submit_t']) ? 'checked=""' : '' }}>
+                <label>Submit batch untuk verifikasi</label>
               </fieldset>
             </div>
           </div>

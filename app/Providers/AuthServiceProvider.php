@@ -32,7 +32,7 @@ class AuthServiceProvider extends ServiceProvider
     public function registerPostPolicies($gate)
     {
         $permissions = [
-            'info_t', 'tambahBatch_t', 'verifikasi_t', 'verifikasi2_t', 'insert_t', 'update_t', 'hapus_t', 'cari_t',
+            'info_t', 'tambahBatch_t', 'verifikasi_t', 'berkas_t', 'verifikasi2_t', 'insert_t', 'update_t', 'hapus_t', 'cari_t', 'submit_t',
             'info_a', 'riwayat_a', 'persetujuan_a', 'persetujuan2_a',
             'info_u', 'tambah_u', 'jenis_u', 'tambah_jenis', 'edit_u', 'sdelete_u', 'pdelete_u', 'restore_u'];
         

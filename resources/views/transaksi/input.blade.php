@@ -160,7 +160,7 @@
                                   <form method="POST" action="{{ url('transaksi/') }}" id="mainForm" enctype="multipart/form-data">
                                     {{ csrf_field() }}
                                     <div class="col-lg-6 col-md-12">
-                                      @if($editable)
+                                      @if($editable && Gate::check('berkas_t'))
                                       <fieldset class="form-group">
                                         <label for="basicInputFile">Unggah berkas</label>
                                         <input type="file" class="form-control-file" id="basicInputFile" multiple="" name="berkas[]">
@@ -174,7 +174,7 @@
                                             <td width="25%">Berkas: <a href="{{ url('transaksi/berkas/download').'/'.$value->id }}" target="_blank">{{ $value->file_name }}</a></td>
                                             <td width="25%">Diunggah: <b>{{ $value->created_at }}</b></td>
                                             <td width="5%">
-                                              @if($editable)
+                                              @if($editable && Gate::check('berkas_t'))
                                               <a href="javascript:deleteBerkas('{{ $value->id }}', '{{ $value->file_name }}');"><i class="fa fa-times"></i> Hapus</a>
                                               @endif
                                             </td>
@@ -213,16 +213,20 @@
                                 <br>
                                 @if($editable)
                                 <div class="row">
+                                  @if (Gate::check('insert_t') || Gate::check('update_t') || Gate::check('hapus_t'))
                                   <div class="col-xs-2 pull-right">
                                     <div class="form-group">
                                       <button onclick="populateBatchInput()" class="btn btn-primary pull-right" id="simpan" value="Simpan"><i class="fa fa-check"></i> Simpan perubahan batch</button>
                                     </div>
                                   </div>
+                                  @endif
+                                  @if (Gate::check('submit_t'))
                                   <div class="col-xs-3 pull-right">
                                     <div class="form-group">
                                       <button onclick="checkBatchSubmit()" class="btn btn-danger pull-right" id="button_status"><i class="fa fa-check-circle"></i> Submit batch untuk Verifikasi</button>
                                     </div>
                                   </div>
+                                  @endif
                                 </div>
                                 @endif
                               </div>
