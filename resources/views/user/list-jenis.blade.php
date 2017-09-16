@@ -64,9 +64,9 @@
 			                        				@if(!$user->deleted_at)
 			                        					<a class="btn btn-sm btn-primary" href="{{ url('jenis_user').'/'.$user->id.'/edit' }}"><i class="fa fa-edit"></i> Edit</a>
 		                        					@endif
-		                        					@if(Auth::user()->id != $user->id && !$user->deleted_at)
+		                        					{{-- @if(Auth::user()->id != $user->id && !$user->deleted_at)
 				                        				<a class="btn btn-sm btn-danger" href="#" onclick="deleteUser({{ $user->id }}, false)"><i class="fa fa-times"></i> Hapus</a>
-				                        			@endif
+				                        			@endif --}}
 				                        			@if($user->deleted_at)
 				                        				<a class="btn btn-sm btn-warning" href="#" onclick="restoreUser({{ $user->id }})"><i class="fa fa-backward"></i> Restore</a>
 				                        				<a class="btn btn-sm btn-danger" href="#" onclick="deleteUser({{ $user->id }}, true)"><i class="fa fa-times"></i> Hapus permanen</a>
