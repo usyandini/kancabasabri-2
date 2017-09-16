@@ -163,5 +163,14 @@
                             $('select[name="divisi"]').prop("disabled", false);
                           }
                         });
+
+                        $('select[name="jenis_user"]').on('change', function(){
+                          $.post('{{ url('/jenis_user/handle') }}', {_token: '{{ csrf_token() }}', id: $(this).val()}, function(e) {
+                            $('input[type="checkbox"]').iCheck('uncheck');
+                            $.each(e, function(e) {
+                              $('input[name="perizinan[' + e + ']"]').iCheck('check');
+                            })
+                          });
+                        });
                       </script>
                       @endsection

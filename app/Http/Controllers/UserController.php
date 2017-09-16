@@ -9,6 +9,7 @@ use App\Http\Requests;
 use App\User;
 use App\Models\Divisi;
 use App\Models\KantorCabang;
+use App\Models\JenisUser;
 use Validator;
 
 class UserController extends Controller
@@ -27,18 +28,19 @@ class UserController extends Controller
     {
     	return view('user.input', [
             'cabang' => KantorCabang::get(),
-            'divisi' => Divisi::get()
+            'divisi' => Divisi::get(),
+            'jenis_user' => JenisUser::get()
         ]);
     }
 
     public function store(Request $request)
     {
-        // dd($request->all());
     	$input = $request->except('_method', '_token');
     	$validator = $this->validateInputs($input);
 
     	if ($validator->passes()) {
             // $input['password'] = bcrypt($input['password']);
+            if ($input['perizinan']['data-cabang'] == 'off') { unset($input['perizinan']['data-cabang']); }
             $input['password'] = bcrypt('rahasia');
             $input['created_by'] = \Auth::user()->id;
     		User::create($input);
@@ -53,16 +55,15 @@ class UserController extends Controller
     public function edit($id)
     {
     	$user = User::withTrashed()->where('id', $id)->first();
-        // dd($user->perizinan[info-t]);
     	return view('user.edit', [
             'user' => $user, 
             'cabang' => KantorCabang::get(),
-            'divisi' => Divisi::get()]);
+            'divisi' => Divisi::get(),
+            'jenis_user' => JenisUser::get()]);
     }
 
     public function update(Request $request, $id)
     {    	
-        // dd($request->all());
     	$input = $request->except('_token' , '_method');
         // if ($input['password'] == '') { unset($input['password']); unset($input['password_confirmation']); }
         $validator = $this->validateInputs($input, $id);
