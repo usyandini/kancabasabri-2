@@ -63,7 +63,7 @@
 			                        			<td>{!! $user->countUsers() !!}</td>
 			                        			{!! $user->deleted_at ? '<td class="red">Deleted</td>' : '<td class="blue">Aktif</td>' !!}
 			                        			<td>
-			                        				@if(!$user->deleted_at)
+			                        				@if(!$user->deleted_at && Gate::check('edit_jenis'))
 			                        					<a class="btn btn-sm btn-primary" href="{{ url('jenis_user').'/'.$user->id.'/edit' }}"><i class="fa fa-edit"></i> Edit</a>
 		                        					@endif
 		                        					{{-- @if(Auth::user()->id != $user->id && !$user->deleted_at)

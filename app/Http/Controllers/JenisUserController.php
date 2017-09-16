@@ -12,7 +12,9 @@ class JenisUserController extends Controller
 {
     public function __construct()
     {
-
+        $this->middleware('can:jenis_u', ['only' => 'index']);
+        $this->middleware('can:edit_jenis', ['only' => 'edit', 'update']);
+        $this->middleware('can:tambah_jenis', ['only' => 'create', 'store']);
     }
 
     public function index()

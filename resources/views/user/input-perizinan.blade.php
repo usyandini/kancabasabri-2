@@ -172,6 +172,10 @@
                   <input type="checkbox" name="perizinan[restore_u]" {{ isset(old("perizinan")['restore_u']) ? 'checked=""' : '' }}>
                   <label>Restore user</label>
                 </fieldset>
+                <fieldset>
+                  <input type="checkbox" name="perizinan[edit_jenis]" {{ isset(old("perizinan")['edit_jenis']) ? 'checked=""' : '' }}>
+                  <label>Edit Jenis User</label>
+                </fieldset>
               </div>
             </div>
           </div>
