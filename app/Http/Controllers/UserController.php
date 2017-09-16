@@ -16,7 +16,10 @@ class UserController extends Controller
 {
     public function __construct()
     {
-
+        $this->middleware('can:info_u', ['only' => 'index']);
+        $this->middleware('can:tambah_u', ['only' => 'create', 'store']);
+        $this->middleware('can:edit_u', ['only' => 'edit', 'update']);
+        $this->middleware('can:restore', ['only' => 'restore']);
     }
 
     public function index()
