@@ -114,13 +114,13 @@
                                 <li class="is-shown {{ checkActiveMenu('transaksi') }}"><a href="{{ url('/transaksi', $parameters = [], $secure = null) }}" class="menu-item">Informasi Transaksi</a>
                             @endcan
                             @can('tambahBatch_t')
-                                <li class="is-shown {{ checkActiveMenu('transaksi') }}"><a href="{{ url('/transaksi', $parameters = [], $secure = null) }}" class="menu-item">Tambah Batch Baru</a>
+                                <li class="is-shown {{ checkActiveMenu('transaksi/new') }}"><a href="{{ url('/transaksi', $parameters = [], $secure = null) }}" class="menu-item">Tambah Batch Baru</a>
                             @endcan
                             @can('verifikasi_t')
-                                <li class="is-shown {{ checkActiveMenu('persetujuan') }}"><a href="{{ url('/transaksi/persetujuan', $parameters = [], $secure = null) }}" class="menu-item">Persetujuan Transaksi</a>
+                                <li class="is-shown {{ checkActiveMenu('transaksi/persetujuan') }}"><a href="{{ url('/transaksi/persetujuan', $parameters = [], $secure = null) }}" class="menu-item">Persetujuan Transaksi</a>
                             @endcan
                             @can('verifikasi2_t')
-                                <li class="is-shown {{ checkActiveMenu('verifikasi') }}"><a href="{{ url('/transaksi/verifikasi', $parameters = [], $secure = null) }}" class="menu-item">Verifikasi Transaksi</a>
+                                <li class="is-shown {{ checkActiveMenu('transaksi/verifikasi') }}"><a href="{{ url('/transaksi/verifikasi', $parameters = [], $secure = null) }}" class="menu-item">Verifikasi Transaksi</a>
                             @endcan
                         </ul>
                     </li>
