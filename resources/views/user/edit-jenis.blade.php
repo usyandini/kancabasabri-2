@@ -22,7 +22,9 @@
                         <ol class="breadcrumb">
                           <li class="breadcrumb-item"><a href="{{ url('user') }}">Manajemen User</a>
                           </li>
-                          <li class="breadcrumb-item active">Input User
+                          <li class="breadcrumb-item"><a href="{{ url('jenis_user') }}">Perizinan Jenis User</a>
+                          </li>
+                          <li class="breadcrumb-item active">Edit Jenis User
                           </li>
                         </ol>
                       </div>

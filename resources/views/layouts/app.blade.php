@@ -144,7 +144,7 @@
                     </li>
                     @endif
                     @if (Gate::check('info_u') || Gate::check('tambah_u') || Gate::check('tambah_jenis') || Gate::check('jenis_u'))
-                    <li class="nav-item has-sub {{ checkOpenedMenu('user') }}"><a href=""><i class="ft-user"></i><span data-i18n="" class="menu-title">Manajemen User</span></a>
+                    <li class="nav-item has-sub {{ checkOpenedMenu('user') }} {{ checkOpenedMenu('jenis_user') }}"><a href=""><i class="ft-user"></i><span data-i18n="" class="menu-title">Manajemen User</span></a>
                     <ul class="menu-content">
                         @can('info_u')
                             <li class="is-shown {{ checkActiveMenu('user') }}"><a href="{{ url('/user', $parameters = [], $secure = null) }}" class="menu-item">Informasi User</a>
