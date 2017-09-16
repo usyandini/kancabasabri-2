@@ -92,10 +92,13 @@
                           <div class="card-header">
                             <h4 class="card-title" id="basic-layout-card-center">Perizinan <code>Notifikasi</code></h4>
                             <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
+                            <div class="heading-elements">
+                              <label class="text-primary" onclick="checkAll(this)" id="notifikasi"></label>
+                            </div>
                           </div>
                           <div class="card-body">
                             <div class="card-block">
-                              <div class="form-group skin skin-square">
+                              <div class="form-group skin skin-square" id="notifikasi">
                                 <fieldset>
                                   <input type="checkbox" name="perizinan[verifikasi_notif]" {{ isset($user->perizinan['verifikasi_notif']) ? 'checked=""' : '' }}>
                                   <label>Pemintaan verifikasi persetujuan transaksi</label>
@@ -129,14 +132,5 @@
                       <script src="{{ asset('app-assets/vendors/js/forms/icheck/icheck.min.js') }}" type="text/javascript"></script>
                       <script src="{{ asset('app-assets/js/scripts/forms/checkbox-radio.min.js') }}" type="text/javascript"></script>
                       <!-- END PAGE LEVEL JS-->
-                      <script type="text/javascript">
-                        $('select[name="cabang"]').on('change', function() {
-                          if ($(this).val() !== '00') {
-                            $('select[name="divisi"]').prop("disabled", true);
-                            toastr.info("Divisi tidak perlu dipilih jika Kantor Cabang yang dipilih adalah <b>Kantor pusat</b>.", "Kantor Cabang dipilih", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:10e3});
-                          } else {
-                            $('select[name="divisi"]').prop("disabled", false);
-                          }
-                        });
-                      </script>
+                      @include('user.js-perizinan')
                       @endsection
