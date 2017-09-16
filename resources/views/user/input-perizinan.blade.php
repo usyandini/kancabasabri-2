@@ -12,7 +12,7 @@
             <select class="select2 form-control" name="jenis_user" id="jenis_user">
               <option selected disabled="">Jenis User</option>
               @foreach ($jenis_user as $jenis)
-                <option value="{{ $jenis->id }}">{{ $jenis->nama }}</option>
+              <option value="{{ $jenis->id }}">{{ $jenis->nama }}</option>
               @endforeach
             </select>
           </div>
@@ -132,54 +132,59 @@
                 <fieldset>
                   <input type="checkbox" name="perizinan[info_u]" {{ isset(old("perizinan")['info_u']) ? 'checked=""' : '' }}>
                   <label>Informasi user</label>
-                  <fieldset>
-                    <input type="checkbox" name="perizinan[tambah_u]" {{ isset(old("perizinan")['tambah_u']) ? 'checked=""' : '' }}>
-                    <label>Tambah user baru</label>
-                  </fieldset>
-                  <fieldset>
-                    <input type="checkbox" name="perizinan[jenis_u]" {{ isset(old("perizinan")['jenis_u']) ? 'checked=""' : '' }}>
-                    <label>Perizinan Jenis User</label>
-                  </fieldset>
-                </div>
-                <h5>Sub-menu</h5>
-                <div class="form-group skin skin-square">
-                  <fieldset>
-                    <input type="checkbox" name="perizinan[edit_u]" {{ isset(old("perizinan")['edit_u']) ? 'checked=""' : '' }}>
-                    <label>Edit user</label>
-                  </fieldset>
-                  <fieldset>
-                    <input type="checkbox" name="perizinan[sdelete_u]" {{ isset(old("perizinan")['sdelete_u']) ? 'checked=""' : '' }}>
-                    <label>Hapus user (soft delete)</label>
-                  </fieldset>
-                  <fieldset>
-                    <input type="checkbox" name="perizinan[pdelete_u]" {{ isset(old("perizinan")['pdelete_u']) ? 'checked=""' : '' }}>
-                    <label>Hapus user (permanent delete)</label>
-                  </fieldset>
-                  <fieldset>
-                    <input type="checkbox" name="perizinan[restore_u]" {{ isset(old("perizinan")['restore_u']) ? 'checked=""' : '' }}>
-                    <label>Restore user</label>
-                  </fieldset>
-                </div>
+                </fieldset>
+                <fieldset>
+                  <input type="checkbox" name="perizinan[tambah_u]" {{ isset(old("perizinan")['tambah_u']) ? 'checked=""' : '' }}>
+                  <label>Tambah user baru</label>
+                </fieldset>
+                <fieldset>
+                  <input type="checkbox" name="perizinan[jenis_u]" {{ isset(old("perizinan")['jenis_u']) ? 'checked=""' : '' }}>
+                  <label>Perizinan Jenis User</label>
+                </fieldset>
+                <fieldset>
+                  <input type="checkbox" name="perizinan[tambah_jenis]" {{ isset(old("perizinan")['tambah_jenis']) ? 'checked=""' : '' }}>
+                  <label>Tambah Jenis User</label>
+                </fieldset>
               </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-12">
-          <div class="card">
-            <div class="card-body">
-              <div class="card-block">
-                <div class="form-actions right">
-                  <a href="{{ url('user') }}" class="btn btn-warning mr-1">
-                    <i class="ft-x"></i> Kembali
-                  </a>    
-                  <button type="submit" class="btn btn-primary">
-                    <i class="fa fa-check-square-o"></i> Simpan
-                  </button>
-                </div>
+              <h5>Sub-menu</h5>
+              <div class="form-group skin skin-square">
+                <fieldset>
+                  <input type="checkbox" name="perizinan[edit_u]" {{ isset(old("perizinan")['edit_u']) ? 'checked=""' : '' }}>
+                  <label>Edit user</label>
+                </fieldset>
+                <fieldset>
+                  <input type="checkbox" name="perizinan[sdelete_u]" {{ isset(old("perizinan")['sdelete_u']) ? 'checked=""' : '' }}>
+                  <label>Hapus user (soft delete)</label>
+                </fieldset>
+                <fieldset>
+                  <input type="checkbox" name="perizinan[pdelete_u]" {{ isset(old("perizinan")['pdelete_u']) ? 'checked=""' : '' }}>
+                  <label>Hapus user (permanent delete)</label>
+                </fieldset>
+                <fieldset>
+                  <input type="checkbox" name="perizinan[restore_u]" {{ isset(old("perizinan")['restore_u']) ? 'checked=""' : '' }}>
+                  <label>Restore user</label>
+                </fieldset>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </form>
-  </div>
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-body">
+            <div class="card-block">
+              <div class="form-actions right">
+                <a href="{{ url('user') }}" class="btn btn-warning mr-1">
+                  <i class="ft-x"></i> Kembali
+                </a>    
+                <button type="submit" class="btn btn-primary">
+                  <i class="fa fa-check-square-o"></i> Simpan
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

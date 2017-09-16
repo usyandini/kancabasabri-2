@@ -53,4 +53,17 @@ class User extends Authenticatable
     {
         return $this->hasOne('App\Models\KantorCabang', 'VALUE', 'cabang');
     }
+
+    public function hasAccess($permission)
+    {
+        if ($this->hasPermission($permission)) {
+            return true;
+        }
+        return false;
+    }
+
+    public function hasPermission($permission)
+    {
+        return isset($this->perizinan[$permission]) ? true : false;
+    }
 }
