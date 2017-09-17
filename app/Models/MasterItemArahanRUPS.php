@@ -4,21 +4,19 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class FormMaster extends Model
+class MasterItemArahanRUPS extends Model
 {
     //
 
     protected $connection = 'sqlsrv';
 
-    protected $table = 'form_master';
+    protected $table = 'master_item_arahan_rups';
 
     protected $fillable = 
-    		['tanggal_mulai', 
-    		'tanggal_selesai',
-    		'tw_dari', 
-    		'tw_ke', 
-    		'unit_kerja', 
-    		'kategori',
+    		['id_form_master', 
+            'unit_kerja', 
+    		'jenis_arahan',
+    		'arahan', 
     		'active',
     		'created_at', 
     		'updated_at'];

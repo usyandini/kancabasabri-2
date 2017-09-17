@@ -103,7 +103,7 @@
                                     <div class="col-xs-1">
                                       <div class="form-group">
                                         <label style="visibility:hidden">TW</label>
-                                        <a href="{{url('anggaran/pelaporan_tambah/'.$setting['kategori']) }}" class="btn btn-success" style="width:110px"><i class="fa fa-plus"></i> Tambah</a>                                            
+                                        <a href="{{url('pelaporan/tambah/'.$setting['kategori']) }}" class="btn btn-success" style="width:110px"><i class="fa fa-plus"></i> Tambah</a>                                            
                                       </div>
                                     </div>
                                   </div>
@@ -117,7 +117,7 @@
                         <div class="card">
                             <div class="card-body collapse in">
                                 <div class="card-block">
-                                  <form method="POST" action="{{url('anggaran/submit/tambah_pelaporan') }}" id="insertLaporanAnggaran" name="insertLaporanAnggaran" enctype="multipart/form-data">
+                                  <form method="POST" action="{{url('anggaran/submit/tambah') }}" id="insertLaporanAnggaran" name="insertLaporanAnggaran" enctype="multipart/form-data">
                                   <div class="row">
                                   <div class="col-xs-12">
                                     {{ csrf_field() }}
@@ -312,6 +312,7 @@
                   var editable = {{$setting['edit']?1:0}};
                   var unit_field_insert,unit_field_edit = null;
                   var click_berkas = true;
+                  var statusTable = "";
                   var simpan_file = false;
                   $(document).ready(function() {
 
@@ -371,6 +372,24 @@
                           } 
                         },
                       }, 
+
+                      onItemEditing: function(args) {
+
+                          // delete_temp = [];
+                          if(statusTable=="edit"){
+                            // console.log ("Cancel",     ); 
+                            args.cancel =true;
+                          }
+                          statusTable = "edit";
+                           window.setTimeout(function() {
+                              $('.jsgrid-cancel-edit-button').one('click.avoidAuthorClickHandler', function() {
+                                  statusTable = "null";
+
+                                  click_berkas = true;
+                                  
+                              });
+                           }, 200);
+                      },
                       fields: [
                           {
                             name: "id",

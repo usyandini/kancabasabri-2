@@ -60,7 +60,7 @@
                                         <div class="col-xs-3">
                                             <div class="form-group">
                                               <label>Unit Kerja</label>
-                                              <select class="select2 form-control " name="cari_unit_kerja" id="cari_unit_kerja">
+                                              <select class="select2 form-control " name="cari_unit_kerja" id="cari_unit_kerja" onchange="set_nd_surat()">
                                                 <option value="0">none</option>
                                               </select>
                                             </div>
@@ -231,7 +231,7 @@
                         'async': false, 'type': "GET", 'dataType': 'JSON', 'url': "{{ url('anggaran/get/attributes/unitkerja/1') }}",
                         'success': function (data) {
 
-                          daySelect = document.getElementById('cari_unit_kerja');
+                          cari_unit_kerja = document.getElementById('cari_unit_kerja');
 
                          
                           for(i =0 ;i<data.length;i++){
@@ -242,7 +242,7 @@
                             // }else{
                             //   value = "00"+data[i].VALUE;
                             // }
-                            daySelect.options[daySelect.options.length] = new Option(desc, value);
+                            cari_unit_kerja.options[cari_unit_kerja.options.length] = new Option(desc, value);
                           }
                              
                         }
@@ -255,8 +255,10 @@
                     // for (i = 0; i < nd_surat_option.options.length; i++) {
                     //   nd_surat_option.options[i] = null;
                     // }
+
+                    cari_unit_kerja = document.getElementById('cari_unit_kerja').value;
                     $.ajax({
-                        'async': false, 'type': "GET", 'dataType': 'JSON', 'url': "{{ url('anggaran/get/attributes/nd_surat/1') }}",
+                        'async': false, 'type': "GET", 'dataType': 'JSON', 'url': "{{ url('anggaran/get/attributes/nd_surat').'/' }}"+encodeURI(cari_unit_kerja),
                         'success': function (data) {
 
                           // nd_surat_option = document.getElementById('cari_nd_surat');
@@ -289,6 +291,6 @@
                     // alert(JSON.stringify(inputs));
                   }
                   window.setUnitKerja({{$userCabang.",".$userDivisi}});
-                  window.set_nd_surat();
+                  
                 </script>
                 @endsection

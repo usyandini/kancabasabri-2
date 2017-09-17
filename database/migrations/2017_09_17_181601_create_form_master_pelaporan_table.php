@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateMasterFormTable extends Migration
+class CreateFormMasterPelaporanTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,8 @@ class CreateMasterFormTable extends Migration
     public function up()
     {
         //
-        Schema::create('master_form', function(Blueprint $table) {
+
+        Schema::create('form_master_pelaporan', function(Blueprint $table) {
             $db = DB::connection('sqlsrv2')->getDatabaseName();
             $table->increments('id');           
             $table->date('tanggal_mulai');
@@ -34,5 +35,6 @@ class CreateMasterFormTable extends Migration
     public function down()
     {
         //
+        Schema::drop('form_master_pelaporan');
     }
 }

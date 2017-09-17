@@ -5,26 +5,30 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
-use App\Models\FormMaster;
-use App\Models\ListLaporanAnggaran;
-use App\Models\FileFormMaster;
+use App\Models\FormMasterPelaporan;
+use App\Models\MasterItemPelaporanAnggaran;
+use App\Models\MasterItemArahanRUPS;
+use App\Models\BerkasFormItemMaster;
 
 
 class PelaporanController extends Controller
 {
-    protected $FormMasterModel;
-    protected $ListLaporanAnggaranModel;
-    protected $FileFormMasterModel;
+    protected $FormMasterPelaporanModel;
+    protected $MasterItemPelaporanAnggaranModel;
+    protected $MasterItemArahanRUPSModel;
+    protected $BerkasFormItemMasterModel;
 
 
     public function __construct(
-       FormMaster $FormMaster, 
-       ListLaporanAnggaran $ListLaporanAnggaran, 
-       FileFormMaster $FileFormMaster )
+       FormMasterPelaporan $FormMasterPelaporan, 
+       MasterItemPelaporanAnggaran $MasterItemPelaporanAnggaran, 
+       MasterItemArahanRUPS $MasterItemArahanRUPS,
+       BerkasFormItemMaster $BerkasFormItemMaster )
     {
-        $this->FormMasterModel = $FormMaster;
-        $this->ListLaporanAnggaranModel = $ListLaporanAnggaran;
-        $this->FileFormMasterModel = $FileFormMaster;
+        $this->FormMasterPelaporanModel = $FormMasterPelaporan;
+        $this->MasterItemPelaporanAnggaranModel = $MasterItemPelaporanAnggaran;
+        $this->MasterItemArahanRUPSModel = $MasterItemArahanRUPS;
+        $this->BerkasFormItemMasterModel = $BerkasFormItemMaster;
         $this->userCabang = '00';
         $this->userDivisi = '16';
         
@@ -328,7 +332,7 @@ class PelaporanController extends Controller
 
         }
         // if($request->kategori == "laporan_anggaran")
-        return redirect('anggaran/pelaporan/'.$kategori."/".urlencode($id_form_master)."/0");
+        return redirect('pelaporan/'.$kategori."/".urlencode($id_form_master)."/0");
     }   
 
     public function getFiltered($id,$kategori){

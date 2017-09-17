@@ -4,11 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class FileFormMaster extends Model
+class BerkasFormItemMaster extends Model
 {
     //
 
     protected $connection = 'sqlsrv';
 
-    protected $table = 'file_form_master';
+    protected $table = 'berkas_form_item_master';
 }

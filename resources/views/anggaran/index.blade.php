@@ -368,8 +368,6 @@
                 </script>
                 <script type="text/javascript">
                   var inputs = [];
-                  var delete_file = [];
-                  var delete_temp = [];
                   var hasil=[];
                   var upload_file = [];
                   var temp_file = [];
@@ -387,7 +385,7 @@
                   var tempIdCounter = totalRows  = jumlah_file=0
                   var simpan_file =false;
                   var index_modal = -1;
-                  var isInput = false;
+                  var click_berkas = true;
                   var statusTable = "null";
                   var countFile = 0;
                   
@@ -433,6 +431,8 @@
                           item["tw_iv"]= validDigits(item.tw_iv);
                           item["anggarana_setahun"]= validDigits(item.anggarana_setahun);
                           item["delete"]="none";
+
+                          click_berkas =true;
                                                       
                           inputs.push(item);
 
@@ -453,14 +453,18 @@
                               for(i=0;i<inputs.length;i++){
                                 if(inputs[i]["id"]==item.id){
                                   item["tempId"]=inputs[i]["tempId"];
-                                  inputs[i] = item;
+                                  if(inputs[i]["file"].length>0){
+                                    for(j=0;j<inputs[i]["file"].length;j++){
+                                      item["file"][j]["delete"]=inputs[i]["file"][j]["delete"];
+                                    }
+                                    inputs[i] = item; 
+                                  }
                                 }
                               }
                             }
                           }
-                          
-                          // inputs.splice(item["tempId"], 1, item);  
-                          // alert(validDigits(item.nilai_persatuan)+":"+JSON.stringify(inputs));
+
+                          click_berkas = true;
                         },
                       }, 
                       onRefreshed: function(args) {
@@ -483,23 +487,21 @@
                             }
                           }
                         }
-                        // if(count_berkas == 0){
-                        //   args.cancel = true;
-                        //   alert("Harap Disertai minimal 1 berkas");
-                        // }
                       },
                       onItemEditing: function(args) {
 
-                          delete_temp = [];
                           if(statusTable=="edit"){
-                            // console.log ("Cancel",     ); 
                             args.cancel =true;
                           }
                           statusTable = "edit";
                            window.setTimeout(function() {
                               $('.jsgrid-cancel-edit-button').one('click.avoidAuthorClickHandler', function() {
                                   statusTable = "null";
+
+                                  list_berkas[index_modal] = inputs[index_modal]["file"];
+                                  click_berkas = true;
                                   
+                                  // alert("Cancel : "+JSON.stringify(inputs[index_modal]["file"]));
                               });
                            }, 200);
                       },
@@ -507,20 +509,15 @@
                         for(i=0;i<inputs.length;i++){
                           if(inputs[i]['id']==args.item['id']){
                             if(args.item["id"]==-1){
-                              // if(inputs[i][tempId]!=null){
                               if(inputs[i]['tempId']==args.item['tempId']){
                                 inputs[i]["delete"]="delete";
-                                // alert(JSON.stringify(inputs[i]));
                               }
                             }else{
                               inputs[i]["delete"]="delete";
-
-                              // alert(JSON.stringify(inputs[i]));
                             }
                             
                             break;
                           }else{
-                            // alert("not "+item['id']);
                           }
                         }
                           statusTable = "null";
@@ -528,27 +525,7 @@
                       },
                       onItemUpdating:function(args){
                         var count_berkas = 0;
-                        // delete_file[index_modal] = [];
-                        for(i=0;i<delete_temp.length;i++){
-                          // delete_file[index_modal][i]= {};
-                          if(delete_temp[i]['name'] == 'delete'){
-
-                              delete_file.push(delete_temp[i]);
-                              list_berkas[index_modal][i] = null;
-                          }
-                          // delete_file[index_modal][i]["id"]= delete_temp[i]["id"];
-                        }
-                        delete_temp = [];
-                          // alert(JSON.stringify(upload_file[args.item.file]));
-
-                        // if(upload_file[args.item.file] != null){
-                        //   for(i=0;i<upload_file[args.item.file].length;i++){
-                        //     if(upload_file[args.item.file][i]!=null){
-                        //       count_berkas++;
-                        //       readerPrev(i,index_modal);
-                        //     }
-                        //   }
-                        // }
+                        
                         if(upload_file[index_modal] != null){
                           for(i=0;i<upload_file[index_modal].length;i++){
                             if(upload_file[index_modal][i]!=null){
@@ -557,16 +534,22 @@
                             }
                           }
                         }
-                        if(args.item.file.length>0){
-                          for(i =0;i<args.item.file.length;i++){
-                            count_berkas++;
-                          }
-                        }
 
-                        // if(count_berkas == 0){
-                        //   args.cancel = true;
-                        //   alert("Harap Disertai minimal 1 berkas");
+                        // if(args.item.file.length>0){
+                        //   for(i =0;i<args.item.file.length;i++){
+                        //     if(list_berkas[index_modal][i]["delete"]=="none"){
+                        //         count_berkas++;
+                        //     }
+
+
+                              // alert("update : "+list_berkas[index_modal][i]["delete"]);
+                            
+                        //   }
                         // }
+
+                        // inputs[index_modal]["file"]=list_berkas[index_modal];
+
+                        // alert("update : "+JSON.stringify(inputs[index_modal]["file"]));
                       },
                       onItemUpdated: function(args) {
                         // alert("updated-"+args.item.file);
@@ -1078,18 +1061,23 @@
                           },
                           { name: "file", align:"center", title: "Berkas",  width: 150 ,
 
-                            itemTemplate: function(value) {
+                            itemTemplate: function(value,item) {
                               // alert("null");
+
+                              // alert(item.tempId);
                               var id_list=0;
                               var count_berkas=0;
                               if(value.length>0){
                                 for(i =0;i<value.length;i++){
                                   id_list = value[i]['count'];
-                                  count_berkas++;
+                                  // alert(JSON.stringify(inputs[id_list]["file"][i]));
+                                  if(inputs[id_list]["file"][i]["delete"]=="none")
+                                    count_berkas++;
                                 }
                               }else{
                                 id_list=value
                               }
+
                               if(upload_file[id_list] != null){
                                 for(i=0;i<upload_file[id_list].length;i++){
                                   if(upload_file[id_list][i]!=null){
@@ -1141,7 +1129,8 @@
                               if(value.length>0){
                                 for(i =0;i<value.length;i++){
                                   id_list = value[i]['count'];
-                                  count_berkas++;
+                                  if(inputs[id_list]["file"][i]["delete"]=="none")
+                                    count_berkas++;
                                 }
                               }else{
                                 id_list=value
@@ -1204,7 +1193,6 @@
                       $.ajax({
                           'async': false, 'type': "GET", 'dataType': 'JSON', 'url': "{{ url('anggaran/get/filtered/') }}/"+nd_surat+"/anggaran",
                           'success': function (data) {
-                              // alert(document.getElementById("stat_anggaran").value);
                                 var persetujuan = status_anggaran = "";
                                 switch(data[0].persetujuan){
                                   case "-1" : persetujuan="";break;
@@ -1237,9 +1225,6 @@
                                   document.getElementById("grup_m").style.display="none";
                                   document.getElementById("grup_r").style.display="none";
                                   document.getElementById("grup_uk").style.display="block";
-                                  // document.getElementById("edit_button").style.display = "none";
-                                  // document.getElementById("save_button").style.display = "none";
-                                  // document.getElementById("send_button").style.display = "none";
                                 }else if(data[0].persetujuan == "9"){
                                   document.getElementById("grup_m").style.display="none";
                                   document.getElementById("grup_r").style.display="none";
@@ -1267,7 +1252,6 @@
                                   document.getElementById("edit_r").style.display="none";
                                   document.getElementById("save_r").style.display="block";
                                   document.getElementById("send_r").style.display="block";
-                                  // alert({{$reject}});
                                   var reject = {{$reject ? 1:0}};
                                   if(reject == 1)
                                     document.getElementById("send_r").setAttribute('onclick','check("Tolak");');
@@ -1277,7 +1261,6 @@
                                   
                                 }else{
                                   for(i=1;i<data.length;i++){
-                                // alert(data[0].persetujuan+"???"+data[i].persetujuan);
                                     if(parseInt(data[0].persetujuan) < parseInt(data[i].persetujuan)){
 
                                       changeButton();
@@ -1368,9 +1351,13 @@
 
                                 inputs[i]["delete"]="none";
                                 inputs[i]["tempId"]= tempIdCounter++;
+                                for(j=0;j<inputs[i]["file"].length;j++){
+                                  inputs[i]["file"][j]["delete"]="none";
+                                }
                                 list_berkas[i] = {};
                                 list_berkas[i] = data[i]["file"];
-                                // alert(i+" : "+JSON.stringify(list_berkas[i]));
+                                
+                                // alert(JSON.stringify(inputs[i]));
                               }
                           }
                           
@@ -1381,8 +1368,6 @@
                     $.ajax({
                         'async': false, 'type': "GET", 'dataType': 'JSON', 'url': "{{ url('anggaran/get/attributes') }}/mataanggaran/-1",
                         'success': function (data) {
-
-                            // alert("berhasil");
                             tmp = data;
                             if(type == "edit"){
                               $(jenis_field_edit).val("Contoh Jenis");
@@ -1397,8 +1382,6 @@
                               $(sub_field_insert).val("Contoh Sub Pos");
                               $(satuan_field_insert).val("Contoh Satuan");
                             }
-                            
-                            // $(unitk_field).val("Contoh Unit Kerja");
                         }
                     });
                   }
@@ -1434,7 +1417,6 @@
                           
                         }
                       }
-                      // alert(status==1);
                       if(status == 1){
                         stop = false;
                       }else{
@@ -1482,9 +1464,6 @@
                           document.getElementById("form_penolakan").style.display = form_penolakan;
                           document.getElementById("button_peryataan").innerHTML = "Ya, "+type;
 
-                          // $('input[name="list_anggaran_values"]').val(JSON.stringify(inputs));
-                          // alert(JSON.stringify(inputs));
-                          // $('form[id="insertAnggaran"]').submit();
                           if(type == "Tolak"&&document.getElementById("alasan_penolakan".value="")){
                             toastr.error("Silahkan Isi Alasan Penolakan Anda. Terima kasih.", "Alasan Penolakan Kosong.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
                           }else{
@@ -1543,66 +1522,68 @@
                     };
                   }
                   function setModalFile(index) {
-                    $('#files').replaceWith($('#files').val('').clone(true));
-                    $('#list_file').empty();
-                    $('#list_download').empty();
-                    banyak = 0;
-                    hasil2 = [];
-                    if(delete_temp.length==0){
-                      delete_temp = list_berkas[index]; 
-                    }
-                    
-                    if(delete_temp!=null){
-                      if(delete_temp.length>0){
-                        for(i = 0; i<delete_temp.length; i++){
-                          if(delete_temp[i]!=null){
-                            // if(delete_temp[i]['name'] == 'delete'){
-                            //   delete_temp[i] = null;
-                            // }else{
-                              link = "{{url('anggaran/get/download')}}/"+delete_temp[i]['id'];
-                              hasil2[i] = '<div id="db_file_'+i+'"><div class="col-xs-10"><a href="'+link+'" ><li>'+delete_temp[i]['name']+'</li></div>';
-                              hasil2[i] += '<div class="col-xs-1"><i class="fa fa-download "></i></div></a></div>';
-                              // hasil2[i] += '<div class="col-xs-1" onclick="deleteFileDB('+i+')"><i style="color:red" class="fa fa-close "></i></div><br/><br/></div>';
-                            // }
+                    if(click_berkas){
+                      $('#files').replaceWith($('#files').val('').clone(true));
+                      $('#list_file').empty();
+                      $('#list_download').empty();
+                      banyak = 0;
+                      hasil2 = [];
+                      
+                      if( list_berkas[index]!=null){
+                        if( list_berkas[index].length>0){
+                          for(i = 0; i< list_berkas[index].length; i++){
+                            if( list_berkas[index][i]!=null){
+                              if(list_berkas[index][i]["delete"]=="none"){
+                                link = "{{url('anggaran/get/download')}}/"+ list_berkas[index][i]['id'];
+                                hasil2[i] = '<div id="db_file_'+i+'"><div class="col-xs-10"><a href="'+link+'" ><li>'+ list_berkas[index][i]['name']+'</li></div>';
+                                if(editableStat == 1){
+                                  hasil2[i] += '<div class="col-xs-1" ><i class="fa fa-download "></i></div></a>';
+                                  hasil2[i] += '<div class="col-xs-1" onclick="deleteFileDB('+i+')"><i style="color:red" class="fa fa-close "></i></div><br/><br/></div>';
+                                }else{
+                                  hasil2[i] += '<div class="col-xs-2"><i class="fa fa-download "></i></div></a><br/><br/></div>';
+                                }
+                              }
+                            }
+                          }
+                          $("#list_download").append(hasil2);
+                        }
+                      }
+
+                      if(upload_file[index]!=null){
+                        var nameCon = "";
+                        for(i = 0; i<upload_file[index].length; i++){
+                          if(upload_file[index][i]!=null){
+                            nameCon += '<div id="upload_'+i+'" ><div class="col-xs-10"> <li> '+upload_file[index][i]['name']+'</li></div>';
+                            nameCon += '<div class="col-xs-2" onclick="deleteRowFile('+i+','+index+')"><i class="fa fa-close "></i></div><br/><br/></div>';
+                            temp_file[i]=upload_file[index][i];
                           }
                         }
-                        $("#list_download").append(hasil2);
+                        banyak+=upload_file[index].length;
+                       $("#list_file").append(nameCon);
                       }
-                    }
 
-                    if(upload_file[index]!=null){
-                      // alert(upload_file[index].length);
-                      var nameCon = "";
-                      for(i = 0; i<upload_file[index].length; i++){
-                        if(upload_file[index][i]!=null){
-                          nameCon += '<div id="upload_'+i+'" ><div class="col-xs-10"> <li> '+upload_file[index][i]['name']+'</li></div>';
-                          nameCon += '<div class="col-xs-2" onclick="deleteRowFile('+i+','+index+')"><i class="fa fa-close "></i></div><br/><br/></div>';
-                          temp_file[i]=upload_file[index][i];
-                        }
+                      //;
+                      index_modal = index;
+                      if(document.getElementById('files') !=null ){
+                        document.getElementById('files').onchange = function () {
+                          value = this.files;
+                          for(i = banyak; i<(banyak+value.length); i++){
+                            hasil[i] = '<div id="upload_'+i+'" ><div class="col-xs-10"> <li> '+value[(i-banyak)]['name']+'</li></div>';
+                            hasil[i] += '<div class="col-xs-2" onclick="deleteRowFile('+i+','+index+')"><i class="fa fa-close "></i></div><br/><br/></div>';
+                            temp_file[i]=value[(i-banyak)];
+                          }
+                          
+                          banyak+=value.length; 
+                          $("#list_file").append(hasil);
+                        };
                       }
-                      banyak+=upload_file[index].length;
-                     $("#list_file").append(nameCon);
+                      $('#modal_berkas').modal({
+                          backdrop: 'static'
+                      })
+                    }else{
+                      alert("Silahkan simpan atau batalkan perubahan data untuk menambah atau menghapus berkas kembali");
+                    
                     }
-
-                    //;
-                    index_modal = index;
-                    if(document.getElementById('files') !=null ){
-                      document.getElementById('files').onchange = function () {;
-                        // $('#list_file').empty();
-                        value = this.files;
-                        for(i = banyak; i<(banyak+value.length); i++){
-                          hasil[i] = '<div id="upload_'+i+'" ><div class="col-xs-10"> <li> '+value[(i-banyak)]['name']+'</li></div>';
-                          hasil[i] += '<div class="col-xs-2" onclick="deleteRowFile('+i+','+index+')"><i class="fa fa-close "></i></div><br/><br/></div>';
-                          temp_file[i]=value[(i-banyak)];
-                        }
-                        
-                        banyak+=value.length; 
-                        $("#list_file").append(hasil);
-                      };
-                    }
-                    $('#modal_berkas').modal({
-                        backdrop: 'static'
-                    })
                   }
                   function deleteRowFile(i,index){
                       $("#upload_"+i).remove();
@@ -1612,9 +1593,9 @@
                   function deleteFileDB(i){
                       $("#db_file_"+i).remove();
                       hasil2[i] = "";
-                      delete_temp[i]['name'] = "delete";
                   }
                   $('#simpan_file').click(function() {
+                    click_berkas = false;
                     simpan_file =true;
                     countFile=0;
                     hasil=[];
@@ -1627,6 +1608,14 @@
                         if(temp_file[i]!=null){
                           countFile++;
                         }
+                    }
+
+                    for(i=0;i<hasil2.length;i++){
+                      if(hasil2[i] == ""){
+                        list_berkas[index_modal][i]["delete"]="delete";
+                      }else{
+                        countFile++;
+                      }
                     }
                     var title = "Unggah Berkas";
                     if(countFile>0){

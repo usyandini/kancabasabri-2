@@ -386,7 +386,7 @@ class AnggaranController extends Controller
                 }
             }
 
-            if($request->status == 'tambah'||($request->status == 'edit')){
+            if($request->status == 'tambah'||($request->setuju == 'Simpan')){
                 $index2 = 0;
                 $id_list_anggaran;
                 if($request->status == 'edit'){
@@ -404,10 +404,8 @@ class AnggaranController extends Controller
                     $id_list_anggaran = $LAnggaranInsert->id;
                 }
 
-
                 if($value->delete == "none"){
                     if(isset($_POST['count_file_'.$index])){
-                        // echo $index."<br />";
                         for($i=0;$i<$_POST['count_file_'.$index];$i++){
                             $data = $_POST['file_'.$index."_".$index2];
                             if($data!="null"){
@@ -429,6 +427,14 @@ class AnggaranController extends Controller
                                 FileListAnggaran::insert($store_file_list_values);
                                 $index2++;
                             }
+                        }
+                    }
+                    foreach ($value->file as $list_file) {
+                        if($list_file->delete == "delete"){
+                            $file_update = [
+                                    'active'         => '0',
+                                    'updated_at'    => \Carbon\Carbon::now()];
+                            FileListAnggaran::where('id', $list_file->id)->update($file_update);
                         }
                     }
                 }
@@ -477,7 +483,7 @@ class AnggaranController extends Controller
                     }else{
                         $id_list_anggaran = $list_anggaran->id_first;
                     }
-                    $fileListAnggaran = $this->fileListAnggaranModel;
+                    $fileListAnggaran = $this->fileListAnggaranModel->where('active','1');
                     $fileList = [];
                     foreach ($fileListAnggaran->get() as $file_list_anggaran) {
                         if($file_list_anggaran->id_list_anggaran == $id_list_anggaran){
@@ -564,7 +570,7 @@ class AnggaranController extends Controller
                                     ->where('active', '1');
             }
 
-            $fileListAnggaran = $this->fileListAnggaranModel;
+            $fileListAnggaran = $this->fileListAnggaranModel->where('active','1');
             // echo "Terbaru<br/>";
             foreach ($listAnggaran->get() as $list_anggaran) {
                 $fileList = [];
