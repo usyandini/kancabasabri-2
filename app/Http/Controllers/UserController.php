@@ -134,15 +134,15 @@ class UserController extends Controller
 
   public function destroy(Request $request, $id)
   {
-   $user = User::withTrashed()->where('id', $id)->first()->name ? User::withTrashed()->where('id', $id)->first()->name : User::withTrashed()->where('id', $id)->first()->username;
+     $user = User::withTrashed()->where('id', $id)->first()->name ? User::withTrashed()->where('id', $id)->first()->name : User::withTrashed()->where('id', $id)->first()->username;
 
-   if ($request->is_force == '1') {
-    User::where('id', $id)->forceDelete();
-} else {
-    User::where('id', $id)->delete();
-}
+     if ($request->is_force == '1') {
+        User::where('id', $id)->forceDelete();
+    } else {
+        User::where('id', $id)->delete();
+    }
 
-session()->flash('success', 'User atas nama <b>'.$user.'</b> berhasil dihapus');
-return redirect()->back();
+    session()->flash('success', 'User atas nama <b>'.$user.'</b> berhasil dihapus');
+    return redirect()->back();
 }
 }

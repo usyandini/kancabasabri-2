@@ -153,23 +153,5 @@
                       <script src="{{ asset('app-assets/vendors/js/forms/icheck/icheck.min.js') }}" type="text/javascript"></script>
                       <script src="{{ asset('app-assets/js/scripts/forms/checkbox-radio.min.js') }}" type="text/javascript"></script>
                       <!-- END PAGE LEVEL JS-->
-                      <script type="text/javascript">
-                        $('select[name="cabang"]').on('change', function() {
-                          if ($(this).val() !== '00') {
-                            $('select[name="divisi"]').prop("disabled", true);
-                            toastr.info("Divisi tidak perlu dipilih jika Kantor Cabang yang dipilih adalah <b>Kantor pusat</b>.", "Kantor Cabang dipilih", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:10e3});
-                          } else {
-                            $('select[name="divisi"]').prop("disabled", false);
-                          }
-                        });
-
-                        $('select[name="jenis_user"]').on('change', function(){
-                          $.post('{{ url('/jenis_user/handle') }}', {_token: '{{ csrf_token() }}', id: $(this).val()}, function(e) {
-                            $.each(e, function(e) {
-                              $('input[name="perizinan[' + e + ']"]').iCheck('check');
-                            })
-                          });
-                        });
-                      </script>
                       @include('user.js-perizinan')
                       @endsection
