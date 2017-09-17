@@ -57,7 +57,21 @@
                             <div class="alert alert-warning">
                               <b>Data tarik tunai {{ $tariktunai->cabang }} sudah dilakukan verifikasi.</b>
                             </div>
-                        </div>
+                          </div>
+                        @endif
+
+                        @if(session('integrated'))
+                          <div class="col-xs-7">
+                              <div class="alert alert-success">
+                                <b>Data tarik tunai {{ $tariktunai->cabang }} sudah tercatat journal di Axapta.</b>
+                              </div>
+                          </div>
+                          @elseif(!session('integrated'))
+                          <div class="col-xs-7">
+                              <div class="alert alert-warning">
+                                <b>Data tarik tunai {{ $tariktunai->cabang }} belum tercatat journal di Axapta.</b>
+                              </div>
+                          </div>
                         @endif
 
                         @if (count($errors) > 0)
@@ -102,21 +116,21 @@
                                     <div class="col-md-6">
                                       <div class="form-group">
                                         <label for="nominal">Saldo (Dalam IDR)</label>
-                                          <input type="text" readonly="" class="form-control" placeholder="Saldo" name="nominal" value="{{ number_format($tariktunai->nominal) }}" disabled>
+                                          <input type="text" readonly="" class="form-control" placeholder="Saldo" name="nominal" value="{{ number_format($tariktunai->nominal, 0, '', '.') }}" disabled>
                                           <input type="hidden" name="v_nominal" value="{{ $tariktunai->nominal }}">
                                       </div>
                                     </div>
                                     <div class="col-md-6 pull-right">
                                       <div class="form-group">
                                         <label for="nominal_tarik">Sisa Dropping (Dalam IDR)</label>
-                                          <input type="text" id="sisa_dropping" readonly="" name="sisa_dropping" placeholder="Sisa Dropping" class="form-control" value="{{ number_format($tariktunai->sisa_dropping) }}" disabled>
+                                          <input type="text" id="sisa_dropping" readonly="" name="sisa_dropping" placeholder="Sisa Dropping" class="form-control" value="{{ number_format($tariktunai->sisa_dropping, 0, '', '.') }}" disabled>
                                           <input type="hidden" name="v_sisa_dropping" value="{{ $tariktunai->sisa_dropping }}">
                                       </div>
                                     </div>
                                     <div class="col-md-6">
                                       <div class="form-group">
                                         <label for="nominal_tarik">Nominal Tarik Tunai (Dalam IDR)</label>
-                                          <input type="text" id="nominal_tarik" readonly="" name="nominal_tarik" class="form-control" placeholder="Nominal Tarik Tunai" value="{{ number_format($tariktunai->nominal_tarik) }}" disabled>
+                                          <input type="text" id="nominal_tarik" readonly="" name="nominal_tarik" class="form-control" placeholder="Nominal Tarik Tunai" value="{{ number_format($tariktunai->nominal_tarik, 0, '', '.') }}" disabled>
                                           <input type="hidden" name="v_nominal_tarik" value="{{ $tariktunai->nominal_tarik }}">
                                       </div>
                                     </div>
@@ -142,7 +156,7 @@
                                       <div class="form-group">
                                         <h4 class="form-section">Daftar Berkas</h4>
                                         <table>
-                                            @forelse($berkas as $value)
+                                          @forelse($berkas as $value)
                                             <tr>
                                               <li><a href="{{ url('dropping/tariktunai/berkas/download').'/'.$value->id }}" target="_blank">{{ $value->name }}</a></li>
                                             </tr>
@@ -295,11 +309,26 @@
                                       <h4 class="modal-title" id="myModalLabel20">Box Konfirmasi</h4>
                                     </div>
                                     <div class="modal-body" id="confirmation-msg">
-                                      <p>Apakah anda yakin <b>menolak verifikasi</b> untuk tarik tunai {{ $tariktunai->cabang }} ?</p>
+                                      <div class="row">
+                                        <div class="col-md-10" id="reason">
+                                          <form method="GET" action="{{ url('dropping/verifikasi/tariktunai/rejected/'.$tariktunai->id) }}" id="verification">
+                                            <div class="form-group">
+                                              <label>Alasan <b>penolakan</b></label>
+                                              <select class="form-control" name="reason">
+                                                <option value="0">Silahkan pilih alasan anda</option>
+                                                @foreach($reject_reasons as $res)
+                                                  <option value="{{ $res->id }}">{{ $res->content }}</option>
+                                                @endforeach
+                                              </select>
+                                            </div>
+                                          </form>
+                                        </div>
+                                      </div>
                                     </div>
                                     <div class="modal-footer">
-                                      <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">Tidak, kembali</button>
-                                      <a href="{{ url('dropping/verifikasi/tariktunai/rejected/'.$tariktunai->id) }}" class="btn btn-outline-danger">Ya, tolak</a>
+                                      <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">Kembali</button>
+                                      <button onclick="attent()" type="submit" class="btn btn-outline-primary">Submit penolakan</button>
+                                      <!-- <a href="{{ url('dropping/verifikasi/tariktunai/rejected/'.$tariktunai->id) }}" class="btn btn-outline-danger" onclick="attent()" id="tolak1">Ya, tolak</a> -->
                                     </div>
                                   </div>
                                 </div>
@@ -319,19 +348,10 @@
                 @section('customjs')
                 <!-- BEGIN PAGE VENDOR JS-->
                 <script type="text/javascript" src="{{ asset('app-assets/vendors/js/ui/jquery.sticky.js') }}"></script>
-                <script src="{{ asset('app-assets/vendors/js/forms/select/select2.full.min.js') }}" type="text/javascript"></script>
-                <script src="{{ asset('app-assets/vendors/js/forms/toggle/bootstrap-checkbox.min.js') }}"></script>
-                <script src="{{ asset('app-assets/vendors/js/forms/toggle/switchery.min.js') }}" type="text/javascript"></script>
                 <script src="{{ asset('app-assets/vendors/js/extensions/toastr.min.js') }}" type="text/javascript"></script>
-                <script src="{{ asset('app-assets/vendors/js/forms/validation/jqBootstrapValidation.js') }}" type="text/javascript"></script>
-                <script src="{{ asset('app-assets/vendors/js/forms/validation/jquery.validate.min.js') }}" type="text/javascript"></script>
-                <script src="{{ asset('app-assets/vendors/js/forms/icheck/icheck.min.js') }}" type="text/javascript"></script>
                 <!-- END PAGE VENDOR JS-->
                 <!-- BEGIN PAGE LEVEL JS-->
                 <script type="text/javascript" src="{{ asset('app-assets/js/scripts/ui/breadcrumbs-with-stats.min.js') }}"></script>
-                <script src="{{ asset('app-assets/js/scripts/forms/select/form-select2.min.js') }}" type="text/javascript"></script>
-                <script src="{{ asset('app-assets/js/scripts/forms/switch.min.js') }}" type="text/javascript"></script>
-                {{--<script src="{{ asset('app-assets/js/scripts/forms/validation/form-validation.js') }}" type="text/javascript"></script>--}}
                 <script src="{{ asset('app-assets/js/scripts/modal/components-modal.min.js') }}" type="text/javascript"></script>
                 <script src="{{ asset('app-assets/js/scripts/extensions/toastr.min.js') }}" type="text/javascript"></script>
                 <!-- END PAGE LEVEL JS-->  
@@ -339,6 +359,14 @@
                 <script type="text/javascript">
                   function forms_submit() {
                       document.getElementById("tariktunai-form").submit();
+                  };
+
+                  function attent() {
+                    if ($('select[name="reason"]').val() == '0') {
+                      toastr.error("Silahkan input alasan penolakan anda untuk verifikasi lvl 1 ini. Terima kasih.", "Alasan penolakan dibutuhkan.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:10e3});
+                    }else {
+                      $('form[id="verification"]').submit();
+                    }
                   };
                 </script>
                 @endsection

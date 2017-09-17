@@ -53,6 +53,24 @@
                               <b>Anda sudah melakukan konfirmasi Tarik Tunai, harap menunggu verifikasi dari Kantor Pusat.</b>
                             </div>
                         </div>
+                        @elseif(session('reject1'))
+                        <div class="col-xs-8">
+                            <div class="alert alert-warning">
+                              <b>Tarik tunai anda ditolak oleh Akuntansi dengan alasan {{ $notif->reason['content'] }}.<br>Silahkan melakukan <i>tarik tunai</i> kembali.</b>
+                            </div>
+                        </div>
+                        <!-- @elseif(session('integrated'))
+                        <div class="col-xs-7">
+                            <div class="alert alert-success">
+                              <b>Data tarik tunai berhasil terintegrasi dengan Axapta.</b>
+                            </div>
+                        </div>
+                        @elseif(session('notintegrated'))
+                        <div class="col-xs-7">
+                            <div class="alert alert-warning">
+                              <b>Data tarik tunai belum terintegrasi dengan Axapta.</b>
+                            </div>
+                        </div> -->
                         @endif
 
                         @if (count($errors) > 0)
@@ -100,7 +118,7 @@
                                       <div class="form-group">
                                         <label for="nominal">Nominal Dropping (Dalam IDR)</label>
 
-                                          <input type="text" readonly="" class="form-control" placeholder="{{ $dropping->DEBIT }}" name="nominal_dropping" value="{{ number_format($dropping->DEBIT) }}">
+                                          <input type="text" readonly="" class="form-control" placeholder="{{ $dropping->DEBIT }}" name="nominal_dropping" value="{{ number_format($dropping->DEBIT, 0, '','.') }}">
 
                                           <input type="hidden" id="nominal" name="nominal" value="{{ $dropping->DEBIT }}">
                                       </div>
@@ -184,6 +202,7 @@
                                               <th>Nominal Tarik</th>
                                               <th>Sisa Dropping</th>
                                               <th>Attachment</th>
+                                              <th>Status Ax</th>
                                             </tr>
                                           </thead>
                                           @foreach($tariktunai as $history)
@@ -191,16 +210,21 @@
                                             <tr>
                                               <th>{{ date('d-m-Y H:i:s', strtotime($history->created_at)) }}</th>
 
-                                              <td>IDR {{ number_format($history->nominal) }}</td>
-                                              <td>IDR {{ number_format($history->nominal_tarik) }}</td>
-                                              <td>IDR {{ number_format($history->sisa_dropping) }}</td>
+                                              <td>IDR {{ number_format($history->nominal, 0, '','.') }}</td>
+                                              <td>IDR {{ number_format($history->nominal_tarik, 0, '','.') }}</td>
+                                              <td>IDR {{ number_format($history->sisa_dropping, 0, '','.') }}</td>
                                               <td>
-                                              <!-- <li><a href="{{ url('dropping/tariktunai/berkas/download').'/'.$history->fileTarikTunai['id'] }}" target="_blank">{{ $history->fileTarikTunai['name'] }}</a></li> -->
-                                              @foreach($berkas as $value)
-                                                <li><a href="{{ url('dropping/tariktunai/berkas/download').'/'.$history->fileTarikTunai['id'] }}" target="_blank">{{ $history->fileTarikTunai['name'] }}</a></li>
-                                              @endforeach
+                                                @foreach($berkas->where('id_tariktunai', $history->id)->get() as $value)
+                                                  <li><a href="{{ url('dropping/tariktunai/berkas/download').'/'.$value['id'] }}" target="_blank">{{ $value['name'] }}</a></li>
+                                                @endforeach
                                               </td>
-
+                                              <td>
+                                                @if($history->integrated['PIL_POSTED'] == 1)
+                                                  Terintegrasi
+                                                @else
+                                                  -
+                                                @endif
+                                              </td>
                                             </tr>
                                           </tbody>
                                           @endforeach
@@ -264,19 +288,19 @@
                 @section('customjs')
                 <!-- BEGIN PAGE VENDOR JS-->
                 <script type="text/javascript" src="{{ asset('app-assets/vendors/js/ui/jquery.sticky.js') }}"></script>
-                <script src="{{ asset('app-assets/vendors/js/forms/select/select2.full.min.js') }}" type="text/javascript"></script>
+                {{-- <script src="{{ asset('app-assets/vendors/js/forms/select/select2.full.min.js') }}" type="text/javascript"></script>
                 <script src="{{ asset('app-assets/vendors/js/forms/toggle/bootstrap-checkbox.min.js') }}"></script>
-                <script src="{{ asset('app-assets/vendors/js/forms/toggle/switchery.min.js') }}" type="text/javascript"></script>
+                <script src="{{ asset('app-assets/vendors/js/forms/toggle/switchery.min.js') }}" type="text/javascript"></script> --}}
                 <script src="{{ asset('app-assets/vendors/js/extensions/toastr.min.js') }}" type="text/javascript"></script>
-                <script src="{{ asset('app-assets/vendors/js/forms/validation/jqBootstrapValidation.js') }}" type="text/javascript"></script>
+                {{-- <script src="{{ asset('app-assets/vendors/js/forms/validation/jqBootstrapValidation.js') }}" type="text/javascript"></script>
                 <script src="{{ asset('app-assets/vendors/js/forms/validation/jquery.validate.min.js') }}" type="text/javascript"></script>
-                <script src="{{ asset('app-assets/vendors/js/forms/icheck/icheck.min.js') }}" type="text/javascript"></script>
+                <script src="{{ asset('app-assets/vendors/js/forms/icheck/icheck.min.js') }}" type="text/javascript"></script> --}}
                 <!-- END PAGE VENDOR JS-->
                 <!-- BEGIN PAGE LEVEL JS-->
                 <script type="text/javascript" src="{{ asset('app-assets/js/scripts/ui/breadcrumbs-with-stats.min.js') }}"></script>
-                <script src="{{ asset('app-assets/js/scripts/forms/select/form-select2.min.js') }}" type="text/javascript"></script>
+                {{-- <script src="{{ asset('app-assets/js/scripts/forms/select/form-select2.min.js') }}" type="text/javascript"></script>
                 <script src="{{ asset('app-assets/js/scripts/forms/switch.min.js') }}" type="text/javascript"></script>
-                <script src="{{ asset('app-assets/js/scripts/forms/validation/form-validation.js') }}" type="text/javascript"></script>
+                <script src="{{ asset('app-assets/js/scripts/forms/validation/form-validation.js') }}" type="text/javascript"></script> --}}
                 <script src="{{ asset('app-assets/js/scripts/modal/components-modal.min.js') }}" type="text/javascript"></script>
                 <script src="{{ asset('app-assets/js/scripts/extensions/toastr.min.js') }}" type="text/javascript"></script>
                 <!-- END PAGE LEVEL JS-->  
@@ -284,11 +308,12 @@
                 <script type="text/javascript">
                   function forms_submit() {
                       var num = document.getElementById('nominal_tarik').value;
-                      var val = parseFloat(num.replace(/,/g, ''));
+                      //var val = parseFloat(num.replace(/./g, ''));
+                      var val = parseFloat(validDigits(num));
                       var mod = val%100
 
                       if(mod != 0 || val < 100){
-                        alert("Nominal tidak valid. Silahkan input nominal kembali.");
+                        alert("Nominal tidak valid! Silahkan input nominal kembali.\nMinimal input nominal IDR 100 dengan kelipatan 100.");
                       }else{
                         document.getElementById("tariktunai-form").submit();
                       }
@@ -299,7 +324,7 @@
                       var rx=  /(\d+)(\d{3})/;
                       return String(n).replace(/^\d+/, function(w){
                           while(rx.test(w)){
-                              w= w.replace(rx, '$1,$2');
+                              w= w.replace(rx, '$1.$2');
                           }
                           return w;
                       });

@@ -30,7 +30,8 @@ class TarikTunai extends Model
         'SEGMEN_6',
         'ACCOUNT',
 
-        'stat'
+        'stat',
+        'verified_by'
     ];
 
     public function creator()
@@ -38,10 +39,13 @@ class TarikTunai extends Model
     	return $this->belongsTo('App\User', 'created_by', 'id');
     }
 
-    
-
-    public function fileTarikTunai()
+    public function dropping()
     {
-        return $this->hasOne('App\Models\BerkasTarikTunai', 'id_tariktunai', 'id');
+        return $this->hasOne('App\Models\Dropping', 'RECID', 'id_dropping');
+    }
+
+    public function integrated()
+    {
+        return $this->hasOne('App\Models\StagingTarikTunai', 'RECID', 'id');
     }
 }

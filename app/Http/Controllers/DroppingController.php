@@ -13,6 +13,9 @@ use App\Models\TarikTunai;
 use App\Models\PenyesuaianDropping;
 use App\Models\BerkasTarikTunai;
 use App\Models\BerkasPenyesuaian;
+use App\Models\RejectReason;
+use App\Models\RejectTarikTunai;
+use App\Models\RejectPenyesuaian;
 
 use App\Models\AkunBank;
 use App\Models\KantorCabang;
@@ -20,6 +23,9 @@ use App\Models\Program;
 use App\Models\Divisi;
 use App\Models\SubPos;
 use App\Models\Kegiatan;
+
+use App\Models\StagingTarikTunai;
+use App\Models\StagingPengembalian;
 
 use Validator;
 use App\Services\FileUpload;
@@ -137,7 +143,7 @@ class DroppingController extends Controller
                 'bank'          => $dropping->BANK_DROPPING, 
                 'journalnum'    => $dropping->JOURNALNUM, 
                 'transdate'     => date("d-m-Y", strtotime($dropping->TRANSDATE)), 
-                'debit'         => 'IDR '. number_format($dropping->DEBIT),
+                'debit'         => 'IDR '. number_format($dropping->DEBIT, 0, '','.'),
                 'credit'        => 'IDR '. number_format($dropping->KREDIT),
                 'banknum'       => $dropping->REKENING_DROPPING,
                 'company'       => $dropping->CABANG_DROPPING,
@@ -181,18 +187,38 @@ class DroppingController extends Controller
 
         $dropping = $this->droppingModel->where([['RECID', $id_drop], ['DEBIT', '>', 0]])->firstOrFail();
 
+        //dd(StagingTarikTunai::get());
+
         $tariktunai = TarikTunai::where([['id_dropping', $id_drop], ['nominal_tarik', '>', 0], ['stat', 3]])->orderby('sisa_dropping', 'asc')->get();
-        //$berkas = [];
+
+        $status = TarikTunai::where('id_dropping', $id_drop)->orderby('updated_at', 'desc')->first();
+        $notif = '';
         if($tariktunai){
-            foreach($tariktunai as $value){
-                //$berkas = BerkasTarikTunai::where('id_tariktunai', $this->tarikTunaiModel['id'])->get();   
-                $berkas = BerkasTarikTunai::where('id_tariktunai', $value->id)->get();    
-                
-                //$berkas = $tariktunai->fileTarikTunai;  
+            $berkas = [];
+            $berkas = $this->berkasTTModel;
+            $integrated = StagingTarikTunai::where('PIL_POSTED', 1);
+            if($status['stat'] == 2){
+                $notif = RejectTarikTunai::where('id_tariktunai', $status['id'])->orderby('updated_at', 'desc')->first();
+                session()->flash('reject1', true);
             }
+            // elseif($status['stat'] == 3){
+            //     $integrated = StagingTarikTunai::where([['RECID', $status['id']],['PIL_POSTED', 1]])->orderby('PIL_TRANSDATE', 'desc')->first();
+            //     if($integrated){
+            //         session()->flash('integrated', true);
+            //     }else{
+            //         session()->flash('notintegrated', true);
+            //     }
+            // }
         }
-        //dd($tariktunai, $berkas);
-        return view('dropping.tariktunai.tariktunai', ['tariktunai' => $tariktunai, 'dropping' => $dropping, 'berkas' => $berkas]);
+        //dd($berkas);
+        return view(
+            'dropping.tariktunai.tariktunai', 
+                ['tariktunai' => $tariktunai, 
+                 'dropping' => $dropping, 
+                 'berkas' => $berkas, 
+                 'notif' => $notif,
+                 'integrated' => $integrated
+                ]);
     }
 
     public function tarik_tunai_process($id_drop, Request $request)
@@ -214,7 +240,8 @@ class DroppingController extends Controller
             [
                 'berkas.*' => 'required',
                 //'berkas.*' => 'required|mimes:jpg,jpeg,png,bmp|max:20000', // batasan image file max 20 mb
-                'nominal_tarik' => 'not_in:0|required|regex:/^\d+([\,]\d+)*([\.]\d+)?$/'
+                'nominal_tarik' => 'not_in:0|required|regex:/^\d+([\.]\d+)*([\,]\d+)?$/' //titik separator
+                //'nominal_tarik' => 'not_in:0|required|regex:/^\d+([\,]\d+)*([\.]\d+)?$/' //koma separator
                 //'nominal_tarik' => 'not_in:0|required|regex:/^[1-8](,[1-8])*$/'
             ], 
             [
@@ -228,7 +255,8 @@ class DroppingController extends Controller
         //----- jika ada record maka tariktunai berasal dari (nominal = sisa dropping sebelumnya) - nominal tarik  -----//
 
         $string_tarik = $request->nominal_tarik;
-        $tarik = floatval(str_replace('.', ',', str_replace(',', '', $string_tarik)));
+        $tarik = floatval(str_replace('.', '', $string_tarik));
+        //dd($tarik);
 
         if($validatorTT->passes() && $temp_sisa['stat'] !=1){
             if($temp_sisa){
@@ -286,13 +314,25 @@ class DroppingController extends Controller
 
         $dropping = $this->droppingModel->where([['RECID', $id_drop], ['DEBIT', '>', 0]])->firstOrFail();
         $akunBank = $this->akunBankModel->get();
-        $kesesuaian = PenyesuaianDropping::where([['id_dropping', $id_drop], ['stat', 8]])->first();
+        $kesesuaian = PenyesuaianDropping::where([['id_dropping', $id_drop], ['stat', 8]])->orderby('updated_at', 'desc')->first();
+        $status = PenyesuaianDropping::where('id_dropping', $id_drop)->orderby('updated_at', 'desc')->first();
+        $notif = '';
         $berkas = [];
-        if($kesesuaian){
-            $berkas = BerkasPenyesuaian::where('id_penyesuaian', $kesesuaian->id)->get();
-         }
-        //dd($berkas);
-        return view('dropping.penyesuaian.penyesuaian', ['dropping' => $dropping, 'kesesuaian' => $kesesuaian, 'kcabangs' => $this->kantorCabangs, 'berkas' => $berkas]); 
+
+        if($status){
+            if($status['stat'] == 8){
+                $berkas = BerkasPenyesuaian::where('id_penyesuaian', $status->id)->get();
+             }elseif($status['stat'] == 5){
+                $notif = RejectPenyesuaian::where('id_penyesuaian', $status['id'])->orderby('created_at', 'desc')->first();
+                session()->flash('reject1', true);
+             }elseif($status['stat'] == 7){
+                $notif = RejectPenyesuaian::where('id_penyesuaian', $status['id'])->orderby('created_at', 'desc')->first();
+                session()->flash('reject2', true);
+             }
+        }
+
+        //dd($notif);
+        return view('dropping.penyesuaian.penyesuaian', ['dropping' => $dropping, 'kesesuaian' => $kesesuaian, 'kcabangs' => $this->kantorCabangs, 'berkas' => $berkas, 'notif' => $notif]); 
     }
 
     public function penyesuaian_process($id_drop, Request $request)
@@ -429,7 +469,7 @@ class DroppingController extends Controller
             header('Content-Type: '.$berkas->type);
             header('Content-Disposition: inline; filename="'.basename($file).'"');
             //header('Expires: 0');
-            header('Expires: '.gmdate('D, d M Y H:i:s \G\M\T', time() + (60))); // 1 hour
+            header('Expires: '.gmdate('D, d M Y H:i:s \G\M\T', time() + (60*60))); // 1 hour
             header('Cache-Control: must-revalidate');
             //header('Pragma: public');
             header('Content-Length: '.$berkas->size);
@@ -476,6 +516,13 @@ class DroppingController extends Controller
             $kegiatan = Kegiatan::where('VALUE', $dataTT->SEGMEN_6)->first();
         }
 
+        $integrated = StagingTarikTunai::where([['RECID', $id], ['PIL_POSTED', 1]])->first();
+        if($integrated){
+            session()->flash('integrated', true);
+        }else{
+            session()->flash('integrated', false);
+        }
+
         return view('dropping.tariktunai.verifikasi', [
             'tariktunai' => $dataTT,
             'berkas' => $berkas,
@@ -484,7 +531,8 @@ class DroppingController extends Controller
             'kpkc' => $kpkc,
             'divisi' => $divisi,
             'subpos' => $subpos,
-            'kegiatan' => $kegiatan
+            'kegiatan' => $kegiatan,
+            'reject_reasons' => RejectReason::where('type', 3)->get()
             ]);
     }
 
@@ -496,9 +544,10 @@ class DroppingController extends Controller
         {
             switch($reaction){
                 case 'verified':
-                    TarikTunai::where('id', $id_tarik)->update(array('stat' => 3));
+                    TarikTunai::where('id', $id_tarik)->update(array('stat' => 3, 'verified_by' => \Auth::id()));
                     session()->flash('success', true);
                     NotificationSystem::send($id_tarik, 9);
+                    $this->insertStagingTarikTunai($id_tarik);
                     break;
                     //update dengan data tarik tunai sebelumnya
                 case 'rejected':
@@ -507,8 +556,10 @@ class DroppingController extends Controller
                         'nominal' => $verification->nominal,
                         'nominal_tarik' => 0,
                         'sisa_dropping' => $verification->nominal,
-                        'stat' => 2));
-                    //BerkasTarikTunai::where('id', $verification->berkas_tariktunai)->delete();
+                        'stat' => 2,
+                        'verified_by' => \Auth::id()));
+                    $reject_reason = ['id_tariktunai' => $id_tarik, 'reject_reason' => $request->reason];
+                    RejectTarikTunai::create($reject_reason);
                     NotificationSystem::send($id_tarik, 8);
                     session()->flash('reject', true);
                     break;
@@ -518,7 +569,7 @@ class DroppingController extends Controller
         return redirect()->back();
     }
 
-    public function verifikasiPenyesuaian ($id){
+    public function verifikasiPenyesuaian ($id, Request $request){
         $dataPD = PenyesuaianDropping::where('id', $id)->first();
         $berkas = [] ;
 
@@ -540,7 +591,8 @@ class DroppingController extends Controller
             'kpkc' => $kpkc,
             'divisi' => $divisi,
             'subpos' => $subpos,
-            'kegiatan' => $kegiatan
+            'kegiatan' => $kegiatan,
+            'reject_reasons' => RejectReason::where('type', 4)->get()
             ]);
     }
 
@@ -558,6 +610,13 @@ class DroppingController extends Controller
             $kegiatan = Kegiatan::where('VALUE', $dataPD->SEGMEN_6)->first();
         }
 
+        $integrated = StagingTarikTunai::where([['RECID', $id], ['PIL_POSTED', 1]])->first();
+        if($integrated){
+            session()->flash('integrated', true);
+        }else{
+            session()->flash('integrated', false);
+        }
+
         return view('dropping.penyesuaian.verifikasilv2', [
             'penyesuaian' => $dataPD,
             'berkas' => $berkas,
@@ -566,7 +625,8 @@ class DroppingController extends Controller
             'kpkc' => $kpkc,
             'divisi' => $divisi,
             'subpos' => $subpos,
-            'kegiatan' => $kegiatan
+            'kegiatan' => $kegiatan,
+            'reject_reasons' => RejectReason::where('type', 5)->get()
             ]);
     }
 
@@ -579,7 +639,7 @@ class DroppingController extends Controller
             {
                 switch($reaction){
                     case 'verified':
-                        PenyesuaianDropping::where('id', $id_penyesuaian)->update(array('stat' => 6));
+                        PenyesuaianDropping::where('id', $id_penyesuaian)->update(array('stat' => 6, '1_verified_by' => \Auth::id()));
                         session()->flash('success', true);
                         NotificationSystem::send($id_penyesuaian, 12);
                         break;
@@ -588,6 +648,8 @@ class DroppingController extends Controller
                         ->update(array(
                             'stat' => 5));
                         //BerkasTarikTunai::where('id', $verification->berkas_tariktunai)->delete();
+                        $reject_reason = ['id_penyesuaian' => $id_penyesuaian, 'level' => $lvl, 'rejected_by' => \Auth::id() ,'reject_reason' => $request->reason];
+                        RejectPenyesuaian::create($reject_reason);
                         NotificationSystem::send($id_penyesuaian, 11);
                         session()->flash('reject', true);
                         break;
@@ -600,15 +662,18 @@ class DroppingController extends Controller
             {
                 switch($reaction){
                     case 'verified':
-                        PenyesuaianDropping::where('id', $id_penyesuaian)->update(array('stat' => 8));
+                        $type = PenyesuaianDropping::where('id', $id_penyesuaian)->update(array('stat' => 8, '2_verified_by' => \Auth::id()));
                         session()->flash('success', true);
                         NotificationSystem::send($id_penyesuaian, 14);
+                        $this->insertStagingPengembalian($id_penyesuaian);
                         break;
                     case 'rejected':
                         PenyesuaianDropping::where('id', $id_penyesuaian)
                         ->update(array(
                             'stat' => 7));
                         //BerkasTarikTunai::where('id', $verification->berkas_tariktunai)->delete();
+                        $reject_reason = ['id_penyesuaian' => $id_penyesuaian, 'level' => $lvl, 'rejected_by' => \Auth::id() ,'reject_reason' => $request->reason];
+                        RejectPenyesuaian::create($reject_reason);
                         NotificationSystem::send($id_penyesuaian, 13);
                         session()->flash('reject', true);
                         break;
@@ -617,6 +682,57 @@ class DroppingController extends Controller
         }
         session()->flash('done', true);
         return redirect()->back();
+    }
+
+    public function insertStagingTarikTunai($id_tarik)
+    {
+        $tariktunai = TarikTunai::where([['id', $id_tarik], ['stat', 3]])->first();
+
+        $inputStagingTT = [
+            'DATAAREAID'       => 'asbr',
+            // 'RECVERSION'
+            // 'PARTITION'
+            'RECID'             => $tariktunai['id'],
+            'PIL_TRANSDATE'     => $tariktunai['updated_at'],
+            'PIL_TXT'           => $tariktunai['cabang'], //deskripsi optional
+            //'PIL_JOURNALNUM'    => $tariktunai['dropping']['JOURNALNUM'], //kosong
+            'PIL_AMOUNT'        => $tariktunai['nominal_tarik'],
+            'PIL_BANK'          => $tariktunai['akun_bank'],
+            'PIL_ACCOUNT'       => $tariktunai['SEGMEN_1'],
+            //'PIL_VOUCHER'       => $tariktunai['dropping']['JOURNALNAME'] //kosong
+            //'PIL_POSTED'
+            'PIL_PROGRAM'       => $tariktunai['SEGMEN_2'],
+            'PIL_KPKC'          => $tariktunai['SEGMEN_3'],
+            'PIL_DIVISI'        => $tariktunai['SEGMEN_4'],
+            'PIL_SUBPOS'        => $tariktunai['SEGMEN_5'],
+            'PIL_MATAANGGARAN'  => $tariktunai['SEGMEN_6']
+        ];
+        
+        StagingTariktunai::insert($inputStagingTT);   
+    }
+
+    public function insertStagingPengembalian($id_pengembalian)
+    {
+        $pengembalian = PenyesuaianDropping::where([['id', $id_pengembalian], ['is_pengembalian', 1], ['stat', 8]])->first();
+
+        if($pengembalian){
+            $inputStagingPL = [
+                'DATAAREAID'        => 'asbr',
+                'RECID'             => $pengembalian['id'],
+                'PIL_TRANSDATE'     => $pengembalian['updated_at'],
+                'PIL_TXT'           => $pengembalian['cabang'], //deskripsi optional
+                'PIL_AMOUNT'        => $pengembalian['nominal'],
+                'PIL_BANK'          => $pengembalian['akun_bank'],
+                'PIL_ACCOUNT'       => $pengembalian['SEGMEN_1'],
+                'PIL_PROGRAM'       => $pengembalian['SEGMEN_2'],
+                'PIL_KPKC'          => $pengembalian['SEGMEN_3'],
+                'PIL_DIVISI'        => $pengembalian['SEGMEN_4'],
+                'PIL_SUBPOS'        => $pengembalian['SEGMEN_5'],
+                'PIL_MATAANGGARAN'  => $pengembalian['SEGMEN_6']
+            ];
+        
+            StagingPengembalian::insert($inputStagingPL);   
+        }
     }
 
     public function redirect($url, $statusCode = 303)

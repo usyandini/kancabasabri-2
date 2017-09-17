@@ -59,6 +59,18 @@
                               <b>Anda sudah melakukan penyesuaian dropping. Penyesuaian dropping hanya bisa dilakukan sekali.</b>
                             </div>
                         </div>
+                        @elseif(session('reject1'))
+                        <div class="col-xs-8">
+                            <div class="alert alert-warning">
+                              <b>Penyesuaian dropping anda ditolak oleh Bia dengan alasan {{ $notif->reason['content'] }}.<br>Silahkan melakukan <i>penyesuaian dropping</i> kembali.</b>
+                            </div>
+                        </div>
+                        @elseif(session('reject2'))
+                        <div class="col-xs-8">
+                            <div class="alert alert-warning">
+                              <b>Penyesuaian dropping anda ditolak oleh Akuntansi dengan alasan {{ $notif->reason['content'] }}.<br>Silahkan melakukan <i>penyesuaian dropping</i> kembali.</b>
+                            </div>
+                        </div>
                         @endif
 
                         @if (count($errors) > 0)
@@ -104,7 +116,7 @@
                                     <div class="col-md-6">
                                       <div class="form-group">
                                         <label for="nominal">Nominal Dropping (Dalam IDR)</label>
-                                          <input type="text" readonly="" id="nominal_dropping" class="form-control" placeholder="{{ $dropping->DEBIT }}" name="nominal" value="{{ number_format($dropping->DEBIT) }}">
+                                          <input type="text" readonly="" id="nominal_dropping" class="form-control" placeholder="{{ $dropping->DEBIT }}" name="nominal_dropping" value="{{ number_format($dropping->DEBIT, 0, '', '.') }}">
                                       </div>
                                     </div>
                                     <div class="col-md-6 pull-right">
@@ -125,12 +137,6 @@
                                         <input type="text" readonly="" id="cabang" class="form-control" placeholder="Kantor Cabang" name="cabang" value="{{ $dropping->CABANG_DROPPING }}">
                                       </div>
                                     </div>
-                                    {{--<div class="col-md-12">
-                                      <div class="form-group">
-                                        <label for="is_sesuai">Apakah jumlah dropping sudah sesuai dengan pengajuan?</label><br>
-                                        <input type="checkbox" onchange="change_checkbox(this)" class="form-control switch" id="switch1" checked="checked" name="is_sesuai" value="1" data-on-label="Sesuai" data-off-label="Tidak Sesuai"/>
-                                      </div>
-                                    </div>--}}
                                   </div>
                                 </div>
                               </form>
@@ -258,6 +264,7 @@
                       </div>
                     </div>
 
+                    @if(isset($kesesuaian))
                     <div class="row match-height">
                       <div class="col-md-12">
                         <div class="card" id="history">
@@ -287,23 +294,19 @@
                                           </thead>
                                           <tbody>
                                             <tr>
-                                              @if(isset($kesesuaian))
                                                 <td><b>{{ date('d-m-Y H:i:s', strtotime($kesesuaian->created_at)) }}</b></td>
                                                 <td>{{ $kesesuaian->cabang }}</td>
-                                                <td>IDR {{ number_format($kesesuaian->nominal) }}</td>
+                                                <td>IDR {{ number_format($kesesuaian->nominal, 0, '', '.') }}</td>
                                                 @if($kesesuaian->is_pengembalian == 1)
                                                 <td>Pengembalian</td>
                                                 @else
                                                 <td>Penambahan</td>
                                                 @endif
-
                                                 <td>
-                                                @foreach($berkas as $value)
-                                                <li><a href="{{ url('dropping/penyesuaian/berkas/download').'/'.$value->id }}" target="_blank">{{ $value->name }}</a></li>
-                                                @endforeach
+                                                  @foreach($berkas as $value)
+                                                  <li><a href="{{ url('dropping/penyesuaian/berkas/download').'/'.$value->id }}" target="_blank">{{ $value->name }}</a></li>
+                                                  @endforeach
                                                 </td>
-
-                                              @endif
                                             </tr>
                                           </tbody>
                                         </table>
@@ -317,6 +320,7 @@
                         </div>
                       </div>
                     </div>
+                    @endif
 
                     <div class="row match-height">
                       <div class="col-md-12">
@@ -366,20 +370,20 @@
 
                 @section('customjs')
                 <!-- BEGIN PAGE VENDOR JS-->
-                <script type="text/javascript" src="{{ asset('app-assets/vendors/js/ui/jquery.sticky.js') }}"></script>
-                <script src="{{ asset('app-assets/vendors/js/forms/select/select2.full.min.js') }}" type="text/javascript"></script>
-                <script src="{{ asset('app-assets/vendors/js/forms/toggle/bootstrap-checkbox.min.js') }}"></script>
-                <script src="{{ asset('app-assets/vendors/js/forms/toggle/switchery.min.js') }}" type="text/javascript"></script>
+                <script src="{{ asset('app-assets/vendors/js/ui/jquery.sticky.js') }}" type="text/javascript"></script>
                 <script src="{{ asset('app-assets/vendors/js/extensions/toastr.min.js') }}" type="text/javascript"></script>
+                <script src="{{ asset('app-assets/vendors/js/forms/toggle/switchery.min.js') }}" type="text/javascript"></script>
+                <script src="{{ asset('app-assets/vendors/js/forms/toggle/bootstrap-checkbox.min.js') }}"></script>
+                {{--<script src="{{ asset('app-assets/vendors/js/forms/select/select2.full.min.js') }}" type="text/javascript"></script>
                 <script src="{{ asset('app-assets/vendors/js/forms/validation/jqBootstrapValidation.js') }}" type="text/javascript"></script>
                 <script src="{{ asset('app-assets/vendors/js/forms/validation/jquery.validate.min.js') }}" type="text/javascript"></script>
-                <script src="{{ asset('app-assets/vendors/js/forms/icheck/icheck.min.js') }}" type="text/javascript"></script>
+                <script src="{{ asset('app-assets/vendors/js/forms/icheck/icheck.min.js') }}" type="text/javascript"></script>--}}
                 <!-- END PAGE VENDOR JS-->
                 <!-- BEGIN PAGE LEVEL JS-->
                 <script type="text/javascript" src="{{ asset('app-assets/js/scripts/ui/breadcrumbs-with-stats.min.js') }}"></script>
-                <script src="{{ asset('app-assets/js/scripts/forms/select/form-select2.min.js') }}" type="text/javascript"></script>
                 <script src="{{ asset('app-assets/js/scripts/forms/switch.min.js') }}" type="text/javascript"></script>
-                <script src="{{ asset('app-assets/js/scripts/forms/validation/form-validation.js') }}" type="text/javascript"></script>
+                {{--<script src="{{ asset('app-assets/js/scripts/forms/select/form-select2.min.js') }}" type="text/javascript"></script>
+                <script src="{{ asset('app-assets/js/scripts/forms/validation/form-validation.js') }}" type="text/javascript"></script>--}}
                 <script src="{{ asset('app-assets/js/scripts/modal/components-modal.min.js') }}" type="text/javascript"></script>
                 <script src="{{ asset('app-assets/js/scripts/extensions/toastr.min.js') }}" type="text/javascript"></script>
                 <!-- END PAGE LEVEL JS-->  
@@ -397,11 +401,11 @@
 
                   function forms_submit() {
                     var num = document.getElementById('p_nominal').value;
-                      var val = parseFloat(num.replace(/,/g, ''));
+                      var val = parseFloat(validDigits(num));
                       var mod = val%100
 
                       if(mod != 0 || val < 100){
-                        alert("Nominal tidak valid. Silahkan input nominal kembali.");
+                        alert("Nominal tidak valid! Silahkan input nominal kembali.\nMinimal input nominal IDR 100 dengan kelipatan 100.");
                       }else{
                         document.getElementById("kesesuaian-form").submit();
                       }
@@ -411,7 +415,7 @@
                       var rx=  /(\d+)(\d{3})/;
                       return String(n).replace(/^\d+/, function(w){
                           while(rx.test(w)){
-                              w= w.replace(rx, '$1,$2');
+                              w= w.replace(rx, '$1.$2');
                           }
                           return w;
                       });

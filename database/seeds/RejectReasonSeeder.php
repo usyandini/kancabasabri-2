@@ -31,5 +31,35 @@ class RejectReasonSeeder extends Seeder
 	            ]
 	        );	
     	}
+
+        for ($i=1; $i < 6 ; $i++) { 
+            DB::table('reject_reasons')->insert(
+                [
+                    'content'   => 'Sample alasan '.$i,
+                    'type'      => 3,
+                    'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s')
+                ]
+            );  
+        }
+
+        for ($i=1; $i < 6 ; $i++) { 
+            DB::table('reject_reasons')->insert(
+                [
+                    'content'   => 'Sample alasan '.$i,
+                    'type'      => 4,
+                    'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s')
+                ]
+            );  
+        }
+
+        for ($i=1; $i < 6 ; $i++) { 
+            DB::table('reject_reasons')->insert(
+                [
+                    'content'   => 'Sample alasan '.$i,
+                    'type'      => 5,
+                    'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s')
+                ]
+            );  
+        }
     }
 }

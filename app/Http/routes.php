@@ -77,17 +77,52 @@ Route::group(['middleware' => 'auth'], function() {
 		Route::get('/persetujuan/{nd}/{status}', 'AnggaranController@persetujuan_anggaran');
 		Route::get('/get/attributes/{type}/{id}', 'AnggaranController@getAttributes');
 		Route::get('/get/filtered/{nd_surat}/{type}', 'AnggaranController@getFiltered');
-		Route::get('/get/filteredHistory', 'AnggaranController@getFilteredHistory');
+		Route::get('/get/filteredHistory/{tahun}/{unit}/{kategori}/{keyword}', 'AnggaranController@getFilteredHistory');
+		Route::get('/get/filteredAnggaran/{nd_surat}/{status}/{unit}', 'AnggaranController@getFilteredAnggaran');
 		Route::get('/get/download/{id}', 'AnggaranController@unduh_file');
 		Route::get('/riwayat/', 'AnggaranController@riwayat');
+		Route::post('/riwayat/', 'AnggaranController@riwayat');
+		Route::post('/cari/', 'AnggaranController@index');
 		Route::get('/removeAnggaran/', 'AnggaranController@removeAnggaranAll');
+		Route::get('/activeFileListAnggaran/', 'AnggaranController@activeFileListAnggaranAll');
 		Route::post('/submit/tambah', 'AnggaranController@store');
+
+	});
+
+	Route::group(['prefix' => 'pelaporan'], function() {
+   		Route::resource('/', 'PelaporanController');
+		Route::get('/tambah/{kategori}', 'PelaporanController@tambah');
+		Route::post('/submit/tambah', 'PelaporanController@store');
+		Route::get('/{kategori}/{id}/{type}', 'PelaporanController@form_master');
+		Route::get('/{kategori}', 'PelaporanController@pelaporan');
+		Route::get('/tambah/{kategori}', 'PelaporanController@tambah');
+		Route::get('/removeFormMaster', 'PelaporanController@removeFormMasterAll');
+		Route::get('/pelaporan/get/filtered/{id}/{type}', 'PelaporanController@getFiltered');
+   	});
+
+	Route::group(['prefix' => 'pelaporan'], function() {
+   		Route::resource('/', 'PelaporanController');
+
+		Route::post('/submit/tambah', 'PelaporanController@store');
+		Route::post('/pelaporan/{kategori}/{id}/{type}', 'PelaporanController@form_master');
 	});
 
 	Route::resource('/user', 'UserController');
 	Route::get('/user/profile/{id}', 'UserController@profile');
 	Route::post('/user/restore/{id}', 'UserController@restore');
 
+<<<<<<< HEAD
 	Route::resource('/jenis_user', 'JenisUserController');
 	Route::post('/jenis_user/handle', 'JenisUserController@handleCombo');
+=======
+	Route::group(['prefix' => 'item'], function(){
+		Route::resource('/', 'ItemController');
+		Route::get('/create', 'ItemController@create');
+	});
+
+	Route::group(['prefix' => 'reason'], function(){
+		Route::resource('/', 'ItemController');
+		Route::get('/create', 'ItemController@create');
+	});
+>>>>>>> 9d1c2d7a490fab3caa444f1b9a8e1ac9a8a704b1
 });

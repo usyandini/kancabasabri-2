@@ -60,6 +60,20 @@
                         </div>
                         @endif
 
+                        @if(session('integrated'))
+                        <div class="col-xs-7">
+                            <div class="alert alert-success">
+                              <b>Data penyesuaian dropping {{ $penyesuaian->cabang }} sudah tercatat journal di Axapta.</b>
+                            </div>
+                        </div>
+                        @elseif(!session('integrated'))
+                        <div class="col-xs-7">
+                            <div class="alert alert-warning">
+                              <b>Data penyesuaian dropping {{ $penyesuaian->cabang }} belum tercatat journal di Axapta.</b>
+                            </div>
+                        </div>
+                        @endif
+
                         @if (count($errors) > 0)
                             <div class="col-xs-7">
                                 <div class="alert alert-danger alert-dismissible" role="alert">
@@ -109,15 +123,13 @@
                                     <div class="col-md-6 pull-right">
                                       <div class="form-group">
                                         <label for="nominal_tarik">Nominal Penyesuaian (Dalam IDR)</label>
-                                          <input type="text" id="nominal" readonly="" name="nominal" placeholder="Nominal Penyesuaian" class="form-control" value="{{ number_format($penyesuaian->nominal) }}" disabled>
-                                          <input type="hidden" name="v_nominal" value="{{ $penyesuaian->nominal }}">
+                                          <input type="text" id="nominal" readonly="" name="nominal" placeholder="Nominal Penyesuaian" class="form-control" value="{{ number_format($penyesuaian->nominal, 0, '', '.') }}" disabled>
                                       </div>
                                     </div>
                                     <div class="col-md-6">
                                       <div class="form-group">
                                         <label for="nominal_tarik">Nominal Awal Dropping (Dalam IDR)</label>
-                                          <input type="text" id="nominal_dropping" readonly="" name="nominal_dropping" class="form-control" placeholder="Nominal Dropping" value="{{ number_format($penyesuaian->nominal_dropping) }}" disabled>
-                                          <input type="hidden" name="v_nominal_dropping" value="{{ $penyesuaian->nominal_dropping }}">
+                                          <input type="text" id="nominal_dropping" readonly="" name="nominal_dropping" class="form-control" placeholder="Nominal Dropping" value="{{ number_format($penyesuaian->nominal_dropping, 0, '', '.') }}" disabled>
                                       </div>
                                     </div>
                                     <div class="col-md-6 pull-right">
@@ -292,11 +304,26 @@
                                       <h4 class="modal-title" id="myModalLabel20">Box Konfirmasi</h4>
                                     </div>
                                     <div class="modal-body" id="confirmation-msg">
-                                      <p>Apakah anda yakin <b>menolak verifikasi</b> penyesuaian dropping untuk {{ $penyesuaian->cabang }} ?</p>
+                                      <div class="row">
+                                        <div class="col-md-10" id="reason">
+                                          <form method="GET" action="{{ url('dropping/verifikasi/penyesuaian/2/rejected/'.$penyesuaian->id) }}" id="verification">
+                                            <div class="form-group">
+                                              <label>Alasan <b>penolakan</b></label>
+                                              <select class="form-control" name="reason">
+                                                <option value="0">Silahkan pilih alasan anda</option>
+                                                @foreach($reject_reasons as $res)
+                                                  <option value="{{ $res->id }}">{{ $res->content }}</option>
+                                                @endforeach
+                                              </select>
+                                            </div>
+                                          </form>
+                                        </div>
+                                      </div>
                                     </div>
                                     <div class="modal-footer">
-                                      <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">Tidak, kembali</button>
-                                      <a href="{{ url('dropping/verifikasi/penyesuaian/2/rejected/'.$penyesuaian->id) }}" class="btn btn-outline-danger">Ya, tolak</a>
+                                      <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">Kembali</button>
+                                      <button onclick="attent()" type="submit" class="btn btn-outline-primary">Submit penolakan</button>
+                                      <!-- <a href="{{ url('dropping/verifikasi/penyesuaian/2/rejected/'.$penyesuaian->id) }}" class="btn btn-outline-danger">Ya, tolak</a> -->
                                     </div>
                                   </div>
                                 </div>
@@ -316,19 +343,10 @@
                 @section('customjs')
                 <!-- BEGIN PAGE VENDOR JS-->
                 <script type="text/javascript" src="{{ asset('app-assets/vendors/js/ui/jquery.sticky.js') }}"></script>
-                <script src="{{ asset('app-assets/vendors/js/forms/select/select2.full.min.js') }}" type="text/javascript"></script>
-                <script src="{{ asset('app-assets/vendors/js/forms/toggle/bootstrap-checkbox.min.js') }}"></script>
-                <script src="{{ asset('app-assets/vendors/js/forms/toggle/switchery.min.js') }}" type="text/javascript"></script>
                 <script src="{{ asset('app-assets/vendors/js/extensions/toastr.min.js') }}" type="text/javascript"></script>
-                <script src="{{ asset('app-assets/vendors/js/forms/validation/jqBootstrapValidation.js') }}" type="text/javascript"></script>
-                <script src="{{ asset('app-assets/vendors/js/forms/validation/jquery.validate.min.js') }}" type="text/javascript"></script>
-                <script src="{{ asset('app-assets/vendors/js/forms/icheck/icheck.min.js') }}" type="text/javascript"></script>
                 <!-- END PAGE VENDOR JS-->
                 <!-- BEGIN PAGE LEVEL JS-->
                 <script type="text/javascript" src="{{ asset('app-assets/js/scripts/ui/breadcrumbs-with-stats.min.js') }}"></script>
-                <script src="{{ asset('app-assets/js/scripts/forms/select/form-select2.min.js') }}" type="text/javascript"></script>
-                <script src="{{ asset('app-assets/js/scripts/forms/switch.min.js') }}" type="text/javascript"></script>
-                {{--<script src="{{ asset('app-assets/js/scripts/forms/validation/form-validation.js') }}" type="text/javascript"></script>--}}
                 <script src="{{ asset('app-assets/js/scripts/modal/components-modal.min.js') }}" type="text/javascript"></script>
                 <script src="{{ asset('app-assets/js/scripts/extensions/toastr.min.js') }}" type="text/javascript"></script>
                 <!-- END PAGE LEVEL JS-->  
@@ -339,12 +357,20 @@
                   };
 
                   //function change_status(t){
-                  	var status = document.getElementById("p_status");
-                    if(status != 0){
+                  	var status = document.getElementById("p_status").value;
+                    if(status == 1){
                       document.getElementById("status").value = 'Pengembalian kelebihan';
                     } else {
                       document.getElementById("status").value = 'Penambahan kekurangan';
                     }
                   //};
+
+                  function attent() {
+                    if ($('select[name="reason"]').val() == '0') {
+                      toastr.error("Silahkan input alasan penolakan anda untuk verifikasi level 2 ini. Terima kasih.", "Alasan penolakan dibutuhkan.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:10e3});
+                    }else {
+                      $('form[id="verification"]').submit();
+                    }
+                  };
                 </script>
                 @endsection

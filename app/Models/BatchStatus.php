@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 //  ----------- BATCH STAT DESC -------------
 //          0 = Inserted 
 //          1 = Updated
-//          2 = Posted / Submitted to Kasmin
+//          2 = Posted / Submitted to Kasimin
 //          3 = Rejected for revision
 //          4 = Verified by Kasmin (lvl 1) / Submitted to Akuntansi 
 //          5 = Rejected for revision
@@ -47,11 +47,11 @@ class BatchStatus extends Model
             case 1:
                 return "Terakhir diupdate";
             case 2:
-                return "Submit persetujuan ke Kasmin";
+                return "Submit persetujuan ke Kasimin";
             case 3:
-                return "Tidak disetujui Kasmin";
+                return "Tidak disetujui Kasimin";
             case 4:
-                return "Mendapat persetujuan dari Kasmin";
+                return "Mendapat persetujuan dari Kasimin";
             case 5:
                 return "Tidak diverifikasi Akutansi";
             case 6:
