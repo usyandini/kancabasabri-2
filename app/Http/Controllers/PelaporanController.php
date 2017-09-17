@@ -23,7 +23,7 @@ class PelaporanController extends Controller
        FileFormMaster $FileFormMaster )
     {
         $this->FormMasterModel = $FormMaster;
-        $this->ListLaporanAnggaran = $ListLaporanAnggaran;
+        $this->ListLaporanAnggaranModel = $ListLaporanAnggaran;
         $this->FileFormMasterModel = $FileFormMaster;
         $this->userCabang = '00';
         $this->userDivisi = '16';
@@ -64,17 +64,23 @@ class PelaporanController extends Controller
     public function form_master($kategori,$id,$type) 
     {
 
-        $filter = null;
+        $filter =  array(
+                'id'        => $id,
+                'kategori'  => $kategori
+
+            );
         $setting = array('editable' => false,
                     'berkas'        =>true,
                     'edit'          =>false,
-                    'status'        =>"Tambah",
+                    'insert'          =>false,
+                    'status'        =>"View",
                     'jenis_berkas'  =>"upload",
-                    'kategori'      =>'',
+                    'kategori'      =>$kategori,
                     'id_form_master'=>$id,
                     'table'         => true
 
             );
+
         $sub_title = "";
         if($kategori == "laporan_anggaran"){
             if($type == "1"){
@@ -116,7 +122,7 @@ class PelaporanController extends Controller
                     'berkas'        =>true,
                     'edit'          =>false,
                     'insert'          =>false,
-                    'status'        =>"Tambah",
+                    'status'        =>"Cari",
                     'jenis_berkas'  =>"upload",
                     'kategori'      =>$kategori,
                     'id_form_master'=>-1,
@@ -149,26 +155,34 @@ class PelaporanController extends Controller
     {
 
         $filter = null;
-        $editable = true;
-        $setting = array('editable' => true,
-                    'berkas'=>true,
-                    'master'=>true,
-                    'status'=>"baru",
-                    'kategori'=>'laporan anggaran'
+        $setting = array('editable' => false,
+                    'berkas'        =>true,
+                    'edit'          =>true,
+                    'insert'          =>true,
+                    'status'        =>"Tambah",
+                    'jenis_berkas'  =>"upload",
+                    'kategori'      =>$kategori,
+                    'id_form_master'=>-1,
+                    'table'         => true
 
             );
-
-        if(isset($request->cari_tahun)){
-            $filter = array('tahun' => $request->cari_tahun,
-                    'unit_kerja' =>$request->cari_unit_kerja,
-                    'kategori' =>$request->cari_kategori,
-                    'keyword' =>$request->cari_keyword,
-                );
+        $sub_title = "";
+        if($kategori == "laporan_anggaran"){
+            $setting['table'] = true;
+            $sub_title = "Pelaporan Anggaran dan Kegiatan";
+        }else if($kategori == "arahan_rups"){
+            $setting['table'] = true;
+            $setting['berkas'] = false;
+            $sub_title = "Arahan RUPS";
+        }else if($kategori == "usulan_program"){
+            $setting['table'] = false;
+            $sub_title = "Usulan Program Prioritas";
         }
+        
 
         return view('anggaran.master.pelaporan', [
             'title' => 'Form Master',
-            'sub_title' => 'Pelaporan Anggaran dan Kegiatan',
+            'sub_title' => $sub_title,
             'setting' => $setting , 
             'userCabang' =>$this->userCabang,
             'userDivisi' =>$this->userDivisi,
@@ -184,10 +198,9 @@ class PelaporanController extends Controller
         if($request->status == 'Tambah'){
             $anggaran_insert = [
                 'tanggal_mulai'    => $request->tanggal_mulai, 
-                'tanggal_selesai'   => $request->durasi,
+                'tanggal_selesai'  => $request->tanggal_selesai,
                 'tw_dari'           => $request->tw_dari, 
                 'tw_ke'             => $request->tw_ke, 
-                'unit_kerja'        => $request->unit_kerja, 
                 'kategori'          => $kategori,
                 'active'            => '1'];
         }
@@ -214,8 +227,7 @@ class PelaporanController extends Controller
             }
             if($request->status == 'Tambah'){
                 // echo "baru";
-                if($kategori == "laporan anggaran"){
-                    // echo $id_form_master;
+                if($kategori == "laporan_anggaran"){
                     $form_master_insert_list = [
                     'program_prioritas' => $value->program_prioritas,
                     'sasaran_dicapai'   => $value->sasaran_dicapai,
@@ -224,7 +236,7 @@ class PelaporanController extends Controller
                     'id_form_master'    => $id_form_master,
                     'active'            => '1'
                     ];
-                }else if($kategori == "arahan rups"){
+                }else if($kategori == "arahan_rups"){
                     $form_master_insert_list = [
                     'jenis_arahan'          => $value->jenis_arahan,
                     'arahan'                => $value->arahan,
@@ -316,7 +328,70 @@ class PelaporanController extends Controller
 
         }
         // if($request->kategori == "laporan_anggaran")
-        return redirect('pelaporan/'.$kategori);
+        return redirect('anggaran/pelaporan/'.$kategori."/".urlencode($id_form_master)."/0");
     }   
+
+    public function getFiltered($id,$kategori){
+        $result = [];
+
+        if($kategori == "form_master"){
+            // $result = $this->anggaranModel->where('nd_surat', $nd_surat)->orderBy('id', 'DESC')->take(5)->get();
+            $result = $this->FormMasterModel->where('id', $id)->where('active','1')->get();
+
+        }else if($kategori == "laporan_anggaran"){
+
+            $FormMaster = $this->FormMasterModel->where('id', $id)->where('active', '1');
+            foreach ($FormMaster->get() as $form_master) {
+                $listLaporanAnggaran = $this->ListLaporanAnggaranModel
+                    ->where('id_form_master', $form_master->id)->where('active', '1');
+
+                
+                $countIndex=0;
+                foreach ($listLaporanAnggaran->get() as $list_laporan_anggaran) {
+                    $id_list_Laporan_anggaran;
+                    if($list_laporan_anggaran->id_before == 0){
+                        $id_list_Laporan_anggaran = $list_laporan_anggaran->id;
+                    }else{
+                        $id_list_Laporan_anggaran = $list_laporan_anggaran->id_before;
+                    }
+                    $fileFormMaster = $this->FileFormMasterModel;
+                    $fileList = [];
+                    foreach ($fileFormMaster->get() as $file_form_master) {
+                        if($file_form_master->id_list_form_master == $id_list_Laporan_anggaran){
+                            $fileList[] = [
+                                'id'   => $file_form_master->id,
+                                'count' => $countIndex,
+                                'name' => $file_form_master->name,
+                                'type' => $file_form_master->type,
+                                'size' => $file_form_master->size
+                            ];
+                        }
+                    }
+
+                    $result[] = [
+                        'id'                        => $list_laporan_anggaran->id,
+                        'program_prioritas'         => $list_laporan_anggaran->program_prioritas,
+                        'sasaran_dicapai'           => $list_laporan_anggaran->sasaran_dicapai,
+                        'uraian_progress'           => $list_laporan_anggaran->uraian_progress,
+                        'id_before'                 => $list_laporan_anggaran->id_first,
+                        'file'  => $fileList
+                        
+                    ];
+                    $countIndex++;
+                }  
+            }
+            
+        }
+
+        
+        return response()->json($result);
+    }
+
+    public function removeFormMasterAll(){
+
+                \DB::table('form_master')->delete();
+                \DB::table('list_laporan_anggaran')->delete();
+                \DB::table('file_form_master')->delete();
+    }
 
 }

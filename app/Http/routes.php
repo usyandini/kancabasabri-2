@@ -95,6 +95,9 @@ Route::group(['middleware' => 'auth'], function() {
 		Route::post('/submit/tambah_pelaporan', 'PelaporanController@store');
 		Route::get('/pelaporan/{kategori}/{id}/{type}', 'PelaporanController@form_master');
 		Route::get('/pelaporan/{kategori}', 'PelaporanController@pelaporan');
+		Route::get('/pelaporan_tambah/{kategori}', 'PelaporanController@tambah');
+		Route::get('/removeFormMaster', 'PelaporanController@removeFormMasterAll');
+		Route::get('/pelaporan/get/filtered/{id}/{type}', 'PelaporanController@getFiltered');
 	});
 
 	Route::group(['prefix' => 'pelaporan'], function() {

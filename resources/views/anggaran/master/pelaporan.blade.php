@@ -103,7 +103,7 @@
                                     <div class="col-xs-1">
                                       <div class="form-group">
                                         <label style="visibility:hidden">TW</label>
-                                        <div class="btn btn-success" style="width:110px"><i class="fa fa-plus"></i> Tambah</div>                                            
+                                        <a href="{{url('anggaran/pelaporan_tambah/'.$setting['kategori']) }}" class="btn btn-success" style="width:110px"><i class="fa fa-plus"></i> Tambah</a>                                            
                                       </div>
                                     </div>
                                   </div>
@@ -143,7 +143,7 @@
                                     </div>
                                     <div class="col-xs-3">
                                         <div class="form-group">
-                                          <label>Durasi</label>
+                                          <label>Tanggal Selesai</label>
                                           @if($setting['insert'])
                                           <input type="date"  id="tanggal_selesai" name="tanggal_selesai" class="date form-control">
                                           @else
@@ -201,13 +201,13 @@
                                     <input type="hidden" name="status" id="status" value="{{$setting['status']}}">
                                     <input type="hidden" name="id_form_master" id="id_form_master" value="-1">
                                     <input type="hidden" name="jenis_berkas" id="jenis_berkas" value="{{$setting['jenis_berkas']}}">
+                                    @if($setting['table'])
                                     <div id="file_grid"></div>
                                       <!-- <p>Grid with filtering, editing, inserting, deleting, sorting and paging. Data provided by controller.</p> -->
                                     <div class="col-xs-12">
-                                    
-
                                       <div id="basicScenario"></div>
                                     </div>
+                                    @endif
                                   </div>
 
                                   @if($setting['insert'])
@@ -308,10 +308,11 @@
                   var hasil = [];
                   var count_file=0;
                   var tempIdCounter = 0;
-                  var insertAble = {{$setting['insert']?1:0}};
-                  var editAble = {{$setting['edit']?1:0}};
+                  var insertable = {{$setting['insert']?1:0}};
+                  var editable = {{$setting['edit']?1:0}};
                   var unit_field_insert,unit_field_edit = null;
                   var click_berkas = true;
+                  var simpan_file = false;
                   $(document).ready(function() {
 
                     $("#basicScenario").jsGrid( {
@@ -321,8 +322,8 @@
                       paging: true,
                       autoload: true,
 
-                      editing: insertAble == 1 ? true : false,
-                      inserting: insertAble == 1 ? true : false,
+                      editing: insertable == 1 ? true : false,
+                      inserting: editable == 1 ? true : false,
                       pageSize: 5,
                       pageButtonCount: 10,
                       deleteConfirm: "Apalakh anda yakin akan menghapus anggaran baris ini?",
@@ -331,7 +332,7 @@
                         loadData: function(filter) {
                           return $.ajax({
                               type: "GET",
-                              url:"{{ (checkActiveMenu('anggaran') == 'active' ? url('anggaran') : url('anggaran/get/filteredHistory/'.$filters['tahun'].'/'.urlencode(strtolower($filters['unit_kerja'])).'/'.$filters['kategori'].'/'.urlencode(strtolower($filters['keyword'])) ) ) }}",
+                              url:"{{ (checkActiveMenu('anggaran') == 'active' ? url('anggaran') : url('anggaran/pelaporan/get/filtered/'.$filters['id'].'/'.$filters['kategori'])) }}",
                               data: filter,
                               dataType: "JSON"
                           })
@@ -392,10 +393,17 @@
                           { name: "unit_kerja", 
                             type: "select",
                             title: "Unit Kerja", 
-                            data:getData('unit_kerja'),
+                            width: 130,
+                            align: "left",
                             valueField: "DESCRIPTION", 
-                            textField: "DESCRIPTION",
-                            width: 100,
+                            textField: "DESCRIPTION", 
+                            items: getData('unitkerja'),
+                            validate: {
+                              message : "Pilih Unit Kerja Terlebih Dahulu." ,
+                              validator :function(value, item) {
+                                  return value != "None" ;
+                              } 
+                            }
                           },
                           { name: "program_prioritas", 
                             type: "select", 
@@ -429,6 +437,7 @@
                               } 
                             }
                           },
+                          @if($setting['berkas'])
                           { name: "uraian_progress", 
                             type: "textarea", 
                             title: "Uraian Progress", 
@@ -531,6 +540,7 @@
                               return button;
                             },
                           },
+                          @endif
                           {
                             name: "control",
                             type: "control",
@@ -580,6 +590,32 @@
                     });
                   }
 
+                  function setDetailFormMaster(){
+                    $.ajax({
+                        'async': false, 'type': "GET", 'dataType': 'JSON', 'url': "{{ url('anggaran/pelaporan/get/filtered/'.$filters['id'].'/form_master') }}",
+                        'success': function (data) {
+
+                          tanggal = document.getElementById('tanggal');
+                          tanggal_mulai = document.getElementById('tanggal_mulai');
+                          tanggal_selesai = document.getElementById('tanggal_selesai');
+                          tw_dari = document.getElementById('tw_dari');
+                          tw_ke = document.getElementById('tw_ke');
+                          id_form_master = document.getElementById('id_form_master');
+
+                          tanggal = data[0].created_at;
+                          tanggal_mulai = data[0].tanggal_mulai;
+                          tanggal_selesai = data[0].tanggal_selesai;
+                          tw_dari = data[0].tw_dari;
+                          tw_ke = data[0].tw_ke;
+                          id_form_master = data[0].id;
+
+
+                          
+                             
+                        }
+                    });
+                  }
+
                   function setBerkas(index) {
                     $('#list_file').empty();
                     var name="";
@@ -599,12 +635,10 @@
 
                     if(document.getElementById("tanggal_mulai").value == ""){
                       toastr.error("Silahkan Isi Tanggal Mulai Untuk memulai Pelaporan Anggaran Kegiatan. Terima kasih.", "Perhatian.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
-                    }else if(document.getElementById("durasi").value == ""){
-                      toastr.error("Silahkan Isi Durasi sebagai acuan berakhirnya Pelaporan Anggaran Kegiatan. Terima kasih.", "Perhatian.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
+                    }else if(document.getElementById("tanggal_selesai").value == ""){
+                      toastr.error("Silahkan Isi Tanggal Selesai sebagai acuan berakhirnya Pelaporan Anggaran Kegiatan. Terima kasih.", "Perhatian.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
                     }else if(document.getElementById("tw_dari").value == "0"){
                       toastr.error("Pilih TW Pelaporan Anggaran Kegiatan. Terima kasih.", "Perhatian.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
-                    }else if(document.getElementById("unit_kerja").value == "None"){
-                      toastr.error("Pilih Unit Kerja untuk Pelaporan Anggaran Kegiatan. Terima kasih.", "Perhatian.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
                     }else if(inputs.length == 0 ){
                       toastr.error("Silahkan Isi Minimal Satu daftar Pelaporan Anggaran Kegiatan. Terima kasih.", "Perhatian.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
                     }else{
@@ -643,7 +677,7 @@
                     var year = now[0];
                     mulai = year+"-"+month+"-"+day;
                     // alert(mulai);
-                    document.getElementById("durasi").min = mulai;
+                    document.getElementById("tanggal_selesai").min = mulai;
                   }
                   function readerPrev(index, tempIdCount){
                     // tempIdCount++;
@@ -780,6 +814,7 @@
 
 
                   window.setUnitKerja();
+                  window.setDetailFormMaster();
                   // window.startDate();
 
 

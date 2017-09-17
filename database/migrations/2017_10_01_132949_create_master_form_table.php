@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateListLaporanAnggaranTable extends Migration
+class CreateMasterFormTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,14 @@ class CreateListLaporanAnggaranTable extends Migration
     public function up()
     {
         //
-        Schema::create('list_laporan_anggaran', function(Blueprint $table) {
+        Schema::create('master_form', function(Blueprint $table) {
             $db = DB::connection('sqlsrv2')->getDatabaseName();
             $table->increments('id');           
-            $table->integer('id_form_master');
-            $table->string('program_prioritas');
-            $table->string('sasaran_dicapai');
-            $table->string('uraian_progress');
+            $table->date('tanggal_mulai');
+            $table->date('tanggal_selesai');
+            $table->string('tw_dari');
+            $table->string('tw_ke');
+            $table->string('kategori');
             $table->string('active');
             $table->timestamps();
         });
@@ -33,8 +34,5 @@ class CreateListLaporanAnggaranTable extends Migration
     public function down()
     {
         //
-         Schema::table('list_laporan_anggaran', function(Blueprint $table) {
-            $table->dropColumn('kategori');
-        });
     }
 }

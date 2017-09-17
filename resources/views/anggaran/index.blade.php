@@ -1261,7 +1261,6 @@
                                   document.getElementById("grup_r").style.display="none";
                                   document.getElementById("grup_uk").style.display="none";
                                 }
-
                                 if(editableStat){
                                   document.getElementById("accept_r").style.display="none";
                                   document.getElementById("download_r").style.display="none";
@@ -1282,7 +1281,7 @@
                                     if(parseInt(data[0].persetujuan) < parseInt(data[i].persetujuan)){
 
                                       changeButton();
-                                      document.getElementById("send_r").style.display="none";
+                                      document.getElementById("send_r").style.display="block";
                                       document.getElementById("accept_r").style.display="none";
                                       break;
                                     }
