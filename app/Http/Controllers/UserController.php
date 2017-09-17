@@ -78,6 +78,7 @@ class UserController extends Controller
 
     public function update(Request $request, $id)
     {    	
+        dd($request->perizinan);
     	$input = $request->except('_token' , '_method');
         // if ($input['password'] == '') { unset($input['password']); unset($input['password_confirmation']); }
         $validator = $this->validateInputs($input, $id);
