@@ -111,10 +111,8 @@ Route::group(['middleware' => 'auth'], function() {
 	Route::get('/user/profile/{id}', 'UserController@profile');
 	Route::post('/user/restore/{id}', 'UserController@restore');
 
-<<<<<<< HEAD
 	Route::resource('/jenis_user', 'JenisUserController');
 	Route::post('/jenis_user/handle', 'JenisUserController@handleCombo');
-=======
 	Route::group(['prefix' => 'item'], function(){
 		Route::resource('/', 'ItemController');
 		Route::get('/create', 'ItemController@create');
@@ -124,5 +122,4 @@ Route::group(['middleware' => 'auth'], function() {
 		Route::resource('/', 'ItemController');
 		Route::get('/create', 'ItemController@create');
 	});
->>>>>>> 9d1c2d7a490fab3caa444f1b9a8e1ac9a8a704b1
 });
