@@ -107,14 +107,6 @@ Route::group(['middleware' => 'auth'], function() {
 		Route::get('/get/filteredMaster/{type}', 'PelaporanController@getDataFormMaster');
    	});
 
-
-	Route::group(['prefix' => 'pelaporan'], function() {
-		Route::resource('/', 'PelaporanController');
-
-		Route::post('/submit/tambah', 'PelaporanController@store');
-		Route::post('/pelaporan/{kategori}/{id}/{type}', 'PelaporanController@form_master');
-	});
-
 	Route::resource('/user', 'UserController');
 	Route::get('/user/profile/{id}', 'UserController@profile');
 	Route::post('/user/restore/{id}', 'UserController@restore');
