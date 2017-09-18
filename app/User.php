@@ -22,25 +22,24 @@ class User extends Authenticatable
 
     protected $connection = 'sqlsrv';
 
-    //protected $dateFormat = 'Y-m-d H:i:s';
+    protected $dateFormat = 'Y-m-d H:i:s';
     protected $dates = ['dob'];
+
+    protected $casts = ['perizinan' => 'array'];
     
     protected $fillable = [
         'name', 
         'email', 
         'password', 
         'username', 
-        'is_admin', 
         'created_by', 
         'updated_by', 
         'divisi', 
-        'cabang', 
-        'perizinan_dropping', 
-        'perizinan_transaksi', 
-        'perizinan_anggaran'
+        'cabang',
+        'perizinan',
+        'jenis_user'
     ];
 
-    
     protected $hidden = [
         'password', 'remember_token',
     ];
@@ -55,36 +54,16 @@ class User extends Authenticatable
         return $this->hasOne('App\Models\KantorCabang', 'VALUE', 'cabang');
     }
 
-    public function perizinan($perizinan)
+    public function hasAccess($permission)
     {
-        switch ($perizinan) {
-            case 'anggaran':
-                $perizinan = $this->perizinan_anggaran;
-                break;
-            case 'dropping':
-                $perizinan = $this->perizinan_dropping;
-                break;
-            default:
-                $perizinan = $this->perizinan_transaksi;
-                break;
+        if ($this->hasPermission($permission)) {
+            return true;
         }
+        return false;
+    }
 
-        $result = $perizinan;
-        switch ($perizinan) {
-            case '3':
-                $result = [1, 2];
-                break;
-            case '5':
-                $result = [1, 4];
-                break;
-            case '6':
-                $result = [2, 4];
-                break;
-            case '7':
-                $result = [1, 2, 4];
-                break;
-        }
-
-        return $result;
+    public function hasPermission($permission)
+    {
+        return isset($this->perizinan[$permission]) ? true : false;
     }
 }

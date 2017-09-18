@@ -10,9 +10,8 @@ class BerkasTarikTunai extends Model
 
     protected $table = 'berkas_tariktunai';
 
-    //protected $dateFormat = 'Y-m-d H:i:s';
+    protected $dateFormat = 'Y-m-d H:i:s';
     protected $dates =['dob'];
-
 
     protected $fillable = [
         'id_tariktunai',

@@ -40,7 +40,7 @@
     <body>
         <div class="container">
             <div class="content">
-                <div class="title">Page Not Found.</div>
+                <div class="title">Page Not Authorized.</div>
             </div>
         </div>
     </body>

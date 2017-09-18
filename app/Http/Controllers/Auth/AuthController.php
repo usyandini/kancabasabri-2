@@ -85,21 +85,25 @@ class AuthController extends Controller
         $username = $credentials['username'];
         $password = $credentials['password'];
         
-        if(Adldap::auth()->attempt($username, $password, $bindAsUser = true)) {
-            if (strpos($username, '@') != false) {
-                $exp = explode('@', $username);
-                $username = $exp[0];
-            } 
+        if (\App::environment('server')) {
+            if (Adldap::auth()->attempt($username, $password, $bindAsUser = true)) {
+                if (strpos($username, '@') != false) {
+                    $exp = explode('@', $username);
+                    $username = $exp[0];
+                } 
 
-            $user = \App\User::where('username', $username)->first();
-            if ( !$user ) {
-                $new = ['username' => $username, 'name' => $username, 'password' => bcrypt($password)];
-                $user = User::create($new);
-            } 
+                $user = \App\User::where('username', $username)->first();
+                if (!$user) {
+                    $new = ['username' => $username, 'name' => $username, 'password' => bcrypt($password)];
+                    $user = User::create($new);
+                } 
 
-            \Auth::login($user);
-            return redirect()->intended('/');
-        } elseif (\Auth::attempt(['username' => $username, 'password' => $password])) {
+                \Auth::login($user);
+                return redirect()->intended('/');
+            }
+        } 
+
+        if (\Auth::attempt(['username' => $username, 'password' => $password])) {
             $user = \App\User::where('username', $username)->first();
             \Auth::login($user);
             return redirect()->intended('/');
