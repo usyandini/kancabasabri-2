@@ -145,7 +145,7 @@
                                             <div class="modal-content">
                                                 <div class="modal-header">
                                                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><center>
-                                                    <h4 class="modal-title text-success" id="myModalLabel" ><i class="glyphicon glyphicon-edit"></i> Tambah Alasan</h4>
+                                                    <center><h4 class="modal-title text-success" id="myModalLabel" ><i class="glyphicon glyphicon-edit"></i> Tambah Alasan</h4></center>
                                                 </div>
                                                 <form enctype="multipart/form-data" role="form" action="{{ URL('reason/store') }}" method="POST" >
                                                  {{ csrf_field() }}
@@ -166,11 +166,11 @@
 													<option value="5">Reject penyesuaian dropping by akuntansi (lv2)</option>                                                  
 				                                    </select>
                                             	</div>
-                                            <div class="modal-footer">
+                                            	<div class="modal-footer">
                                                 <button type="submit" name="save" class="btn btn-sm btn-primary"><i class="fa fa-check "></i> Tambah</button>
                                                 <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal"><i class="fa fa-times"></i> Batal</button>
-                                            </div>
-                                            	<center>
+                                            	</div>
+                                            	</form>
                 						</div>
                 					</div>
                 				</div>
@@ -248,7 +248,7 @@
                                             				<div class="modal-content">
                                                 				<div class="modal-header">
                                                     				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                                    				<h4 class="modal-title text-info" id="myModalLabel" ><i class="fa fa-warning-sign"></i> Ubah Alasan</h4>
+                                                    				<center><h4 class="modal-title text-info" id="myModalLabel" ><i class="fa fa-warning-sign"></i> Ubah Alasan</h4></center>
                                                 				</div>
                                                 					<div class="modal-body">
                                                 						<form enctype="multipart/form-data" role="form" action="{{ URL('reason/update/'. $reason->id) }}" method="POST" >
