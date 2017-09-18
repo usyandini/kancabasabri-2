@@ -117,7 +117,7 @@
                         <div class="card">
                             <div class="card-body collapse in">
                                 <div class="card-block">
-                                  <form method="POST" action="{{url('anggaran/submit/tambah') }}" id="insertLaporanAnggaran" name="insertLaporanAnggaran" enctype="multipart/form-data">
+                                  <form method="POST" action="{{url('pelaporan/submit/tambah') }}" id="insertLaporanAnggaran" name="insertLaporanAnggaran" enctype="multipart/form-data">
                                   <div class="row">
                                   <div class="col-xs-12">
                                     {{ csrf_field() }}
@@ -196,10 +196,10 @@
                                     </div>
                                   </div>
                                   <div class="col-xs-12">
-                                    <input type="hidden" name="list_laporan_anggaran" id="list_laporan_anggaran">
+                                    <input type="hidden" name="item_form_master" id="item_form_master">
                                     <input type="hidden" name="kategori" id="kategori" value="{{$setting['kategori']}}">
                                     <input type="hidden" name="status" id="status" value="{{$setting['status']}}">
-                                    <input type="hidden" name="id_form_master" id="id_form_master" value="-1">
+                                    <input type="hidden" name="id_form_master" id="id_form_master" value="{{$setting['id_form_master']}}">
                                     <input type="hidden" name="jenis_berkas" id="jenis_berkas" value="{{$setting['jenis_berkas']}}">
                                     @if($setting['table'])
                                     <div id="file_grid"></div>
@@ -333,7 +333,7 @@
                         loadData: function(filter) {
                           return $.ajax({
                               type: "GET",
-                              url:"{{ (checkActiveMenu('anggaran') == 'active' ? url('anggaran') : url('anggaran/pelaporan/get/filtered/'.$filters['id'].'/'.$filters['kategori'])) }}",
+                              url:"{{ (checkActiveMenu('pelaporan') == 'active' ? url('pelaporan') : url('pelaporan/get/filtered/'.$filters['id'].'/'.$filters['kategori'])) }}",
                               data: filter,
                               dataType: "JSON"
                           })
@@ -398,14 +398,9 @@
 
                           },
                           {
-                            name: "id_before",
-                            css: "hide",
-                            width: 0,
-
-                          },
-                          {
                             name: "control",
                             type: "control",
+                            css:editable == 1 ?"":"hide",
                             width: 50,
 
                           },
@@ -424,6 +419,56 @@
                               } 
                             }
                           },
+                          @if($setting['kategori'] == "arahan_rups")
+                          { name: "jenis_arahan", 
+                            type: "select", 
+                            title: "Jenis Arahan", 
+                            width: 170,
+                            valueField: "Id", 
+                            textField: "Name",
+                            items:[
+                                { Name: "None", Id: 0 },
+                                { Name: "Jenis Arahan 1", Id: 1},
+                                { Name: "Jenis Arahan 2", Id: 2},
+                                { Name: "Jenis Arahan 3", Id: 3},
+                                { Name: "Jenis Arahan 4", Id: 4},
+                                { Name: "Jenis Arahan 5", Id: 5}
+                            ],
+                            validate: {
+                              message : "Pilih Jenis Arahan terlebih Dahulu." ,
+                              validator :function(value, item) {
+                                  return value > 0 ;
+                              } 
+                            }
+                          },
+                          { name: "arahan", 
+                            type: "textarea", 
+                            title: "Arahan", 
+                            width: 300,
+                            validate: {
+                              message : "Isi Arahan terlebih dahulu." ,
+                              validator :function(value, item) {
+                                  return value != "" ;
+                              } 
+                            }
+                          },
+
+                          
+                          { name: "progres_tindak_lanjut", 
+                            type: "textarea", 
+                            title: "Progres Tindak Lanjut", 
+                            readOnly:true,
+                            width: 300,
+                            validate: {
+                              message : "Isi Progres Tindak Lanjut terlebih dahulu." ,
+                              validator :function(value, item) {
+                                  return true;
+                              } 
+                            }
+                          },
+                          @endif
+
+                          @if($setting['kategori'] == "laporan_anggaran")
                           { name: "program_prioritas", 
                             type: "select", 
                             title: "Program Prioritas", 
@@ -456,7 +501,8 @@
                               } 
                             }
                           },
-                          @if($setting['berkas'])
+
+                          
                           { name: "uraian_progress", 
                             type: "textarea", 
                             title: "Uraian Progress", 
@@ -465,13 +511,12 @@
                             validate: {
                               message : "Isi Uraian Progress yang ingin di capai terlebih dahulu." ,
                               validator :function(value, item) {
-
-                                  // if()
-                                  // return value != "" ;
                                   return true;
                               } 
                             }
                           },
+                          @endif
+                          @if($setting['berkas'])
                           { name: "file", align:"center", title: "Berkas",  width: 150 ,
 
                             itemTemplate: function(value) {
@@ -563,6 +608,7 @@
                           {
                             name: "control",
                             type: "control",
+                            css:editable == 1 ?"":"hide",
                             width: 50,
 
                           }
@@ -610,8 +656,9 @@
                   }
 
                   function setDetailFormMaster(){
+                    // alert('{{ url('pelaporan/get/filtered/'.$filters['id'].'/form_master') }}');
                     $.ajax({
-                        'async': false, 'type': "GET", 'dataType': 'JSON', 'url': "{{ url('anggaran/pelaporan/get/filtered/'.$filters['id'].'/form_master') }}",
+                        'async': false, 'type': "GET", 'dataType': 'JSON', 'url': "{{ url('pelaporan/get/filtered/'.$filters['id'].'/form_master') }}",
                         'success': function (data) {
 
                           tanggal = document.getElementById('tanggal');
@@ -620,16 +667,15 @@
                           tw_dari = document.getElementById('tw_dari');
                           tw_ke = document.getElementById('tw_ke');
                           id_form_master = document.getElementById('id_form_master');
+                          // alert(JSON.stringify(data));
 
-                          tanggal = data[0].created_at;
-                          tanggal_mulai = data[0].tanggal_mulai;
-                          tanggal_selesai = data[0].tanggal_selesai;
-                          tw_dari = data[0].tw_dari;
-                          tw_ke = data[0].tw_ke;
-                          id_form_master = data[0].id;
-
-
-                          
+                          now = data[0].created_at.split(' ')
+                          tanggal.value = now[0];
+                          tanggal_mulai.value = data[0].tanggal_mulai;
+                          tanggal_selesai.value = data[0].tanggal_selesai;
+                          tw_dari.value = data[0].tw_dari;
+                          tw_ke.value = data[0].tw_ke;
+                          id_form_master.value = data[0].id;
                              
                         }
                     });
@@ -819,7 +865,7 @@
                   });
 
                   function sumbit_post(){
-                    $('input[name="list_laporan_anggaran"]').val(JSON.stringify(inputs));
+                    $('input[name="item_form_master"]').val(JSON.stringify(inputs));
                     // alert(JSON.stringify(inputs));
                     $('form[id="insertLaporanAnggaran"]').submit();
                   }

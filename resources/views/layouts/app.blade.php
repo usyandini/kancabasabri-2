@@ -131,6 +131,11 @@
                     <li class="nav-item has-sub {{ checkOpenedMenu('anggaran') }}"><a href=""><i class="ft-edit"></i><span data-i18n="" class="menu-title">Anggaran Kegiatan</span></a>
                         <ul class="menu-content">
                             @can('info_a')
+                            <li class="is-shown {{ checkActiveMenu('pelaporan') }}"><a href="{{ url('/pelaporan/lihat/laporan_anggaran', $parameters = [], $secure = null) }}" class="menu-item">Pelaporan Anggaran Kegiatan</a></li>
+                            <li class="is-shown {{ checkActiveMenu('arahan') }}"><a href="{{ url('/pelaporan/lihat/arahan_rups', $parameters = [], $secure = null) }}" class="menu-item">Arahan RUPS</a></li>
+                            <li class="is-shown {{ checkActiveMenu('usulan') }}"><a href="{{ url('/pelaporan/lihat/usulan_program', $parameters = [], $secure = null) }}" class="menu-item">Usulan Program Prioritas</a></li>
+                            @endcan
+                            @can('info_a')
                                 <li class="is-shown {{ checkActiveMenu('anggaran') }}"><a href="{{ url('/anggaran', $parameters = [], $secure = null) }}" class="menu-item">Informasi Anggaran</a>
                             @endcan
                             @can('riwayat_a')

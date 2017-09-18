@@ -21,6 +21,7 @@ Route::group(['middleware' => 'auth'], function() {
 	Route::get('notification/', 'NotificationController@get');
 	Route::get('notification/redirect/{id}', 'NotificationController@redirect');
    	Route::get('/dashboard', 'DashboardController@index');
+   });
 
    	Route::group(['prefix' => 'dropping'], function() {
 		Route::resource('/', 'DroppingController');
@@ -50,6 +51,13 @@ Route::group(['middleware' => 'auth'], function() {
    	Route::group(['prefix' => 'transaksi'], function() {
 		Route::resource('/', 'TransaksiController');
 		Route::post('/submit/verify', 'TransaksiController@submit');
+		});
+
+
+		Route::group(['middleware' => 'previlege:transaksi,2,3,4,6,7'], function() {
+   			Route::get('/persetujuan/{id_batch}', 'TransaksiController@persetujuan');
+   			Route::get('/persetujuan/', 'TransaksiController@persetujuan2');
+			Route::get('/verifikasi/{id_batch}', 'TransaksiController@verifikasi');
 
 
 		Route::get('/persetujuan/{id_batch}', 'TransaksiController@persetujuan');
@@ -94,10 +102,10 @@ Route::group(['middleware' => 'auth'], function() {
 		Route::get('/tambah/{kategori}', 'PelaporanController@tambah');
 		Route::post('/submit/tambah', 'PelaporanController@store');
 		Route::get('/{kategori}/{id}/{type}', 'PelaporanController@form_master');
-		Route::get('/{kategori}', 'PelaporanController@pelaporan');
+		Route::get('/lihat/{kategori}', 'PelaporanController@pelaporan');
 		Route::get('/tambah/{kategori}', 'PelaporanController@tambah');
 		Route::get('/removeFormMaster', 'PelaporanController@removeFormMasterAll');
-		Route::get('/pelaporan/get/filtered/{id}/{type}', 'PelaporanController@getFiltered');
+		Route::get('/get/filtered/{id}/{type}', 'PelaporanController@getFiltered');
    	});
 
 	Route::group(['prefix' => 'pelaporan'], function() {
@@ -111,15 +119,25 @@ Route::group(['middleware' => 'auth'], function() {
 	Route::get('/user/profile/{id}', 'UserController@profile');
 	Route::post('/user/restore/{id}', 'UserController@restore');
 
+
+
+	Route::resource('/item', 'ItemController');
+	Route::get('/item/tambah', 'ItemController@tambahItem');
+
+
 	Route::resource('/jenis_user', 'JenisUserController');
 	Route::post('/jenis_user/handle', 'JenisUserController@handleCombo');
+
 	Route::group(['prefix' => 'item'], function(){
 		Route::resource('/', 'ItemController');
 		Route::get('/create', 'ItemController@create');
 	});
 
+
 	Route::group(['prefix' => 'reason'], function(){
-		Route::resource('/', 'ItemController');
-		Route::get('/create', 'ItemController@create');
+		Route::resource('/', 'ItemController@reason');
+		Route::post('/store', 'ItemController@store');
+		Route::post('/update/{id}', 'ItemController@update');
+		Route::get('/delete/{id}', 'ItemController@delete');
+		Route::post('/carialasan', 'ItemController@carialasan');
 	});
-});
