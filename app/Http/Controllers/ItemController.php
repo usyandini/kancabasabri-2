@@ -30,12 +30,10 @@ class ItemController extends Controller
 
     public function reason()
     {
-    	$reject_reasons = RejectReason::all();
+    	$reject_reasons = RejectReason::orderBy('id','DESC')->get();
     	return view('master.reason.index', compact('reject_reasons'));
     }
-
-
-
+    
     public function store(Request $request)
     {
                
