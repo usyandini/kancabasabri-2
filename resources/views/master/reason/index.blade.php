@@ -74,58 +74,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="content-body">
-                  <div class="row">
-                    <section id="select-inputs">
-			          <div class="row">
-			            <div class="col-xs-12">
-			              <div class="card">
-			                <div class="card-header">
-			                  <h4 class="card-title">Filter Alasan</h4></br>
-			                  <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
-			                  	
-                                                    <table>
-                                                    <form enctype="multipart/form-data" role="form" action="{{ URL('reason/carialasan') }}" method="POST" >
-			                  						{{ csrf_field() }}
-                                            		<tr>
-                                            		<td><b>Keterangan </b></td><td><b> : </b></td><td><b> &nbsp&nbsp&nbsp </b></td>
-
-                                            		<td><select class="select form-control" name="keterangan">
-                                                    	<option value="0">Semua keterangan</option>
-                                                        <option value="1">Reject transaksi by kasimin (lv1)</option>
-														<option value="2">Reject transaksi by akuntansi (lv2)</option>  
-														<option value="3">Reject tarik tunai by akuntansi (lv1)</option>
-														<option value="4">Reject penyesuaian dropping by bia (lv1)</option>
-														<option value="5">Reject penyesuaian dropping by akuntansi (lv2)</option>                                                  
-                                                  		</select></td>
-                                            		</tr>
-                                            		<tr>
-                                            		<td>
-                                            		<b>Alasan </b></td><td><b> : </b></td><td><b>  </b></td>
-                                            		<td><input class="select form-control" type="text" name="alasan" placeholder="search....">
-                                            		</td>
-                                            		</tr>
-                                                	<tr>
-	                              					<td></td><td></td><td></td><td><button type="submit" name="save" class="btn btn-primary pull-right"><i class="fa fa-search "></i> Cari</button></td>
-			                						</tr>
-			                						</form>
-			                						</table>
-			                </div>
-			                <div class="card-body collapse in">			                
-			                  <div class="card-block">
-		                  		
-			                    
-			                  </div>
-			                </div>
-			              </div>
-			            </div>
-			          </div>
-			        </section>
-                  	</div>
-
-
-
-		 
+                
 
 
 
@@ -175,14 +124,7 @@
                 					</div>
                 				</div>
                 			</div>
-
-
-
-
-
-
-
-			                </div>
+						</div>
 			                <div class="card-body collapse in">			                
 			                  <div class="card-block">
 		                  		@if(session('success'))
@@ -190,6 +132,7 @@
 				                  		{!! session('success') !!}
 				                	</div>
 				                @endif
+				                <name="data" id="data">
 			                    <div class="table-responsive">
 			                      <table class="table table-striped table-bordered datatable-select-inputs nowrap" cellspacing="0" width="100%">
 			                        <thead>

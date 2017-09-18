@@ -134,7 +134,6 @@
                                     <div class="alert alert-success">
                                       Berkas <code>{{ session('success_deletion') }}</code> berhasil dihapus.
                                     </div>
-
                                   </div>
                                   @endif
                                   @if(session('failed_filter'))
@@ -179,7 +178,6 @@
                                             <td width="5%">
                                               @if($editable && Gate::check('berkas_t'))
                                               <a href="javascript:deleteBerkas('{{ $value->id }}', '{{ $value->file_name }}');"><i class="fa fa-times"></i> Hapus</a>
-
                                               @endif
                                             </td>
                                           </tr>

@@ -40,7 +40,7 @@ class JenisUserController extends Controller
         $validator = $this->validateInputs($input);
 
     	if ($validator->passes()) {
-            if ($input['perizinan']['data-cabang'] == 'off') { unset($input['perizinan']['data-cabang']); }    
+            if ($input['perizinan']['data_cabang'] == 'off') { unset($input['perizinan']['data_cabang']); }    
             $input['created_by'] = $input['updated_by'] = \Auth::user()->id;
 
     		JenisUser::create($input);

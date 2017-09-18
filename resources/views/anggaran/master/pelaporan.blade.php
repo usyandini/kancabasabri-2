@@ -732,7 +732,7 @@
                           id_form_master.value = data[0].id;
                           @endif
 
-                          alert(data[0].tanggal_selesai);
+                          // alert(data[0].tanggal_selesai);
 
                           @if($type=="item")
                           var countDownDate = new Date(data[0].tanggal_selesai).getTime();
