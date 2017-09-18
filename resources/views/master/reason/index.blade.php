@@ -83,9 +83,10 @@
 			                <div class="card-header">
 			                  <h4 class="card-title">Filter Alasan</h4></br>
 			                  <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
-			                  
+			                  	
                                                     <table>
-                                                    
+                                                    <form enctype="multipart/form-data" role="form" action="{{ URL('reason/carialasan') }}" method="POST" >
+			                  						{{ csrf_field() }}
                                             		<tr>
                                             		<td><b>Keterangan </b></td><td><b> : </b></td><td><b> &nbsp&nbsp&nbsp </b></td>
 
@@ -99,12 +100,16 @@
                                                   		</select></td>
                                             		</tr>
                                             		<tr>
-                                            		<td><b>Alasan </b></td><td><b> : </b></td><td><b>  </b></td>
-
-                                            		<td><input class="select form-control" type="text" name="alasan"></td>
+                                            		<td>
+                                            		<b>Alasan </b></td><td><b> : </b></td><td><b>  </b></td>
+                                            		<td><input class="select form-control" type="text" name="alasan" placeholder="search....">
+                                            		</td>
                                             		</tr>
-                                                	</table>
-	                              
+                                                	<tr>
+	                              					<td></td><td></td><td></td><td><button type="submit" name="save" class="btn btn-primary pull-right"><i class="fa fa-search "></i> Cari</button></td>
+			                						</tr>
+			                						</form>
+			                						</table>
 			                </div>
 			                <div class="card-body collapse in">			                
 			                  <div class="card-block">
@@ -142,32 +147,30 @@
                                                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><center>
                                                     <h4 class="modal-title text-success" id="myModalLabel" ><i class="glyphicon glyphicon-edit"></i> Tambah Alasan</h4>
                                                 </div>
-                                                <div class="modal-body">
                                                 <form enctype="multipart/form-data" role="form" action="{{ URL('reason/store') }}" method="POST" >
                                                  {{ csrf_field() }}
-                                                 
-                                                 	
-                                                 	<label class="control-label"><b> Alasan </b></label>
-                                                	<label class="control-label"> : </label>
+                                                <div class="modal-body">
+                                                    
+                                                <label class="control-label"><b> Alasan </b></label>
+                                                <label class="control-label"> : </label>
 											        <input class="form-control" type="text" name="alasan" placeholder="masukkan alasan" required="required"/>
 											        <br><br>
                                                 	<label class="control-label"><b> Keterangan </b></label>
                                                 	<label class="control-label"><b> : </b></label>
 											        <select class="select form-control" name="keterangan" required="required" >
-                                                    	<option value="">Pilih keterangan</option>
-                                                        <option value="1">Reject transaksi by kasimin (lv1)</option>
-														<option value="2">Reject transaksi by akuntansi (lv2)</option>  
-														<option value="3">Reject tarik tunai by akuntansi (lv1)</option>
-														<option value="4">Reject penyesuaian dropping by bia (lv1)</option>
-														<option value="5">Reject penyesuaian dropping by akuntansi (lv2)</option>                                                  
-                                                  	</select>
-                                                  	
-                                                </div>
+				                                    <option value="">Pilih keterangan</option>
+				                                    <option value="1">Reject transaksi by kasimin (lv1)</option>
+													<option value="2">Reject transaksi by akuntansi (lv2)</option>  
+													<option value="3">Reject tarik tunai by akuntansi (lv1)</option>
+													<option value="4">Reject penyesuaian dropping by bia (lv1)</option>
+													<option value="5">Reject penyesuaian dropping by akuntansi (lv2)</option>                                                  
+				                                    </select>
+                                            	</div>
                                             <div class="modal-footer">
                                                 <button type="submit" name="save" class="btn btn-sm btn-primary"><i class="fa fa-check "></i> Tambah</button>
                                                 <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal"><i class="fa fa-times"></i> Batal</button>
                                             </div>
-                                            	</form><center>
+                                            	<center>
                 						</div>
                 					</div>
                 				</div>
@@ -216,21 +219,45 @@
 												<td><center>
 													<span data-toggle='tooltip' title='Ubah'><a class="btn btn-info btn-sm" data-target="#ubah{{$reason->id}}" data-toggle="modal"><i class="fa fa-edit"></i> </a></span>
 
-													<div class="modal fade" data-backdrop="static" id="ubah{{$reason->id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+													
+
+                                        			<span data-toggle='tooltip' title='Hapus'><a class="btn btn-danger btn-sm" data-target="#hapus{{$reason->id}}" data-toggle="modal"><i class="fa fa-trash"></i> </a></span>
+
+													<div class="modal fade" data-backdrop="static" id="hapus{{$reason->id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                        				<div class="modal-dialog">
+                                            				<div class="modal-content">
+                                                				<div class="modal-header">
+                                                    				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                                    				<h4 class="modal-title text-info" id="myModalLabel" ><i class="glyphicon glyphicon-warning-sign"></i> Dialog Konfirmasi</h4>
+                                                				</div>
+                                                					<div class="modal-body">
+                                                   						<h4>Anda yakin ingin menghapus alasan <span class=text-danger>{{ $reason->content }}</span> ?</h4>
+                                                					</div>
+                                                						<div class="modal-footer">
+                                                   							<a href="{{ URL('reason/delete/'. $reason->id) }}"" class="btn btn-success btn-sm"><i class="fa fa-check"></i> Ya</a>
+                                                    						<button type="button" class="btn btn-danger btn-sm" data-dismiss="modal"><i class="fa fa-times"></i> Tidak</button>
+                                                						</div>
+                                            				</div>
+                                            			</div>
+                                        			</div>
+
+												</center></td>
+								     		</tr>
+								     		<div class="modal fade" data-backdrop="static" id="ubah{{$reason->id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                                         				<div class="modal-dialog">
                                             				<div class="modal-content">
                                                 				<div class="modal-header">
                                                     				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                                                     				<h4 class="modal-title text-info" id="myModalLabel" ><i class="fa fa-warning-sign"></i> Ubah Alasan</h4>
                                                 				</div>
-                                                					
+                                                					<div class="modal-body">
                                                 						<form enctype="multipart/form-data" role="form" action="{{ URL('reason/update/'. $reason->id) }}" method="POST" >
                                                  						{{ csrf_field() }}
                                                  						<input type="hidden" name="id"  value="{{$reason->id}}" />
                                                  						
-                                                 					<div class="modal-body">	
+                                                 						
                                                 						<label class="control-label"><b> Alasan </b></label>
-                                                						<label class="control-label"><b> : </b></label>
+                                                						<label class="control-label"> : </label>
 											                            <input class="form-control" type="text" name="alasan" placeholder="masukkan alasan" value="{{$reason->content}}" required="required"/>
 											                           
 											                            <br><br>
@@ -255,29 +282,6 @@
                                             				</div>
                                             			</div>
                                         			</div>
-
-                                        			<span data-toggle='tooltip' title='Hapus'><a class="btn btn-danger btn-sm" data-target="#hapus{{$reason->id}}" data-toggle="modal"><i class="fa fa-trash"></i> </a></span>
-
-													<div class="modal fade" data-backdrop="static" id="hapus{{$reason->id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                                        				<div class="modal-dialog">
-                                            				<div class="modal-content">
-                                                				<div class="modal-header">
-                                                    				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                                    				<h4 class="modal-title text-info" id="myModalLabel" ><i class="glyphicon glyphicon-warning-sign"></i> Dialog Konfirmasi</h4>
-                                                				</div>
-                                                					<div class="modal-body">
-                                                   						<h4>Anda yakin ingin menghapus alasan <span class=text-danger>{{ $reason->content }}</span> ?</h4>
-                                                					</div>
-                                                						<div class="modal-footer">
-                                                   							<a href="{{ URL('reason/delete/'. $reason->id) }}"" class="btn btn-success btn-sm"><i class="fa fa-check"></i> Ya</a>
-                                                    						<button type="button" class="btn btn-danger btn-sm" data-dismiss="modal"><i class="fa fa-times"></i> Tidak</button>
-                                                						</div>
-                                            				</div>
-                                            			</div>
-                                        			</div>
-
-												</center></td>
-								     		</tr>
 			                        		<?php $no++;?>
 			                        		@endforeach
 			                        		@endif

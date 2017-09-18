@@ -129,4 +129,11 @@ class ItemController extends Controller
          
 
      }
+
+     public function carialasan(Request $request)
+     {
+        $cari = $request->get('alasan');
+        $alasan =  \App\Models\RejectReason::where('content','LIKE','%'.$cari.'%')->paginate(10);
+        return view('master.reason.index', compact('alasan'));       
+     }
 }

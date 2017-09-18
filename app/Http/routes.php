@@ -21,6 +21,7 @@ Route::group(['middleware' => 'auth'], function() {
 	Route::get('notification/', 'NotificationController@get');
 	Route::get('notification/redirect/{id}', 'NotificationController@redirect');
    	Route::get('/dashboard', 'DashboardController@index');
+   });
 
    	Route::group(['prefix' => 'dropping'], function() {
 		Route::resource('/', 'DroppingController');
@@ -50,14 +51,14 @@ Route::group(['middleware' => 'auth'], function() {
    	Route::group(['prefix' => 'transaksi'], function() {
 		Route::resource('/', 'TransaksiController');
 		Route::post('/submit/verify', 'TransaksiController@submit');
+		});
 
-<<<<<<< HEAD
+
 		Route::group(['middleware' => 'previlege:transaksi,2,3,4,6,7'], function() {
    			Route::get('/persetujuan/{id_batch}', 'TransaksiController@persetujuan');
    			Route::get('/persetujuan/', 'TransaksiController@persetujuan2');
 			Route::get('/verifikasi/{id_batch}', 'TransaksiController@verifikasi');
-=======
->>>>>>> a864297987db68cb6e8c78e5e5d26fbc5fc2c00a
+
 
 		Route::get('/persetujuan/{id_batch}', 'TransaksiController@persetujuan');
 		Route::get('/verifikasi/{id_batch}', 'TransaksiController@verifikasi');
@@ -118,16 +119,15 @@ Route::group(['middleware' => 'auth'], function() {
 	Route::get('/user/profile/{id}', 'UserController@profile');
 	Route::post('/user/restore/{id}', 'UserController@restore');
 
-<<<<<<< HEAD
 
 
 	Route::resource('/item', 'ItemController');
 	Route::get('/item/tambah', 'ItemController@tambahItem');
 
-=======
+
 	Route::resource('/jenis_user', 'JenisUserController');
 	Route::post('/jenis_user/handle', 'JenisUserController@handleCombo');
->>>>>>> a864297987db68cb6e8c78e5e5d26fbc5fc2c00a
+
 	Route::group(['prefix' => 'item'], function(){
 		Route::resource('/', 'ItemController');
 		Route::get('/create', 'ItemController@create');
@@ -139,6 +139,5 @@ Route::group(['middleware' => 'auth'], function() {
 		Route::post('/store', 'ItemController@store');
 		Route::post('/update/{id}', 'ItemController@update');
 		Route::get('/delete/{id}', 'ItemController@delete');
-		
+		Route::post('/carialasan', 'ItemController@carialasan');
 	});
-});
