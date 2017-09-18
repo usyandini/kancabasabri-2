@@ -290,6 +290,7 @@
                                               <th>Nominal Penyesuaian</th>
                                               <th>Status</th>
                                               <th>Attachment</th>
+                                              <th>Status Ax</th>
                                             </tr>
                                           </thead>
                                           <tbody>
@@ -306,6 +307,13 @@
                                                   @foreach($berkas as $value)
                                                   <li><a href="{{ url('dropping/penyesuaian/berkas/download').'/'.$value->id }}" target="_blank">{{ $value->name }}</a></li>
                                                   @endforeach
+                                                </td>
+                                                <td>
+                                                  @if($kesesuaian->integrated['PIL_POSTED'] == 1)
+                                                  Terintegrasi
+                                                  @else
+                                                    -
+                                                  @endif
                                                 </td>
                                             </tr>
                                           </tbody>

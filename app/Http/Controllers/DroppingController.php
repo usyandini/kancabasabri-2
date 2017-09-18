@@ -113,7 +113,7 @@ class DroppingController extends Controller
 
     public function getFiltered($transyear, $periode, $kcabang)
     {
-        $droppings = $this->jDroppingModel->where('DEBIT', '>', 0);
+        $droppings = $this->jDroppingModel->where('DEBIT', '>', 0)->orderby('TRANSDATE', 'desc');
         
         if ($transyear != '0') {
             $droppings = $droppings->whereYear('TRANSDATE', '=', $transyear);
@@ -186,8 +186,9 @@ class DroppingController extends Controller
         $this->inputDrop($id_drop); 
 
         $dropping = $this->droppingModel->where([['RECID', $id_drop], ['DEBIT', '>', 0]])->firstOrFail();
-
-        //dd(StagingTarikTunai::get());
+        // $cabang = \Auth::user()->cabang;
+        // $roleCabang = KantorCabang::where('VALUE', $cabang)->first();
+        // dd($roleCabang['DESCRIPTION']);
 
         $tariktunai = TarikTunai::where([['id_dropping', $id_drop], ['nominal_tarik', '>', 0], ['stat', 3]])->orderby('sisa_dropping', 'asc')->get();
 
@@ -330,7 +331,7 @@ class DroppingController extends Controller
                 session()->flash('reject2', true);
              }
         }
-
+        $integrated = StagingPengembalian::where('PIL_POSTED', 1);
         //dd($notif);
         return view('dropping.penyesuaian.penyesuaian', ['dropping' => $dropping, 'kesesuaian' => $kesesuaian, 'kcabangs' => $this->kantorCabangs, 'berkas' => $berkas, 'notif' => $notif]); 
     }
@@ -344,7 +345,7 @@ class DroppingController extends Controller
 
                 'p_akun_bank'       => 'not_in:0|required',
                 'p_cabang'          => 'not_in:0|required',
-                'p_nominal'         => 'not_in:0|required|regex:/^\d+([\,]\d+)*([\.]\d+)?$/',
+                'p_nominal'         => 'not_in:0|required|regex:/^\d+([\.]\d+)*([\,]\d+)?$/',
                 'p_rek_bank'        => 'not_in:0|required',
                 'berkas.*'          => 'required'
             ],
