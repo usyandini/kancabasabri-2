@@ -36,13 +36,16 @@
 
                     $("#basicScenario").jsGrid( {
                       width: "100%",
-               
+
                       sorting: true, 
                       paging: true, 
                       autoload: true, 
-                      editing: editableStat == 1 ? true : false, 
-                      inserting: editableStat == 1 ? true : false,
-               
+                      @if(Gate::check('update_t') || Gate::check('hapus_t'))
+                          editing: editableStat == 1 ? true : false, 
+                      @endif
+                      @can('insert_t')
+                          inserting: editableStat == 1 ? true : false,
+                      @endcan
                       pageSize: 10, pageButtonCount: 10,
                       
                       controller: {
@@ -87,7 +90,15 @@
                           { 
                             type: "control", 
                             width: 60,
-                            css: editableStat == 1 ? '' : "hide"
+                            @if(!Gate::check('hapus_t'))
+                                deleteButton: false,
+                            @endif
+                            @if(!Gate::check('update_t'))
+                                editButton: false,
+                            @endif
+                            @if (!$editable || (!Gate::check('update_t') && !Gate::check('hapus_t')))
+                              css: editableStat == 1 ? "" : "hide"
+                            @endif
                           },
                           { 
                             name: "account", 
@@ -257,7 +268,15 @@
                           { 
                             type: "control", 
                             width: 60,
-                            css: editableStat == 1 ? '' : "hide"
+                            @if(!Gate::check('hapus_t'))
+                                deleteButton: false,
+                            @endif
+                            @if(!Gate::check('update_t'))
+                                editButton: false,
+                            @endif
+                            @if (!$editable || (!Gate::check('update_t') && !Gate::check('hapus_t')))
+                              css: editableStat == 1 ? "" : "hide"
+                            @endif
                           }
                         ]
                     });

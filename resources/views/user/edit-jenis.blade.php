@@ -16,13 +16,15 @@
                 @section('content')
                 <div class="content-header row">
                   <div class="content-header-left col-md-6 col-xs-12 mb-2">
-                    <h3 class="content-header-title mb-0">Input User</h3>
+                    <h3 class="content-header-title mb-0">Manajemen User</h3>
                     <div class="row breadcrumbs-top">
                       <div class="breadcrumb-wrapper col-xs-12">
                         <ol class="breadcrumb">
                           <li class="breadcrumb-item"><a href="{{ url('user') }}">Manajemen User</a>
                           </li>
-                          <li class="breadcrumb-item active">Input User
+                          <li class="breadcrumb-item"><a href="{{ url('jenis_user') }}">Perizinan Jenis User</a>
+                          </li>
+                          <li class="breadcrumb-item active">Edit Jenis User
                           </li>
                         </ol>
                       </div>
@@ -30,10 +32,11 @@
                   </div>
                 </div>
                 <div class="content-body">
-                  <form class="form" action="{{ url('user') }}" method="POST">
+                  <form class="form" action="{{ url('jenis_user').'/'.$user->id }}" method="POST">
                     <div class="row">
                       <div class="col-md-6">
                         {{ csrf_field() }}
+                        {{ method_field('PUT') }}
                         <div class="card">
                           <div class="card-header">
                             <h4 class="card-title" id="basic-layout-card-center">Data Dasar</h4>
@@ -50,34 +53,12 @@
                               @endif
                               <div class="form-body">
                                 <div class="form-group">
-                                  <label>Username</label>
-                                  <input type="text" required="" class="form-control" placeholder="Username" name="username" value="{{ old('username') }}">
+                                  <label>Nama</label>
+                                  <input type="text" required="" class="form-control" placeholder="Nama Jenis User" name="nama" value="{{ $user->nama }}">
                                 </div>
                                 <div class="form-group">
-                                  <label>Nama Lengkap</label>
-                                  <input type="text" required="" class="form-control" placeholder="Nama" name="name" value="{{ old('name') }}">
-                                </div>
-                                <div class="form-group">
-                                  <label>Email</label>
-                                  <input type="email" required="" class="form-control" placeholder="Email" name="email" value="{{ old('email') }}">
-                                </div>
-                                <div class="form-group">
-                                  <label>Cabang</label>
-                                  <select class="select2 form-control" name="cabang" style="width: 100%;">
-                                    <option selected disabled="">Kantor Cabang</option>
-                                    @foreach($cabang as $cab)
-                                    <option {{ old('cabang') == $cab->VALUE ? 'selected=""' : '' }} value="{{ $cab->VALUE }}">{{ $cab->DESCRIPTION }}</option>
-                                    @endforeach
-                                  </select>
-                                </div>
-                                <div class="form-group">
-                                  <label>Divisi</label><br>
-                                  <select class="select2 form-control" name="divisi" style="width: 100%;">
-                                    <option selected disabled="">Divisi</option>
-                                    @foreach($divisi as $div)
-                                    <option {{ old('divisi') == $div->VALUE ? 'selected=""' : '' }} value="{{ $div->VALUE }}">{{ $div->DESCRIPTION }}</option>
-                                    @endforeach
-                                  </select>
+                                  <label>Deskripsi</label>
+                                  <textarea class="form-control" name="desc" rows="7" placeholder="Tulis deskripsi mengenai jenis user ini">{!! $user->desc !!}</textarea>
                                 </div>
                               </div>
                             </div>
@@ -85,28 +66,6 @@
                         </div>
                       </div>
                       <div class="col-md-6">
-                        <div class="card">
-                          <div class="card-header">
-                            <h4 class="card-title" id="basic-layout-card-center">Password</h4>
-                            <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
-                          </div>
-                          <div class="card-body collapse in">
-                            <div class="card-block">
-                              <div class="row skin skin-square">
-                                <div class="col-md-12 col-sm-12">
-                                  <div class="form-group">
-                                    <label>Password</label>
-                                    <input type="password" class="form-control" id="input-11" name="password">
-                                  </div>
-                                  <div class="form-group">
-                                    <label>Konfirmasi Password</label>
-                                    <input type="password" class="form-control" name="password_confirmation">
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
                         <div class="card">
                           <div class="card-header">
                             <h4 class="card-title" id="basic-layout-card-center">Pengaturan Perizinan Data</h4>
@@ -118,11 +77,11 @@
                                 <div class="col-md-12 col-sm-12">
                                   <div class="form-group">
                                     <fieldset>
-                                      <input type="radio" id="input-11" name="perizinan[data-cabang]" checked="" value="on">
+                                      <input type="radio" id="input-11" name="perizinan[data_cabang]" checked="" value="on" {{ isset($user->perizinan['data_cabang']) ? 'checked=""' : '' }} >
                                       <label>Data semua kantor cabang</label>
                                     </fieldset>
                                     <fieldset>
-                                      <input type="radio" id="input-11" name="perizinan[data-cabang]" value="off">
+                                      <input type="radio" id="input-11" name="perizinan[data_cabang]" value="off" {{ !isset($user->perizinan['data_cabang']) == 'off' ? 'checked=""' : '' }}>
                                       <label>Data kantor cabang yang bersangkutan</label>
                                     </fieldset>
                                   </div>
@@ -136,21 +95,21 @@
                             <h4 class="card-title" id="basic-layout-card-center">Perizinan <code>Notifikasi</code></h4>
                             <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
                             <div class="heading-elements">
-                              <label class="text-primary" onclick="checkAll(this)" id="notifikasi">Centang semua</label>
+                              <label class="text-primary" onclick="checkAll(this)" id="notifikasi"></label>
                             </div>
                           </div>
                           <div class="card-body">
                             <div class="card-block">
                               <div class="form-group skin skin-square" id="notifikasi">
                                 <fieldset>
-                                  <input type="checkbox" name="perizinan[verifikasi-notif]" value="1">
+                                  <input type="checkbox" name="perizinan[verifikasi_notif]" {{ isset($user->perizinan['verifikasi_notif']) ? 'checked=""' : '' }}>
                                   <label>Pemintaan verifikasi persetujuan transaksi</label>
                                   <fieldset>
-                                    <input type="checkbox" name="perizinan[verifikasi2-notif]" value="1">
+                                    <input type="checkbox" name="perizinan[verifikasi2_notif]" {{ isset($user->perizinan['verifikasi2_notif']) ? 'checked=""' : '' }}>
                                     <label>Permintaan verifikasi final transaksi</label>
                                   </fieldset>
                                   <fieldset>
-                                    <input type="checkbox" name="perizinan[update-notif]" value="1">
+                                    <input type="checkbox" name="perizinan[update_notif]" {{ isset($user->perizinan['update_notif']) ? 'checked=""' : '' }}>
                                     <label>Update mengenai status batch transaksi</label>
                                   </fieldset>
                                 </div>
@@ -159,7 +118,7 @@
                           </div>
                         </div>
                       </div>
-                      @include('user.input-perizinan')
+                      @include('user.edit-perizinan')
                       @endsection
 
                       @section('customjs')

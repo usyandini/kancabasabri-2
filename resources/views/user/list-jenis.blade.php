@@ -15,11 +15,13 @@
                 @section('content')
                 <div class="content-header row">
                     <div class="content-header-left col-md-6 col-xs-12 mb-2">
-                        <h3 class="content-header-title mb-0">Informasi User</h3>
+                        <h3 class="content-header-title mb-0">Perizinan Jenis User</h3>
                         <div class="row breadcrumbs-top">
                             <div class="breadcrumb-wrapper col-xs-12">
                                 <ol class="breadcrumb">
-                                    <li class="breadcrumb-item active"><a href="{{ url('user') }}">Manajemen User</a>
+                                    <li class="breadcrumb-item"><a href="{{ url('user') }}">Manajemen User</a>
+                                    </li>
+                                    <li class="breadcrumb-item active">Perizinan Jenis User
                                     </li>
                                 </ol>
                             </div>
@@ -33,7 +35,7 @@
 			            <div class="col-xs-12">
 			              <div class="card">
 			                <div class="card-header">
-			                  <h4 class="card-title">List User</h4>
+			                  <h4 class="card-title">List Jenis User</h4>
 			                  <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
 			                </div>
 			                <div class="card-body collapse in">
@@ -42,11 +44,11 @@
 			                      <table class="table table-striped table-bordered datatable-select-inputs nowrap" cellspacing="0" width="100%">
 			                        <thead>
 			                          <tr>
-			                            <th id="filterable" width="200px">Nama Lengkap</th>
-			                            <th id="filterable">Username</th>
-			                            <th id="filterable">Email</th>
-			                            <th id="filterable">Kantor Cabang</th>
-			                            <th>Terakhir diperbarui</th>
+			                            <th id="filterable" width="200px">Nama Jenis User</th>
+			                            <th id="filterable">Dibuat oleh</th>
+			                            <th id="filterable">Dibuat pada</th>
+			                            <th id="filterable">Terakhir diperbarui</th>
+			                            <th>Banyak User</th>
 			                            <th id="filterable">Status</th>
 			                            <th>Aksi</th>
 			                          </tr>
@@ -54,26 +56,22 @@
 			                        <tbody>
 			                        	@forelse($users as $user)
 			                        		<tr>
-			                        			<td>{!! $user->name !!}</td>
-			                        			<td>{!! $user->username ? $user->username : '-' !!}</td>
-			                        			<td>{!! $user->email ? $user->email : '-' !!}</td>
-			                        			<td>{!! $user['kantorCabang']['DESCRIPTION'] ? $user['kantorCabang']['DESCRIPTION'] : '-' !!}</td>
-			                        			<td>{{ date('Y-m-d, H:m', strtotime($user->updated_at)) }}</td>
+			                        			<td>{{  $user->nama }}</td>
+			                        			<td>{{  $user->creator['name'] }}</td>
+			                        			<td>{!! date('Y-m-d, H:m', strtotime($user->created_at)) !!}</td>
+			                        			<td>{!! date('Y-m-d, H:m', strtotime($user->updated_at)) !!}</td>
+			                        			<td>{!! $user->countUsers() !!}</td>
 			                        			{!! $user->deleted_at ? '<td class="red">Deleted</td>' : '<td class="blue">Aktif</td>' !!}
 			                        			<td>
-			                        				@if(!$user->deleted_at && Gate::check('edit_u'))
-			                        					<a class="btn btn-sm btn-primary" href="{{ url('user').'/'.$user->id.'/edit' }}"><i class="fa fa-edit"></i> Edit</a>
+			                        				@if(!$user->deleted_at && Gate::check('edit_jenis'))
+			                        					<a class="btn btn-sm btn-primary" href="{{ url('jenis_user').'/'.$user->id.'/edit' }}"><i class="fa fa-edit"></i> Edit</a>
 		                        					@endif
-		                        					@if(Auth::user()->id != $user->id && !$user->deleted_at && Gate::check('sdelete_u'))
+		                        					{{-- @if(Auth::user()->id != $user->id && !$user->deleted_at)
 				                        				<a class="btn btn-sm btn-danger" href="#" onclick="deleteUser({{ $user->id }}, false)"><i class="fa fa-times"></i> Hapus</a>
-				                        			@endif
+				                        			@endif --}}
 				                        			@if($user->deleted_at)
-				                        				@can('restore_u')
-				                        				    <a class="btn btn-sm btn-warning" href="#" onclick="restoreUser({{ $user->id }})"><i class="fa fa-backward"></i> Restore</a>
-				                        				@endcan
-				                        				@can('pdelete_u')
-				                        				    <a class="btn btn-sm btn-danger" href="#" onclick="deleteUser({{ $user->id }}, true)"><i class="fa fa-times"></i> Hapus permanen</a>
-				                        				@endcan
+				                        				<a class="btn btn-sm btn-warning" href="#" onclick="restoreUser({{ $user->id }})"><i class="fa fa-backward"></i> Restore</a>
+				                        				<a class="btn btn-sm btn-danger" href="#" onclick="deleteUser({{ $user->id }}, true)"><i class="fa fa-times"></i> Hapus permanen</a>
 			                        				@endif
 		                        				</td>
 			                        		</tr>
