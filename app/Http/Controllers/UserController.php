@@ -42,9 +42,8 @@ class UserController extends Controller
     	$validator = $this->validateInputs($input);
 
     	if ($validator->passes()) {
-            // $input['password'] = bcrypt($input['password']);
+            $input['password'] = bcrypt($input['password']);
             if ($input['perizinan']['data-cabang'] == 'off') { unset($input['perizinan']['data-cabang']); }
-            $input['password'] = bcrypt('rahasia');
             $input['created_by'] = \Auth::user()->id;
             User::create($input);
 
@@ -78,13 +77,16 @@ class UserController extends Controller
 
     public function update(Request $request, $id)
     {    	
-        dd($request->perizinan);
     	$input = $request->except('_token' , '_method');
-        // if ($input['password'] == '') { unset($input['password']); unset($input['password_confirmation']); }
+        if ($input['password'] == '') { unset($input['password']); unset($input['password_confirmation']); }
         $validator = $this->validateInputs($input, $id);
 
         if ($validator->passes()) {
             $input['updated_by'] = \Auth::user()->id;
+            if (isset($input['password'])) {
+                $input['password'] = bcrypt($input['password']);
+                unset($input['password_confirmation']);
+            }
             if (isset($input['perizinan'])) {
                 if ($input['perizinan']['data-cabang'] == 'off') { unset($input['perizinan']['data-cabang']); }
                 $user = User::withTrashed()->where('id', $id)->first();

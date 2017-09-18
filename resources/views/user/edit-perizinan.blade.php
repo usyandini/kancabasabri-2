@@ -142,7 +142,7 @@
               <label>Perizinan Jenis User</label>
             </fieldset>
             <fieldset>
-              <input type="checkbox" name="perizinan[tambah_jenis]" {{ isset(old("perizinan")['tambah_jenis']) ? 'checked=""' : '' }}>
+              <input type="checkbox" name="perizinan[tambah_jenis]" {{ isset($user->perizinan['tambah_jenis']) ? 'checked=""' : '' }}>
               <label>Tambah Jenis User</label>
             </fieldset>
           </div>

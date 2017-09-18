@@ -87,6 +87,28 @@
                       <div class="col-md-6">
                         <div class="card">
                           <div class="card-header">
+                            <h4 class="card-title" id="basic-layout-card-center">Password</h4>
+                            <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
+                          </div>
+                          <div class="card-body collapse in">
+                            <div class="card-block">
+                              <div class="row skin skin-square">
+                                <div class="col-md-12 col-sm-12">
+                                  <div class="form-group">
+                                    <label>Password</label>
+                                    <input type="password" class="form-control" id="input-11" name="password">
+                                  </div>
+                                  <div class="form-group">
+                                    <label>Konfirmasi Password</label>
+                                    <input type="password" class="form-control" name="password_confirmation">
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="card">
+                          <div class="card-header">
                             <h4 class="card-title" id="basic-layout-card-center">Pengaturan Perizinan Data</h4>
                             <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
                           </div>
