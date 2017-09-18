@@ -53,16 +53,24 @@
                                     </div>
 
                                     
-                                    <div class="col-xs-5">
+                                    <div class="col-xs-3">
                                         <div class="form-group">
                                           <label>Unit Kerja</label>
-                                          <select class="select2 form-control " name="cari_unit_kerja" id="cari_unit_kerja">
+                                          <select class="select2 form-control " name="cari_unit_kerja" id="cari_unit_kerja" onchange="setNDSurat()">
                                             <option value="0">None</option>
                                           </select>
                                         </div>
                                     </div>
+                                    <div class="col-xs-2">
+                                        <div class="form-group">
+                                          <label>ND/Surat</label>
+                                          <select class="select2 form-control" name="cari_nd_surat" id="cari_nd_surat">
+                                           
+                                          </select>
+                                        </div>
+                                    </div>
 
-                                    <div class="col-xs-5">
+                                    <div class="col-xs-3">
                                         <div class="form-group">
                                           <label>Kategori</label>
                                           <select class="select2 form-control" name="cari_kategori" id="cari_kategori">
@@ -212,7 +220,7 @@
                         loadData: function(filter) {
                           return $.ajax({
                               type: "GET",
-                              url:"{{ (checkActiveMenu('anggaran') == 'active' ? url('anggaran') : url('anggaran/get/filteredHistory/'.$filters['tahun'].'/'.urlencode(strtolower($filters['unit_kerja'])).'/'.$filters['kategori'].'/'.urlencode(strtolower($filters['keyword'])) ) ) }}",
+                              url:"{{ (checkActiveMenu('anggaran') == 'active' ? url('anggaran') : url('anggaran/get/filteredHistory/'.$filters['tahun'].'/'.$filters['nd_surat'].'/'.$filters['kategori'].'/'.urlencode(strtolower($filters['keyword'])) ) ) }}",
                               data: filter,
                               dataType: "JSON"
                           })
@@ -226,32 +234,38 @@
 
                           },
                           { name: "jenis", 
-                            type: "text", 
+                            type: "text",
+                            align: "left", 
                             title: "Jenis", 
                             width: 90
                           },
                           { name: "kelompok", 
-                            type: "text", 
+                            type: "text",
+                            align: "left", 
                             title: "Kelompok", 
                             width: 90
                           },
                           { name: "pos_anggaran", 
                             type: "text", 
+                            align: "left",
                             title: "Pos Anggaran", 
                             width: 120
                           },
                           { name: "sub_pos", 
                             type: "text", 
+                            align: "left",
                             title: "Sub Pos", 
                             width: 70
                           },
                           { name: "mata_anggaran", 
                             type: "text", 
+                            align: "left",
                             title: "Mata Anggaran",
                             width: 130
                           },
                           { name: "input_anggaran", 
                             type: "number", 
+                            align: "left",
                             title: "Input Anggaran dan kegiatan",
                             width: 220,
                             itemTemplate: function(value) {
@@ -264,6 +278,7 @@
                           },
                           { name: "clearing_house", 
                             type: "number", 
+                            align: "left",
                             title: "Clearing House",
                             width: 130,
                             itemTemplate: function(value) {
@@ -276,6 +291,7 @@
                           },
                           { name: "naskah_rkap", 
                             type: "number", 
+                            align: "left",
                             title: "Naskah RKAP",
                             width: 130,
                             itemTemplate: function(value) {
@@ -288,6 +304,7 @@
                           },
                           { name: "dewan_komisaris", 
                             type: "number", 
+                            align: "left",
                             title: "Persetujuan Dewan Komisaris",
                             width: 220,
                             itemTemplate: function(value) {
@@ -300,6 +317,7 @@
                           },
                           { name: "rapat_teknis", 
                             type: "number", 
+                            align: "left",
                             title: "Rapat Teknis",
                             width: 130,
                             itemTemplate: function(value) {
@@ -312,6 +330,7 @@
                           },
                           { name: "rups", 
                             type: "number", 
+                            align: "left",
                             title: "RUPS",
                             width: 130,
                             itemTemplate: function(value) {
@@ -324,6 +343,7 @@
                           },
                           { name: "finalisasi_rups", 
                             type: "number", 
+                            align: "left",
                             title: "Finalisasi RUPS",
                             width: 130,
                             itemTemplate: function(value) {
@@ -336,6 +356,7 @@
                           },
                           { name: "risalah_rups", 
                             type: "number", 
+                            align: "left",
                             title: "Risalah RUPS",
                             width: 130,
                             itemTemplate: function(value) {
@@ -384,8 +405,14 @@
                     }();
                     return returned;
                   }
-
+                  
                   function setUnitKerja(){
+
+                    // $("select").select2({
+                    //   tags: "true",
+                    //   placeholder: "Selectn",
+                    //   allowClear: true
+                    // });
                     var tahun = '{{$filters["tahun"]}}';
                     if(tahun == '0'){
                       tahun = '2015 sampai 2017';
@@ -403,12 +430,33 @@
                             var value = "";
                             var desc = data[i].DESCRIPTION;
                             value = data[i].DESCRIPTION;
-                            // if(desc.split("Cabang").length > 1 ){
-                            //   value = data[i].VALUE+"00";
-                            // }else{
-                            //   value = "00"+data[i].VALUE;
-                            // }
                             unit_kerja.options[unit_kerja.options.length] = new Option(desc, value);
+                          }
+                             
+                        }
+                    });
+                  }
+
+                  
+                  function setNDSurat(){
+
+                     unit_kerja = document.getElementById('cari_unit_kerja').value;
+                    // alert('<?php echo urlencode(strtolower('+unit_kerja+')) ?>');
+                    // alert("{{ url('anggaran/get/attributes/nd_surat').'/'}}"+encodeURI(unit_kerja));
+                    // unit_kerja = document.getElementById('cari_unit_kerja').value;
+
+                    $.ajax({
+                        'async': false, 'type': "GET", 'dataType': 'JSON', 'url': "{{ url('anggaran/get/attributes/nd_surat').'/'}}"+ encodeURI(unit_kerja),
+                        'success': function (data) {
+
+                          nd_surat = document.getElementById('cari_nd_surat');
+
+                         
+                          for(i =0 ;i<data.length;i++){
+                            var value = "";
+                            var desc = data[i].nd_surat;
+                            value = data[i].nd_surat;
+                            nd_surat.options[nd_surat.options.length] = new Option(desc, value);
                           }
                              
                         }
@@ -431,17 +479,19 @@
                   };
 
                   function cariRiwayat(){
-                    if(document.getElementById("cari_keyword").value==""){
-                      toastr.error("Silahkan Isi Kata Kunci Pencarian. Terima kasih.", "Kata Kunci Pencarian Kosong.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
-                    }else if(document.getElementById("cari_unit_kerja").value=="0"){
+                    // if(document.getElementById("cari_keyword").value==""){
+                    //   toastr.error("Silahkan Isi Kata Kunci Pencarian. Terima kasih.", "Kata Kunci Pencarian Kosong.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
+                    // }else 
+                    if(document.getElementById("cari_unit_kerja").value=="0"){
                       toastr.error("Silahkan Pilih Salah Satu Unit Kerja. Terima kasih.", "Unit Kerja Belum Dipilih.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
                     }else{
                       $('form[id="filterAnggaran"]').submit();
                     }
-                    // alert(JSON.stringify(inputs));
+                    // alert(document.getElementById("cari_nd_surat").value);
                   }
 
                   window.setUnitKerja();
+                  // window.setNDSurat();
 
 
                 </script>

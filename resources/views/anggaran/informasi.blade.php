@@ -42,8 +42,8 @@
                                         <div class="col-xs-3">
                                             <div class="form-group">
                                               <label>ND/Surat</label>
-                                              <input id="cari_nd_surat" name="cari_nd_surat" class="form-control">
-                                              
+                                               <select class="select2 form-control " name="cari_nd_surat" id="cari_nd_surat">
+                                              </select>
                                             </div>
                                         </div>
                                         <div class="col-xs-3">
@@ -60,7 +60,7 @@
                                         <div class="col-xs-3">
                                             <div class="form-group">
                                               <label>Unit Kerja</label>
-                                              <select class="select2 form-control " name="cari_unit_kerja" id="cari_unit_kerja">
+                                              <select class="select2 form-control " name="cari_unit_kerja" id="cari_unit_kerja" onchange="set_nd_surat()">
                                                 <option value="0">none</option>
                                               </select>
                                             </div>
@@ -148,26 +148,31 @@
                           },
                           { name: "tanggal", 
                             type: "text", 
+                            align: "left",
                             title: "Tanggal", 
                             width: 90
                           },
                           { name: "nd_surat", 
                             type: "text", 
+                            align: "left",
                             title: "ND/Surat", 
                             width: 90
                           },
                           { name: "unit_kerja", 
                             type: "text", 
+                            align: "left",
                             title: "Unit Kerja", 
                             width: 100
                           },
                           { name: "tipe_anggaran", 
                             type: "text", 
+                            align: "left",
                             title: "Tipe Anggaran", 
                             width: 100
                           },
                           { name: "status_anggaran", 
                             type: "text", 
+                            align: "left",
                             title: "Status Anggaran", 
                             width: 100,
                             itemTemplate:function(value){
@@ -182,6 +187,7 @@
                           },
                           { name: "persetujuan", 
                             type: "text", 
+                            align: "left",
                             title: "Persetujuan", 
                             width: 100,
                             itemTemplate:function(value){
@@ -225,7 +231,7 @@
                         'async': false, 'type': "GET", 'dataType': 'JSON', 'url': "{{ url('anggaran/get/attributes/unitkerja/1') }}",
                         'success': function (data) {
 
-                          daySelect = document.getElementById('cari_unit_kerja');
+                          cari_unit_kerja = document.getElementById('cari_unit_kerja');
 
                          
                           for(i =0 ;i<data.length;i++){
@@ -236,7 +242,38 @@
                             // }else{
                             //   value = "00"+data[i].VALUE;
                             // }
-                            daySelect.options[daySelect.options.length] = new Option(desc, value);
+                            cari_unit_kerja.options[cari_unit_kerja.options.length] = new Option(desc, value);
+                          }
+                             
+                        }
+                    });
+                    
+
+                  }
+
+                  function set_nd_surat(){
+                    // for (i = 0; i < nd_surat_option.options.length; i++) {
+                    //   nd_surat_option.options[i] = null;
+                    // }
+
+                    cari_unit_kerja = document.getElementById('cari_unit_kerja').value;
+                    $.ajax({
+                        'async': false, 'type': "GET", 'dataType': 'JSON', 'url': "{{ url('anggaran/get/attributes/nd_surat').'/' }}"+encodeURI(cari_unit_kerja),
+                        'success': function (data) {
+
+                          // nd_surat_option = document.getElementById('cari_nd_surat');
+
+                          nd_surat_option = document.getElementById('cari_nd_surat');
+                         
+                          for(i =0 ;i<data.length;i++){
+                            var value = data[i].nd_surat;
+                            var desc = data[i].nd_surat;
+                            // if(desc.split("Cabang").length > 0 ){
+                            //   value = data[i].VALUE+"00";
+                            // }else{
+                            //   value = "00"+data[i].VALUE;
+                            // }
+                            nd_surat_option.options[nd_surat_option.options.length] = new Option(desc, value);
                           }
                              
                         }
@@ -254,5 +291,6 @@
                     // alert(JSON.stringify(inputs));
                   }
                   window.setUnitKerja({{$userCabang.",".$userDivisi}});
+                  
                 </script>
                 @endsection

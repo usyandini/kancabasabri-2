@@ -34,6 +34,8 @@ class PrevilegeManager
                 if (collect($perizinan_value)->contains($user->perizinan_transaksi)) { return $next($request); }
             case 'anggaran':
                 if (collect($perizinan_value)->contains($user->perizinan_anggaran)) { return $next($request); }
+            case 'admin':
+                if (collect($perizinan_value)->contains($user->is_admin)) { return $next($request); }
         }
 
         return redirect('/');

@@ -22,11 +22,9 @@ Route::group(['middleware' => 'auth'], function() {
 	Route::get('notification/redirect/{id}', 'NotificationController@redirect');
    	Route::get('/dashboard', 'DashboardController@index');
 
-   	Route::group(['prefix' => 'dropping', 'middleware' => 'previlege:dropping,1,2,3,4,5,6,7'], function() {
-   		Route::group(['middleware' => 'previlege:dropping,1,3,5,7'], function() {
-   			Route::resource('/', 'DroppingController');
-			Route::get('/get', 'DroppingController@getAll');
-   		});
+   	Route::group(['prefix' => 'dropping'], function() {
+		Route::resource('/', 'DroppingController');
+		Route::get('/get', 'DroppingController@getAll');
 		
 		Route::post('/filter', 'DroppingController@filterHandle');
 		Route::get('/filter/{transyear}/{periode}/{kcabang}', 'DroppingController@filter');
@@ -49,19 +47,22 @@ Route::group(['middleware' => 'auth'], function() {
 	    Route::post('/banks/', 'DroppingController@getChainedBank');
 	});
    	
-   	Route::group(['prefix' => 'transaksi', 'middleware' => 'previlege:transaksi,1,2,3,4,5,6,7'], function() {
-   		Route::group(['middleware' => 'previlege:transaksi,1,3,5,7'], function() {
-   			Route::resource('/', 'TransaksiController');
-   			Route::post('/submit/verify', 'TransaksiController@submit');
-   		});
+   	Route::group(['prefix' => 'transaksi'], function() {
+		Route::resource('/', 'TransaksiController');
+		Route::post('/submit/verify', 'TransaksiController@submit');
 
+<<<<<<< HEAD
 		Route::group(['middleware' => 'previlege:transaksi,2,3,4,6,7'], function() {
    			Route::get('/persetujuan/{id_batch}', 'TransaksiController@persetujuan');
    			Route::get('/persetujuan/', 'TransaksiController@persetujuan2');
 			Route::get('/verifikasi/{id_batch}', 'TransaksiController@verifikasi');
+=======
+>>>>>>> a864297987db68cb6e8c78e5e5d26fbc5fc2c00a
 
-			Route::post('/submit/verifikasi/{type}/{id_batch}', 'TransaksiController@submitVerification');
-   		});   		
+		Route::get('/persetujuan/{id_batch}', 'TransaksiController@persetujuan');
+		Route::get('/verifikasi/{id_batch}', 'TransaksiController@verifikasi');
+
+		Route::post('/submit/verifikasi/{type}/{id_batch}', 'TransaksiController@submitVerification');
 
    		Route::post('/filter/process', 'TransaksiController@filter_handle');
    		Route::get('/filter/result/{batch}/{batch_no}', 'TransaksiController@filter_result');
@@ -90,17 +91,43 @@ Route::group(['middleware' => 'auth'], function() {
 		Route::post('/riwayat/', 'AnggaranController@riwayat');
 		Route::post('/cari/', 'AnggaranController@index');
 		Route::get('/removeAnggaran/', 'AnggaranController@removeAnggaranAll');
+		Route::get('/activeFileListAnggaran/', 'AnggaranController@activeFileListAnggaranAll');
 		Route::post('/submit/tambah', 'AnggaranController@store');
+
+	});
+
+	Route::group(['prefix' => 'pelaporan'], function() {
+   		Route::resource('/', 'PelaporanController');
+		Route::get('/tambah/{kategori}', 'PelaporanController@tambah');
+		Route::post('/submit/tambah', 'PelaporanController@store');
+		Route::get('/{kategori}/{id}/{type}', 'PelaporanController@form_master');
+		Route::get('/lihat/{kategori}', 'PelaporanController@pelaporan');
+		Route::get('/tambah/{kategori}', 'PelaporanController@tambah');
+		Route::get('/removeFormMaster', 'PelaporanController@removeFormMasterAll');
+		Route::get('/get/filtered/{id}/{type}', 'PelaporanController@getFiltered');
+   	});
+
+	Route::group(['prefix' => 'pelaporan'], function() {
+   		Route::resource('/', 'PelaporanController');
+
+		Route::post('/submit/tambah', 'PelaporanController@store');
+		Route::post('/pelaporan/{kategori}/{id}/{type}', 'PelaporanController@form_master');
 	});
 
 	Route::resource('/user', 'UserController');
+	Route::get('/user/profile/{id}', 'UserController@profile');
 	Route::post('/user/restore/{id}', 'UserController@restore');
 
+<<<<<<< HEAD
 
 
 	Route::resource('/item', 'ItemController');
 	Route::get('/item/tambah', 'ItemController@tambahItem');
 
+=======
+	Route::resource('/jenis_user', 'JenisUserController');
+	Route::post('/jenis_user/handle', 'JenisUserController@handleCombo');
+>>>>>>> a864297987db68cb6e8c78e5e5d26fbc5fc2c00a
 	Route::group(['prefix' => 'item'], function(){
 		Route::resource('/', 'ItemController');
 		Route::get('/create', 'ItemController@create');
