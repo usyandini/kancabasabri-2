@@ -13,6 +13,52 @@
                 @endsection
 
                 @section('content')
+                {{-- part alert --}}
+		         @if (Session::has('after_save'))
+		             <div class="row">
+		                 <div class="col-md-12">
+		                     <div class="alert alert-dismissible alert-{{ Session::get('after_save.alert') }}">
+		                       <button type="button" class="close" data-dismiss="alert">×</button>
+		                       <strong>{{ Session::get('after_save.title') }}</strong>
+		                       
+		                     </div>
+		                 </div>
+		             </div>
+		         @endif
+		         {{-- end part alert --}}
+
+
+		         {{-- Kita cek, jika sessionnya ada maka tampilkan alertnya, jika tidak ada maka tidak ditampilkan alertnya --}}
+        
+		         @if (Session::has('after_update'))
+		             <div class="row">
+		                 <div class="col-md-12">
+		                     <div class="alert alert-dismissible alert-{{ Session::get('after_update.alert') }}">
+		                       <button type="button" class="close" data-dismiss="alert">×</button>
+		                       <strong>{{ Session::get('after_update.title') }}</strong>
+		                       
+		                     </div>
+		                 </div>
+		             </div>
+		         @endif
+		         {{-- end part alert --}}
+
+		         {{-- Kita cek, jika sessionnya ada maka tampilkan alertnya, jika tidak ada maka tidak ditampilkan alertnya --}}
+        
+		         @if (Session::has('after_delete'))
+		             <div class="row">
+		                 <div class="col-md-12">
+		                     <div class="alert alert-dismissible alert-{{ Session::get('after_delete.alert') }}">
+		                       <button type="button" class="close" data-dismiss="alert">×</button>
+		                       <strong>{{ Session::get('after_delete.title') }}</strong>
+		                       
+		                     </div>
+		                 </div>
+		             </div>
+		         @endif
+		         {{-- end part alert --}}
+		         
+
                	<div class="content-header row">
                     <div class="content-header-left col-md-6 col-xs-12 mb-2">
                         <h3 class="content-header-title mb-0">Manajemen Alasan Menolak</h3>
@@ -41,7 +87,7 @@
                                                     <table>
                                                     
                                             		<tr>
-                                            		<td><b>Keterangan </b></td><td><b> : </b></td>
+                                            		<td><b>Keterangan </b></td><td><b> : </b></td><td><b> &nbsp&nbsp&nbsp </b></td>
 
                                             		<td><select class="select form-control" name="keterangan">
                                                     	<option value="0">Semua keterangan</option>
@@ -51,6 +97,11 @@
 														<option value="4">Reject penyesuaian dropping by bia (lv1)</option>
 														<option value="5">Reject penyesuaian dropping by akuntansi (lv2)</option>                                                  
                                                   		</select></td>
+                                            		</tr>
+                                            		<tr>
+                                            		<td><b>Alasan </b></td><td><b> : </b></td><td><b>  </b></td>
+
+                                            		<td><input class="select form-control" type="text" name="alasan"></td>
                                             		</tr>
                                                 	</table>
 	                              
@@ -69,19 +120,7 @@
 
 
 
-		 {{-- part alert --}}
-         @if (Session::has('after_save'))
-             <div class="row">
-                 <div class="col-md-12">
-                     <div class="alert alert-dismissible alert-{{ Session::get('after_save.alert') }}">
-                       <button type="button" class="close" data-dismiss="alert">×</button>
-                       <strong>{{ Session::get('after_save.title') }}</strong>
-                       <a href="javascript:void(0)" class="alert-link">{{ Session::get('after_save.text-1') }}</a> {{ Session::get('after_save.text-2') }}
-                     </div>
-                 </div>
-             </div>
-         @endif
-         {{-- end part alert --}}
+		 
 
 
 
@@ -103,33 +142,30 @@
                                                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><center>
                                                     <h4 class="modal-title text-success" id="myModalLabel" ><i class="glyphicon glyphicon-edit"></i> Tambah Alasan</h4>
                                                 </div>
+                                                <div class="modal-body">
                                                 <form enctype="multipart/form-data" role="form" action="{{ URL('reason/store') }}" method="POST" >
-                                                <div class="modal-body text-info">
-                                                    <center><table>
-                                                    <tr>
-                                            		<td><b>Alasan </b></td><td><b> : </b></td>
-                                            		<td><input class="form-control" type="text" name="alasan" placeholder="masukkan alasan" /></td>
-                                            		</tr>
-                                            		</br>
-                                            		<tr>
-                                            		<td><b>Keterangan </b></td><td><b> : </b></td>
-
-                                            		<td><select class="select form-control" name="keterangan">
-                                                    	<option value="0">Pilih keterangan</option>
+                                                 {{ csrf_field() }}
+                                                 
+                                                 	
+                                                 	<label class="control-label"><b> Alasan </b></label>
+                                                	<label class="control-label"> : </label>
+											        <input class="form-control" type="text" name="alasan" placeholder="masukkan alasan" required="required"/>
+											        <br><br>
+                                                	<label class="control-label"><b> Keterangan </b></label>
+                                                	<label class="control-label"><b> : </b></label>
+											        <select class="select form-control" name="keterangan" required="required" >
+                                                    	<option value="">Pilih keterangan</option>
                                                         <option value="1">Reject transaksi by kasimin (lv1)</option>
 														<option value="2">Reject transaksi by akuntansi (lv2)</option>  
 														<option value="3">Reject tarik tunai by akuntansi (lv1)</option>
 														<option value="4">Reject penyesuaian dropping by bia (lv1)</option>
 														<option value="5">Reject penyesuaian dropping by akuntansi (lv2)</option>                                                  
-                                                  		</select></td>
-                                            		</tr>
+                                                  	</select>
+                                                  	
                                                 </div>
-                                                   </table></center>
-
-                                            </div>
                                             <div class="modal-footer">
-                                                <button type="submit" name="save" class="btn btn-sm btn-primary"><i class="glyphicon glyphicon-ok "></i> Tambah</button>
-                                                <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal"><i class="glyphicon glyphicon-remove"></i> Batal</button>
+                                                <button type="submit" name="save" class="btn btn-sm btn-primary"><i class="fa fa-check "></i> Tambah</button>
+                                                <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal"><i class="fa fa-times"></i> Batal</button>
                                             </div>
                                             	</form><center>
                 						</div>
@@ -178,29 +214,51 @@
 													?>
 												</td>
 												<td><center>
-													<span data-toggle='tooltip' title='Ubah'><a class="btn btn-info btn-sm" data-target="#ubah" data-toggle="modal"><i class="fa fa-edit"></i> </a></span>
+													<span data-toggle='tooltip' title='Ubah'><a class="btn btn-info btn-sm" data-target="#ubah{{$reason->id}}" data-toggle="modal"><i class="fa fa-edit"></i> </a></span>
 
-													<div class="modal fade" data-backdrop="static" id="ubah" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+													<div class="modal fade" data-backdrop="static" id="ubah{{$reason->id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                                         				<div class="modal-dialog">
                                             				<div class="modal-content">
                                                 				<div class="modal-header">
                                                     				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                                    				<h4 class="modal-title text-danger" id="myModalLabel" ><i class="glyphicon glyphicon-warning-sign"></i> Peringatan</h4>
+                                                    				<h4 class="modal-title text-info" id="myModalLabel" ><i class="fa fa-warning-sign"></i> Ubah Alasan</h4>
                                                 				</div>
-                                                					<div class="modal-body">
-                                                   						<h4>Anda yakin ingin mengubah <span class=text-danger>{{ $reason->content }}</h4>
-                                                					</div>
-                                                						<div class="modal-footer">
-                                                   							<a href="{{ url('item/edit') }}"" class="btn btn-success btn-sm"><i class="glyphicon glyphicon-trash"></i> Ya</a>
-                                                    						<button type="button\" class="btn btn-danger btn-sm" data-dismiss="modal"><i class="glyphicon glyphicon-remove"></i> Tidak</button>
-                                                						</div>
+                                                					
+                                                						<form enctype="multipart/form-data" role="form" action="{{ URL('reason/update/'. $reason->id) }}" method="POST" >
+                                                 						{{ csrf_field() }}
+                                                 						<input type="hidden" name="id"  value="{{$reason->id}}" />
+                                                 						
+                                                 					<div class="modal-body">	
+                                                						<label class="control-label"><b> Alasan </b></label>
+                                                						<label class="control-label"><b> : </b></label>
+											                            <input class="form-control" type="text" name="alasan" placeholder="masukkan alasan" value="{{$reason->content}}" required="required"/>
+											                           
+											                            <br><br>
+                                                						<label class="control-label"><b> Keterangan </b></label>
+                                                						<label class="control-label"><b> : </b></label>
+											                            <select class="select form-control" name="keterangan" required="required"/>
+					                                                    	<option value="">Pilih keterangan</option>
+					                                                    	<option value="1" @if ($reason->type=="1")Selected @endif>Reject transaksi by kasimin (lv1)</option>
+																			<option value="2" @if ($reason->type=="2")Selected @endif>Reject transaksi by akuntansi (lv2)</option>  
+																			<option value="3" @if ($reason->type=="3")Selected @endif>Reject tarik tunai by akuntansi (lv1)</option>
+																			<option value="4" @if ($reason->type=="4")Selected @endif>Reject penyesuaian dropping by bia (lv1)</option>
+																			<option value="5" @if ($reason->type=="5")Selected @endif>Reject penyesuaian dropping by akuntansi (lv2)</option>                                                  
+					                                                  	</select>
+											                            
+											                            
+											                        </div>
+                                                					<div class="modal-footer">
+                                                						<button type="submit" name="save" class="btn btn-sm btn-primary"><i class="fa fa-check "></i> Ubah</button>
+                                                						<button type="button" class="btn btn-danger btn-sm" data-dismiss="modal"><i class="fa fa-times"></i> Batal</button>
+                                            						</div>
+                                            							</form>
                                             				</div>
                                             			</div>
                                         			</div>
 
-                                        			<span data-toggle='tooltip' title='Hapus'><a class="btn btn-danger btn-sm" data-target="#hapus" data-toggle="modal"><i class="fa fa-trash"></i> </a></span>
+                                        			<span data-toggle='tooltip' title='Hapus'><a class="btn btn-danger btn-sm" data-target="#hapus{{$reason->id}}" data-toggle="modal"><i class="fa fa-trash"></i> </a></span>
 
-													<div class="modal fade" data-backdrop="static" id="hapus" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+													<div class="modal fade" data-backdrop="static" id="hapus{{$reason->id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                                         				<div class="modal-dialog">
                                             				<div class="modal-content">
                                                 				<div class="modal-header">
@@ -211,8 +269,8 @@
                                                    						<h4>Anda yakin ingin menghapus alasan <span class=text-danger>{{ $reason->content }}</span> ?</h4>
                                                 					</div>
                                                 						<div class="modal-footer">
-                                                   							<a href="{{ url('item/edit') }}"" class="btn btn-success btn-sm"><i class="glyphicon glyphicon-trash"></i> Ya</a>
-                                                    						<button type="button\" class="btn btn-danger btn-sm" data-dismiss="modal"><i class="glyphicon glyphicon-remove"></i> Tidak</button>
+                                                   							<a href="{{ URL('reason/delete/'. $reason->id) }}"" class="btn btn-success btn-sm"><i class="fa fa-check"></i> Ya</a>
+                                                    						<button type="button" class="btn btn-danger btn-sm" data-dismiss="modal"><i class="fa fa-times"></i> Tidak</button>
                                                 						</div>
                                             				</div>
                                             			</div>
@@ -251,6 +309,8 @@
 				<script src="{{ asset('app-assets/vendors/js/tables/datatable/dataTables.responsive.min.js') }}"
 				  type="text/javascript"></script>
 				<script type="text/javascript">
+
+					
 					$('.datatable-select-inputs').DataTable( {
 							scrollX: true,
 						    initComplete: function () {

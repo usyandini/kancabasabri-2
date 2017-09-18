@@ -110,6 +110,8 @@ Route::group(['middleware' => 'auth'], function() {
 	Route::group(['prefix' => 'reason'], function(){
 		Route::resource('/', 'ItemController@reason');
 		Route::post('/store', 'ItemController@store');
+		Route::post('/update/{id}', 'ItemController@update');
+		Route::get('/delete/{id}', 'ItemController@delete');
 		
 	});
 });
