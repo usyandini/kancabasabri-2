@@ -105,9 +105,10 @@
                     <li class="navigation-header">
                     </li>
                     <li class="navigation-header"><span >Menu Utama</span><i data-toggle="tooltip" data-placement="right" data-original-title="General"class=" ft-minus"></i></li>
-                    
+                    @if (Gate::check('info_d') || Gate::check('tarikTunai_d') || Gate::check('penyesuaian_d') || Gate::check('insertTT_d') || Gate::check('insertPD_d') || Gate::check('verifikasiTT_d') || Gate::check('verifikasiPD_d') || Gate::check('verifikasiPD2_d'))
                     <li class="nav-item {{ checkActiveMenu('dropping') }}"><a href="{{ url('/dropping', $parameters = [], $secure = null) }}"><i class="ft-box"></i><span data-i18n="" class="menu-title">Dropping</span></a></li>
-                    
+                    @endif
+
                     @if (Gate::check('info_t') || Gate::check('tambahBatch_t') || Gate::check('verifikasi_t') || Gate::check('verifikasi2_t'))
                     <li class="nav-item has-sub {{ checkOpenedMenu('transaksi') }}"><a href=""><i class="ft-layout"></i><span data-i18n="" class="menu-title">Transaksi</span></a>
                         <ul class="menu-content">

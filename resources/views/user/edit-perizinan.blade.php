@@ -24,6 +24,59 @@
   <div class="col-md-4">
     <div class="card">
       <div class="card-header">
+        <h4 class="card-title" id="basic-layout-card-center">Perizinan <code>Dropping</code></h4>
+        <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
+        <div class="heading-elements">
+          <label class="text-primary" onclick="checkAll(this)" id="dropping"></label>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-block">
+          <h5>Menu utama</h5>
+          <div class="form-group skin skin-square" id="dropping">
+            <fieldset>
+              <input type="checkbox" name="perizinan[info_d]" {{ isset($user->perizinan['info_d']) ? 'checked=""' : '' }}>
+              <label>Informasi dropping</label>
+            </fieldset>
+            <fieldset>
+              <input type="checkbox" name="perizinan[tarikTunai_d]" {{ isset($user->perizinan['tarikTunai_d']) ? 'checked=""' : '' }} >
+              <label>Tarik Tunai dropping</label>
+            </fieldset>
+            <fieldset>
+              <input type="checkbox" name="perizinan[penyesuaian_d]" {{ isset($user->perizinan['penyesuaian_d']) ? 'checked=""' : '' }} >
+              <label>Penyesuaian dropping</label>
+            </fieldset>
+            </div>
+          <h5>Sub-menu</h5>
+          <div class="form-group skin skin-square" id="dropping">
+            <fieldset>
+              <input type="checkbox" name="perizinan[insertTT_d]" {{ isset($user->perizinan['insertTT_d']) ? 'checked=""' : '' }}>
+              <label>Input tarik tunai</label>
+            </fieldset>
+            <fieldset>
+              <input type="checkbox" name="perizinan[insertPD_d]" {{ isset($user->perizinan['insertPD_d']) ? 'checked=""' : '' }}>
+              <label>Input penyesuaian dropping</label>
+            </fieldset>
+            <fieldset>
+              <input type="checkbox" name="perizinan[verifikasiTT_d]" {{ isset($user->perizinan['verifikasiTT_d']) ? 'checked=""' : '' }}>
+              <label>Verifikasi tarik tunai</label>
+            </fieldset>
+            <fieldset>
+              <input type="checkbox" name="perizinan[verifikasiPD_d]" {{ isset($user->perizinan['verifikasiPD_d']) ? 'checked=""' : '' }}>
+              <label>Verifikasi penyesuaian dropping</label>
+            </fieldset>
+            <fieldset>
+              <input type="checkbox" name="perizinan[verifikasiPD2_d]" {{ isset($user->perizinan['verifikasiPD2_d']) ? 'checked=""' : '' }}>
+              <label>Verifikasi final penyesuaian dropping</label>
+            </fieldset>  
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-header">
         <h4 class="card-title" id="basic-layout-card-center">Perizinan <code>Transaksi</code></h4>
         <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
         <div class="heading-elements">

@@ -55,22 +55,10 @@
                         </div>
                         @elseif(session('reject1'))
                         <div class="col-xs-8">
-                            <div class="alert alert-warning">
-                              <b>Tarik tunai anda ditolak oleh Akuntansi dengan alasan {{ $notif->reason['content'] }}.<br>Silahkan melakukan <i>tarik tunai</i> kembali.</b>
-                            </div>
+                          <div class="alert alert-warning">
+                            <b>Tarik tunai anda ditolak oleh Akuntansi dengan alasan {{ $notif->reason['content'] }}.<br>Silahkan melakukan <i>tarik tunai</i> kembali.</b>
+                          </div>
                         </div>
-                        <!-- @elseif(session('integrated'))
-                        <div class="col-xs-7">
-                            <div class="alert alert-success">
-                              <b>Data tarik tunai berhasil terintegrasi dengan Axapta.</b>
-                            </div>
-                        </div>
-                        @elseif(session('notintegrated'))
-                        <div class="col-xs-7">
-                            <div class="alert alert-warning">
-                              <b>Data tarik tunai belum terintegrasi dengan Axapta.</b>
-                            </div>
-                        </div> -->
                         @endif
 
                         @if (count($errors) > 0)

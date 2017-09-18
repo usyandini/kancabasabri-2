@@ -11,6 +11,7 @@ class BerkasPenyesuaian extends Model
     protected $table = 'berkas_penyesuaian';
 
     // protected $dateFormat = 'Y-m-d H:i:s';
+
     protected $dates = ['dob'];
 
     protected $fillable = [

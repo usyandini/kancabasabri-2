@@ -154,6 +154,18 @@
                                                     <input type="checkbox" name="perizinan[update-notif]" {{ isset($user->perizinan['update-notif']) ? 'checked=""' : '' }}>
                                                     <label>Update mengenai status batch transaksi</label>
                                                   </fieldset>
+                                                  <fieldset>
+                                                    <input type="checkbox" name="perizinan[verifikasiTT_notif]" {{ isset($user->perizinan['verifikasiTT_notif']) ? 'checked=""' : '' }}>
+                                                    <label>Permintaan verifikasi tarik tunai</label>
+                                                  </fieldset>
+                                                  <fieldset>
+                                                    <input type="checkbox" name="perizinan[verifikasiPD_notif]" {{ isset($user->perizinan['verifikasiPD_notif']) ? 'checked=""' : '' }}>
+                                                    <label>Permintaan verifikasi penyesuaian dropping</label>
+                                                  </fieldset>
+                                                  <fieldset>
+                                                    <input type="checkbox" name="perizinan[verifikasiPD2_notif]" {{ isset($user->perizinan['verifikasiPD2_notif']) ? 'checked=""' : '' }}>
+                                                    <label>Permintaan verifikasi final penyesuaian dropping</label>
+                                                  </fieldset>
                                                 </div>
                                               </div>
                                             </div>

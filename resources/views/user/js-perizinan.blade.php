@@ -26,6 +26,12 @@
         $('label#notifikasi').html('Centang semua')
       }
 
+      if ($('#dropping input').filter(':checked').length > $('#dropping input').length/2) {
+        $('label#dropping').html('Hilangkan centang')
+      } else {
+        $('label#dropping').html('Centang semua')
+      }
+
       if ($('#transaksi input').filter(':checked').length > $('#transaksi input').length/2) {
         $('label#transaksi').html('Hilangkan centang')
       } else {
@@ -48,6 +54,7 @@
     @if (isset($profile_edit))
     $('input[type="checkbox"]').iCheck('disable')
     $('select[name="jenis_user"]').prop('disabled', true)
+    $('label#dropping').html('')
     $('label#transaksi').html('')
     $('label#anggaran').html('')
     $('label#notifikasi').html('')
