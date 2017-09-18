@@ -99,10 +99,10 @@ Route::group(['middleware' => 'auth'], function() {
 		Route::get('/tambah/{kategori}', 'PelaporanController@tambah');
 		Route::post('/submit/tambah', 'PelaporanController@store');
 		Route::get('/{kategori}/{id}/{type}', 'PelaporanController@form_master');
-		Route::get('/{kategori}', 'PelaporanController@pelaporan');
+		Route::get('/lihat/{kategori}', 'PelaporanController@pelaporan');
 		Route::get('/tambah/{kategori}', 'PelaporanController@tambah');
 		Route::get('/removeFormMaster', 'PelaporanController@removeFormMasterAll');
-		Route::get('/pelaporan/get/filtered/{id}/{type}', 'PelaporanController@getFiltered');
+		Route::get('/get/filtered/{id}/{type}', 'PelaporanController@getFiltered');
    	});
 
 	Route::group(['prefix' => 'pelaporan'], function() {
