@@ -74,6 +74,16 @@ class DroppingController extends Controller
         $this->droppingModel = $droppingTable;
         $this->penyesuaianModel = $kesesuaianDropping;
         $this->berkasTTModel = $berkasTT;
+
+        //$this->middleware('can:info_d', ['only' => 'index', 'filterHandle', 'filter', 'getFiltered']);
+        //$this->middleware('can:tarikTunai_d', ['only' => 'tarik_tunai']);
+        //$this->middleware('can:insertTT_d', ['only' => 'tarik_tunai_process']);
+        //$this->middleware('can:penyesuaian_d', ['only' => 'penyesuaian']);
+        //$this->middleware('can:insertPD_d', ['only' => 'penyesuaian_process']);
+        //$this->middleware('can:verifikasiTT_d', ['only' => 'verifikasiTarikTunai']);
+        //$this->middleware('can:verifikasiPD_d', ['only' => 'verifikasiPenyesuaian']);
+        //$this->middleware('can:verifikasiPD2_d', ['only' => 'verifikasiPenyesuaianLv2']);
+
     }
 
     public function index() 
@@ -340,6 +350,7 @@ class DroppingController extends Controller
     {
         $inputsPD = $request->except('_method', '_token', 'p_akun_bank', 'p_cabang', 'is_pengembalian', 'p_nominal', 'p_rek_bank', 'p_tgl_dropping');
 
+
         $validatorPD = Validator::make($request->all(),
             [
 
@@ -369,7 +380,7 @@ class DroppingController extends Controller
         $verLv2 = PenyesuaianDropping::where([['id_dropping', $id_drop], ['stat', 8]])->orderby('created_at', 'desc')->first();
         //dd($findstat1);
         $string_penyesuaian = $request->p_nominal;
-        $penyesuaian = floatval(str_replace('.', ',', str_replace(',', '', $string_penyesuaian)));
+        $penyesuaian = floatval(str_replace('.', '', $string_penyesuaian));
 
         if($submitted){
             session()->flash('fail', true);
