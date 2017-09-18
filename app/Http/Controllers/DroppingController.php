@@ -113,7 +113,7 @@ class DroppingController extends Controller
 
     public function getFiltered($transyear, $periode, $kcabang)
     {
-        $droppings = $this->jDroppingModel->where('DEBIT', '>', 0);
+        $droppings = $this->jDroppingModel->where('DEBIT', '>', 0)->orderby('TRANSDATE', 'desc');
         
         if ($transyear != '0') {
             $droppings = $droppings->whereYear('TRANSDATE', '=', $transyear);
