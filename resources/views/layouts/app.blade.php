@@ -129,22 +129,30 @@
                     @if (Gate::check('info_a') || Gate::check('riwayat_a') || Gate::check('persetujuan_a') || Gate::check('persetujuan2_a'))
                     <li class="nav-item has-sub {{ checkOpenedMenu('anggaran') }}"><a href=""><i class="ft-edit"></i><span data-i18n="" class="menu-title">Anggaran Kegiatan</span></a>
                         <ul class="menu-content">
-                            @can('info_a')
-                            <li class="is-shown {{ checkActiveMenu('pelaporan') }}"><a href="{{ url('/pelaporan/lihat/laporan_anggaran', $parameters = [], $secure = null) }}" class="menu-item">Pelaporan Anggaran Kegiatan</a></li>
-                            <li class="is-shown {{ checkActiveMenu('arahan') }}"><a href="{{ url('/pelaporan/lihat/arahan_rups', $parameters = [], $secure = null) }}" class="menu-item">Arahan RUPS</a></li>
-                            <li class="is-shown {{ checkActiveMenu('usulan') }}"><a href="{{ url('/pelaporan/lihat/usulan_program', $parameters = [], $secure = null) }}" class="menu-item">Usulan Program Prioritas</a></li>
-                            @endcan
+                            
                             @can('info_a')
                                 <li class="is-shown {{ checkActiveMenu('anggaran') }}"><a href="{{ url('/anggaran', $parameters = [], $secure = null) }}" class="menu-item">Informasi Anggaran</a>
                             @endcan
                             @can('riwayat_a')
-                                <li class="is-shown {{ checkActiveMenu('persetujuan') }}"><a href="{{ url('/anggaran/riwayat', $parameters = [], $secure = null) }}" class="menu-item">Riwayat Anggaran</a>
+                                <li class="is-shown {{ checkActiveMenu('riwayat') }}"><a href="{{ url('/anggaran/riwayat', $parameters = [], $secure = null) }}" class="menu-item">Riwayat Anggaran</a>
                             @endcan
                             @can('persetujuan_a')
                                 <li class="is-shown {{ checkActiveMenu('persetujuan') }}"><a href="{{ url('/anggaran/persetujuan/333/1', $parameters = [], $secure = null) }}" class="menu-item">Persetujuan Rembang</a>
                             @endcan
                             @can('persetujuan2_a')
                                 <li class="is-shown {{ checkActiveMenu('persetujuan') }}"><a href="{{ url('/anggaran/persetujuan/333/2', $parameters = [], $secure = null) }}" class="menu-item">Persetujuan Manajemen</a>
+                            @endcan
+                            @can('info_a')
+                            <li class="is-shown {{ checkActiveMenu('laporan_anggaran') }}"><a href="{{ url('/pelaporan/lihat/laporan_anggaran', $parameters = [], $secure = null) }}" class="menu-item">Pelaporan Anggaran Kegiatan</a></li>
+                            <li class="is-shown {{ checkActiveMenu('arahan_rups') }}"><a href="{{ url('/pelaporan/lihat/arahan_rups', $parameters = [], $secure = null) }}" class="menu-item">Arahan RUPS</a></li>
+                                  
+                            <li class="nav-item has-sub {{ checkOpenedMenu('form_master_laporan_anggaran') }}"><a href=""><span data-i18n="" class="menu-title">Form Master</span></a>
+                                <ul class="menu-content">
+                                    <li class="is-shown {{ checkActiveMenu('form_master_laporan_anggaran') }}"><a href="{{ url('/pelaporan/form_master/laporan_anggaran', $parameters = [], $secure = null) }}" class="menu-item">Pelaporan Anggaran Kegiatan</a></li>
+                                    <li class="is-shown {{ checkActiveMenu('form_master_arahan_rups') }}"><a href="{{ url('/pelaporan/form_master/arahan_rups', $parameters = [], $secure = null) }}" class="menu-item">Arahan RUPS</a></li>
+                                    <li class="is-shown {{ checkActiveMenu('form_master_usulan') }}"><a href="{{ url('/pelaporan/form_master/usulan_program', $parameters = [], $secure = null) }}" class="menu-item">Usulan Program Prioritas</a></li>
+                                </ul>
+                            </li>
                             @endcan
                         </ul>
                     </li>
