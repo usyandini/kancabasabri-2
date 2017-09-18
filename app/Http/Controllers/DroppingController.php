@@ -330,7 +330,7 @@ class DroppingController extends Controller
                 session()->flash('reject2', true);
              }
         }
-
+        $integrated = StagingPengembalian::where('PIL_POSTED', 1);
         //dd($notif);
         return view('dropping.penyesuaian.penyesuaian', ['dropping' => $dropping, 'kesesuaian' => $kesesuaian, 'kcabangs' => $this->kantorCabangs, 'berkas' => $berkas, 'notif' => $notif]); 
     }
@@ -344,7 +344,7 @@ class DroppingController extends Controller
 
                 'p_akun_bank'       => 'not_in:0|required',
                 'p_cabang'          => 'not_in:0|required',
-                'p_nominal'         => 'not_in:0|required|regex:/^\d+([\,]\d+)*([\.]\d+)?$/',
+                'p_nominal'         => 'not_in:0|required|regex:/^\d+([\.]\d+)*([\,]\d+)?$/',
                 'p_rek_bank'        => 'not_in:0|required',
                 'berkas.*'          => 'required'
             ],
