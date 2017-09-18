@@ -21,7 +21,7 @@ Route::group(['middleware' => 'auth'], function() {
 	Route::get('notification/', 'NotificationController@get');
 	Route::get('notification/redirect/{id}', 'NotificationController@redirect');
    	Route::get('/dashboard', 'DashboardController@index');
-   });
+  
 
    	Route::group(['prefix' => 'dropping'], function() {
 		Route::resource('/', 'DroppingController');
@@ -139,5 +139,6 @@ Route::group(['middleware' => 'auth'], function() {
 		Route::post('/store', 'ItemController@store');
 		Route::post('/update/{id}', 'ItemController@update');
 		Route::get('/delete/{id}', 'ItemController@delete');
-		Route::post('/carialasan', 'ItemController@carialasan');
+		
 	});
+ });
