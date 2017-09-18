@@ -54,11 +54,11 @@ class TransaksiController extends Controller
         $this->current_batch = $this->defineCurrentBatch();
         $this->batches_dates = Batch::get();
 
-        // $this->middleware('can:info_t', ['only' => 'index']);
-        // $this->middleware('can:tambahBatch_t', ['only' => 'store']);
-        // $this->middleware('can:verifikasi_t', ['only' => 'persetujuan']);
-        // $this->middleware('can:verifikasi2_t', ['only' => 'verifikasi']);
-        // $this->middleware('can:cari_t', ['only' => 'filter_handle', 'filter_result']);
+        $this->middleware('can:info_t', ['only' => 'index']);
+        $this->middleware('can:tambahBatch_t', ['only' => 'store']);
+        $this->middleware('can:verifikasi_t', ['only' => 'persetujuan']);
+        $this->middleware('can:verifikasi2_t', ['only' => 'verifikasi']);
+        $this->middleware('can:cari_t', ['only' => 'filter_handle', 'filter_result']);
     }
 
     public function index()
