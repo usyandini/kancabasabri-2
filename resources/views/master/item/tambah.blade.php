@@ -135,60 +135,62 @@
                           <div class="card-body">
                             <div class="card-block">
                               <div class="form form-horizontal striped-rows">
-                            	<div class="form-group row">
-		                          <label class="col-md-2 label-control" for="segmen1">Account</label>
-		                          <div class="col-md-7">
-                                  	<input type="text" id="account" class="form-control" name="account" value="" disabled>
+                              	<div class="form-group row">
+    		                          <label class="col-md-2 label-control" for="segmen1">Account</label>
+    		                          <div class="col-md-7">
+                                    <select class = "select2 form-control" name="account">
+                                      <option selected disabled="">COA</option>
+                                    </select>
                                   </div>
                                   <div class="col-md-3">
-	                     			<input type="text" id="segmen1" class="form-control" name="segmen1" value="" disabled>
-		                          </div>
-				                </div>
-		                        <div class="form-group row">
-		                          <label class="col-md-2 label-control" for="segmen2">Program</label>
-		                          <div class="col-md-7">
-		                          	<input type="text" id="program" class="form-control" name="program" value="" disabled>
-		                          </div>
-		                          <div class="col-md-3">
-		                          	<input type="text" id="segmen2" class="form-control" name="segmen2" value="" disabled>
-				                  </div>
-		                        </div>
-		                        <div class="form-group row">
-		                          <label class="col-md-2 label-control" for="segmen3">KPKC</label>
-	                        	  <div class="col-md-7">
-	                          		<input type="text" id="kpkc" class="form-control" name="kpkc" value="" disabled>
-	                        	  </div>
-		                          <div class="col-md-3">
-	                          		<input type="text" id="segmen3" class="form-control" name="segmen3" value="" disabled>
-			                      </div>
-		                        </div>
-		                        <div class="form-group row">
-		                          <label class="col-md-2 label-control" for="segmen4">Divisi</label>
-		                          <div class="col-md-7">
-		                          	<input type="text" id="divisi" class="form-control" name="divisi" value="" disabled>
-		                          </div>
-		                          <div class="col-md-3">
-		                          	<input type="text" id="segmen4" class="form-control" name="segmen4" value="" disabled>
-				                  </div>
-		                        </div>
-		                        <div class="form-group row">
-		                          <label class="col-md-2 label-control" for="segmen5">Sub Pos</label>
-		                          <div class="col-md-7">
-		                          	<input type="text" id="subpos" class="form-control" name="subpos" value="" disabled>
-		                          </div>
-		                          <div class="col-md-3">
-		                          	<input type="text" id="segmen5" class="form-control" name="segmen5" value="" disabled>
-				                  </div>
-		                        </div>
+    	                     			    <input type="text" id="segmen1" class="form-control" name="segmen1" value="" disabled>
+    		                          </div>
+    				                    </div>
+    		                        <div class="form-group row">
+    		                          <label class="col-md-2 label-control" for="segmen2">Program</label>
+    		                          <div class="col-md-7">
+    		                          	<input type="text" id="program" class="form-control" name="program" value="" disabled>
+    		                          </div>
+    		                          <div class="col-md-3">
+    		                          	<input type="text" id="segmen2" class="form-control" name="segmen2" value="" disabled>
+      				                    </div>
+    		                        </div>
+    		                        <div class="form-group row">
+    		                          <label class="col-md-2 label-control" for="segmen3">KPKC</label>
+    	                        	  <div class="col-md-7">
+    	                          		<input type="text" id="kpkc" class="form-control" name="kpkc" value="" disabled>
+    	                        	  </div>
+    		                          <div class="col-md-3">
+    	                          		<input type="text" id="segmen3" class="form-control" name="segmen3" value="" disabled>
+    			                        </div>
+    		                        </div>
+    		                        <div class="form-group row">
+    		                          <label class="col-md-2 label-control" for="segmen4">Divisi</label>
+    		                          <div class="col-md-7">
+    		                          	<input type="text" id="divisi" class="form-control" name="divisi" value="" disabled>
+    		                          </div>
+    		                          <div class="col-md-3">
+    		                          	<input type="text" id="segmen4" class="form-control" name="segmen4" value="" disabled>
+    				                      </div>
+    		                        </div>
+    		                        <div class="form-group row">
+    		                          <label class="col-md-2 label-control" for="segmen5">Sub Pos</label>
+    		                          <div class="col-md-7">
+    		                          	<input type="text" id="subpos" class="form-control" name="subpos" value="" disabled>
+    		                          </div>
+    		                          <div class="col-md-3">
+    		                          	<input type="text" id="segmen5" class="form-control" name="segmen5" value="" disabled>
+    				                      </div>
+    		                        </div>
                               	<div class="form-group row">
-		                          <label class="col-md-2 label-control" for="segmen6">Mata Anggaran</label>
-		                          <div class="col-md-7">
-		                            <input type="text" id="kegiatan" class="form-control" name="kegiatan" value="" disabled>
-		                          </div>
-		                          <div class="col-md-3">
-		                        	<input type="text" id="segmen6" class="form-control" name="segmen6" value="" disabled>
-				                  </div>
-				              	</div>
+    		                          <label class="col-md-2 label-control" for="segmen6">Mata Anggaran</label>
+    		                          <div class="col-md-7">
+    		                            <input type="text" id="kegiatan" class="form-control" name="kegiatan" value="" disabled>
+    		                          </div>
+    		                          <div class="col-md-3">
+    		                        	  <input type="text" id="segmen6" class="form-control" name="segmen6" value="" disabled>
+        				                  </div>
+        				              	</div>
                               </div>
                             </div>
                           </div>
