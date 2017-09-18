@@ -186,8 +186,9 @@ class DroppingController extends Controller
         $this->inputDrop($id_drop); 
 
         $dropping = $this->droppingModel->where([['RECID', $id_drop], ['DEBIT', '>', 0]])->firstOrFail();
-
-        //dd(StagingTarikTunai::get());
+        // $cabang = \Auth::user()->cabang;
+        // $roleCabang = KantorCabang::where('VALUE', $cabang)->first();
+        // dd($roleCabang['DESCRIPTION']);
 
         $tariktunai = TarikTunai::where([['id_dropping', $id_drop], ['nominal_tarik', '>', 0], ['stat', 3]])->orderby('sisa_dropping', 'asc')->get();
 
