@@ -35,7 +35,8 @@ class AuthServiceProvider extends ServiceProvider
             'info_d', 'tarikTunai_d', 'penyesuaian_d', 'insertTT_d', 'insertPD_d', 'verifikasiTT_d', 'verifikasiPD_d', 'verifikasiPD2_d',
             'info_t', 'tambahBatch_t', 'verifikasi_t', 'berkas_t', 'verifikasi2_t', 'insert_t', 'update_t', 'hapus_t', 'cari_t', 'submit_t',
             'info_a', 'riwayat_a', 'persetujuan_a', 'persetujuan2_a',
-            'info_u', 'tambah_u', 'jenis_u', 'tambah_jenis', 'edit_u', 'sdelete_u', 'pdelete_u', 'restore_u', 'edit_jenis'];
+            'info_u', 'tambah_u', 'jenis_u', 'tambah_jenis', 'edit_u', 'sdelete_u', 'pdelete_u', 'restore_u', 'edit_jenis',
+            'info_i', 'tambah_i', 'listAlasan_i', 'tambahAlasan_i','jenis_i', 'kelompok_i', 'pos_i', 'simpan_i', 'delete_i', 'edit_i'];
         
         foreach ($permissions as $permission) {
             \Gate::define($permission, function ($user) use ($permission) {

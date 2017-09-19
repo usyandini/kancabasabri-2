@@ -89,7 +89,9 @@
                                     <span class="user-name">{{ Auth::user()->name }}</span>
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right">
+                                    @can('edit_u')
                                     <a href="{{ url('user/profile').'/'.Auth::user()->id }}" class="dropdown-item"><i class="ft-user"></i> Edit Profile</a>
+                                    @endcan
                                     <div class="dropdown-divider"></div><a href="{{ url('logout', $parameters = [], $secure = null) }}" class="dropdown-item"><i class="ft-power"></i> Logout</a>
                                 </div>
                             </li>
@@ -106,7 +108,9 @@
                     </li>
                     <li class="navigation-header"><span >Menu Utama</span><i data-toggle="tooltip" data-placement="right" data-original-title="General"class=" ft-minus"></i></li>
                     @if (Gate::check('info_d') || Gate::check('tarikTunai_d') || Gate::check('penyesuaian_d') || Gate::check('insertTT_d') || Gate::check('insertPD_d') || Gate::check('verifikasiTT_d') || Gate::check('verifikasiPD_d') || Gate::check('verifikasiPD2_d'))
-                    <li class="nav-item {{ checkActiveMenu('dropping') }}"><a href="{{ url('/dropping', $parameters = [], $secure = null) }}"><i class="ft-box"></i><span data-i18n="" class="menu-title">Dropping</span></a></li>
+                        @can('info_d')
+                        <li class="nav-item {{ checkActiveMenu('dropping') }}"><a href="{{ url('/dropping', $parameters = [], $secure = null) }}"><i class="ft-box"></i><span data-i18n="" class="menu-title">Dropping</span></a></li>
+                        @endcan
                     @endif
 
                     @if (Gate::check('info_t') || Gate::check('tambahBatch_t') || Gate::check('verifikasi_t') || Gate::check('verifikasi2_t'))
@@ -130,7 +134,6 @@
                     @if (Gate::check('info_a') || Gate::check('riwayat_a') || Gate::check('persetujuan_a') || Gate::check('persetujuan2_a'))
                     <li class="nav-item has-sub {{ checkOpenedMenu('anggaran') }}"><a href=""><i class="ft-edit"></i><span data-i18n="" class="menu-title">Anggaran Kegiatan</span></a>
                         <ul class="menu-content">
-                            
                             @can('info_a')
                                 <li class="is-shown {{ checkActiveMenu('anggaran') }}"><a href="{{ url('/anggaran', $parameters = [], $secure = null) }}" class="menu-item">Informasi Anggaran</a>
                             @endcan
@@ -175,11 +178,17 @@
                         @endcan
                     </ul>
                     @endif
+                    @if(Gate::check('info_i') || Gate::check('tambah_i') || Gate::check('tambah_r') || Gate::check('listAlasan_r'))
                     <li class="nav-item has-sub {{ checkOpenedMenu('item') }}"><a href=""><i class="ft-file"></i><span data-i18n="" class="menu-title">Manajemen Item</span></a>
                     <ul class="menu-content">
+                        @can('info_i')
                         <li class="is-shown {{ checkActiveMenu('item') }}"><a href="{{ url('/item', $parameters = [], $secure = null) }}" class="menu-item">Manajemen Kombinasi Item</a>
+                        @endcan
+                        @can('listAlasan_r')
                         <li class="is-shown {{ checkActiveMenu('reason') }}"><a href="{{ url('/reason', $parameters = [], $secure = null) }}" class="menu-item">Manajemen Alasan Menolak</a>
+                        @endcan
                     </ul>
+                    @endif
                 </ul>
             </div>
         </div>

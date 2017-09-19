@@ -40,11 +40,11 @@
             </fieldset>
             <fieldset>
               <input type="checkbox" name="perizinan[tarikTunai_d]" {{ isset($user->perizinan['tarikTunai_d']) ? 'checked=""' : '' }} >
-              <label>Tarik Tunai dropping</label>
+              <label>Melihat halaman tarik tunai dropping</label>
             </fieldset>
             <fieldset>
               <input type="checkbox" name="perizinan[penyesuaian_d]" {{ isset($user->perizinan['penyesuaian_d']) ? 'checked=""' : '' }} >
-              <label>Penyesuaian dropping</label>
+              <label>Melihat halaman penyesuaian dropping</label>
             </fieldset>
             </div>
           <h5>Sub-menu</h5>

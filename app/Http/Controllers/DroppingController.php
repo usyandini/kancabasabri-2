@@ -75,15 +75,14 @@ class DroppingController extends Controller
         $this->penyesuaianModel = $kesesuaianDropping;
         $this->berkasTTModel = $berkasTT;
 
-        //$this->middleware('can:info_d', ['only' => 'index', 'filterHandle', 'filter', 'getFiltered']);
-        //$this->middleware('can:tarikTunai_d', ['only' => 'tarik_tunai']);
-        //$this->middleware('can:insertTT_d', ['only' => 'tarik_tunai_process']);
-        //$this->middleware('can:penyesuaian_d', ['only' => 'penyesuaian']);
-        //$this->middleware('can:insertPD_d', ['only' => 'penyesuaian_process']);
-        //$this->middleware('can:verifikasiTT_d', ['only' => 'verifikasiTarikTunai']);
-        //$this->middleware('can:verifikasiPD_d', ['only' => 'verifikasiPenyesuaian']);
-        //$this->middleware('can:verifikasiPD2_d', ['only' => 'verifikasiPenyesuaianLv2']);
-
+        $this->middleware('can:info_d', ['only' => 'index', 'filterHandle', 'filter', 'getFiltered']);
+        $this->middleware('can:tarikTunai_d', ['only' => 'tarik_tunai']);
+        $this->middleware('can:insertTT_d', ['only' => 'tarik_tunai_process']);
+        $this->middleware('can:penyesuaian_d', ['only' => 'penyesuaian']);
+        $this->middleware('can:insertPD_d', ['only' => 'penyesuaian_process']);
+        $this->middleware('can:verifikasiTT_d', ['only' => 'verifikasiTarikTunai']);
+        $this->middleware('can:verifikasiPD_d', ['only' => 'verifikasiPenyesuaian']);
+        $this->middleware('can:verifikasiPD2_d', ['only' => 'verifikasiPenyesuaianLv2']);
     }
 
     public function index() 
@@ -622,7 +621,7 @@ class DroppingController extends Controller
             $kegiatan = Kegiatan::where('VALUE', $dataPD->SEGMEN_6)->first();
         }
 
-        $integrated = StagingTarikTunai::where([['RECID', $id], ['PIL_POSTED', 1]])->first();
+        $integrated = StagingPengembalian::where([['RECID', $id], ['PIL_POSTED', 1]])->first();
         if($integrated){
             session()->flash('integrated', true);
         }else{

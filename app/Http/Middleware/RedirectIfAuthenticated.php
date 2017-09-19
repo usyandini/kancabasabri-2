@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 // ------- PERIZINAN --------
 //  0 = Not authorized
@@ -29,7 +30,14 @@ class RedirectIfAuthenticated
     public function handle($request, Closure $next, $guard = null)
     {
         if (Auth::guard($guard)->check()) {
-            return redirect('/dropping');       
+            if(Gate::check('info_d'))
+                return redirect('/dropping');
+            elseif(Gate::check('info_t'))
+                return redirect('/transaksi');
+            elseif(Gate::check('info_a'))
+                return redirect('/anggaran'); 
+            else
+                return redirect('/dashboard');      
         }
 
         return $next($request);
