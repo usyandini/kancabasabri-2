@@ -128,8 +128,6 @@
                                             </div>
                                           </div>
                                         </div>
-
-                                           
                                       </div>
                                     </div>
                                     <input type="hidden" name="list_anggaran_values" id="list_anggaran_values">
@@ -1090,6 +1088,11 @@
                               // document.getElementById('button_'+index_modal).innerHTML = countFile+" Berkas";
                               if(count_berkas==0){
                                 title = "Unggah Berkas";
+                                for(i=0;i<inputs.length;i++){
+                                  if(inputs[i]["id"]==item.id){
+                                    id_list = inputs[i]["tempId"];
+                                  }
+                                }
                               }else{
                                 title = count_berkas+" Berkas";
                               }
@@ -1122,7 +1125,7 @@
                               return button;
                             },
                             
-                            editTemplate: function(value) {
+                            editTemplate: function(value,item) {
                               // alert("update");
                               var id_list=0;
                               var count_berkas=0;
@@ -1145,6 +1148,13 @@
                               var title="";
                               if(count_berkas==0){
                                 title = "Unggah Berkas";
+                                for(i=0;i<inputs.length;i++){
+                                  if(inputs[i]["id"]==item.id){
+                                    id_list = inputs[i]["tempId"];
+                                  }
+                                }
+
+                              // alert(item.tempId);
                               }else{
                                 title = count_berkas+" Berkas";
                               }

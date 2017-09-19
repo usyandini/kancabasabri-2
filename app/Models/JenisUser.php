@@ -12,7 +12,8 @@ class JenisUser extends Model
     protected $connection = 'sqlsrv';
     protected $table = 'jenis_user';
 
-	//protected $dateFormat = 'Y-m-d H:i:s';
+	// protected $dateFormat = 'Y-m-d H:i:s';
+
     protected $dates = ['dob'];
 
     protected $casts = ['perizinan' => 'array'];

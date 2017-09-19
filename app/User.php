@@ -22,7 +22,8 @@ class User extends Authenticatable
 
     protected $connection = 'sqlsrv';
 
-    //protected $dateFormat = 'Y-m-d H:i:s';
+    // protected $dateFormat = 'Y-m-d H:i:s';
+
     protected $dates = ['dob'];
 
     protected $casts = ['perizinan' => 'array'];
