@@ -43,7 +43,7 @@ class UserController extends Controller
 
     	if ($validator->passes()) {
             $input['password'] = bcrypt($input['password']);
-            if ($input['perizinan']['data-cabang'] == 'off') { unset($input['perizinan']['data-cabang']); }
+            if ($input['perizinan']['data_cabang'] == 'off') { unset($input['perizinan']['data_cabang']); }
             $input['created_by'] = \Auth::user()->id;
             User::create($input);
 
@@ -88,7 +88,7 @@ class UserController extends Controller
                 unset($input['password_confirmation']);
             }
             if (isset($input['perizinan'])) {
-                if ($input['perizinan']['data-cabang'] == 'off') { unset($input['perizinan']['data-cabang']); }
+                if ($input['perizinan']['data_cabang'] == 'off') { unset($input['perizinan']['data_cabang']); }
                 $user = User::withTrashed()->where('id', $id)->first();
                 $user->perizinan = $input['perizinan'];
                 $user->save();
