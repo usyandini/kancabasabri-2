@@ -20,7 +20,7 @@ class Batch extends Model
 
 	protected $table = 'batches';
 
-    //protected $dateFormat = 'Y-m-d H:i:s';
+    protected $dateFormat = 'Y-m-d H:i:s';
     protected $dates = ['dob'];
 
 	protected $fillable = ['created_by'];    
@@ -42,6 +42,10 @@ class Batch extends Model
 
 	public function isUpdatable()
     {
+        if (!$this->latestStat()) {
+            return null;
+        }
+        
         switch ($this->latestStat()->stat) {
             case 0:
                 return true;
