@@ -227,6 +227,79 @@
       </div>
     </div>
   </div>
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-header">
+        <h4 class="card-title" id="basic-layout-card-center">Perizinan <code>Manajemen Item</code></h4>
+        <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
+        <div class="heading-elements">
+          <label class="text-primary" onclick="checkAll(this)" id="item"></label>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-block">
+          <h5>Menu utama</h5>
+          <div class="form-group skin skin-square" id="item">
+            <fieldset>
+              <input type="checkbox" name="perizinan[info_i]" {{ isset(old("perizinan")['info_i']) ? 'checked=""' : '' }}>
+              <label>Manajemen kombinasi item</label>
+            </fieldset>
+            <fieldset>
+              <input type="checkbox" name="perizinan[listAlasan_r]" {{ isset(old("perizinan")['listAlasan_r']) ? 'checked=""' : '' }}>
+              <label>Manajemen alasan penolakan</label>
+            </fieldset>
+          </div>
+          <h5>Sub-menu</h5>
+          <div class="form-group skin skin-square" id="item">
+            <fieldset>
+              <input type="checkbox" name="perizinan[tambah_i]" {{ isset(old("perizinan")['tambah_i']) ? 'checked=""' : '' }}>
+              <label>Tambah item</label>
+            </fieldset>
+            <fieldset>
+              <input type="checkbox" name="perizinan[delete_i]" {{ isset(old("perizinan")['delete_i']) ? 'checked=""' : '' }}>
+              <label>Hapus item</label>
+            </fieldset>
+            <fieldset>
+              <input type="checkbox" name="perizinan[edit_i]" {{ isset(old("perizinan")['edit_i']) ? 'checked=""' : '' }}>
+              <label>Edit item</label>
+            </fieldset>
+            <fieldset>
+              <input type="checkbox" name="perizinan[jenis_i]" {{ isset(old("perizinan")['jenis_i']) ? 'checked=""' : '' }}>
+              <label>Tambah jenis anggaran</label>
+            </fieldset>
+            <fieldset>
+              <input type="checkbox" name="perizinan[kelompok_i]" {{ isset(old("perizinan")['kelompok_i']) ? 'checked=""' : '' }}>
+              <label>Tambah kelompok anggaran</label>
+            </fieldset>
+            <fieldset>
+              <input type="checkbox" name="perizinan[pos_i]" {{ isset(old("perizinan")['pos_i']) ? 'checked=""' : '' }}>
+              <label>Tambah pos anggaran</label>
+            </fieldset>
+            <fieldset>
+              <input type="checkbox" name="perizinan[simpan_i]" {{ isset(old("perizinan")['simpan_i']) ? 'checked=""' : '' }}>
+              <label>Simpan item baru</label>
+            </fieldset>
+            <fieldset>
+              <input type="checkbox" name="perizinan[tambah_r]" {{ isset(old("perizinan")['tambah_r']) ? 'checked=""' : '' }}>
+              <label>Tambah alasan</label>
+            </fieldset>
+            <fieldset>
+              <input type="checkbox" name="perizinan[delete_r]" {{ isset(old("perizinan")['delete_r']) ? 'checked=""' : '' }}>
+              <label>Hapus alasan</label>
+            </fieldset>
+            <fieldset>
+              <input type="checkbox" name="perizinan[edit_r]" {{ isset(old("perizinan")['edit_r']) ? 'checked=""' : '' }}>
+              <label>Edit alasan</label>
+            </fieldset>
+            <fieldset>
+              <input type="checkbox" name="perizinan[simpan_r]" {{ isset(old("perizinan")['simpan_r']) ? 'checked=""' : '' }}>
+              <label>Simpan alasan baru</label>
+            </fieldset>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
   <div class="col-md-12">
     <div class="card">
       <div class="card-body">

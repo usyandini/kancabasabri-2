@@ -111,26 +111,20 @@ Route::group(['middleware' => 'auth'], function() {
 	Route::get('/user/profile/{id}', 'UserController@profile');
 	Route::post('/user/restore/{id}', 'UserController@restore');
 
-
-
-	Route::resource('/item', 'ItemController');
-	Route::get('/item/tambah', 'ItemController@tambahItem');
-
-
 	Route::resource('/jenis_user', 'JenisUserController');
 	Route::post('/jenis_user/handle', 'JenisUserController@handleCombo');
 
 	Route::group(['prefix' => 'item'], function(){
 		Route::resource('/', 'ItemController');
 		Route::get('/create', 'ItemController@create');
+		Route::post('/add', 'ItemController@addItem');
+		Route::post('/submit/{type}', 'ItemController@submitAnggaranItem');
 	});
-
 
 	Route::group(['prefix' => 'reason'], function(){
 		Route::resource('/', 'ItemController@reason');
 		Route::post('/store', 'ItemController@store');
 		Route::post('/update/{id}', 'ItemController@update');
-		Route::get('/delete/{id}', 'ItemController@delete');
-		
+		Route::get('/delete/{id}', 'ItemController@delete');		
 	});
 });

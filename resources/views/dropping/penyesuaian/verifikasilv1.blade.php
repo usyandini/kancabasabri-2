@@ -228,13 +228,6 @@
                                           <input type="text" id="kegiatan" class="form-control" name="kegiatan" value="{{ $kegiatan->DESCRIPTION }}" disabled>
                                         </div>
       				                        </div>
-                                      {{--<div class="form-group row">
-                                        <label class="col-md-3 label-control" for="account">Account</label>
-                                        <div class="col-md-9">
-                                          <input type="text" id="account" class="form-control" placeholder="Mata Anggaran"
-                                          name="ccount" value="{{ $penyesuaian->ACCOUNT }}" disabled>
-                                        </div>
-                                      </div>--}}
                                     </form>
                                   </div>
                                 </div>

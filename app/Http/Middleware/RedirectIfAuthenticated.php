@@ -30,7 +30,7 @@ class RedirectIfAuthenticated
     public function handle($request, Closure $next, $guard = null)
     {
         if (Auth::guard($guard)->check()) {
-            if(Gate::check('info_d'))
+            if(Gate::check('info_d') || Gate::check('verifikasiTT_d') || Gate::check('verifikasiPD_d') || Gate::check('verifikasiPD2_d'))
                 return redirect('/dropping');
             elseif(Gate::check('info_t'))
                 return redirect('/transaksi');
