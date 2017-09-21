@@ -310,10 +310,15 @@
                     }
                     generateAccount(item, m_anggaran, subpos);
                   }
+                  
+                  function pad(n) {
+                      return (n < 10) ? ("0" + n) : n;
+                  }
 
                   function generateAccount(item, m_anggaran, subpos) {
-                    var userId = {{ Auth::user()->id }};
-                    var account = item + '-THT-' + userId +'-00-' + subpos + '-' + m_anggaran;   
+                    var kpkcId = {{ Auth::user()->cabang }};
+                    var divisiId = {{ Auth::user()->divisi }};
+                    var account = item + '-THT' + '-' + pad(kpkcId) + '-' + pad(divisiId) + '-' + subpos + '-' + m_anggaran;   
                     $(account_field).val(account);
                   };
 
