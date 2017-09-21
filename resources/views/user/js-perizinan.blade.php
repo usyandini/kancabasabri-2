@@ -54,11 +54,14 @@
     @if (isset($profile_edit))
     $('input[type="checkbox"]').iCheck('disable')
     $('select[name="jenis_user"]').prop('disabled', true)
+    $('input[name="profile_edit"]').val('true');
+
     $('label#dropping').html('')
     $('label#transaksi').html('')
     $('label#anggaran').html('')
     $('label#notifikasi').html('')
     $('label#user').html('')
+    
     $('input[type="radio"]').iCheck('disable')
     @else
     calibrateCentang()

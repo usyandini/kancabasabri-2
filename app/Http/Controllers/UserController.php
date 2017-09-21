@@ -77,16 +77,19 @@ class UserController extends Controller
 
     public function update(Request $request, $id)
     {    	
-    	$input = $request->except('_token' , '_method');
+    	$input = $request->except('_token' , '_method', 'profile_edit');
+        $profile_edit = $request->profile_edit;
         if ($input['password'] == '') { unset($input['password']); unset($input['password_confirmation']); }
         $validator = $this->validateInputs($input, $id);
 
         if ($validator->passes()) {
             $input['updated_by'] = \Auth::user()->id;
+            
             if (isset($input['password'])) {
                 $input['password'] = bcrypt($input['password']);
                 unset($input['password_confirmation']);
             }
+
             if (isset($input['perizinan'])) {
                 if ($input['perizinan']['data_cabang'] == 'off') { unset($input['perizinan']['data_cabang']); }
                 $user = User::withTrashed()->where('id', $id)->first();
@@ -98,6 +101,10 @@ class UserController extends Controller
             User::where('id', $id)->update($input);
             $user = User::withTrashed()->where('id', $id)->first();
 
+            if ($profile_edit == 'true') {
+                session()->flash('success', 'Data profil anda berhasil diperbarui.');
+                return redirect()->back();    
+            }
             session()->flash('success', 'User atas nama <b>'.$user->name.' ('.$user->username.')</b> berhasil diperbarui.');
             return redirect('user');
         }

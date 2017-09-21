@@ -35,6 +35,7 @@
                                       <div class="col-md-6">
                                         {{ csrf_field() }}
                                         {{ method_field('PUT') }}
+                                        <input type="hidden" name="profile_edit" value="false">
                                         <div class="card">
                                           <div class="card-header">
                                             <h4 class="card-title" id="basic-layout-card-center">Data Dasar</h4>
@@ -189,4 +190,11 @@
                                       <script src="{{ asset('app-assets/js/scripts/forms/checkbox-radio.min.js') }}" type="text/javascript"></script>
                                       <!-- END PAGE LEVEL JS-->
                                       @include('user.js-perizinan')
+                                      <script type="text/javascript">
+                                        $(document).ready(function() {
+                                            @if (session('success'))
+                                              toastr.info("{!! session('success') !!}", "Update Berhasil", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:10e3});
+                                            @endif
+                                          });
+                                      </script>
                                       @endsection
