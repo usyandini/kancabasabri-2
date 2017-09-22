@@ -86,8 +86,8 @@
                             </div>
                         @endif
                       </div>
-                      @if(Gate::check('insertPD_d'))
-                        @can('insertPD_d')
+                      @if(Gate::check('masuk_p_d'))
+                        @can('masuk_p_d')
                         <div class="col-md-6">
                         @endcan
                       @else
@@ -151,7 +151,7 @@
                         </div>
                       </div>
 
-                      @can('insertPD_d')
+                      @can('masuk_p_d')
                       <div class="col-md-6">
                         <div class="card" id="kesesuaian" style="height: 1800px;">
                           <div class="card-header">
@@ -334,7 +334,7 @@
                       </div>
                     </div>
                     @endif
-                    @can('insertPD_d')
+                    @can('masuk_p_d')
                     <div class="row match-height">
                       <div class="col-md-12">
                         <div class="card">

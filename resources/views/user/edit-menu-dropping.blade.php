@@ -15,7 +15,7 @@
               <label>Pencarian dropping</label>
             </fieldset>
             <fieldset>
-              <input type="checkbox" name="perizinan[masuk_tt_d]" {{ isset($user->perizinan['masuk_tt_d']) ? 'checked=""' : '' }}>
+              <input type="checkbox" name="perizinan[lihat_tt_d]" {{ isset($user->perizinan['lihat_tt_d']) ? 'checked=""' : '' }}>
               <label>Lihat tarik tunai</label>
             </fieldset>
             <fieldset>
