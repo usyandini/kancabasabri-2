@@ -31,6 +31,7 @@ class AuthServiceProvider extends ServiceProvider
 
     public function registerPostPolicies($gate)
     {
+
         $permissions = array();
         $unit = ["unit_0100","unit_0200","unit_0300","unit_0400","unit_0500","unit_0600",
                     "unit_0700","unit_0800","unit_0900","unit_1000","unit_1100","unit_1200",
@@ -84,7 +85,7 @@ class AuthServiceProvider extends ServiceProvider
         //     'info_t', 'tambahBatch_t', 'verifikasi_t', 'berkas_t', 'verifikasi2_t', 'insert_t', 'update_t', 'hapus_t', 'cari_t', 'submit_t',
         //     'info_a', 'riwayat_a', 'persetujuan_a', 'persetujuan2_a',
         //     'info_u', 'tambah_u', 'jenis_u', 'tambah_jenis', 'edit_u', 'sdelete_u', 'pdelete_u', 'restore_u', 'edit_jenis'];
-        
+
         foreach ($permissions as $permission) {
             \Gate::define($permission, function ($user) use ($permission) {
                 return $user->hasAccess($permission);

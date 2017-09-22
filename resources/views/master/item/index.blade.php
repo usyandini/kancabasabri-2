@@ -21,7 +21,7 @@
                                 <ol class="breadcrumb">
                                     <li class="breadcrumb-item"><a href="{{ url('/') }}">Manajemen Item</a>
                                     </li>
-                                    <li class="breadcrumb-item active"><a href="{{ url('/dropping') }}">Master Item</a>
+                                    <li class="breadcrumb-item active"><a href="{{ url('/item') }}">Master Item</a>
                                     </li>
                                 </ol>
                             </div>
@@ -62,29 +62,29 @@
 			                          </tr>
 			                        </thead>
 			                        <tbody>
-			                        		<tr>
-			                        			<td>Laptop</td>
-			                        			<td>Belanja Modal</td>
-			                        			<td>Komputer</td>
-			                        			<td>Komputer KC/KCP</td>
-			                        			<td>Hardware</td>
-			                        			<td>Laptop</td>
-			                        			{{-- {!! $user->deleted_at ? '<td class="red">Deleted</td>' : '<td class="blue">Aktif</td>' !!}
-			                        			<td>
-			                        				<a class="btn btn-sm btn-primary" href="{{ url('user').'/'.$user->id }}"><i class="fa fa-info"></i> Detil</a>
-			                        				@if(!$user->deleted_at)
-			                        					<a class="btn btn-sm btn-primary" href="{{ url('user').'/'.$user->id.'/edit' }}"><i class="fa fa-edit"></i> Edit</a>
-		                        					@endif
-		                        					@if(Auth::user()->id != $user->id && !$user->deleted_at)
-				                        				<a class="btn btn-sm btn-danger" href="#" onclick="deleteUser({{ $user->id }}, false)"><i class="fa fa-times"></i> Hapus</a>
-				                        			@endif
-				                        			@if($user->deleted_at)
-				                        				<a class="btn btn-sm btn-warning" href="#" onclick="restoreUser({{ $user->id }})"><i class="fa fa-backward"></i> Restore</a>
-				                        				<a class="btn btn-sm btn-danger" href="#" onclick="deleteUser({{ $user->id }}, true)"><i class="fa fa-times"></i> Hapus permanen</a>
-			                        				@endif
-		                        				</td> --}}
-		                        				<td></td>
-			                        		</tr>
+		                        		<tr>
+		                        			<td>Laptop</td>
+		                        			<td>Belanja Modal</td>
+		                        			<td>Komputer</td>
+		                        			<td>Komputer KC/KCP</td>
+		                        			<td>Hardware</td>
+		                        			<td>Laptop</td>
+		                        			{{-- {!! $user->deleted_at ? '<td class="red">Deleted</td>' : '<td class="blue">Aktif</td>' !!}
+		                        			<td>
+		                        				<a class="btn btn-sm btn-primary" href="{{ url('user').'/'.$user->id }}"><i class="fa fa-info"></i> Detil</a>
+		                        				@if(!$user->deleted_at)
+		                        					<a class="btn btn-sm btn-primary" href="{{ url('user').'/'.$user->id.'/edit' }}"><i class="fa fa-edit"></i> Edit</a>
+	                        					@endif
+	                        					@if(Auth::user()->id != $user->id && !$user->deleted_at)
+			                        				<a class="btn btn-sm btn-danger" href="#" onclick="deleteUser({{ $user->id }}, false)"><i class="fa fa-times"></i> Hapus</a>
+			                        			@endif
+			                        			@if($user->deleted_at)
+			                        				<a class="btn btn-sm btn-warning" href="#" onclick="restoreUser({{ $user->id }})"><i class="fa fa-backward"></i> Restore</a>
+			                        				<a class="btn btn-sm btn-danger" href="#" onclick="deleteUser({{ $user->id }}, true)"><i class="fa fa-times"></i> Hapus permanen</a>
+		                        				@endif
+	                        				</td> --}}
+	                        				<td></td>
+		                        		</tr>
 			                        </tbody>
 			                      </table>
 			                      {{-- <form method="post" action="#" id="restoreU">

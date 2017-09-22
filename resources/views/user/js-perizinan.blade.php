@@ -55,6 +55,12 @@
       } else {
         $('label#user').html('Centang semua')
       }
+
+      if ($('#item input').filter(':checked').length > $('#item input').length/2) {
+        $('label#item').html('Hilangkan centang')
+      } else {
+        $('label#item').html('Centang semua')
+      }
     }
 
     @if (isset($profile_edit))
@@ -66,6 +72,7 @@
     $('label#notifikasi').html('')
     $('label#unit_kerja').html('')
     $('label#user').html('')
+    $('label#item').html('')
     $('input[type="radio"]').iCheck('disable')
     @else
     calibrateCentang()

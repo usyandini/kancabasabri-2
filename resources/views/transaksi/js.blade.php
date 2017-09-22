@@ -313,7 +313,7 @@
 
                   function generateAccount(item, m_anggaran, subpos) {
                     var userId = {{ Auth::user()->id }};
-                    var account = item + '-THT-' + userId +'-00-' + subpos + '-' + m_anggaran;   
+                    var account = item + '-THT-' + userId +'-00-' + subpos + '-' + m_anggaran;
                     $(account_field).val(account);
                   };
 
