@@ -51,11 +51,13 @@
                                         @endforeach
                                       </select>
                                     </div>
+
                                   </div>
                                   <div class="col-xs-6">
                                     <div class="form-group">
                                       <label>No. Batch</label>
                                       <input class="form-control" type="text" id="batch" name="batch_no"></input>
+
                                     </div>
                                   </div>
                                 </div>

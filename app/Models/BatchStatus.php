@@ -21,6 +21,7 @@ class BatchStatus extends Model
     protected $table = 'batches_status';
 
     protected $dateFormat = 'Y-m-d H:i:s';
+
     protected $dates =['dob'];
 
     protected $fillable = [

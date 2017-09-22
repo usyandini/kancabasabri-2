@@ -86,7 +86,13 @@
                             </div>
                         @endif
                       </div>
-                      <div class="col-md-6">
+                      @if(Gate::check('masuk_p_d'))
+                        @can('masuk_p_d')
+                        <div class="col-md-6">
+                        @endcan
+                      @else
+                      <div class="col-md-6 offset-md-3">
+                      @endif
                         <div class="card" style="height: 100px;">
                           <div class="card-header">
                             <h4 class="card-title" id="basic-layout-form">Detail Dropping <b><br>{{ $dropping->CABANG_DROPPING }}</b></h4>
@@ -145,6 +151,7 @@
                         </div>
                       </div>
 
+                      @can('masuk_p_d')
                       <div class="col-md-6">
                         <div class="card" id="kesesuaian" style="height: 1800px;">
                           <div class="card-header">
@@ -243,7 +250,6 @@
                                       </div>
                                     </div>
                                   </div>
-
                                   <div class="row">
                                     <div class="col-md-12">
                                       <div class="form-group">
@@ -251,7 +257,6 @@
                                         <span class="required"> *</span>
                                         <div class="controls">
                                           <input type="file" class="form-control-file" id="berkas" name="berkas[]" multiple="" required>
-
                                         </div>
                                       </div>
                                     </div>
@@ -263,7 +268,7 @@
                         </div>
                       </div>
                     </div>
-
+                    @endcan
                     @if(isset($kesesuaian))
                     <div class="row match-height">
                       <div class="col-md-12">
@@ -329,7 +334,7 @@
                       </div>
                     </div>
                     @endif
-
+                    @can('masuk_p_d')
                     <div class="row match-height">
                       <div class="col-md-12">
                         <div class="card">
@@ -370,6 +375,7 @@
                         </div>
                       </div>
                     </div>
+                    @endcan
                   </section>
 
                 <!-- Basic scenario end -->

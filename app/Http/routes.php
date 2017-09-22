@@ -91,32 +91,29 @@ Route::group(['middleware' => 'auth'], function() {
 	});
 
 	Route::group(['prefix' => 'pelaporan'], function() {
+
 		Route::resource('/', 'PelaporanController');
 		Route::get('/tambah/{kategori}', 'PelaporanController@tambah');
+
 		Route::post('/submit/tambah', 'PelaporanController@store');
-		Route::get('/{kategori}/{id}/{type}', 'PelaporanController@form_master');
+		// Route::get('/{kategori}/{id}/{type}', 'PelaporanController@form_master');
+		Route::get('/detail/{kategori}/{id}/{type}', 'PelaporanController@form_master_detail');
+		Route::get('/form_master/{kategori}', 'PelaporanController@form_master');
 		Route::get('/lihat/{kategori}', 'PelaporanController@pelaporan');
-		Route::get('/tambah/{kategori}', 'PelaporanController@tambah');
+		Route::get('/tambah/{type}/{kategori}', 'PelaporanController@tambah');
 		Route::get('/removeFormMaster', 'PelaporanController@removeFormMasterAll');
 		Route::get('/get/filtered/{id}/{type}', 'PelaporanController@getFiltered');
-	});
 
-	Route::group(['prefix' => 'pelaporan'], function() {
-		Route::resource('/', 'PelaporanController');
+		Route::get('/get/filteredMaster/{type}', 'PelaporanController@getDataFormMaster');
+   	});
 
-		Route::post('/submit/tambah', 'PelaporanController@store');
-		Route::post('/pelaporan/{kategori}/{id}/{type}', 'PelaporanController@form_master');
-	});
-
+	Route::get('/user/ldap/', 'UserController@filterLDAP');
 	Route::resource('/user', 'UserController');
 	Route::get('/user/profile/{id}', 'UserController@profile');
 	Route::post('/user/restore/{id}', 'UserController@restore');
 
-
-
-	Route::resource('/item', 'ItemController');
-	Route::get('/item/tambah', 'ItemController@tambahItem');
-
+	// Route::resource('/item', 'ItemController');
+	// Route::get('/item/tambah', 'ItemController@tambahItem');
 
 	Route::resource('/jenis_user', 'JenisUserController');
 	Route::post('/jenis_user/handle', 'JenisUserController@handleCombo');
@@ -124,14 +121,17 @@ Route::group(['middleware' => 'auth'], function() {
 	Route::group(['prefix' => 'item'], function(){
 		Route::resource('/', 'ItemController');
 		Route::get('/create', 'ItemController@create');
+		Route::post('/add', 'ItemController@addItem');
+		Route::post('/submit/{type}', 'ItemController@submitAnggaranItem');
+		Route::get('/edit/{id}', 'ItemController@editItem');
+		Route::post('/update/{id}', 'ItemController@updateItem');
+		Route::get('/delete/{id}', 'ItemController@destroy');
 	});
-
 
 	Route::group(['prefix' => 'reason'], function(){
 		Route::resource('/', 'ItemController@reason');
 		Route::post('/store', 'ItemController@store');
 		Route::post('/update/{id}', 'ItemController@update');
-		Route::get('/delete/{id}', 'ItemController@delete');
-		
+		Route::get('/delete/{id}', 'ItemController@delete');		
 	});
 });

@@ -130,6 +130,7 @@
                                       </div>
                                     </div>
                                   </div>
+                                  @can('masuk_tt_d')
                                   <h4 class="form-section">Tarik Tunai</h4>
                                   <div class="row">
                                     <div class="col-md-6">
@@ -157,6 +158,7 @@
                                       </div>
                                     </div>
                                   </div>
+                                  @endcan
                                 </div>
                               </form>
                             </div>
@@ -227,6 +229,7 @@
                         </div>
                       </div>
                     </div>
+                    @can('masuk_tt_d')
                     <div class="row match-height">
                       <div class="col-md-12">
                         <div class="card">
@@ -267,6 +270,7 @@
                         </div>
                       </div>
                     </div>
+                    @endcan
                   </section>
 
                 <!-- Basic scenario end -->

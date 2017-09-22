@@ -11,6 +11,7 @@ use App\Models\Divisi;
 use App\Models\KantorCabang;
 use App\Models\JenisUser;
 use Validator;
+use Adldap\Laravel\Facades\Adldap;
 
 class UserController extends Controller
 {
@@ -21,6 +22,8 @@ class UserController extends Controller
         $this->middleware('can:edit_u', ['only' => 'edit', 'update']);
         $this->middleware('can:restore_u', ['only' => 'restore']);
     }
+
+
 
     public function index()
     {
@@ -43,7 +46,8 @@ class UserController extends Controller
 
     	if ($validator->passes()) {
             $input['password'] = bcrypt($input['password']);
-            if ($input['perizinan']['data_cabang'] == 'off') { unset($input['perizinan']['data_cabang']); }
+
+            // if ($input['perizinan']['data-cabang'] == 'off') { unset($input['perizinan']['data-cabang']); }
             $input['created_by'] = \Auth::user()->id;
             User::create($input);
 
@@ -51,6 +55,7 @@ class UserController extends Controller
             return redirect('user');
         } 
 
+        echo json_encode($input);
         return redirect()->back()->withInput()->withErrors($validator);
     }
 
@@ -91,12 +96,16 @@ class UserController extends Controller
             }
 
             if (isset($input['perizinan'])) {
-                if ($input['perizinan']['data_cabang'] == 'off') { unset($input['perizinan']['data_cabang']); }
+                // if ($input['perizinan']['data-cabang'] == 'off') { unset($input['perizinan']['data-cabang']); }
+
                 $user = User::withTrashed()->where('id', $id)->first();
                 $user->perizinan = $input['perizinan'];
                 $user->save();
+                
+            echo json_encode($input['perizinan']);
                 unset($input['perizinan']);
             }
+
             
             User::where('id', $id)->update($input);
             $user = User::withTrashed()->where('id', $id)->first();
@@ -154,5 +163,50 @@ class UserController extends Controller
 
     session()->flash('success', 'User atas nama <b>'.$user.'</b> berhasil dihapus');
     return redirect()->back();
-}
+    }
+
+    public function filterLDAP(){
+        // $keyword_decode = urldecode($keyword);
+        // $users = AdldapInterface::search()->users()->get();
+        $hostname = '172.31.0.2';
+        $ldap_username = 'fax.server@asabri.co.id';
+        $ldap_password = 'f3x-serv.!!';
+        $ldap_connection = ldap_connect($hostname);
+
+        if (FALSE === $ldap_connection) {
+            exit('Connection Refused With Hostname : ' . $hostname);
+        }
+
+        ldap_set_option($ldap_connection, LDAP_OPT_PROTOCOL_VERSION, 3) or die('Unable to set LDAP protocol version');
+        ldap_set_option($ldap_connection, LDAP_OPT_REFERRALS, 0);
+
+        $entries = Array();
+        if (TRUE === ldap_bind($ldap_connection, $ldap_username, $ldap_password)) {
+            $ldap_base_dn = 'DC=asabri,DC=co,DC=id';
+            // $search_filter = '(&(objectCategory=person)(samaccountname=*'.$keyword_decode.'*))';
+            $search_filter = '(&(objectCategory=person)(samaccountname=*))';
+            $attributes = array();
+            // $attributes[] = 'givenname';
+            $attributes[] = 'mail';
+            $attributes[] = 'samaccountname';
+            $attributes[] = 'displayname';
+            // $attributes[] = 'password';
+            $result = ldap_search($ldap_connection, $ldap_base_dn, $search_filter, $attributes);
+            if (FALSE !== $result) {
+                $entries = ldap_get_entries($ldap_connection, $result);
+            }
+            // echo "<pre>";
+            // print_r($entries);
+            // echo "</pre>";
+            ldap_unbind($ldap_connection); // Clean up after ourselves.
+        } else {
+            exit("Connection Succesfully, But LDAP Bind host refused with status = false");
+        }
+
+        // echo json_encode($entries);
+
+        // echo $entries[0]["samaccountname"]["0"].":".$entries[0]["displayname"]["0"];
+        return response()->json($entries);
+    }
+
 }

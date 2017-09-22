@@ -19,8 +19,10 @@ class Batch extends Model
 	protected $connection = 'sqlsrv';
 
 	protected $table = 'batches';
+    // protected $dateFormat = 'Y-m-d H:i:s';
 
     protected $dateFormat = 'Y-m-d H:i:s';
+
     protected $dates = ['dob'];
 
 	protected $fillable = ['created_by'];    

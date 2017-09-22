@@ -177,7 +177,7 @@
                                                    						<h4>Anda yakin ingin menghapus alasan <span class=text-danger>{{ $reason->content }}</span> ?</h4>
                                                 					</div>
                                                 						<div class="modal-footer">
-                                                   							<a href="{{ URL('reason/delete/'. $reason->id) }}"" class="btn btn-success btn-sm"><i class="fa fa-check"></i> Ya</a>
+                                                   							<a href="{{ URL('reason/delete/'. $reason->id) }}" class="btn btn-success btn-sm"><i class="fa fa-check"></i> Ya</a>
                                                     						<button type="button" class="btn btn-danger btn-sm" data-dismiss="modal"><i class="fa fa-times"></i> Tidak</button>
                                                 						</div>
                                             				</div>

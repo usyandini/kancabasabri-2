@@ -67,11 +67,13 @@
                             </div>
                         </div>
                         @elseif(!session('integrated'))
-                        <div class="col-xs-7">
-                            <div class="alert alert-warning">
-                              <b>Data penyesuaian dropping {{ $penyesuaian->cabang }} belum tercatat journal di Axapta.</b>
-                            </div>
-                        </div>
+                          @if($penyesuaian->is_pengembalian)
+                          <div class="col-xs-7">
+                              <div class="alert alert-warning">
+                                <b>Data penyesuaian dropping {{ $penyesuaian->cabang }} belum tercatat journal di Axapta.</b>
+                              </div>
+                          </div>
+                          @endif
                         @endif
 
                         @if (count($errors) > 0)

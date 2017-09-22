@@ -26,6 +26,12 @@
         $('label#notifikasi').html('Centang semua')
       }
 
+      if ($('#unit_kerja input').filter(':checked').length > $('#unit_kerja input').length/2) {
+        $('label#unit_kerja').html('Hilangkan centang')
+      } else {
+        $('label#unit_kerja').html('Centang semua')
+      }
+
       if ($('#dropping input').filter(':checked').length > $('#dropping input').length/2) {
         $('label#dropping').html('Hilangkan centang')
       } else {
@@ -49,6 +55,12 @@
       } else {
         $('label#user').html('Centang semua')
       }
+
+      if ($('#item input').filter(':checked').length > $('#item input').length/2) {
+        $('label#item').html('Hilangkan centang')
+      } else {
+        $('label#item').html('Centang semua')
+      }
     }
 
     @if (isset($profile_edit))
@@ -60,8 +72,9 @@
     $('label#transaksi').html('')
     $('label#anggaran').html('')
     $('label#notifikasi').html('')
+    $('label#unit_kerja').html('')
     $('label#user').html('')
-    
+    $('label#item').html('')
     $('input[type="radio"]').iCheck('disable')
     @else
     calibrateCentang()
@@ -77,4 +90,114 @@
       $(e).html('Hilangkan centang')
     }
   }
+
+  function CheckUnitKerja(id){
+    cabang = $('select[name="cabang"]').val();
+    divisi = $('select[name="divisi"]').val();
+    value =  false;
+    if(cabang!=null||divisi!=null){
+      unit = cabang+divisi;
+      if(cabang == null||$('select[name="cabang"]').is(':disabled')){
+        unit ="00"+divisi;
+      }else if(divisi == null||$('select[name="divisi"]').is(':disabled')){
+        unit =cabang+"00";
+      }
+      $('#' +id+ ' input').iCheck('uncheck')
+      value = true;
+      // $("input[name='perizinan[unit]["+unit+"]'").iCheck('check')
+      $("input[name='perizinan[unit_"+unit+"]'").iCheck('check')
+    }else{
+
+      alert("Pilih Terlebih dahulu Cabang atau Divisi");
+    }
+    return value;
+  }
+
+  function open_menu(menu){
+    if(menu == 'dropping'){
+      $( "#modal_menu_dropping" ).modal()
+    }else if(menu == 'transaksi'){
+      $( "#modal_menu_transaksi" ).modal()
+    }else if(menu == 'anggaran'){
+      $( "#modal_menu_anggaran" ).modal()
+    }else if(menu == 'pelaporan'){
+      $( "#modal_menu_pelaporan" ).modal()
+    }else if(menu == 'user'){
+      $( "#modal_menu_user" ).modal()
+    }else if(menu == 'item'){
+      $( "#modal_menu_item" ).modal()
+    }
+  }
+
+  $('#toogle_unit').click(function() {
+      // if(CheckUnitKerja('unit_kerja')){
+        $( "#modal_unit" ).modal();
+      // }
+  });
+
+  $('.iCheck-helper').click(function() {
+      id = $(this).prev().attr('id');
+      // alert(id);
+      if(id == "activ_dir_on"){
+        $(this).prev().iCheck('check');
+        changeLDAP('on');
+      }else if(id == "activ_dir_off"){
+        $(this).prev().iCheck('check');
+        changeLDAP('off');
+      }else{
+        check= $('#' +id+ ' input');
+        if($(this).prev().is(':checked')){
+          check.iCheck('check')
+        }else{
+          check.iCheck('uncheck')
+        }
+      }
+      
+      
+  });
+  var data_username = {};
+  function changeLDAP(type){
+    $("#input_user").empty();
+    if(type == "on"){
+        $("#input_user").append('<select class="select2 form-control" id="username" name="username" placeholder="Username" style="width: 100%;"></select>')
+        getUsername();
+        $("#username").change(function(){
+          nama_lengkap = document.getElementById('nama_lengkap');
+          username = document.getElementById('username');
+          Object.keys(data_username).map(function(key, index) {
+              if(key!="count"){
+                text = data_username[key]["samaccountname"]["0"];
+                if(text == username.value){
+                  nama_lengkap.value = data_username[key]["displayname"]["0"];
+                }
+              }
+          });
+
+        });
+    }else if(type == "off"){
+      $("#input_user").append('<input type="text" required="" id="username" class="form-control select2" placeholder="Username" name="username" value="{{ old("username") }}">')
+    }
+     
+  }
+  
+  function getUsername(){
+    $.ajax({
+          'async': false, 'type': "GET", 'dataType': 'JSON', 'url': "{{ url('user/ldap/') }}",
+          'success': function (data) {
+              data_username = data;
+              username = document.getElementById('username');
+              
+              Object.keys(data_username).map(function(key, index) {
+                  if(key!="count"){
+                    text = data_username[key]["samaccountname"]["0"];
+                    username.options[username.options.length] = new Option(text, text);
+                  }
+              });
+             
+          }
+      });
+  }
+
+  
+  
 </script>

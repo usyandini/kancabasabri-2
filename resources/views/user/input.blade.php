@@ -49,13 +49,27 @@
                               </div>
                               @endif
                               <div class="form-body">
+                                <div class="row skin skin-square">
+                                  <div class="col-md-12 col-sm-12">
+                                    <div class="form-group">
+                                      <fieldset>
+                                        <input type="radio" id='activ_dir_on' name="activ_dir" value="on" onchange="changeLDAP()">
+                                        <label>Daftar dengan Active Dirctory</label>
+                                        <input type="radio" id='activ_dir_off' name="activ_dir" value="off" checked="">
+                                        <label>Daftar dengan aplikasi</label>
+                                      </fieldset>
+                                    </div>
+                                  </div>
+                                </div>
                                 <div class="form-group">
                                   <label>Username</label>
-                                  <input type="text" required="" class="form-control" placeholder="Username" name="username" value="{{ old('username') }}">
+                                  <div id="input_user">
+                                    <input type="text" required="" id="username" class="form-control select2" placeholder="Username" name="username" value="{{ old('username') }}">
+                                  </div>
                                 </div>
                                 <div class="form-group">
                                   <label>Nama Lengkap</label>
-                                  <input type="text" required="" class="form-control" placeholder="Nama" name="name" value="{{ old('name') }}">
+                                  <input type="text" required="" class="form-control" placeholder="Nama" id="nama_lengkap" name="name" value="{{ old('name') }}">
                                 </div>
                                 <div class="form-group">
                                   <label>Email</label>
@@ -64,7 +78,7 @@
                                 <div class="form-group">
                                   <label>Cabang</label>
                                   <select class="select2 form-control" name="cabang" style="width: 100%;">
-                                    <option selected disabled="">Kantor Cabang</option>
+                                    <option selected disabled="" value="">Kantor Cabang</option>
                                     @foreach($cabang as $cab)
                                     <option {{ old('cabang') == $cab->VALUE ? 'selected=""' : '' }} value="{{ $cab->VALUE }}">{{ $cab->DESCRIPTION }}</option>
                                     @endforeach
@@ -73,12 +87,23 @@
                                 <div class="form-group">
                                   <label>Divisi</label><br>
                                   <select class="select2 form-control" name="divisi" style="width: 100%;">
-                                    <option selected disabled="">Divisi</option>
+                                    <option selected disabled="" value="">Divisi</option>
                                     @foreach($divisi as $div)
                                     <option {{ old('divisi') == $div->VALUE ? 'selected=""' : '' }} value="{{ $div->VALUE }}">{{ $div->DESCRIPTION }}</option>
                                     @endforeach
                                   </select>
                                 </div>
+                                @if (isset($jenis_user))
+                                <div class="form-group">
+                                  <label>Jenis User (preset)</label><br>
+                                  <select class="select2 form-control" name="divisi" style="width: 100%;">
+                                    <option selected disabled="" value="">Jenis User</option>
+                                    @foreach($jenis_user as $jenis)
+                                    <option {{ old('jenis') == $jenis->id ? 'selected=""' : '' }} value="{{ $jenis->nama }}">{{ $div->DESCRIPTION }}</option>
+                                    @endforeach
+                                  </select>
+                                </div>
+                                @endif
                               </div>
                             </div>
                           </div>
@@ -109,71 +134,281 @@
                         </div>
                         <div class="card">
                           <div class="card-header">
-                            <h4 class="card-title" id="basic-layout-card-center">Pengaturan Perizinan Data</h4>
-                            <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
-                          </div>
-                          <div class="card-body collapse in">
-                            <div class="card-block">
-                              <div class="row skin skin-square">
-                                <div class="col-md-12 col-sm-12">
-                                  <div class="form-group">
-                                    <fieldset>
-                                      <input type="radio" id="input-11" name="perizinan[data-cabang]" checked="" value="on">
-                                      <label>Data semua kantor cabang</label>
-                                    </fieldset>
-                                    <fieldset>
-                                      <input type="radio" id="input-11" name="perizinan[data-cabang]" value="off">
-                                      <label>Data kantor cabang yang bersangkutan</label>
-                                    </fieldset>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="card">
-                          <div class="card-header">
-                            <h4 class="card-title" id="basic-layout-card-center">Perizinan <code>Notifikasi</code></h4>
-                            <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
-                            <div class="heading-elements">
-                              <label class="text-primary" onclick="checkAll(this)" id="notifikasi">Centang semua</label>
-                            </div>
+                            <h4 class="card-title" id="basic-layout-card-center">Perizinan <code>User</code></h4>
                           </div>
                           <div class="card-body">
                             <div class="card-block">
-                              <div class="form-group skin skin-square" id="notifikasi">
-                                <fieldset>
-                                  <input type="checkbox" name="perizinan[verifikasi-notif]" value="1">
-                                  <label>Pemintaan verifikasi persetujuan transaksi</label>
-                                  <fieldset>
-                                    <input type="checkbox" name="perizinan[verifikasi2-notif]" value="1">
-                                    <label>Permintaan verifikasi final transaksi</label>
-                                  </fieldset>
-                                  <fieldset>
-                                    <input type="checkbox" name="perizinan[update-notif]" value="1">
-                                    <label>Update mengenai status batch transaksi</label>
-                                  </fieldset>
+                              <div class="form-group skin skin-square">
+                                <div class="col-md-8">
+                                  <label >Penggaturan Perizinan <code>Unit Kerja</code></label>
+                                </div>
+                                <div class="col-md-4">
+                                  <div class="btn btn-sm btn-primary" id="toogle_unit"><i class="fa fa-edit"></i></div>
+                                </div>
+                              </div>
+                              <br />
+                              <div class="form-group skin skin-square">
+                                <div class="col-md-8">
+                                  <label>Penggaturan Menu <code>Dropping</code></label>
+                                </div>
+                                <div class="col-md-4">
+                                  <div class="btn btn-sm btn-primary"  onclick="open_menu('dropping')"><i class="fa fa-edit"></i></div>
+                                </div>
+                              </div>
+                              <br />
+                              <div class="form-group skin skin-square">
+                                <div class="col-md-8">
+                                  <label>Penggaturan Menu <code>Transaksi</code></label>
+                                </div>
+                                <div class="col-md-4">
+                                  <div class="btn btn-sm btn-primary" onclick="open_menu('transaksi')"><i class="fa fa-edit"></i></div>
+                                </div>
+                              </div>
+                              <br />
+                              <div class="form-group skin skin-square">
+                                <div class="col-md-8">
+                                  <label>Penggaturan Menu <code>Anggaran</code></label>
+                                </div>
+                                <div class="col-md-4">
+                                  <div class="btn btn-sm btn-primary"  onclick="open_menu('anggaran')"><i class="fa fa-edit"></i></div>
+                                </div>
+                              </div>
+                              <br />
+                              <div class="form-group skin skin-square">
+                                <div class="col-md-8">
+                                  <label>Penggaturan Menu <code>Pelaporan</code></label>
+                                </div>
+                                <div class="col-md-4">
+                                  <div class="btn btn-sm btn-primary"  onclick="open_menu('pelaporan')"><i class="fa fa-edit"></i></div>
+                                </div>
+                              </div>
+                              <br />
+                              <div class="form-group skin skin-square">
+                                <div class="col-md-8">
+                                  <label>Penggaturan Menu <code>Manajemen User</code></label>
+                                </div>
+                                <div class="col-md-4">
+                                  <div class="btn btn-sm btn-primary"  onclick="open_menu('user')"><i class="fa fa-edit"></i></div>
+                                </div>
+                              </div>
+                              <br />
+                              <div class="form-group skin skin-square">
+                                <div class="col-md-8">
+                                  <label>Penggaturan Menu <code>Manajemen Item</code></label>
+                                </div>
+                                <div class="col-md-4">
+                                  <div class="btn btn-sm btn-primary"  onclick="open_menu('item')"><i class="fa fa-edit"></i></div>
                                 </div>
                               </div>
                             </div>
                           </div>
                         </div>
                       </div>
-                      @include('user.input-perizinan')
-                      @endsection
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12">
+                        <div class="card">
+                          <div class="card-body">
+                            <div class="card-block">
+                              <div class="form-actions right">
+                                <a href="{{ url('user') }}" class="btn btn-warning mr-1">
+                                  <i class="ft-x"></i> Kembali
+                                </a>    
+                                <button type="submit" class="btn btn-primary">
+                                  <i class="fa fa-check-square-o"></i> Simpan
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                 
 
-                      @section('customjs')
-                      <!-- BEGIN PAGE VENDOR JS-->
-                      <script type="text/javascript" src="{{ asset('app-assets/vendors/js/ui/jquery.sticky.js') }}"></script>
-                      <script type="text/javascript" src="{{ asset('app-assets/vendors/js/charts/jquery.sparkline.min.js') }}"></script>
-                      <script src="{{ asset('app-assets/vendors/js/tables/jsgrid/jsgrid.min.js') }}" type="text/javascript"></script>
-                      <script src="{{ asset('app-assets/vendors/js/tables/jsgrid/griddata.js') }}" type="text/javascript"></script>
-                      <script src="{{ asset('app-assets/vendors/js/tables/jsgrid/jquery.validate.min.js') }}" type="text/javascript"></script>
-                      <!-- END PAGE VENDOR JS-->
-                      <!-- BEGIN PAGE LEVEL JS-->
-                      <script type="text/javascript" src="{{ asset('app-assets/js/scripts/ui/breadcrumbs-with-stats.min.js') }}"></script>
-                      <script src="{{ asset('app-assets/vendors/js/forms/icheck/icheck.min.js') }}" type="text/javascript"></script>
-                      <script src="{{ asset('app-assets/js/scripts/forms/checkbox-radio.min.js') }}" type="text/javascript"></script>
-                      <!-- END PAGE LEVEL JS-->
-                      @include('user.js-perizinan')
-                      @endsection
+                    <div class="modal fade text-xs-left" id="modal_unit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel20">
+                      <div class="modal-dialog" style="width: 80%; min-width:80%;max-width:80%;">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                            <h4 class="modal-title col-md-12 col-sm-12" id="title_modal_pernyataan" >Pengaturan Perizinan <code>Unit Kerja</code></h4>
+                          </div>
+                          <div class="modal-body" id="confirmation-msg">
+                             <div class="col-md-12 col-sm-12">
+                              <div class="card">
+                                <div class="card-header">
+                                  <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
+                                  <div class="heading-elements">
+                                    <label class="text-primary" onclick="CheckUnitKerja('unit_kerja')">Unit Kerja</label>
+                                    &nbsp&nbsp&nbsp
+                                    <label class="text-primary" onclick="checkAll(this)" id="unit_kerja"></label>
+                                  </div>
+                                </div>
+                                <div class="card-body collapse in">
+                                  <div class="card-block">
+                                    <div class="row skin skin-square">
+                                      <div class="col-md-12 col-sm-12" id="unit_kerja">
+                                        <div class="col-md-4 col-sm-4">
+                                          <div class="form-group">
+                                            <?php
+                                              $countCAB = count($cabang);
+                                              $count = 0;
+                                            ?>
+                                            @foreach($cabang as $cab)
+                                              @if($cab->VALUE != "00")
+                                              <fieldset>
+                                                <input type="checkbox" name="perizinan[{{'unit_'.$cab->VALUE.'00'}}]" {{ isset(old('perizinan')['unit_'.$cab->VALUE.'00']) ? 'checked=""' : '' }}>
+                                                <label>{{$cab->DESCRIPTION}}</label>
+                                              </fieldset>
+                                              @endif
+                                              <?php
+                                                $count++;
+                                                if($count > $countCAB/2){
+                                                  break;
+                                                }
+                                              ?>
+                                            @endforeach
+                                          </div>
+                                        </div>
+                                        <div class="col-md-4 col-sm-4">
+                                          <div class="form-group">
+                                            <?php
+                                              $count = 0;
+                                            ?>
+                                            @foreach($cabang as $cab)
+                                              @if($count > $countCAB/2)
+                                              <fieldset>
+                                                <input type="checkbox" name="perizinan[unit_{{$cab->VALUE.'00'}}]" {{ isset(old('perizinan')['unit_'.$cab->VALUE.'00']) ? 'checked=""' : '' }} >
+                                                <label>{{$cab->DESCRIPTION}}</label>
+                                              </fieldset>
+                                              @endif
+                                              <?php
+                                                $count++;
+                                              ?>
+                                            @endforeach
+                                          </div>
+                                        </div>
+                                        <div class="col-md-4 col-sm-4">
+                                          <div class="form-group">
+                                            @foreach($divisi as $div)
+                                              @if($div->VALUE!="00")
+                                              <fieldset>
+                                                <input type="checkbox" name="perizinan[unit_{{'00'.$div->VALUE}}]" {{ isset(old('perizinan')['unit_00'.$div->VALUE]) ? 'checked=""' : '' }}>
+                                                <label>{{$div->DESCRIPTION}}</label>
+                                              </fieldset>
+                                              @endif
+                                            @endforeach
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">kembali</button>
+                            <!-- <button type="button" id="button_peryataan" onclick="sumbit_post()" class="btn btn-outline-primary">Ya, kirim</button> -->
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="modal fade text-xs-left" id="modal_menu_dropping" tabindex="-1" role="dialog" aria-labelledby="myModalLabel20">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                            <h4 class="modal-title col-md-12 col-sm-12" id="title_modal_pernyataan" >Pengaturan Perizinan <code>Dropping</code></h4>
+                          </div>
+                          <div class="modal-body" id="body-menu">
+                             @include('user.input-menu-dropping')
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">kembali</button>
+                            <!-- <button type="button" id="button_peryataan" onclick="sumbit_post()" class="btn btn-outline-primary">Ya, kirim</button> -->
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="modal fade text-xs-left" id="modal_menu_transaksi" tabindex="-1" role="dialog" aria-labelledby="myModalLabel20">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                            <h4 class="modal-title col-md-12 col-sm-12" id="title_modal_pernyataan" >Pengaturan Perizinan <code>Transaksi</code></h4>
+                          </div>
+                          <div class="modal-body" id="body-menu">
+                             @include('user.input-menu-transaksi')
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">kembali</button>
+                            <!-- <button type="button" id="button_peryataan" onclick="sumbit_post()" class="btn btn-outline-primary">Ya, kirim</button> -->
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="modal fade text-xs-left" id="modal_menu_anggaran" tabindex="-1" role="dialog" aria-labelledby="myModalLabel20">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                            <h4 class="modal-title col-md-12 col-sm-12" id="title_modal_pernyataan" >Pengaturan Perizinan <code>Anggaran</code></h4>
+                          </div>
+                          <div class="modal-body" id="body-menu">
+                             @include('user.input-menu-anggaran')
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">kembali</button>
+                            <!-- <button type="button" id="button_peryataan" onclick="sumbit_post()" class="btn btn-outline-primary">Ya, kirim</button> -->
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="modal fade text-xs-left" id="modal_menu_user" tabindex="-1" role="dialog" aria-labelledby="myModalLabel20">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                            <h4 class="modal-title col-md-12 col-sm-12" id="title_modal_pernyataan" >Pengaturan Perizinan <code>Manajemen User</code></h4>
+                          </div>
+                          <div class="modal-body" id="body-menu">
+                             @include('user.input-menu-user')
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">kembali</button>
+                            <!-- <button type="button" id="button_peryataan" onclick="sumbit_post()" class="btn btn-outline-primary">Ya, kirim</button> -->
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                  </form>
+                </div>
+                
+                @endsection
+
+                @section('customjs')
+                <!-- BEGIN PAGE VENDOR JS-->
+                <script type="text/javascript" src="{{ asset('app-assets/vendors/js/ui/jquery.sticky.js') }}"></script>
+                <script type="text/javascript" src="{{ asset('app-assets/vendors/js/charts/jquery.sparkline.min.js') }}"></script>
+                <script src="{{ asset('app-assets/vendors/js/tables/jsgrid/jsgrid.min.js') }}" type="text/javascript"></script>
+                <script src="{{ asset('app-assets/vendors/js/tables/jsgrid/griddata.js') }}" type="text/javascript"></script>
+                <script src="{{ asset('app-assets/vendors/js/tables/jsgrid/jquery.validate.min.js') }}" type="text/javascript"></script>
+                <!-- END PAGE VENDOR JS-->
+                <!-- BEGIN PAGE LEVEL JS-->
+                <script type="text/javascript" src="{{ asset('app-assets/js/scripts/ui/breadcrumbs-with-stats.min.js') }}"></script>
+                <script src="{{ asset('app-assets/vendors/js/forms/icheck/icheck.min.js') }}" type="text/javascript"></script>
+                <script src="{{ asset('app-assets/js/scripts/forms/checkbox-radio.min.js') }}" type="text/javascript"></script>
+                <!-- END PAGE LEVEL JS-->
+                @include('user.js-perizinan')
+                @endsection

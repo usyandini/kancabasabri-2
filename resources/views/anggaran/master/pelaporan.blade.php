@@ -13,7 +13,7 @@
                 @section('content')
                 <div class="content-header row">
                     <div class="content-header-left col-md-6 col-xs-12 mb-2">
-                        <h3 class="content-header-title mb-0">{{$sub_title}}</h3>
+                        <h3 class="content-header-title mb-0">{{$sub_title==''?$title:$sub_title}}</h3>
                         <div class="row breadcrumbs-top">
                             <div class="breadcrumb-wrapper col-xs-12">
                                 <ol class="breadcrumb">
@@ -21,8 +21,10 @@
                                     </li>
                                     <li class="breadcrumb-item">{{$title}}
                                     </li>
+                                    @if($sub_title != "")
                                     <li class="breadcrumb-item active">{{$sub_title}}
                                     </li>
+                                    @endif
                                 </ol>
                             </div>
                         </div>
@@ -57,7 +59,7 @@
                                         <div class="form-group">
                                           <label>Unit Kerja</label>
                                           <select class="select2 form-control " name="cari_unit_kerja" id="cari_unit_kerja">
-                                            <option value="0">None</option>
+                                            <option value="0">Semua</option>
                                           </select>
                                         </div>
                                     </div>
@@ -103,7 +105,7 @@
                                     <div class="col-xs-1">
                                       <div class="form-group">
                                         <label style="visibility:hidden">TW</label>
-                                        <a href="{{url('pelaporan/tambah/'.$setting['kategori']) }}" class="btn btn-success" style="width:110px"><i class="fa fa-plus"></i> Tambah</a>                                            
+                                        <a href="{{url('pelaporan/tambah/'.$type.'/'.$setting['kategori']) }}" class="btn btn-success" style="width:110px"><i class="fa fa-plus"></i> Tambah</a>                                          
                                       </div>
                                     </div>
                                   </div>
@@ -119,9 +121,9 @@
                                 <div class="card-block">
                                   <form method="POST" action="{{url('pelaporan/submit/tambah') }}" id="insertLaporanAnggaran" name="insertLaporanAnggaran" enctype="multipart/form-data">
                                   <div class="row">
-                                  <div class="col-xs-12">
+                                  <div class="col-xs-10">
                                     {{ csrf_field() }}
-                                    <div class="col-xs-2">
+                                    <div class="col-xs-3">
                                         <div class="form-group">
                                           <label>Tanggal</label>
                                           @if($setting['insert'])
@@ -131,35 +133,12 @@
                                           @endif
                                         </div>
                                     </div>
-                                    <div class="col-xs-3">
-                                        <div class="form-group">
-                                          <label>Tanggal Mulai</label>
-                                          @if($setting['insert'])
-                                          <input type="date" id="tanggal_mulai" name="tanggal_mulai" min = <?php echo date('Y-m-d')?> onchange="startDate()" class="form-control">
-                                          @else
-                                          <input id="tanggal_mulai" name="tanggal_mulai" class="form-control" readOnly>
-                                          @endif
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-3">
-                                        <div class="form-group">
-                                          <label>Tanggal Selesai</label>
-                                          @if($setting['insert'])
-                                          <input type="date"  id="tanggal_selesai" name="tanggal_selesai" class="date form-control">
-                                          @else
-                                          <input id="tanggal_selesai" name="tanggal_selesai" class="form-control" readOnly>
-                                          @endif
-                                        </div>
-                                    </div>
-                                  </div>
-
-                                  <div class="col-xs-8">
                                     <div class="col-xs-2">
                                       <div class="form-group">
                                         <label>TW</label>
 
                                         @if($setting['insert'])
-                                        <select class="select2 form-control" name="tw_dari" id="tw_dari">
+                                        <select class="select2 form-control" name="tw_dari" id="tw_dari" onchange="changeTW(0)">
                                           <option value="0">None</option>
                                           <option value="1">I</option>
                                           <option value="2">II</option>
@@ -182,7 +161,7 @@
                                       <div class="form-group">
                                         <label>TW</label>
                                          @if($setting['insert'])
-                                        <select class="select2 form-control" name="tw_ke" id="tw_ke">
+                                        <select class="select2 form-control" name="tw_ke" id="tw_ke" onchange="changeTW(1)">
                                           <option value="0">None</option>
                                           <option value="1">I</option>
                                           <option value="2">II</option>
@@ -194,7 +173,61 @@
                                         @endif
                                       </div>
                                     </div>
+                                    
                                   </div>
+
+                                  
+                                  <div class="col-xs-10">
+                                    @if($type=="master")
+                                    <div class="col-xs-3">
+                                        <div class="form-group">
+                                          <label>Tanggal Mulai</label>
+                                          @if($setting['insert'])
+                                          <input type="date" id="tanggal_mulai" name="tanggal_mulai" min = <?php echo date('Y-m-d')?> onchange="startDate()" class="form-control">
+                                          @else
+                                          <input id="tanggal_mulai" name="tanggal_mulai" class="form-control" readOnly>
+                                          @endif
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-3">
+                                        <div class="form-group">
+                                          <label>Tanggal Selesai</label>
+                                          @if($setting['insert'])
+                                          <input type="date"  id="tanggal_selesai" name="tanggal_selesai" class="date form-control">
+                                          @else
+                                          <input id="tanggal_selesai" name="tanggal_selesai" class="form-control" readOnly>
+                                          @endif
+                                        </div>
+                                    </div>
+                                    @endif
+                                    @if($type=="item")
+                                    <div class="col-xs-3">
+                                      <div class="form-group">
+                                        <label >Batas Waktu Pengisian &nbsp; :</label>
+                                        <input id="bts_hari" name="bts_hari" class="form-control" value="---" readonly>
+                                      </div>
+                                    </div>
+                                    <div class="col-xs-3">
+                                      <div class="form-group">
+                                        <label>&nbsp;</label>
+                                        <input id="bts_jam" name="bts_jam" class="form-control" value="---" readonly>
+                                      </div>
+                                    </div>
+                                    <div class="col-xs-3">
+                                      <div class="form-group">
+                                        <label>&nbsp;</label>
+                                        <input id="bts_menit" name="bts_menit" class="form-control" value="---" readonly>
+                                      </div>
+                                    </div>
+                                    <div class="col-xs-3">
+                                      <div class="form-group">
+                                        <label>&nbsp;</label>
+                                        <input id="bts_detik" name="bts_detik" class="form-control" value="---" readonly>
+                                      </div>
+                                    </div>
+                                    @endif
+                                  </div>
+                                  <hr />
                                   <div class="col-xs-12">
                                     <input type="hidden" name="item_form_master" id="item_form_master">
                                     <input type="hidden" name="kategori" id="kategori" value="{{$setting['kategori']}}">
@@ -210,7 +243,7 @@
                                     @endif
                                   </div>
 
-                                  @if($setting['insert'])
+                                  @if($setting['edit'])
                                   <div class="row col-xs-12" style="display:block">
                                     <br />
                                     <div class="pull-right">
@@ -323,8 +356,8 @@
                       paging: true,
                       autoload: true,
 
-                      editing: insertable == 1 ? true : false,
-                      inserting: editable == 1 ? true : false,
+                      inserting: insertable == 1 ? true : false,
+                      editing: editable == 1 ? true : false,
                       pageSize: 5,
                       pageButtonCount: 10,
                       deleteConfirm: "Apalakh anda yakin akan menghapus anggaran baris ini?",
@@ -333,7 +366,7 @@
                         loadData: function(filter) {
                           return $.ajax({
                               type: "GET",
-                              url:"{{ (checkActiveMenu('pelaporan') == 'active' ? url('pelaporan') : url('pelaporan/get/filtered/'.$filters['id'].'/'.$filters['kategori'])) }}",
+                              url:"{{ ($type == 'item' ? url('pelaporan/get/filteredMaster/'.$setting['kategori']) : url('pelaporan/get/filtered/'.$filters['id'].'/'.$setting['kategori'])) }}",
                               data: filter,
                               dataType: "JSON"
                           })
@@ -409,6 +442,7 @@
                             title: "Unit Kerja", 
                             width: 130,
                             align: "left",
+                            readOnly:insertable == 1 ? false : true,
                             valueField: "DESCRIPTION", 
                             textField: "DESCRIPTION", 
                             items: getData('unitkerja'),
@@ -424,7 +458,8 @@
                             type: "select", 
                             title: "Jenis Arahan", 
                             width: 170,
-                            valueField: "Id", 
+                            readOnly:insertable == 1 ? false : true,
+                            valueField: "Name", 
                             textField: "Name",
                             items:[
                                 { Name: "None", Id: 0 },
@@ -437,13 +472,14 @@
                             validate: {
                               message : "Pilih Jenis Arahan terlebih Dahulu." ,
                               validator :function(value, item) {
-                                  return value > 0 ;
+                                  return value != "None" ;
                               } 
                             }
                           },
                           { name: "arahan", 
                             type: "textarea", 
                             title: "Arahan", 
+                            readOnly:insertable == 1 ? false : true,
                             width: 300,
                             validate: {
                               message : "Isi Arahan terlebih dahulu." ,
@@ -452,12 +488,10 @@
                               } 
                             }
                           },
-
-                          
+                          @if($type== "item")
                           { name: "progres_tindak_lanjut", 
                             type: "textarea", 
                             title: "Progres Tindak Lanjut", 
-                            readOnly:true,
                             width: 300,
                             validate: {
                               message : "Isi Progres Tindak Lanjut terlebih dahulu." ,
@@ -467,13 +501,15 @@
                             }
                           },
                           @endif
+                          @endif
 
                           @if($setting['kategori'] == "laporan_anggaran")
                           { name: "program_prioritas", 
                             type: "select", 
+                            readOnly:insertable == 1 ? false : true,
                             title: "Program Prioritas", 
                             width: 170,
-                            valueField: "Id", 
+                            valueField: "Name", 
                             textField: "Name",
                             items:[
                                 { Name: "None", Id: 0 },
@@ -486,13 +522,14 @@
                             validate: {
                               message : "Pilih Program Prioritas terlebih Dahulu." ,
                               validator :function(value, item) {
-                                  return value > 0 ;
+                                  return value !="None" ;
                               } 
                             }
                           },
                           { name: "sasaran_dicapai", 
                             type: "textarea", 
                             title: "Sasaran Yang ingin Di Capai", 
+                            readOnly:insertable == 1 ? false : true,
                             width: 300,
                             validate: {
                               message : "Isi Saran yang ingin di capai terlebih dahulu." ,
@@ -502,19 +539,19 @@
                             }
                           },
 
-                          
+                          @if($type == "item")
                           { name: "uraian_progress", 
                             type: "textarea", 
                             title: "Uraian Progress", 
-                            readOnly:true,
                             width: 300,
                             validate: {
                               message : "Isi Uraian Progress yang ingin di capai terlebih dahulu." ,
                               validator :function(value, item) {
-                                  return true;
+                                  return value!="";
                               } 
                             }
                           },
+                          @endif
                           @endif
                           @if($setting['berkas'])
                           { name: "file", align:"center", title: "Berkas",  width: 150 ,
@@ -658,24 +695,91 @@
                   function setDetailFormMaster(){
                     // alert('{{ url('pelaporan/get/filtered/'.$filters['id'].'/form_master') }}');
                     $.ajax({
-                        'async': false, 'type': "GET", 'dataType': 'JSON', 'url': "{{ url('pelaporan/get/filtered/'.$filters['id'].'/form_master') }}",
+                        'async': false, 'type': "GET", 'dataType': 'JSON', 'url': "{{ ($type == 'item' ? url('pelaporan/get/filteredMaster/form_master') : url('pelaporan/get/filtered/'.$filters['id'].'/form_master')) }}",
                         'success': function (data) {
 
                           tanggal = document.getElementById('tanggal');
-                          tanggal_mulai = document.getElementById('tanggal_mulai');
-                          tanggal_selesai = document.getElementById('tanggal_selesai');
                           tw_dari = document.getElementById('tw_dari');
                           tw_ke = document.getElementById('tw_ke');
-                          id_form_master = document.getElementById('id_form_master');
                           // alert(JSON.stringify(data));
 
                           now = data[0].created_at.split(' ')
                           tanggal.value = now[0];
+                          tw_dari_val="";
+                          tw_ke_val="";
+                          // alert(data[0].tw_dari+data[0].tw_ke)
+                          switch(data[0].tw_dari){
+                            case "1" : tw_dari_val = "I";break;
+                            case "2" : tw_dari_val = "II";break;
+                            case "3" : tw_dari_val = "III";break;
+                            case "4" : tw_dari_val = "IV";break;
+                          }
+                          switch(data[0].tw_ke){
+                            case "1" : tw_ke_val = "I";break;
+                            case "2" : tw_ke_val = "II";break;
+                            case "3" : tw_ke_val = "III";break;
+                            case "4" : tw_ke_val = "IV";break;
+                          }
+                          tw_dari.value = tw_dari_val;
+                          tw_ke.value = tw_ke_val;
+
+                          @if($type=="master")
+                          tanggal_mulai = document.getElementById('tanggal_mulai');
+                          tanggal_selesai = document.getElementById('tanggal_selesai');
                           tanggal_mulai.value = data[0].tanggal_mulai;
                           tanggal_selesai.value = data[0].tanggal_selesai;
-                          tw_dari.value = data[0].tw_dari;
-                          tw_ke.value = data[0].tw_ke;
+                          id_form_master = document.getElementById('id_form_master');
                           id_form_master.value = data[0].id;
+                          @endif
+
+                          // alert(data[0].tanggal_selesai);
+
+                          @if($type=="item")
+                          var countDownDate = new Date(data[0].tanggal_selesai).getTime();
+
+                          var disableCountDown = true;
+                          if(disableCountDown){
+                            var x = setInterval(function() {
+
+                                // Get todays date and time
+                                var now = new Date().getTime();
+                                
+                                // Find the distance between now an the count down date
+                                var distance = countDownDate - now;
+                                
+                                // Time calculations for days, hours, minutes and seconds
+                                var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                                var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                                var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                                var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                                
+                                // Output the result in an element with id="demo"
+                                document.getElementById("bts_hari").value= days +" Hari";
+                                document.getElementById("bts_jam").value= hours +" Jam";
+                                document.getElementById("bts_menit").value= minutes + " Menit";
+                                document.getElementById("bts_detik").value= seconds + " Detik";
+                                // document.getElementById("bts").innerHTML = days + "d " + hours + "h "
+                                // + minutes + "m " + seconds + "s ";
+                                
+                                // If the count down is over, write some text 
+                                if (distance < 0) {
+                                    alert ("Waktu Memasukkan data anggaran dan kegiatan telah usai");
+                                    clearInterval(x);
+                                    document.getElementById("bts_hari").value= "---";
+                                    document.getElementById("bts_jam").value= "---";
+                                    document.getElementById("bts_menit").value= "---";
+                                    document.getElementById("bts_detik").value= "---";
+                                    document.getElementById("bts").innerHTML = "EXPIRED";
+                                    document.getElementById("nd_surat").disabled  = true;
+                                    document.getElementById("unit_kerja").disabled  = true;
+                                    document.getElementById("tipe_anggaran").disabled  = true;
+                                    document.getElementById("stat_anggaran").disabled  = true;
+                                    document.getElementById("save").style.display = "none";
+                                    document.getElementById("send").style.display = "none";
+                                }
+                            }, 1000);
+                          }
+                          @endif
                              
                         }
                     });
@@ -875,11 +979,89 @@
                         temp_file=[];
                       }
                       simpan_file = false;
-                  })
+                  });
 
+                  function changeTW(type){
+                    tw_dari = document.getElementById('tw_dari').value;
+                    if(type == 0){
+                      document.getElementById('tw_ke').selectedIndex = tw_dari;
+                      document.getElementById('select2-tw_ke-container').innerHTML = document.getElementById('tw_ke').options.item(tw_dari).text;
+                      document.getElementById('select2-tw_ke-container').title = document.getElementById('tw_ke').options.item(tw_dari).text;
+                    }
+                    tw_ke = document.getElementById('tw_ke').value;
+                    tanggal_mulai = document.getElementById('tanggal_mulai');
+                    tanggal_selesai = document.getElementById('tanggal_selesai');
+
+                    if(tw_dari > 0){
+                      var bulan_dari = 0 + ((tw_dari-1)*3) ;
+                      var bulan_ke = 0 + ((tw_ke-1)*3);
+                      now_year = new Date().getFullYear();
+                      now_month = new Date().getMonth();
+
+                      min_dari_date = new Date(now_year, bulan_dari, 1);
+                      max_dari_date = new Date(now_year, bulan_dari+3, 0);
+                      min_ke_date = new Date(now_year, bulan_ke, 1);
+                      max_ke_date = new Date(now_year, bulan_ke+3, 0);
+
+                      min_hari_dari = min_dari_date.getDate();
+                      max_hari_dari = max_dari_date.getDate();
+                      min_hari_ke = min_ke_date.getDate();
+                      max_hari_ke = max_ke_date.getDate();
+
+                      min_bulan_dari = min_dari_date.getMonth()+1;
+                      max_bulan_dari = max_dari_date.getMonth()+1;
+                      min_bulan_ke = min_ke_date.getMonth()+1;
+                      max_bulan_ke = max_ke_date.getMonth()+1;
+
+                      min_dari = now_year+"-"+(min_bulan_dari<9?"0":'')+min_bulan_dari+"-"+(min_hari_dari<9?"0":'')+min_hari_dari;
+                      max_dari = now_year+"-"+(max_bulan_dari<9?"0":'')+max_bulan_dari+"-"+(max_hari_dari<9?"0":'')+max_hari_dari;
+                      min_ke = now_year+"-"+(min_bulan_ke<9?"0":'')+min_bulan_ke+"-"+(min_hari_ke<9?"0":'')+min_hari_ke;
+                      max_ke = now_year+"-"+(max_bulan_ke<9?"0":'')+max_bulan_ke+"-"+(max_hari_ke<9?"0":'')+max_hari_ke;
+                      // tanggal_mulai.setAttribute("min", '2013-12-9');
+
+                      tanggal_mulai.setAttribute("max",max_dari);
+                      tanggal_mulai.setAttribute("min",min_dari);
+
+                      tanggal_selesai.setAttribute("max",max_ke);
+                      tanggal_selesai.setAttribute("min",min_ke);
+                      // alert(min_dari+":"+max_ke);
+                    }
+                  }
+
+                  function setTWFirst(){
+                    var status = '{{$setting['status']}}';
+                    var type = '{{$type}}';
+
+                    if(status != "Tambah"||type!="item"){
+                        tw_dari = document.getElementById('tw_dari');
+                      tw_ke = document.getElementById('tw_ke');
+
+                      now = new Date().getMonth();
+                      tw = 0;
+                      if(now >=0 && now <=2){
+                        tw = 1;
+                      }else if(now >=3 && now <=5){
+                        tw = 2;
+                      }else if(now >=6 && now <=8){
+                        tw = 3;
+                      }else if(now >=9 && now <=11){
+                        tw = 4;
+                      }
+
+                      tw_dari.value = tw;
+                      tw_ke.value = tw_dari.value;
+                      document.getElementById('select2-tw_dari-container').innerHTML = tw_dari.options.item(tw).text;
+                      document.getElementById('select2-tw_dari-container').title = tw_dari.options.item(tw).text;
+                      document.getElementById('select2-tw_ke-container').innerHTML = tw_ke.options.item(tw).text;
+                      document.getElementById('select2-tw_ke-container').title = tw_ke.options.item(tw).text;
+                        
+                      changeTW(0);
+                    }
+                  }
 
                   window.setUnitKerja();
                   window.setDetailFormMaster();
+                  window.setTWFirst();
                   // window.startDate();
 
 

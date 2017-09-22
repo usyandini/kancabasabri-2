@@ -74,6 +74,15 @@ class DroppingController extends Controller
         $this->droppingModel = $droppingTable;
         $this->penyesuaianModel = $kesesuaianDropping;
         $this->berkasTTModel = $berkasTT;
+
+        $this->middleware('can:cari_d', ['only' => 'index', 'filterHandle', 'filter', 'getFiltered']);
+        $this->middleware('can:lihat_tt_d', ['only' => 'tarik_tunai']);
+        $this->middleware('can:masuk_tt_d', ['only' => 'tarik_tunai_process']);
+        $this->middleware('can:lihat_p_d', ['only' => 'penyesuaian']);
+        $this->middleware('can:masuk_p_d', ['only' => 'penyesuaian_process']);
+        $this->middleware('can:setuju_tt_d', ['only' => 'verifikasiTarikTunai']);
+        $this->middleware('can:setuju_p_d', ['only' => 'verifikasiPenyesuaian']);
+        $this->middleware('can:setuju_p2_d', ['only' => 'verifikasiPenyesuaianLv2']);
     }
 
     public function index() 
@@ -340,6 +349,7 @@ class DroppingController extends Controller
     {
         $inputsPD = $request->except('_method', '_token', 'p_akun_bank', 'p_cabang', 'is_pengembalian', 'p_nominal', 'p_rek_bank', 'p_tgl_dropping');
 
+
         $validatorPD = Validator::make($request->all(),
             [
 
@@ -369,7 +379,7 @@ class DroppingController extends Controller
         $verLv2 = PenyesuaianDropping::where([['id_dropping', $id_drop], ['stat', 8]])->orderby('created_at', 'desc')->first();
         //dd($findstat1);
         $string_penyesuaian = $request->p_nominal;
-        $penyesuaian = floatval(str_replace('.', ',', str_replace(',', '', $string_penyesuaian)));
+        $penyesuaian = floatval(str_replace('.', '', $string_penyesuaian));
 
         if($submitted){
             session()->flash('fail', true);
@@ -611,7 +621,7 @@ class DroppingController extends Controller
             $kegiatan = Kegiatan::where('VALUE', $dataPD->SEGMEN_6)->first();
         }
 
-        $integrated = StagingTarikTunai::where([['RECID', $id], ['PIL_POSTED', 1]])->first();
+        $integrated = StagingPengembalian::where([['RECID', $id], ['PIL_POSTED', 1]])->first();
         if($integrated){
             session()->flash('integrated', true);
         }else{
