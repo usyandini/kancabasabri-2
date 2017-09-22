@@ -184,17 +184,11 @@
                         @endcan
                     </ul>
                     @endif
-                    @if(Gate::check('info_i') || Gate::check('tambah_i') || Gate::check('tambah_r') || Gate::check('listAlasan_r'))
                     <li class="nav-item has-sub {{ checkOpenedMenu('item') }}"><a href=""><i class="ft-file"></i><span data-i18n="" class="menu-title">Manajemen Item</span></a>
                     <ul class="menu-content">
-                        @can('info_i')
                         <li class="is-shown {{ checkActiveMenu('item') }}"><a href="{{ url('/item', $parameters = [], $secure = null) }}" class="menu-item">Manajemen Kombinasi Item</a>
-                        @endcan
-                        @can('listAlasan_r')
                         <li class="is-shown {{ checkActiveMenu('reason') }}"><a href="{{ url('/reason', $parameters = [], $secure = null) }}" class="menu-item">Manajemen Alasan Menolak</a>
-                        @endcan
                     </ul>
-                    @endif
                 </ul>
             </div>
         </div>

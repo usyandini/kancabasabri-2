@@ -203,7 +203,7 @@ class ItemController extends Controller
                 'SEGMEN_6'          => $request->kegiatan
             );
         ItemMaster::where('id', $id)->update($update);
-        return redirect('/item/edit/'.$$id);
+        return redirect('/item/edit/'.$id);
     }
 
     public function reason()
