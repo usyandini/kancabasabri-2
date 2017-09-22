@@ -119,6 +119,8 @@ Route::group(['middleware' => 'auth'], function() {
 		Route::get('/create', 'ItemController@create');
 		Route::post('/add', 'ItemController@addItem');
 		Route::post('/submit/{type}', 'ItemController@submitAnggaranItem');
+		Route::get('/edit/{id}', 'ItemController@editItem');
+		Route::post('/update/{id}', 'ItemController@updateItem');
 	});
 
 	Route::group(['prefix' => 'reason'], function(){

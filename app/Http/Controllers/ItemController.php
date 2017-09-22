@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\User;
-
+use Validator;
 
 use App\Models\Item;
 use App\Models\KantorCabang;
@@ -59,8 +59,17 @@ class ItemController extends Controller
 
     public function index()
     {
-        $master_item = ItemMaster::get();
-    	return view('master.item.index', ['item' => $master_item]);
+        $master_item = ItemMaster::orderby('kode_item')->get();
+        $jenis = ItemAnggaranMaster::where('type', 1)->get();
+        $kelompok = ItemAnggaranMaster::where('type', 2)->get();
+        $pos = ItemAnggaranMaster::where('type', 3)->get();
+    	return view('master.item.index', [
+            'items' => $master_item, 
+            'no' => 1, 
+            'jenis' => $jenis,
+            'kelompok' => $kelompok,
+            'pos' => $pos,
+        ]);
     }
 
     public function create()
@@ -150,6 +159,51 @@ class ItemController extends Controller
                 break;
         }
         return redirect()->back()->withInput();
+    }
+
+    public function editItem($id)
+    {
+        $item = ItemMaster::where('id', $id)->first();
+
+        $jenis = ItemAnggaranMaster::where('type', 1)->get();
+        $kelompok = ItemAnggaranMaster::where('type', 2)->get();
+        $pos = ItemAnggaranMaster::where('type', 3)->get();
+        return view('master.item.edit-item', [
+            'item' => $this->itemModel->get(),
+            'program' => $this->programModel->where("VALUE", "THT")->get(),
+            'kpkc' => $this->kpkcModel->get(),
+            'divisi' => $this->divisiModel->get(),
+            'subpos' => $this->subPosModel->get(),
+            'm_anggaran' => $this->mAnggaranModel->get(),
+            'jenis' => $jenis,
+            'kelompok' => $kelompok,
+            'pos' => $pos,
+            'master' => $item
+        ]);
+    }
+
+    public function updateItem($id, Request $request)
+    {
+        $name_subpos = $this->subPosModel->where('VALUE', $request->subpos)->first();
+        $name_kegiatan = $this->mAnggaranModel->where('VALUE', $request->kegiatan)->first();
+        $update = array(
+                'kode_item'         => $request->kode_item,
+                'nama_item'         => $request->nama_item,
+                'jenis_anggaran'    => $request->jenis,
+                'kelompok_anggaran' => $request->kelompok,
+                'pos_anggaran'      => $request->pos,
+                'sub_pos'           => $name_subpos->DESCRIPTION,
+                'mata_anggaran'     => $name_kegiatan->DESCRIPTION,
+
+                'SEGMEN_1'          => $request->account,
+                'SEGMEN_2'          => $request->program,
+                'SEGMEN_3'          => $request->kpkc,
+                'SEGMEN_4'          => $request->divisi,
+                'SEGMEN_5'          => $request->subpos,
+                'SEGMEN_6'          => $request->kegiatan
+            );
+        ItemMaster::where('id', $id)->update($update);
+        return redirect('/item/edit/'.$$id);
     }
 
     public function reason()

@@ -1,4 +1,4 @@
-				        @extends('layouts.app')
+				@extends('layouts.app')
 
                 @section('additional-vendorcss')
                 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/tables/jsgrid/jsgrid-theme.min.css') }}">
@@ -16,7 +16,7 @@
                 @section('content')
                	<div class="content-header row">
                     <div class="content-header-left col-md-6 col-xs-12 mb-2">
-                        <h3 class="content-header-title mb-0">Tambah Item</h3>
+                        <h3 class="content-header-title mb-0">Edit Item</h3>
                         <div class="row breadcrumbs-top">
                             <div class="breadcrumb-wrapper col-xs-12">
                                 <ol class="breadcrumb">
@@ -24,7 +24,7 @@
                                     </li>
                                     <li class="breadcrumb-item"><a href="{{ url('/') }}">Master Item</a>
                                     </li>
-                                    <li class="breadcrumb-item active"><a href="{{ url('/item/create') }}">Tambah Item</a>
+                                    <li class="breadcrumb-item active"><a href="{{ url('/item/create') }}">Edit Item</a>
                                     </li>
                                 </ol>
                             </div>
@@ -46,7 +46,7 @@
                         </div>
                     </div>
                     @endif
-                    <form class="form" action="{{ url('item/add') }}" method="POST">
+                    <form class="form" action="{{ url('item/update').'/'.$master->id }}" method="POST">
                       <div class="col-md-6">
                         {{ csrf_field() }}
                         <div class="card">
@@ -66,11 +66,11 @@
                               <div class="form-body">
                                 <div class="form-group">
                                   <label for="eventRegInput1">Kode Item</label>
-                                  <input type="text" required="Kode item harap diisi" class="form-control" placeholder="Kode Item" name="kode_item" value="{{ old('kode_item') }}">
+                                  <input type="text" required="Kode item harap diisi" class="form-control" placeholder="Kode Item" name="kode_item" value="{{ $master->kode_item }}">
                                 </div>
                                 <div class="form-group">
                                   <label for="eventRegInput1">Item</label>
-                                  <input type="text" required="" class="form-control" placeholder="Item" name="nama_item" value="{{ old('nama_item') }}">
+                                  <input type="text" required="" class="form-control" placeholder="Item" name="nama_item" value="{{ $master->nama_item }}">
                                 </div>
                                 <div class="form-group">
                                 <label for="jenis">Jenis Anggaran</label>
