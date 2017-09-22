@@ -40,10 +40,10 @@
                       sorting: true, 
                       paging: true, 
                       autoload: true, 
-                      @if(Gate::check('update_t') || Gate::check('hapus_t'))
+                      @if(Gate::check('ubah_item_t') || Gate::check('hapus_item_t'))
                           editing: editableStat == 1 ? true : false, 
                       @endif
-                      @can('insert_t')
+                      @can('tambah_item_t')
                           inserting: editableStat == 1 ? true : false,
                       @endcan
                       pageSize: 10, pageButtonCount: 10,
@@ -90,13 +90,13 @@
                           { 
                             type: "control", 
                             width: 60,
-                            @if(!Gate::check('hapus_t'))
+                            @if(!Gate::check('hapus_item_t'))
                                 deleteButton: false,
                             @endif
-                            @if(!Gate::check('update_t'))
+                            @if(!Gate::check('ubah_item_t'))
                                 editButton: false,
                             @endif
-                            @if (!$editable || (!Gate::check('update_t') && !Gate::check('hapus_t')))
+                            @if (!$editable || (!Gate::check('ubah_item_t') && !Gate::check('hapus_item_t')))
                               css: editableStat == 1 ? "" : "hide"
                             @endif
                           },
@@ -268,13 +268,13 @@
                           { 
                             type: "control", 
                             width: 60,
-                            @if(!Gate::check('hapus_t'))
+                            @if(!Gate::check('hapus_item_t'))
                                 deleteButton: false,
                             @endif
-                            @if(!Gate::check('update_t'))
+                            @if(!Gate::check('ubah_item_t'))
                                 editButton: false,
                             @endif
-                            @if (!$editable || (!Gate::check('update_t') && !Gate::check('hapus_t')))
+                            @if (!$editable || (!Gate::check('ubah_item_t') && !Gate::check('hapus_item_t')))
                               css: editableStat == 1 ? "" : "hide"
                             @endif
                           }
