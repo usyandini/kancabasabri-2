@@ -413,11 +413,11 @@
                           })
                         },
                         insertItem: function (item) {
-                          // if(inputs.length >0){
-                          //   item['file'] = inputs.length;
-                          // }else{
-                          //   item['file'] = tempIdCounter;
-                          // }
+                          if(inputs.length >0){
+                            item['file'] = inputs.length;
+                          }else{
+                            item['file'] = tempIdCounter;
+                          }
                           
                           item["isNew"] = true;
                           item["tempId"] = tempIdCounter++;
@@ -429,7 +429,8 @@
                           item["tw_iv"]= validDigits(item.tw_iv);
                           item["anggarana_setahun"]= validDigits(item.anggarana_setahun);
                           item["delete"]="none";
-                          item["file"]=[];
+			  item['file']=[];
+
 
                           click_berkas =true;
                                                       
@@ -788,8 +789,8 @@
                             validate: {
                                 message : "Isi Kolom Nilai Per Satuan.",
                                 validator :function(value, item) {
-
                                     var val = validDigits(value);
+
                                     return val > 0 ;
                                 } 
                               }
@@ -1410,11 +1411,9 @@
                         if(nameClass.length != 0){
                           count=0;
                           for(j=0;j<nameClass.length;j++){
-                            if(document.getElementById("file_name_"+i+"_"+j) != null){
-                              file = document.getElementById("file_name_"+i+"_"+j).value;
-                              if(file=="null"){
-                                count++;
-                              }
+                            file = document.getElementById("file_name_"+i+"_"+j).value;
+                            if(file=="null"){
+                              count++;
                             }
                           }
                           if(count==nameClass.length){
