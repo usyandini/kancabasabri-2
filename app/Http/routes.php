@@ -125,6 +125,7 @@ Route::group(['middleware' => 'auth'], function() {
 		Route::post('/submit/{type}', 'ItemController@submitAnggaranItem');
 		Route::get('/edit/{id}', 'ItemController@editItem');
 		Route::post('/update/{id}', 'ItemController@updateItem');
+		Route::get('/delete/{id}', 'ItemController@destroy');
 	});
 
 	Route::group(['prefix' => 'reason'], function(){

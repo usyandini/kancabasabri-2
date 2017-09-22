@@ -206,6 +206,16 @@ class ItemController extends Controller
         return redirect('/item/edit/'.$id);
     }
 
+    public function destroy(Request $request, $id)
+    {
+        //$item = ItemMaster::withTrashed()->where('id', $id)->first()->name ? ItemMaster::withTrashed()->where('id', $id)->first()->name : ItemMaster::withTrashed()->where('id', $id)->first()->kode;
+
+        ItemMaster::where('id', $id)->delete();
+
+        //session()->flash('success', 'Item dengan kode <b>'.$item.'</b> berhasil dihapus');
+        return redirect()->back();
+    }
+
     public function reason()
     {
     	$reject_reasons = RejectReason::orderby('id','DESC')->get();
