@@ -208,11 +208,11 @@ class ItemController extends Controller
 
     public function destroy(Request $request, $id)
     {
-        //$item = ItemMaster::withTrashed()->where('id', $id)->first()->name ? ItemMaster::withTrashed()->where('id', $id)->first()->name : ItemMaster::withTrashed()->where('id', $id)->first()->kode;
+        $item = ItemMaster::withTrashed()->where('id', $id)->first()->name ? ItemMaster::withTrashed()->where('id', $id)->first()->name : ItemMaster::withTrashed()->where('id', $id)->first()->kode;
 
         ItemMaster::where('id', $id)->delete();
 
-        //session()->flash('success', 'Item dengan kode <b>'.$item.'</b> berhasil dihapus');
+        session()->flash('success', 'Item dengan kode <b>'.$item.'</b> berhasil dihapus');
         return redirect()->back();
     }
 
