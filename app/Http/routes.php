@@ -107,10 +107,10 @@ Route::group(['middleware' => 'auth'], function() {
 		Route::get('/get/filteredMaster/{type}', 'PelaporanController@getDataFormMaster');
    	});
 
+	Route::get('/user/ldap/', 'UserController@filterLDAP');
 	Route::resource('/user', 'UserController');
 	Route::get('/user/profile/{id}', 'UserController@profile');
 	Route::post('/user/restore/{id}', 'UserController@restore');
-
 
 
 	Route::resource('/item', 'ItemController');

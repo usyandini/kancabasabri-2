@@ -388,9 +388,8 @@ class AnggaranController extends Controller
 
             if($request->status == 'tambah'||($request->setuju == 'Simpan')){
                 $index2 = 0;
-                $id_list_anggaran=0;
-                if($request->setuju == 'Simpan'){ 
-
+                $id_list_anggaran;
+                if($request->status == 'edit'){
                     if($value->id_first== 0){
                         $id_list_anggaran = $value->id;
 
@@ -398,17 +397,12 @@ class AnggaranController extends Controller
                         if($value->id == -1){
                             $id_list_anggaran = $LAnggaranInsert->id;
                         }
-
-                         
                     }else{
                         $id_list_anggaran = $value->id_first;
-                         // echo $value->id_first;
                     }  
                 }else if($request->status == 'tambah'){
                     $id_list_anggaran = $LAnggaranInsert->id;
                 }
-
-               
 
                 if($value->delete == "none"){
                     if(isset($_POST['count_file_'.$index])){
@@ -435,18 +429,14 @@ class AnggaranController extends Controller
                             }
                         }
                     }
-
-                    if (is_array($value->file) || is_object($value->file)){
-                        foreach ($value->file as $list_file) {
-                            if($list_file->delete == "delete"){
-                                $file_update = [
-                                        'active'         => '0',
-                                        'updated_at'    => \Carbon\Carbon::now()];
-                                FileListAnggaran::where('id', $list_file->id)->update($file_update);
-                            }
+                    foreach ($value->file as $list_file) {
+                        if($list_file->delete == "delete"){
+                            $file_update = [
+                                    'active'         => '0',
+                                    'updated_at'    => \Carbon\Carbon::now()];
+                            FileListAnggaran::where('id', $list_file->id)->update($file_update);
                         }
                     }
-                    
                 }
             }
             $index++;
@@ -468,7 +458,7 @@ class AnggaranController extends Controller
         if($setuju != "-1"){
             $status_view = redirect('anggaran/persetujuan/'.$request->nd_surat.'/1');
         }
-        // return $status_view;
+        return $status_view;
     }
 
     public function getFiltered($nd_surat,$type){
