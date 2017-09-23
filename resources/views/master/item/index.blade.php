@@ -72,12 +72,19 @@
 		                        			<td>{{ $item->mata_anggaran }}</td>
 	                        				<td>
 	                        					<a href="{{ url('item/edit').'/'.$item->id }}" class="btn btn-info btn-sm">
-	                        					<i class="fa fa-edit"></i> </a>
+	                        					<i class="fa fa-edit"></i> Edit</a>
+
+	                        					<a href="#" class="btn btn-danger btn-sm" onclick="deleteUser({{ $item->id }})">
+	                        					<i class="fa fa-trash"></i> Hapus</a>
 	                        				</td>
 		                        		</tr>
 		                        	@endforeach
 			                        </tbody>
 			                      </table>
+			                      <form method="GET" action="#" id="deleteU">
+                					 {{ csrf_field() }}
+                					 {{ method_field('DELETE') }}
+                				   </form>
 			                    </div>
 			                  </div>
 			                </div>
@@ -126,5 +133,13 @@
 						        } );
 						    }
 						});
+
+					function deleteUser(id) {
+						$('form[id="deleteU"').attr('action', '{{ url('item') }}' + '/delete/' + id);
+						var con = confirm("Apakah anda yakin untuk menghapus item ini?");
+						if (con) {
+							$('form[id="deleteU"').submit();	
+						}
+					}
 				</script>
                 @endsection
