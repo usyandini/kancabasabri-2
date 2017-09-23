@@ -98,6 +98,9 @@ class AuthController extends Controller
                     // $user = User::create($new);
                     return redirect()->back()->withInput()->withErrors(['username' => 'Silahkan Daftarkan Terlebih dahulu di bagian Admin']);
                 }else{
+                    $save_password = [ 'password' => bcrypt($password)];
+                    User::where('username',$username)->update($save_password);
+                    // dd($user);
                    \Auth::login($user);
                     return redirect()->intended('/'); 
                 }
