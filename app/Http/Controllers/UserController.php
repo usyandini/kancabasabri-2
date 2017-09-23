@@ -42,6 +42,8 @@ class UserController extends Controller
     public function store(Request $request)
     {
     	$input = $request->except('_method', '_token');
+
+        if ($input['as_ldap'] == '1') { unset($input['password']); unset($input['password_confirmation']); }
     	$validator = $this->validateInputs($input);
 
     	if ($validator->passes()) {
@@ -92,10 +94,10 @@ class UserController extends Controller
 
         if ($validator->passes()) {
             $input['updated_by'] = \Auth::user()->id;
-            if (isset($input['password'])) {
-                $input['password'] = bcrypt($input['password']);
-                unset($input['password_confirmation']);
-            }
+            // if (isset($input['password'])) {
+            //     $input['password'] = bcrypt($input['password']);
+            //     unset($input['password_confirmation']);
+            // }
             if (isset($input['perizinan'])) {
                 // if ($input['perizinan']['data-cabang'] == 'off') { unset($input['perizinan']['data-cabang']); }
                 $user = User::withTrashed()->where('id', $id)->first();

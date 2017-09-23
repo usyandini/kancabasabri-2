@@ -94,12 +94,13 @@ class AuthController extends Controller
 
                 $user = \App\User::where('username', $username)->first();
                 if (!$user) {
-                    $new = ['username' => $username, 'name' => $username, 'password' => bcrypt($password)];
-                    $user = User::create($new);
-                } 
-
-                \Auth::login($user);
-                return redirect()->intended('/');
+                    // $new = ['username' => $username, 'name' => $username, 'password' => bcrypt($password)];
+                    // $user = User::create($new);
+                    return redirect()->back()->withInput()->withErrors(['username' => 'Silahkan Daftarkan Terlebih dahulu di bagian Admin']);
+                }else{
+                   \Auth::login($user);
+                    return redirect()->intended('/'); 
+                }
             }
         } 
 

@@ -53,7 +53,7 @@
                                   <div class="col-md-12 col-sm-12">
                                     <div class="form-group">
                                       <fieldset>
-                                        <input type="radio" id='activ_dir_off' name="as_ldap" value="0" {{ old('as_ldap') != "0" ? 'checked=""' : '' }}>
+                                        <input type="radio" id='activ_dir_off' name="as_ldap" value="0" {{ old('as_ldap') != "1" ? 'checked=""' : '' }}>
                                         <label>Daftar dengan aplikasi</label>
                                         <input type="radio" id='activ_dir_on' name="as_ldap" value="1" {{ old('as_ldap') == "1" ? 'checked=""' : '' }}>
                                         <label>Daftar dengan Active Dirctory</label>
