@@ -81,16 +81,20 @@ class NotificationController extends Controller
     public function read_all(){
 
         $notification_all = [];
-        foreach (NotificationSystem::getAll() as $value) {
-            $notification_all[] = [
-                'id'        => $value->id,
-                'wording'   => $value->wording(),
-                'is_read'   => $value->is_read,
-                'time_dif'  => \Carbon\Carbon::createFromTimeStamp(strtotime($value->created_at))->diffForHumans(),
-                'time'      => date('d F Y, H:m', strtotime($value->created_at))
-            ];
-        }
+        if(NotificationSystem::getAll()!=null)
+            foreach (NotificationSystem::getAll() as $value) {
+                $notification_all[] = [
+                    'id'        => $value->id,
+                    'wording'   => $value->wording(),
+                    'is_read'   => $value->is_read,
+                    'time_dif'  => \Carbon\Carbon::createFromTimeStamp(strtotime($value->created_at))->diffForHumans(),
+                    'time'      => date('d F Y, H:m', strtotime($value->created_at))
+                ];
+            }
         // $notification_all = null;
+        // if(count($notification_all)){
+        //     $notification_all = null;
+        // }
         return view('notification.index', compact('notification_all'));
     }
 }

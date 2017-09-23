@@ -122,8 +122,9 @@
 								  "next": "Selanjutnya"
 								},
 
+    							"emptyTable":  "Tidak Ada Notifikasi Masuk",
     							"info":  "Data Notifikasi _START_-_END_ dari _TOTAL_ Notifikasi",
-    							"infoEmpty":  "Tidak Ada Notifikasi Masuk",
+    							"infoEmpty":  "",
     							"search": "Pencarian:",
 							},
 							
