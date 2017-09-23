@@ -48,12 +48,11 @@
 			                      <table class="table table-striped table-bordered datatable-select-inputs wrap" cellspacing="0" width="100%">
 			                        <thead>
 			                          <tr>
-			                          	<th><center>No</center></th>
 			                          	<th id="filterable"><center>Kode Item</center></th>
 			                            <th id="filterable">Item</th>
-			                            <th id="filterable">Jenis Anggaran</th>
-			                            <th id="filterable">Kelompok Anggaran</th>
-			                            <th id="filterable">Pos Anggaran</th>
+			                            {{-- <th id="filterable">Jenis Anggaran</th> --}}
+			                            {{-- <th id="filterable">Kelompok Anggaran</th> --}}
+			                            {{-- <th id="filterable">Pos Anggaran</th> --}}
 			                            <th id="filterable">Sub Pos</th>
 			                            <th id="filterable">Mata Anggaran</th>
 			                            <th><center>Aksi</center></th>
@@ -62,12 +61,11 @@
 			                        <tbody>
 			                        @foreach($items as $item)
 		                        		<tr>
-		                        			<td><center>{{ $no++ }}</center></td>
 		                        			<td>{{ $item->kode_item }}</td>
 		                        			<td>{{ $item->nama_item }}</td>
-		                        			<td>{{ $jenis->where('kode', $item->jenis_anggaran)->first()['name'] }}
-		                        			<td>{{ $kelompok->where('kode', $item->kelompok_anggaran)->first()['name'] }}</td>
-		                        			<td>{{ $pos->where('kode', $item->pos_anggaran)->first()['name'] }}</td>
+		                        			{{-- <td>{{ $jenis->where('kode', $item->jenis_anggaran)->first()['name'] }} --}}
+		                        			{{-- <td>{{ $kelompok->where('kode', $item->kelompok_anggaran)->first()['name'] }}</td> --}}
+		                        			{{-- <td>{{ $pos->where('kode', $item->pos_anggaran)->first()['name'] }}</td> --}}
 		                        			<td>{{ $item->sub_pos }}</td>
 		                        			<td>{{ $item->mata_anggaran }}</td>
 	                        				<td>

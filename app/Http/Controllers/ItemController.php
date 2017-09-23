@@ -208,7 +208,7 @@ class ItemController extends Controller
 
     public function destroy(Request $request, $id)
     {
-        $item = ItemMaster::withTrashed()->where('id', $id)->first()->name ? ItemMaster::withTrashed()->where('id', $id)->first()->name : ItemMaster::withTrashed()->where('id', $id)->first()->kode;
+        $item = ItemMaster::where('id', $id)->first()->name ? ItemMaster::where('id', $id)->first()->name : ItemMaster::where('id', $id)->first()->kode;
 
         ItemMaster::where('id', $id)->delete();
 
