@@ -55,9 +55,9 @@ class TransaksiController extends Controller
         $this->batches_dates = Batch::get();
 
         $this->middleware('can:info_t', ['only' => 'index']);
-        $this->middleware('can:tambahBatch_t', ['only' => 'store']);
-        $this->middleware('can:verifikasi_t', ['only' => 'persetujuan']);
-        $this->middleware('can:verifikasi2_t', ['only' => 'verifikasi']);
+        // $this->middleware('can:tambahBatch_t', ['only' => 'store']);
+        $this->middleware('can:setuju_t', ['only' => 'persetujuan']);
+        $this->middleware('can:setuju2_t', ['only' => 'verifikasi']);
         $this->middleware('can:cari_t', ['only' => 'filter_handle', 'filter_result']);
     }
 
@@ -195,7 +195,7 @@ class TransaksiController extends Controller
 
     public function store(Request $request)
     {
-        $batch_insert = $batch_update = [];
+        $batch_insert = $batch_update = $batch_delete = [];
         if (!$this->current_batch) {
             $this->current_batch = $this->defineNewBatch();
             $this->updateBatchStat($this->current_batch, 0);
@@ -224,6 +224,8 @@ class TransaksiController extends Controller
             if (isset($value->isNew)) {
                 unset($store_values['id']);
                 array_push($batch_insert, $store_values);
+            } elseif (isset($value->toBeDeleted)) {
+                array_push($batch_delete, $value->id);
             } else {
                 array_push($batch_update, $store_values);
             }
@@ -231,9 +233,15 @@ class TransaksiController extends Controller
 
         $this->doInsert($batch_insert);
         $this->doUpdate($batch_update);
+        $this->doDelete($batch_delete);
         $this->storeBerkas($request->berkas, $this->current_batch['id']);
         
-        $batch_counter = array(count($batch_insert), count($batch_update), $request->berkas[0] ? count($request->berkas) : 0);
+        $batch_counter = array(
+            count($batch_insert), // inserted items count
+            count($batch_update), // updated items count
+            count($batch_delete), // deleted items count
+            $request->berkas[0] ? count($request->berkas) : 0 // berkas uploaded
+        );
 
         session()->flash('success', $batch_counter);
         return redirect('transaksi');
@@ -266,6 +274,11 @@ class TransaksiController extends Controller
                 Transaksi::where('id', $id)->update($value);
             }
         }
+    }
+
+    public function doDelete($batch_delete)
+    {
+        Transaksi::whereIn('id', $batch_delete)->delete();
     }
 
     public function storeBerkas($inputs, $current_batch)

@@ -58,18 +58,22 @@
                           item["isNew"] = true;
                           item["tempId"] = ++tempIdCounter;
                           inputs.push(item);
-                          console.log(item);
                         },
                         updateItem: function(item) {
                           if (item["isNew"]) {
                             inputs.splice(item["tempId"]-1, 1, item);  
                           } else {
                             inputs.push(item);
-                          }
-                          console.log(item);  
+                          }  
                         },
                         deleteItem: function(item) {
-
+                          if (item["isNew"]) {
+                            inputs.splice(item["tempId"]-1, 1);
+                          } else {
+                            item["toBeDeleted"] = true;
+                            inputs.push(item);
+                            toastr.info("Jangan lupa untuk menekan tombol <b>Simpan perubahan batch</b> setelah penghapusan item.", "Update List Batch", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:10e3});
+                          }
                         }
                       }, 
                       onRefreshed: function(args) {
@@ -102,7 +106,7 @@
                           },
                           { 
                             name: "account", 
-                            width: 200, 
+                            width: 250, 
                             align: "left",
                             type: "text", 
                             title: "Account", 
@@ -256,7 +260,7 @@
                             align: "left",
                             width: 200, 
                             type: "number", 
-                            title: "Total",
+                            title: "Jumlah",
                             itemTemplate: function(value) {
                               return "<span class='tag tag-danger'>IDR " + parseInt(value).toLocaleString() + ",00</span>";
                             },

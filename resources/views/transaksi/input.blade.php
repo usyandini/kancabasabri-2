@@ -111,13 +111,16 @@
                                   <div class="col-xs-7">
                                     <div class="alert alert-success">
                                       @if(session('success')[0] > 0)
-                                      Batch transaksi sebanyak <b>{{ session('success')[0] }} baris baru berhasil disimpan</b>.<br>
+                                      Item batch transaksi sebanyak <b>{{ session('success')[0] }} baris baru berhasil disimpan</b>.<br>
                                       @endif
                                       @if(session('success')[1] > 0)
-                                      Batch transaksi sebanyak <b>{{ session('success')[1] }} baris berhasil diupdate</b>.<br>
+                                      Item batch transaksi sebanyak <b>{{ session('success')[1] }} baris berhasil diupdate</b>.<br>
                                       @endif
                                       @if(session('success')[2] > 0)
-                                      Berkas batch transaksi sebanyak <b>{{ session('success')[2] }} berkas baru berhasil disimpan</b>.
+                                      Item batch transaksi sebanyak <b>{{ session('success')[2] }} baris berhasil dihapus</b>.
+                                      @endif
+                                      @if(session('success')[3] > 0)
+                                      Berkas batch transaksi sebanyak <b>{{ session('success')[3] }} berkas baru berhasil disimpan</b>.
                                       @endif
                                     </div>
                                   </div>
@@ -215,14 +218,14 @@
                                 <br>
                                 @if($editable)
                                 <div class="row">
-                                  @if (Gate::check('insert_t') || Gate::check('update_t') || Gate::check('hapus_t'))
+                                  @if (Gate::check('tambah_item_t') || Gate::check('ubah_item_t') || Gate::check('hapus_item_t'))
                                   <div class="col-xs-2 pull-right">
                                     <div class="form-group">
                                       <button onclick="populateBatchInput()" class="btn btn-primary pull-right" id="simpan" value="Simpan"><i class="fa fa-check"></i> Simpan perubahan batch</button>
                                     </div>
                                   </div>
                                   @endif
-                                  @if (Gate::check('submit_t'))
+                                  @if (Gate::check('ajukan_t'))
                                   <div class="col-xs-3 pull-right">
                                     <div class="form-group">
                                       <button onclick="checkBatchSubmit()" class="btn btn-danger pull-right" id="button_status"><i class="fa fa-check-circle"></i> Submit batch untuk Verifikasi</button>
