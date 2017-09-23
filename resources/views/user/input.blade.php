@@ -53,10 +53,10 @@
                                   <div class="col-md-12 col-sm-12">
                                     <div class="form-group">
                                       <fieldset>
-                                        <input type="radio" id='activ_dir_on' name="activ_dir" value="on" onchange="changeLDAP()">
-                                        <label>Daftar dengan Active Dirctory</label>
                                         <input type="radio" id='activ_dir_off' name="activ_dir" value="off" checked="">
                                         <label>Daftar dengan aplikasi</label>
+                                        <input type="radio" id='activ_dir_on' name="activ_dir" value="on" >
+                                        <label>Daftar dengan Active Dirctory</label>
                                       </fieldset>
                                     </div>
                                   </div>
@@ -64,7 +64,7 @@
                                 <div class="form-group">
                                   <label>Username</label>
                                   <div id="input_user">
-                                    <input type="text" required="" id="username" class="form-control select2" placeholder="Username" name="username" value="{{ old('username') }}">
+                                    <input type="text" required="" id="username" class="form-control" placeholder="Username" name="username" value="{{ old('username') }}">
                                   </div>
                                 </div>
                                 <div class="form-group">
