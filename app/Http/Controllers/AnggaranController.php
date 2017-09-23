@@ -65,8 +65,8 @@ class AnggaranController extends Controller
         $this->anggaranModel = $anggaran;
         $this->listAnggaranModel = $listAnggaran;
         $this->fileListAnggaranModel = $fileListAnggaran;
-        $this->userCabang = '00';
-        $this->userDivisi = '16';
+        $this->userCabang = \Auth::user()->cabang;
+        $this->userDivisi = \Auth::user()->divisi;
         
     }
 
@@ -80,13 +80,18 @@ class AnggaranController extends Controller
                     'unit_kerja' =>$request->cari_unit_kerja
                 );
         }
-
+        $query="SELECT * 
+                    FROM (SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_DIVISI] 
+                    WHERE VALUE!='00') AS A 
+                    UNION ALL 
+                    SELECT * FROM (SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_KPKC]  
+                    WHERE VALUE!='00') AS B";
+        $unit_kerja = \DB::select($query);
         $editable = false;
         $displaySearch = 'block';
         return view('anggaran.informasi', [
             'title' => 'Informasi Kegiatan dan Anggaran',
-            'userCabang' =>$this->userCabang,
-            'userDivisi' =>$this->userDivisi,
+            'unit_kerja' =>$unit_kerja,
             'nd_surat' => '',
             'filters' =>$filter]);
     }
@@ -142,8 +147,6 @@ class AnggaranController extends Controller
 
     public function persetujuan_anggaran($nd_surat,$status) 
     {
-
-        // (checkActiveMenu('anggaran') == 'active' ? url('anggaran') : url('anggaran/get/filteredAnggaran/'.$filters['nd_surat'].'/'.$filters['status_anggaran'].'/'.urlencode(strtolower($filters['unit_kerja'])));
         $editable = false;
         $reject = false;
         if($status == '2'||$status == '3'){
@@ -268,17 +271,12 @@ class AnggaranController extends Controller
         'keterangan'        => $keterangan,
         'updated_at'        => \Carbon\Carbon::now()];
         
-        // echo $request->status;
-        // echo $request->setuju;
         $AnggaranData;
         if($request->status == 'tambah'){
-            // echo "tambah";
             $AnggaranData=Anggaran::create($anggaran_insert);
         }else if($request->setuju == 'Simpan'){
-            // echo $active;
             Anggaran::where('nd_surat', $request->nd_surat)->where('active', '1')->update($anggaran_update);
         }else{
-            // echo "lain";
             Anggaran::where('nd_surat', $request->nd_surat)->where('active', '1')->update($anggaran_update);
             $AnggaranData=Anggaran::create($anggaran_insert);
         }
@@ -300,41 +298,33 @@ class AnggaranController extends Controller
                 }
             }
 
-            // echo 
-            // if($request->setuju != 'Simpan' || $request->status == 'tambah'){
-                
-                // if($request->setuju == 'Simpan'){
-
-                // }
-
-                if($anggaranId == "" && $request->status == 'tambah'){
-                    $anggaranId = $AnggaranData->id;
-                }
-                if($request->setuju != 'Simpan' || ($request->setuju == 'Simpan' && $value->id == -1)){
-                    // echo "baru";
-                    $anggaran_insert_list = [
-                    // 'id'            => $value->id,
-                    'jenis'           => $value->jenis,
-                    'kelompok'          => $value->kelompok,
-                    'pos_anggaran'      => $value->pos_anggaran,
-                    'sub_pos'       => $value->sub_pos,
-                    'mata_anggaran' => $value->mata_anggaran,
-                    'kuantitas'     => (int)$value->kuantitas,
-                    'satuan'     => $value->satuan,
-                    'nilai_persatuan'       => (double)$value->nilai_persatuan,
-                    'terpusat'      => $value->terpusat,
-                    'unit_kerja'         => $value->unit_kerja,
-                    'TWI'    => (double)$value->tw_i,
-                    'TWII'    => (double)$value->tw_ii,
-                    'TWIII'    => (double)$value->tw_iii,
-                    'TWIV'    => (double)$value->tw_iv,
-                    'anggaran_setahun'      => (double)$value->anggarana_setahun,
-                    'id_first'      => $idBefore,
-                    'id_list_anggaran'            => $anggaranId,
-                    'active'            => '1'
-                    ];
-                }
-            // }
+            if($anggaranId == "" && $request->status == 'tambah'){
+                $anggaranId = $AnggaranData->id;
+            }
+            if($request->setuju != 'Simpan' || ($request->setuju == 'Simpan' && $value->id == -1)){
+                // echo "baru";
+                $anggaran_insert_list = [
+                // 'id'            => $value->id,
+                'jenis'           => $value->jenis,
+                'kelompok'          => $value->kelompok,
+                'pos_anggaran'      => $value->pos_anggaran,
+                'sub_pos'       => $value->sub_pos,
+                'mata_anggaran' => $value->mata_anggaran,
+                'kuantitas'     => (int)$value->kuantitas,
+                'satuan'     => $value->satuan,
+                'nilai_persatuan'       => (double)$value->nilai_persatuan,
+                'terpusat'      => $value->terpusat,
+                'unit_kerja'         => $value->unit_kerja,
+                'TWI'    => (double)$value->tw_i,
+                'TWII'    => (double)$value->tw_ii,
+                'TWIII'    => (double)$value->tw_iii,
+                'TWIV'    => (double)$value->tw_iv,
+                'anggaran_setahun'      => (double)$value->anggarana_setahun,
+                'id_first'      => $idBefore,
+                'id_list_anggaran'            => $anggaranId,
+                'active'            => '1'
+                ];
+            }
 
             $active_list = '0';
             if($request->setuju == 'Simpan'){
@@ -415,7 +405,7 @@ class AnggaranController extends Controller
                         for($i=0;$i<$_POST['count_file_'.$index];$i++){
                             $data = $_POST['file_'.$index."_".$index2];
                             if($data!="null"){
-                                echo $index."_".$index2."<br />";
+                                // echo $index."_".$index2."<br />";
                                 $file_name = $_POST['file_name_'.$index."_".$index2];
                                 $file_type = $_POST['file_type_'.$index."_".$index2];
                                 $file_size = $_POST['file_size_'.$index."_".$index2];
@@ -468,7 +458,7 @@ class AnggaranController extends Controller
         if($setuju != "-1"){
             $status_view = redirect('anggaran/persetujuan/'.$request->nd_surat.'/1');
         }
-        // return $status_view;
+        return $status_view;
     }
 
     public function getFiltered($nd_surat,$type){
@@ -708,7 +698,11 @@ class AnggaranController extends Controller
         switch ($type) {
             case 'unitkerja':
                 $second="SELECT * 
-                    FROM (SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_DIVISI] WHERE VALUE!='00') AS A UNION ALL SELECT * FROM (SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_KPKC]  WHERE VALUE!='00') AS B";
+                    FROM (SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_DIVISI] 
+                    WHERE VALUE!='00') AS A 
+                    UNION ALL 
+                    SELECT * FROM (SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_KPKC]  
+                    WHERE VALUE!='00') AS B";
                 $return = \DB::select($second);
                 break;
             case 'divisi':
@@ -729,8 +723,6 @@ class AnggaranController extends Controller
 
     public function unduh_file($id){
 
-        
-        
         $berkas = FileListAnggaran::where('id', $id)->first();
          
         $decoded = base64_decode($berkas->data);
@@ -753,14 +745,12 @@ class AnggaranController extends Controller
         }
     }
 
-
     public function removeAnggaranAll(){
 
                 \DB::table('anggaran')->delete();
                 \DB::table('list_anggaran')->delete();
                 \DB::table('file_list_anggaran')->delete();
     }
-
 
     public function activeFileListAnggaranAll(){
 

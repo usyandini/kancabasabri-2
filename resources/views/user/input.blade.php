@@ -53,9 +53,9 @@
                                   <div class="col-md-12 col-sm-12">
                                     <div class="form-group">
                                       <fieldset>
-                                        <input type="radio" id='activ_dir_off' name="activ_dir" value="off" checked="">
+                                        <input type="radio" id='activ_dir_off' name="as_ldap" value="0" {{ old('as_ldap') != "0" ? 'checked=""' : '' }}>
                                         <label>Daftar dengan aplikasi</label>
-                                        <input type="radio" id='activ_dir_on' name="activ_dir" value="on" >
+                                        <input type="radio" id='activ_dir_on' name="as_ldap" value="1" {{ old('as_ldap') == "1" ? 'checked=""' : '' }}>
                                         <label>Daftar dengan Active Dirctory</label>
                                       </fieldset>
                                     </div>
@@ -65,6 +65,7 @@
                                   <label>Username</label>
                                   <div id="input_user">
                                     <input type="text" required="" id="username" class="form-control" placeholder="Username" name="username" value="{{ old('username') }}">
+                                    <!-- <select class="select2 form-control" id="username" name="username" placeholder="Username" style="width: 100%;"></select> -->
                                   </div>
                                 </div>
                                 <div class="form-group">
@@ -110,7 +111,7 @@
                         </div>
                       </div>
                       <div class="col-md-6">
-                        <div class="card">
+                        <div class="card" id="form_password">
                           <div class="card-header">
                             <h4 class="card-title" id="basic-layout-card-center">Password</h4>
                             <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>

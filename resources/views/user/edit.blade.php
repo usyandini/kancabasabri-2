@@ -50,13 +50,25 @@
                                               </div>
                                               @endif
                                               <div class="form-body">
+                                                <div class="row skin skin-square">
+                                                  <div class="col-md-12 col-sm-12">
+                                                    <div class="form-group">
+                                                      <fieldset>
+                                                        <input type="radio" id='activ_dir_off' name="as_ldap" value="0" disabled {{ $user->as_ldap  != "1" ? 'checked=""' : '' }}>
+                                                        <label>Daftar dengan aplikasi</label>
+                                                        <input type="radio" id='activ_dir_on' name="as_ldap" value="1"  disabled {{ $user->as_ldap == "1" ? 'checked=""' : '' }}>
+                                                        <label>Daftar dengan Active Dirctory</label>
+                                                      </fieldset>
+                                                    </div>
+                                                  </div>
+                                                </div>
                                                 <div class="form-group">
                                                   <label>Username</label>
                                                   <input type="text" required="" class="form-control" placeholder="Username" name="username" value="{{ old('username') == '' ? $user->username : old('username') }}" readOnly>
                                                 </div>
                                                 <div class="form-group">
                                                   <label>Nama Lengkap</label>
-                                                  <input type="text" required="" class="form-control" placeholder="Nama" name="name" value="{{ old('name') == '' ? $user->name : old('name') }}">
+                                                  <input type="text" required="" class="form-control" placeholder="Nama" name="name" value="{{ old('name') == '' ? $user->name : old('name') }}" readOnly>
                                                 </div>
                                                 <div class="form-group">
                                                   <label>Email</label>
@@ -97,7 +109,7 @@
                                         </div>
                                       </div>
                                       <div class="col-md-6">
-                                        <div class="card">
+                                        <div class="card" style='display:{{ $user->as_ldap  != "1" ? "block":"none"}}'>
                                           <div class="card-header">
                                             <h4 class="card-title" id="basic-layout-card-center">Password</h4>
                                             <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>

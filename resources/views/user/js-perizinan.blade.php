@@ -135,13 +135,16 @@
 
   $('.iCheck-helper').click(function() {
       id = $(this).prev().attr('id');
-      // alert(id);
       if(id == "activ_dir_on"){
-        $(this).prev().iCheck('check');
-        changeLDAP('on');
+        if(!$(this).prev().is(':disabled')){
+          $(this).prev().iCheck('check');
+          changeLDAP('on');
+        }
       }else if(id == "activ_dir_off"){
-        $(this).prev().iCheck('check');
-        changeLDAP('off');
+        if(!$(this).prev().is(':disabled')){
+          $(this).prev().iCheck('check');
+          changeLDAP('off');
+        }
       }else{
         check= $('#' +id+ ' input');
         if($(this).prev().is(':checked')){
@@ -157,23 +160,32 @@
   function changeLDAP(type){
     $("#input_user").empty();
     if(type == "on"){
-        $("#input_user").append('<select class="select2 form-control" id="username" name="username" placeholder="Username" style="width: 100%;"></select>')
-        getUsername();
-        $("#username").change(function(){
-          nama_lengkap = document.getElementById('nama_lengkap');
-          username = document.getElementById('username');
-          Object.keys(data_username).map(function(key, index) {
-              if(key!="count"){
-                text = data_username[key]["samaccountname"]["0"];
-                if(text == username.value){
-                  nama_lengkap.value = data_username[key]["displayname"]["0"];
-                }
-              }
-          });
+      $("#input_user").append('<select class="form-control" id="username" name="username" placeholder="Username" style="width: 100%;"></select>')
+      $("select[name='username']").select2();
+      getUsername();
+      $("#username").change(function(){
+        nama_lengkap = document.getElementById('nama_lengkap');
+        username = document.getElementById('username');
+        Object.keys(data_username).map(function(key, index) {
+            if(key!="count"){
 
+                // console.log(data_username[key]);
+              if( typeof data_username[key]["displayname"] == 'undefined'){
+                console.log(data_username[key]);
+              }
+              
+              text = data_username[key]["samaccountname"]["0"];
+              // if(text == username.value){
+              //   nama_lengkap.value = data_username[key]["displayname"]["0"];
+              // }
+            }
         });
+      });
+      $('#form_password').css("display", "none");
     }else if(type == "off"){
       $("#input_user").append('<input type="text" required="" id="username" class="form-control select2" placeholder="Username" name="username" value="{{ old("username") }}">')
+      
+      $('#form_password').css("display", "block");
     }
      
   }

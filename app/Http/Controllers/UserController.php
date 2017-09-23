@@ -45,7 +45,12 @@ class UserController extends Controller
     	$validator = $this->validateInputs($input);
 
     	if ($validator->passes()) {
-            $input['password'] = bcrypt($input['password']);
+            if (isset($input['password'])) {
+                $input['password'] = bcrypt($input['password']);
+                unset($input['password_confirmation']);
+            }else{
+                $input['password'] = "";
+            }
             // if ($input['perizinan']['data-cabang'] == 'off') { unset($input['perizinan']['data-cabang']); }
             $input['created_by'] = \Auth::user()->id;
             User::create($input);
@@ -54,7 +59,7 @@ class UserController extends Controller
             return redirect('user');
         } 
 
-        echo json_encode($input);
+        // echo json_encode($input);
         return redirect()->back()->withInput()->withErrors($validator);
     }
 
