@@ -7,6 +7,12 @@
                   .hide {
                     display: none;
                   }
+                  .jsgrid-row .jsgrid-cell {
+                      background: inherit;
+                  }
+                  .contoh {
+                    background: rgb(239, 133, 115);
+                  }
                 </style>
                 @endsection
 

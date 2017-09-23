@@ -20,6 +20,7 @@ use Validator;
 use App\Services\FileUpload;
 use App\Services\NotificationSystem;
 use App\Http\Traits\BatchTrait;
+use App\Http\Traits\BudgetControlTrait;
 
 //  ----------- BATCH STAT DESC -------------
 //          0 = Inserted 
@@ -33,7 +34,8 @@ use App\Http\Traits\BatchTrait;
 
 class TransaksiController extends Controller
 {
-    use BatchTrait;    
+    use BatchTrait;
+    use BudgetControlTrait;    
 
     protected $bankModel;
     protected $itemModel;
@@ -144,7 +146,8 @@ class TransaksiController extends Controller
                 'bank'          => $value->akun_bank,
                 'account'       => $value->account,
                 'anggaran'      => $value->anggaran,
-                'total'         => $value->total
+                'total'         => $value->total,
+                'is_anggaran_safe' => $value->is_anggaran_safe
                 ]);
         }
         return response()->json($result);
@@ -167,7 +170,8 @@ class TransaksiController extends Controller
                 'bank'          => $value->akun_bank,
                 'account'       => $value->account,
                 'anggaran'      => $value->anggaran,
-                'total'         => $value->total
+                'total'         => $value->total,
+                'is_anggaran_safe' => $value->is_anggaran_safe
                 ]);
         }
         return response()->json($result);
@@ -178,16 +182,24 @@ class TransaksiController extends Controller
         $return = null;
         switch ($type) {
             case 'item':
-                $return = $this->itemModel->get();
+                $header = ['MAINACCOUNTID' => '-1', 'NAME' => 'Silahkan Pilih'];
+                $return = $this->itemModel->get(['MAINACCOUNTID', 'NAME'])->filter(function($item) {
+                            return $item->kombinasiAvailable(\Auth::user()->cabang, \Auth::user()->divisi);
+                        });
+                $return->prepend($header);
                 break;
             case 'bank':
                 $return = $this->bankModel->get();
                 break;       
             case 'subpos':
-                $return = $this->subPosModel->get();
+                $header = ['VALUE' => '-1', 'DESCRIPTION' => 'Auto Generate dari Account'];
+                $return = $this->subPosModel->get(['VALUE', 'DESCRIPTION']);
+                $return->prepend($header);
                 break;
             case 'kegiatan':
-                $return = $this->kegiatanModel->get();
+                $header = ['VALUE' => '-1', 'DESCRIPTION' => 'Auto Generate dari Account'];
+                $return = $this->kegiatanModel->get(['VALUE', 'DESCRIPTION']);
+                $return->prepend($header);
                 break;
         }
         return response()->json($return);

@@ -1,6 +1,6 @@
                 <script type="text/javascript">
                   var inputs = [];
-                  var item = m_anggaran = subpos = account_field = null;
+                  var item = m_anggaran = subpos = mainaccount = account_field = date_field = anggaran_field = null;
                   var tempIdCounter = totalRows = 0;
                   var editableStat = {{ $editable ? 1 : 0 }};
 
@@ -39,7 +39,13 @@
 
                       sorting: true, 
                       paging: true, 
-                      autoload: true, 
+                      autoload: true,
+                      rowClass: function(item, itemIndex) {
+                        return item.is_anggaran_safe != 1 ? "contoh" : ""
+                      }, 
+                      // rowRenderer: function(item) {
+                      //   return $("<tr>").addClass("contoh").append($("<td>").append(item.Name));
+                      // },
                       @if(Gate::check('ubah_item_t') || Gate::check('hapus_item_t'))
                           editing: editableStat == 1 ? true : false, 
                       @endif
@@ -77,6 +83,9 @@
                         }
                       }, 
                       onRefreshed: function(args) {
+                        $(account_field).val('Auto generate dari Account')
+                        $(anggaran_field).val('Auto generate dari Account')
+                        date_field = mainaccount = null;
                         var items = args.grid.option("data");
                         items.forEach(function(item) {
                           totalRows += 1;
@@ -105,6 +114,59 @@
                             @endif
                           },
                           { 
+                            name: "tgl", 
+                            type: "date", 
+                            width: 150, 
+                            title: "Tanggal", 
+                            align: "left",
+                            validate: {
+                              validator : "required",
+                              message : "Kolom tanggal tidak boleh kosong."  
+                            },
+                            insertTemplate: function(value) {
+                              var result = this._insertPicker = $("<input>").datepicker({ defaultDate: new Date() })
+                              result.on("change", function() {
+                                date_field = result.val()
+                                date_field = ("0" + new Date(date_field).getDate()).slice(-2) + '-' + ("0" + (new Date(date_field).getMonth() + 1)).slice(-2) + '-' + new Date(date_field).getFullYear()
+                                if (mainaccount != null) {
+                                  getCombination()
+                                }
+                              })
+                              return result;
+                            }
+                      },
+                          { 
+                            name: "item", 
+                            width: 300, 
+                            align: "left",
+                            type: "select", 
+                            items: getData('item'), 
+                            valueField: "MAINACCOUNTID", 
+                            textField: "NAME", 
+                            title: "Jenis Barang/Jasa", 
+                            selectedindex: 0,
+                            insertTemplate: function() {
+                                var result = jsGrid.fields.select.prototype.insertTemplate.call(this);
+                                result.on("change", function() {
+                                    if (date_field == null) {
+                                      toastr.error("Mohon input <b>tanggal transaksi</b> terlebih dahulu. Terima kasih", "Tanggal transaksi dibutuhkan.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:10e3});
+                                      $(result).val('-1')
+                                    } else {
+                                      mainaccount = $(this).val()
+                                      getCombination()
+                                    }
+                                });
+                                return result; },
+                            editTemplate: function(value) {
+                                var result = jsGrid.fields.select.prototype.editTemplate.call(this);
+                                $(result).val(value);
+                                populateAccount('item', value);
+
+                                result.on("change", function() {
+                                    populateAccount('item', $(this).val());
+                                });
+                                return result; } },
+                          { 
                             name: "account", 
                             width: 250, 
                             align: "left",
@@ -122,76 +184,45 @@
                               $(account_field).val(value);
                               return account_field; } },
                           { 
-                            name: "tgl", 
-                            type: "date", 
-                            width: 150, 
-                            title: "Tanggal", 
+                            name: "anggaran", 
+                            width: 200, 
                             align: "left",
-                            validate: {
-                              validator : "required",
-                              message : "Kolom tanggal tidak boleh kosong."  
-                            } },
-                          { 
-                            name: "item", 
-                            width: 300, 
-                            align: "left",
-                            type: "select", 
-                            items: getData('item'), 
-                            valueField: "MAINACCOUNTID", 
-                            textField: "NAME", 
-                            title: "Jenis Barang/Jasa", 
-                            selectedindex: 0,
-                            insertTemplate: function() {
-                                var result = jsGrid.fields.select.prototype.insertTemplate.call(this);
-                                result.on("change", function() {
-                                    populateAccount('item', $(this).val());
-                                });
-                                return result; },
-                            editTemplate: function(value) {
-                                var result = jsGrid.fields.select.prototype.editTemplate.call(this);
-                                $(result).val(value);
-                                populateAccount('item', value);
-
-                                result.on("change", function() {
-                                    populateAccount('item', $(this).val());
-                                });
-                                return result; } },
-                          { 
-                            name: "qty_item", 
-                            width: 100, 
-                            align: "left",
-                            type: "number", 
-                            title: "Jumlah",
-                            validate: {
+                            type: "text", 
+                            title: "Anggaran tersedia",
+                            readOnly: true,
+                            itemTemplate: function(value) {
+                              return "<span class='tag tag-info'>IDR " + parseInt(value).toLocaleString() + ",00</span>";
+                            },
+                            insertTemplate: function(value) {
+                              anggaran_field = jsGrid.fields.text.prototype.insertTemplate.call(this)
+                              anggaran_field.on("keyup", function() {
+                                var nilai = validDigits($(this).val());
+                                var val = addCommas(nilai);
+                                $(anggaran_field).val(val)
+                              })
+                              return anggaran_field
+                            },
+                            valdiate: {
                               validator: "min",
-                              message: "Kolom jumlah item tidak boleh 0.",
-                              param: [0]
-                            }  },
-                          { 
-                            name: "desc", 
-                            width: 300, 
-                            type: "textarea", 
-                            title: "Uraian", 
-                            align: "left",
-                            validate: {
-                              validator: "required",
-                              message: "Kolom uraian tidak boleh kosong."  
-                            }  },
+                              message: "Kolom anggaran tidak boleh kosong.",
+                              param: [1]
+                             } },
                           { 
                             name: "sub_pos", 
-                            width: 200, 
+                            width: 250, 
                             align: "left",
                             type: "select", 
                             items: getData('subpos'), 
                             valueField: "VALUE", 
                             textField: "DESCRIPTION", 
+                            readOnly: true,
                             title: "Subpos", 
                             insertTemplate: function() {
-                                var result = jsGrid.fields.select.prototype.insertTemplate.call(this);
-                                result.on("change", function() {
+                                subpos = jsGrid.fields.select.prototype.insertTemplate.call(this);
+                                subpos.on("change", function() {
                                     populateAccount('subpos', $(this).val());
                                 });
-                                return result; },
+                                return subpos; },
                             editTemplate: function(value) {
                                 var result = jsGrid.fields.select.prototype.editTemplate.call(this);
                                 $(result).val(value);
@@ -202,21 +233,22 @@
                                 });
                                 return result; }
                             }, 
-                          { 
+                            { 
                             name: "mata_anggaran", 
-                            width: 200, 
+                            width: 250, 
                             align: "left",
                             type: "select", 
                             items: getData('kegiatan'), 
                             valueField: "VALUE", 
                             textField: "DESCRIPTION", 
+                            readOnly: true,
                             title: "Mata Anggaran", 
                             insertTemplate: function() {
-                                var result = jsGrid.fields.select.prototype.insertTemplate.call(this);
-                                result.on("change", function() {
+                                m_anggaran = jsGrid.fields.select.prototype.insertTemplate.call(this);
+                                m_anggaran.on("change", function() {
                                     populateAccount('m_anggaran', $(this).val());
                                 });
-                                return result; },
+                                return m_anggaran; },
                             editTemplate: function(value) {
                                 var result = jsGrid.fields.select.prototype.editTemplate.call(this);
                                 $(result).val(value);
@@ -229,7 +261,7 @@
                             }, 
                           { 
                             name: "bank", 
-                            width: 200,
+                            width: 250,
                             align: "left", 
                             type: "select", 
                             items: getData('bank'), 
@@ -242,25 +274,22 @@
                               param: [1]
                              } },
                           { 
-                            name: "anggaran", 
+                            name: "qty_item", 
                             width: 200, 
                             align: "left",
                             type: "number", 
-                            title: "Anggaran tersedia",
-                            itemTemplate: function(value) {
-                              return "<span class='tag tag-info'>IDR " + parseInt(value).toLocaleString() + ",00</span>";
-                            },
-                            valdiate: {
+                            title: "Jumlah (Kuantitas)",
+                            validate: {
                               validator: "min",
-                              message: "Kolom anggaran tidak boleh kosong.",
-                              param: [1]
-                             } },
+                              message: "Kolom jumlah item tidak boleh 0.",
+                              param: [0]
+                            }  },
                           { 
                             name: "total", 
                             align: "left",
                             width: 200, 
                             type: "number", 
-                            title: "Jumlah",
+                            title: "Jumlah (IDR)",
                             itemTemplate: function(value) {
                               return "<span class='tag tag-danger'>IDR " + parseInt(value).toLocaleString() + ",00</span>";
                             },
@@ -269,6 +298,16 @@
                               message: "Kolom total tidak boleh kosong.",
                               param: [1]
                              } },
+                          { 
+                            name: "desc", 
+                            width: 300, 
+                            type: "textarea", 
+                            title: "Uraian", 
+                            align: "left",
+                            validate: {
+                              validator: "required",
+                              message: "Kolom uraian tidak boleh kosong."  
+                            }  },
                           { 
                             type: "control", 
                             width: 60,
@@ -295,6 +334,9 @@
                                 tmp = data;
                             }
                         });
+                        if (type == 'item' && tmp.length == 1) {
+                            toastr.error("<b>Kombinasi Account</b> tidak ditemukan sama sekali untuk cabang dan/atau divisi anda.", "Kombinasi Account diperlukan.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:10e3});
+                        }
                         return tmp;
                     }();
                     return returned;
@@ -313,6 +355,54 @@
                         break;
                     }
                     generateAccount(item, m_anggaran, subpos);
+                  }
+
+                  function getCombination() {
+                    var combination = null
+                    $.ajax({
+                      'async': false, 'type': "GET", 'dataType': "JSON", 'url': "{{ url('item/get/combination').'/' }}" + mainaccount + "{{ '/'.\Auth::user()->cabang.'/'.\Auth::user()->divisi.'/' }}" + date_field,
+                      'success': function(data) {
+                        combination = data
+                      }
+                    })
+                    if (combination == null) {
+                      toastr.error("Anggaran pada <b>tanggal transaksi dan jenis barang/jasa</b> yang diinputkan tidak ditemukan.", "Anggaran tidak ditemukan.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:10e3});
+                    } else {
+                      console.log(date_field)
+                      console.log(combination)
+                      populateAccountEtc(combination)
+                    }
+                  }
+
+                  function addCommas(n){
+                    var rx=  /(\d+)(\d{3})/;
+                    return String(n).replace(/^\d+/, function(w){
+                      while(rx.test(w)){
+                        w= w.replace(rx, '$1.$2');
+                      }
+                      return w;
+                    });
+                  }
+
+                  function validDigits(n, dec){
+                    n= n.replace(/[^\d]+/g, '');
+                    var ax1= n.indexOf('.'), ax2= -1;
+                    if(ax1!= -1){
+                      ++ax1;
+                      ax2= n.indexOf('.', ax1);
+                      if(ax2> ax1) n= n.substring(0, ax2);
+                      if(typeof dec=== 'number') n= n.substring(0, ax1+dec);
+                    }
+                    return n;
+                  }
+
+                  function populateAccountEtc(data) {
+                    var account = data.SEGMEN_1 + '-' + data.SEGMEN_2 + '-' + data.SEGMEN_3 + '-' + data.SEGMEN_4 + '-' +data.SEGMEN_5 + '-' + data.SEGMEN_6
+                    $(account_field).val(account)
+                    $(subpos).val(data.SEGMEN_5)
+                    $(m_anggaran).val(data.SEGMEN_6)
+
+                    $(anggaran_field).val(data.ax_anggaran.PIL_AMOUNTAVAILABLE)
                   }
                   
                   function pad(n) {

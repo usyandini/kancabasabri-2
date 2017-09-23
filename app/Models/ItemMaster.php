@@ -8,6 +8,10 @@ class ItemMaster extends Model
 {
     protected $connection = 'sqlsrv';
     protected $table = 'item_master';
+
+    protected $dateFormat = 'Y-m-d H:i:s';
+
+    protected $dates = ['dob'];
     
     protected $fillable = [
     	'kode_item',
@@ -26,4 +30,18 @@ class ItemMaster extends Model
     	'SEGMEN_6',
     	'created_by',
     ];
+
+    public function axAnggaran($transaksi_date)
+    {
+        $displayvalue = $this->SEGMEN_1.'-'.$this->SEGMEN_2.'-'.$this->SEGMEN_3.'-'.$this->SEGMEN_4.'-'.$this->SEGMEN_5.'-'.$this->SEGMEN_6;
+        return $this->hasMany('App\Models\BudgetControl', 'PIL_MAINACCOUNT', 'SEGMEN_1')->where([
+            ['PIL_DISPLAYVALUE', $displayvalue], 
+            ['PIL_PERIODSTARTDATE', '<=', $transaksi_date], 
+            ['PIL_PERIODENDDATE', '>=', $transaksi_date]])->first();
+    }
+
+    public function isAxAnggaranAvailable($transaksi_date)
+    {
+        return $this->axAnggaran($transaksi_date) ? true : false;   
+    }
 }

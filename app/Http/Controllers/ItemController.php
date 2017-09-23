@@ -25,6 +25,15 @@ use App\Models\RejectReason;
 //      3 = Pos Anggaran
 //---------------------------------------------------//
 
+//-------- SEGMEN-SEGMEN -------------------------//
+//  SEGMEN_1 = Jenis Barang/Jasa / MAINACCOUNTID
+//  SEGMEN_2 = Program / THT
+//  SEGMEN_3 = KPKC / VALUE
+//  SEGMEN_4 = DIVISI / VALUE
+//  SEGMEN_5 = SUB_POS / VALUE
+//  SEGMEN_6 = Mata Anggaran / VALUE
+//-------------------------------------------------//
+
 class ItemController extends Controller
 {
     protected $itemModel;
@@ -70,6 +79,24 @@ class ItemController extends Controller
             'kelompok' => $kelompok,
             'pos' => $pos,
         ]);
+    }
+
+    public function getCombination($id, $cabang, $divisi, $tanggal)
+    {
+        $tanggal = date("Y-m-d", strtotime($tanggal));
+        $result = ItemMaster::where([
+            ['SEGMEN_1', $id], 
+            ['SEGMEN_2', 'THT'],
+            ['SEGMEN_3', $cabang],
+            ['SEGMEN_4', $divisi]])->first();
+        
+        if ($result->isAxAnggaranAvailable($tanggal)) {
+            $result['ax_anggaran'] = $result->axAnggaran($tanggal);
+            $result['ax_anggaran']['PIL_AMOUNTAVAILABLE'] = (int)$result['ax_anggaran']['PIL_AMOUNTAVAILABLE'];
+            return response()->json($result);    
+        }
+
+        return null;
     }
 
     public function create()

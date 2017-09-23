@@ -25,7 +25,8 @@ class Transaksi extends Model
     	'anggaran',
     	'total',
     	'created_by',
-        'batch_id'
+        'batch_id',
+        'is_anggaran_safe'
     ];
 
     public function stat()
