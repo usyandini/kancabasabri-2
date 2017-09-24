@@ -2,6 +2,7 @@
                   var inputs = [];
                   var item = m_anggaran = subpos = mainaccount = account_field = date_field = anggaran_field = null;
                   var tempIdCounter = totalRows = 0;
+                  var is_all_anggaran_safe = true;
                   var editableStat = {{ $editable ? 1 : 0 }};
 
                   $(document).ready(function() {
@@ -93,6 +94,9 @@
                         date_field = mainaccount = null;
                         var items = args.grid.option("data");
                         items.forEach(function(item) {
+                          if (item.is_anggaran_safe != true) {
+                            is_all_anggaran_safe = false;
+                          }
                           totalRows += 1;
                         });
 
@@ -469,8 +473,10 @@
                   };
 
                   function checkBatchSubmit() {
-                    if (totalRows > 0) {
+                    if (totalRows > 0 && is_all_anggaran_safe) {
                       $('#xSmall').modal()
+                    } else if(!is_all_anggaran_safe) {
+                      toastr.error("Anggaran yang bersangkutan tidak mencukupi untuk disubmit. Terima kasih.", "Peringatan Anggaran", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:10e3});                      
                     } else {
                       toastr.error("Silahkan input data yang hendak disubmit. Terima kasih.", "Data tidak boleh kosong", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:10e3});                      
                     }
