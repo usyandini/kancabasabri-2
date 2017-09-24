@@ -189,7 +189,7 @@
                             width: 200, 
                             align: "left",
                             type: "text", 
-                            title: "Anggaran tersedia",
+                            title: "Anggaran tersedia (awal)",
                             readOnly: true,
                             itemTemplate: function(value) {
                               return "<span class='tag tag-info'>IDR " + parseInt(value).toLocaleString() + ",00</span>";
@@ -206,6 +206,30 @@
                             valdiate: {
                               validator: "min",
                               message: "Kolom anggaran tidak boleh kosong.",
+                              param: [1]
+                             } },
+                          { 
+                            name: "actual_anggaran", 
+                            width: 300, 
+                            align: "left",
+                            type: "text", 
+                            title: "Anggaran tersedia (aktual estimasi)",
+                            readOnly: true,
+                            itemTemplate: function(value) {
+                              return "<span class='tag tag-info'>IDR " + parseInt(value).toLocaleString() + ",00</span>";
+                            },
+                            insertTemplate: function(value) {
+                              anggaran_field = jsGrid.fields.text.prototype.insertTemplate.call(this)
+                              anggaran_field.on("keyup", function() {
+                                var nilai = validDigits($(this).val());
+                                var val = addCommas(nilai);
+                                $(anggaran_field).val(val)
+                              })
+                              return anggaran_field
+                            },
+                            valdiate: {
+                              validator: "min",
+                              message: "Kolom aktual anggaran tidak boleh kosong.",
                               param: [1]
                              } },
                           { 

@@ -147,7 +147,8 @@ class TransaksiController extends Controller
                 'mata_anggaran' => $value->mata_anggaran,
                 'bank'          => $value->akun_bank,
                 'account'       => $value->account,
-                'anggaran'      => $value->actual_anggaran,
+                'anggaran'      => $value->anggaran,
+                'actual_anggaran' => $value->actual_anggaran,
                 'total'         => $value->total,
                 'is_anggaran_safe' => $value->is_anggaran_safe
                 ]);
@@ -171,7 +172,8 @@ class TransaksiController extends Controller
                 'mata_anggaran' => $value->mata_anggaran,
                 'bank'          => $value->akun_bank,
                 'account'       => $value->account,
-                'anggaran'      => $value->actual_anggaran,
+                'anggaran'      => $value->anggaran,
+                'actual_anggaran' => $value->actual_anggaran,
                 'total'         => $value->total,
                 'is_anggaran_safe' => $value->is_anggaran_safe
                 ]);
@@ -260,14 +262,23 @@ class TransaksiController extends Controller
             $request->berkas[0] ? count($request->berkas) : 0 // berkas uploaded
         );
 
+        $transaksis = Transaksi::where('batch_id', $this->current_batch['id'])->get();
+        $this->doRefreshAnggaran($transaksis);
+
         session()->flash('success', $batch_counter);
         return redirect('transaksi');
     }
 
     public function refreshAnggaran($batch_id)
     {
-        // anggaran -> savepoint_anggaran | actual_anggaran -> actual_anggaran
         $transaksis = Transaksi::where('batch_id', $batch_id)->get();
+        $this->doRefreshAnggaran($transaksis);
+
+        return redirect('transaksi');
+    }
+
+    public function doRefreshAnggaran($transaksis)
+    {
         foreach ($transaksis as $transaksi) {
             $this->calibrateSavePointAndActual($transaksi);
             $calibrate = $this->calibrateAnggaran($transaksi, false);
@@ -275,8 +286,6 @@ class TransaksiController extends Controller
                 Transaksi::where('id', $transaksi->id)->update($calibrate);
             }
         }
-
-        return redirect('transaksi');
     }
 
     public function submit(Request $request)
