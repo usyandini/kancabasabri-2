@@ -265,6 +265,15 @@ class TransaksiController extends Controller
         $transaksis = Transaksi::where('batch_id', $this->current_batch['id'])->get();
         $this->doRefreshAnggaran($transaksis);
 
+        if (count($batch_delete) > 0) {
+            $accounts = \DB::select("SELECT 
+                DATEPART(YEAR, tgl) as year, DATEPART(MONTH, tgl) as month, account FROM dbo.transaksi 
+                    WHERE batch_id = ". $this->current_batch['id'].
+                " GROUP BY DATEPART(YEAR, tgl), DATEPART(MONTH, tgl), account");
+
+            $this->resetCalibrateBecauseDeleteOrUpdate($accounts, $transaksis);
+        }
+
         session()->flash('success', $batch_counter);
         return redirect('transaksi');
     }

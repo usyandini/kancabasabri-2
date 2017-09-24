@@ -7,6 +7,7 @@ use App\Http\Requests;
 
 use App\Models\BudgetControl;
 use App\Models\BudgetControlHistory;
+use App\Models\Transaksi;
 
 use Carbon;
 
@@ -14,7 +15,7 @@ trait BudgetControlTrait
 {
 	public function calibrateAnggaran($trans, $isInsert)
 	{
-		if ($trans->isNew) {
+		if (isset($trans->isNew)) {
 			$transaksi_date = new Carbon(date("Y-m-d", strtotime($trans->tgl)));	
 		} else {
 			$transaksi_date = new Carbon(strtotime($trans->tgl));
@@ -28,11 +29,34 @@ trait BudgetControlTrait
 		if ($isInsert || $currentHistory->savepoint_amount != $trans->anggaran) {
 			$input['actual_amount'] = $result['actual_anggaran'] = (int)$currentHistory->actual_amount - (int)$trans->total;
 			$result['anggaran'] = $currentHistory->savepoint_amount; 
+			
 			BudgetControlHistory::where('id', $currentHistory->id)->update($input);	
+			
 			$result['is_anggaran_safe'] = ((int)$result['actual_anggaran'] < 0) ? false : true;
 		}
 
 		return $result;
+	}
+
+	public function resetCalibrateBecauseDeleteOrUpdate($accounts, $transaksi_batch)
+	{
+		foreach ($accounts as $acc) {
+			$localBudgetControl = BudgetControlHistory::where([
+				['month_period', $acc->month], 
+				['year_period', $acc->year],
+				['account', $acc->account]])->first();;
+			$this->updateSavePoint((int)$localBudgetControl->savepoint_amount, $localBudgetControl->id);
+		}
+
+		foreach ($transaksi_batch as $transaksi) {
+			$transaksi_date = new Carbon(str_replace(':AM', ' AM', $transaksi->tgl));
+			$currentHistory = $this->getHistory($transaksi_date, $transaksi->account);
+			$budgetUpdate['actual_amount'] = $transaksiUpdate['actual_anggaran'] = (int)$currentHistory->actual_amount - (int)$transaksi->total;
+			$transaksiUpdate['is_anggaran_safe'] = ((int)$budgetUpdate['actual_amount'] < 0) ? false : true;
+
+			BudgetControlHistory::where('id', $currentHistory->id)->update($budgetUpdate);				
+			Transaksi::where('id', $transaksi->id)->update($transaksiUpdate);
+		}
 	}
 
 	public function calibrateSavePointAndActual($transaksi_data)
