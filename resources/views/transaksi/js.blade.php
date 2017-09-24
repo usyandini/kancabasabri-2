@@ -135,8 +135,20 @@
                                 }
                               })
                               return result;
+                            },
+                            editTemplate: function(value) {
+                              var result = this._editPicker = $("<input>").datepicker().datepicker("setDate", new Date(value));
+                              date_field = ("0" + new Date(value).getDate()).slice(-2) + '-' + ("0" + (new Date(value).getMonth() + 1)).slice(-2) + '-' + new Date(value).getFullYear()
+                              result.on("change", function() {
+                                date_field = result.val()
+                                date_field = ("0" + new Date(date_field).getDate()).slice(-2) + '-' + ("0" + (new Date(date_field).getMonth() + 1)).slice(-2) + '-' + new Date(date_field).getFullYear()
+                                if (mainaccount != null) {
+                                  getCombination()
+                                }
+                              })
+                              return result;   
                             }
-                      },
+                          },
                           { 
                             name: "item", 
                             width: 300, 
@@ -161,7 +173,7 @@
                                 return result; },
                             editTemplate: function(value) {
                                 var result = jsGrid.fields.select.prototype.editTemplate.call(this);
-
+                                $(result).val(value)
                                 result.on("change", function() {
                                     mainaccount = $(this).val()
                                     getCombination()
@@ -189,10 +201,10 @@
                             width: 200, 
                             align: "left",
                             type: "text", 
-                            title: "Anggaran tersedia (awal)",
+                            title: "Anggaran Tersedia (awal)",
                             readOnly: true,
                             itemTemplate: function(value) {
-                              return "<span class='tag tag-info'>IDR " + parseInt(value).toLocaleString() + ",00</span>";
+                              return "<b>IDR " + parseInt(value).toLocaleString() + ",00</b>";
                             },
                             insertTemplate: function(value) {
                               anggaran_field = jsGrid.fields.text.prototype.insertTemplate.call(this)
@@ -213,10 +225,10 @@
                             width: 300, 
                             align: "left",
                             type: "text", 
-                            title: "Anggaran tersedia (aktual estimasi)",
+                            title: "Anggaran Tersedia (aktual estimasi)",
                             readOnly: true,
                             itemTemplate: function(value) {
-                              return "<span class='tag tag-info'>IDR " + parseInt(value).toLocaleString() + ",00</span>";
+                              return "<b>IDR " + parseInt(value).toLocaleString() + ",00</b>";
                             },
                             insertTemplate: function(value) {
                               anggaran_field = jsGrid.fields.text.prototype.insertTemplate.call(this)
@@ -250,7 +262,7 @@
                             type: "number", 
                             title: "Jumlah Diajukan (IDR)",
                             itemTemplate: function(value) {
-                              return "<span class='tag tag-danger'>IDR " + parseInt(value).toLocaleString() + ",00</span>";
+                              return "<b>IDR " + parseInt(value).toLocaleString() + ",00</b>";
                             },
                             valdiate: {
                               validator: "min",
@@ -271,8 +283,9 @@
                                 subpos = jsGrid.fields.select.prototype.insertTemplate.call(this);
                                 return subpos; },
                             editTemplate: function(value) {
-                                var result = jsGrid.fields.select.prototype.editTemplate.call(this);
-                                return result; 
+                                subpos = jsGrid.fields.select.prototype.editTemplate.call(this);
+                                $(subpos).val(value)
+                                return subpos; 
                               }}, 
                             { 
                             name: "mata_anggaran", 
@@ -288,8 +301,9 @@
                                 m_anggaran = jsGrid.fields.select.prototype.insertTemplate.call(this);
                                 return m_anggaran; },
                             editTemplate: function(value) {
-                                var result = jsGrid.fields.select.prototype.editTemplate.call(this);
-                                return result; }
+                                m_anggaran = jsGrid.fields.select.prototype.editTemplate.call(this);
+                                $(m_anggaran).val(value)
+                                return m_anggaran; }
                             }, 
                           { 
                             name: "bank", 
