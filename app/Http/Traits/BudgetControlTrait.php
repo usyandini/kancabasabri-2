@@ -18,7 +18,7 @@ trait BudgetControlTrait
 		if (isset($trans->isNew)) {
 			$transaksi_date = new Carbon(date("Y-m-d", strtotime($trans->tgl)));	
 		} else {
-			$transaksi_date = new Carbon(strtotime($trans->tgl));
+			$transaksi_date = new Carbon(str_replace(':AM', ' AM', $trans->tgl));
 		}
 		$currentHistory = $this->getHistory($transaksi_date, $trans->account);
 		
@@ -61,7 +61,7 @@ trait BudgetControlTrait
 
 	public function calibrateSavePointAndActual($transaksi_data)
 	{
-		$transaksi_date = new Carbon(strtotime($transaksi_data->tgl));
+		$transaksi_date = new Carbon(str_replace(':AM', ' AM', $transaksi_data->tgl));
 		$axActual = $this->getAxActual($transaksi_data, $transaksi_date);
 		$localActual = $this->getHistory($transaksi_date, $transaksi_data->account);
 
