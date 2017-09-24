@@ -23,6 +23,7 @@ class Transaksi extends Model
     	'akun_bank',
     	'account',
     	'anggaran',
+        'actual_anggaran',
     	'total',
     	'created_by',
         'batch_id',

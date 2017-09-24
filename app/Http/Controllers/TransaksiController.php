@@ -14,8 +14,10 @@ use App\Models\Transaksi;
 use App\Models\Batch;
 use App\Models\BatchStatus;
 use App\Models\BerkasTransaksi;
+use App\Models\BudgetControl;
 
 use Validator;
+use Carbon;
 
 use App\Services\FileUpload;
 use App\Services\NotificationSystem;
@@ -145,7 +147,7 @@ class TransaksiController extends Controller
                 'mata_anggaran' => $value->mata_anggaran,
                 'bank'          => $value->akun_bank,
                 'account'       => $value->account,
-                'anggaran'      => $value->anggaran,
+                'anggaran'      => $value->actual_anggaran,
                 'total'         => $value->total,
                 'is_anggaran_safe' => $value->is_anggaran_safe
                 ]);
@@ -169,7 +171,7 @@ class TransaksiController extends Controller
                 'mata_anggaran' => $value->mata_anggaran,
                 'bank'          => $value->akun_bank,
                 'account'       => $value->account,
-                'anggaran'      => $value->anggaran,
+                'anggaran'      => $value->actual_anggaran,
                 'total'         => $value->total,
                 'is_anggaran_safe' => $value->is_anggaran_safe
                 ]);
@@ -216,6 +218,7 @@ class TransaksiController extends Controller
         }
 
         foreach (json_decode($request->batch_values) as $value) {
+            $calibrate = $this->calibrateAnggaran($value, true);
             $store_values = [
                     'id'            => $value->id,
                     'tgl'           => date("Y-m-d",strtotime($value->tgl)),
@@ -226,10 +229,12 @@ class TransaksiController extends Controller
                     'mata_anggaran' => $value->mata_anggaran,
                     'akun_bank'     => $value->bank,
                     'account'       => $value->account,
-                    'anggaran'      => (int)$value->anggaran,
+                    'anggaran'      => $calibrate['anggaran'] ? $calibrate['anggaran'] : (int)$value->anggaran,
+                    'actual_anggaran' => $calibrate['actual_anggaran'] ? $calibrate['actual_anggaran'] : (int)$value->anggaran,
                     'total'         => (int)$value->total,
                     'created_by'    => \Auth::user()->id,
                     'batch_id'      => (int)$this->current_batch['id'],
+                    'is_anggaran_safe' => $calibrate['is_anggaran_safe'],
                     'created_at'    => \Carbon\Carbon::now(),
                     'updated_at'    => \Carbon\Carbon::now()];
 
@@ -256,6 +261,21 @@ class TransaksiController extends Controller
         );
 
         session()->flash('success', $batch_counter);
+        return redirect('transaksi');
+    }
+
+    public function refreshAnggaran($batch_id)
+    {
+        // anggaran -> savepoint_anggaran | actual_anggaran -> actual_anggaran
+        $transaksis = Transaksi::where('batch_id', $batch_id)->get();
+        foreach ($transaksis as $transaksi) {
+            $this->calibrateSavePointAndActual($transaksi);
+            $calibrate = $this->calibrateAnggaran($transaksi, false);
+            if (count($calibrate) > 0) {
+                Transaksi::where('id', $transaksi->id)->update($calibrate);
+            }
+        }
+
         return redirect('transaksi');
     }
 

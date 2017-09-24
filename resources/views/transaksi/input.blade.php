@@ -7,11 +7,11 @@
                   .hide {
                     display: none;
                   }
-                  .jsgrid-row .jsgrid-cell {
+                  .jsgrid-row .jsgrid-cell, .jsgrid-alt-row .jsgrid-cell {
                       background: inherit;
                   }
                   .contoh {
-                    background: rgb(239, 133, 115);
+                    background: rgb(247, 137, 136);
                   }
                 </style>
                 @endsection
@@ -224,6 +224,11 @@
                                 <br>
                                 @if($editable)
                                 <div class="row">
+                                  <div class="col-xs-2 pull-right">
+                                    <div class="form-group">
+                                      <button class="btn btn-info pull-right" id="keep_anggaran" value="Simpan"><i class="fa fa-money"></i> Perbarui Status Anggaran</button>
+                                    </div>
+                                  </div>
                                   @if (Gate::check('tambah_item_t') || Gate::check('ubah_item_t') || Gate::check('hapus_item_t'))
                                   <div class="col-xs-2 pull-right">
                                     <div class="form-group">

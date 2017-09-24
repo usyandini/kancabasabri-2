@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateLocalBudgetControlTable extends Migration
+class AddSavepointTransaksiTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,8 +12,8 @@ class CreateLocalBudgetControlTable extends Migration
      */
     public function up()
     {
-        Schema::create('budget_control', function(Blueprint $table) {
-            $table->increments('id');
+        Schema::table('transaksi', function(Blueprint $table) {
+            $table->double('actual_anggaran')->nullable();
         });
     }
 
@@ -24,6 +24,8 @@ class CreateLocalBudgetControlTable extends Migration
      */
     public function down()
     {
-        Schema::drop('budget_control');
+        Schema::table('transaksi', function(Blueprint $table) {
+            $table->dropColumn(['actual_anggaran']);
+        });
     }
 }

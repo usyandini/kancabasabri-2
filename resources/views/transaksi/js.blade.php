@@ -5,6 +5,10 @@
                   var editableStat = {{ $editable ? 1 : 0 }};
 
                   $(document).ready(function() {
+                    document.getElementById("keep_anggaran").onclick = function () {
+                        location.href = "{{ url('transaksi/refresh/anggaran').'/'.$active_batch->id }}";
+                    };
+
                     var MyDateField = function(config) {
                         jsGrid.Field.call(this, config);
                     };
@@ -41,11 +45,8 @@
                       paging: true, 
                       autoload: true,
                       rowClass: function(item, itemIndex) {
-                        return item.is_anggaran_safe != 1 ? "contoh" : ""
+                        return item.is_anggaran_safe != true ? "contoh" : ""
                       }, 
-                      // rowRenderer: function(item) {
-                      //   return $("<tr>").addClass("contoh").append($("<td>").append(item.Name));
-                      // },
                       @if(Gate::check('ubah_item_t') || Gate::check('hapus_item_t'))
                           editing: editableStat == 1 ? true : false, 
                       @endif
@@ -63,6 +64,7 @@
                         insertItem: function (item) {
                           item["isNew"] = true;
                           item["tempId"] = ++tempIdCounter;
+                          item["is_anggaran_safe"] = true;
                           inputs.push(item);
                         },
                         updateItem: function(item) {
@@ -159,11 +161,10 @@
                                 return result; },
                             editTemplate: function(value) {
                                 var result = jsGrid.fields.select.prototype.editTemplate.call(this);
-                                $(result).val(value);
-                                populateAccount('item', value);
 
                                 result.on("change", function() {
-                                    populateAccount('item', $(this).val());
+                                    mainaccount = $(this).val()
+                                    getCombination()
                                 });
                                 return result; } },
                           { 
@@ -208,6 +209,31 @@
                               param: [1]
                              } },
                           { 
+                            name: "qty_item", 
+                            width: 250, 
+                            align: "left",
+                            type: "number", 
+                            title: "Jumlah Diajukan (Kuantitas)",
+                            validate: {
+                              validator: "min",
+                              message: "Kolom jumlah item tidak boleh 0.",
+                              param: [0]
+                            }  },
+                          { 
+                            name: "total", 
+                            align: "left",
+                            width: 200, 
+                            type: "number", 
+                            title: "Jumlah Diajukan (IDR)",
+                            itemTemplate: function(value) {
+                              return "<span class='tag tag-danger'>IDR " + parseInt(value).toLocaleString() + ",00</span>";
+                            },
+                            valdiate: {
+                              validator: "min",
+                              message: "Kolom total tidak boleh kosong.",
+                              param: [1]
+                             } },
+                          { 
                             name: "sub_pos", 
                             width: 250, 
                             align: "left",
@@ -219,20 +245,11 @@
                             title: "Subpos", 
                             insertTemplate: function() {
                                 subpos = jsGrid.fields.select.prototype.insertTemplate.call(this);
-                                subpos.on("change", function() {
-                                    populateAccount('subpos', $(this).val());
-                                });
                                 return subpos; },
                             editTemplate: function(value) {
                                 var result = jsGrid.fields.select.prototype.editTemplate.call(this);
-                                $(result).val(value);
-                                populateAccount('subpos', value);
-
-                                result.on("change", function() {
-                                    populateAccount('subpos', $(this).val());
-                                });
-                                return result; }
-                            }, 
+                                return result; 
+                              }}, 
                             { 
                             name: "mata_anggaran", 
                             width: 250, 
@@ -245,18 +262,9 @@
                             title: "Mata Anggaran", 
                             insertTemplate: function() {
                                 m_anggaran = jsGrid.fields.select.prototype.insertTemplate.call(this);
-                                m_anggaran.on("change", function() {
-                                    populateAccount('m_anggaran', $(this).val());
-                                });
                                 return m_anggaran; },
                             editTemplate: function(value) {
                                 var result = jsGrid.fields.select.prototype.editTemplate.call(this);
-                                $(result).val(value);
-                                populateAccount('m_anggaran', value);
-
-                                result.on("change", function() {
-                                    populateAccount('m_anggaran', $(this).val());
-                                });
                                 return result; }
                             }, 
                           { 
@@ -271,31 +279,6 @@
                             valdiate: {
                               validator: "min",
                               message: "Kolom bank tidak boleh tidak dipilih.",
-                              param: [1]
-                             } },
-                          { 
-                            name: "qty_item", 
-                            width: 200, 
-                            align: "left",
-                            type: "number", 
-                            title: "Jumlah (Kuantitas)",
-                            validate: {
-                              validator: "min",
-                              message: "Kolom jumlah item tidak boleh 0.",
-                              param: [0]
-                            }  },
-                          { 
-                            name: "total", 
-                            align: "left",
-                            width: 200, 
-                            type: "number", 
-                            title: "Jumlah (IDR)",
-                            itemTemplate: function(value) {
-                              return "<span class='tag tag-danger'>IDR " + parseInt(value).toLocaleString() + ",00</span>";
-                            },
-                            valdiate: {
-                              validator: "min",
-                              message: "Kolom total tidak boleh kosong.",
                               param: [1]
                              } },
                           { 

@@ -67,6 +67,8 @@ Route::group(['middleware' => 'auth'], function() {
 		
 		Route::post('/berkas/remove', 'TransaksiController@removeBerkas');
 		Route::get('/berkas/download/{id}', 'TransaksiController@downloadBerkas');
+
+		Route::get('/refresh/anggaran/{batch_id}', 'TransaksiController@refreshAnggaran');
 	});
 
 
