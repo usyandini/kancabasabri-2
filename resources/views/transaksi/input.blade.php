@@ -209,7 +209,8 @@
                                       <table>
                                         @forelse($batch_history as $hist)
                                         <tr>
-                                          <td><b class="text-danger">{{ $hist->status() }}</b>
+                                          <td><b class="text-danger">{{ $hist->status() }}</b> 
+                                            {!! $hist['rejectReason'] != null ? "<br>Alasan : ".$hist['rejectReason']['reason']->content : '' !!}
                                           </td>
                                           <td>oleh <b class="text-warning">{{ $hist['submitter']['name'] }}</b></td>
                                           <td>| <code>{{ $hist['updated_at'] }}</code></td>

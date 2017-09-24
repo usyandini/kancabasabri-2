@@ -5,9 +5,12 @@
                   var editableStat = {{ $editable ? 1 : 0 }};
 
                   $(document).ready(function() {
-                    document.getElementById("keep_anggaran").onclick = function () {
+                    var keep_anggaran_btn = document.getElementById("keep_anggaran");
+                    if (keep_anggaran_btn) {
+                      keep_anggaran_btn.onclick = function () {
                         location.href = "{{ url('transaksi/refresh/anggaran').'/'.$active_batch->id }}";
-                    };
+                      };
+                    }
 
                     var MyDateField = function(config) {
                         jsGrid.Field.call(this, config);

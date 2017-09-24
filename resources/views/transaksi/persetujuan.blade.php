@@ -11,6 +11,12 @@
                   .hide {
                     display: none;
                   }
+                  .jsgrid-row .jsgrid-cell, .jsgrid-alt-row .jsgrid-cell {
+                      background: inherit;
+                  }
+                  .contoh {
+                    background: rgb(247, 137, 136);
+                  }
                 </style>
                 @endsection
 
@@ -102,7 +108,9 @@
                                                     <table>
                                                       @forelse($batch_history as $hist)
                                                         <tr>
-                                                          <td><b class="text-danger">{{ $hist->status() }}</b></td>
+                                                          <td><b class="text-danger">{{ $hist->status() }}</b> 
+                                                            {!! $hist['rejectReason'] != null ? "<br>Alasan : ".$hist['rejectReason']['reason']->content : '' !!}
+                                                          </td>
                                                           <td>oleh <b class="text-warning">{{ $hist['submitter']['name'] }}</b></td>
                                                           <td>| <code>{{ $hist['updated_at'] }}</code></td>
                                                         </tr>
