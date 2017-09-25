@@ -373,6 +373,25 @@
                         </div>
                       </div>
                     </div>
+                    <div class="modal fade text-xs-left" id="modal_menu_pelaporan" tabindex="-1" role="dialog" aria-labelledby="myModalLabel20">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                            <h4 class="modal-title col-md-12 col-sm-12" id="title_modal_pernyataan" >Pengaturan Perizinan <code>Pelaporan</code></h4>
+                          </div>
+                          <div class="modal-body" id="body-menu">
+                             @include('user.input-menu-pelaporan')
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">kembali</button>
+                            <!-- <button type="button" id="button_peryataan" onclick="sumbit_post()" class="btn btn-outline-primary">Ya, kirim</button> -->
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                     <div class="modal fade text-xs-left" id="modal_menu_user" tabindex="-1" role="dialog" aria-labelledby="myModalLabel20">
                       <div class="modal-dialog">
                         <div class="modal-content">
@@ -384,6 +403,25 @@
                           </div>
                           <div class="modal-body" id="body-menu">
                              @include('user.input-menu-user')
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">kembali</button>
+                            <!-- <button type="button" id="button_peryataan" onclick="sumbit_post()" class="btn btn-outline-primary">Ya, kirim</button> -->
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="modal fade text-xs-left" id="modal_menu_item" tabindex="-1" role="dialog" aria-labelledby="myModalLabel20">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                            <h4 class="modal-title col-md-12 col-sm-12" id="title_modal_pernyataan" >Pengaturan Perizinan <code>Manajemen Item</code></h4>
+                          </div>
+                          <div class="modal-body" id="body-menu">
+                             @include('user.input-menu-item')
                           </div>
                           <div class="modal-footer">
                             <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">kembali</button>

@@ -79,6 +79,19 @@ class AuthServiceProvider extends ServiceProvider
         for($i=0;$i<count($manajemen_user);$i++){
              $permissions[] = $manajemen_user[$i];
         }
+
+        $pelaporan = ["pelaporan_anggaran","pelaporan_a_RUPS","form_master","master_pelaporan_anggaran",
+                        "master_pelaporan_a_RUPS","master_usulan_p_p"];
+
+        for($i=0;$i<count($pelaporan);$i++){
+             $permissions[] = $pelaporan[$i];
+        }
+
+        $manajemen_item = ["manajemen_k_i","manajemen_a_m"];
+
+        for($i=0;$i<count($manajemen_item);$i++){
+             $permissions[] = $manajemen_item[$i];
+        }
         // $permissions = [
         //     'info_d', 'tarikTunai_d', 'penyesuaian_d', 'insertTT_d', 'insertPD_d', 'verifikasiTT_d', 'verifikasiPD_d', 'verifikasiPD2_d',
         //     'info_t', 'tambahBatch_t', 'verifikasi_t', 'berkas_t', 'verifikasi2_t', 'insert_t', 'update_t', 'hapus_t', 'cari_t', 'submit_t',

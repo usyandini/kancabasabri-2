@@ -149,18 +149,27 @@
                         </ul>
                     </li>
                     @endif
-                    @if (Gate::check('info_a') || Gate::check('riwayat_a'))
+                    @if (Gate::check('pelaporan_anggaran') || Gate::check('pelaporan_a_RUPS') || Gate::check('form_master'))
                     <li class="nav-item has-sub {{ checkOpenedMenu('pelaporan') }}"><a href=""><i class="ft-edit"></i><span data-i18n="" class="menu-title">Pelaporan</span></a>
                         <ul class="menu-content">
-                            @can('info_a')
+                            @can('pelaporan_anggaran')
                             <li class="is-shown {{ checkActiveMenu('laporan_anggaran') }}"><a href="{{ url('/pelaporan/lihat/laporan_anggaran', $parameters = [], $secure = null) }}" class="menu-item">Pelaporan Anggaran Kegiatan</a></li>
+                            @endcan
+                            @can('pelaporan_a_RUPS')
                             <li class="is-shown {{ checkActiveMenu('arahan_rups') }}"><a href="{{ url('/pelaporan/lihat/arahan_rups', $parameters = [], $secure = null) }}" class="menu-item">Arahan RUPS</a></li>
-                                  
+                            @endcan
+                            @can('form_master')
                             <li class="nav-item has-sub {{ checkOpenedMenu('form_master_laporan_anggaran') }}"><a href=""><span data-i18n="" class="menu-title">Form Master</span></a>
                                 <ul class="menu-content">
+                                    @can('master_pelaporan_anggaran')
                                     <li class="is-shown {{ checkActiveMenu('form_master_laporan_anggaran') }}"><a href="{{ url('/pelaporan/form_master/laporan_anggaran', $parameters = [], $secure = null) }}" class="menu-item">Pelaporan Anggaran Kegiatan</a></li>
+                                    @endcan
+                                    @can('master_pelaporan_a_RUPS')
                                     <li class="is-shown {{ checkActiveMenu('form_master_arahan_rups') }}"><a href="{{ url('/pelaporan/form_master/arahan_rups', $parameters = [], $secure = null) }}" class="menu-item">Arahan RUPS</a></li>
+                                    @endcan
+                                    @can('master_usulan_p_p')
                                     <li class="is-shown {{ checkActiveMenu('form_master_usulan') }}"><a href="{{ url('/pelaporan/form_master/usulan_program', $parameters = [], $secure = null) }}" class="menu-item">Usulan Program Prioritas</a></li>
+                                    @endcan
                                 </ul>
                             </li>
                             @endcan

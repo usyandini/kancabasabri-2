@@ -19,6 +19,8 @@
       });
     });
 
+    // window.checkDivCab();
+
     function calibrateCentang() {
       if ($('#notifikasi input').filter(':checked').length > $('#notifikasi input').length/2) {
         $('label#notifikasi').html('Hilangkan centang')
@@ -61,6 +63,12 @@
       } else {
         $('label#item').html('Centang semua')
       }
+
+      if ($('#pelaporan input').filter(':checked').length > $('#pelaporan input').length/2) {
+        $('label#pelaporan').html('Hilangkan centang')
+      } else {
+        $('label#pelaporan').html('Centang semua')
+      }
     }
 
     @if (isset($profile_edit))
@@ -73,6 +81,7 @@
     $('label#anggaran').html('')
     $('label#notifikasi').html('')
     $('label#unit_kerja').html('')
+    $('label#pelaporan').html('')
     $('label#user').html('')
     $('label#item').html('')
     $('input[type="radio"]').iCheck('disable')
@@ -104,6 +113,9 @@
          checkChild(this) 
       });
     $('input[name="perizinan[jenis_u]"]').on('ifClicked', function (event) {
+         checkChild(this) 
+      });
+    $('input[name="perizinan[form_master]"]').on('ifClicked', function (event) {
          checkChild(this) 
       });
     @endif
