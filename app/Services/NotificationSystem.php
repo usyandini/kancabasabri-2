@@ -163,7 +163,7 @@ class NotificationSystem
 					   //      }
         // 	});
         
-        $notifications = Notification::whereIn('type',$array_type);
+        $notifications = Notification::where('is_read',0)->whereIn('type',$array_type);
 		if ($receiver_id) {
 			return Notification::where([['receiver_id', $receiver_id]])->orderBy('id', 'desc')->get();
 		}
