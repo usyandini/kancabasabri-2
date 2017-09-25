@@ -42,11 +42,17 @@ class UserController extends Controller
     public function store(Request $request)
     {
     	$input = $request->except('_method', '_token');
+
+        if ($input['as_ldap'] == '1') { unset($input['password']); unset($input['password_confirmation']); }
     	$validator = $this->validateInputs($input);
 
     	if ($validator->passes()) {
-            $input['password'] = bcrypt($input['password']);
-
+            if (isset($input['password'])) {
+                $input['password'] = bcrypt($input['password']);
+                unset($input['password_confirmation']);
+            }else{
+                $input['password'] = "";
+            }
             // if ($input['perizinan']['data-cabang'] == 'off') { unset($input['perizinan']['data-cabang']); }
             $input['created_by'] = \Auth::user()->id;
             User::create($input);
@@ -55,7 +61,7 @@ class UserController extends Controller
             return redirect('user');
         } 
 
-        echo json_encode($input);
+        // echo json_encode($input);
         return redirect()->back()->withInput()->withErrors($validator);
     }
 
@@ -89,12 +95,10 @@ class UserController extends Controller
 
         if ($validator->passes()) {
             $input['updated_by'] = \Auth::user()->id;
-            
-            if (isset($input['password'])) {
-                $input['password'] = bcrypt($input['password']);
-                unset($input['password_confirmation']);
-            }
-
+            // if (isset($input['password'])) {
+            //     $input['password'] = bcrypt($input['password']);
+            //     unset($input['password_confirmation']);
+            // }
             if (isset($input['perizinan'])) {
                 // if ($input['perizinan']['data-cabang'] == 'off') { unset($input['perizinan']['data-cabang']); }
 

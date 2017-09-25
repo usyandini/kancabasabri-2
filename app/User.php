@@ -38,7 +38,8 @@ class User extends Authenticatable
         'divisi', 
         'cabang',
         'perizinan',
-        'jenis_user'
+        'jenis_user',
+        'as_ldap'
     ];
 
     protected $hidden = [

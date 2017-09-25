@@ -92,21 +92,40 @@
                                                 </select>
                                               </div>
                                               @endif
-                                            </div>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                      <div class="card">
-                                        <div class="card-header">
-                                          <h4 class="card-title" id="basic-layout-card-center">Password</h4>
-                                          <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
-                                        </div>
-                                        <div class="card-body collapse in">
-                                          <div class="card-block">
-                                            <div class="row skin skin-square">
-                                              <div class="col-md-12 col-sm-12">
+                                              <div class="form-body">
+                                                <div class="row skin skin-square">
+                                                  <div class="col-md-12 col-sm-12">
+                                                    <div class="form-group">
+                                                      <fieldset>
+                                                        <input type="radio" id='activ_dir_off' name="as_ldap" value="0" disabled {{ $user->as_ldap  != "1" ? 'checked=""' : '' }}>
+                                                        <label>Daftar dengan aplikasi</label>
+                                                        <input type="radio" id='activ_dir_on' name="as_ldap" value="1"  disabled {{ $user->as_ldap == "1" ? 'checked=""' : '' }}>
+                                                        <label>Daftar dengan Active Dirctory</label>
+                                                      </fieldset>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                                <div class="form-group">
+                                                  <label>Username</label>
+                                                  <input type="text" required="" class="form-control" placeholder="Username" name="username" value="{{ old('username') == '' ? $user->username : old('username') }}" readOnly>
+                                                </div>
+                                                <div class="form-group">
+                                                  <label>Nama Lengkap</label>
+                                                  <input type="text" required="" class="form-control" placeholder="Nama" name="name" value="{{ old('name') == '' ? $user->name : old('name') }}" readOnly>
+                                                </div>
+                                                <div class="form-group">
+                                                  <label>Email</label>
+                                                  <input type="email" required="" class="form-control" placeholder="Email" name="email" value="{{ old('email') == '' ? $user->email : old('email') }}">
+                                                </div>
+                                                <div class="form-group">
+                                                  <label>Cabang</label>
+                                                  <select class="select2 form-control" name="cabang">
+                                                    <option selected disabled="">Cabang</option>
+                                                    @foreach($cabang as $cab)
+                                                    <option {{ $user->cabang == $cab->VALUE ? 'selected=""' : '' }} value="{{ $cab->VALUE }}">{{ $cab->DESCRIPTION }}</option>
+                                                    @endforeach
+                                                  </select>
+                                                </div>
                                                 <div class="form-group">
                                                   <label>Password</label>
                                                   <input type="password" class="form-control" id="input-11" name="password">
@@ -120,18 +139,25 @@
                                           </div>
                                         </div>
                                       </div>
-                                      <div class="card">
-                                        <div class="card-header">
-                                          <h4 class="card-title" id="basic-layout-card-center">Perizinan <code>User</code></h4>
-                                        </div>
-                                        <div class="card-body">
-                                          <div class="card-block">
-                                            <div class="form-group skin skin-square">
-                                              <div class="col-md-8">
-                                                <label >Penggaturan Perizinan <code>Unit Kerja</code></label>
-                                              </div>
-                                              <div class="col-md-4">
-                                                <div class="btn btn-sm btn-primary" id="toogle_unit"><i class="fa fa-edit"></i></div>
+                                      <div class="col-md-6">
+                                        <div class="card" style='display:{{ $user->as_ldap  != "1" ? "block":"none"}}'>
+                                          <div class="card-header">
+                                            <h4 class="card-title" id="basic-layout-card-center">Password</h4>
+                                            <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
+                                          </div>
+                                          <div class="card-body collapse in">
+                                            <div class="card-block">
+                                              <div class="row skin skin-square">
+                                                <div class="col-md-12 col-sm-12">
+                                                  <div class="form-group">
+                                                    <label>Password</label>
+                                                    <input type="password" class="form-control" id="input-11" name="password">
+                                                  </div>
+                                                  <div class="form-group">
+                                                    <label>Konfirmasi Password</label>
+                                                    <input type="password" class="form-control" name="password_confirmation">
+                                                  </div>
+                                                </div>
                                               </div>
                                             </div>
                                             <br />

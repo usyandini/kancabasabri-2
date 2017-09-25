@@ -8,6 +8,7 @@ use App\Http\Requests;
 
 use App\Models\TarikTunai;
 use App\Models\PenyesuaianDropping;
+use App\Models\Notification;
 
 use App\Services\NotificationSystem;
 
@@ -24,12 +25,13 @@ class NotificationController extends Controller
 {
     public function get()
     {
-    	$notifications = NotificationSystem::getAll();
+
+        $notifications = NotificationSystem::getAll();
     	$result = [
     		'total'	=> $notifications->count(),
     		'totalUnread' => NotificationSystem::getUnreads()->count(),
     		'notifications' => []];
-    	foreach ($notifications as $value) {
+    	foreach (NotificationSystem::getUnreads() as $value) {
     		$result['notifications'][] = [
     			'id' 		=> $value->id,
     			'wording' 	=> $value->wording(),
@@ -74,5 +76,25 @@ class NotificationController extends Controller
 			default:
 				return redirect('transaksi/');
     	}
+    }
+
+    public function read_all(){
+
+        $notification_all = [];
+        if(NotificationSystem::getAll()!=null)
+            foreach (NotificationSystem::getAll() as $value) {
+                $notification_all[] = [
+                    'id'        => $value->id,
+                    'wording'   => $value->wording(),
+                    'is_read'   => $value->is_read,
+                    'time_dif'  => \Carbon\Carbon::createFromTimeStamp(strtotime($value->created_at))->diffForHumans(),
+                    'time'      => date('d F Y, H:m', strtotime($value->created_at))
+                ];
+            }
+        // $notification_all = null;
+        // if(count($notification_all)){
+        //     $notification_all = null;
+        // }
+        return view('notification.index', compact('notification_all'));
     }
 }

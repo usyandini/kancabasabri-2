@@ -396,15 +396,11 @@ class PelaporanController extends Controller
         }
 
         $result = [];
-        if($kategori == "form_master"){
-            // $result = $this->anggaranModel->where('nd_surat', $nd_surat)->orderBy('id', 'DESC')->take(5)->get();
-            $result = $this->FormMasterPelaporanModel->where('tw_dari', $tw)->where('active','1')->get();
+        if($kategori == "form_master"){$result = $this->FormMasterPelaporanModel->where('tw_dari', $tw)->where('active','1')->get();
 
         }else if($kategori == "laporan_anggaran"){
             $FormMaster = $this->FormMasterPelaporanModel->where('tw_dari', $tw);
-            // echo "luar";
             foreach ($FormMaster->get() as $form_master) {
-                // echo $form_master->id;
                 $query ;
                 if($this->userCabang == "00"){
                     $query = Divisi::select('DESCRIPTION')->where('VALUE', $this->userDivisi)->get();
@@ -412,7 +408,6 @@ class PelaporanController extends Controller
                     $query = KantorCabang::select('DESCRIPTION')->where('VALUE', $this->userCabang)->get();
                 }
                 $divisi =  $query[0]["DESCRIPTION"];
-                // echo $divisi ;
 
                 $ItemPelaporanAnggaran = $this->MasterItemPelaporanAnggaranModel
                     ->where('id_form_master', $form_master->id)->where('unit_kerja', $divisi)
@@ -458,7 +453,6 @@ class PelaporanController extends Controller
         $result = [];
 
         if($kategori == "form_master"){
-            // $result = $this->anggaranModel->where('nd_surat', $nd_surat)->orderBy('id', 'DESC')->take(5)->get();
             $result = $this->FormMasterPelaporanModel->where('id', $id)->where('active','1')->get();
 
         }else if($kategori == "laporan_anggaran"){

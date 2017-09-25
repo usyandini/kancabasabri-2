@@ -62,6 +62,20 @@
                                               <label>Unit Kerja</label>
                                               <select class="select2 form-control " name="cari_unit_kerja" id="cari_unit_kerja" onchange="set_nd_surat()">
                                                 <option value="0">none</option>
+                                                @foreach($unit_kerja as $unit)
+                                                <?php
+                                                  $cabang = explode(" Cabang ", $unit->DESCRIPTION);
+                                                  // echo count($cabang);
+                                                  $id = "00".$unit->VALUE;
+                                                  if(count($cabang) > 1){
+                                                    // echo $cabang[1];
+                                                    $id = $unit->VALUE."00";
+                                                  }
+                                                ?>
+                                                @if(Gate::check("unit_".$id) )
+                                                  <option value="{{ $unit->DESCRIPTION }}">{{  $unit->DESCRIPTION}}</option>
+                                                @endif
+                                                @endforeach
                                               </select>
                                             </div>
                                         </div>
@@ -237,11 +251,6 @@
                           for(i =0 ;i<data.length;i++){
                             var value = data[i].DESCRIPTION;
                             var desc = data[i].DESCRIPTION;
-                            // if(desc.split("Cabang").length > 0 ){
-                            //   value = data[i].VALUE+"00";
-                            // }else{
-                            //   value = "00"+data[i].VALUE;
-                            // }
                             cari_unit_kerja.options[cari_unit_kerja.options.length] = new Option(desc, value);
                           }
                              
@@ -252,27 +261,16 @@
                   }
 
                   function set_nd_surat(){
-                    // for (i = 0; i < nd_surat_option.options.length; i++) {
-                    //   nd_surat_option.options[i] = null;
-                    // }
-
                     cari_unit_kerja = document.getElementById('cari_unit_kerja').value;
                     $.ajax({
                         'async': false, 'type': "GET", 'dataType': 'JSON', 'url': "{{ url('anggaran/get/attributes/nd_surat').'/' }}"+encodeURI(cari_unit_kerja),
                         'success': function (data) {
-
-                          // nd_surat_option = document.getElementById('cari_nd_surat');
 
                           nd_surat_option = document.getElementById('cari_nd_surat');
                          
                           for(i =0 ;i<data.length;i++){
                             var value = data[i].nd_surat;
                             var desc = data[i].nd_surat;
-                            // if(desc.split("Cabang").length > 0 ){
-                            //   value = data[i].VALUE+"00";
-                            // }else{
-                            //   value = "00"+data[i].VALUE;
-                            // }
                             nd_surat_option.options[nd_surat_option.options.length] = new Option(desc, value);
                           }
                              
@@ -280,17 +278,12 @@
                     });
                   }
                   function cariAnggaran(){
-                    // if(document.getElementById("cari_keyword").value==""){
-                    //   toastr.error("Silahkan Isi Kata Kunci Pencarian. Terima kasih.", "Kata Kunci Pencarian Kosong.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
-                    // }else 
                     if(document.getElementById("cari_unit_kerja").value=="0"){
                       toastr.error("Silahkan Pilih Salah Satu Unit Kerja. Terima kasih.", "Unit Kerja Belum Dipilih.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
                     }else{
                       $('form[id="filterAnggaran"]').submit();
                     }
-                    // alert(JSON.stringify(inputs));
                   }
-                  window.setUnitKerja({{$userCabang.",".$userDivisi}});
                   
                 </script>
                 @endsection

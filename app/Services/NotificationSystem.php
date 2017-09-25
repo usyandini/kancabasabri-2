@@ -56,12 +56,56 @@ class NotificationSystem
 	}
 
 	public static function getAll($receiver_id = null)
-	{
+	{	
+		$array_type = array();
+        $user = \Auth::user();
+        if(isset($user->perizinan['notif_setuju_tt_d'])){
+            array_push($array_type,7);
+        }
+        if(isset($user->perizinan['notif_ubah_tt_d'])){
+            array_push($array_type,8,9);
+        }
+        if(isset($user->perizinan['notif_setuju_p_d'])){
+            array_push($array_type,10);
+        }
+        if(isset($user->perizinan['notif_setuju_p2_d'])){
+            array_push($array_type,12);
+        }
+        if(isset($user->perizinan['notif_ubah_p_d'])){
+            array_push($array_type,11,13,14);
+            if (!in_array(12, $array_type)) {
+                array_push($array_type,12);
+            }
+        }
+        if(isset($user->perizinan['notif_setuju_t'])){
+            array_push($array_type,1);
+        }
+        if(isset($user->perizinan['notif_setuju2_t'])){
+            array_push($array_type,4);
+        }
+        if(isset($user->perizinan['notif_ubah_t'])){
+            array_push($array_type,3,5,6);
+            if (!in_array(4, $array_type)) {
+                array_push($array_type,4);
+            }
+        }
+
+        if(count($array_type) == 0){
+            return null;
+        }
+
+        // $notifications = Notification::where('type', $array_type[0]);
+        // if(count($array_type) > 1 ){
+        //     for($i=1;$i<count($array_type);$i++){
+        //         $notifications=$notifications->orWhere('type', $array_type[$i]);
+        //     }
+        // }
+
 		if ($receiver_id) {
 			return Notification::where([['receiver_id', $receiver_id]])->orderBy('id', 'desc')->get();
 		}
 
-		return Notification::orderBy('id', 'desc')->get();
+		return Notification::whereIn('type',$array_type)->orderBy('id', 'desc')->get();
 	}
 
 	public static function markAsRead($id)
@@ -71,10 +115,59 @@ class NotificationSystem
 
 	public static function getUnreads($receiver_id = null)
 	{
+		$array_type = array();
+        $user = \Auth::user();
+        if(isset($user->perizinan['notif_setuju_tt_d'])){
+            array_push($array_type,7);
+        }
+        if(isset($user->perizinan['notif_ubah_tt_d'])){
+            array_push($array_type,8,9);
+        }
+        if(isset($user->perizinan['notif_setuju_p_d'])){
+            array_push($array_type,10);
+        }
+        if(isset($user->perizinan['notif_setuju_p2_d'])){
+            array_push($array_type,12);
+        }
+        if(isset($user->perizinan['notif_ubah_p_d'])){
+            array_push($array_type,11,13,14);
+            if (!in_array(12, $array_type)) {
+                array_push($array_type,12);
+            }
+        }
+        if(isset($user->perizinan['notif_setuju_t'])){
+            array_push($array_type,1);
+        }
+        if(isset($user->perizinan['notif_setuju2_t'])){
+            array_push($array_type,4);
+        }
+        if(isset($user->perizinan['notif_ubah_t'])){
+            array_push($array_type,3,5,6);
+            if (!in_array(4, $array_type)) {
+                array_push($array_type,4);
+            }
+        }
+
+        if(count($array_type) == 0){
+            return null;
+        }
+
+        // $notifications = Notification::where('type', $array_type[0]);
+        // $notifications = 
+        // 	Notification::where(function ($query,) {
+        // 					$query->where('type', $this->$array_type[0]);
+        // 					if(count($this->$array_type) > 1 ){
+					   //          for($i=1;$i<count($this->$array_type);$i++){
+					   //              $query=$query->orWhere('type', $this->$array_type[$i]);
+					   //          }
+					   //      }
+        // 	});
+        
+        $notifications = Notification::where('is_read', 0)->whereIn('type',$array_type);
 		if ($receiver_id) {
 			return Notification::where([['receiver_id', $receiver_id], ['is_read', 0]])->orderBy('id', 'desc')->get();
 		}
 
-		return Notification::where('is_read', 0)->orderBy('id', 'desc')->get();
+		return $notifications->orderBy('id', 'desc')->get();
 	}
 }
