@@ -50,9 +50,9 @@
                                               </div>
                                               @endif
                                               <div class="form-body">
-                                                <div class="row skin skin-square">
+                                                <div class="row">
                                                   <div class="col-md-12 col-sm-12">
-                                                    <div class="form-group">
+                                                    <div class="form-group  skin skin-square">
                                                       <fieldset>
                                                         <input type="radio" id='activ_dir_off' name="as_ldap" value="0" disabled {{ $user->as_ldap  != "1" ? 'checked=""' : '' }}>
                                                         <label>Daftar dengan aplikasi</label>
