@@ -21,55 +21,6 @@
 
     // window.checkDivCab();
 
-    function calibrateCentang() {
-      if ($('#notifikasi input').filter(':checked').length > $('#notifikasi input').length/2) {
-        $('label#notifikasi').html('Hilangkan centang')
-      } else {
-        $('label#notifikasi').html('Centang semua')
-      }
-
-      if ($('#unit_kerja input').filter(':checked').length > $('#unit_kerja input').length/2) {
-        $('label#unit_kerja').html('Hilangkan centang')
-      } else {
-        $('label#unit_kerja').html('Centang semua')
-      }
-
-      if ($('#dropping input').filter(':checked').length > $('#dropping input').length/2) {
-        $('label#dropping').html('Hilangkan centang')
-      } else {
-        $('label#dropping').html('Centang semua')
-      }
-
-      if ($('#transaksi input').filter(':checked').length > $('#transaksi input').length/2) {
-        $('label#transaksi').html('Hilangkan centang')
-      } else {
-        $('label#transaksi').html('Centang semua')
-      }
-
-      if ($('#anggaran input').filter(':checked').length > $('#anggaran input').length/2) {
-        $('label#anggaran').html('Hilangkan centang')
-      } else {
-        $('label#anggaran').html('Centang semua')
-      }
-
-      if ($('#user input').filter(':checked').length > $('#user input').length/2) {
-        $('label#user').html('Hilangkan centang')
-      } else {
-        $('label#user').html('Centang semua')
-      }
-
-      if ($('#item input').filter(':checked').length > $('#item input').length/2) {
-        $('label#item').html('Hilangkan centang')
-      } else {
-        $('label#item').html('Centang semua')
-      }
-
-      if ($('#pelaporan input').filter(':checked').length > $('#pelaporan input').length/2) {
-        $('label#pelaporan').html('Hilangkan centang')
-      } else {
-        $('label#pelaporan').html('Centang semua')
-      }
-    }
 
     @if (isset($profile_edit))
     $('input[type="checkbox"]').iCheck('disable')
@@ -120,6 +71,57 @@
       });
     @endif
   })
+
+
+    function calibrateCentang() {
+      if ($('#notifikasi input').filter(':checked').length > $('#notifikasi input').length/2) {
+        $('label#notifikasi').html('Hilangkan centang')
+      } else {
+        $('label#notifikasi').html('Centang semua')
+      }
+
+      if ($('#unit_kerja input').filter(':checked').length > $('#unit_kerja input').length/2) {
+        $('label#unit_kerja').html('Hilangkan centang')
+      } else {
+        $('label#unit_kerja').html('Centang semua')
+      }
+
+      if ($('#dropping input').filter(':checked').length > $('#dropping input').length/2) {
+        $('label#dropping').html('Hilangkan centang')
+      } else {
+        $('label#dropping').html('Centang semua')
+      }
+
+      if ($('#transaksi input').filter(':checked').length > $('#transaksi input').length/2) {
+        $('label#transaksi').html('Hilangkan centang')
+      } else {
+        $('label#transaksi').html('Centang semua')
+      }
+
+      if ($('#anggaran input').filter(':checked').length > $('#anggaran input').length/2) {
+        $('label#anggaran').html('Hilangkan centang')
+      } else {
+        $('label#anggaran').html('Centang semua')
+      }
+
+      if ($('#user input').filter(':checked').length > $('#user input').length/2) {
+        $('label#user').html('Hilangkan centang')
+      } else {
+        $('label#user').html('Centang semua')
+      }
+
+      if ($('#item input').filter(':checked').length > $('#item input').length/2) {
+        $('label#item').html('Hilangkan centang')
+      } else {
+        $('label#item').html('Centang semua')
+      }
+
+      if ($('#pelaporan input').filter(':checked').length > $('#pelaporan input').length/2) {
+        $('label#pelaporan').html('Hilangkan centang')
+      } else {
+        $('label#pelaporan').html('Centang semua')
+      }
+    }
 
   function checkChild(e) {
     if ($(e).is(':checked')) {
