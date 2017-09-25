@@ -122,6 +122,7 @@ class DroppingController extends Controller
 
     public function getFiltered($transyear, $periode, $kcabang)
     {
+        $cabang = $this->kantorCabangs;
         $droppings = $this->jDroppingModel->where('DEBIT', '>', 0)->orderby('TRANSDATE', 'desc');
         
         if ($transyear != '0') {
@@ -159,7 +160,6 @@ class DroppingController extends Controller
                 'sisa'          => 'IDR '. number_format($dropping->tarikTunai['sisa_dropping'])
             ];
         }
-
         return response()->json($result);
     }
 
