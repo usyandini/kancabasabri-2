@@ -78,6 +78,11 @@
     $('input[type="radio"]').iCheck('disable')
     @else
     calibrateCentang()
+     $('input[type="radio"]').iCheck({
+        checkboxClass: 'icheckbox_flat-red',
+        radioClass: 'iradio_square-red',
+        increaseArea: '20%' // optional
+      });
     @endif
   })
   function checkAll(e) {
