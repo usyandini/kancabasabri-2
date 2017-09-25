@@ -29,6 +29,7 @@ class ItemMaster extends Model
     	'SEGMEN_5',
     	'SEGMEN_6',
     	'created_by',
+        'is_displayed'
     ];
 
     public function axAnggaran($transaksi_date)
