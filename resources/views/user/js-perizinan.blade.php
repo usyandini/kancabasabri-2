@@ -83,6 +83,13 @@
         radioClass: 'iradio_square-red',
         increaseArea: '20%' // optional
       });
+
+    $('input[name="as_ldap"]').on('ifClicked', function (event) {
+          // alert("You clicked " + );
+
+          changeLDAP(this.value);
+      });
+
     @endif
   })
   function checkAll(e) {
@@ -107,7 +114,7 @@
       }else if(divisi == null||$('select[name="divisi"]').is(':disabled')){
         unit =cabang+"00";
       }
-      $('#' +id+ ' input').iCheck('uncheck')
+      // $('#' +id+ ' input').iCheck('uncheck')
       value = true;
       // $("input[name='perizinan[unit]["+unit+"]'").iCheck('check')
       $("input[name='perizinan[unit_"+unit+"]'").iCheck('check')
@@ -135,38 +142,26 @@
   }
 
   $('#toogle_unit').click(function() {
-      // if(CheckUnitKerja('unit_kerja')){
+      if(CheckUnitKerja('unit_kerja')){
         $( "#modal_unit" ).modal();
-      // }
+      }
   });
-
   $('.iCheck-helper').click(function() {
       id = $(this).prev().attr('id');
-      if(id == "activ_dir_on"){
-        if(!$(this).prev().is(':disabled')){
-          $(this).prev().iCheck('check');
-          changeLDAP('on');
-        }
-      }else if(id == "activ_dir_off"){
-        if(!$(this).prev().is(':disabled')){
-          $(this).prev().iCheck('check');
-          changeLDAP('off');
-        }
+
+      check= $('#' +id+ ' input');
+      if($(this).prev().is(':checked')){
+        check.iCheck('check')
       }else{
-        check= $('#' +id+ ' input');
-        if($(this).prev().is(':checked')){
-          check.iCheck('check')
-        }else{
-          check.iCheck('uncheck')
-        }
+        check.iCheck('uncheck')
       }
-      
       
   });
   var data_username = {};
   function changeLDAP(type){
     $("#input_user").empty();
-    if(type == "on"){
+    // alert("test");
+    if(type == 1){
       $("#input_user").append('<select class="form-control" id="username" name="username" placeholder="Username" style="width: 100%;"></select>')
       $("select[name='username']").select2();
       getUsername();
@@ -189,7 +184,7 @@
         });
       });
       $('#form_password').css("display", "none");
-    }else if(type == "off"){
+    }else if(type == 0){
       $("#input_user").append('<input type="text" required="" id="username" class="form-control select2" placeholder="Username" name="username" value="{{ old("username") }}">')
       
       $('#form_password').css("display", "block");

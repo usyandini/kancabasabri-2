@@ -95,7 +95,7 @@
                                                 @if (isset($jenis_user))
                                                 <div class="form-group">
                                                   <label>Jenis User (preset)</label><br>
-                                                  <select class="select2 form-control" name="divisi" style="width: 100%;">
+                                                  <select class="select2 form-control" name="jenis_user" style="width: 100%;">
                                                     <option selected disabled="" value="">Jenis User</option>
                                                     @foreach($jenis_user as $jenis)
                                                     <option value="{{ $jenis->id }}" {{ $jenis->id == $user->jenis_user ? 'selected=""' : '' }}>{{ $jenis->nama }}</option>
