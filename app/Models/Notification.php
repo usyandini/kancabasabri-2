@@ -87,6 +87,9 @@ class Notification extends Model
                 return 'Penyesuaian dropping oleh <b>'.$this->idPenyesuaian['cabang'].'</b> pada tanggal '.date('d F Y', strtotime($this->idPenyesuaian['created_at'])).' ditolak oleh Divisi Akuntansi dengan alasan '.$this->rejectPenyesuaian['reason']['content'].'. Silahkan melakukan Penyesuaian Dropping kembali.';
             case 14:
                 return 'Penyesuaian dropping oleh <b>'.$this->idPenyesuaian['cabang'].'</b> pada tanggal '.date('d F Y', strtotime($this->idPenyesuaian['created_at'])).' telah diverifikasi oleh Divisi Akuntansi.';
+            case 15:
+                return 'Anggaran dropping oleh <b>'.$this->idPenyesuaian['cabang'].'</b> pada tanggal '.date('d F Y', strtotime($this->idPenyesuaian['created_at'])).' telah diverifikasi oleh Divisi Akuntansi.';
+        
         }
     }
 }

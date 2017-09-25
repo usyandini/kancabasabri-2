@@ -116,39 +116,35 @@
           <div class="form-group skin skin-square" id="anggaran">
            <fieldset >
               <input type="checkbox" name="perizinan[notif_setuju_ia]" {{ isset($user->perizinan['notif_setuju_ia']) ? 'checked=""' : '' }}>
-              <label>Persetujuan Kanit Kerja</label>
+              <label>Permintaan Persetujuan Kanit Kerja</label>
             </fieldset>
             <fieldset >
               <input type="checkbox" name="perizinan[notif_setuju_iia]" {{ isset($user->perizinan['notif_setuju_iia']) ? 'checked=""' : '' }}>
-              <label>Persetujuan Renbang</label>
+              <label>Permintaan Persetujuan Renbang</label>
             </fieldset>
             <fieldset >
               <input type="checkbox" name="perizinan[notif_setuju_iiia]" {{ isset($user->perizinan['notif_setuju_iiia']) ? 'checked=""' : '' }}>
-              <label>Persetujuan Direksi</label>
+              <label>Permintaan Persetujuan Direksi</label>
             </fieldset>
             <fieldset >
               <input type="checkbox" name="perizinan[notif_setuju_iva]" {{ isset($user->perizinan['notif_setuju_iva']) ? 'checked=""' : '' }}>
-              <label>Persetujuan Dekom</label>
+              <label>Permintaan Persetujuan Dekom</label>
             </fieldset>
             <fieldset >
               <input type="checkbox" name="perizinan[notif_setuju_va]" {{ isset($user->perizinan['notif_setuju_va']) ? 'checked=""' : '' }}>
-              <label>Persetujuan Ratek</label>
+              <label>Permintaan Persetujuan Ratek</label>
             </fieldset>
             <fieldset >
               <input type="checkbox" name="perizinan[notif_setuju_via]" {{ isset($user->perizinan['notif_setuju_via']) ? 'checked=""' : '' }}>
-              <label>Persetujuan RUPS</label>
+              <label>Permintaan Persetujuan RUPS</label>
             </fieldset>
             <fieldset >
               <input type="checkbox" name="perizinan[notif_setuju_viia]" {{ isset($user->perizinan['notif_setuju_viia']) ? 'checked=""' : '' }}>
-              <label>Persetujuan FinRUPS</label>
+              <label>Permintaan Persetujuan FinRUPS</label>
             </fieldset>
             <fieldset >
               <input type="checkbox" name="perizinan[notif_setuju_viiia]"{{ isset($user->perizinan['notif_setuju_viiia']) ? 'checked=""' : '' }}>
-              <label>Persetujuan RIsalah RUPS</label>
-            </fieldset>
-            <fieldset >
-              <input type="checkbox" name="perizinan[notif_setuju_ixa]"{{ isset($user->perizinan['notif_setuju_ixa']) ? 'checked=""' : '' }}>
-              <label>Anggaran Disetujui Persetujuan</label>
+              <label>Permintaan Persetujuan Risalah RUPS</label>
             </fieldset>
             <fieldset >
               <input type="checkbox" name="perizinan[notif_ubah_a]" {{ isset($user->perizinan['notif_ubah_a']) ? 'checked=""' : '' }}>

@@ -1,13 +1,13 @@
 <script type="text/javascript">
   $(document).ready(function() {
-    // $('select[name="cabang"]').on('change', function() {
-    //   if ($(this).val() !== '00') {
-    //     $('select[name="divisi"]').prop("disabled", true);
-    //     toastr.info("Divisi tidak perlu dipilih jika Kantor Cabang yang dipilih adalah <b>Kantor pusat</b>.", "Kantor Cabang dipilih", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:10e3});
-    //   } else {
-    //     $('select[name="divisi"]').prop("disabled", false);
-    //   }
-    // });
+    $('select[name="cabang"]').on('change', function() {
+      if ($(this).val() !== '00') {
+        $('select[name="divisi"]').prop("disabled", true);
+        toastr.info("Divisi tidak perlu dipilih jika Kantor Cabang yang dipilih adalah <b>Kantor pusat</b>.", "Kantor Cabang dipilih", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:10e3});
+      } else {
+        $('select[name="divisi"]').prop("disabled", false);
+      }
+    });
 
     $('select[name="jenis_user"]').on('change', function(){
       $.post("{{ url('/jenis_user/handle') }}", {_token: '{{ csrf_token() }}', id: $(this).val()}, function(e) {
@@ -76,10 +76,46 @@
     $('label#user').html('')
     $('label#item').html('')
     $('input[type="radio"]').iCheck('disable')
+    $('input').iCheck({
+        checkboxClass: 'icheckbox_square-red',
+        radioClass: 'iradio_square-red',
+        increaseArea: '20%' // optional
+      });
     @else
     calibrateCentang()
+     $('input').iCheck({
+        checkboxClass: 'icheckbox_square-red',
+        radioClass: 'iradio_square-red',
+        increaseArea: '20%' // optional
+      });
+
+    $('input[name="as_ldap"]').on('ifClicked', function (event) {
+          changeLDAP(this.value);
+      });
+
+    $('input[name="perizinan[info_t]"]').on('ifClicked', function (event) {
+        // checkAll(this) 
+          checkChild(this) 
+      });
+    $('input[name="perizinan[info_a]"]').on('ifClicked', function (event) {
+         checkChild(this) 
+      });
+    $('input[name="perizinan[info_u]"]').on('ifClicked', function (event) {
+         checkChild(this) 
+      });
+    $('input[name="perizinan[jenis_u]"]').on('ifClicked', function (event) {
+         checkChild(this) 
+      });
     @endif
   })
+
+  function checkChild(e) {
+    if ($(e).is(':checked')) {
+      $('#' +$(e).attr('id')+ ' input').iCheck('uncheck')
+    } else {
+      $('#' +$(e).attr('id')+ ' input').iCheck('check')
+    }
+  }
   function checkAll(e) {
     var content = $(e).html()
     if (content == 'Hilangkan centang') {
@@ -102,7 +138,7 @@
       }else if(divisi == null||$('select[name="divisi"]').is(':disabled')){
         unit =cabang+"00";
       }
-      $('#' +id+ ' input').iCheck('uncheck')
+      // $('#' +id+ ' input').iCheck('uncheck')
       value = true;
       // $("input[name='perizinan[unit]["+unit+"]'").iCheck('check')
       $("input[name='perizinan[unit_"+unit+"]'").iCheck('check')
@@ -130,38 +166,26 @@
   }
 
   $('#toogle_unit').click(function() {
-      // if(CheckUnitKerja('unit_kerja')){
+      if(CheckUnitKerja('unit_kerja')){
         $( "#modal_unit" ).modal();
-      // }
+      }
   });
-
   $('.iCheck-helper').click(function() {
       id = $(this).prev().attr('id');
-      if(id == "activ_dir_on"){
-        if(!$(this).prev().is(':disabled')){
-          $(this).prev().iCheck('check');
-          changeLDAP('on');
-        }
-      }else if(id == "activ_dir_off"){
-        if(!$(this).prev().is(':disabled')){
-          $(this).prev().iCheck('check');
-          changeLDAP('off');
-        }
+      alert();
+      check= $('#' +id+ ' input');
+      if($(this).prev().is(':checked')){
+        check.iCheck('check')
       }else{
-        check= $('#' +id+ ' input');
-        if($(this).prev().is(':checked')){
-          check.iCheck('check')
-        }else{
-          check.iCheck('uncheck')
-        }
+        check.iCheck('uncheck')
       }
-      
       
   });
   var data_username = {};
   function changeLDAP(type){
     $("#input_user").empty();
-    if(type == "on"){
+    // alert("test");
+    if(type == 1){
       $("#input_user").append('<select class="form-control" id="username" name="username" placeholder="Username" style="width: 100%;"></select>')
       $("select[name='username']").select2();
       getUsername();
@@ -184,7 +208,7 @@
         });
       });
       $('#form_password').css("display", "none");
-    }else if(type == "off"){
+    }else if(type == 0){
       $("#input_user").append('<input type="text" required="" id="username" class="form-control select2" placeholder="Username" name="username" value="{{ old("username") }}">')
       
       $('#form_password').css("display", "block");

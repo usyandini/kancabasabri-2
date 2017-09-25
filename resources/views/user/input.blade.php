@@ -49,9 +49,9 @@
                               </div>
                               @endif
                               <div class="form-body">
-                                <div class="row skin skin-square">
+                                <div class="row">
                                   <div class="col-md-12 col-sm-12">
-                                    <div class="form-group">
+                                    <div class="form-group skin skin-square">
                                       <fieldset>
                                         <input type="radio" id='activ_dir_off' name="as_ldap" value="0" {{ old('as_ldap') != "1" ? 'checked=""' : '' }}>
                                         <label>Daftar dengan aplikasi</label>
@@ -97,7 +97,7 @@
                                 @if (isset($jenis_user))
                                 <div class="form-group">
                                   <label>Jenis User (preset)</label><br>
-                                  <select class="select2 form-control" name="divisi" style="width: 100%;">
+                                  <select class="select2 form-control" name="jenis_user" style="width: 100%;">
                                     <option selected disabled="" value="">Jenis User</option>
                                     @foreach($jenis_user as $jenis)
                                     <option {{ old('jenis') == $jenis->id ? 'selected=""' : '' }} value="{{ $jenis->nama }}">{{ $div->DESCRIPTION }}</option>
@@ -141,7 +141,7 @@
                             <div class="card-block">
                               <div class="form-group skin skin-square">
                                 <div class="col-md-8">
-                                  <label >Penggaturan Perizinan <code>Unit Kerja</code></label>
+                                  <label >Pengaturan Perizinan <code>Unit Kerja</code></label>
                                 </div>
                                 <div class="col-md-4">
                                   <div class="btn btn-sm btn-primary" id="toogle_unit"><i class="fa fa-edit"></i></div>
@@ -150,7 +150,7 @@
                               <br />
                               <div class="form-group skin skin-square">
                                 <div class="col-md-8">
-                                  <label>Penggaturan Menu <code>Dropping</code></label>
+                                  <label>Pengaturan Menu <code>Dropping</code></label>
                                 </div>
                                 <div class="col-md-4">
                                   <div class="btn btn-sm btn-primary"  onclick="open_menu('dropping')"><i class="fa fa-edit"></i></div>
@@ -159,7 +159,7 @@
                               <br />
                               <div class="form-group skin skin-square">
                                 <div class="col-md-8">
-                                  <label>Penggaturan Menu <code>Transaksi</code></label>
+                                  <label>Pengaturan Menu <code>Transaksi</code></label>
                                 </div>
                                 <div class="col-md-4">
                                   <div class="btn btn-sm btn-primary" onclick="open_menu('transaksi')"><i class="fa fa-edit"></i></div>
@@ -168,7 +168,7 @@
                               <br />
                               <div class="form-group skin skin-square">
                                 <div class="col-md-8">
-                                  <label>Penggaturan Menu <code>Anggaran</code></label>
+                                  <label>Pengaturan Menu <code>Anggaran</code></label>
                                 </div>
                                 <div class="col-md-4">
                                   <div class="btn btn-sm btn-primary"  onclick="open_menu('anggaran')"><i class="fa fa-edit"></i></div>
@@ -177,7 +177,7 @@
                               <br />
                               <div class="form-group skin skin-square">
                                 <div class="col-md-8">
-                                  <label>Penggaturan Menu <code>Pelaporan</code></label>
+                                  <label>Pengaturan Menu <code>Pelaporan</code></label>
                                 </div>
                                 <div class="col-md-4">
                                   <div class="btn btn-sm btn-primary"  onclick="open_menu('pelaporan')"><i class="fa fa-edit"></i></div>
@@ -186,7 +186,7 @@
                               <br />
                               <div class="form-group skin skin-square">
                                 <div class="col-md-8">
-                                  <label>Penggaturan Menu <code>Manajemen User</code></label>
+                                  <label>Pengaturan Menu <code>Manajemen User</code></label>
                                 </div>
                                 <div class="col-md-4">
                                   <div class="btn btn-sm btn-primary"  onclick="open_menu('user')"><i class="fa fa-edit"></i></div>
@@ -195,7 +195,7 @@
                               <br />
                               <div class="form-group skin skin-square">
                                 <div class="col-md-8">
-                                  <label>Penggaturan Menu <code>Manajemen Item</code></label>
+                                  <label>Pengaturan Menu <code>Manajemen Item</code></label>
                                 </div>
                                 <div class="col-md-4">
                                   <div class="btn btn-sm btn-primary"  onclick="open_menu('item')"><i class="fa fa-edit"></i></div>
