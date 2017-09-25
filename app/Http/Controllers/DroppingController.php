@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests;
+use Illuminate\Support\Facades\Gate;
 
 use App\User;
 use App\Models\PaymentJournalDropping;
@@ -147,7 +148,7 @@ class DroppingController extends Controller
         }  
          
         $result = [];
-        foreach ($droppings->get() as $dropping) {
+        foreach ($droppings->where('CABANG_DROPPING', $kcabang)->get() as $dropping) {
             $result[] = [
                 'id_dropping'   => $dropping->RECID,
                 'bank'          => $dropping->BANK_DROPPING, 
