@@ -49,15 +49,15 @@
           <div class="form-group skin skin-square" id="dropping">
             <fieldset>
               <input type="checkbox" name="perizinan[notif_setuju_tt_d]" {{ isset(old("perizinan")['notif_setuju_tt_d']) ? 'checked=""' : '' }}>
-              <label>Persetujuan tarik tunai</label>
+              <label>Permintaan Persetujuan tarik tunai</label>
             </fieldset>
             <fieldset>
               <input type="checkbox" name="perizinan[notif_setuju_p_d]" {{ isset(old("perizinan")['notif_setuju_p_d']) ? 'checked=""' : '' }}>
-              <label>Persetujuan penyesuaian dropping</label>
+              <label>Permintaan Persetujuan penyesuaian dropping</label>
             </fieldset>
             <fieldset>
               <input type="checkbox" name="perizinan[notif_setuju_p2_d]" {{ isset(old("perizinan")['notif_setuju_p2_d']) ? 'checked=""' : '' }}>
-              <label>Persetujuan akhir penyesuaian dropping</label>
+              <label>Permintaan Persetujuan akhir penyesuaian dropping</label>
             </fieldset>
             <fieldset>
               <input type="checkbox" name="perizinan[notif_ubah_tt_d]" {{ isset(old("perizinan")['notif_ubah_tt_d']) ? 'checked=""' : '' }}>

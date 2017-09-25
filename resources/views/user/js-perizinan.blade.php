@@ -1,13 +1,13 @@
 <script type="text/javascript">
   $(document).ready(function() {
-    // $('select[name="cabang"]').on('change', function() {
-    //   if ($(this).val() !== '00') {
-    //     $('select[name="divisi"]').prop("disabled", true);
-    //     toastr.info("Divisi tidak perlu dipilih jika Kantor Cabang yang dipilih adalah <b>Kantor pusat</b>.", "Kantor Cabang dipilih", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:10e3});
-    //   } else {
-    //     $('select[name="divisi"]').prop("disabled", false);
-    //   }
-    // });
+    $('select[name="cabang"]').on('change', function() {
+      if ($(this).val() !== '00') {
+        $('select[name="divisi"]').prop("disabled", true);
+        toastr.info("Divisi tidak perlu dipilih jika Kantor Cabang yang dipilih adalah <b>Kantor pusat</b>.", "Kantor Cabang dipilih", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:10e3});
+      } else {
+        $('select[name="divisi"]').prop("disabled", false);
+      }
+    });
 
     $('select[name="jenis_user"]').on('change', function(){
       $.post('{{ url('/jenis_user/handle') }}', {_token: '{{ csrf_token() }}', id: $(this).val()}, function(e) {

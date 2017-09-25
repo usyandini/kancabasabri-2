@@ -116,43 +116,39 @@
           <div class="form-group skin skin-square" id="anggaran">
            <fieldset >
               <input type="checkbox" name="perizinan[notif_setuju_ia]" value="1">
-              <label>Persetujuan Kanit Kerja</label>
+              <label>Permintaan Persetujuan Kanit Kerja</label>
             </fieldset>
             <fieldset >
               <input type="checkbox" name="perizinan[notif_setuju_iia]" value="1">
-              <label>Persetujuan Renbang</label>
+              <label>Permintaan Persetujuan Renbang</label>
             </fieldset>
             <fieldset >
               <input type="checkbox" name="perizinan[notif_setuju_iiia]" value="1">
-              <label>Persetujuan Direksi</label>
+              <label>Permintaan Persetujuan Direksi</label>
             </fieldset>
             <fieldset >
               <input type="checkbox" name="perizinan[notif_setuju_iva]" value="1">
-              <label>Persetujuan Dekom</label>
+              <label>Permintaan Persetujuan Dekom</label>
             </fieldset>
             <fieldset >
               <input type="checkbox" name="perizinan[notif_setuju_va]" value="1">
-              <label>Persetujuan Ratek</label>
+              <label>Permintaan Persetujuan Ratek</label>
             </fieldset>
             <fieldset >
               <input type="checkbox" name="perizinan[notif_setuju_via]" value="1">
-              <label>Persetujuan RUPS</label>
+              <label>Permintaan Persetujuan RUPS</label>
             </fieldset>
             <fieldset >
               <input type="checkbox" name="perizinan[notif_setuju_viia]" value="1">
-              <label>Persetujuan FinRUPS</label>
+              <label>Permintaan Persetujuan FinRUPS</label>
             </fieldset>
             <fieldset >
               <input type="checkbox" name="perizinan[notif_setuju_viiia]" value="1">
-              <label>Persetujuan RIsalah RUPS</label>
-            </fieldset>
-            <fieldset >
-              <input type="checkbox" name="perizinan[notif_setuju_ixa]" value="1">
-              <label>Anggaran Disetujui Persetujuan</label>
+              <label>Permintaan Persetujuan Risalah RUPS</label>
             </fieldset>
             <fieldset >
               <input type="checkbox" name="perizinan[notif_ubah_a]" value="1">
-              <label>Perubahan Anggaran dan Kegiatan</label>
+              <label>Permintaan Perubahan Anggaran dan Kegiatan</label>
             </fieldset>
            </div>
         </div>

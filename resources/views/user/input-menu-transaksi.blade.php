@@ -78,11 +78,11 @@
           <div class="form-group skin skin-square" id="transaksi">
             <fieldset >
               <input type="checkbox" name="perizinan[notif_setuju_t]" {{ isset(old("perizinan")['notif_setuju_t']) ? 'checked=""' : '' }}>
-              <label>Persetujuan transaksi</label>
+              <label>Permintaan Persetujuan transaksi</label>
             </fieldset>
             <fieldset >
               <input type="checkbox" name="perizinan[notif_setuju2_t]" {{ isset(old("perizinan")['notif_setuju2_t']) ? 'checked=""' : '' }}>
-              <label>Persetujuan final transaksi</label>
+              <label>Permintaan Persetujuan final transaksi</label>
             </fieldset>
             <fieldset >
               <input type="checkbox" name="perizinan[notif_ubah_t]" {{ isset(old("perizinan")['notif_ubah_t']) ? 'checked=""' : '' }}>
