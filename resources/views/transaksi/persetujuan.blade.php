@@ -122,15 +122,20 @@
                                                 </div>
                                               </div>
                                               <br>
-                                              @if($verifiable)
                                               <div class="row">
+                                                @if($verifiable)
+                                                <div class="col-xs-2 pull-right">
+                                                  <div class="form-group">
+                                                    <button class="btn btn-info pull-right" id="keep_anggaran" value="Simpan"><i class="fa fa-money"></i> Perbarui Status Anggaran</button>
+                                                  </div>
+                                                </div>
                                                 <div class="col-md-3 pull-right">
                                                     <div class="form-group">
                                                         <button onclick="checkBatchSubmit()" class="btn btn-info pull-right" id="simpan" value="Simpan"><i class="fa fa-refresh"></i> Tindaklanjuti</button>
                                                     </div>
                                                 </div>
+                                                @endif
                                               </div>
-                                              @endif
                                           </div>
                                       </div>
                                   </div>

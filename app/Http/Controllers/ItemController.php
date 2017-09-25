@@ -90,7 +90,7 @@ class ItemController extends Controller
             ['SEGMEN_3', $cabang],
             ['SEGMEN_4', $divisi]])->first();
         
-        if ($result->isAxAnggaranAvailable($tanggal)) {
+        if (isset($result) && $result->isAxAnggaranAvailable($tanggal)) {
             $result['ax_anggaran'] = $result->axAnggaran($tanggal);
             $result['ax_anggaran']['PIL_AMOUNTAVAILABLE'] = (int)$result['ax_anggaran']['PIL_AMOUNTAVAILABLE'];
             return response()->json($result);    

@@ -223,8 +223,8 @@
                                   </div>
                                 </div>
                                 <br>
-                                @if($editable)
                                 <div class="row">
+                                  @if($editable)
                                   <div class="col-xs-2 pull-right">
                                     <div class="form-group">
                                       <button class="btn btn-info pull-right" id="keep_anggaran" value="Simpan"><i class="fa fa-money"></i> Perbarui Status Anggaran</button>
@@ -244,8 +244,8 @@
                                     </div>
                                   </div>
                                   @endif
+                                  @endif
                                 </div>
-                                @endif
                               </div>
                             </div>
                           </div>
