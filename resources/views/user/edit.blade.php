@@ -79,7 +79,9 @@
                                                   <select class="select2 form-control" name="cabang">
                                                     <option selected disabled="">Cabang</option>
                                                     @foreach($cabang as $cab)
+                                                    @if($cab->VALUE !== "00")
                                                     <option {{ $user->cabang == $cab->VALUE ? 'selected=""' : '' }} value="{{ $cab->VALUE }}">{{ $cab->DESCRIPTION }}</option>
+                                                    @endif
                                                     @endforeach
                                                   </select>
                                                 </div>
@@ -88,7 +90,9 @@
                                                   <select class="select2 form-control" name="divisi" >
                                                     <option selected disabled="">Divisi</option>
                                                     @foreach($divisi as $div)
+                                                    @if($div->VALUE !== "00")
                                                     <option {{ $user->divisi == $div->VALUE ? 'selected=""' : '' }} value="{{ $div->VALUE }}">{{ $div->DESCRIPTION }}</option>
+                                                    @endif
                                                     @endforeach
                                                   </select>
                                                 </div>
@@ -378,6 +382,25 @@
                                         </div>
                                       </div>
                                     </div>
+                                    <div class="modal fade text-xs-left" id="modal_menu_pelaporan" tabindex="-1" role="dialog" aria-labelledby="myModalLabel20">
+                                      <div class="modal-dialog">
+                                        <div class="modal-content">
+                                          <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                              <span aria-hidden="true">&times;</span>
+                                            </button>
+                                            <h4 class="modal-title col-md-12 col-sm-12" id="title_modal_pernyataan" >Pengaturan Perizinan <code>Pelaporan</code></h4>
+                                          </div>
+                                          <div class="modal-body" id="body-menu">
+                                             @include('user.edit-menu-pelaporan')
+                                          </div>
+                                          <div class="modal-footer">
+                                            <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">kembali</button>
+                                            <!-- <button type="button" id="button_peryataan" onclick="sumbit_post()" class="btn btn-outline-primary">Ya, kirim</button> -->
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
                                     <div class="modal fade text-xs-left" id="modal_menu_user" tabindex="-1" role="dialog" aria-labelledby="myModalLabel20">
                                       <div class="modal-dialog">
                                         <div class="modal-content">
@@ -389,6 +412,25 @@
                                           </div>
                                           <div class="modal-body" id="body-menu">
                                              @include('user.edit-menu-user')
+                                          </div>
+                                          <div class="modal-footer">
+                                            <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">kembali</button>
+                                            <!-- <button type="button" id="button_peryataan" onclick="sumbit_post()" class="btn btn-outline-primary">Ya, kirim</button> -->
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div class="modal fade text-xs-left" id="modal_menu_item" tabindex="-1" role="dialog" aria-labelledby="myModalLabel20">
+                                      <div class="modal-dialog">
+                                        <div class="modal-content">
+                                          <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                              <span aria-hidden="true">&times;</span>
+                                            </button>
+                                            <h4 class="modal-title col-md-12 col-sm-12" id="title_modal_pernyataan" >Pengaturan Perizinan <code>Manajemen Item</code></h4>
+                                          </div>
+                                          <div class="modal-body" id="body-menu">
+                                             @include('user.edit-menu-item')
                                           </div>
                                           <div class="modal-footer">
                                             <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">kembali</button>

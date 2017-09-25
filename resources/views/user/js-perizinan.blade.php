@@ -19,6 +19,60 @@
       });
     });
 
+    // window.checkDivCab();
+
+
+    @if (isset($profile_edit))
+    $('input[type="checkbox"]').iCheck('disable')
+    $('select[name="jenis_user"]').prop('disabled', true)
+    $('input[name="profile_edit"]').val('true');
+
+    $('label#dropping').html('')
+    $('label#transaksi').html('')
+    $('label#anggaran').html('')
+    $('label#notifikasi').html('')
+    $('label#unit_kerja').html('')
+    $('label#pelaporan').html('')
+    $('label#user').html('')
+    $('label#item').html('')
+    $('input[type="radio"]').iCheck('disable')
+    $('input').iCheck({
+        checkboxClass: 'icheckbox_square-red',
+        radioClass: 'iradio_square-red',
+        increaseArea: '20%' // optional
+      });
+    @else
+    calibrateCentang()
+     $('input').iCheck({
+        checkboxClass: 'icheckbox_square-red',
+        radioClass: 'iradio_square-red',
+        increaseArea: '20%' // optional
+      });
+
+    $('input[name="as_ldap"]').on('ifClicked', function (event) {
+          changeLDAP(this.value);
+      });
+
+    $('input[name="perizinan[info_t]"]').on('ifClicked', function (event) {
+        // checkAll(this) 
+          checkChild(this) 
+      });
+    $('input[name="perizinan[info_a]"]').on('ifClicked', function (event) {
+         checkChild(this) 
+      });
+    $('input[name="perizinan[info_u]"]').on('ifClicked', function (event) {
+         checkChild(this) 
+      });
+    $('input[name="perizinan[jenis_u]"]').on('ifClicked', function (event) {
+         checkChild(this) 
+      });
+    $('input[name="perizinan[form_master]"]').on('ifClicked', function (event) {
+         checkChild(this) 
+      });
+    @endif
+  })
+
+
     function calibrateCentang() {
       if ($('#notifikasi input').filter(':checked').length > $('#notifikasi input').length/2) {
         $('label#notifikasi').html('Hilangkan centang')
@@ -61,53 +115,13 @@
       } else {
         $('label#item').html('Centang semua')
       }
+
+      if ($('#pelaporan input').filter(':checked').length > $('#pelaporan input').length/2) {
+        $('label#pelaporan').html('Hilangkan centang')
+      } else {
+        $('label#pelaporan').html('Centang semua')
+      }
     }
-
-    @if (isset($profile_edit))
-    $('input[type="checkbox"]').iCheck('disable')
-    $('select[name="jenis_user"]').prop('disabled', true)
-    $('input[name="profile_edit"]').val('true');
-
-    $('label#dropping').html('')
-    $('label#transaksi').html('')
-    $('label#anggaran').html('')
-    $('label#notifikasi').html('')
-    $('label#unit_kerja').html('')
-    $('label#user').html('')
-    $('label#item').html('')
-    $('input[type="radio"]').iCheck('disable')
-    $('input').iCheck({
-        checkboxClass: 'icheckbox_square-red',
-        radioClass: 'iradio_square-red',
-        increaseArea: '20%' // optional
-      });
-    @else
-    calibrateCentang()
-     $('input').iCheck({
-        checkboxClass: 'icheckbox_square-red',
-        radioClass: 'iradio_square-red',
-        increaseArea: '20%' // optional
-      });
-
-    $('input[name="as_ldap"]').on('ifClicked', function (event) {
-          changeLDAP(this.value);
-      });
-
-    $('input[name="perizinan[info_t]"]').on('ifClicked', function (event) {
-        // checkAll(this) 
-          checkChild(this) 
-      });
-    $('input[name="perizinan[info_a]"]').on('ifClicked', function (event) {
-         checkChild(this) 
-      });
-    $('input[name="perizinan[info_u]"]').on('ifClicked', function (event) {
-         checkChild(this) 
-      });
-    $('input[name="perizinan[jenis_u]"]').on('ifClicked', function (event) {
-         checkChild(this) 
-      });
-    @endif
-  })
 
   function checkChild(e) {
     if ($(e).is(':checked')) {
