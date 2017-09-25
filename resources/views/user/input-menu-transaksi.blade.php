@@ -14,63 +14,64 @@
               <input id="info_transaksi" type="checkbox"  name="perizinan[info_t]" {{ isset(old("perizinan")['info_t']) ? 'checked=""' : '' }} >
               <label>Informasi transaksi</label>
             </fieldset>
-            <ul id="info_transaksi">
-                <li>
-                  <fieldset>
-                    <input type="checkbox" name="perizinan[cari_t]" {{ isset(old("perizinan")['cari_t']) ? 'checked=""' : '' }}>
-                    <label >Pencarian batch transaksi</label>
-                  </fieldset>
-                </li>
-                <li>
-                  <fieldset>
-                    <input type="checkbox" name="perizinan[tambah_item_t]" {{ isset(old("perizinan")['tambah_item_t']) ? 'checked=""' : '' }}>
-                    <label>Tambah item batch daftar transaksi</label>
-                  </fieldset>
-                </li>
-                <li>
-                  <fieldset>
-                    <input type="checkbox" name="perizinan[ubah_item_t]" {{ isset(old("perizinan")['ubah_item_t']) ? 'checked=""' : '' }}>
-                    <label>Ubah item batch daftar transaksi</label>
-                  </fieldset>
-                </li>
-                <li>
-                  <fieldset>
-                    <input type="checkbox" name="perizinan[hapus_item_t]" {{ isset(old("perizinan")['hapus_item_t']) ? 'checked=""' : '' }}>
-                    <label>Hapus item batch  daftar transaksi</label>
-                  </fieldset>
-                </li>
-                <li>
-                  <fieldset>
-                    <input type="checkbox" name="perizinan[berkas_t]" {{ isset(old("perizinan")['berkas_t']) ? 'checked=""' : '' }}>
-                    <label>Unggah dan edit berkas transaksi</label>
-                  </fieldset>
-                </li>
-                <li>
-                  <fieldset>
-                    <input type="checkbox" name="perizinan[simpan_t]" {{ isset(old("perizinan")['simpan_t']) ? 'checked=""' : '' }}>
-                    <label>Simpan batch untuk verifikasi</label>
-                  </fieldset>
-                </li>
-                <li>
-                  <fieldset>
-                    <input type="checkbox" name="perizinan[ajukan_t]" {{ isset(old("perizinan")['ajukan_t']) ? 'checked=""' : '' }}>
-                    <label>Ajukan batch untuk verifikasi</label>
-                  </fieldset>
-                </li>
-                <li>
-                  <fieldset>
-                    <input type="checkbox" name="perizinan[setuju_t]" {{ isset(old("perizinan")['setuju_t']) ? 'checked=""' : '' }}>
-                    <label>Persetujuan transaksi</label>
-                  </fieldset>
-                </li>
-                <li>
-                  <fieldset>
-                    <input type="checkbox" name="perizinan[setuju2_t]" {{ isset(old("perizinan")['setuju2_t']) ? 'checked=""' : '' }}>
-                    <label>Persetujuan final transaksi</label>
-                  </fieldset>
-                </li>
-            </ul>
-            
+            <div id="info_transaksi">
+              <ul>
+                  <li>
+                    <fieldset>
+                      <input type="checkbox" name="perizinan[cari_t]" {{ isset(old("perizinan")['cari_t']) ? 'checked=""' : '' }}>
+                      <label >Pencarian batch transaksi</label>
+                    </fieldset>
+                  </li>
+                  <li>
+                    <fieldset>
+                      <input type="checkbox" name="perizinan[tambah_item_t]" {{ isset(old("perizinan")['tambah_item_t']) ? 'checked=""' : '' }}>
+                      <label>Tambah item batch daftar transaksi</label>
+                    </fieldset>
+                  </li>
+                  <li>
+                    <fieldset>
+                      <input type="checkbox" name="perizinan[ubah_item_t]" {{ isset(old("perizinan")['ubah_item_t']) ? 'checked=""' : '' }}>
+                      <label>Ubah item batch daftar transaksi</label>
+                    </fieldset>
+                  </li>
+                  <li>
+                    <fieldset>
+                      <input type="checkbox" name="perizinan[hapus_item_t]" {{ isset(old("perizinan")['hapus_item_t']) ? 'checked=""' : '' }}>
+                      <label>Hapus item batch  daftar transaksi</label>
+                    </fieldset>
+                  </li>
+                  <li>
+                    <fieldset>
+                      <input type="checkbox" name="perizinan[berkas_t]" {{ isset(old("perizinan")['berkas_t']) ? 'checked=""' : '' }}>
+                      <label>Unggah dan edit berkas transaksi</label>
+                    </fieldset>
+                  </li>
+                  <li>
+                    <fieldset>
+                      <input type="checkbox" name="perizinan[simpan_t]" {{ isset(old("perizinan")['simpan_t']) ? 'checked=""' : '' }}>
+                      <label>Simpan batch untuk verifikasi</label>
+                    </fieldset>
+                  </li>
+                  <li>
+                    <fieldset>
+                      <input type="checkbox" name="perizinan[ajukan_t]" {{ isset(old("perizinan")['ajukan_t']) ? 'checked=""' : '' }}>
+                      <label>Ajukan batch untuk verifikasi</label>
+                    </fieldset>
+                  </li>
+                  <li>
+                    <fieldset>
+                      <input type="checkbox" name="perizinan[setuju_t]" {{ isset(old("perizinan")['setuju_t']) ? 'checked=""' : '' }}>
+                      <label>Persetujuan transaksi</label>
+                    </fieldset>
+                  </li>
+                  <li>
+                    <fieldset>
+                      <input type="checkbox" name="perizinan[setuju2_t]" {{ isset(old("perizinan")['setuju2_t']) ? 'checked=""' : '' }}>
+                      <label>Persetujuan final transaksi</label>
+                    </fieldset>
+                  </li>
+              </ul>
+            </div>
           </div>
         </div>
         <div class="card-block">

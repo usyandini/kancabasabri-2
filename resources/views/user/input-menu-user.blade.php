@@ -11,10 +11,10 @@
           <h5>Aksi</h5>
           <div class="form-group skin skin-square" id="user">
             <fieldset>
-              <input type="checkbox" name="perizinan[info_u]" {{ isset(old("perizinan")['info_u']) ? 'checked=""' : '' }}>
+              <input id="info_user" type="checkbox" name="perizinan[info_u]" {{ isset(old("perizinan")['info_u']) ? 'checked=""' : '' }}>
               <label>Informasi user</label>
             </fieldset>
-            <ul>
+            <ul id="info_user">
               <li>
                 <fieldset>
                   <input type="checkbox" name="perizinan[edit_u]" {{ isset(old("perizinan")['edit_u']) ? 'checked=""' : '' }}>
@@ -45,10 +45,10 @@
               <label>Tambah user baru</label>
             </fieldset>
             <fieldset>
-              <input type="checkbox" name="perizinan[jenis_u]" {{ isset(old("perizinan")['jenis_u']) ? 'checked=""' : '' }}>
+              <input id="jenis_user" type="checkbox" name="perizinan[jenis_u]" {{ isset(old("perizinan")['jenis_u']) ? 'checked=""' : '' }}>
               <label>Perizinan Jenis User</label>
             </fieldset>
-            <ul>
+            <ul id="jenis_user">
               <li>
                 <input type="checkbox" name="perizinan[edit_jenis]" {{ isset(old("perizinan")['edit_jenis']) ? 'checked=""' : '' }}>
                 <label>Edit Jenis User</label>

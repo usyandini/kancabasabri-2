@@ -90,13 +90,32 @@
       });
 
     $('input[name="as_ldap"]').on('ifClicked', function (event) {
-          // alert("You clicked " + );
-
           changeLDAP(this.value);
       });
 
+    $('input[name="perizinan[info_t]"]').on('ifClicked', function (event) {
+        // checkAll(this) 
+          checkChild(this) 
+      });
+    $('input[name="perizinan[info_a]"]').on('ifClicked', function (event) {
+         checkChild(this) 
+      });
+    $('input[name="perizinan[info_u]"]').on('ifClicked', function (event) {
+         checkChild(this) 
+      });
+    $('input[name="perizinan[jenis_u]"]').on('ifClicked', function (event) {
+         checkChild(this) 
+      });
     @endif
   })
+
+  function checkChild(e) {
+    if ($(e).is(':checked')) {
+      $('#' +$(e).attr('id')+ ' input').iCheck('uncheck')
+    } else {
+      $('#' +$(e).attr('id')+ ' input').iCheck('check')
+    }
+  }
   function checkAll(e) {
     var content = $(e).html()
     if (content == 'Hilangkan centang') {
@@ -153,7 +172,7 @@
   });
   $('.iCheck-helper').click(function() {
       id = $(this).prev().attr('id');
-
+      alert();
       check= $('#' +id+ ' input');
       if($(this).prev().is(':checked')){
         check.iCheck('check')
