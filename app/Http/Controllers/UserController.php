@@ -95,10 +95,10 @@ class UserController extends Controller
 
         if ($validator->passes()) {
             $input['updated_by'] = \Auth::user()->id;
-            // if (isset($input['password'])) {
-            //     $input['password'] = bcrypt($input['password']);
-            //     unset($input['password_confirmation']);
-            // }
+            if (isset($input['password'])) {
+                $input['password'] = bcrypt($input['password']);
+                unset($input['password_confirmation']);
+            }
             if (isset($input['perizinan'])) {
                 // if ($input['perizinan']['data-cabang'] == 'off') { unset($input['perizinan']['data-cabang']); }
 
@@ -170,8 +170,6 @@ class UserController extends Controller
     }
 
     public function filterLDAP(){
-        // $keyword_decode = urldecode($keyword);
-        // $users = AdldapInterface::search()->users()->get();
         $hostname = '172.31.0.2';
         $ldap_username = 'fax.server@asabri.co.id';
         $ldap_password = 'f3x-serv.!!';
@@ -183,7 +181,7 @@ class UserController extends Controller
 
         ldap_set_option($ldap_connection, LDAP_OPT_PROTOCOL_VERSION, 3) or die('Unable to set LDAP protocol version');
         ldap_set_option($ldap_connection, LDAP_OPT_REFERRALS, 0);
-
+        $user = User::select('username')->get();
         $entries = Array();
         if (TRUE === ldap_bind($ldap_connection, $ldap_username, $ldap_password)) {
             $ldap_base_dn = 'DC=asabri,DC=co,DC=id';
@@ -191,7 +189,7 @@ class UserController extends Controller
             $search_filter = '(&(objectCategory=person)(samaccountname=*))';
             $attributes = array();
             // $attributes[] = 'givenname';
-            $attributes[] = 'mail';
+            // $attributes[] = 'mail';
             $attributes[] = 'samaccountname';
             $attributes[] = 'displayname';
             // $attributes[] = 'password';
@@ -199,17 +197,25 @@ class UserController extends Controller
             if (FALSE !== $result) {
                 $entries = ldap_get_entries($ldap_connection, $result);
             }
-            // echo "<pre>";
-            // print_r($entries);
-            // echo "</pre>";
             ldap_unbind($ldap_connection); // Clean up after ourselves.
         } else {
             exit("Connection Succesfully, But LDAP Bind host refused with status = false");
         }
+        for($i=0;$i<count($entries)-1;$i++){
+            foreach ($user as $row) {
+                    if($row->username == $entries[$i]["samaccountname"]["0"]){
+                        // echo $entries[$i]["samaccountname"]["0"]."<br/>";
+                        $entries[$i]["dn"] = "Tidak";
+                        break;
+                    }
+                // }
+            }
+            // if($save){
+            //     $entries[$i]["dn"] = "Save";
+            // }
+        }
+        
 
-        // echo json_encode($entries);
-
-        // echo $entries[0]["samaccountname"]["0"].":".$entries[0]["displayname"]["0"];
         return response()->json($entries);
     }
 

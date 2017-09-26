@@ -238,7 +238,7 @@
               username = document.getElementById('username');
               
               Object.keys(data_username).map(function(key, index) {
-                  if(key!="count"){
+                  if(key!="count"&&data_username[key]["dn"]!="Tidak"){
                     text = data_username[key]["samaccountname"]["0"];
                     username.options[username.options.length] = new Option(text, text);
                   }
