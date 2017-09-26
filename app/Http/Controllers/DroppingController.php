@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests;
+use Illuminate\Support\Facades\Gate;
 
 use App\User;
 use App\Models\PaymentJournalDropping;
@@ -122,8 +123,17 @@ class DroppingController extends Controller
 
     public function getFiltered($transyear, $periode, $kcabang)
     {
-        $droppings = $this->jDroppingModel->where('DEBIT', '>', 0)->orderby('TRANSDATE', 'desc');
-        
+        $cabang = $this->kantorCabangs;
+        $unit = array();
+
+        foreach($cabang as $cab){
+            if(Gate::check('unit_'.$cab->VALUE."00")){
+                array_push($unit, $cab->DESCRIPTION);
+            }
+        }   
+
+        $droppings = $this->jDroppingModel->where('DEBIT', '>', 0)->whereIn('CABANG_DROPPING', $unit)->orderby('TRANSDATE', 'desc');
+                
         if ($transyear != '0') {
             $droppings = $droppings->whereYear('TRANSDATE', '=', $transyear);
         }
@@ -159,7 +169,6 @@ class DroppingController extends Controller
                 'sisa'          => 'IDR '. number_format($dropping->tarikTunai['sisa_dropping'])
             ];
         }
-
         return response()->json($result);
     }
 
@@ -195,9 +204,6 @@ class DroppingController extends Controller
         $this->inputDrop($id_drop); 
 
         $dropping = $this->droppingModel->where([['RECID', $id_drop], ['DEBIT', '>', 0]])->firstOrFail();
-        // $cabang = \Auth::user()->cabang;
-        // $roleCabang = KantorCabang::where('VALUE', $cabang)->first();
-        // dd($roleCabang['DESCRIPTION']);
 
         $tariktunai = TarikTunai::where([['id_dropping', $id_drop], ['nominal_tarik', '>', 0], ['stat', 3]])->orderby('sisa_dropping', 'asc')->get();
 
@@ -211,16 +217,7 @@ class DroppingController extends Controller
                 $notif = RejectTarikTunai::where('id_tariktunai', $status['id'])->orderby('updated_at', 'desc')->first();
                 session()->flash('reject1', true);
             }
-            // elseif($status['stat'] == 3){
-            //     $integrated = StagingTarikTunai::where([['RECID', $status['id']],['PIL_POSTED', 1]])->orderby('PIL_TRANSDATE', 'desc')->first();
-            //     if($integrated){
-            //         session()->flash('integrated', true);
-            //     }else{
-            //         session()->flash('notintegrated', true);
-            //     }
-            // }
         }
-        //dd($berkas);
         return view(
             'dropping.tariktunai.tariktunai', 
                 ['tariktunai' => $tariktunai, 
@@ -290,10 +287,6 @@ class DroppingController extends Controller
                 $seg5 = $inputsTT['SEGMEN_5'] = $subpos->VALUE;
                 $seg6 = $inputsTT['SEGMEN_6'] = $kegiatan->VALUE;
                 $inputsTT['ACCOUNT'] = $seg1.'-'.$seg2.'-'.$seg3.'-'.$seg4.'-'.$seg5.'-'.$seg6;
-
-
-                // $attach = $this->storeBerkas($request->berkas, 'tariktunai');
-                // $inputsTT['berkas_tariktunai'] = $attach['id'];
                 $inputsTT['stat'] = 1;
 
                 //dd($inputsTT);
@@ -302,7 +295,6 @@ class DroppingController extends Controller
 
                 $this->storeBerkas($request->berkas, 'tariktunai', $TT->id);
                 NotificationSystem::send($TT->id, 7);
-
 
                 session()->flash('success', true);
             } else {
@@ -418,8 +410,6 @@ class DroppingController extends Controller
                 $inputsPD['nominal_dropping']  = $request->nominal_dropping;
 
                 $inputsPD['stat'] = 4;
-                // $attach = $this->storeBerkas($request->berkas, 'penyesuaian');
-                // $inputsPD['berkas_penyesuaian'] = $attach['id'];
                 
                 //dd($inputsPD);
                 $PD = PenyesuaianDropping::create($inputsPD); 
@@ -445,17 +435,17 @@ class DroppingController extends Controller
                         
             switch($route){
                 case 'tariktunai':
-                foreach($store as $key => $value){
-                    $value['id_tariktunai'] = $id;
-                    BerkasTarikTunai::insert($value);
-                }
-                break;
+                    foreach($store as $key => $value){
+                        $value['id_tariktunai'] = $id;
+                        BerkasTarikTunai::insert($value);
+                    }
+                    break;
                 case 'penyesuaian':
-                foreach($store as $key => $value){
-                    $value['id_penyesuaian'] = $id;
-                    BerkasPenyesuaian::insert($value);
-                }
-                break;
+                    foreach($store as $key => $value){
+                        $value['id_penyesuaian'] = $id;
+                        BerkasPenyesuaian::insert($value);
+                    }
+                    break;
             }
         }
     }

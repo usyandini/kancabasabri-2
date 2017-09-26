@@ -221,7 +221,10 @@
                                           <select class="form-control kcabang" id="cabang" name="p_cabang" required>
                                               <option value="0">--Pilih Kantor Cabang</option>
                                             @foreach($kcabangs as $cabang)
+                                              {{ $id = $cabang->VALUE."00" }}
+                                              @if(Gate::check("unit_".$id) )
                                               <option value="{{ $cabang->DESCRIPTION }}">{{ $cabang->DESCRIPTION }}</option>
+                                              @endif
                                             @endforeach
                                           </select>
                                         </div>

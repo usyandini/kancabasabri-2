@@ -146,8 +146,10 @@ class ItemController extends Controller
                 'SEGMEN_4'          => $request->divisi,
                 'SEGMEN_5'          => $request->subpos,
                 'SEGMEN_6'          => $request->kegiatan,
-                'created_by'        => \Auth::id()
+                'created_by'        => \Auth::id(),
+                'is_displayed'      => $request->item_display
             );
+            
             ItemMaster::create($inputItem);
         }
         session()->flash('success', true);
@@ -227,9 +229,11 @@ class ItemController extends Controller
                 'SEGMEN_3'          => $request->kpkc,
                 'SEGMEN_4'          => $request->divisi,
                 'SEGMEN_5'          => $request->subpos,
-                'SEGMEN_6'          => $request->kegiatan
+                'SEGMEN_6'          => $request->kegiatan,
+                'is_displayed'      => $request->item_display
             );
         ItemMaster::where('id', $id)->update($update);
+        session()->flash('success', true);
         return redirect('/item/edit/'.$id);
     }
 

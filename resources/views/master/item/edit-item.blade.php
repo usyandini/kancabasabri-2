@@ -10,6 +10,7 @@
                 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/plugins/extensions/toastr.min.css') }}">
                 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/plugins/forms/validation/form-validation.css') }}">
                 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/forms/icheck/icheck.css') }}">
+                <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/forms/icheck/custom.css') }}">
                 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/tables/datatable/dataTables.bootstrap4.min.css') }}">
                 @endsection
 
@@ -36,7 +37,7 @@
                     @if(session('success'))
                     <div class="col-xs-7">
                       <div class="alert alert-success">
-                        <b>Data item berhasil ditambah.</b>
+                        <b>Data item berhasil diubah.</b>
                       </div>
                     </div>
                     @elseif(session('unique'))
@@ -123,6 +124,21 @@
                                       <button type="button" class="btn btn-success" data-target="#tambahPos" data-toggle="modal">
                                         <i class="fa fa-plus"></i>
                                       </button>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="form-group">
+                                  <div class="row">
+                                    <div class="col-md-12 col-sm-12">
+                                      <div class="form-group skin skin-square">
+                                        <label>Display item untuk seluruh cabang</label>
+                                        <fieldset>
+                                          <input type="radio" id='item_display_on' name="item_display" value="1" {{ $master->is_displayed == "1" ? 'checked=""' : '' }}>
+                                          <label>Iya</label>
+                                          <input type="radio" id='item_display_off' name="item_display" value="0" {{ $master->is_displayed == "0" ? 'checked=""' : '' }}>
+                                          <label>Tidak</label>
+                                        </fieldset>
+                                      </div>
                                     </div>
                                   </div>
                                 </div>
@@ -348,6 +364,7 @@
         			 	<script type="text/javascript" src="{{ asset('app-assets/vendors/js/tables/jquery.dataTables.min.js') }}"></script>
         				<script type="text/javascript" src="{{ asset('app-assets/vendors/js/tables/datatable/dataTables.bootstrap4.min.js') }}"></script>
         				<script type="text/javascript" src="{{ asset('app-assets/vendors/js/tables/datatable/dataTables.responsive.min.js') }}"></script>
+                <script src="{{ asset('app-assets/vendors/js/forms/icheck/icheck.min.js') }}" type="text/javascript"></script> 
                 <script type="text/javascript" src="{{ asset('app-assets/js/scripts/modal/components-modal.min.js') }}"></script>
                 <script type="text/javascript">
                   function getVal(s, v){
@@ -382,6 +399,13 @@
                               e.target.setCustomValidity("");
                           };
                       }
+                  });
+
+                  $('input[type="radio"]').iCheck('enable')
+                  $('input').iCheck({
+                    checkboxClass: 'icheckbox_square-red',
+                    radioClass: 'iradio_square-red',
+                    increaseArea: '20%' // optional
                   });
                 </script>
                 @endsection		
