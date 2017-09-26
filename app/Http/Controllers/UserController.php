@@ -87,7 +87,7 @@ class UserController extends Controller
     }
 
     public function update(Request $request, $id)
-    {    	
+    {
     	$input = $request->except('_token' , '_method', 'profile_edit');
         $profile_edit = $request->profile_edit;
         if ($input['password'] == '') { unset($input['password']); unset($input['password_confirmation']); }
@@ -106,7 +106,6 @@ class UserController extends Controller
                 $user->perizinan = $input['perizinan'];
                 $user->save();
                 
-            echo json_encode($input['perizinan']);
                 unset($input['perizinan']);
             }
 
