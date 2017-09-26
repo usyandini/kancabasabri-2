@@ -3,6 +3,10 @@
     $('select[name="cabang"]').on('change', function() {
       if ($(this).val() !== '00') {
         $('select[name="divisi"]').prop("disabled", true);
+        $('select[name="divisi"] option:selected').attr("selected",null);
+        $('select[name="divisi"] option[value=00]').attr("selected","selected");
+        $('#select2-divisi-container').attr("title","");
+        $('#select2-divisi-container').html("");
         toastr.info("Divisi tidak perlu dipilih jika Kantor Cabang yang dipilih adalah <b>Kantor pusat</b>.", "Kantor Cabang dipilih", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:10e3});
       } else {
         $('select[name="divisi"]').prop("disabled", false);
@@ -205,21 +209,38 @@
       getUsername();
       $("#username").change(function(){
         nama_lengkap = document.getElementById('nama_lengkap');
+        email = document.getElementById('email');
         username = document.getElementById('username');
+        nama_isi = true;
+        email_isi = true;
         Object.keys(data_username).map(function(key, index) {
             if(key!="count"){
 
-                // console.log(data_username[key]);
-              if( typeof data_username[key]["displayname"] == 'undefined'){
+              nama_isi = true;
+              email_isi = true;
                 console.log(data_username[key]);
+              if( typeof data_username[key]["displayname"] == 'undefined'){
+                nama_isi = false;
+              }
+              if( typeof data_username[key]["mail"] == 'undefined'){
+                email_isi = false;
               }
               
               text = data_username[key]["samaccountname"]["0"];
-              // if(text == username.value){
-              //   nama_lengkap.value = data_username[key]["displayname"]["0"];
-              // }
+              if(text == username.value){
+                if(nama_isi)
+                  nama_lengkap.value = data_username[key]["displayname"]["0"];
+                if(email_isi && data_username[key]["mail"]["0"]!="-")
+                  email.value = data_username[key]["mail"]["0"];
+              }
             }
         });
+        if(!nama_isi)
+          toastr.info("User LDAP tidak mengisi nama lengkap.", "Nama Lengkap Kosong", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:10e3});
+
+        if(!email_isi)
+          toastr.info("User LDAP tidak mengisi email.", "Email Kosong", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:10e3});
+      
       });
       $('#form_password').css("display", "none");
     }else if(type == 0){

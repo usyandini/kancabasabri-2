@@ -164,7 +164,7 @@
                                     @can('master_pelaporan_anggaran')
                                     <li class="is-shown {{ checkActiveMenu('form_master_laporan_anggaran') }}"><a href="{{ url('/pelaporan/form_master/laporan_anggaran', $parameters = [], $secure = null) }}" class="menu-item">Pelaporan Anggaran Kegiatan</a></li>
                                     @endcan
-                                    @can('master_pelaporan_a_RUPS')
+                                    @can('master_arahan_a_RUPS')
                                     <li class="is-shown {{ checkActiveMenu('form_master_arahan_rups') }}"><a href="{{ url('/pelaporan/form_master/arahan_rups', $parameters = [], $secure = null) }}" class="menu-item">Arahan RUPS</a></li>
                                     @endcan
                                     @can('master_usulan_p_p')

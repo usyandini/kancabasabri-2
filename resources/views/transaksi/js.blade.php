@@ -9,7 +9,9 @@
                     var keep_anggaran_btn = document.getElementById("keep_anggaran");
                     if (keep_anggaran_btn) {
                       keep_anggaran_btn.onclick = function () {
+                        @if(!$empty_batch)
                         location.href = "{{ url('transaksi/refresh/anggaran').'/'.$active_batch->id }}";
+                        @endif
                       };
                     }
 

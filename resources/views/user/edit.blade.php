@@ -72,27 +72,23 @@
                                                 </div>
                                                 <div class="form-group">
                                                   <label>Email</label>
-                                                  <input type="email" required="" class="form-control" placeholder="Email" name="email" value="{{ old('email') == '' ? $user->email : old('email') }}">
+                                                  <input type="email" required="" class="form-control" placeholder="Email" name="email" id="email" value="{{ old('email') == '' ? $user->email : old('email') }}">
                                                 </div>
                                                 <div class="form-group">
                                                   <label>Cabang</label>
                                                   <select class="select2 form-control" name="cabang">
                                                     <option selected disabled="">Cabang</option>
                                                     @foreach($cabang as $cab)
-                                                    @if($cab->VALUE !== "00")
                                                     <option {{ $user->cabang == $cab->VALUE ? 'selected=""' : '' }} value="{{ $cab->VALUE }}">{{ $cab->DESCRIPTION }}</option>
-                                                    @endif
                                                     @endforeach
                                                   </select>
                                                 </div>
                                                 <div class="form-group">
                                                   <label>Divisi</label><br>
-                                                  <select class="select2 form-control" name="divisi" >
+                                                  <select class="select2 form-control" name="divisi" id="divisi">
                                                     <option selected disabled="">Divisi</option>
                                                     @foreach($divisi as $div)
-                                                    @if($div->VALUE !== "00")
                                                     <option {{ $user->divisi == $div->VALUE ? 'selected=""' : '' }} value="{{ $div->VALUE }}">{{ $div->DESCRIPTION }}</option>
-                                                    @endif
                                                     @endforeach
                                                   </select>
                                                 </div>

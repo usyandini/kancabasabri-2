@@ -74,7 +74,7 @@
                                 </div>
                                 <div class="form-group">
                                   <label>Email</label>
-                                  <input type="email" required="" class="form-control" placeholder="Email" name="email" value="{{ old('email') }}">
+                                  <input type="email" required="" class="form-control" placeholder="Email" name="email" id="email" value="{{ old('email') }}">
                                 </div>
                                 <div class="form-group">
                                   <label>Cabang</label>

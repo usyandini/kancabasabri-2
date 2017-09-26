@@ -121,7 +121,7 @@ class UserController extends Controller
             session()->flash('success', 'User atas nama <b>'.$user->name.' ('.$user->username.')</b> berhasil diperbarui.');
             return redirect('user');
         }
-
+        echo $input['divisi'].":".$input['cabang']; 
         return redirect()->back()->withInput()->withErrors($validator);
     }
 
@@ -189,7 +189,7 @@ class UserController extends Controller
             $search_filter = '(&(objectCategory=person)(samaccountname=*))';
             $attributes = array();
             // $attributes[] = 'givenname';
-            // $attributes[] = 'mail';
+            $attributes[] = 'mail';
             $attributes[] = 'samaccountname';
             $attributes[] = 'displayname';
             // $attributes[] = 'password';
@@ -204,18 +204,13 @@ class UserController extends Controller
         for($i=0;$i<count($entries)-1;$i++){
             foreach ($user as $row) {
                     if($row->username == $entries[$i]["samaccountname"]["0"]){
-                        // echo $entries[$i]["samaccountname"]["0"]."<br/>";
                         $entries[$i]["dn"] = "Tidak";
                         break;
+                    }else{
+                        $entries[$i]["dn"] = "Ya";
                     }
-                // }
             }
-            // if($save){
-            //     $entries[$i]["dn"] = "Save";
-            // }
         }
-        
-
         return response()->json($entries);
     }
 

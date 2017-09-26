@@ -98,8 +98,6 @@ class AnggaranController extends Controller
 
     public function tambah_anggaran() 
     {
-
-        
         $editable = true;
         $displayEdit = 'none';
         $displaySave = 'block';
