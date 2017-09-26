@@ -35,6 +35,7 @@
                                       <div class="col-md-6">
                                         {{ csrf_field() }}
                                         {{ method_field('PUT') }}
+                                        <input type="hidden" name="profile_edit" value="false">
                                         <div class="card">
                                           <div class="card-header">
                                             <h4 class="card-title" id="basic-layout-card-center">Data Dasar</h4>
