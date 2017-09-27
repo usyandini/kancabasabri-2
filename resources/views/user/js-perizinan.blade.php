@@ -1,5 +1,6 @@
 <script type="text/javascript">
   $(document).ready(function() {
+
     $('select[name="cabang"]').on('change', function() {
       if ($(this).val() !== '00') {
         $('select[name="divisi"]').prop("disabled", true);
@@ -27,7 +28,9 @@
 
     // window.checkDivCab();
 
-
+    @if (session('success'))
+      toastr.info("{!! session('success') !!}", "Update Berhasil", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:10e3});
+    @endif
     @if (isset($profile_edit))
     $('input[type="checkbox"]').iCheck('disable')
     $('select[name="jenis_user"]').prop('disabled', true)

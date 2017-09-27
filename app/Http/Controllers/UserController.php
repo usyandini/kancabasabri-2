@@ -19,7 +19,7 @@ class UserController extends Controller
     {
         $this->middleware('can:info_u', ['only' => 'index']);
         $this->middleware('can:tambah_u', ['only' => 'create', 'store']);
-        $this->middleware('can:edit_u', ['only' => 'edit', 'update']);
+        $this->middleware('can:edit_u', ['only' => 'edit']);
         $this->middleware('can:restore_u', ['only' => 'restore']);
     }
 
@@ -87,7 +87,7 @@ class UserController extends Controller
     }
 
     public function update(Request $request, $id)
-    {    	
+    {
     	$input = $request->except('_token' , '_method', 'profile_edit');
         $profile_edit = $request->profile_edit;
         if ($input['password'] == '') { unset($input['password']); unset($input['password_confirmation']); }

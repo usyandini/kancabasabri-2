@@ -86,12 +86,12 @@
                                 <a href="#" data-toggle="dropdown" class="dropdown-toggle nav-link dropdown-user-link">
                                     <span class="avatar avatar-online">
                                         <img src="{{ asset('app-assets/images/empty-profile-grey.jpg', $secure = null) }}" alt="avatar"><i></i></span>
-                                    <span class="user-name">{{ Auth::user()->name }}</span>
+                                    <span class="user-name">{!! Auth::user()->name !!}</span>
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right">
-                                    @can('edit_u')
+                                    {{-- @can('edit_u') --}}
                                     <a href="{{ url('user/profile').'/'.Auth::user()->id }}" class="dropdown-item"><i class="ft-user"></i> Edit Profile</a>
-                                    @endcan
+                                    {{-- @endcan --}}
                                     <div class="dropdown-divider"></div><a href="{{ url('logout', $parameters = [], $secure = null) }}" class="dropdown-item"><i class="ft-power"></i> Logout</a>
                                 </div>
                             </li>
