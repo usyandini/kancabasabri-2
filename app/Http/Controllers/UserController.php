@@ -106,11 +106,12 @@ class UserController extends Controller
                 $user->perizinan = $input['perizinan'];
                 $user->save();
                 
-            echo json_encode($input['perizinan']);
                 unset($input['perizinan']);
             }
 
-            
+            if (!isset($input['divisi'])) {
+                $input['divisi']="00";
+            }
             User::where('id', $id)->update($input);
             $user = User::withTrashed()->where('id', $id)->first();
 
@@ -121,7 +122,6 @@ class UserController extends Controller
             session()->flash('success', 'User atas nama <b>'.$user->name.' ('.$user->username.')</b> berhasil diperbarui.');
             return redirect('user');
         }
-        echo $input['divisi'].":".$input['cabang']; 
         return redirect()->back()->withInput()->withErrors($validator);
     }
 

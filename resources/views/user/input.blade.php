@@ -100,7 +100,7 @@
                                   <select class="select2 form-control" name="jenis_user" style="width: 100%;">
                                     <option selected disabled="" value="">Jenis User</option>
                                     @foreach($jenis_user as $jenis)
-                                    <option {{ old('jenis') == $jenis->id ? 'selected=""' : '' }} value="{{ $jenis->nama }}">{{ $div->DESCRIPTION }}</option>
+                                    <option {{ old('jenis') == $jenis->id ? 'selected=""' : '' }} value="{{ $jenis->id }}">{{ $jenis->nama }}</option>
                                     @endforeach
                                   </select>
                                 </div>

@@ -85,7 +85,9 @@
                                               <div class="btn btn-primary" onclick="cariAnggaran()"><i class="fa fa-search"></i> Cari</div>                                            
                                           </div>
                                           <div class="col-xs-2" >
+                                            @if(Gate::check('tambah_a'))
                                               <a href="{{ url('anggaran/tambah') }}" class="btn btn-success"><i class="fa fa-plus"></i> Tambah</a>                                   
+                                            @endif
                                           </div>
                                       </div>
                                     </form>
@@ -226,7 +228,7 @@
 
                             itemTemplate: function(value) {
                               
-                              var button = "<a href='{{ url('anggaran/edit/')}}/"+value+"/0'   class='btn btn-primary'> Detail</a>";
+                              var button = "<a href='{{ url('anggaran/edit/')}}/"+value+"'   class='btn btn-primary'> Detail</a>";
                               return button;
                             }
                           }

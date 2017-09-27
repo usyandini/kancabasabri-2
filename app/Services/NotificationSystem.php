@@ -90,6 +90,66 @@ class NotificationSystem
             }
         }
 
+        if(isset($user->perizinan['notif_setuju_ia'])){
+            array_push($array_type,15);
+        }
+        if(isset($user->perizinan['notif_setuju_iia'])){
+            array_push($array_type,17);
+        }
+        if(isset($user->perizinan['notif_setuju_iiia'])){
+            array_push($array_type,19);
+        }
+        if(isset($user->perizinan['notif_setuju_iva'])){
+            array_push($array_type,21);
+        }
+        if(isset($user->perizinan['notif_setuju_va'])){
+            array_push($array_type,23);
+        }
+        if(isset($user->perizinan['notif_setuju_via'])){
+            array_push($array_type,25);
+        }
+        if(isset($user->perizinan['notif_setuju_viia'])){
+            array_push($array_type,27);
+        }
+        if(isset($user->perizinan['notif_setuju_viiia'])){
+            array_push($array_type,29);
+        }
+        if(isset($user->perizinan['notif_ubah_a'])){
+            array_push($array_type,16);
+            if (!in_array(17, $array_type)) {
+                array_push($array_type,17);
+            }
+            array_push($array_type,18);
+            if (!in_array(17, $array_type)) {
+                array_push($array_type,17);
+            }
+            array_push($array_type,20);
+            if (!in_array(19, $array_type)) {
+                array_push($array_type,19);
+            }
+            array_push($array_type,22);
+            if (!in_array(21, $array_type)) {
+                array_push($array_type,21);
+            }
+            array_push($array_type,24);
+            if (!in_array(23, $array_type)) {
+                array_push($array_type,23);
+            }
+            array_push($array_type,26);
+            if (!in_array(25, $array_type)) {
+                array_push($array_type,25);
+            }
+            array_push($array_type,28);
+            if (!in_array(27, $array_type)) {
+                array_push($array_type,27);
+            }
+            array_push($array_type,30);
+            if (!in_array(29, $array_type)) {
+                array_push($array_type,29);
+            }
+            array_push($array_type,31);
+        }
+
         if(count($array_type) == 0){
             return null;
         }
@@ -147,7 +207,65 @@ class NotificationSystem
                 array_push($array_type,4);
             }
         }
-
+        if(isset($user->perizinan['notif_setuju_ia'])){
+            array_push($array_type,15);
+        }
+        if(isset($user->perizinan['notif_setuju_iia'])){
+            array_push($array_type,17);
+        }
+        if(isset($user->perizinan['notif_setuju_iiia'])){
+            array_push($array_type,19);
+        }
+        if(isset($user->perizinan['notif_setuju_iva'])){
+            array_push($array_type,21);
+        }
+        if(isset($user->perizinan['notif_setuju_va'])){
+            array_push($array_type,23);
+        }
+        if(isset($user->perizinan['notif_setuju_via'])){
+            array_push($array_type,25);
+        }
+        if(isset($user->perizinan['notif_setuju_viia'])){
+            array_push($array_type,27);
+        }
+        if(isset($user->perizinan['notif_setuju_viiia'])){
+            array_push($array_type,29);
+        }
+        if(isset($user->perizinan['notif_ubah_a'])){
+            array_push($array_type,16);
+            if (!in_array(17, $array_type)) {
+                array_push($array_type,17);
+            }
+            array_push($array_type,18);
+            if (!in_array(17, $array_type)) {
+                array_push($array_type,17);
+            }
+            array_push($array_type,20);
+            if (!in_array(19, $array_type)) {
+                array_push($array_type,19);
+            }
+            array_push($array_type,22);
+            if (!in_array(21, $array_type)) {
+                array_push($array_type,21);
+            }
+            array_push($array_type,24);
+            if (!in_array(23, $array_type)) {
+                array_push($array_type,23);
+            }
+            array_push($array_type,26);
+            if (!in_array(25, $array_type)) {
+                array_push($array_type,25);
+            }
+            array_push($array_type,28);
+            if (!in_array(27, $array_type)) {
+                array_push($array_type,27);
+            }
+            array_push($array_type,30);
+            if (!in_array(29, $array_type)) {
+                array_push($array_type,29);
+            }
+            array_push($array_type,31);
+        }
         if(count($array_type) == 0){
             return null;
         }

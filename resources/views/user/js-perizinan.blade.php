@@ -5,8 +5,10 @@
         $('select[name="divisi"]').prop("disabled", true);
         $('select[name="divisi"] option:selected').attr("selected",null);
         $('select[name="divisi"] option[value=00]').attr("selected","selected");
+        $('select[name="divisi"]').val('00');
         $('#select2-divisi-container').attr("title","");
         $('#select2-divisi-container').html("");
+        // alert($('select[name="divisi"]').val());
         toastr.info("Divisi tidak perlu dipilih jika Kantor Cabang yang dipilih adalah <b>Kantor pusat</b>.", "Kantor Cabang dipilih", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:10e3});
       } else {
         $('select[name="divisi"]').prop("disabled", false);

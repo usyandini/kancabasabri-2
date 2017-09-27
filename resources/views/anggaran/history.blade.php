@@ -113,7 +113,6 @@
                             </div>
                             <div class="card-body collapse in">
                                 <div class="card-block">
-                                  <form method="POST" action="{{url('anggaran/submit/tambah') }}" id="insertAnggaran" name="insertAnggaran" enctype="multipart/form-data">
                                   <div class="row">
 
                                     <div class="col-xs-12">
@@ -147,13 +146,12 @@
                                     <br />
                                     <div class="pull-right">
                                       <div class="form-group">
-                                        <button type="submit" class="btn btn-secondary"><i class="fa fa-download"></i> Unduh</button>
+                                        <a type="submit" class="btn btn-secondary"><i class="fa fa-download"></i> Unduh</a>
                                       </div>
                                     </div>
                                   </div>
                                 </div>
                                 
-                                </form>
                             </div>
                         </div>
                       </div>
