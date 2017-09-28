@@ -56,7 +56,7 @@
                         @elseif(session('reject1'))
                         <div class="col-xs-8">
                           <div class="alert alert-warning">
-                            <b>Tarik tunai anda ditolak oleh Akuntansi dengan alasan {{ $notif->reason['content'] }}.<br>Silahkan melakukan <i>tarik tunai</i> kembali.</b>
+                            <b>Tarik tunai anda ditolak dengan alasan {{ $notif->reason['content'] }}.<br>Silahkan melakukan <i>tarik tunai</i> kembali.</b>
                           </div>
                         </div>
                         @endif
