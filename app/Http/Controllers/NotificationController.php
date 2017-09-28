@@ -8,6 +8,7 @@ use App\Http\Requests;
 
 use App\Models\TarikTunai;
 use App\Models\PenyesuaianDropping;
+use App\Models\Anggaran;
 use App\Models\Notification;
 
 use App\Services\NotificationSystem;
@@ -51,6 +52,7 @@ class NotificationController extends Controller
         $notifDetail = NotificationSystem::get($id);
         $tariktunai = TarikTunai::where('id', $notifDetail->batch_id)->first();
         $penyesuaian = PenyesuaianDropping::where('id', $notifDetail->batch_id)->first();
+        $anggaran = Anggaran::where('id', $notifDetail->batch_id)->first();
     	
     	switch ($notifDetail->type) {
     		case 1:
@@ -73,6 +75,28 @@ class NotificationController extends Controller
                 return redirect('dropping/penyesuaian/'.$penyesuaian->id_dropping);
             case 14:
                 return redirect('dropping/penyesuaian/'.$penyesuaian->id_dropping);
+            case 15:
+                return redirect('anggaran/persetujuan/'.$anggaran->nd_surat."/1");
+            case 16:
+                return redirect('anggaran/edit/'.$anggaran->nd_surat);
+            case 17:
+                return redirect('anggaran/persetujuan/'.$anggaran->nd_surat."/1");
+            case 18:
+                return redirect('anggaran/edit/'.$anggaran->nd_surat);
+            case 19:
+            case 20:
+            case 21:
+            case 22:
+            case 23:
+            case 24:
+            case 25:
+            case 26:
+            case 27:
+            case 28:
+            case 29:
+            case 30:
+            case 31:
+                return redirect('anggaran/persetujuan/'.$anggaran->nd_surat."/1");
 			default:
 				return redirect('transaksi/');
     	}

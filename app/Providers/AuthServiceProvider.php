@@ -81,7 +81,7 @@ class AuthServiceProvider extends ServiceProvider
         }
 
         $pelaporan = ["pelaporan_anggaran","pelaporan_a_RUPS","form_master","master_pelaporan_anggaran",
-                        "master_pelaporan_a_RUPS","master_usulan_p_p"];
+                        "master_arahan_a_RUPS","master_usulan_p_p"];
 
         for($i=0;$i<count($pelaporan);$i++){
              $permissions[] = $pelaporan[$i];

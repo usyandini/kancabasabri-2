@@ -74,7 +74,7 @@
                                 </div>
                                 <div class="form-group">
                                   <label>Email</label>
-                                  <input type="email" required="" class="form-control" placeholder="Email" name="email" value="{{ old('email') }}">
+                                  <input type="email" required="" class="form-control" placeholder="Email" name="email" id="email" value="{{ old('email') }}">
                                 </div>
                                 <div class="form-group">
                                   <label>Cabang</label>
@@ -100,7 +100,7 @@
                                   <select class="select2 form-control" name="jenis_user" style="width: 100%;">
                                     <option selected disabled="" value="">Jenis User</option>
                                     @foreach($jenis_user as $jenis)
-                                    <option {{ old('jenis') == $jenis->id ? 'selected=""' : '' }} value="{{ $jenis->nama }}">{{ $div->DESCRIPTION }}</option>
+                                    <option {{ old('jenis') == $jenis->id ? 'selected=""' : '' }} value="{{ $jenis->id }}">{{ $jenis->nama }}</option>
                                     @endforeach
                                   </select>
                                 </div>

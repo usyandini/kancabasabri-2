@@ -66,7 +66,7 @@
 			                        				@if(!$user->deleted_at && Gate::check('edit_jenis'))
 			                        					<a class="btn btn-sm btn-primary" href="{{ url('jenis_user').'/'.$user->id.'/edit' }}"><i class="fa fa-edit"></i> Edit</a>
 		                        					@endif
-		                        					@if(Auth::user()->id != $user->id && !$user->deleted_at && $user->jumlah > 0)
+		                        					@if(Auth::user()->id != $user->id && !$user->deleted_at && $user->countUsers() == 0)
 				                        				<a class="btn btn-sm btn-danger" href="#" onclick="deleteUser({{ $user->id }}, false)"><i class="fa fa-times"></i> Hapus</a>
 				                        			@endif
 				                        			@if($user->deleted_at)

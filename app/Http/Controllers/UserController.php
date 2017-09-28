@@ -19,7 +19,7 @@ class UserController extends Controller
     {
         $this->middleware('can:info_u', ['only' => 'index']);
         $this->middleware('can:tambah_u', ['only' => 'create', 'store']);
-        $this->middleware('can:edit_u', ['only' => 'edit', 'update']);
+        $this->middleware('can:edit_u', ['only' => 'edit']);
         $this->middleware('can:restore_u', ['only' => 'restore']);
     }
 
@@ -87,7 +87,7 @@ class UserController extends Controller
     }
 
     public function update(Request $request, $id)
-    {    	
+    {
     	$input = $request->except('_token' , '_method', 'profile_edit');
         $profile_edit = $request->profile_edit;
         if ($input['password'] == '') { unset($input['password']); unset($input['password_confirmation']); }
@@ -106,11 +106,12 @@ class UserController extends Controller
                 $user->perizinan = $input['perizinan'];
                 $user->save();
                 
-            echo json_encode($input['perizinan']);
                 unset($input['perizinan']);
             }
 
-            
+            if (!isset($input['divisi'])) {
+                $input['divisi']="00";
+            }
             User::where('id', $id)->update($input);
             $user = User::withTrashed()->where('id', $id)->first();
 
@@ -121,7 +122,6 @@ class UserController extends Controller
             session()->flash('success', 'User atas nama <b>'.$user->name.' ('.$user->username.')</b> berhasil diperbarui.');
             return redirect('user');
         }
-
         return redirect()->back()->withInput()->withErrors($validator);
     }
 
@@ -189,7 +189,7 @@ class UserController extends Controller
             $search_filter = '(&(objectCategory=person)(samaccountname=*))';
             $attributes = array();
             // $attributes[] = 'givenname';
-            // $attributes[] = 'mail';
+            $attributes[] = 'mail';
             $attributes[] = 'samaccountname';
             $attributes[] = 'displayname';
             // $attributes[] = 'password';
@@ -204,18 +204,13 @@ class UserController extends Controller
         for($i=0;$i<count($entries)-1;$i++){
             foreach ($user as $row) {
                     if($row->username == $entries[$i]["samaccountname"]["0"]){
-                        // echo $entries[$i]["samaccountname"]["0"]."<br/>";
                         $entries[$i]["dn"] = "Tidak";
                         break;
+                    }else{
+                        $entries[$i]["dn"] = "Ya";
                     }
-                // }
             }
-            // if($save){
-            //     $entries[$i]["dn"] = "Save";
-            // }
         }
-        
-
         return response()->json($entries);
     }
 

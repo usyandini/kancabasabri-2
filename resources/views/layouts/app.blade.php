@@ -86,12 +86,12 @@
                                 <a href="#" data-toggle="dropdown" class="dropdown-toggle nav-link dropdown-user-link">
                                     <span class="avatar avatar-online">
                                         <img src="{{ asset('app-assets/images/empty-profile-grey.jpg', $secure = null) }}" alt="avatar"><i></i></span>
-                                    <span class="user-name">{{ Auth::user()->name }}</span>
+                                    <span class="user-name">{!! Auth::user()->name !!}</span>
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right">
-                                    @can('edit_u')
+                                    {{-- @can('edit_u') --}}
                                     <a href="{{ url('user/profile').'/'.Auth::user()->id }}" class="dropdown-item"><i class="ft-user"></i> Edit Profile</a>
-                                    @endcan
+                                    {{-- @endcan --}}
                                     <div class="dropdown-divider"></div><a href="{{ url('logout', $parameters = [], $secure = null) }}" class="dropdown-item"><i class="ft-power"></i> Logout</a>
                                 </div>
                             </li>
@@ -164,7 +164,7 @@
                                     @can('master_pelaporan_anggaran')
                                     <li class="is-shown {{ checkActiveMenu('form_master_laporan_anggaran') }}"><a href="{{ url('/pelaporan/form_master/laporan_anggaran', $parameters = [], $secure = null) }}" class="menu-item">Pelaporan Anggaran Kegiatan</a></li>
                                     @endcan
-                                    @can('master_pelaporan_a_RUPS')
+                                    @can('master_arahan_a_RUPS')
                                     <li class="is-shown {{ checkActiveMenu('form_master_arahan_rups') }}"><a href="{{ url('/pelaporan/form_master/arahan_rups', $parameters = [], $secure = null) }}" class="menu-item">Arahan RUPS</a></li>
                                     @endcan
                                     @can('master_usulan_p_p')
