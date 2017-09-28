@@ -12,6 +12,16 @@ use Illuminate\Database\Eloquent\Model;
 // 5 = Submit verifikasi lvl 2 rejected | Reveiver : id batch submitter
 // 6 = Submit verifikasi lvl 2 approved | Receiver : id batch submitter
 
+// 7 = Submit verifikasi lvl 1 tarik tunai | Receiver : Akuntansi
+// 8 = Submit verifikasi lvl 1 tarik tunai rejected | Receiver : id submitter
+// 9 = Submit verifikasi lvl 1 tarik tunai approved | Receiver : id submitter
+
+// 10 = Submit verifikasi lvl 1 penyesuaian dropping | Receiver : Bia
+// 11 = Submit verifikasi lvl 1 penyesuaian dropping rejected | Receiver : id submitter
+//    = Submit verifikasi lvl 1 penyesuaian dropping approved | Receiver : id submitter
+// 12 = Submit verifikasi lvl 1 penyesuaian dropping approved | Receiver : Akuntansi
+// 13 = Submit verifikasi lvl 2 penyesuaian dropping rejected | Receiver : id submitter
+// 14 = Submit verifikasi lvl 2 penyesuaian dropping approved | Reveiver : id submitter
 
 // ------------------------------------
 
@@ -78,11 +88,11 @@ class Notification extends Model
             case 9:
                 return 'Tarik Tunai oleh <b>'.$this->idTarikTunai['cabang'].'</b> pada tanggal '.date('d F Y', strtotime($this->idTarikTunai['created_at'])).' telah diverifikasi oleh Divisi Akuntansi.';
             case 10: 
-                return 'Penyesuaian dropping dilakukan oleh <b>'.$this->idPenyesuaian['cabang'].'</b>. Mohon review untuk verifikasi anda sebagai user Bia.';
+                return 'Penyesuaian dropping dilakukan oleh <b>'.$this->idPenyesuaian['cabang'].'</b>. Mohon review untuk verifikasi anda.';
             case 11:
-                return 'Penyesuaian dropping oleh <b>'.$this->idPenyesuaian['cabang'].'</b> pada tanggal '.date('d F Y', strtotime($this->idPenyesuaian['created_at'])).' ditolak oleh Bia dengan alasan '.$this->rejectPenyesuaian['reason']['content'].'. Silahkan melakukan Penyesuaian Dropping kembali.';
+                return 'Penyesuaian dropping oleh <b>'.$this->idPenyesuaian['cabang'].'</b> pada tanggal '.date('d F Y', strtotime($this->idPenyesuaian['created_at'])).' ditolak dengan alasan '.$this->rejectPenyesuaian['reason']['content'].'. Silahkan melakukan Penyesuaian Dropping kembali.';
             case 12:
-                return 'Penyesuaian dropping oleh <b>'.$this->idPenyesuaian['cabang'].'</b> pada tanggal '.date('d F Y', strtotime($this->idPenyesuaian['created_at'])).' telah diverifikasi oleh Bia. Mohon review untuk verifikasi anda sebagai user Akuntansi.';
+                return 'Penyesuaian dropping oleh <b>'.$this->idPenyesuaian['cabang'].'</b> pada tanggal '.date('d F Y', strtotime($this->idPenyesuaian['created_at'])).' telah diverifikasi. Mohon review untuk verifikasi anda sebagai user Akuntansi.';
             case 13:
                 return 'Penyesuaian dropping oleh <b>'.$this->idPenyesuaian['cabang'].'</b> pada tanggal '.date('d F Y', strtotime($this->idPenyesuaian['created_at'])).' ditolak oleh Divisi Akuntansi dengan alasan '.$this->rejectPenyesuaian['reason']['content'].'. Silahkan melakukan Penyesuaian Dropping kembali.';
             case 14:
