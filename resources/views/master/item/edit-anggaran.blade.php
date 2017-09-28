@@ -15,13 +15,13 @@
                 @section('content')
                	<div class="content-header row">
                     <div class="content-header-left col-md-6 col-xs-12 mb-2">
-                        <h3 class="content-header-title mb-0">Master Item</h3>
+                        <h3 class="content-header-title mb-0">Daftar Item Anggaran</h3>
                         <div class="row breadcrumbs-top">
                             <div class="breadcrumb-wrapper col-xs-12">
                                 <ol class="breadcrumb">
                                     <li class="breadcrumb-item"><a href="{{ url('/') }}">Manajemen Item</a>
                                     </li>
-                                    <li class="breadcrumb-item active"><a href="{{ url('/item') }}">Manajemen Kombinasi Item</a>
+                                    <li class="breadcrumb-item active"><a href="{{ url('/item') }}">Manajemen Item Anggaran</a>
                                     </li>
                                 </ol>
                             </div>
@@ -35,49 +35,76 @@
 			            <div class="col-xs-12">
 			              <div class="card">
 			                <div class="card-header">
-			                  <h4 class="card-title">Daftar Item</h4>
+			                  <h4 class="card-title">Daftar Item Anggaran</h4>
 			                  <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
-			                  <div class="col-md-12" >
+			                  {{--<div class="col-md-12" >
 	                              <a href="{{ url('item/create') }}" class="btn btn-success pull-right"><i class="fa fa-plus"></i> Tambah</a>
-	                          </div>
+	                          </div>--}}
 			                </div>
 			                <div class="card-body collapse in">			                
 			                  <div class="card-block">
 			                  	<name="data" id="data">
 			                  	<div class="table-responsive">
-			                      <table class="table table-striped table-bordered datatable-select-inputs wrap" cellspacing="0" width="120%">
+			                      <table class="table table-striped table-bordered datatable-select-inputs wrap" cellspacing="0" width="100%">
 			                        <thead>
 			                          <tr>
-			                          	<th width="5%">No</th>
-			                          	<th id="filterable" width="5%"><center>Kode Item</center></th>
-			                            <th id="filterable" width="20%">Item</th>
-			                            <th id="filterable" width="10%">Jenis Anggaran</th>
-			                            <th id="filterable" width="10%">Kelompok Anggaran</th>
-			                            <th id="filterable" width="10%">Pos Anggaran</th>
-			                            <th id="filterable" width="10%">Sub Pos</th>
-			                            <th id="filterable" width="10%">Mata Anggaran</th>
-			                            <th width="40%"><center>Aksi</center></th>
+			                          	<th>No</th>
+			                          	<th id="filterable"><center>Kode Item Anggaran</center></th>
+			                            <th id="filterable">Nama Item Anggaran</th>
+			                            <th id="filterable">Tipe Item Anggaran</th>
+			                            <th><center>Aksi</center></th>
 			                          </tr>
 			                        </thead>
 			                        <tbody>
 			                        @foreach($items as $item)
 		                        		<tr>
-		                        			<td width="5%">{{ $no++ }}</td>
-		                        			<td width="5%">{{ $item->kode_item }}</td>
-		                        			<td width="20%">{{ $item->nama_item }}</td>
-		                        			<td width="10%">{{ $jenis->where('kode', $item->jenis_anggaran)->first()['name'] }}
-		                        			<td width="10%">{{ $kelompok->where('kode', $item->kelompok_anggaran)->first()['name'] }}</td>
-		                        			<td width="10%">{{ $pos->where('kode', $item->pos_anggaran)->first()['name'] }}</td>
-		                        			<td width="10%">{{ $item->sub_pos }}</td>
-		                        			<td width="10%">{{ $item->mata_anggaran }}</td>
-	                        				<td width="40%"><center>
-	                        					<a href="{{ url('item/edit').'/'.$item->id }}" class="btn btn-info btn-sm">
-	                        					<i class="fa fa-edit"></i> Edit</a>
+		                        			<td>{{ $no++ }}</td>
+		                        			<td>{{ $item->kode }}</td>
+		                        			<td>{{ $item->name }}</td>
+		                        			<td>
+		                        			@if($item->type == 1) Jenis Anggaran
+		                        			@elseif($item->type == 2) Kelompok Anggaran
+		                        			@elseif($item->type == 3) Pos Anggaran
+		                        			@endif
+		                        			</td>
+	                        				<td><center>
+	                        					{{--<a href="{{ url('item/edit/anggaran').'/'.$item->id }}" class="btn btn-info btn-sm">--}}
+	                        					<button class="btn btn-info btn-sm" data-target="#edit{{$item->id}}" data-toogle="modal">
+	                        					<i class="fa fa-edit"></i> Edit</a></button>
 
 	                        					<a href="#" class="btn btn-danger btn-sm" onclick="deleteUser({{ $item->id }})">
 	                        					<i class="fa fa-trash"></i> Hapus</a>
 	                        				</center></td>
 		                        		</tr>
+		                        		<div class="modal fade text-xs-left" id="edit{{$item->id}}" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+					                      <div class="modal-dialog">
+					                        <div class="modal-content">
+					                          <div class="modal-header">
+					                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					                              <span aria-hidden="true">&times;</span>
+					                            </button>
+					                            <h4 class="modal-title" id="myModalLabel">Edit Item Anggaran</h4>
+					                          </div>
+					                          <form class="form" id="edit-jenis-form" action="{{ URL('item/update/anggaran/'.$item->id) }}" method="POST">
+					                          {{ csrf_field() }}
+					                            <div class="modal-body" id="confirmation-msg">
+					                                <div class="form-group">
+					                                  <label for="edit_kode_jenis">Kode</label>
+					                                    <input class="form-control" type="text" name="edit_kode" id="edit_kode" placeholder="Kode Item Anggaran" value="{{ $item->kode }}" readonly="">
+					                                </div> 
+					                                <div class="form-group">
+					                                  <label for="edit_nama_jenis">Nama</label>
+					                                    <input class="form-control" type="text" name="edit_nama" id="edit_nama" placeholder="Nama Item Anggaran" value="{{ $item->name }}">
+					                                </div>
+					                            </div>
+					                            <div class="modal-footer">
+					                              <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">Kembali</button>
+					                              <button type="submit" id="simpan" class="btn btn-outline-primary">Simpan</button>
+					                            </div>
+					                          </form>
+					                        </div>
+					                      </div>
+					                    </div>
 		                        	@endforeach
 			                        </tbody>
 			                      </table>
@@ -112,20 +139,6 @@
 				<script type="text/javascript">
 					$('.datatable-select-inputs').DataTable( {
 							scrollX: true,
-							"language": {
-								"paginate": {
-								  "previous": "Sebelumnya",
-								  "next": "Selanjutnya"
-								},
-
-    							"emptyTable":  "Tidak Ada Item Tersimpan",
-    							"info":  "Data Item _START_-_END_ dari _TOTAL_ Item",
-    							"infoEmpty":  "Data Item 0-0 dari _TOTAL_ Item ",
-    							"search": "Pencarian:",
-    							"lengthMenu": "Perlihatkan _MENU_ masukan",
-    							"infoFiltered": "(telah di filter dari _MAX_ total masukan)",
-    							"zeroRecords": "Tidak ada data ditemukan",
-							},
 						    initComplete: function () {
 						        this.api().columns('#filterable').every( function () {
 						            var column = this;
@@ -149,7 +162,7 @@
 						});
 
 					function deleteUser(id) {
-						$('form[id="deleteU"').attr('action', '{{ url('item') }}' + '/delete/master/' + id);
+						$('form[id="deleteU"').attr('action', '{{ url('item') }}' + '/delete/anggaran/' + id);
 						var con = confirm("Apakah anda yakin untuk menghapus item ini?");
 						if (con) {
 							$('form[id="deleteU"').submit();	
