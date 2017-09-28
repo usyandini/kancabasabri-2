@@ -80,7 +80,7 @@
                                       <select class="select2 form-control" name="jenis" id="jenis" required>
                                         <option value="" disabled selected>Jenis Anggaran</option>
                                         @foreach($jenis as $ja)
-                                        <option {{ old('jenis') == $ja->kode ? 'selected=""' : '' }} value="{{ $ja->kode }}">{{ $ja->kode }} - {{ $ja->name }}</option>
+                                        <option {{ old('jenis') == $ja->kode ? 'selected=""' : '' }} value="{{ $ja->name }}">{{ $ja->kode }} - {{ $ja->name }}</option>
                                         @endforeach
                                       </select>
                                     </div>
@@ -98,7 +98,7 @@
                                       <select class="select2 form-control" id="kelompok" name="kelompok" required>
                                         <option value="" disabled selected>Kelompok Anggaran</option>
                                         @foreach($kelompok as $ka)
-                                        <option {{ old('kelompok') == $ka->kode ? 'selected=""' : '' }} value="{{ $ka->kode }}">{{ $ka->kode }} - {{ $ka->name }}</option>
+                                        <option {{ old('kelompok') == $ka->kode ? 'selected=""' : '' }} value="{{ $ka->name }}">{{ $ka->kode }} - {{ $ka->name }}</option>
                                         @endforeach
                                       </select>
                                     </div>
@@ -116,7 +116,7 @@
                                       <select class="select2 form-control" id="pos" name="pos" required>
                                         <option value="" disabled selected>Pos Anggaran</option>
                                         @foreach($pos as $pa)
-                                        <option {{ old('pos') == $pa->kode ? 'selected=""' : '' }} value="{{ $pa->kode }}">{{ $pa->kode }} - {{ $pa->name }}</option>
+                                        <option {{ old('pos') == $pa->kode ? 'selected=""' : '' }} value="{{ $pa->name }}">{{ $pa->kode }} - {{ $pa->name }}</option>
                                         @endforeach
                                       </select>
                                     </div>

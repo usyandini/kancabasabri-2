@@ -74,7 +74,7 @@
                                       <select class="select2 form-control" name="jenis" id="jenis" onchange="selected(this)" required>
                                         <option value="" disabled selected>Jenis Anggaran</option>
                                         @foreach($jenis as $ja)
-                                        <option {{ $items->jenis_anggaran == $ja->kode ? 'selected=""' : '' }} value="{{ $ja->kode }}">{{ $ja->kode }} - {{ $ja->name }}</option>
+                                        <option {{ $items->jenis_anggaran == $ja->kode ? 'selected=""' : '' }} value="{{ $ja->name }}">{{ $ja->kode }} - {{ $ja->name }}</option>
                                         @endforeach
                                         </select>
                                     </div>
@@ -101,7 +101,7 @@
                                       <select class="select2 form-control" id="kelompok" name="kelompok" required>
                                         <option value="" disabled selected>Kelompok Anggaran</option>
                                         @foreach($kelompok as $ka)
-                                        <option {{ $items->kelompok_anggaran == $ka->kode ? 'selected=""' : '' }} value="{{ $ka->kode }}">{{ $ka->kode }} - {{ $ka->name }}</option>
+                                        <option {{ $items->kelompok_anggaran == $ka->kode ? 'selected=""' : '' }} value="{{ $ka->name }}">{{ $ka->kode }} - {{ $ka->name }}</option>
                                         @endforeach
                                       </select>
                                     </div>
@@ -119,7 +119,7 @@
                                       <select class="select2 form-control" id="pos" name="pos" required>
                                         <option value="" disabled selected>Pos Anggaran</option>
                                         @foreach($pos as $pa)
-                                        <option {{ $items->pos_anggaran == $pa->kode ? 'selected=""' : '' }} value="{{ $pa->kode }}">{{ $pa->kode }} - {{ $pa->name }}</option>
+                                        <option {{ $items->pos_anggaran == $pa->kode ? 'selected=""' : '' }} value="{{ $pa->name }}">{{ $pa->kode }} - {{ $pa->name }}</option>
                                         @endforeach
                                       </select>
                                     </div>
