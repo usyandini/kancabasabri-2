@@ -15,7 +15,7 @@
                 @section('content')
                 <div class="content-header row">
                     <div class="content-header-left col-md-6 col-xs-12 mb-2">
-                        <h3 class="content-header-title mb-0">Verifikasi Penyesuaian Dropping</h3>
+                        <h3 class="content-header-title mb-0">Verifikasi Penyesuaian Dropping Level 2</h3>
                         <div class="row breadcrumbs-top">
                             <div class="breadcrumb-wrapper col-xs-12">
                                 <ol class="breadcrumb">
@@ -23,7 +23,6 @@
                                     </li>
                                     <li class="breadcrumb-item active">Verifikasi Penyesuaian Dropping
                                     </li>
-
                                 </ol>
                             </div>
                         </div>
@@ -37,7 +36,7 @@
                       <div class="col-xs-12">
                         <div class="col-md-6">
                           <div class="alert alert-info alert-dismissible fade in mb-2" role="alert">
-                            <b>Verifikasi hanya dilakukan oleh user <i>Akuntansi</i></b>
+                            <b>Verifikasi dilakukan oleh verifikator <i>level 2</i></b>
                           </div>
                         </div>
                         @if(session('success'))

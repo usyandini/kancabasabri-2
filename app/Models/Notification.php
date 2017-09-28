@@ -75,82 +75,82 @@ class Notification extends Model
     {
         switch ($this->type) {
             case 1:
-                return 'Batch <b>'.date('d-m-Y', strtotime($this->batch['created_at'])).' </b> butuh review anda untuk approval sebagai Kasimin.';
+                return 'Batch '.date('d-m-Y', strtotime($this->batch['created_at'])).' butuh review anda untuk approval sebagai Kasimin.';
             case 2:
-                return 'Batch <b>'.date('d-m-Y', strtotime($this->batch['created_at'])).' </b> anda ditolak dengan perbaikan oleh Kasimin. Silahkan lakukan perubahan dan submit kembali.';
+                return 'Batch '.date('d-m-Y', strtotime($this->batch['created_at'])).' anda ditolak dengan perbaikan oleh Kasimin. Silahkan lakukan perubahan dan submit kembali.';
             case 3:
-                return 'Batch <b>'.date('d-m-Y', strtotime($this->batch['created_at'])).' </b> anda telah <b>disetujui oleh Kasimin</b>. Silahkan Menunggu verifikasi dari user Akutansi.';
+                return 'Batch '.date('d-m-Y', strtotime($this->batch['created_at'])).' anda telah disetujui oleh Kasimin. Silahkan Menunggu verifikasi dari user Akutansi.';
             case 4:
-                return 'Batch <b>'.date('d-m-Y', strtotime($this->batch['created_at'])).' </b> telah disetujui oleh user Kasmin. Mohon review untuk verifikasi akhir anda sebagai user Akutansi.';
+                return 'Batch '.date('d-m-Y', strtotime($this->batch['created_at'])).' telah disetujui oleh user Kasmin. Mohon review untuk verifikasi akhir anda sebagai user Akutansi.';
             case 5:
-                return 'Batch <b>'.date('d-m-Y', strtotime($this->batch['created_at'])).' </b> anda ditolak dengan perbaikan oleh user Akutansi. Silahkan lakukan perubahan dan submit kembali.';
+                return 'Batch '.date('d-m-Y', strtotime($this->batch['created_at'])).' anda ditolak dengan perbaikan oleh user Akutansi. Silahkan lakukan perubahan dan submit kembali.';
             case 6: 
-                return 'Batch <b>'.date('d-m-Y', strtotime($this->batch['created_at'])).' </b> anda telah diverifikasi oleh user Akutansi. Harap menunggu konfirmasi dari Pusat.';
+                return 'Batch '.date('d-m-Y', strtotime($this->batch['created_at'])).' anda telah diverifikasi oleh user Akutansi. Harap menunggu konfirmasi dari Pusat.';
             case 7: 
-                return 'Tarik Tunai dilakukan oleh <b>'.$this->idTarikTunai['cabang'].'</b>. Mohon review untuk verifikasi anda sebagai user Akuntansi.';
+                return 'Tarik Tunai dilakukan oleh '.$this->idTarikTunai['cabang'].'. Mohon review untuk verifikasi level 1.';
             case 8:
-                return 'Tarik Tunai oleh <b>'.$this->idTarikTunai['cabang'].'</b> pada tanggal '.date('d F Y', strtotime($this->idTarikTunai['created_at'])).' ditolak oleh Divisi Akuntansi dengan alasan '.$this->rejectTarikTunai['reason']['content'].'. Silahkan melakukan Tarik Tunai kembali.';
+                return 'Tarik Tunai oleh '.$this->idTarikTunai['cabang'].' pada tanggal '.date('d F Y', strtotime($this->idTarikTunai['created_at'])).' ditolak oleh verifikator dengan alasan '.$this->rejectTarikTunai['reason']['content'].'. Silahkan melakukan Tarik Tunai kembali.';
             case 9:
-                return 'Tarik Tunai oleh <b>'.$this->idTarikTunai['cabang'].'</b> pada tanggal '.date('d F Y', strtotime($this->idTarikTunai['created_at'])).' telah diverifikasi oleh Divisi Akuntansi.';
+                return 'Tarik Tunai oleh '.$this->idTarikTunai['cabang'].' pada tanggal '.date('d F Y', strtotime($this->idTarikTunai['created_at'])).' telah diverifikasi.';
             case 10: 
-                return 'Penyesuaian dropping dilakukan oleh <b>'.$this->idPenyesuaian['cabang'].'</b>. Mohon review untuk verifikasi anda.';
+                return 'Penyesuaian dropping dilakukan oleh '.$this->idPenyesuaian['cabang'].'. Mohon review untuk verifikasi level 1.';
             case 11:
-                return 'Penyesuaian dropping oleh <b>'.$this->idPenyesuaian['cabang'].'</b> pada tanggal '.date('d F Y', strtotime($this->idPenyesuaian['created_at'])).' ditolak dengan alasan '.$this->rejectPenyesuaian['reason']['content'].'. Silahkan melakukan Penyesuaian Dropping kembali.';
+                return 'Penyesuaian dropping oleh '.$this->idPenyesuaian['cabang'].' pada tanggal '.date('d F Y', strtotime($this->idPenyesuaian['created_at'])).' ditolak dengan alasan '.$this->rejectPenyesuaian['reason']['content'].'. Silahkan melakukan Penyesuaian Dropping kembali.';
             case 12:
-                return 'Penyesuaian dropping oleh <b>'.$this->idPenyesuaian['cabang'].'</b> pada tanggal '.date('d F Y', strtotime($this->idPenyesuaian['created_at'])).' telah diverifikasi. Mohon review untuk verifikasi anda sebagai user Akuntansi.';
+                return 'Penyesuaian dropping oleh '.$this->idPenyesuaian['cabang'].' pada tanggal '.date('d F Y', strtotime($this->idPenyesuaian['created_at'])).' telah diverifikasi level 1. Mohon review untuk verifikasi level 2.';
             case 13:
-                return 'Penyesuaian dropping oleh <b>'.$this->idPenyesuaian['cabang'].'</b> pada tanggal '.date('d F Y', strtotime($this->idPenyesuaian['created_at'])).' ditolak oleh Divisi Akuntansi dengan alasan '.$this->rejectPenyesuaian['reason']['content'].'. Silahkan melakukan Penyesuaian Dropping kembali.';
+                return 'Penyesuaian dropping oleh '.$this->idPenyesuaian['cabang'].' pada tanggal '.date('d F Y', strtotime($this->idPenyesuaian['created_at'])).' ditolak dengan alasan '.$this->rejectPenyesuaian['reason']['content'].'. Silahkan melakukan Penyesuaian Dropping kembali.';
             case 14:
-                return 'Penyesuaian dropping oleh <b>'.$this->idPenyesuaian['cabang'].'</b> pada tanggal '.date('d F Y', strtotime($this->idPenyesuaian['created_at'])).' telah diverifikasi oleh Divisi Akuntansi.';
+                return 'Penyesuaian dropping oleh '.$this->idPenyesuaian['cabang'].' pada tanggal '.date('d F Y', strtotime($this->idPenyesuaian['created_at'])).' telah diverifikasi.';
             case 15:
-                return 'Anggaran dengan Nomer Dinas/Surat <b>'.$this->idAnggaran['nd_surat'].'</b> diajukan oleh <b>'.$this->idAnggaran['unit_kerja'].'</b>. Mohon review untuk disetujui anda sebagai <b> Kanit Kerja '.$this->idAnggaran['unit_kerja'].'</b>.';
+                return 'Anggaran dengan Nomer Dinas/Surat '.$this->idAnggaran['nd_surat'].' diajukan oleh '.$this->idAnggaran['unit_kerja'].'. Mohon review untuk disetujui anda sebagai Kanit Kerja '.$this->idAnggaran['unit_kerja'].'.';
             case 16:
-                return 'Anggaran dengan Nomer Dinas/Surat <b>'.$this->idAnggaran['nd_surat'].'</b> diajukan oleh <b>'.$this->idAnggaran['unit_kerja'].'</b> pada tanggal '.date('d F Y', strtotime($this->idAnggaran['updated_at'])).
-                ' ditolak oleh <b>Kanit Kerja</b> dengan alasan '.$this->idAnggaran['keterangan'].'. Silahkan melakukan Perbaikan Anggaran dan Kegiatan kembali.';
+                return 'Anggaran dengan Nomer Dinas/Surat '.$this->idAnggaran['nd_surat'].' diajukan oleh '.$this->idAnggaran['unit_kerja'].' pada tanggal '.date('d F Y', strtotime($this->idAnggaran['updated_at'])).
+                ' ditolak oleh Kanit Kerja dengan alasan '.$this->idAnggaran['keterangan'].'. Silahkan melakukan Perbaikan Anggaran dan Kegiatan kembali.';
             case 17:
-                return 'Anggaran dengan Nomer Dinas/Surat <b>'.$this->idAnggaran['nd_surat'].'</b> diajukan oleh <b>'.$this->idAnggaran['unit_kerja'].'</b> pada tanggal '.date('d F Y', strtotime($this->idAnggaran['updated_at'])).
-                ' telah disetujui oleh <b>Kanit Kerja</b>. Mohon review untuk disetujui anda sebagai <b>Divisi Renbang</b>.';
+                return 'Anggaran dengan Nomer Dinas/Surat '.$this->idAnggaran['nd_surat'].' diajukan oleh '.$this->idAnggaran['unit_kerja'].' pada tanggal '.date('d F Y', strtotime($this->idAnggaran['updated_at'])).
+                ' telah disetujui oleh Kanit Kerja. Mohon review untuk disetujui anda sebagai Divisi Renbang.';
             case 18:
-                return 'Anggaran dengan Nomer Dinas/Surat <b>'.$this->idAnggaran['nd_surat'].'</b> diajukan oleh <b>'.$this->idAnggaran['unit_kerja'].'</b> pada tanggal '.date('d F Y', strtotime($this->idAnggaran['updated_at'])).
-                ' ditolak oleh <b>Divisi Renbang</b> dengan alasan <i>'.$this->idAnggaran['keterangan'].'</i>. Silahkan melakukan Perbaikan Anggaran dan Kegiatan kembali.';
+                return 'Anggaran dengan Nomer Dinas/Surat '.$this->idAnggaran['nd_surat'].' diajukan oleh '.$this->idAnggaran['unit_kerja'].' pada tanggal '.date('d F Y', strtotime($this->idAnggaran['updated_at'])).
+                ' ditolak oleh Divisi Renbang dengan alasan '.$this->idAnggaran['keterangan'].'. Silahkan melakukan Perbaikan Anggaran dan Kegiatan kembali.';
             case 19:
-                return 'Anggaran dengan Nomer Dinas/Surat <b>'.$this->idAnggaran['nd_surat'].'</b> diajukan oleh <b>'.$this->idAnggaran['unit_kerja'].'</b> pada tanggal '.date('d F Y', strtotime($this->idAnggaran['updated_at'])).
-                ' telah disetujui oleh <b>Divisi Renbang</b>. Mohon review untuk disetujui anda sebagai <b>Direksi</b>.';
+                return 'Anggaran dengan Nomer Dinas/Surat '.$this->idAnggaran['nd_surat'].' diajukan oleh '.$this->idAnggaran['unit_kerja'].' pada tanggal '.date('d F Y', strtotime($this->idAnggaran['updated_at'])).
+                ' telah disetujui oleh Divisi Renbang. Mohon review untuk disetujui anda sebagai Direksi.';
             case 20:
-                return 'Anggaran dengan Nomer Dinas/Surat <b>'.$this->idAnggaran['nd_surat'].'</b> diajukan oleh <b>'.$this->idAnggaran['unit_kerja'].'</b> pada tanggal '.date('d F Y', strtotime($this->idAnggaran['updated_at'])).
-                ' ditolak oleh <b>Direksi</b> dengan alasan <i>'.$this->idAnggaran['keterangan'].'</i>. Silahkan melakukan Perbaikan Anggaran dan Kegiatan kembali oleh <b>Divisi Renbang</b>';
+                return 'Anggaran dengan Nomer Dinas/Surat '.$this->idAnggaran['nd_surat'].' diajukan oleh '.$this->idAnggaran['unit_kerja'].' pada tanggal '.date('d F Y', strtotime($this->idAnggaran['updated_at'])).
+                ' ditolak oleh Direksi dengan alasan '.$this->idAnggaran['keterangan'].'. Silahkan melakukan Perbaikan Anggaran dan Kegiatan kembali oleh Divisi Renbang';
             case 21:
-                return 'Anggaran dengan Nomer Dinas/Surat <b>'.$this->idAnggaran['nd_surat'].'</b> diajukan oleh <b>'.$this->idAnggaran['unit_kerja'].'</b> pada tanggal '.date('d F Y', strtotime($this->idAnggaran['updated_at'])).
-                ' telah disetujui oleh <b>Direksi</b>. Mohon Naskah RKAP untuk disetujui anda sebagai <b>Dewan Komisaris</b>.';
+                return 'Anggaran dengan Nomer Dinas/Surat '.$this->idAnggaran['nd_surat'].' diajukan oleh '.$this->idAnggaran['unit_kerja'].' pada tanggal '.date('d F Y', strtotime($this->idAnggaran['updated_at'])).
+                ' telah disetujui oleh Direksi. Mohon Naskah RKAP untuk disetujui anda sebagai Dewan Komisaris.';
             case 22:
-                return 'Naskah RKAP Anggaran dengan Nomer Dinas/Surat <b>'.$this->idAnggaran['nd_surat'].'</b> diajukan oleh <b>'.$this->idAnggaran['unit_kerja'].'</b> pada tanggal '.date('d F Y', strtotime($this->idAnggaran['updated_at'])).
-                ' ditolak oleh <b>Dewan Komisaris</b> dengan alasan <i>'.$this->idAnggaran['keterangan'].'</i>. Silahkan melakukan Perbaikan Anggaran dan Kegiatan kembali oleh <b>Divisi Renbang</b>';
+                return 'Naskah RKAP Anggaran dengan Nomer Dinas/Surat '.$this->idAnggaran['nd_surat'].' diajukan oleh '.$this->idAnggaran['unit_kerja'].' pada tanggal '.date('d F Y', strtotime($this->idAnggaran['updated_at'])).
+                ' ditolak oleh Dewan Komisaris dengan alasan '.$this->idAnggaran['keterangan'].'. Silahkan melakukan Perbaikan Anggaran dan Kegiatan kembali oleh Divisi Renbang';
             case 23:
-                return 'Naskah RKAP Anggaran dengan Nomer Dinas/Surat <b>'.$this->idAnggaran['nd_surat'].'</b> diajukan oleh <b>'.$this->idAnggaran['unit_kerja'].'</b> pada tanggal '.date('d F Y', strtotime($this->idAnggaran['updated_at'])).
-                ' telah disetujui oleh <b>Dewan Komisaris</b>. Mohon Naskah RKAP disetujui pada <b>Rapat Teknis</b>.';
+                return 'Naskah RKAP Anggaran dengan Nomer Dinas/Surat '.$this->idAnggaran['nd_surat'].' diajukan oleh '.$this->idAnggaran['unit_kerja'].' pada tanggal '.date('d F Y', strtotime($this->idAnggaran['updated_at'])).
+                ' telah disetujui oleh Dewan Komisaris. Mohon Naskah RKAP disetujui pada Rapat Teknis.';
             case 24:
-                return 'Naskah RKAP Anggaran dengan Nomer Dinas/Surat <b>'.$this->idAnggaran['nd_surat'].'</b> diajukan oleh <b>'.$this->idAnggaran['unit_kerja'].'</b> pada tanggal '.date('d F Y', strtotime($this->idAnggaran['updated_at'])).
-                ' ditolak pada <b>Rapat Teknis</b> dengan alasan <i>'.$this->idAnggaran['keterangan'].'</i>. Silahkan melakukan Perbaikan Anggaran dan Kegiatan kembali oleh <b>Divisi Renbang</b>';
+                return 'Naskah RKAP Anggaran dengan Nomer Dinas/Surat '.$this->idAnggaran['nd_surat'].' diajukan oleh '.$this->idAnggaran['unit_kerja'].' pada tanggal '.date('d F Y', strtotime($this->idAnggaran['updated_at'])).
+                ' ditolak pada Rapat Teknis dengan alasan '.$this->idAnggaran['keterangan'].'. Silahkan melakukan Perbaikan Anggaran dan Kegiatan kembali oleh Divisi Renbang';
             case 25:
-                return 'Naskah RKAP Anggaran dengan Nomer Dinas/Surat <b>'.$this->idAnggaran['nd_surat'].'</b> diajukan oleh <b>'.$this->idAnggaran['unit_kerja'].'</b> pada tanggal '.date('d F Y', strtotime($this->idAnggaran['updated_at'])).
-                ' telah disetujui pada <b>Rapat Teknis</b>. Mohon Naskah RKAP disetujui pada <b>Rapat Umum Pemegang Saham</b>';
+                return 'Naskah RKAP Anggaran dengan Nomer Dinas/Surat '.$this->idAnggaran['nd_surat'].' diajukan oleh '.$this->idAnggaran['unit_kerja'].' pada tanggal '.date('d F Y', strtotime($this->idAnggaran['updated_at'])).
+                ' telah disetujui pada Rapat Teknis. Mohon Naskah RKAP disetujui pada Rapat Umum Pemegang Saham';
             case 26:
-                return 'Naskah RKAP Anggaran dengan Nomer Dinas/Surat <b>'.$this->idAnggaran['nd_surat'].'</b> diajukan oleh <b>'.$this->idAnggaran['unit_kerja'].'</b> pada tanggal '.date('d F Y', strtotime($this->idAnggaran['updated_at'])).
-                ' ditolak pada <b>Rapat Umum Pemegang Saham</b> dengan alasan <i>'.$this->idAnggaran['keterangan'].'</i>. Silahkan melakukan Perbaikan Anggaran dan Kegiatan kembali oleh <b>Divisi Renbang</b>';
+                return 'Naskah RKAP Anggaran dengan Nomer Dinas/Surat '.$this->idAnggaran['nd_surat'].' diajukan oleh '.$this->idAnggaran['unit_kerja'].' pada tanggal '.date('d F Y', strtotime($this->idAnggaran['updated_at'])).
+                ' ditolak pada Rapat Umum Pemegang Saham dengan alasan '.$this->idAnggaran['keterangan'].'. Silahkan melakukan Perbaikan Anggaran dan Kegiatan kembali oleh Divisi Renbang';
             case 27:
-                return 'Naskah RKAP Anggaran dengan Nomer Dinas/Surat <b>'.$this->idAnggaran['nd_surat'].'</b> diajukan oleh <b>'.$this->idAnggaran['unit_kerja'].'</b> pada tanggal '.date('d F Y', strtotime($this->idAnggaran['updated_at'])).
-                ' telah disetujui pada <b>Rapat Umum Pemegang Saham</b>. Mohon Naskah RKAP dilakukan <b>Finalisasi RUPS</b>';
+                return 'Naskah RKAP Anggaran dengan Nomer Dinas/Surat '.$this->idAnggaran['nd_surat'].' diajukan oleh '.$this->idAnggaran['unit_kerja'].' pada tanggal '.date('d F Y', strtotime($this->idAnggaran['updated_at'])).
+                ' telah disetujui pada Rapat Umum Pemegang Saham. Mohon Naskah RKAP dilakukan Finalisasi RUPS.';
             case 28:
-                return 'Naskah RKAP Anggaran dengan Nomer Dinas/Surat <b>'.$this->idAnggaran['nd_surat'].'</b> diajukan oleh <b>'.$this->idAnggaran['unit_kerja'].'</b> pada tanggal '.date('d F Y', strtotime($this->idAnggaran['updated_at'])).
-                ' ditolak pada <b>Finalisasi RUPS</b> dengan alasan <i>'.$this->idAnggaran['keterangan'].'</i>. Silahkan melakukan Perbaikan Anggaran dan Kegiatan kembali oleh <b>Divisi Renbang</b>';
+                return 'Naskah RKAP Anggaran dengan Nomer Dinas/Surat '.$this->idAnggaran['nd_surat'].' diajukan oleh '.$this->idAnggaran['unit_kerja'].' pada tanggal '.date('d F Y', strtotime($this->idAnggaran['updated_at'])).
+                ' ditolak pada Finalisasi RUPS dengan alasan '.$this->idAnggaran['keterangan'].'. Silahkan melakukan Perbaikan Anggaran dan Kegiatan kembali oleh Divisi Renbang.';
             case 29:
-                return 'Naskah RKAP Anggaran dengan Nomer Dinas/Surat <b>'.$this->idAnggaran['nd_surat'].'</b> diajukan oleh <b>'.$this->idAnggaran['unit_kerja'].'</b> pada tanggal '.date('d F Y', strtotime($this->idAnggaran['updated_at'])).
-                ' telah disetujui pada <b>Finalisasi RUPS</b>. Mohon Naskah RKAP dilakukan <b>Pembuatan Risalah RUPS</b>';
+                return 'Naskah RKAP Anggaran dengan Nomer Dinas/Surat '.$this->idAnggaran['nd_surat'].' diajukan oleh '.$this->idAnggaran['unit_kerja'].' pada tanggal '.date('d F Y', strtotime($this->idAnggaran['updated_at'])).
+                ' telah disetujui pada Finalisasi RUPS. Mohon Naskah RKAP dilakukan Pembuatan Risalah RUPS.';
             case 30:
-                return 'Risalah RUPS Anggaran dengan Nomer Dinas/Surat <b>'.$this->idAnggaran['nd_surat'].'</b> diajukan oleh <b>'.$this->idAnggaran['unit_kerja'].'</b> pada tanggal '.date('d F Y', strtotime($this->idAnggaran['updated_at'])).
-                ' ditolak dengan alasan <i>'.$this->idAnggaran['keterangan'].'</i>. Silahkan melakukan Perbaikan Anggaran dan Kegiatan kembali oleh <b>Divisi Renbang</b>';
+                return 'Risalah RUPS Anggaran dengan Nomer Dinas/Surat '.$this->idAnggaran['nd_surat'].' diajukan oleh '.$this->idAnggaran['unit_kerja'].' pada tanggal '.date('d F Y', strtotime($this->idAnggaran['updated_at'])).
+                ' ditolak dengan alasan '.$this->idAnggaran['keterangan'].'. Silahkan melakukan Perbaikan Anggaran dan Kegiatan kembali oleh Divisi Renbang';
             case 31:
-                return 'Risalah RUPS Anggaran dengan Nomer Dinas/Surat <b>'.$this->idAnggaran['nd_surat'].'</b> diajukan oleh <b>'.$this->idAnggaran['unit_kerja'].'</b> pada tanggal '.date('d F Y', strtotime($this->idAnggaran['updated_at'])).
+                return 'Risalah RUPS Anggaran dengan Nomer Dinas/Surat '.$this->idAnggaran['nd_surat'].' diajukan oleh '.$this->idAnggaran['unit_kerja'].' pada tanggal '.date('d F Y', strtotime($this->idAnggaran['updated_at'])).
                 ' telah disetujui dan ditandatangani';
         }
     }
