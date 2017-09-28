@@ -124,7 +124,7 @@
     							"search": "Pencarian:",
     							"lengthMenu": "Perlihatkan _MENU_ masukan",
     							"infoFiltered": "(telah di filter dari _MAX_ total masukan)",
-    							"zeroRecords": "Tidak ada data ditemukan",
+    							"zeroRecords": "Tidak ada data ditemukan"
 							},
 						    initComplete: function () {
 						        this.api().columns('#filterable').every( function () {

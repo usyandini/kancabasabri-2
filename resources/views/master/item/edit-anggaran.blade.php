@@ -37,9 +37,6 @@
 			                <div class="card-header">
 			                  <h4 class="card-title">Daftar Item Anggaran</h4>
 			                  <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
-			                  {{--<div class="col-md-12" >
-	                              <a href="{{ url('item/create') }}" class="btn btn-success pull-right"><i class="fa fa-plus"></i> Tambah</a>
-	                          </div>--}}
 			                </div>
 			                <div class="card-body collapse in">			                
 			                  <div class="card-block">
@@ -69,14 +66,14 @@
 		                        			</td>
 	                        				<td><center>
 	                        					{{--<a href="{{ url('item/edit/anggaran').'/'.$item->id }}" class="btn btn-info btn-sm">--}}
-	                        					<button class="btn btn-info btn-sm" data-target="#edit{{$item->id}}" data-toogle="modal">
-	                        					<i class="fa fa-edit"></i> Edit</a></button>
+	                        					<button type="button" class="btn btn-info btn-sm" data-target="#edit" data-toogle="modal">
+	                        					<i class="fa fa-edit"></i> Edit</button>
 
 	                        					<a href="#" class="btn btn-danger btn-sm" onclick="deleteUser({{ $item->id }})">
 	                        					<i class="fa fa-trash"></i> Hapus</a>
 	                        				</center></td>
 		                        		</tr>
-		                        		<div class="modal fade text-xs-left" id="edit{{$item->id}}" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		                        		<div class="modal fade text-xs-left" id="edit" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 					                      <div class="modal-dialog">
 					                        <div class="modal-content">
 					                          <div class="modal-header">
@@ -139,6 +136,20 @@
 				<script type="text/javascript">
 					$('.datatable-select-inputs').DataTable( {
 							scrollX: true,
+							"language": {
+								"paginate": {
+								  "previous": "Sebelumnya",
+								  "next": "Selanjutnya"
+								},
+
+    							"emptyTable":  "Tidak Ada Item Tersimpan",
+    							"info":  "Data Item _START_-_END_ dari _TOTAL_ Item",
+    							"infoEmpty":  "Data Item 0-0 dari _TOTAL_ Item ",
+    							"search": "Pencarian:",
+    							"lengthMenu": "Perlihatkan _MENU_ masukan",
+    							"infoFiltered": "(telah di filter dari _MAX_ total masukan)",
+    							"zeroRecords": "Tidak ada data ditemukan"
+    						},
 						    initComplete: function () {
 						        this.api().columns('#filterable').every( function () {
 						            var column = this;

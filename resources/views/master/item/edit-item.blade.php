@@ -40,12 +40,6 @@
                         <b>Data item berhasil diubah.</b>
                       </div>
                     </div>
-                    {{-- @elseif(session('unique'))
-                    <div class="col-xs-7">
-                        <div class="alert alert-warning">
-                          <b>Kode item harus unik.</b>
-                        </div>
-                    </div> --}}
                     @endif                    
                     <form class="form" action="{{ url('item/update').'/'.$items->id }}" method="POST">
                       <div class="col-md-6">
@@ -422,14 +416,6 @@
                     document.getElementById("edit_kode_jenis").value = a.options[a.selectedIndex].value;
                     document.getElementById("edit_nama_jenis").value = a.options[a.selectedIndex].text;
                   }
-
-                  
-                    //  var idjenis = document.getElementById('idjenis').value;
-                    //  var namajenis = document.getElementById('namajenis').value;
-                    // // var namajenis = jenis.options[jenis.selectedIndex].text;
-                    // // document.edit-jenis-form.action = "item/update/jenis/".idjenis;
-                    // document.getElementById("edit_kode_jenis").text = idjenis;
-                    // document.getElementById("edit_nama_jenis").text = namajenis;
                   
                 </script>
                 @endsection		

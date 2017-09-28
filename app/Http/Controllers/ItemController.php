@@ -262,10 +262,7 @@ class ItemController extends Controller
         $itemAngg = ItemAnggaranMaster::orderby('type')->orderby('kode')->get();
         return view('master.item.edit-anggaran', [
             'items' => $itemAngg, 
-            'no' => 1, 
-            // 'jenis' => $jenis,
-            // 'kelompok' => $kelompok,
-            // 'pos' => $pos,
+            'no' => 1
         ]);
     }
 
