@@ -24,7 +24,7 @@ use App\Services\NotificationSystem;
 use App\Http\Traits\BatchTrait;
 use App\Http\Traits\BudgetControlTrait;
 
-//  ----------- BATCH STAT DESC -------------
+//  ----------- BATCH STAT / HISTORY DESC -------------
 //          0 = Inserted 
 //          1 = Updated
 //          2 = Posted / Submitted to Kasmin
@@ -74,7 +74,11 @@ class TransaksiController extends Controller
         if ($this->current_batch) {
             $editable = $this->current_batch->isUpdatable();
             $berkas = BerkasTransaksi::where('batch_id', $this->current_batch['id'])->get();
-            $history = BatchStatus::where('batch_id', $this->current_batch['id'])->orderBy('updated_at', 'desc')->get();
+            $history = BatchStatus::select('stat', \DB::raw('count(*) as total'), \DB::raw('max(updated_at) as tgl'))
+                    ->where('batch_id', $this->current_batch['id'])
+                    ->groupBy('stat')
+                    ->orderBy('tgl', 'desc')
+                    ->get();
             $jsGrid_url = 'transaksi/get/batch/'.$this->current_batch['id'];
             $empty_batch = false;
         }
