@@ -76,6 +76,7 @@
 			                        </thead>
 			                        <tbody>
 			                        @foreach($items as $item)
+			                        @if(!$item->deleted_at)
 		                        		<tr>
 		                        			<td>{{ $no++ }}</td>
 		                        			<td>{{ $item->kode }}</td>
@@ -125,13 +126,14 @@
 					                        </div>
 					                      </div>
 					                    </div>
+		                        	@endif
 		                        	@endforeach
 			                        </tbody>
 			                      </table>
 			                      <form method="GET" action="#" id="deleteU">
                 					 {{ csrf_field() }}
                 					 {{ method_field('DELETE') }}
-                				   </form>
+                				  </form>
 			                    </div>
 			                  </div>
 			                </div>

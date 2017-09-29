@@ -69,9 +69,9 @@ class ItemController extends Controller
     public function index()
     {
         $master_item = ItemMaster::orderby('kode_item')->get();
-        $jenis = ItemAnggaranMaster::get();
-        $kelompok = ItemAnggaranMaster::where('type', 2)->get();
-        $pos = ItemAnggaranMaster::where('type', 3)->get();
+        $jenis = ItemAnggaranMaster::withTrashed()->where('type', 1)->get();
+        $kelompok = ItemAnggaranMaster::withTrashed()->where('type', 2)->get();
+        $pos = ItemAnggaranMaster::withTrashed()->where('type', 3)->get();
     	return view('master.item.index', [
             'items' => $master_item, 
             'no' => 1, 
@@ -160,6 +160,7 @@ class ItemController extends Controller
     {
         $arraykode = array($request->kode_jenis, $request->kode_kelompok, $request->kode_pos);
         $findkode = ItemAnggaranMaster::whereIn('kode', $arraykode)->first();
+        $trashed = ItemAnggaranMaster::onlyTrashed()->whereIn('kode', $arraykode)->forceDelete();
 
         if($findkode){
             session()->flash('unique', true);
@@ -268,6 +269,8 @@ class ItemController extends Controller
 
     public function updateItemAnggaran($id, Request $request)
     {
+        $trashed = ItemAnggaranMaster::onlyTrashed()->where('kode', $request->edit_kode)->forceDelete();
+
         $validatorItemAnggaran = Validator::make($request->all(),
             [
              'edit_kode' => 'unique:item_anggaran_master,kode,'.$id
@@ -296,11 +299,11 @@ class ItemController extends Controller
     {
         switch($jenis){
             case 'master':
-                $item = ItemMaster::where('id', $id)->first()->nama_item ? ItemMaster::where('id', $id)->first()->nama_item : ItemMaster::where('id', $id)->first()->kode_item;
+                $item = ItemMaster::withTrashed()->where('id', $id)->first()->nama_item ? ItemMaster::withTrashed()->where('id', $id)->first()->nama_item : ItemMaster::withTrashed()->where('id', $id)->first()->kode_item;
 
                 ItemMaster::where('id', $id)->delete(); break;
             case 'anggaran':
-                $item = ItemAnggaranMaster::where('id', $id)->first()->name ? ItemAnggaranMaster::where('id', $id)->first()->name : ItemAnggaranMaster::where('id', $id)->first()->kode;
+                $item = ItemAnggaranMaster::withTrashed()->where('id', $id)->first()->name ? ItemAnggaranMaster::withTrashed()->where('id', $id)->first()->name : ItemAnggaranMaster::withTrashed()->where('id', $id)->first()->kode;
 
                 ItemAnggaranMaster::where('id', $id)->delete(); break;
         }
