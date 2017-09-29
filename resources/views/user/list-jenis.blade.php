@@ -71,7 +71,7 @@
 				                        			@endif
 				                        			@if($user->deleted_at)
 				                        				<a class="btn btn-sm btn-warning" href="#" onclick="restoreUser({{ $user->id }})"><i class="fa fa-backward"></i> Restore</a>
-				                        				<a class="btn btn-sm btn-danger" href="#" onclick="deleteUser({{ $user->id }}, true)"><i class="fa fa-times"></i> Hapus permanen</a>
+				                        				<!-- <a class="btn btn-sm btn-danger" href="#" onclick="deleteUser({{ $user->id }}, true)"><i class="fa fa-times"></i> Hapus permanen</a> -->
 			                        				@endif
 		                        				</td>
 			                        		</tr>
@@ -132,16 +132,16 @@
 						if (is_force == true) {
 							$('input[name="is_force"]').val('1');
 						}
-						$('form[id="deleteU"').attr('action', '{{ url('user') }}' + '/' + id);
-						var con = confirm("Apakah anda yakin untuk menghapus user ini?");
+						$('form[id="deleteU"').attr('action', '{{ url('jenis_user') }}' + '/' + id);
+						var con = confirm("Apakah anda yakin untuk menghapus jenis user ini?");
 						if (con) {
 							$('form[id="deleteU"').submit();	
 						}
 					}
 
 					function restoreUser(id) {
-						$('form[id="restoreU"').attr('action', '{{ url('user/restore') }}' + '/' + id);
-						var con = confirm("Apakah anda yakin untuk melakukan restore user ini?");
+						$('form[id="restoreU"').attr('action', '{{ url('jenis_user/restore') }}' + '/' + id);
+						var con = confirm("Apakah anda yakin untuk melakukan restore jenis user ini?");
 						if (con) {
 							$('form[id="restoreU"').submit();	
 						}

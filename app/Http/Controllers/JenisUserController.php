@@ -21,17 +21,8 @@ class JenisUserController extends Controller
 
     public function index()
     {
-        // $data = \DB::table('users')->select(\DB::raw("count(*) as count, jenis_user "))->groupBy('jenis_user')->get();
-
-        // $second="SELECT j.nama, count(u.jenis_user) as jumlah, j.created_at, j.updated_at, j.deleted_at FROM [DBCabang].[dbo].[users] u, [DBCabang].[dbo].[jenis_user] j
-        //             WHERE u.jenis_user=j.id GROUP BY j.nama;";
-        //     $return = \DB::select($second);
-        // return response()->json($return);
     	return view('user.list-jenis', [
             'users' => JenisUser::withTrashed()->get()]);
-
-        // return view('user.list-jenis', [
-        //     'users' => $return]);
     }
 
     public function create()
@@ -56,7 +47,20 @@ class JenisUserController extends Controller
 
         // return response()->json(JenisUser::withTrashed()->where('id', $id)->first());
     }
+
+    public function destroy(Request $request, $id)
+    {
+        // $user = JenisUser::withTrashed()->where('id', $id)->first();
+        $jenis_user = JenisUser::withTrashed()->where('id', $id)->first()->nama;
+        if ($request->is_force == '1') {
+            JenisUser::where('id', $id)->forceDelete();
+        } else {
+            JenisUser::where('id', $id)->delete();
+        }
+        session()->flash('success', 'Jenis user <b>'.$jenis_user.'</b> berhasil dihapus.');
+        return redirect()->back();
     
+    }
     public function store(Request $request)
     {
     	$input = $request->except('_method', '_token');

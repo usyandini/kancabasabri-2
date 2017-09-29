@@ -154,10 +154,10 @@ class UserController extends Controller
 
       session()->flash('success', 'User atas nama <b>'.$user.'</b> berhasil direstore');
       return redirect()->back();
-  }
+    }
 
-  public function destroy(Request $request, $id)
-  {
+    public function destroy(Request $request, $id)
+    {
      $user = User::withTrashed()->where('id', $id)->first()->name ? User::withTrashed()->where('id', $id)->first()->name : User::withTrashed()->where('id', $id)->first()->username;
 
      if ($request->is_force == '1') {
