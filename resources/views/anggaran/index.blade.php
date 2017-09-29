@@ -597,7 +597,7 @@
                           { name: "jenis", 
                             type: "text", 
                             title: "Jenis", 
-                            width: 90,
+                            width: 130,
                             align: "left",
                             insertTemplate: function() {
                               jenis_field_insert = jsGrid.fields.text.prototype.insertTemplate.call(this);
@@ -612,7 +612,7 @@
                           { name: "kelompok", 
                             type: "text", 
                             title: "Kelompok", 
-                            width: 90,
+                            width: 130,
                             align: "left",
                             readOnly:true,
                             insertTemplate: function() {
@@ -628,7 +628,7 @@
                           { name: "pos_anggaran", 
                             type: "text", 
                             title: "Pos Anggaran", 
-                            width: 120,
+                            width: 130,
                             align: "left",
                             readOnly:true,
                             insertTemplate: function() {
@@ -1259,7 +1259,7 @@
                                   case "6" : persetujuan="Persetujuan RUPS";break;
                                   case "7" : persetujuan="Persetujuan FinRUPS";break;
                                   case "8" : persetujuan="Persetujuan Risalah RUPS";break;
-                                  case "9" : persetujuan="Disetujuai dan Ditandatangani";break;
+                                  // case "9" : persetujuan="Disetujuai dan Ditandatangani";break;
                                 }
                                 switch(data[0].status_anggaran){
                                   case "1" : status_anggaran="Draft";break;

@@ -11,6 +11,7 @@ use App\Models\ListAnggaran;
 use App\Models\FileListAnggaran;
 use App\Models\Kegiatan;
 use App\Models\ItemMaster;
+use App\Models\ItemAnggaranMaster;
 use App\Models\Divisi;
 use App\Models\KantorCabang;
 
@@ -131,7 +132,7 @@ class AnggaranController extends Controller
             'userDivisi' =>$this->userDivisi,
             'nd_surat' => '',
             'beda' => true , 
-            'status' => '1',
+            'status' => 'tambah',
             'reject' => false,
             'filters' =>null,
             'display' => array('edit' => $displayEdit,
@@ -256,7 +257,7 @@ class AnggaranController extends Controller
         }else if($persetujuan == "7"&&Gate::check('setuju_viiia')){
                 $beda = true;
         }else{
-            
+
                 // echo "renbang";
         }
 
@@ -873,12 +874,14 @@ class AnggaranController extends Controller
                 }else{
                     $mataanggaran = ItemMaster::where('nama_item',urldecode($id))->orderBy('nama_item','ASC')->get();  
                 }
+
+
                 foreach ($mataanggaran as $mata) {
                     $return[] = [
                         'item'             => $mata->nama_item,
-                        'jenis'             => $mata->jenis_anggaran,
-                        'kelompok'          => $mata->kelompok_anggaran,
-                        'pos_anggaran'      => $mata->pos_anggaran,
+                        'jenis'             => ItemAnggaranMaster::where('kode',$mata->jenis_anggaran)->where('type',1)->first()->name,
+                        'kelompok'          => ItemAnggaranMaster::where('kode',$mata->kelompok_anggaran)->where('type',2)->first()->name,
+                        'pos_anggaran'      => ItemAnggaranMaster::where('kode',$mata->pos_anggaran)->where('type',3)->first()->name,
                         'sub_pos'           => $mata->sub_pos,
                         'mata_anggaran'     => $mata->mata_anggaran,
                     ];

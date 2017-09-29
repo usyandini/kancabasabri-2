@@ -25,36 +25,36 @@
                 var link2 = '</a>';
                 if(val.type == 17||val.type == 19||val.type == 21||val.type == 23||val.type == 25||val.type == 27||val.type == 29){
                     if({{Gate::check('notif_ubah_a')?1:0}}){
-                        var link = true;
+                        var link_con = true;
                         if(val.type == 17&&{{Gate::check('notif_setuju_iia')?1:0}}){
-                            link = false;
+                            link_con = false;
                         }
 
                         if(val.type == 19&&{{Gate::check('notif_setuju_iiia')?1:0}}){
-                            link = false;
+                            link_con = false;
                         }
 
                         if(val.type == 21&&{{Gate::check('notif_setuju_iva')?1:0}}){
-                            link = false;
+                            link_con = false;
                         }
 
                         if(val.type == 23&&{{Gate::check('notif_setuju_va')?1:0}}){
-                            link = false;
+                            link_con = false;
                         }
 
                         if(val.type == 25&&{{Gate::check('notif_setuju_via')?1:0}}){
-                            link = false;
+                            link_con = false;
                         }
 
                         if(val.type == 27&&{{Gate::check('notif_setuju_viia')?1:0}}){
-                            link = false;
+                            link_con = false;
                         }
 
                         if(val.type == 29&&{{Gate::check('notif_setuju_viiia')?1:0}}){
-                            link = false;
+                            link_con = false;
                         }
 
-                        if(link){
+                        if(link_con){
                             link='';
                             link2='';
                         }
