@@ -87,7 +87,7 @@
                                 </div>
                                 <div class="form-group">
                                   <label>Divisi</label><br>
-                                  <select class="select2 form-control" name="divisi" style="width: 100%;">
+                                  <select class="select2 form-control" name="divisi" id="divisi">
                                     <option selected disabled="" value="">Divisi</option>
                                     @foreach($divisi as $div)
                                     <option {{ old('divisi') == $div->VALUE ? 'selected=""' : '' }} value="{{ $div->VALUE }}">{{ $div->DESCRIPTION }}</option>

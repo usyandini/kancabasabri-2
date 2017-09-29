@@ -35,6 +35,7 @@ class NotificationController extends Controller
     	foreach (NotificationSystem::getUnreads() as $value) {
     		$result['notifications'][] = [
     			'id' 		=> $value->id,
+                'type'      => $value->type,
     			'wording' 	=> $value->wording(),
     			'is_read'	=> $value->is_read,
     			'time_dif' 	=> \Carbon\Carbon::createFromTimeStamp(strtotime($value->created_at))->diffForHumans(),

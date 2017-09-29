@@ -126,38 +126,36 @@ class NotificationSystem
             array_push($array_type,29);
         }
         if(isset($user->perizinan['notif_ubah_a'])){
+            
             array_push($array_type,16);
             if (!in_array(17, $array_type)) {
                 array_push($array_type,17);
             }
             array_push($array_type,18);
-            if (!in_array(17, $array_type)) {
-                array_push($array_type,17);
-            }
-            array_push($array_type,20);
             if (!in_array(19, $array_type)) {
                 array_push($array_type,19);
             }
-            array_push($array_type,22);
+            array_push($array_type,20);
             if (!in_array(21, $array_type)) {
                 array_push($array_type,21);
             }
-            array_push($array_type,24);
+            array_push($array_type,22);
             if (!in_array(23, $array_type)) {
                 array_push($array_type,23);
             }
-            array_push($array_type,26);
+            array_push($array_type,24);
             if (!in_array(25, $array_type)) {
                 array_push($array_type,25);
             }
-            array_push($array_type,28);
+            array_push($array_type,26);
             if (!in_array(27, $array_type)) {
                 array_push($array_type,27);
             }
-            array_push($array_type,30);
+            array_push($array_type,28);
             if (!in_array(29, $array_type)) {
                 array_push($array_type,29);
             }
+            array_push($array_type,30);
             array_push($array_type,31);
         }
 

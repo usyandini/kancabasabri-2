@@ -86,7 +86,7 @@ class AuthController extends Controller
         $password = $credentials['password'];
         
         if (!\App::environment('local-ilyas')) {
-            if (Adldap::auth()->attempt($username, $password, $bindAsUser = true)) {
+            if (Adldap::auth()->attempt($username, $password, $bindAsUser = true)||Adldap::auth()->attempt($username."@asabri.co.id", $password, $bindAsUser = true)) {
                 if (strpos($username, '@') != false) {
                     $exp = explode('@', $username);
                     $username = $exp[0];

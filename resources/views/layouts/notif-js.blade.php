@@ -21,8 +21,26 @@
                 $('#notifList, notifList2, #notifSection').html('');
             }
             e.notifications.forEach(function(val) {
+                var link = '<a href="{{ url('notification/redirect') }}/'+ val.id +'" class="list-group-item">';
+                var link2 = '</a>';
+                if(val.type == 17||val.type == 19||val.type == 21||val.type == 23||val.type == 25||val.type == 27||val.type == 29){
+                    @if(Gate::check('notif_ubah_a'))
+                    link='';
+                    link2='';
+                    @endif
+                }else if(val.type == 12){
+                    @if(Gate::check('notif_ubah_d'))
+                    link='';
+                    link2='';
+                    @endif
+                }else if(val.type == 4){
+                    @if(Gate::check('notif_ubah_t'))
+                    link='';
+                    link2='';
+                    @endif
+                }
                 $('#notifList, notifList2').append(''+
-                    '<a href="{{ url('notification/redirect') }}/'+ val.id +'" class="list-group-item">' +
+                     link+
                         '<div class="media">' +
                           '<div class="media-left valign-middle"><i class="ft-plus-square icon-bg-circle bg-cyan"></i></div>' +
                           '<div class="media-body">' +
@@ -33,7 +51,7 @@
                             (val.is_read == 0 ? '<span class="tag tag-danger float-xs-right">BARU</span>' : '')+
                           '</div>' +
                         '</div>' +
-                    '</a>');
+                    link2);
             })
             
         });
