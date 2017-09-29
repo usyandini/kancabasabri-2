@@ -81,37 +81,8 @@
                                           </div>
                                             <div id="basicScenario"></div><br>
                                               <div class="row">
-                                                <div class="col-lg-6 col-md-12">
-                                                  <div class="bs-callout-info callout-border-left callout-bordered callout-transparent mt-1 p-1">
-                                                    <h4 class="info">Daftar Berkas</h4>
-                                                    <table>
-                                                      @forelse($berkas as $value)
-                                                        <tr>
-                                                          <td width="25%">Berkas: <a href="{{ asset('file/transaksi').'/'.$value->file_name }}" target="_blank">{{ $value->file_name }}</a></td>
-                                                          <td width="25%">Diunggah: <b>{{ $value->created_at }}</b></td>
-                                                        </tr>
-                                                      @empty
-                                                        <code>Belum ada berkas terlampir</code>
-                                                      @endforelse
-                                                    </table>
-                                                  </div>
-                                                </div>
-                                                <div class="col-lg-6 col-md-12">
-                                                  <div class="bs-callout-danger callout-border-left callout-bordered mt-1 p-1">
-                                                    <h4 class="danger">History Batch </h4>
-                                                    <table>
-                                                      @forelse($batch_history as $hist)
-                                                        <tr>
-                                                          <td><b class="text-danger">{{ $hist->status() }}</b></td>
-                                                          <td>oleh <b class="text-warning">{{ $hist['submitter']['name'] }}</b></td>
-                                                          <td>| <code>{{ $hist['updated_at'] }}</code></td>
-                                                        </tr>
-                                                      @empty
-                                                        <code>Belum ada history batch terbaru.</code>
-                                                      @endforelse
-                                                    </table>
-                                                  </div>
-                                                </div>
+                                                @include('transaksi.berkas')
+                                                @include('transaksi.history')
                                               </div>
                                               <br>
                                               @if($verifiable)
