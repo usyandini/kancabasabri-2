@@ -3,6 +3,8 @@
                 @section('additional-vendorcss')
                 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/tables/jsgrid/jsgrid-theme.min.css') }}">
                 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/tables/jsgrid/jsgrid.min.css') }}">
+                <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/extensions/toastr.css') }}">
+                <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/plugins/extensions/toastr.min.css') }}">
                 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/tables/datatable/dataTables.bootstrap4.min.css') }}">
                 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/tables/extensions/responsive.dataTables.min.css') }}">               
                 <style type="text/css">
@@ -66,14 +68,14 @@
 		                        			</td>
 	                        				<td><center>
 	                        					{{--<a href="{{ url('item/edit/anggaran').'/'.$item->id }}" class="btn btn-info btn-sm">--}}
-	                        					<button type="button" class="btn btn-info btn-sm" data-target="#edit" data-toogle="modal">
+	                        					<button type="button" class="btn btn-info btn-sm" data-target="#editJenis" data-toogle="modal">
 	                        					<i class="fa fa-edit"></i> Edit</button>
 
 	                        					<a href="#" class="btn btn-danger btn-sm" onclick="deleteUser({{ $item->id }})">
 	                        					<i class="fa fa-trash"></i> Hapus</a>
 	                        				</center></td>
 		                        		</tr>
-		                        		<div class="modal fade text-xs-left" id="edit" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		                        		<div class="modal fade text-xs-left" id="editJenis" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 					                      <div class="modal-dialog">
 					                        <div class="modal-content">
 					                          <div class="modal-header">
@@ -133,6 +135,7 @@
 				  type="text/javascript"></script>
 				<script src="{{ asset('app-assets/vendors/js/tables/datatable/dataTables.responsive.min.js') }}"
 				  type="text/javascript"></script>
+				<script type="text/javascript" src="{{ asset('app-assets/js/scripts/modal/components-modal.min.js') }}"></script>
 				<script type="text/javascript">
 					$('.datatable-select-inputs').DataTable( {
 							scrollX: true,
@@ -179,5 +182,9 @@
 							$('form[id="deleteU"').submit();	
 						}
 					}
+
+					// $(document).ready(function(){
+					//     $('.modal').modal('show');
+					// });
 				</script>
                 @endsection
