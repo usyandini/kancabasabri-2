@@ -49,21 +49,21 @@
                                 {{ csrf_field() }}
                                 <div class="col-xs-6">
                                   <div class="form-group">
-                                    <label>Tanggal Batch</label>
-                                    <select class="select2 form-control" name="date">
-                                      <option value="0">Pilih tanggal</option>
-                                      @foreach($batches_dates as $batch)
-                                      <option value="{{ $batch->id }}" {{ $filters[0] == $batch->id ? 'selected=""' : '' }}>{{ date('d F Y', strtotime($batch->created_at)) }}</option>
+                                    <label>Nomor Batch Lokal</label>
+                                    <select class="select2 form-control" name="batch">
+                                      <option value="0">Pilih nomor</option>
+                                      @foreach($batch_nos as $batch)
+                                      <option value="{{ $batch->id }}" {{ $filters[0] == $batch->id ? 'selected=""' : '' }}>{{ $batch->batchNo() }}</option>
                                       @endforeach
                                     </select>
                                   </div>
                                 </div>
-                                <div class="col-xs-6">
+                                {{-- <div class="col-xs-6">
                                   <div class="form-group">
                                     <label>No. Batch</label>
                                     <input class="form-control" type="text" id="batch" name="batch_no"></input>
                                   </div>
-                                </div>
+                                </div> --}}
                               </div>
                               <div class="row">
                                 <div class="col-xs-2">
@@ -74,7 +74,7 @@
                                   @if($filters)
                                   <div class="col-xs-2">
                                     <div class="form-group">
-                                      <a href="{{ url('transaksi') }}" class="btn btn-danger"><i class="fa fa-times"></i> Atur Ulang Pencarian</a>
+                                      <a href="{{ url('transaksi') }}" class="btn btn-danger"><i class="fa fa-times"></i> Reset pencarian</a>
                                     </div>
                                   </div>
                                   @endif
@@ -108,8 +108,10 @@
                             @endif
                             <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
                             <div class="font-small-3">
-                            <span>No. Batch: <code>{{ $no_batch }}</code></span>
-                            <span>KPKC: <code>{{ $active_batch->kantorCabang()->DESCRIPTION }}</code> <span>Divisi:</span> <code>{{ $active_batch->divisi == '00' ? 'Non-Divisi' : $active_batch->divisi()->DESCRIPTION  }}</code></span>
+                              @if ($active_batch)
+                              <span>No. Batch: <code>{{ $active_batch->batchNo() }}</code></span>
+                              <span>KPKC: <code>{{ $active_batch->kantorCabang()->DESCRIPTION }}</code> <span>Divisi:</span> <code>{{ $active_batch->divisi == '00' ? 'Non-Divisi' : $active_batch->divisi()->DESCRIPTION  }}</code></span>
+                              @endif
                             </div>
                           </div>
                           <div class="card-body collapse in ">
@@ -119,6 +121,9 @@
                               <div class="row">
                                 <form method="POST" action="{{ url('transaksi/') }}" id="mainForm" enctype="multipart/form-data">
                                   {{ csrf_field() }}
+                                  @if ($active_batch)
+                                  <input type="hidden" name="batch_id" value="{{ $active_batch->id }}">
+                                  @endif
                                   <div class="col-lg-6 col-md-12">
                                     @if($editable && Gate::check('berkas_t'))
                                     <fieldset class="form-group">
@@ -161,7 +166,7 @@
                                         <td width="65%">
                                           <b class="text-danger">{{ $active_batch->latestStat()->status() }}</b><br>
                                           @if (isset($active_batch->latestStat()['rejectReason']))
-                                            <span class="font-small-3">{{ $active_batch->latestStat()['rejectReason']['reason']->content }}</span>
+                                          <span class="font-small-3">{{ $active_batch->latestStat()['rejectReason']['reason']->content }}</span>
                                           @endif
                                         </td>
                                         <td>

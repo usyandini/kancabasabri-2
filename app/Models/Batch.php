@@ -35,6 +35,11 @@ class Batch extends Model
 		return $this->hasMany('App\Models\Transaksi', 'batch_id', 'id');
 	}
 
+    public function batchNo()
+    {
+        return date('ymd', strtotime($this->created_at)).'-'.$this->cabang.'/'.$this->divisi.'-'.$this->seq_number;
+    }
+
     public function divisi()
     {
         return $this->hasOne('App\Models\Divisi', 'VALUE', 'divisi')->first();
