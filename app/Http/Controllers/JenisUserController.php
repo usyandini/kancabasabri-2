@@ -48,6 +48,15 @@ class JenisUserController extends Controller
         // return response()->json(JenisUser::withTrashed()->where('id', $id)->first());
     }
 
+    public function restore(Request $request, $id)
+    {
+      JenisUser::where('id', $id)->restore();
+      $jenis_user = JenisUser::where('id', $id)->first()->nama;
+
+      session()->flash('success', 'Jenis User atas nama <b>'.$jenis_user.'</b> berhasil direstore');
+      return redirect()->back();
+    }
+
     public function destroy(Request $request, $id)
     {
         // $user = JenisUser::withTrashed()->where('id', $id)->first();
