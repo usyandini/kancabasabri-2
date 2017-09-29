@@ -131,7 +131,7 @@ class AnggaranController extends Controller
             'userDivisi' =>$this->userDivisi,
             'nd_surat' => '',
             'beda' => true , 
-            'status' => 'tambah',
+            'status' => '1',
             'reject' => false,
             'filters' =>null,
             'display' => array('edit' => $displayEdit,
@@ -236,7 +236,13 @@ class AnggaranController extends Controller
             if(Gate::check('setuju_ia')&&($userUnit == $unit))
                 $beda = true;
         }else if($persetujuan == "1"&&Gate::check('setuju_iia')){
+            if($status == '2'||$status == '3'){
                 $beda = true;
+                if($status == '3'){
+                    $reject = true;
+                }
+
+            }
         }else if($persetujuan == "2"&&Gate::check('setuju_iiia')){
                 $beda = true;
         }else if($persetujuan == "3"&&Gate::check('setuju_iva')){
@@ -249,7 +255,12 @@ class AnggaranController extends Controller
                 $beda = true;
         }else if($persetujuan == "7"&&Gate::check('setuju_viiia')){
                 $beda = true;
+        }else{
+            
+                // echo "renbang";
         }
+
+        // echo $beda;
         return view('anggaran.index', [
             'title' => 'Persetujuan Kegiatan dan Anggaran',
             'userCabang' =>$this->userCabang,

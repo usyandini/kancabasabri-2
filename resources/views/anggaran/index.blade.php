@@ -1303,46 +1303,46 @@
                                   document.getElementById("grup_uk").style.display="none";
                                 }else if(data[0].persetujuan =="1"){
                                   document.getElementById("grup_m").style.display="none";
-                                  if({{$status == 'edit' ? 1 : 0}}){
-                                    document.getElementById("grup_r").style.display="none";
-                                  }else{
+                                  @if($status=='setuju'&&$beda)
                                     document.getElementById("grup_r").style.display="block";
-                                  }
+                                  @else
+                                    document.getElementById("grup_r").style.display="none";
+                                  @endif
                                   document.getElementById("grup_uk").style.display="none";
                                 }else{
-                                  if({{$status=='setuju'&&$beda?1:0}}){
+                                  @if($status=='setuju'&&$beda)
                                     document.getElementById("grup_m").style.display="block";
-                                  }else{
+                                  @else
                                     document.getElementById("grup_m").style.display="none";
-                                  }
+                                  @endif
                                   document.getElementById("grup_r").style.display="none";
                                   document.getElementById("grup_uk").style.display="none";
                                 }
-                                @if((Gate::check('tambah_item_a')||Gate::check('ubah_item_a'))&&Gate::check('setuju_iia'))
-                                // if(Gate::check('setuju_iia')){
-                                  document.getElementById("accept_r").style.display="none";
-                                  document.getElementById("download_r").style.display="none";
-                                  document.getElementById("edit_r").style.display="none";
-                                  document.getElementById("save_r").style.display="block";
-                                  document.getElementById("send_r").style.display="block";
-                                  var reject = {{$reject ? 1:0}};
-                                  if(reject == 1)
-                                    document.getElementById("send_r").setAttribute('onclick','check("Tolak");');
-                                  else{
-                                    document.getElementById("send_r").setAttribute('onclick','check("Setuju");');
-                                  }
-                                @else
-                                  for(i=1;i<data.length;i++){
-                                    if(parseInt(data[0].persetujuan) < parseInt(data[i].persetujuan)){
-
-                                      changeButton();
-                                      document.getElementById("send_r").style.display="block";
-                                      document.getElementById("accept_r").style.display="none";
-                                      break;
+                                if(data[0].persetujuan =="1"&&{{Gate::check('setuju_iia')?1:0}}){
+                                  @if($beda)
+                                    document.getElementById("accept_r").style.display="none";
+                                    document.getElementById("download_r").style.display="none";
+                                    document.getElementById("edit_r").style.display="none";
+                                    document.getElementById("save_r").style.display="block";
+                                    document.getElementById("send_r").style.display="block";
+                                    var reject = {{$reject ? 1:0}};
+                                    if(reject == 1)
+                                      document.getElementById("send_r").setAttribute('onclick','check("Tolak");');
+                                    else{
+                                      document.getElementById("send_r").setAttribute('onclick','check("Setuju");');
                                     }
-                                  }
-                                @endif
-                              
+                                  @else
+                                    for(i=1;i<data.length;i++){
+                                      if(parseInt(data[0].persetujuan) < parseInt(data[i].persetujuan)){
+
+                                        changeButton();
+                                        document.getElementById("send_r").style.display="block";
+                                        document.getElementById("accept_r").style.display="none";
+                                        break;
+                                      }
+                                    }
+                                  @endif
+                                }
                           }
                       });
                   }

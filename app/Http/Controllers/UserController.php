@@ -133,7 +133,7 @@ class UserController extends Controller
             'name'      => 'required',
             'email'     => 'required|email|unique:users,email,'.$id,
             'cabang'    => 'required',
-            'divisi'    => 'required_if:cabang,00|not_in:divisi,00',
+            'divisi'    => 'required_if:cabang,00&not_in:divisi,00',
             'password'  => 'sometimes|required|min:4|confirmed'
             ], [
             'username.required' => 'Kolom <b>username</b> tidak boleh kosong.',
