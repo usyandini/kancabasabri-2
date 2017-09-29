@@ -9,7 +9,7 @@ use App\Models\Batch;
 use App\Models\BatchStatus;
 use App\Models\RejectHistory;
 
-//  ----------- BATCH STAT DESC -------------
+//  ----------- BATCH STAT / HISTORY DESC -------------
 //          0 = Inserted 
 //          1 = Updated
 //          2 = Posted / Submitted to Kasmin
@@ -29,8 +29,26 @@ trait BatchTrait
 
     public function defineNewBatch()
     {
-    	$input = array('created_by' => \Auth::User()->id);
-    	return Batch::create($input);
+    	$input = array(
+            'created_by' => \Auth::User()->id, 
+            'divisi' => \Auth::user()->divisi, 
+            'cabang' => \Auth::user()->cabang, 
+            'seq_number' => $this->defineCurentSequenceNo());
+    	$create = Batch::create($input);
+        $this->updateBatchStat($create, 0);
+        return $create;
+    }
+
+    public function defineCurentSequenceNo()
+    {
+        $batch = Batch::orderBy('id','desc')
+                        ->where([['divisi', \Auth::user()->divisi], ['cabang', \Auth::user()->cabang]])
+                        ->whereYear('created_at', '=', date('Y'))
+                        ->first();   
+        
+        $result = $batch ? $batch['seq_number'] : 0;
+
+        return sprintf('%04d', ++$result);
     }
 
 	public function updateBatchStat($batch, $stat)

@@ -50,7 +50,9 @@ Route::group(['middleware' => 'auth'], function() {
 	});
 
 	Route::group(['prefix' => 'transaksi'], function() {
-		Route::resource('/', 'TransaksiController');
+		Route::resource('/', 'TransaksiController', ['except' => ['index']]);
+		Route::get('/{batch_id?}', 'TransaksiController@index');
+		Route::post('/create/process', 'TransaksiController@createProcess');
 		Route::post('/submit/verify', 'TransaksiController@submit');
 
 		Route::get('/persetujuan/{id_batch}', 'TransaksiController@persetujuan');

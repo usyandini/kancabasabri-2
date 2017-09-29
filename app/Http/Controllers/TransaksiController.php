@@ -65,12 +65,13 @@ class TransaksiController extends Controller
         $this->middleware('can:cari_t', ['only' => 'filter_handle', 'filter_result']);
     }
 
-    public function index()
+    public function index($batch_id = null)
     {
         $jsGrid_url = 'transaksi';
         $berkas = $history = [];
         $empty_batch = $editable = true;
         
+        $this->current_batch = $batch_id == null ? $this->current_batch : Batch::where('id', $batch_id)->first();
         if ($this->current_batch) {
             $editable = $this->current_batch->isUpdatable();
             $berkas = BerkasTransaksi::where('batch_id', $this->current_batch['id'])->get();
@@ -84,6 +85,7 @@ class TransaksiController extends Controller
         }
 
         return view('transaksi.input', [
+            'no_batch'      => date('ymd', strtotime($this->current_batch->created_at)).'-'.$this->current_batch->cabang.'/'.$this->current_batch->divisi.'-'.$this->current_batch->seq_number,
             'batches_dates' => $this->batches_dates,
             'filters'       => null,
             'active_batch'  => $this->current_batch,
@@ -92,6 +94,21 @@ class TransaksiController extends Controller
             'berkas'        => $berkas,
             'batch_history' => $history,
             'jsGrid_url'    => $jsGrid_url]);
+    }
+
+    public function create()
+    {
+        return view('transaksi.new', [
+            'cabang'    => \Auth::user()->kantorCabang()->DESCRIPTION,
+            'divisi'    => \Auth::user()->cabang == '00' ? \Auth::user()->divisi()->DESCRIPTION : 'Non-Divisi',
+            'no_batch'  => date('ymd').'-'.$this->current_batch->cabang.'/'.$this->current_batch->divisi.'-'.$this->defineCurentSequenceNo()]);
+    }
+
+    public function createProcess(Request $request)
+    {
+        $newBatch = $this->defineNewBatch();
+        session()->flash('success_newBatch', true);
+        return redirect('transaksi/'.$newBatch->id);
     }
 
     public function filter_handle(Request $request) 

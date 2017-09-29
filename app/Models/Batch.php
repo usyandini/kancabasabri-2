@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-//  ----------- BATCH STAT DESC -------------
+//  ----------- BATCH STAT / HISTORY DESC -------------
 //          0 = Inserted 
 //          1 = Updated
 //          2 = Posted / Submitted to Kasmin
@@ -19,13 +19,11 @@ class Batch extends Model
 	protected $connection = 'sqlsrv';
 
 	protected $table = 'batches';
-    // protected $dateFormat = 'Y-m-d H:i:s';
-
-    // protected $dateFormat = 'Y-m-d H:i:s';
+    protected $dateFormat = 'Y-m-d H:i:s';
 
     protected $dates = ['dob'];
 
-	protected $fillable = ['created_by'];    
+	protected $fillable = ['divisi','cabang','seq_number','created_by'];    
 
 	public function creator()
 	{
@@ -37,10 +35,25 @@ class Batch extends Model
 		return $this->hasMany('App\Models\Transaksi', 'batch_id', 'id');
 	}
 
+    public function divisi()
+    {
+        return $this->hasOne('App\Models\Divisi', 'VALUE', 'divisi')->first();
+    }
+
+    public function kantorCabang()
+    {
+        return $this->hasOne('App\Models\KantorCabang', 'VALUE', 'cabang')->first();
+    }
+
 	public function latestStat()
 	{
 		return $this->hasOne('App\Models\BatchStatus', 'batch_id', 'id')->orderBy('updated_at', 'desc')->first();
 	}
+
+    public function latestUpdate()
+    {
+        return $this->hasOne('App\Models\BatchStatus', 'batch_id', 'id')->where('stat', 1)->first();
+    }
 
 	public function isUpdatable()
     {

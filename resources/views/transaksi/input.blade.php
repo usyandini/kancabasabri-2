@@ -57,13 +57,11 @@
                                       @endforeach
                                     </select>
                                   </div>
-
                                 </div>
                                 <div class="col-xs-6">
                                   <div class="form-group">
                                     <label>No. Batch</label>
                                     <input class="form-control" type="text" id="batch" name="batch_no"></input>
-
                                   </div>
                                 </div>
                               </div>
@@ -109,63 +107,14 @@
                             <h4 class="card-title">Daftar Transaksi</h4><br>
                             @endif
                             <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
+                            <div class="font-small-3">
+                            <span>No. Batch: <code>{{ $no_batch }}</code></span>
+                            <span>KPKC: <code>{{ $active_batch->kantorCabang()->DESCRIPTION }}</code> <span>Divisi:</span> <code>{{ $active_batch->divisi == '00' ? 'Non-Divisi' : $active_batch->divisi()->DESCRIPTION  }}</code></span>
+                            </div>
                           </div>
                           <div class="card-body collapse in ">
                             <div class="card-block card-dashboard ">
-                              <div class="row">
-                                @if(session('success'))
-                                <div class="col-xs-7">
-                                  <div class="alert alert-success">
-                                    @if(session('success')[0] > 0)
-                                    Item batch transaksi sebanyak <b>{{ session('success')[0] }} baris baru berhasil disimpan</b>.<br>
-                                    @endif
-                                    @if(session('success')[1] > 0)
-                                    Item batch transaksi sebanyak <b>{{ session('success')[1] }} baris berhasil diupdate</b>.<br>
-                                    @endif
-                                    @if(session('success')[2] > 0)
-                                    Item batch transaksi sebanyak <b>{{ session('success')[2] }} baris berhasil dihapus</b>.
-                                    @endif
-                                    @if(session('success')[3] > 0)
-                                    Berkas batch transaksi sebanyak <b>{{ session('success')[3] }} berkas baru berhasil disimpan</b>.
-                                    @endif
-                                  </div>
-                                </div>
-                                @endif
-                                @if(session('success_submit'))
-                                <div class="col-xs-6">
-                                  <div class="alert alert-info">
-                                    Batch <code>{{ date("d-m-Y", strtotime(session('success_submit'))) }}</code> berhasil disubmit. <b>Silahkan tunggu verifikasi dari user.</b></code>
-                                  </div>
-                                </div>
-                                @endif
-                                @if(session('success_deletion'))
-                                <div class="col-xs-6">
-                                  <div class="alert alert-success">
-                                    Berkas <code>{{ session('success_deletion') }}</code> berhasil dihapus.
-                                  </div>
-                                </div>
-                                @endif
-                                @if(session('failed_filter'))
-                                <div class="col-xs-6">
-                                  <div class="alert alert-danger">
-                                    {!! session('failed_filter') !!}
-                                  </div>
-                                </div>
-                                @endif
-                                @if(session('success_filtering'))
-                                <div class="col-xs-6">
-                                  <div class="alert alert-success">
-                                    Filtering berhasil berdasar
-                                    @if($filters[0])
-                                    <b>tanggal batch. </b>
-                                    @endif
-                                    @if($filters[1])
-                                    <b>nomor batch. </b>
-                                    @endif
-                                  </div>
-                                </div>
-                                @endif
-                              </div>
+                              @include('transaksi.success')
                               <div id="basicScenario"></div><br>
                               <div class="row">
                                 <form method="POST" action="{{ url('transaksi/') }}" id="mainForm" enctype="multipart/form-data">
@@ -205,13 +154,15 @@
                                 </form>
                                 <div class="col-lg-6 col-md-12">
                                   <div class="bs-callout-danger callout-border-left callout-bordered mt-1 p-1">
-                                    @if (!$empty_batch)
+                                    @if (!$empty_batch && $active_batch->latestStat())
                                     <h4>Status Terakhir</h4>
                                     <table>
                                       <tr>
                                         <td width="65%">
                                           <b class="text-danger">{{ $active_batch->latestStat()->status() }}</b><br>
-                                          <span class="font-small-3">{{ $active_batch->latestStat()['rejectReason']['reason']->content }}</span>
+                                          @if (isset($active_batch->latestStat()['rejectReason']))
+                                            <span class="font-small-3">{{ $active_batch->latestStat()['rejectReason']['reason']->content }}</span>
+                                          @endif
                                         </td>
                                         <td>
                                           <code style="padding: 0;">{{ $active_batch->latestStat()->updated_at }}</code><br>
@@ -241,6 +192,11 @@
                               </div>
                               <br>
                               <div class="row">
+                                <div class="col-xs-2">
+                                  <div class="form-group">
+                                    <button class="btn btn-pink" onclick="location.href='{{ url('transaksi/create') }}'"><i class="fa fa-plus"></i> Buat Batch baru</button>
+                                  </div>
+                                </div>
                                 @if($editable)
                                 <div class="col-xs-2 pull-right">
                                   <div class="form-group">
