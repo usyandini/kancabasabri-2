@@ -11,6 +11,7 @@ use App\Models\ListAnggaran;
 use App\Models\FileListAnggaran;
 use App\Models\Kegiatan;
 use App\Models\ItemMaster;
+use App\Models\ItemAnggaranMaster;
 use App\Models\Divisi;
 use App\Models\KantorCabang;
 
@@ -236,7 +237,13 @@ class AnggaranController extends Controller
             if(Gate::check('setuju_ia')&&($userUnit == $unit))
                 $beda = true;
         }else if($persetujuan == "1"&&Gate::check('setuju_iia')){
+            if($status == '2'||$status == '3'){
                 $beda = true;
+                if($status == '3'){
+                    $reject = true;
+                }
+
+            }
         }else if($persetujuan == "2"&&Gate::check('setuju_iiia')){
                 $beda = true;
         }else if($persetujuan == "3"&&Gate::check('setuju_iva')){
@@ -249,7 +256,12 @@ class AnggaranController extends Controller
                 $beda = true;
         }else if($persetujuan == "7"&&Gate::check('setuju_viiia')){
                 $beda = true;
+        }else{
+
+                // echo "renbang";
         }
+
+        // echo $beda;
         return view('anggaran.index', [
             'title' => 'Persetujuan Kegiatan dan Anggaran',
             'userCabang' =>$this->userCabang,
@@ -862,12 +874,14 @@ class AnggaranController extends Controller
                 }else{
                     $mataanggaran = ItemMaster::where('nama_item',urldecode($id))->orderBy('nama_item','ASC')->get();  
                 }
+
+
                 foreach ($mataanggaran as $mata) {
                     $return[] = [
                         'item'             => $mata->nama_item,
-                        'jenis'             => $mata->jenis_anggaran,
-                        'kelompok'          => $mata->kelompok_anggaran,
-                        'pos_anggaran'      => $mata->pos_anggaran,
+                        'jenis'             => ItemAnggaranMaster::where('kode',$mata->jenis_anggaran)->where('type',1)->first()->name,
+                        'kelompok'          => ItemAnggaranMaster::where('kode',$mata->kelompok_anggaran)->where('type',2)->first()->name,
+                        'pos_anggaran'      => ItemAnggaranMaster::where('kode',$mata->pos_anggaran)->where('type',3)->first()->name,
                         'sub_pos'           => $mata->sub_pos,
                         'mata_anggaran'     => $mata->mata_anggaran,
                     ];

@@ -115,9 +115,7 @@ Route::group(['middleware' => 'auth'], function() {
 	Route::get('/user/profile/{id}', 'UserController@profile');
 	Route::post('/user/restore/{id}', 'UserController@restore');
 
-	// Route::resource('/item', 'ItemController');
-	// Route::get('/item/tambah', 'ItemController@tambahItem');
-
+	Route::post('/jenis_user/restore/{id}', 'JenisUserController@restore');
 	Route::resource('/jenis_user', 'JenisUserController');
 	Route::post('/jenis_user/handle', 'JenisUserController@handleCombo');
 

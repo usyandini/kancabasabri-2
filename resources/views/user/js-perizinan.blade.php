@@ -51,7 +51,6 @@
         increaseArea: '20%' // optional
       });
     @else
-    calibrateCentang()
      $('input').iCheck({
         checkboxClass: 'icheckbox_square-red',
         radioClass: 'iradio_square-red',
@@ -61,9 +60,17 @@
     $('input[name="as_ldap"]').on('ifClicked', function (event) {
           changeLDAP(this.value);
       });
+    @endif
+
+    calibrateCentang();
+    $('input[type="checkbox"]').on('ifChecked', function (event) {
+        calibrateCentang();
+    });
+    $('input[type="checkbox"]').on('ifUnchecked', function (event) {
+        calibrateCentang();
+    });
 
     $('input[name="perizinan[info_t]"]').on('ifClicked', function (event) {
-        // checkAll(this) 
           checkChild(this) 
       });
     $('input[name="perizinan[info_a]"]').on('ifClicked', function (event) {
@@ -78,15 +85,38 @@
     $('input[name="perizinan[form_master]"]').on('ifClicked', function (event) {
          checkChild(this) 
       });
-    @endif
   })
 
 
     function calibrateCentang() {
-      if ($('#notifikasi input').filter(':checked').length > $('#notifikasi input').length/2) {
-        $('label#notifikasi').html('Hilangkan centang')
-      } else {
-        $('label#notifikasi').html('Centang semua')
+      if($('#info_transaksi input').filter(':checked').length == 0){
+        $('input[name="perizinan[info_t]"]').iCheck('uncheck');
+      }else{
+        $('input[name="perizinan[info_t]"]').iCheck('check');
+      }
+
+      if($('#info_anggaran input').filter(':checked').length == 0){
+        $('input[name="perizinan[info_a]"]').iCheck('uncheck');
+      }else{
+        $('input[name="perizinan[info_a]"]').iCheck('check');
+      }
+
+      if($('#info_user input').filter(':checked').length == 0){
+        $('input[name="perizinan[info_u]"]').iCheck('uncheck');
+      }else{
+        $('input[name="perizinan[info_u]"]').iCheck('check');
+      }
+
+      if($('#jenis_user input').filter(':checked').length == 0){
+        $('input[name="perizinan[form_master]"]').iCheck('uncheck');
+      }else{
+        $('input[name="perizinan[form_master]"]').iCheck('check');
+      }
+
+      if($('#form_master input').filter(':checked').length == 0){
+        $('input[name="perizinan[jenis_u]"]').iCheck('uncheck');
+      }else{
+        $('input[name="perizinan[jenis_u]"]').iCheck('check');
       }
 
       if ($('#unit_kerja input').filter(':checked').length > $('#unit_kerja input').length/2) {
@@ -189,20 +219,9 @@
   }
 
   $('#toogle_unit').click(function() {
-      if(CheckUnitKerja('unit_kerja')){
+      // if(CheckUnitKerja('unit_kerja')){
         $( "#modal_unit" ).modal();
-      }
-  });
-  $('.iCheck-helper').click(function() {
-      id = $(this).prev().attr('id');
-      alert();
-      check= $('#' +id+ ' input');
-      if($(this).prev().is(':checked')){
-        check.iCheck('check')
-      }else{
-        check.iCheck('uncheck')
-      }
-      
+      // }
   });
   var data_username = {};
   function changeLDAP(type){
