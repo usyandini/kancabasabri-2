@@ -9,7 +9,7 @@
                 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/tables/extensions/responsive.dataTables.min.css') }}">               
                 <style type="text/css">
                   .hide {
-                    display: none;
+                    display: block;
                   }
                 </style>
                 @endsection
@@ -42,6 +42,26 @@
 			                </div>
 			                <div class="card-body collapse in">			                
 			                  <div class="card-block">
+				                @if(session('success'))
+				                  <div class="col-xs-6">
+				                    <div class="alert alert-success">
+				                      <b>Data item berhasil diubah.</b>
+				                    </div>
+				                  </div>
+				                @elseif(session('deleted'))
+				                  <div class="col-xs-6">
+				                    <div class="alert alert-success">
+				                      <b>{!! session('deleted') !!}</b>
+				                    </div>
+				                  </div>
+				                @endif
+				                @if(count($errors->all()) > 0)
+	                            <div class="alert alert-danger alert-dismissable">
+	                              @foreach ($errors->all() as $error)
+	                              {!! $error !!}<br>
+	                              @endforeach
+	                            </div>
+	                            @endif
 			                  	<name="data" id="data">
 			                  	<div class="table-responsive">
 			                      <table class="table table-striped table-bordered datatable-select-inputs wrap" cellspacing="0" width="100%">
@@ -67,15 +87,16 @@
 		                        			@endif
 		                        			</td>
 	                        				<td><center>
-	                        					{{--<a href="{{ url('item/edit/anggaran').'/'.$item->id }}" class="btn btn-info btn-sm">--}}
-	                        					<button type="button" class="btn btn-info btn-sm" data-target="#editJenis" data-toogle="modal">
+	                        					<button type="button" class="btn btn-info btn-sm" onclick="showModal({{$item->id}})" 
+	                        					data-toogle="modal">
 	                        					<i class="fa fa-edit"></i> Edit</button>
 
 	                        					<a href="#" class="btn btn-danger btn-sm" onclick="deleteUser({{ $item->id }})">
 	                        					<i class="fa fa-trash"></i> Hapus</a>
 	                        				</center></td>
 		                        		</tr>
-		                        		<div class="modal fade text-xs-left" id="editJenis" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		                        		<div class="modal fade text-xs-left" id="editAnggaran{{$item->id}}"tabindex="-1" role="dialog" 
+		                        		aria-labelledby="myModalLabel" aria-hidden="true">
 					                      <div class="modal-dialog">
 					                        <div class="modal-content">
 					                          <div class="modal-header">
@@ -88,11 +109,11 @@
 					                          {{ csrf_field() }}
 					                            <div class="modal-body" id="confirmation-msg">
 					                                <div class="form-group">
-					                                  <label for="edit_kode_jenis">Kode</label>
-					                                    <input class="form-control" type="text" name="edit_kode" id="edit_kode" placeholder="Kode Item Anggaran" value="{{ $item->kode }}" readonly="">
+					                                  <label for="edit_kode">Kode</label>
+					                                    <input class="form-control" type="text" name="edit_kode" id="edit_kode" placeholder="Kode Item Anggaran" value="{{ $item->kode }}">
 					                                </div> 
 					                                <div class="form-group">
-					                                  <label for="edit_nama_jenis">Nama</label>
+					                                  <label for="edit_nama">Nama</label>
 					                                    <input class="form-control" type="text" name="edit_nama" id="edit_nama" placeholder="Nama Item Anggaran" value="{{ $item->name }}">
 					                                </div>
 					                            </div>
@@ -183,8 +204,8 @@
 						}
 					}
 
-					// $(document).ready(function(){
-					//     $('.modal').modal('show');
-					// });
+					function showModal(a){
+						$('#editAnggaran'+a).modal('show');
+					}
 				</script>
                 @endsection

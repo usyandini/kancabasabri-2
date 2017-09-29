@@ -80,7 +80,7 @@
                                       <select class="select2 form-control" name="jenis" id="jenis" required>
                                         <option value="" disabled selected>Jenis Anggaran</option>
                                         @foreach($jenis as $ja)
-                                        <option {{ old('jenis') == $ja->kode ? 'selected=""' : '' }} value="{{ $ja->name }}">{{ $ja->kode }} - {{ $ja->name }}</option>
+                                        <option {{ old('jenis') == $ja->id ? 'selected=""' : '' }} value="{{ $ja->id }}">{{ $ja->kode }} - {{ $ja->name }}</option>
                                         @endforeach
                                       </select>
                                     </div>
@@ -98,7 +98,7 @@
                                       <select class="select2 form-control" id="kelompok" name="kelompok" required>
                                         <option value="" disabled selected>Kelompok Anggaran</option>
                                         @foreach($kelompok as $ka)
-                                        <option {{ old('kelompok') == $ka->kode ? 'selected=""' : '' }} value="{{ $ka->name }}">{{ $ka->kode }} - {{ $ka->name }}</option>
+                                        <option {{ old('kelompok') == $ka->id ? 'selected=""' : '' }} value="{{ $ka->id }}">{{ $ka->kode }} - {{ $ka->name }}</option>
                                         @endforeach
                                       </select>
                                     </div>
@@ -116,7 +116,7 @@
                                       <select class="select2 form-control" id="pos" name="pos" required>
                                         <option value="" disabled selected>Pos Anggaran</option>
                                         @foreach($pos as $pa)
-                                        <option {{ old('pos') == $pa->kode ? 'selected=""' : '' }} value="{{ $pa->name }}">{{ $pa->kode }} - {{ $pa->name }}</option>
+                                        <option {{ old('pos') == $pa->id ? 'selected=""' : '' }} value="{{ $pa->id }}">{{ $pa->kode }} - {{ $pa->name }}</option>
                                         @endforeach
                                       </select>
                                     </div>
@@ -204,7 +204,11 @@
                                     <select class = "select2 form-control" id="divisi" name="divisi" onchange="getVal('divisi', 'segmen4');" required>
                                       <option value="" disabled selected>Divisi</option>
                                       @foreach($divisi as $div)
+                                      @if($div->VALUE == 00)
+                                      <option {{ old('divisi') == $div->VALUE ? 'selected=""' : '' }} value="{{ $div->VALUE }}">&nbsp</option>
+                                      @else
                                       <option {{ old('divisi') == $div->VALUE ? 'selected=""' : '' }} value="{{ $div->VALUE }}">{{ $div->DESCRIPTION }}</option>
+                                      @endif
                                       @endforeach
                                       </select>
     		                          </div>

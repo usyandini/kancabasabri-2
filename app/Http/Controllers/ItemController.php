@@ -69,7 +69,7 @@ class ItemController extends Controller
     public function index()
     {
         $master_item = ItemMaster::orderby('kode_item')->get();
-        $jenis = ItemAnggaranMaster::where('type', 1)->get();
+        $jenis = ItemAnggaranMaster::get();
         $kelompok = ItemAnggaranMaster::where('type', 2)->get();
         $pos = ItemAnggaranMaster::where('type', 3)->get();
     	return view('master.item.index', [
@@ -77,7 +77,7 @@ class ItemController extends Controller
             'no' => 1, 
             'jenis' => $jenis,
             'kelompok' => $kelompok,
-            'pos' => $pos,
+            'pos' => $pos
         ]);
     }
 
@@ -266,54 +266,29 @@ class ItemController extends Controller
         ]);
     }
 
-    public function updateItemAnggaran($type, $id, Request $request)
+    public function updateItemAnggaran($id, Request $request)
     {
         $validatorItemAnggaran = Validator::make($request->all(),
             [
-             'edit_kode_jenis' => 'unique:item_anggaran_master,kode,'.$id,
-             'kode_kelompok' => 'unique:item_anggaran_master,kode,'.$id,
-             'kode_pos' => 'unique:item_anggaran_master,kode,'.$id
+             'edit_kode' => 'unique:item_anggaran_master,kode,'.$id
             ],
             [
-             'edit_kode_jenis.unique' => 'Kode jenis anggaran sudah ada.',
-             'kode_kelompok.unique' => 'Kode kelompok anggaran sudah ada.',
-             'kode_pos.unique' => 'Kode pos anggaran sudah ada.'
+             'edit_kode.unique' => 'Kode item anggaran sudah ada.'
             ]
         );
 
-        //dd($request->all());
-
         if($validatorItemAnggaran->passes())
-        {
-            switch($type){
-                case 'jenis':
-                    $inputJenis = array(
-                        'kode'  => $request->edit_kode_jenis,
-                        'name'  => $request->edit_nama_jenis,
-                        'updated_by' => \Auth::id()
-                    );
-                    ItemAnggaranMaster::where('kode', $id)->update($inputJenis);
-                    break;
-                case 'kelompok':
-                    $inputKelompok = array(
-                        'kode'  => $request->kode_kelompok,
-                        'name'  => $request->nama_kelompok,
-                        'updated_by' => \Auth::id()
-                    );
-                    ItemAnggaranMaster::update($inputKelompok);
-                    break;
-                case 'pos':
-                    $inputPos = array(
-                        'kode'  => $request->kode_pos,
-                        'name'  => $request->nama_pos,
-                        'updated_by' => \Auth::id()
-                    );
-                    ItemAnggaranMaster::update($inputPos);
-                    break;
-            }
+        {        
+            $updateItemAngg = array(
+                'kode'  => $request->edit_kode,
+                'name'  => $request->edit_nama,
+                'updated_by' => \Auth::id()
+            );
+            ItemAnggaranMaster::where('id', $id)->update($updateItemAngg);
         }else{
             return redirect()->back()->withErrors($validatorItemAnggaran)->withInput();
         }
+        session()->flash('success', true);
         return redirect()->back()->withInput();
     }
 
@@ -330,7 +305,7 @@ class ItemController extends Controller
                 ItemAnggaranMaster::where('id', $id)->delete(); break;
         }
 
-        session()->flash('success', 'Item dengan kode <b>'.$item.'</b> berhasil dihapus');
+        session()->flash('deleted', 'Item <b>'.$item.'</b> berhasil dihapus');
         return redirect()->back();
     }
 

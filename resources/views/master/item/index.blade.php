@@ -43,6 +43,13 @@
 			                </div>
 			                <div class="card-body collapse in">			                
 			                  <div class="card-block">
+			                  	@if(session('deleted'))
+				                  <div class="col-xs-6">
+				                    <div class="alert alert-success">
+				                      <b>{!! session('deleted') !!}</b>
+				                    </div>
+				                  </div>
+				                @endif
 			                  	<name="data" id="data">
 			                  	<div class="table-responsive">
 			                      <table class="table table-striped table-bordered datatable-select-inputs wrap" cellspacing="0" width="120%">
@@ -65,9 +72,12 @@
 		                        			<td width="5%">{{ $no++ }}</td>
 		                        			<td width="5%">{{ $item->kode_item }}</td>
 		                        			<td width="20%">{{ $item->nama_item }}</td>
-		                        			<td width="10%">{{ $jenis->where('kode', $item->jenis_anggaran)->first()['name'] }}
-		                        			<td width="10%">{{ $kelompok->where('kode', $item->kelompok_anggaran)->first()['name'] }}</td>
-		                        			<td width="10%">{{ $pos->where('kode', $item->pos_anggaran)->first()['name'] }}</td>
+		                        			<td width="10%">{{--$item->jenis_anggaran--}}
+		                        			{{ $jenis->where('kode', $item->jenis_anggaran)->first()['name'] }}</td>
+		                        			<td width="10%">{{--$item->kelompok_anggaran--}}
+		                        			{{ $kelompok->where('kode', $item->kelompok_anggaran)->first()['name'] }}</td>
+		                        			<td width="10%">{{--$item->pos_anggaran--}}
+		                        			{{ $pos->where('kode', $item->pos_anggaran)->first()['name'] }}</td>
 		                        			<td width="10%">{{ $item->sub_pos }}</td>
 		                        			<td width="10%">{{ $item->mata_anggaran }}</td>
 	                        				<td width="40%"><center>

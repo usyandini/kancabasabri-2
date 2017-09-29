@@ -130,7 +130,7 @@ Route::group(['middleware' => 'auth'], function() {
 		Route::get('/edit/{id}', 'ItemController@editItem');
 		Route::post('/update/{id}', 'ItemController@updateItem');
 		Route::get('/anggaran', 'ItemController@editItemAnggaran');
-		// Route::post('/update/anggaran/{id}', 'ItemController@updateItemAnggaran');
+		Route::post('/update/anggaran/{id}', 'ItemController@updateItemAnggaran');
 		Route::get('/delete/{jenis}/{id}', 'ItemController@destroy');
 	});
 
