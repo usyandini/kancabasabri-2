@@ -115,12 +115,8 @@ Route::group(['middleware' => 'auth'], function() {
 	Route::get('/user/profile/{id}', 'UserController@profile');
 	Route::post('/user/restore/{id}', 'UserController@restore');
 
-	// Route::resource('/item', 'ItemController');
-	// Route::get('/item/tambah', 'ItemController@tambahItem');
-
 	Route::resource('/jenis_user', 'JenisUserController');
 	Route::post('/jenis_user/handle', 'JenisUserController@handleCombo');
-	// Route::post('/jenis_user/remove/{id}', 'JenisUserController@destroy');
 
 	Route::group(['prefix' => 'item'], function(){
 		Route::resource('/', 'ItemController');
