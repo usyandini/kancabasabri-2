@@ -48,12 +48,12 @@ class User extends Authenticatable
 
     public function divisi()
     {
-        return $this->hasOne('App\Models\Divisi', 'VALUE', 'divisi');
+        return $this->hasOne('App\Models\Divisi', 'VALUE', 'divisi')->first();
     }
 
     public function kantorCabang()
     {
-        return $this->hasOne('App\Models\KantorCabang', 'VALUE', 'cabang');
+        return $this->hasOne('App\Models\KantorCabang', 'VALUE', 'cabang')->first();
     }
 
     public function hasAccess($permission)

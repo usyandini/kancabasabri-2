@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-//  ----------- BATCH STAT DESC -------------
+//  ----------- BATCH STAT / HISTORY DESC -------------
 //          0 = Inserted 
 //          1 = Updated
 //          2 = Posted / Submitted to Kasimin
@@ -46,7 +46,7 @@ class BatchStatus extends Model
             case 0:
                 return "Pertama dibuat";
             case 1:
-                return "Terakhir diupdate";
+                return "Terakhir diperbarui";
             case 2:
                 return "Submit persetujuan ke Kasimin";
             case 3:

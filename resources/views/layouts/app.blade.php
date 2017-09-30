@@ -79,7 +79,7 @@
                                 </li>
                                 <li class="list-group scrollable-container" id="notifList">
                                 </li>
-                                <li class="dropdown-menu-footer"><a href="{{url('notification/read_all')}}" class="dropdown-item text-muted text-xs-center">Read all notifications</a></li>
+                                <li class="dropdown-menu-footer"><a href="{{url('notification/read_all')}}" class="dropdown-item text-muted text-xs-center">Baca semua notifikasi</a></li>
                               </ul>
                             </li>
                             <li class="dropdown dropdown-user nav-item">
