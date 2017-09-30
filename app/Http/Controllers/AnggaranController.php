@@ -112,21 +112,49 @@ class AnggaranController extends Controller
 
         $batas_anggaran = BatasAnggaran::get();
 
+        foreach ($batas_anggaran as $batas) {
+            $date_now = date("Y-m-d");
+            $date = $batas ->tanggal_selesai;
+            $diff = strtotime($date) - strtotime($date_now);
+            if($diff <= 0){
+                BatasAnggaran::where('id',$batas->id)->update(['active'=>'0']);
+            }
+        }
+
         return view('anggaran.batas',[
             'unit_kerja' => $unit_kerja,
             'reject_reasons'=>null, 
-            'batas_anggaran'=>$batas_anggaran
+            'batas_anggaran'=>BatasAnggaran::get()
             ]);
     }
 
     public function add_pengajuan(Request $request){
+        $date_now = date("Y-m-d");
         $input = $request->except('_method', '_token');
+        $batas = BatasAnggaran::where('unit_kerja',$input['unit_kerja']);
+        $count = 0;
+        foreach ($batas->get() as $bts) {
+            $count++;
+        }
+        $condition = false;
+        if($count >= 1){
+            $date = $batas->first()->tanggal_mulai;
+            $condition = date('Y', strtotime($date)) != date('Y', strtotime($date_now));
+            if($condition){
+                unset($input['unit_kerja']);
+            }
+        }
+
         $validator = $this->validateBatas($input);
 
         if ($validator->passes()) {
-            
-            $input['active']= '1';
-            BatasAnggaran::create($input);
+            if($condition){
+                $input['unit_kerja'] = $request->unit_kerja;
+                BatasAnggaran::where('unit_kerja',$input['unit_kerja'])->update(['tanggal_mulai'=>$input['tanggal_mulai'],'tanggal_selesai'=>$input['tanggal_selesai'],'active'=>'1']);
+            }else{
+                $input['active']= '1';
+                BatasAnggaran::create($input);
+            }
             session()->flash('success', 'Waktu Pengajuan Anggaran dan Kegiatan Untuk '.$input['unit_kerja']." telah ditambah");
             return redirect()->back();
         }
@@ -141,8 +169,7 @@ class AnggaranController extends Controller
 
         if ($validator->passes()) {
             $batas = BatasAnggaran::where('id',$id)->first();
-            
-            BatasAnggaran::where('id',$id)->update(['tanggal_selesai'=>$input['tanggal_selesai'],'active'=>'1']);
+            BatasAnggaran::where('id',$id)->update(['tanggal_mulai'=>$input['tanggal_mulai'],'tanggal_selesai'=>$input['tanggal_selesai'],'active'=>'1']);
             session()->flash('success', 'Waktu Pengajuan Anggaran dan Kegiatan Untuk '.$batas->unit_kerja." telah diubah");
 
             return redirect()->back();
@@ -154,10 +181,12 @@ class AnggaranController extends Controller
     {
         return Validator::make($input, 
             [
+                'tanggal_mulai'  => 'required',
                 'tanggal_selesai'  => 'required',
                 'unit_kerja'    => 'unique:batas_anggaran,unit_kerja,'.$id
             ],[
-                'tanggal_selesai.required' => 'Tanggal Berakhir Harap Di isi.',
+                'tanggal_mulai.required' => 'Tanggal Mulai Harap Di isi.',
+                'tanggal_selesai.required' => 'Tanggal Selesai Harap Di isi.',
                 'unit_kerja.unique'   => 'Batas Pengajuan Unit Kerja Sudah terdapat di Database Sistem. Silahkan ubah pengajuan yang telah tersedia'
             ]);
     }
@@ -207,23 +236,34 @@ class AnggaranController extends Controller
         }
 
         $date_now = date("Y-m-d");
-        $date;
+        $date_selesai;
+        $date_mulai;
         foreach ($batasAnggaran as $batas) {
             
             if($batas->unit_kerja == "Semua Unit Kerja"||$userUnit == $batas->unit_kerja){
-                $date = $batas->tanggal_selesai;
+                $date_mulai = $batas->tanggal_mulai;
+                $date_selesai = $batas->tanggal_selesai;
             }
 
 
         }
 
-        $diff = strtotime($date) - strtotime($date_now);
+        $diff1 = strtotime($date_now) - strtotime($date_mulai);
+        $diff2 = strtotime($date_selesai) - strtotime($date_now);
 
-        if($diff <= 0){
+        if($diff2 <= 0){
             $beda = false;
         }else{
             $beda = true;
         }
+
+        if($diff1 < 0){
+            $beda = false;
+        }else{
+            $beda = true;
+        }
+
+        // echo $date_mulai.":".$diff1;
 
         return view('anggaran.index', [
             'title' => 'Tambah Kegiatan dan Anggaran',
@@ -231,7 +271,7 @@ class AnggaranController extends Controller
             'userDivisi' =>$this->userDivisi,
             'nd_surat' => '',
             'beda' => $beda ,
-            'batas' =>$date,
+            'batas' =>$date_selesai,
             'status' => 'tambah',
             'reject' => false,
             'filters' =>null,
@@ -268,31 +308,35 @@ class AnggaranController extends Controller
             $unit = $angg->unit_kerja;
             $persetujuan = $angg->persetujuan;
         }
-
-        $beda = false;
-        if($userUnit == $unit){
-            $beda = true;
-        }
-
-        if($persetujuan != "-1"){
-            $beda = false;
-        }
-
-
         $date_now = date("Y-m-d");
-        $date;
+        $date_mulai;
+        $date_selesai;
         foreach ($batasAnggaran as $batas) {
             
             if($batas->unit_kerja == "Semua Unit Kerja"||$unit == $batas->unit_kerja){
-                $date = $batas->tanggal_selesai;
+                $date_mulai = $batas->tanggal_mulai;
+                $date_selesai = $batas->tanggal_selesai;
             }
 
 
         }
 
-        $diff = strtotime($date) - strtotime($date_now);
+        $diff1 = strtotime($date_now) - strtotime($date_mulai);
+        $diff2 = strtotime($date_selesai) - strtotime($date_now);
+        $beda = false;
 
-        if($diff <= 0){
+        if($userUnit == $unit){
+            $beda = true;
+            if($diff2 <= 0){
+                $beda = false;
+            }
+
+            if($diff1 < 0){
+                $beda = false;
+            }
+        }
+
+        if($persetujuan != "-1"){
             $beda = false;
         }
 

@@ -15,6 +15,7 @@ class BatasAnggaran extends Model
     
     protected $fillable = [
                 'unit_kerja', 
+                'tanggal_mulai', 
                 'tanggal_selesai', 
                 'active', 
                 'created_by', 

@@ -17,6 +17,7 @@ class CreateTableBatasAnggaran extends Migration
         Schema::create('batas_anggaran', function(Blueprint $table){
             $table->increments('id');
             $table->string('unit_kerja');
+            $table->date('tanggal_mulai');
             $table->date('tanggal_selesai');
             $table->string('active');
             $table->timestamps();

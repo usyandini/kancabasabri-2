@@ -395,7 +395,7 @@
                   var countFile = 0;
                   
                   $(document).ready(function() {
-                    alert("{{ $beda?1:0}}")
+                    // alert("{{ $beda?1:0}}")
                     $("#basicScenario").jsGrid( {
                       width: "100%",
                

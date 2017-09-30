@@ -147,7 +147,7 @@
                                 <li class="is-shown {{ checkActiveMenu('riwayat') }}"><a href="{{ url('/anggaran/riwayat', $parameters = [], $secure = null) }}" class="menu-item">Riwayat Anggaran</a>
                             @endcan
                             @can('batas_a')
-                                <li class="is-shown {{ checkActiveMenu('batas') }}"><a href="{{ url('/anggaran/batas', $parameters = [], $secure = null) }}" class="menu-item">Batas Pengajuan</a>
+                                <li class="is-shown {{ checkActiveMenu('batas') }}"><a href="{{ url('/anggaran/batas', $parameters = [], $secure = null) }}" class="menu-item">Manajemen Pengajuan</a>
                             @endcan
                         </ul>
                     </li>

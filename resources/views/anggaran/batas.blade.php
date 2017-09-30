@@ -53,21 +53,29 @@
                                                 </div>
                                                 <form enctype="multipart/form-data" role="form" action="{{ url('/anggaran/batas/tambah/') }}" method="POST" >
                                                  {{ csrf_field() }}
-                                                <div class="modal-body">
-                                                    
-                                                <label class="control-label"><b> Tanggal Pengajuan Berakhir </b></label>
-                                                <label class="control-label"> : </label>
-										        <input class="form-control" type="date" name="tanggal_selesai" required="required" min={{Date("Y-m-d")}}>
-										        <br><br>
-                                            	<label class="control-label"><b> Keterangan </b></label>
-                                            	<label class="control-label"><b> : </b></label>
-										        <select class="select2 form-control" name="unit_kerja" required="required" style="width:100%"> 
-										        <option value="Semua Unit Kerja">Semua Unit Kerja</option> 
+                                                <div class="modal-body col-md-12">
+                                                <div class="col-md-6">
+	                                                <label class="control-label"><b> Tanggal Pengajuan Mulai </b></label>
+	                                                <label class="control-label"> : </label>
+											        <input class="form-control" type="date" name="tanggal_mulai" required="required" min={{Date("Y-m-d")}}>
+										        </div>
+										         <div class="col-md-6">
+	                                                <label class="control-label"><b> Tanggal Pengajuan Selesai </b></label>
+	                                                <label class="control-label"> : </label>
+											        <input class="form-control" type="date" name="tanggal_selesai" required="required" min={{Date("Y-m-d")}}>
+										        </div>
+										        <div class="col-md-12">
+	                                            	<label class="control-label"><b> Keterangan </b></label>
+	                                            	<label class="control-label"><b> : </b></label>
+											        <select class="select2 form-control" name="unit_kerja" required="required" style="width:100%"> 
+											        <option value="Semua Unit Kerja">Semua Unit Kerja</option> 
 
-										        @foreach($unit_kerja as $unit)
-										        <option value="{{$unit->DESCRIPTION}}">{{$unit->DESCRIPTION}}</option> 
-										        @endforeach                                       
-			                                    </select>
+											        @foreach($unit_kerja as $unit)
+											        <option value="{{$unit->DESCRIPTION}}">{{$unit->DESCRIPTION}}</option> 
+											        @endforeach                                       
+				                                    </select>
+                                            	</div>
+										        <hr /><hr />
                                             	</div>
                                             	<div class="modal-footer">
                                                 <button type="submit" name="save" class="btn btn-sm btn-primary"><i class="fa fa-check "></i> Tambah</button>
@@ -101,7 +109,9 @@
 										  <tr>
 										    <th><center>No</center></th>
 										    <th id="filterable"><center>Unit Kerja</center></th>
-										    <th id="filterable"><center>Tanggal Berakhir</center></th>
+										    <th id="filterable"><center>Tanggal Mulai</center></th>
+										    <th id="filterable"><center>Tanggal Selesai</center></th>
+										    <th><center>Aktif</center></th>
 										    <th><center>Aksi</center></th>
 										  </tr>
 										</thead>
@@ -113,8 +123,11 @@
 												<tr>
 													<td><center>{{ $no }}</center></td>
 													<td>{{ $batas->unit_kerja }}</td>
+													<td id="tanggal_mulai_{{$batas->id}}">{{ $batas->tanggal_mulai }}</td>
 													<td id="tanggal_selesai_{{$batas->id}}">{{ $batas->tanggal_selesai }}</td>
+													<td style="color:{{$batas->active?'green':'red'}}"><b>{{ $batas->active?"Ya":"Tidak"}}</b></td>
 													<td><center>
+														<input type="hidden" id="active_{{$batas->id}}" value="{{$batas->active}}">
 														<span data-toggle='tooltip' title='Edit'><a class="btn btn-info btn-sm" onclick='modal_ubah("{{$batas->id}}")' style="color:black"><i class="fa fa-edit"></i> </a></span>
 													</center></td>
 										 		</tr>
@@ -132,14 +145,19 @@
 									            </div>
 									            <form method="post" action="#" id="form_edit_pengajuan" >
 									             {{ csrf_field() }}
-									            <div class="modal-body">
-									                
-									            <label class="control-label"><b> Tanggal Pengajuan Berakhir </b></label>
-									            <label class="control-label"> : </label>
-										        <input class="form-control" type="date" name="tanggal_selesai" id ="tanggal_selesai_edit" required="required">
-										        <br><br>
-									        	
-									        	</div>
+									            <div class="modal-body col-md-12">
+                                                <div class="col-md-6" id="mulai">
+	                                                <label class="control-label"><b> Tanggal Pengajuan Mulai </b></label>
+	                                                <label class="control-label"> : </label>
+											        <input class="form-control" type="date" name="tanggal_mulai" id="tanggal_mulai_edit" required="required" min={{Date("Y-m-d")}}>
+										        </div>
+										         <div class="col-md-6">
+	                                                <label class="control-label"><b> Tanggal Pengajuan Selesai </b></label>
+	                                                <label class="control-label"> : </label>
+											        <input class="form-control" type="date" name="tanggal_selesai" id="tanggal_selesai_edit" required="required" min={{Date("Y-m-d")}}>
+										        </div>
+										        <hr /><hr />
+                                            	</div>
 									        	<div class="modal-footer">
 									            <button type="submit" name="save" class="btn btn-sm btn-primary"><i class="fa fa-check "></i> Ubah</button>
 									            <div class="btn btn-danger btn-sm" data-dismiss="modal"><i class="fa fa-times"></i> Batal</button>
@@ -176,9 +194,16 @@
 					function modal_ubah(id){	
 
 
+						tanggal_mulai = document.getElementById('tanggal_mulai_'+id).innerHTML;
 						tanggal_selesai = document.getElementById('tanggal_selesai_'+id).innerHTML;
-
+						active = document.getElementById('active_'+id).value;
 						// alert(tanggal_selesai);
+
+						$('#tanggal_mulai_edit').val(tanggal_mulai);
+						if(active == "0")
+							$('#tanggal_mulai_edit').datepicker().datepicker('disable');
+						
+							
 						$('#tanggal_selesai_edit').val(tanggal_selesai);
 						$('form[id="form_edit_pengajuan"').attr('action', '{{ url('anggaran/batas/ubah') }}' + '/' + id);
 						$('#modal_ubah').modal({
