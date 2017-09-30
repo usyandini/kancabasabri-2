@@ -62,7 +62,7 @@ class AuthServiceProvider extends ServiceProvider
              $permissions[] = $transaksi[$i];
         }
 
-        $anggaran = ["info_a","cari_a","tambah_a","tambah_item_a","ubah_item_a","hapus_item_a",
+        $anggaran = ["info_a","cari_a","batas_a","tambah_a","tambah_item_a","ubah_item_a","hapus_item_a",
                     "berkas_item_a","kirim_a","setuju_ia","setuju_iia","setuju_iiia","setuju_iva",
                     "setuju_va","setuju_via","setuju_viia","setuju_viiia","riwayat_a","notif_setuju_ia",
                     "notif_setuju_iia","notif_setuju_iiia","notif_setuju_iva","notif_setuju_va",

@@ -76,6 +76,9 @@ Route::group(['middleware' => 'auth'], function() {
 	Route::group(['prefix' => 'anggaran'], function() {
 		Route::resource('/', 'AnggaranController');
 
+		Route::get('/batas/', 'AnggaranController@batas');
+		Route::post('/batas/tambah/', 'AnggaranController@add_pengajuan');
+		Route::post('/batas/ubah/{id}', 'AnggaranController@change_pengajuan');
 		Route::get('/tambah/', 'AnggaranController@tambah_anggaran');
 		Route::get('/edit/{nd}', 'AnggaranController@edit_anggaran');
 		Route::get('/persetujuan/{nd}/{status}', 'AnggaranController@persetujuan_anggaran');

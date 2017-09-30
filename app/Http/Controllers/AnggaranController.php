@@ -12,11 +12,13 @@ use App\Models\FileListAnggaran;
 use App\Models\Kegiatan;
 use App\Models\ItemMaster;
 use App\Models\ItemAnggaranMaster;
+use App\Models\BatasAnggaran;
 use App\Models\Divisi;
 use App\Models\KantorCabang;
 
 use App\Services\FileUpload;
 use App\Services\NotificationSystem;
+use Validator;
 /**
 *
 *-------Status Data :----------
@@ -74,6 +76,7 @@ class AnggaranController extends Controller
         
 
         $this->middleware('can:info_a', ['only' => 'index']);
+        $this->middleware('can:batas_a', ['only' => 'batas']);
         $this->middleware('can:tambah_a', ['only' => 'tambah_anggaran']);
         $this->middleware('can:cari_a', ['only' => 'cari', 'getFilteredAnggaran']);
         $this->middleware('can:riwayat_a', ['only' => 'riwayat','getFilteredHistory']);
@@ -94,6 +97,69 @@ class AnggaranController extends Controller
             'unit_kerja' =>$unit_kerja,
             'nd_surat' => '',
             'filters' =>$filter]);
+    }
+
+    public function batas()
+    {
+        
+        $query="SELECT * 
+                    FROM (SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_DIVISI] 
+                    WHERE VALUE!='00') AS A 
+                    UNION ALL 
+                    SELECT * FROM (SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_KPKC]  
+                    WHERE VALUE!='00') AS B";
+        $unit_kerja = \DB::select($query);
+
+        $batas_anggaran = BatasAnggaran::get();
+
+        return view('anggaran.batas',[
+            'unit_kerja' => $unit_kerja,
+            'reject_reasons'=>null, 
+            'batas_anggaran'=>$batas_anggaran
+            ]);
+    }
+
+    public function add_pengajuan(Request $request){
+        $input = $request->except('_method', '_token');
+        $validator = $this->validateBatas($input);
+
+        if ($validator->passes()) {
+            
+            $input['active']= '1';
+            BatasAnggaran::create($input);
+            session()->flash('success', 'Waktu Pengajuan Anggaran dan Kegiatan Untuk '.$input['unit_kerja']." telah ditambah");
+            return redirect()->back();
+        }
+
+        return redirect()->back()->withInput()->withErrors($validator);
+
+    }
+
+    public function change_pengajuan(Request $request, $id){
+        $input = $request->except('_method', '_token');
+        $validator = $this->validateBatas($input);
+
+        if ($validator->passes()) {
+            $batas = BatasAnggaran::where('id',$id)->first();
+            
+            BatasAnggaran::where('id',$id)->update(['tanggal_selesai'=>$input['tanggal_selesai'],'active'=>'1']);
+            session()->flash('success', 'Waktu Pengajuan Anggaran dan Kegiatan Untuk '.$batas->unit_kerja." telah diubah");
+
+            return redirect()->back();
+        }
+        return redirect()->back()->withInput()->withErrors($validator);
+    }
+
+    public function validateBatas($input, $id = null)
+    {
+        return Validator::make($input, 
+            [
+                'tanggal_selesai'  => 'required',
+                'unit_kerja'    => 'unique:batas_anggaran,unit_kerja,'.$id
+            ],[
+                'tanggal_selesai.required' => 'Tanggal Berakhir Harap Di isi.',
+                'unit_kerja.unique'   => 'Batas Pengajuan Unit Kerja Sudah terdapat di Database Sistem. Silahkan ubah pengajuan yang telah tersedia'
+            ]);
     }
 
     public function cari(Request $request) 
@@ -126,12 +192,46 @@ class AnggaranController extends Controller
         $displayEdit = 'none';
         $displaySave = 'block';
         $displaySend = 'block';
+        $batasAnggaran = BatasAnggaran::orderBy('id', 'ASC')->get();
+        $userUnit = "";
+        if($this->userCabang != "00"){
+            $cabang = KantorCabang::where('VALUE',$this->userCabang)->get();
+            foreach ($cabang as $cab ) {
+                $userUnit =  $cab->DESCRIPTION;
+            } 
+        }else if($this->userDivisi != "00"){
+            $divisi = Divisi::where('VALUE',$this->userDivisi)->get();
+            foreach ($divisi as $div ) {
+                $userUnit = $div->DESCRIPTION;
+            } 
+        }
+
+        $date_now = date("Y-m-d");
+        $date;
+        foreach ($batasAnggaran as $batas) {
+            
+            if($batas->unit_kerja == "Semua Unit Kerja"||$userUnit == $batas->unit_kerja){
+                $date = $batas->tanggal_selesai;
+            }
+
+
+        }
+
+        $diff = strtotime($date) - strtotime($date_now);
+
+        if($diff <= 0){
+            $beda = false;
+        }else{
+            $beda = true;
+        }
+
         return view('anggaran.index', [
             'title' => 'Tambah Kegiatan dan Anggaran',
             'userCabang' =>$this->userCabang,
             'userDivisi' =>$this->userDivisi,
             'nd_surat' => '',
-            'beda' => true , 
+            'beda' => $beda ,
+            'batas' =>$date,
             'status' => 'tambah',
             'reject' => false,
             'filters' =>null,
@@ -147,6 +247,9 @@ class AnggaranController extends Controller
         $displaySave = 'none';
         $displaySend = 'none';
         $userUnit = "";
+
+        $batasAnggaran = BatasAnggaran::orderBy('id', 'ASC')->get();
+
         if($this->userCabang != "00"){
             $cabang = KantorCabang::where('VALUE',$this->userCabang)->get();
             foreach ($cabang as $cab ) {
@@ -176,6 +279,23 @@ class AnggaranController extends Controller
         }
 
 
+        $date_now = date("Y-m-d");
+        $date;
+        foreach ($batasAnggaran as $batas) {
+            
+            if($batas->unit_kerja == "Semua Unit Kerja"||$unit == $batas->unit_kerja){
+                $date = $batas->tanggal_selesai;
+            }
+
+
+        }
+
+        $diff = strtotime($date) - strtotime($date_now);
+
+        if($diff <= 0){
+            $beda = false;
+        }
+
         if(Gate::check('tambah_item_a')||Gate::check('ubah_item_a')||Gate::check('hapus_item_a')){
             $displayEdit = 'none';
             $displaySave = 'block';
@@ -191,6 +311,7 @@ class AnggaranController extends Controller
             'userDivisi' =>$this->userDivisi,
             'nd_surat' => $nd_surat,
             'beda' => $beda , 
+            'batas' =>$date,
             'status' => 'edit',
             'reject' => false,
             'filters' => array('nd_surat' => $nd_surat),
@@ -268,6 +389,7 @@ class AnggaranController extends Controller
             'userDivisi' =>$this->userDivisi,
             'nd_surat' => $nd_surat,
             'beda' => $beda , 
+            'batas' =>null,
             'status' => 'setuju',
             'reject' => $reject,
             'filters' => array('nd_surat' => $nd_surat),

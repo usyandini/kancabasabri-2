@@ -17,7 +17,7 @@
                         <div class="row breadcrumbs-top">
                             <div class="breadcrumb-wrapper col-xs-12">
                                 <ol class="breadcrumb">
-                                    <li class="breadcrumb-item"><a href="index-2.html">Dashboard</a>
+                                    <li class="breadcrumb-item"><a href="{{url('/anggaran')}}">Anggaran dan Kegiatan</a>
                                     </li>
                                     <li class="breadcrumb-item active">{{$title}}
                                     </li>
@@ -324,9 +324,9 @@
                 <!-- END PAGE LEVEL JS-->
                 <script type="text/javascript">
                 // Set the date we're counting down to
-                  var countDownDate = new Date("Aug 30, 2017 00:00:00").getTime();
+                  var countDownDate = new Date("{{$batas}}").getTime();
 
-                  var disableCountDown = false;
+                  var disableCountDown = true;
                   if(disableCountDown){
                     var x = setInterval(function() {
 
@@ -395,7 +395,7 @@
                   var countFile = 0;
                   
                   $(document).ready(function() {
-
+                    alert("{{ $beda?1:0}}")
                     $("#basicScenario").jsGrid( {
                       width: "100%",
                
@@ -404,12 +404,12 @@
                       autoload: true,
 
                       
-                      @if((Gate::check('ubah_item_a')&& $beda)||(Gate::check('tambah_a')&&$status=="tambah"))
+                      @if((Gate::check('ubah_item_a')||(Gate::check('tambah_a')&&$status=="tambah"))&& $beda)
                         editing: true,
                       @else
                         editing: false,
                       @endif
-                      @if((Gate::check('tambah_item_a')&& $beda)||(Gate::check('tambah_a')&&$status=="tambah"))
+                      @if((Gate::check('tambah_item_a')||(Gate::check('tambah_a')&&$status=="tambah"))&& $beda)
                         inserting: true,
                       @else
                         inserting: false,
