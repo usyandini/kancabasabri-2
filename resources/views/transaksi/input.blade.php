@@ -109,7 +109,7 @@
                             <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
                             <div class="font-small-3">
                               @if ($active_batch)
-                              <span>No. Batch: <code>{{ $active_batch->batchNo() }}</code></span>
+                              <span>No. Batch (lokal) saat ini: <code>{{ $active_batch->batchNo() }}</code></span>
                               <span>KPKC: <code>{{ $active_batch->kantorCabang()->DESCRIPTION }}</code> <span>Divisi:</span> <code>{{ $active_batch->divisi == '00' ? 'Non-Divisi' : $active_batch->divisi()->DESCRIPTION  }}</code></span>
                               @endif
                             </div>
@@ -136,32 +136,32 @@
                               </div>
                               <br>
                               <div class="row">
-                                <div class="col-xs-2">
-                                  <div class="form-group">
-                                    <button class="btn btn-pink" onclick="location.href='{{ url('transaksi/create') }}'"><i class="fa fa-plus"></i> Buat Batch baru</button>
-                                  </div>
-                                </div>
                                 @if($editable)
-                                <div class="col-xs-2 pull-right">
+                                <div class="col-sm-12 col-lg-3 col-xl-2 pull-right">
                                   <div class="form-group">
                                     <button class="btn btn-info pull-right" id="keep_anggaran" value="Simpan"><i class="fa fa-money"></i> Perbarui Status Anggaran</button>
                                   </div>
                                 </div>
                                 @if (Gate::check('tambah_item_t') || Gate::check('ubah_item_t') || Gate::check('hapus_item_t'))
-                                <div class="col-xs-2 pull-right">
+                                <div class="col-sm-12 col-lg-3 col-xl-2 pull-right">
                                   <div class="form-group">
                                     <button onclick="populateBatchInput()" class="btn btn-primary pull-right" id="simpan" value="Simpan"><i class="fa fa-check"></i> Simpan perubahan batch</button>
                                   </div>
                                 </div>
                                 @endif
                                 @if (Gate::check('ajukan_t'))
-                                <div class="col-xs-3 pull-right">
+                                <div class="col-sm-12 col-lg-3 col-xl-2 pull-right">
                                   <div class="form-group">
                                     <button onclick="checkBatchSubmit()" class="btn btn-danger pull-right" id="button_status"><i class="fa fa-check-circle"></i> Submit batch untuk Verifikasi</button>
                                   </div>
                                 </div>
                                 @endif
                                 @endif
+                                <div class="col-sm-12 col-lg-3 col-xl-2">
+                                  <div class="form-group">
+                                    <button class="btn btn-pink" onclick="location.href='{{ url('transaksi/create') }}'"><i class="fa fa-plus"></i> Buat Batch baru</button>
+                                  </div>
+                                </div>
                               </div>
                             </div>
                           </div>
