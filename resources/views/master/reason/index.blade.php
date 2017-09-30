@@ -260,6 +260,20 @@
 					
 					$('.datatable-select-inputs').DataTable( {
 							scrollX: true,
+							"language": {
+								"paginate": {
+								  "previous": "Sebelumnya",
+								  "next": "Selanjutnya"
+								},
+
+    							"emptyTable":  "Tidak Ada Alasan Menolak Tersimpan",
+    							"info":  "Data Alasan _START_-_END_ dari _TOTAL_ Alasan",
+    							"infoEmpty":  "Data Alasan 0-0 dari _TOTAL_ Alasan ",
+    							"search": "Pencarian:",
+    							"lengthMenu": "Perlihatkan _MENU_ masukan",
+    							"infoFiltered": "(telah di filter dari _MAX_ total masukan)",
+    							"zeroRecords": "Tidak ada data ditemukan"
+    						},
 						    initComplete: function () {
 						        this.api().columns('#filterable').every( function () {
 						            var column = this;

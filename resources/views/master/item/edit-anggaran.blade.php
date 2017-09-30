@@ -34,11 +34,64 @@
                   <div class="row">
                     <section id="select-inputs">
 			          <div class="row">
+			          	@if(session('add'))
+	                    <div class="col-xs-7">
+	                      <div class="alert alert-success">
+	                        <b>Data item berhasil ditambah.</b>
+	                      </div>
+	                    </div>
+	                    @elseif(session('unique'))
+	                    <div class="col-xs-7">
+	                        <div class="alert alert-warning">
+	                          <b>Kode item harus unik.</b>
+	                        </div>
+	                    </div>
+	                    @endif
 			            <div class="col-xs-12">
 			              <div class="card">
 			                <div class="card-header">
 			                  <h4 class="card-title">Daftar Item Anggaran</h4>
 			                  <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
+			                  <div class="col-md-12" >
+	                              <button type="button" data-target="#tambahPos" data-toggle="modal" class="btn btn-success pull-right"><i class="fa fa-plus"></i> Tambah</button>
+	                          </div>
+	                          <div class="modal fade text-xs-left" id="tambahPos" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		                        <div class="modal-dialog">
+		                          <div class="modal-content">
+		                            <div class="modal-header">
+		                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		                                <span aria-hidden="true">&times;</span>
+		                              </button>
+		                              <h4 class="modal-title" id="myModalLabel">Tambah Item Anggaran</h4>
+		                            </div>
+		                            <form class="form" id="item-anggaran-form" action="{{ URL('item/submit/all') }}" method="POST">
+		                            {{ csrf_field() }}
+		                              <div class="modal-body" id="confirmation-msg">
+		                                <div class="form-group">
+		                                  <label for="kode_kelompok">Kode</label>
+		                                    <input class="form-control" type="text" name="kode" placeholder="Kode Item Anggaran" value="" required>
+		                                </div>
+		                                <div class="form-group">
+		                                  <label for="nama_jenis">Tipe Item Anggaran</label>
+		                                    <select class="form-control" type="text" name="type" placeholder="Tipe Item Anggaran" required>
+		                                    	<option value="1" selected>Jenis Anggaran</option>
+		                                    	<option value="2">Pos Anggaran</option>
+		                                    	<option value="3">Kelompok Anggaran</option>
+		                                    </select>
+		                                </div>
+		                                <div class="form-group">
+		                                  <label for="nama_jenis">Nama Item Anggaran</label>
+		                                    <input class="form-control" type="text" name="name" placeholder="Nama Item Anggaran" value="" required>
+		                                </div>
+		                              </div>
+		                              <div class="modal-footer">
+		                                <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">Kembali</button>
+		                                <button type="submit" id="simpan" class="btn btn-outline-primary">Simpan</button>
+		                              </div>
+		                            </form>
+		                          </div>
+		                        </div>
+		                      </div>
 			                </div>
 			                <div class="card-body collapse in">			                
 			                  <div class="card-block">

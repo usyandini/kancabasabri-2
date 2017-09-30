@@ -58,10 +58,11 @@ class ItemController extends Controller
             $this->subPosModel = $subpos;
             $this->mAnggaranModel = $m_anggaran;
 
-            // $this->middleware('can:info_i', ['only' => 'index']);
-            // $this->middleware('can:tambah_i', ['only' => 'create']);
-            // $this->middleware('can:jenis_i', ['only' => 'submitAnggaranItem']);
-            // $this->middleware('can:kelompok_i', ['only' => 'submitAnggaranItem']);
+            $this->middleware('can:manajemen_k_i', ['only' => 'index']);
+            $this->middleware('can:manajemen_i_a', ['only' => 'editItemAnggaran']);
+            $this->middleware('can:manajemen_a_m', ['only' => 'reason']);
+            // $this->middleware('can:tambah_k_i', ['only' => 'create']);
+            // $this->middleware('can:edit_k_i', ['only' => 'submitAnggaranItem']);
             // $this->middleware('can:pos_i', ['only' => 'submitAnggaranItem']);
             // $this->middleware('can:simpan_i', ['only' => 'addItem']);
         }
@@ -158,7 +159,7 @@ class ItemController extends Controller
 
     public function submitAnggaranItem($type, Request $request)
     {
-        $arraykode = array($request->kode_jenis, $request->kode_kelompok, $request->kode_pos);
+        $arraykode = array($request->kode, $request->kode_jenis, $request->kode_kelompok, $request->kode_pos);
         $findkode = ItemAnggaranMaster::whereIn('kode', $arraykode)->first();
         $trashed = ItemAnggaranMaster::onlyTrashed()->whereIn('kode', $arraykode)->forceDelete();
 
@@ -194,7 +195,17 @@ class ItemController extends Controller
                     );
                     ItemAnggaranMaster::create($inputPos);
                     break;
-            }   
+                case 'all':
+                    $inputAll = array(
+                        'kode'  => $request->kode,
+                        'name'  => $request->name,
+                        'type'  => $request->type,
+                        'created_by' => \Auth::id()
+                    );
+                    ItemAnggaranMaster::create($inputAll);
+                    break;
+            }
+            session()->flash('success', true);   
         }
         return redirect()->back()->withInput();
     }
@@ -287,6 +298,12 @@ class ItemController extends Controller
                 'name'  => $request->edit_nama,
                 'updated_by' => \Auth::id()
             );
+            $itemAnggaran = ItemAnggaranMaster::where('id', $id);
+            
+            ItemMaster::where('jenis_anggaran',$itemAnggaran->first()->kode)->update(['jenis_anggaran' => $request->edit_kode]);
+            ItemMaster::where('kelompok_anggaran',$itemAnggaran->first()->kode)->update(['kelompok_anggaran' => $request->edit_kode]);
+            ItemMaster::where('pos_anggaran',$itemAnggaran->first()->kode)->update(['pos_anggaran' => $request->edit_kode]);
+
             ItemAnggaranMaster::where('id', $id)->update($updateItemAngg);
         }else{
             return redirect()->back()->withErrors($validatorItemAnggaran)->withInput();
