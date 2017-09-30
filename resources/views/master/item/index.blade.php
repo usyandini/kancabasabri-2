@@ -15,13 +15,13 @@
                 @section('content')
                	<div class="content-header row">
                     <div class="content-header-left col-md-6 col-xs-12 mb-2">
-                        <h3 class="content-header-title mb-0">Manajemen Kombinasi Item</h3>
+                        <h3 class="content-header-title mb-0">Master Item</h3>
                         <div class="row breadcrumbs-top">
                             <div class="breadcrumb-wrapper col-xs-12">
                                 <ol class="breadcrumb">
                                     <li class="breadcrumb-item"><a href="{{ url('/') }}">Manajemen Item</a>
                                     </li>
-                                    <li class="breadcrumb-item active"><a href="{{ url('/item') }}">Master Item</a>
+                                    <li class="breadcrumb-item active"><a href="{{ url('/item') }}">Manajemen Kombinasi Item</a>
                                     </li>
                                 </ol>
                             </div>
@@ -43,38 +43,47 @@
 			                </div>
 			                <div class="card-body collapse in">			                
 			                  <div class="card-block">
+			                  	@if(session('deleted'))
+				                  <div class="col-xs-6">
+				                    <div class="alert alert-success">
+				                      <b>{!! session('deleted') !!}</b>
+				                    </div>
+				                  </div>
+				                @endif
 			                  	<name="data" id="data">
 			                  	<div class="table-responsive">
-			                      <table class="table table-striped table-bordered datatable-select-inputs wrap" cellspacing="0" width="100%">
+			                      <table class="table table-striped table-bordered datatable-select-inputs wrap" cellspacing="0" width="120%">
 			                        <thead>
 			                          <tr>
-			                          	<th id="filterable"><center>Kode Item</center></th>
-			                            <th id="filterable">Item</th>
-			                            {{-- <th id="filterable">Jenis Anggaran</th> --}}
-			                            {{-- <th id="filterable">Kelompok Anggaran</th> --}}
-			                            {{-- <th id="filterable">Pos Anggaran</th> --}}
-			                            <th id="filterable">Sub Pos</th>
-			                            <th id="filterable">Mata Anggaran</th>
-			                            <th><center>Aksi</center></th>
+			                          	<th width="5%">No</th>
+			                          	<th id="filterable" width="5%"><center>Kode Item</center></th>
+			                            <th id="filterable" width="20%">Item</th>
+			                            <th id="filterable" width="10%">Jenis Anggaran</th>
+			                            <th id="filterable" width="10%">Kelompok Anggaran</th>
+			                            <th id="filterable" width="10%">Pos Anggaran</th>
+			                            <th id="filterable" width="10%">Sub Pos</th>
+			                            <th id="filterable" width="10%">Mata Anggaran</th>
+			                            <th width="40%"><center>Aksi</center></th>
 			                          </tr>
 			                        </thead>
 			                        <tbody>
 			                        @foreach($items as $item)
 		                        		<tr>
-		                        			<td>{{ $item->kode_item }}</td>
-		                        			<td>{{ $item->nama_item }}</td>
-		                        			{{-- <td>{{ $jenis->where('kode', $item->jenis_anggaran)->first()['name'] }} --}}
-		                        			{{-- <td>{{ $kelompok->where('kode', $item->kelompok_anggaran)->first()['name'] }}</td> --}}
-		                        			{{-- <td>{{ $pos->where('kode', $item->pos_anggaran)->first()['name'] }}</td> --}}
-		                        			<td>{{ $item->sub_pos }}</td>
-		                        			<td>{{ $item->mata_anggaran }}</td>
-	                        				<td>
+		                        			<td width="5%">{{ $no++ }}</td>
+		                        			<td width="5%">{{ $item->kode_item }}</td>
+		                        			<td width="20%">{{ $item->nama_item }}</td>
+		                        			<td width="10%">{{ $jenis->where('kode', $item->jenis_anggaran)->first()['name'] }}</td>
+		                        			<td width="10%">{{ $kelompok->where('kode', $item->kelompok_anggaran)->first()['name'] }}</td>
+		                        			<td width="10%">{{ $pos->where('kode', $item->pos_anggaran)->first()['name'] }}</td>
+		                        			<td width="10%">{{ $item->sub_pos }}</td>
+		                        			<td width="10%">{{ $item->mata_anggaran }}</td>
+	                        				<td width="40%"><center>
 	                        					<a href="{{ url('item/edit').'/'.$item->id }}" class="btn btn-info btn-sm">
 	                        					<i class="fa fa-edit"></i> Edit</a>
 
 	                        					<a href="#" class="btn btn-danger btn-sm" onclick="deleteUser({{ $item->id }})">
 	                        					<i class="fa fa-trash"></i> Hapus</a>
-	                        				</td>
+	                        				</center></td>
 		                        		</tr>
 		                        	@endforeach
 			                        </tbody>
@@ -110,6 +119,20 @@
 				<script type="text/javascript">
 					$('.datatable-select-inputs').DataTable( {
 							scrollX: true,
+							"language": {
+								"paginate": {
+								  "previous": "Sebelumnya",
+								  "next": "Selanjutnya"
+								},
+
+    							"emptyTable":  "Tidak Ada Item Tersimpan",
+    							"info":  "Data Item _START_-_END_ dari _TOTAL_ Item",
+    							"infoEmpty":  "Data Item 0-0 dari _TOTAL_ Item ",
+    							"search": "Pencarian:",
+    							"lengthMenu": "Perlihatkan _MENU_ masukan",
+    							"infoFiltered": "(telah di filter dari _MAX_ total masukan)",
+    							"zeroRecords": "Tidak ada data ditemukan"
+							},
 						    initComplete: function () {
 						        this.api().columns('#filterable').every( function () {
 						            var column = this;
@@ -133,7 +156,7 @@
 						});
 
 					function deleteUser(id) {
-						$('form[id="deleteU"').attr('action', '{{ url('item') }}' + '/delete/' + id);
+						$('form[id="deleteU"').attr('action', '{{ url('item') }}' + '/delete/master/' + id);
 						var con = confirm("Apakah anda yakin untuk menghapus item ini?");
 						if (con) {
 							$('form[id="deleteU"').submit();	

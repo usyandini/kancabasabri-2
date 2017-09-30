@@ -78,8 +78,11 @@ Route::group(['middleware' => 'auth'], function() {
 	Route::group(['prefix' => 'anggaran'], function() {
 		Route::resource('/', 'AnggaranController');
 
+		Route::get('/batas/', 'AnggaranController@batas');
+		Route::post('/batas/tambah/', 'AnggaranController@add_pengajuan');
+		Route::post('/batas/ubah/{id}', 'AnggaranController@change_pengajuan');
 		Route::get('/tambah/', 'AnggaranController@tambah_anggaran');
-		Route::get('/edit/{nd}/{status}', 'AnggaranController@edit_anggaran');
+		Route::get('/edit/{nd}', 'AnggaranController@edit_anggaran');
 		Route::get('/persetujuan/{nd}/{status}', 'AnggaranController@persetujuan_anggaran');
 		Route::get('/get/attributes/{type}/{id}', 'AnggaranController@getAttributes');
 		Route::get('/get/filtered/{nd_surat}/{type}', 'AnggaranController@getFiltered');
@@ -88,7 +91,7 @@ Route::group(['middleware' => 'auth'], function() {
 		Route::get('/get/download/{id}', 'AnggaranController@unduh_file');
 		Route::get('/riwayat/', 'AnggaranController@riwayat');
 		Route::post('/riwayat/', 'AnggaranController@riwayat');
-		Route::post('/cari/', 'AnggaranController@index');
+		Route::post('/cari/', 'AnggaranController@cari');
 		Route::get('/removeAnggaran/', 'AnggaranController@removeAnggaranAll');
 		Route::get('/activeFileListAnggaran/', 'AnggaranController@activeFileListAnggaranAll');
 		Route::post('/submit/tambah', 'AnggaranController@store');
@@ -117,9 +120,7 @@ Route::group(['middleware' => 'auth'], function() {
 	Route::get('/user/profile/{id}', 'UserController@profile');
 	Route::post('/user/restore/{id}', 'UserController@restore');
 
-	// Route::resource('/item', 'ItemController');
-	// Route::get('/item/tambah', 'ItemController@tambahItem');
-
+	Route::post('/jenis_user/restore/{id}', 'JenisUserController@restore');
 	Route::resource('/jenis_user', 'JenisUserController');
 	Route::post('/jenis_user/handle', 'JenisUserController@handleCombo');
 
@@ -131,7 +132,9 @@ Route::group(['middleware' => 'auth'], function() {
 		Route::post('/submit/{type}', 'ItemController@submitAnggaranItem');
 		Route::get('/edit/{id}', 'ItemController@editItem');
 		Route::post('/update/{id}', 'ItemController@updateItem');
-		Route::get('/delete/{id}', 'ItemController@destroy');
+		Route::get('/anggaran', 'ItemController@editItemAnggaran');
+		Route::post('/update/anggaran/{id}', 'ItemController@updateItemAnggaran');
+		Route::get('/delete/{jenis}/{id}', 'ItemController@destroy');
 	});
 
 	Route::group(['prefix' => 'reason'], function(){

@@ -58,10 +58,11 @@ class ItemController extends Controller
             $this->subPosModel = $subpos;
             $this->mAnggaranModel = $m_anggaran;
 
-            // $this->middleware('can:info_i', ['only' => 'index']);
-            // $this->middleware('can:tambah_i', ['only' => 'create']);
-            // $this->middleware('can:jenis_i', ['only' => 'submitAnggaranItem']);
-            // $this->middleware('can:kelompok_i', ['only' => 'submitAnggaranItem']);
+            $this->middleware('can:manajemen_k_i', ['only' => 'index']);
+            $this->middleware('can:manajemen_i_a', ['only' => 'editItemAnggaran']);
+            $this->middleware('can:manajemen_a_m', ['only' => 'reason']);
+            // $this->middleware('can:tambah_k_i', ['only' => 'create']);
+            // $this->middleware('can:edit_k_i', ['only' => 'submitAnggaranItem']);
             // $this->middleware('can:pos_i', ['only' => 'submitAnggaranItem']);
             // $this->middleware('can:simpan_i', ['only' => 'addItem']);
         }
@@ -69,15 +70,15 @@ class ItemController extends Controller
     public function index()
     {
         $master_item = ItemMaster::orderby('kode_item')->get();
-        $jenis = ItemAnggaranMaster::where('type', 1)->get();
-        $kelompok = ItemAnggaranMaster::where('type', 2)->get();
-        $pos = ItemAnggaranMaster::where('type', 3)->get();
+        $jenis = ItemAnggaranMaster::withTrashed()->where('type', 1)->get();
+        $kelompok = ItemAnggaranMaster::withTrashed()->where('type', 2)->get();
+        $pos = ItemAnggaranMaster::withTrashed()->where('type', 3)->get();
     	return view('master.item.index', [
             'items' => $master_item, 
             'no' => 1, 
             'jenis' => $jenis,
             'kelompok' => $kelompok,
-            'pos' => $pos,
+            'pos' => $pos
         ]);
     }
 
@@ -162,34 +163,53 @@ class ItemController extends Controller
 
     public function submitAnggaranItem($type, Request $request)
     {
-        switch($type){
-            case 'jenis':
-                $inputJenis = array(
-                    'kode'  => $request->kode_jenis,
-                    'name'  => $request->nama_jenis,
-                    'type'  => 1,
-                    'created_by' => \Auth::id()
-                );
-                ItemAnggaranMaster::create($inputJenis);
-                break;
-            case 'kelompok':
-                $inputKelompok = array(
-                    'kode'  => $request->kode_kelompok,
-                    'name'  => $request->nama_kelompok,
-                    'type'  => 2,
-                    'created_by' => \Auth::id()
-                );
-                ItemAnggaranMaster::create($inputKelompok);
-                break;
-            case 'pos':
-                $inputPos = array(
-                    'kode'  => $request->kode_pos,
-                    'name'  => $request->nama_pos,
-                    'type'  => 3,
-                    'created_by' => \Auth::id()
-                );
-                ItemAnggaranMaster::create($inputPos);
-                break;
+        $arraykode = array($request->kode, $request->kode_jenis, $request->kode_kelompok, $request->kode_pos);
+        $findkode = ItemAnggaranMaster::whereIn('kode', $arraykode)->first();
+        $trashed = ItemAnggaranMaster::onlyTrashed()->whereIn('kode', $arraykode)->forceDelete();
+
+        if($findkode){
+            session()->flash('unique', true);
+            return redirect()->back()->withInput();
+        }else{
+            switch($type){
+                case 'jenis':
+                    $inputJenis = array(
+                        'kode'  => $request->kode_jenis,
+                        'name'  => $request->nama_jenis,
+                        'type'  => 1,
+                        'created_by' => \Auth::id()
+                    );
+                    ItemAnggaranMaster::create($inputJenis);
+                    break;
+                case 'kelompok':
+                    $inputKelompok = array(
+                        'kode'  => $request->kode_kelompok,
+                        'name'  => $request->nama_kelompok,
+                        'type'  => 2,
+                        'created_by' => \Auth::id()
+                    );
+                    ItemAnggaranMaster::create($inputKelompok);
+                    break;
+                case 'pos':
+                    $inputPos = array(
+                        'kode'  => $request->kode_pos,
+                        'name'  => $request->nama_pos,
+                        'type'  => 3,
+                        'created_by' => \Auth::id()
+                    );
+                    ItemAnggaranMaster::create($inputPos);
+                    break;
+                case 'all':
+                    $inputAll = array(
+                        'kode'  => $request->kode,
+                        'name'  => $request->name,
+                        'type'  => $request->type,
+                        'created_by' => \Auth::id()
+                    );
+                    ItemAnggaranMaster::create($inputAll);
+                    break;
+            }
+            session()->flash('success', true);   
         }
         return redirect()->back()->withInput();
     }
@@ -211,7 +231,7 @@ class ItemController extends Controller
             'jenis' => $jenis,
             'kelompok' => $kelompok,
             'pos' => $pos,
-            'master' => $item
+            'items' => $item
         ]);
     }
 
@@ -219,7 +239,15 @@ class ItemController extends Controller
     {
         $name_subpos = $this->subPosModel->where('VALUE', $request->subpos)->first();
         $name_kegiatan = $this->mAnggaranModel->where('VALUE', $request->kegiatan)->first();
-        $update = array(
+
+        $validatorItem = Validator::make($request->all(),
+            ['kode_item' => 'unique:item_master,kode_item,'.$id],
+            ['kode_item.unique' => 'Kode item sudah ada.']
+        );
+
+        if($validatorItem->passes())
+        {
+            $update = array(
                 'kode_item'         => $request->kode_item,
                 'nama_item'         => $request->nama_item,
                 'jenis_anggaran'    => $request->jenis,
@@ -236,18 +264,72 @@ class ItemController extends Controller
                 'SEGMEN_6'          => $request->kegiatan,
                 'is_displayed'      => $request->item_display
             );
-        ItemMaster::where('id', $id)->update($update);
+            ItemMaster::where('id', $id)->update($update);   
+        }else{
+            //dd($request->all());
+            return redirect()->back()->withErrors($validatorItem)->withInput();
+        }
         session()->flash('success', true);
         return redirect('/item/edit/'.$id);
     }
 
-    public function destroy(Request $request, $id)
+    public function editItemAnggaran()
     {
-        $item = ItemMaster::where('id', $id)->first()->name ? ItemMaster::where('id', $id)->first()->name : ItemMaster::where('id', $id)->first()->kode;
+        $itemAngg = ItemAnggaranMaster::orderby('type')->orderby('kode')->get();
+        return view('master.item.edit-anggaran', [
+            'items' => $itemAngg, 
+            'no' => 1
+        ]);
+    }
 
-        ItemMaster::where('id', $id)->delete();
+    public function updateItemAnggaran($id, Request $request)
+    {
+        $trashed = ItemAnggaranMaster::onlyTrashed()->where('kode', $request->edit_kode)->forceDelete();
 
-        session()->flash('success', 'Item dengan kode <b>'.$item.'</b> berhasil dihapus');
+        $validatorItemAnggaran = Validator::make($request->all(),
+            [
+             'edit_kode' => 'unique:item_anggaran_master,kode,'.$id
+            ],
+            [
+             'edit_kode.unique' => 'Kode item anggaran sudah ada.'
+            ]
+        );
+
+        if($validatorItemAnggaran->passes())
+        {        
+            $updateItemAngg = array(
+                'kode'  => $request->edit_kode,
+                'name'  => $request->edit_nama,
+                'updated_by' => \Auth::id()
+            );
+            $itemAnggaran = ItemAnggaranMaster::where('id', $id);
+            
+            ItemMaster::where('jenis_anggaran',$itemAnggaran->first()->kode)->update(['jenis_anggaran' => $request->edit_kode]);
+            ItemMaster::where('kelompok_anggaran',$itemAnggaran->first()->kode)->update(['kelompok_anggaran' => $request->edit_kode]);
+            ItemMaster::where('pos_anggaran',$itemAnggaran->first()->kode)->update(['pos_anggaran' => $request->edit_kode]);
+
+            ItemAnggaranMaster::where('id', $id)->update($updateItemAngg);
+        }else{
+            return redirect()->back()->withErrors($validatorItemAnggaran)->withInput();
+        }
+        session()->flash('success', true);
+        return redirect()->back()->withInput();
+    }
+
+    public function destroy($jenis, $id, Request $request)
+    {
+        switch($jenis){
+            case 'master':
+                $item = ItemMaster::withTrashed()->where('id', $id)->first()->nama_item ? ItemMaster::withTrashed()->where('id', $id)->first()->nama_item : ItemMaster::withTrashed()->where('id', $id)->first()->kode_item;
+
+                ItemMaster::where('id', $id)->delete(); break;
+            case 'anggaran':
+                $item = ItemAnggaranMaster::withTrashed()->where('id', $id)->first()->name ? ItemAnggaranMaster::withTrashed()->where('id', $id)->first()->name : ItemAnggaranMaster::withTrashed()->where('id', $id)->first()->kode;
+
+                ItemAnggaranMaster::where('id', $id)->delete(); break;
+        }
+
+        session()->flash('deleted', 'Item <b>'.$item.'</b> berhasil dihapus');
         return redirect()->back();
     }
 

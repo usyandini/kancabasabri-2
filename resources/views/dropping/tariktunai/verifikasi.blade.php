@@ -37,7 +37,7 @@
                       <div class="col-xs-12">
                         <div class="col-md-6">
                           <div class="alert alert-info alert-dismissible fade in mb-2" role="alert">
-                            <b>Verifikasi hanya dilakukan oleh user <i>Akuntansi</i></b>
+                            <b>Verifikasi hanya dilakukan oleh verifikator <i>level 1</i></b>
                           </div>
                         </div>
                         @if(session('success'))

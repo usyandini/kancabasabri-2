@@ -3,12 +3,16 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 use App\Http\Requests;
 
 use App\Models\TarikTunai;
 use App\Models\PenyesuaianDropping;
+use App\Models\Anggaran;
 use App\Models\Notification;
+use App\Models\KantorCabang;
+use App\Models\Divisi;
 
 use App\Services\NotificationSystem;
 
@@ -31,15 +35,45 @@ class NotificationController extends Controller
     		'total'	=> $notifications->count(),
     		'totalUnread' => NotificationSystem::getUnreads()->count(),
     		'notifications' => []];
+        $count_unread = 0 ;
     	foreach (NotificationSystem::getUnreads() as $value) {
-    		$result['notifications'][] = [
-    			'id' 		=> $value->id,
-    			'wording' 	=> $value->wording(),
-    			'is_read'	=> $value->is_read,
-    			'time_dif' 	=> \Carbon\Carbon::createFromTimeStamp(strtotime($value->created_at))->diffForHumans(),
-    			'time'		=> date('d F Y, H:m', strtotime($value->created_at))
-    		];
+            $unit_kerja = "";
+            if($value->type < 7){
+                $unit_kerja = "transaksi";
+            }else if($value->type < 15){
+                if($value->type < 10){
+                    $unit_kerja = $value->idTarikTunai['cabang'];
+                }else{
+                    $unit_kerja = $value->idPenyesuaian['cabang'];
+                }
+            }else {
+                $unit_kerja = $value->idAnggaran['unit_kerja'];
+            }
+            $val_unit = "";
+            if(count(explode("Cabang",$unit_kerja))>1){
+                $val_unit = KantorCabang::where('DESCRIPTION',$unit_kerja)->first();
+                $val_unit = $val_unit['VALUE']."00";
+            }else{  
+                $val_unit = DIVISI::where('DESCRIPTION',$unit_kerja)->first();
+                $val_unit = "00".$val_unit['VALUE'];
+                if($unit_kerja == 'transaksi'){
+                    $val_unit = $unit_kerja;
+                }
+            }
+            if(Gate::check('unit_'.$val_unit)){
+        		$result['notifications'][] = [
+        			'id' 		=> $value->id,
+                    'unit_kerja'=> $val_unit,
+                    'type'      => $value->type,
+        			'wording' 	=> $value->wording(),
+        			'is_read'	=> $value->is_read,
+        			'time_dif' 	=> \Carbon\Carbon::createFromTimeStamp(strtotime($value->created_at))->diffForHumans(),
+        			'time'		=> date('d F Y, H:m', strtotime($value->created_at))
+        		];
+                $count_unread++;
+            }
     	}
+        $result['totalUnread'] = $count_unread;
 
     	return response()->json($result);
     }
@@ -51,6 +85,7 @@ class NotificationController extends Controller
         $notifDetail = NotificationSystem::get($id);
         $tariktunai = TarikTunai::where('id', $notifDetail->batch_id)->first();
         $penyesuaian = PenyesuaianDropping::where('id', $notifDetail->batch_id)->first();
+        $anggaran = Anggaran::where('id', $notifDetail->batch_id)->first();
     	
     	switch ($notifDetail->type) {
     		case 1:
@@ -73,6 +108,28 @@ class NotificationController extends Controller
                 return redirect('dropping/penyesuaian/'.$penyesuaian->id_dropping);
             case 14:
                 return redirect('dropping/penyesuaian/'.$penyesuaian->id_dropping);
+            case 15:
+                return redirect('anggaran/persetujuan/'.$anggaran->nd_surat."/1");
+            case 16:
+                return redirect('anggaran/edit/'.$anggaran->nd_surat);
+            case 17:
+                return redirect('anggaran/persetujuan/'.$anggaran->nd_surat."/1");
+            case 18:
+                return redirect('anggaran/edit/'.$anggaran->nd_surat);
+            case 19:
+            case 20:
+            case 21:
+            case 22:
+            case 23:
+            case 24:
+            case 25:
+            case 26:
+            case 27:
+            case 28:
+            case 29:
+            case 30:
+            case 31:
+                return redirect('anggaran/persetujuan/'.$anggaran->nd_surat."/1");
 			default:
 				return redirect('transaksi/');
     	}
@@ -83,13 +140,41 @@ class NotificationController extends Controller
         $notification_all = [];
         if(NotificationSystem::getAll()!=null)
             foreach (NotificationSystem::getAll() as $value) {
-                $notification_all[] = [
-                    'id'        => $value->id,
-                    'wording'   => $value->wording(),
-                    'is_read'   => $value->is_read,
-                    'time_dif'  => \Carbon\Carbon::createFromTimeStamp(strtotime($value->created_at))->diffForHumans(),
-                    'time'      => date('d F Y, H:m', strtotime($value->created_at))
-                ];
+                $unit_kerja = "";
+                if($value->type < 7){
+                    $unit_kerja = "transaksi";
+                }else if($value->type < 15){
+                    if($value->type < 10){
+                        // $cabang = $value->idTarikTunai();
+                        $unit_kerja = $value->idTarikTunai['cabang'];
+                    }else{
+                        $unit_kerja = $value->idPenyesuaian['cabang'];
+                    }
+                }else {
+                    $unit_kerja = $value->idAnggaran['unit_kerja'];
+                }
+                $val_unit = "";
+                if(count(explode("Cabang",$unit_kerja))>1){
+                    $val_unit = KantorCabang::where('DESCRIPTION',$unit_kerja)->first();
+                    $val_unit = $val_unit['VALUE']."00";
+                }else{  
+                    $val_unit = DIVISI::where('DESCRIPTION',$unit_kerja)->first();
+                    $val_unit = "00".$val_unit['VALUE'];
+                    if($unit_kerja == 'transaksi'){
+                        $val_unit = $unit_kerja;
+                    }
+                }
+                if(Gate::check('unit_'.$val_unit)){
+                    $notification_all[] = [
+                        'id'        => $value->id,
+                        'unit_kerja'=> $val_unit,
+                        'type'      => $value->type,
+                        'wording'   => $value->wording(),
+                        'is_read'   => $value->is_read,
+                        'time_dif'  => \Carbon\Carbon::createFromTimeStamp(strtotime($value->created_at))->diffForHumans(),
+                        'time'      => date('d F Y, H:m', strtotime($value->created_at))
+                    ];
+                }
             }
         // $notification_all = null;
         // if(count($notification_all)){

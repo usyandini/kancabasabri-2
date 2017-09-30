@@ -13,8 +13,19 @@ use App\User;
 // 4 = Submit verifikasi lvl 1 approved | Receiver : null (All Akutansi)
 // 5 = Submit verifikasi lvl 2 rejected | Reveiver : id batch submitter
 // 6 = Submit verifikasi lvl 2 approved | Receiver : id batch submitter
+
+// 7 = Submit verifikasi lvl 1 tarik tunai | Receiver : Akuntansi
+// 8 = Submit verifikasi lvl 1 tarik tunai rejected | Receiver : id submitter
+// 9 = Submit verifikasi lvl 1 tarik tunai approved | Receiver : id submitter
+
+// 10 = Submit verifikasi lvl 1 penyesuaian dropping | Receiver : Bia
+// 11 = Submit verifikasi lvl 1 penyesuaian dropping rejected | Receiver : id submitter
+//    = Submit verifikasi lvl 1 penyesuaian dropping approved | Receiver : id submitter
+// 12 = Submit verifikasi lvl 1 penyesuaian dropping approved | Receiver : Akuntansi
+// 13 = Submit verifikasi lvl 2 penyesuaian dropping rejected | Receiver : id submitter
+// 14 = Submit verifikasi lvl 2 penyesuaian dropping approved | Reveiver : id submitter
+
 // ------------------------------------
-// 7 = Submit verifikasi tarik tunai 
 class NotificationSystem
 {
 	public static function send($id, $type)
@@ -90,6 +101,64 @@ class NotificationSystem
             }
         }
 
+        if(isset($user->perizinan['notif_setuju_ia'])){
+            array_push($array_type,15);
+        }
+        if(isset($user->perizinan['notif_setuju_iia'])){
+            array_push($array_type,17);
+        }
+        if(isset($user->perizinan['notif_setuju_iiia'])){
+            array_push($array_type,19);
+        }
+        if(isset($user->perizinan['notif_setuju_iva'])){
+            array_push($array_type,21);
+        }
+        if(isset($user->perizinan['notif_setuju_va'])){
+            array_push($array_type,23);
+        }
+        if(isset($user->perizinan['notif_setuju_via'])){
+            array_push($array_type,25);
+        }
+        if(isset($user->perizinan['notif_setuju_viia'])){
+            array_push($array_type,27);
+        }
+        if(isset($user->perizinan['notif_setuju_viiia'])){
+            array_push($array_type,29);
+        }
+        if(isset($user->perizinan['notif_ubah_a'])){
+            
+            array_push($array_type,16);
+            if (!in_array(17, $array_type)) {
+                array_push($array_type,17);
+            }
+            array_push($array_type,18);
+            if (!in_array(19, $array_type)) {
+                array_push($array_type,19);
+            }
+            array_push($array_type,20);
+            if (!in_array(21, $array_type)) {
+                array_push($array_type,21);
+            }
+            array_push($array_type,22);
+            if (!in_array(23, $array_type)) {
+                array_push($array_type,23);
+            }
+            array_push($array_type,24);
+            if (!in_array(25, $array_type)) {
+                array_push($array_type,25);
+            }
+            array_push($array_type,26);
+            if (!in_array(27, $array_type)) {
+                array_push($array_type,27);
+            }
+            array_push($array_type,28);
+            if (!in_array(29, $array_type)) {
+                array_push($array_type,29);
+            }
+            array_push($array_type,30);
+            array_push($array_type,31);
+        }
+
         if(count($array_type) == 0){
             return null;
         }
@@ -147,7 +216,65 @@ class NotificationSystem
                 array_push($array_type,4);
             }
         }
-
+        if(isset($user->perizinan['notif_setuju_ia'])){
+            array_push($array_type,15);
+        }
+        if(isset($user->perizinan['notif_setuju_iia'])){
+            array_push($array_type,17);
+        }
+        if(isset($user->perizinan['notif_setuju_iiia'])){
+            array_push($array_type,19);
+        }
+        if(isset($user->perizinan['notif_setuju_iva'])){
+            array_push($array_type,21);
+        }
+        if(isset($user->perizinan['notif_setuju_va'])){
+            array_push($array_type,23);
+        }
+        if(isset($user->perizinan['notif_setuju_via'])){
+            array_push($array_type,25);
+        }
+        if(isset($user->perizinan['notif_setuju_viia'])){
+            array_push($array_type,27);
+        }
+        if(isset($user->perizinan['notif_setuju_viiia'])){
+            array_push($array_type,29);
+        }
+        if(isset($user->perizinan['notif_ubah_a'])){
+            array_push($array_type,16);
+            if (!in_array(17, $array_type)) {
+                array_push($array_type,17);
+            }
+            array_push($array_type,18);
+            if (!in_array(17, $array_type)) {
+                array_push($array_type,17);
+            }
+            array_push($array_type,20);
+            if (!in_array(19, $array_type)) {
+                array_push($array_type,19);
+            }
+            array_push($array_type,22);
+            if (!in_array(21, $array_type)) {
+                array_push($array_type,21);
+            }
+            array_push($array_type,24);
+            if (!in_array(23, $array_type)) {
+                array_push($array_type,23);
+            }
+            array_push($array_type,26);
+            if (!in_array(25, $array_type)) {
+                array_push($array_type,25);
+            }
+            array_push($array_type,28);
+            if (!in_array(27, $array_type)) {
+                array_push($array_type,27);
+            }
+            array_push($array_type,30);
+            if (!in_array(29, $array_type)) {
+                array_push($array_type,29);
+            }
+            array_push($array_type,31);
+        }
         if(count($array_type) == 0){
             return null;
         }

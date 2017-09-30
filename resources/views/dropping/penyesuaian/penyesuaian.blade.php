@@ -34,7 +34,8 @@
                 <!-- Basic scenario start -->
                   <section id ="basic-form-layouts">
                     <div class="row match-height">
-                    <div class="row">
+                      <div class="row">
+                        @can('masuk_p_d')
                         @if(session('success'))
                         <div class="col-xs-8">
                             <div class="alert alert-success">
@@ -50,7 +51,7 @@
                         @elseif(session('verifikasi1'))
                         <div class="col-xs-8">
                             <div class="alert alert-warning">
-                              <b>Anda sudah melakukan penyesuaian dropping. Telah diverifikasi oleh <i>Bia</i> dan diteruskan ke <i>Akuntansi</i></b>
+                              <b>Anda sudah melakukan penyesuaian dropping. Telah diverifikasi dan diteruskan ke <i>Verifikator Level 2</i></b>
                             </div>
                         </div>
                         @elseif(session('verifikasi2'))
@@ -62,13 +63,13 @@
                         @elseif(session('reject1'))
                         <div class="col-xs-8">
                             <div class="alert alert-warning">
-                              <b>Penyesuaian dropping anda ditolak oleh Bia dengan alasan {{ $notif->reason['content'] }}.<br>Silahkan melakukan <i>penyesuaian dropping</i> kembali.</b>
+                              <b>Penyesuaian dropping anda ditolak dengan alasan {{ $notif->reason['content'] }}.<br>Silahkan melakukan <i>penyesuaian dropping</i> kembali.</b>
                             </div>
                         </div>
                         @elseif(session('reject2'))
                         <div class="col-xs-8">
                             <div class="alert alert-warning">
-                              <b>Penyesuaian dropping anda ditolak oleh Akuntansi dengan alasan {{ $notif->reason['content'] }}.<br>Silahkan melakukan <i>penyesuaian dropping</i> kembali.</b>
+                              <b>Penyesuaian dropping anda ditolak dengan alasan {{ $notif->reason['content'] }}.<br>Silahkan melakukan <i>penyesuaian dropping</i> kembali.</b>
                             </div>
                         </div>
                         @endif
@@ -85,6 +86,7 @@
                                 </div>
                             </div>
                         @endif
+                        @endcan
                       </div>
                       @if(Gate::check('masuk_p_d'))
                         @can('masuk_p_d')

@@ -11,11 +11,15 @@
         <h5>Aksi</h5>
         <div class="form-group skin skin-square" id="item">
           <fieldset >
-            <input id="info_transaksi" type="checkbox"  name="perizinan[manajemen_k_i]" {{ isset($user->perizinan['manajemen_k_i']) ? 'checked=""' : '' }} >
+            <input id="info_transaksi" type="checkbox"  name="perizinan[manajemen_k_i]" {{ isset(old('perizinan')['manajemen_k_i']) ? 'checked=""' : '' }} >
             <label>Manajemen Kombinasi Item</label>
           </fieldset>
           <fieldset>
-            <input type="checkbox" name="perizinan[manajemen_a_m]" {{ isset($user->perizinan['manajemen_a_m']) ? 'checked=""' : '' }}>
+            <input type="checkbox" name="perizinan[manajemen_i_a]" {{ isset(old("perizinan")['manajemen_i_a']) ? 'checked=""' : '' }}>
+            <label>Manajemen Item Anggaran</label>
+          </fieldset>
+          <fieldset>
+            <input type="checkbox" name="perizinan[manajemen_a_m]" {{ isset(old('perizinan')['manajemen_a_m']) ? 'checked=""' : '' }}>
             <label>Manajemen Alasan Menolak</label>
           </fieldset>
         </div>

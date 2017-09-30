@@ -1,4 +1,4 @@
-				@extends('layouts.app')
+				        @extends('layouts.app')
 
                 @section('additional-vendorcss')
                 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/tables/jsgrid/jsgrid-theme.min.css') }}">
@@ -40,14 +40,8 @@
                         <b>Data item berhasil diubah.</b>
                       </div>
                     </div>
-                    @elseif(session('unique'))
-                    <div class="col-xs-7">
-                        <div class="alert alert-warning">
-                          <b>Kode item harus unik.</b>
-                        </div>
-                    </div>
-                    @endif
-                    <form class="form" action="{{ url('item/update').'/'.$master->id }}" method="POST">
+                    @endif                    
+                    <form class="form" action="{{ url('item/update').'/'.$items->id }}" method="POST">
                       <div class="col-md-6">
                         {{ csrf_field() }}
                         <div class="card">
@@ -67,11 +61,11 @@
                               <div class="form-body">
                                 <div class="form-group">
                                   <label for="eventRegInput1">Kode Item</label>
-                                  <input type="text" required="Kode item harap diisi" class="form-control" placeholder="Kode Item" name="kode_item" value="{{ $master->kode_item }}">
+                                  <input type="text" required="Kode item harap diisi" class="form-control" placeholder="Kode Item" name="kode_item" value="{{ $items->kode_item }}">
                                 </div>
                                 <div class="form-group">
                                   <label for="eventRegInput1">Item</label>
-                                  <input type="text" required="" class="form-control" placeholder="Item" name="nama_item" value="{{ $master->nama_item }}">
+                                  <input type="text" required="" class="form-control" placeholder="Item" name="nama_item" value="{{ $items->nama_item }}">
                                 </div>
                                 <div class="form-group">
                                 <label for="jenis">Jenis Anggaran</label>
@@ -80,15 +74,24 @@
                                       <select class="select2 form-control" name="jenis" id="jenis" required>
                                         <option value="" disabled selected>Jenis Anggaran</option>
                                         @foreach($jenis as $ja)
-                                        <option {{ $master->jenis_anggaran == $ja->kode ? 'selected=""' : '' }} value="{{ $ja->kode }}">{{ $ja->kode }} - {{ $ja->name }}</option>
+                                        <option {{ $items->jenis_anggaran == $ja->id || $items->jenis_anggaran == $ja->kode || $items->jenis_anggaran == $ja->name ? 'selected=""' : '' }} value="{{ $ja->kode }}">{{ $ja->kode }} - {{ $ja->name }}</option>
                                         @endforeach
-                                      </select>
+                                        </select>
                                     </div>
 	                                  <div class = "col-md-2">
-                                      <button type="button" class="btn btn-success" data-target="#tambahJenis" data-toggle="modal">
-                                        <i class="fa fa-plus"></i>
-                                      </button>
-	                                  </div>
+                                      <span data-toggle='tooltip' title='Tambah'>
+                                        <button type="button" class="btn btn-success" data-target="#tambahJenis" data-toggle="modal">
+                                        <i class="fa fa-plus"></i>              
+                                        </button>
+                                      </span>
+                                    </div>
+                                    {{-- <div class = "col-md-1">
+                                      <span data-toggle='tooltip' title='Ubah'>
+                                        <button type="button" class="btn btn-warning" data-target="#editJenis" data-toggle="modal">
+                                        <i class="fa fa-edit"></i>
+                                        </button>
+                                      </span>
+	                                  </div> --}}
                                   </div>
                              	  </div>
                                 <div class="form-group">
@@ -98,14 +101,16 @@
                                       <select class="select2 form-control" id="kelompok" name="kelompok" required>
                                         <option value="" disabled selected>Kelompok Anggaran</option>
                                         @foreach($kelompok as $ka)
-                                        <option {{ $master->kelompok_anggaran == $ka->kode ? 'selected=""' : '' }} value="{{ $ka->kode }}">{{ $ka->kode }} - {{ $ka->name }}</option>
+                                        <option {{ $items->kelompok_anggaran == $ka->id || $items->kelompok_anggaran == $ka->kode || $items->kelompok_anggaran == $ka->name ? 'selected=""' : '' }} value="{{ $ka->kode }}">{{ $ka->kode }} - {{ $ka->name }}</option>
                                         @endforeach
                                       </select>
                                     </div>
                                     <div class = "col-md-2">
-                                      <button type="button" class="btn btn-success" data-target="#tambahKelompok" data-toggle="modal">
-                                        <i class="fa fa-plus"></i>
-                                      </button>
+                                      <span data-toggle='tooltip' title='Tambah'>
+                                        <button type="button" class="btn btn-success" data-target="#tambahKelompok" data-toggle="modal">
+                                          <i class="fa fa-plus"></i>
+                                        </button>
+                                      </span>
                                     </div>
                                   </div>
                                 </div>
@@ -116,14 +121,16 @@
                                       <select class="select2 form-control" id="pos" name="pos" required>
                                         <option value="" disabled selected>Pos Anggaran</option>
                                         @foreach($pos as $pa)
-                                        <option {{ $master->pos_anggaran == $pa->kode ? 'selected=""' : '' }} value="{{ $pa->kode }}">{{ $pa->kode }} - {{ $pa->name }}</option>
+                                        <option {{ $items->pos_anggaran == $pa->id || $items->pos_anggaran == $pa->kode || $items->pos_anggaran == $pa->name ? 'selected=""' : '' }} value="{{ $pa->kode }}">{{ $pa->kode }} - {{ $pa->name }}</option>
                                         @endforeach
                                       </select>
                                     </div>
                                     <div class = "col-md-2">
-                                      <button type="button" class="btn btn-success" data-target="#tambahPos" data-toggle="modal">
-                                        <i class="fa fa-plus"></i>
-                                      </button>
+                                      <span data-toggle='tooltip' title='Tambah'>
+                                        <button type="button" class="btn btn-success" data-target="#tambahPos" data-toggle="modal">
+                                          <i class="fa fa-plus"></i>
+                                        </button>
+                                      </span>
                                     </div>
                                   </div>
                                 </div>
@@ -133,9 +140,9 @@
                                       <div class="form-group skin skin-square">
                                         <label>Display item untuk seluruh cabang</label>
                                         <fieldset>
-                                          <input type="radio" id='item_display_on' name="item_display" value="1" {{ $master->is_displayed == "1" ? 'checked=""' : '' }}>
+                                          <input type="radio" id='item_display_on' name="item_display" value="1" {{ $items->is_displayed == "1" ? 'checked=""' : '' }}>
                                           <label>Iya</label>
-                                          <input type="radio" id='item_display_off' name="item_display" value="0" {{ $master->is_displayed == "0" ? 'checked=""' : '' }}>
+                                          <input type="radio" id='item_display_off' name="item_display" value="0" {{ $items->is_displayed == "0" ? 'checked=""' : '' }}>
                                           <label>Tidak</label>
                                         </fieldset>
                                       </div>
@@ -162,12 +169,12 @@
                                     <select class = "select2 form-control account" name="account" id="account" onchange="getVal('account', 'segmen1');" required>
                                       <option value="" disabled selected>Main Account</option>
                                       @foreach($item as $coa)
-                                      <option {{ $master->SEGMEN_1 == $coa->MAINACCOUNTID ? 'selected=""' : '' }} value="{{ $coa->MAINACCOUNTID }}">{{ $coa->NAME }}</option>
+                                      <option {{ $items->SEGMEN_1 == $coa->MAINACCOUNTID ? 'selected=""' : '' }} value="{{ $coa->MAINACCOUNTID }}">{{ $coa->NAME }}</option>
                                       @endforeach
                                     </select>
                                   </div>
                                   <div class="col-md-3">
-                                    <input id="segmen1" class="form-control" name="segmen1" value="{{ $master->SEGMEN_1 }}" readonly="">
+                                    <input id="segmen1" class="form-control" name="segmen1" value="{{ $items->SEGMEN_1 }}" readonly="">
     		                          </div>
     				                    </div>
     		                        <div class="form-group row">
@@ -176,12 +183,12 @@
                                     <select class = "select2 form-control" id="program" name="program" onchange="getVal('program', 'segmen2');" required>
                                       <option value="" disabled selected>Program</option>
                                       @foreach($program as $prog)
-                                      <option {{ $master->SEGMEN_2 == $prog->VALUE ? 'selected=""' : '' }} value="{{ $prog->VALUE }}">{{ $prog->DESCRIPTION }}</option>
+                                      <option {{ $items->SEGMEN_2 == $prog->VALUE ? 'selected=""' : '' }} value="{{ $prog->VALUE }}">{{ $prog->DESCRIPTION }}</option>
                                       @endforeach
                                     </select>
     		                          </div>
     		                          <div class="col-md-3">
-    		                          	<input id="segmen2" class="form-control" name="segmen2" value="{{ $master->SEGMEN_2 }}" readonly="">
+    		                          	<input id="segmen2" class="form-control" name="segmen2" value="{{ $items->SEGMEN_2 }}" readonly="">
       				                    </div>
     		                        </div>
     		                        <div class="form-group row">
@@ -190,12 +197,12 @@
                                     <select class = "select2 form-control" id="kpkc" name="kpkc" onchange="getVal('kpkc', 'segmen3');" required>
                                       <option value="" disabled selected>KPKC</option>
                                       @foreach($kpkc as $unit)
-                                      <option {{ $master->SEGMEN_3 == $unit->VALUE ? 'selected=""' : '' }} value="{{ $unit->VALUE }}">{{ $unit->DESCRIPTION }}</option>
+                                      <option {{ $items->SEGMEN_3 == $unit->VALUE ? 'selected=""' : '' }} value="{{ $unit->VALUE }}">{{ $unit->DESCRIPTION }}</option>
                                       @endforeach
                                     </select>
     	                        	  </div>
     		                          <div class="col-md-3">
-    	                          		<input id="segmen3" class="form-control" name="segmen3" value="{{ $master->SEGMEN_3 }}" readonly="">
+    	                          		<input id="segmen3" class="form-control" name="segmen3" value="{{ $items->SEGMEN_3 }}" readonly="">
     			                        </div>
     		                        </div>
     		                        <div class="form-group row">
@@ -204,12 +211,16 @@
                                     <select class = "select2 form-control" id="divisi" name="divisi" onchange="getVal('divisi', 'segmen4');" required>
                                       <option value="" disabled selected>Divisi</option>
                                       @foreach($divisi as $div)
-                                      <option {{ $master->SEGMEN_4 == $div->VALUE ? 'selected=""' : '' }} value="{{ $div->VALUE }}">{{ $div->DESCRIPTION }}</option>
+                                      @if($div->VALUE == 00)
+                                      <option {{ $items->SEGMEN_4 == $div->VALUE ? 'selected=""' : '' }} value="{{ $div->VALUE }}">&nbsp</option>
+                                      @else
+                                      <option {{ $items->SEGMEN_4 == $div->VALUE ? 'selected=""' : '' }} value="{{ $div->VALUE }}">{{ $div->DESCRIPTION }}</option>
+                                      @endif
                                       @endforeach
-                                      </select>
+                                    </select>
     		                          </div>
     		                          <div class="col-md-3">
-    		                          	<input id="segmen4" class="form-control" name="segmen4" value="{{ $master->SEGMEN_4 }}" readonly="">
+    		                          	<input id="segmen4" class="form-control" name="segmen4" value="{{ $items->SEGMEN_4 }}" readonly="">
     				                      </div>
     		                        </div>
     		                        <div class="form-group row">
@@ -218,12 +229,12 @@
     		                          	<select class = "select2 form-control" id="subpos" name="subpos" onchange="getVal('subpos', 'segmen5');" required>
                                       <option value="" disabled selected>Sub Pos</option>
                                       @foreach($subpos as $subp)
-                                      <option {{ $master->SEGMEN_5 == $subp->VALUE ? 'selected=""' : '' }} value="{{ $subp->VALUE }}">{{ $subp->DESCRIPTION }}</option>
+                                      <option {{ $items->SEGMEN_5 == $subp->VALUE ? 'selected=""' : '' }} value="{{ $subp->VALUE }}">{{ $subp->DESCRIPTION }}</option>
                                       @endforeach
                                     </select>
     		                          </div>
     		                          <div class="col-md-3">
-    		                          	<input id="segmen5" class="form-control" name="segmen5" value="{{ $master->SEGMEN_5 }}" readonly="">
+    		                          	<input id="segmen5" class="form-control" name="segmen5" value="{{ $items->SEGMEN_5 }}" readonly="">
     				                      </div>
     		                        </div>
                               	<div class="form-group row">
@@ -232,12 +243,12 @@
     		                            <select class = "select2 form-control" id="kegiatan" name="kegiatan" onchange="getVal('kegiatan', 'segmen6');" required>
                                       <option value="" disabled selected>Mata Anggaran</option>
                                       @foreach($m_anggaran as $ma)
-                                        <option {{ $master->SEGMEN_6 == $ma->VALUE ? 'selected=""' : '' }} value="{{ $ma->VALUE }}">{{ $ma->DESCRIPTION }}</option>
+                                        <option {{ $items->SEGMEN_6 == $ma->VALUE ? 'selected=""' : '' }} value="{{ $ma->VALUE }}">{{ $ma->DESCRIPTION }}</option>
                                       @endforeach
                                     </select>
     		                          </div>
     		                          <div class="col-md-3">
-    		                        	  <input id="segmen6" class="form-control" name="segmen6" value="{{ $master->SEGMEN_6 }}" readonly="">
+    		                        	  <input id="segmen6" class="form-control" name="segmen6" value="{{ $items->SEGMEN_6 }}" readonly="">
         				                  </div>
         				              	</div>
                               </div>
@@ -269,7 +280,7 @@
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                               <span aria-hidden="true">&times;</span>
                             </button>
-                            <h4 class="modal-title" id="myModalLabel">Jenis Anggaran</h4>
+                            <h4 class="modal-title" id="myModalLabel">Tambah Jenis Anggaran</h4>
                           </div>
                           <form class="form" id="jenis-form" action="{{ URL('item/submit/jenis') }}" method="POST">
                           {{ csrf_field() }}
@@ -407,5 +418,12 @@
                     radioClass: 'iradio_square-red',
                     increaseArea: '20%' // optional
                   });
+
+                  function selected(a)
+                  {
+                    document.getElementById("edit_kode_jenis").value = a.options[a.selectedIndex].value;
+                    document.getElementById("edit_nama_jenis").value = a.options[a.selectedIndex].text;
+                  }
+                  
                 </script>
                 @endsection		

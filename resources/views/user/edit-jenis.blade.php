@@ -145,7 +145,7 @@
                           <div class="card-body">
                             <div class="card-block">
                               <div class="form-actions right">
-                                <a href="{{ url('user') }}" class="btn btn-warning mr-1">
+                                <a href="{{ url('jenis_user') }}" class="btn btn-warning mr-1">
                                   <i class="ft-x"></i> Kembali
                                 </a>    
                                 <button type="submit" class="btn btn-primary">
