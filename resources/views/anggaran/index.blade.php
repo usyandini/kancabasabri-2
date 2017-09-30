@@ -154,7 +154,7 @@
                                       <div class="col-xs-3 ">
                                       </div>
                                       <div class="col-xs-2" style="horizontal-align:center">
-                                        @if($beda)
+                                        @if($beda && Gate::check('kirim_a'))
                                         <div class="form-group" id="send_button" style="display:{{$display['send']}}">
                                           <div id="send" name="send" onclick="check('Kirim')" class="btn btn-success"><i class="fa fa-send"></i> Kirim</div>
                                         </div>
@@ -429,11 +429,6 @@
                           })
                         },
                         insertItem: function (item) {
-                          // if(inputs.length >0){
-                          //   item['file'] = inputs.length;
-                          // }else{
-                          //   item['file'] = tempIdCounter;
-                          // }
                           
                           item["isNew"] = true;
                           item["tempId"] = tempIdCounter++;
@@ -1229,8 +1224,6 @@
                       type = "cabang";
                       unit = id_type;
                     }
-
-                    // alert(unit);
 
                     $.ajax({
                         'async': false, 'type': "GET", 'dataType': 'JSON', 'url': "{{ url('anggaran/get/attributes') }}/"+type+"/"+unit,
