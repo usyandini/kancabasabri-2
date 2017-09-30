@@ -92,12 +92,12 @@
 													            }
 													        }
 														}else if($notif['type'] == 12){
-															if(Gate::check('notif_ubah_d')&&Gate::check('notif_setuju_p2_d')){
+															if(Gate::check('notif_ubah_d')&&!Gate::check('notif_setuju_p2_d')){
 																$url = "";
 															}
 
 														}else if($notif['type'] == 4){
-															if(Gate::check('notif_ubah_t')&&Gate::check('notif_setuju2_t')){
+															if(Gate::check('notif_ubah_t')&&!Gate::check('notif_setuju2_t')){
 																$url = "";
 															}
 														}
