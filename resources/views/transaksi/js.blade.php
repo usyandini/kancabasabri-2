@@ -1,6 +1,6 @@
                 <script type="text/javascript">
                   var inputs = [];
-                  var item = m_anggaran = subpos = mainaccount = account_field = date_field = anggaran_field = null;
+                  var item = m_anggaran = subpos = mainaccount = account_field = date_field = anggaran_field = actual_anggaran = null;
                   var tempIdCounter = totalRows = 0;
                   var is_all_anggaran_safe = true;
                   var editableStat = {{ $editable ? 1 : 0 }};
@@ -93,6 +93,7 @@
                       onRefreshed: function(args) {
                         $(account_field).val('Auto generate dari Account')
                         $(anggaran_field).val('Auto generate dari Account')
+                        $(actual_anggaran).val('Auto generate dari Account')
                         date_field = mainaccount = null;
                         var items = args.grid.option("data");
                         items.forEach(function(item) {
@@ -210,7 +211,7 @@
                             width: 200, 
                             align: "left",
                             type: "text", 
-                            title: "Anggaran Tersedia (awal)",
+                            title: "Anggaran Tersedia (Awal)",
                             readOnly: true,
                             itemTemplate: function(value) {
                               return "<b>IDR " + parseInt(value).toLocaleString() + ",00</b>";
@@ -234,48 +235,18 @@
                             width: 300, 
                             align: "left",
                             type: "text", 
-                            title: "Anggaran Tersedia (aktual estimasi)",
+                            title: "Anggaran Tersedia (Aktual Estimasi)",
                             readOnly: true,
                             itemTemplate: function(value) {
                               return "<b>IDR " + parseInt(value).toLocaleString() + ",00</b>";
                             },
                             insertTemplate: function(value) {
-                              anggaran_field = jsGrid.fields.text.prototype.insertTemplate.call(this)
-                              anggaran_field.on("keyup", function() {
-                                var nilai = validDigits($(this).val());
-                                var val = addCommas(nilai);
-                                $(anggaran_field).val(val)
-                              })
-                              return anggaran_field
+                              actual_anggaran = jsGrid.fields.text.prototype.insertTemplate.call(this)
+                              return actual_anggaran
                             },
                             valdiate: {
                               validator: "min",
                               message: "Kolom aktual anggaran tidak boleh kosong.",
-                              param: [1]
-                             } },
-                          { 
-                            name: "qty_item", 
-                            width: 250, 
-                            align: "left",
-                            type: "number", 
-                            title: "Jumlah Diajukan (Kuantitas)",
-                            validate: {
-                              validator: "min",
-                              message: "Kolom jumlah item tidak boleh 0.",
-                              param: [0]
-                            }  },
-                          { 
-                            name: "total", 
-                            align: "left",
-                            width: 200, 
-                            type: "number", 
-                            title: "Jumlah Diajukan (IDR)",
-                            itemTemplate: function(value) {
-                              return "<b>IDR " + parseInt(value).toLocaleString() + ",00</b>";
-                            },
-                            valdiate: {
-                              validator: "min",
-                              message: "Kolom total tidak boleh kosong.",
                               param: [1]
                              } },
                           { 
@@ -314,6 +285,31 @@
                                 $(m_anggaran).val(value)
                                 return m_anggaran; }
                             }, 
+                          { 
+                            name: "qty_item", 
+                            width: 250, 
+                            align: "left",
+                            type: "number", 
+                            title: "Jumlah Diajukan (Kuantitas)",
+                            validate: {
+                              validator: "min",
+                              message: "Kolom jumlah item tidak boleh 0.",
+                              param: [0]
+                            }  },
+                          { 
+                            name: "total", 
+                            align: "left",
+                            width: 200, 
+                            type: "number", 
+                            title: "Jumlah Diajukan (IDR)",
+                            itemTemplate: function(value) {
+                              return "<b>IDR " + parseInt(value).toLocaleString() + ",00</b>";
+                            },
+                            valdiate: {
+                              validator: "min",
+                              message: "Kolom total tidak boleh kosong.",
+                              param: [1]
+                             } },
                           { 
                             name: "bank", 
                             width: 250,
@@ -398,8 +394,6 @@
                     if (combination == null) {
                       toastr.error("Anggaran pada <b>tanggal transaksi dan jenis barang/jasa</b> yang diinputkan tidak ditemukan.", "Anggaran tidak ditemukan.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:10e3});
                     } else {
-                      console.log(date_field)
-                      console.log(combination)
                       populateAccountEtc(combination)
                     }
                   }
@@ -433,6 +427,7 @@
                     $(m_anggaran).val(data.SEGMEN_6)
 
                     $(anggaran_field).val(data.ax_anggaran.PIL_AMOUNTAVAILABLE)
+                    $(actual_anggaran).val(data.actual_anggaran)
                   }
                   
                   function pad(n) {

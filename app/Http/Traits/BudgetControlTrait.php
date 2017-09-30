@@ -15,17 +15,19 @@ trait BudgetControlTrait
 {
 	public function calibrateAnggaran($trans, $isInsert)
 	{
+		$result = [];		
 		if (isset($trans->isNew)) {
 			$transaksi_date = new Carbon(date("Y-m-d", strtotime($trans->tgl)));	
 		} else {
 			$transaksi_date = new Carbon(str_replace(':AM', ' AM', $trans->tgl));
 		}
+
 		$currentHistory = $this->getHistory($transaksi_date, $trans->account);
 		
 		if (!$currentHistory) {
 			$currentHistory = $this->createHistory($trans, $transaksi_date);
 		}
-		$result = [];		
+
 		if ($isInsert || $currentHistory->savepoint_amount != $trans->anggaran) {
 			$input['actual_amount'] = $result['actual_anggaran'] = (int)$currentHistory->actual_amount - (int)$trans->total;
 			$result['anggaran'] = $currentHistory->savepoint_amount; 

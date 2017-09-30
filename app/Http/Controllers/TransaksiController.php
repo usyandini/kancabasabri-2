@@ -241,8 +241,8 @@ class TransaksiController extends Controller
                     'mata_anggaran' => $value->mata_anggaran,
                     'akun_bank'     => $value->bank,
                     'account'       => $value->account,
-                    'anggaran'      => $calibrate['anggaran'] ? $calibrate['anggaran'] : (int)$value->anggaran,
-                    'actual_anggaran' => $calibrate['actual_anggaran'] ? $calibrate['actual_anggaran'] : (int)$value->anggaran,
+                    'anggaran'      => (int)$calibrate['anggaran'],
+                    'actual_anggaran' => (int)$calibrate['actual_anggaran'],
                     'total'         => (int)$value->total,
                     'created_by'    => \Auth::user()->id,
                     'batch_id'      => (int)$batch_id,
@@ -296,11 +296,11 @@ class TransaksiController extends Controller
         return redirect('transaksi');
     }
 
-    public function doRefreshAnggaran($transaksis)
+    public function doRefreshAnggaran($transaksis, $isInsert = false)
     {
         foreach ($transaksis as $transaksi) {
             $this->calibrateSavePointAndActual($transaksi);
-            $calibrate = $this->calibrateAnggaran($transaksi, false);
+            $calibrate = $this->calibrateAnggaran($transaksi, $isInsert);
             if (count($calibrate) > 0) {
                 Transaksi::where('id', $transaksi->id)->update($calibrate);
             }
@@ -324,16 +324,27 @@ class TransaksiController extends Controller
         }
     }
 
+    // public function doUpdate($batch_update)
+    // {
+    //     if (count($batch_update) > 0) {
+    //         foreach ($batch_update as $value) {
+    //             $id = $value['id'];
+    //             unset($value['id']);
+    //             unset($value['created_at']);
+    //             Transaksi::where('id', $id)->update($value);
+    //         }
+    //     }
+    // }
+
     public function doUpdate($batch_update)
     {
         if (count($batch_update) > 0) {
             foreach ($batch_update as $value) {
-                $id = $value['id'];
+                Transaksi::where('id', $value['id'])->delete();
                 unset($value['id']);
-                unset($value['created_at']);
-                Transaksi::where('id', $id)->update($value);
+                Transaksi::create($value);
             }
-        }
+        }        
     }
 
     public function doDelete($batch_delete)
