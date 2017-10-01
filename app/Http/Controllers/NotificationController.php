@@ -23,6 +23,17 @@ use App\Services\NotificationSystem;
 // 4 = Submit verifikasi lvl 1 approved | Receiver : null (All Akutansi)
 // 5 = Submit verifikasi lvl 2 rejected | Reveiver : id batch submitter
 // 6 = Submit verifikasi lvl 2 approved | Receiver : id batch submitter
+
+// 7 = Submit verifikasi lvl 1 tarik tunai | Receiver : Akuntansi
+// 8 = Submit verifikasi lvl 1 tarik tunai rejected | Receiver : id submitter
+// 9 = Submit verifikasi lvl 1 tarik tunai approved | Receiver : id submitter
+
+// 10 = Submit verifikasi lvl 1 penyesuaian dropping | Receiver : Bia
+// 11 = Submit verifikasi lvl 1 penyesuaian dropping rejected | Receiver : id submitter
+//    = Submit verifikasi lvl 1 penyesuaian dropping approved | Receiver : id submitter
+// 12 = Submit verifikasi lvl 1 penyesuaian dropping approved | Receiver : Akuntansi
+// 13 = Submit verifikasi lvl 2 penyesuaian dropping rejected | Receiver : id submitter
+// 14 = Submit verifikasi lvl 2 penyesuaian dropping approved | Reveiver : id submitter
 // ------------------------------------
 
 class NotificationController extends Controller
@@ -60,7 +71,7 @@ class NotificationController extends Controller
                     $val_unit = $unit_kerja;
                 }
             }
-            if(Gate::check('unit_'.$val_unit)){
+            // if(Gate::check('unit_'.$val_unit)){
         		$result['notifications'][] = [
         			'id' 		=> $value->id,
                     'unit_kerja'=> $val_unit,
@@ -71,7 +82,7 @@ class NotificationController extends Controller
         			'time'		=> date('d F Y, H:m', strtotime($value->created_at))
         		];
                 $count_unread++;
-            }
+            // }
     	}
         $result['totalUnread'] = $count_unread;
 
@@ -90,6 +101,11 @@ class NotificationController extends Controller
     	switch ($notifDetail->type) {
     		case 1:
     			return redirect('transaksi/persetujuan/'.$notifDetail->batch_id);
+            case 2:
+            case 3:
+            case 5:
+            case 6:
+                return redirect('transaksi/'.$notifDetail->batch_id);
             case 4:
                 return redirect('transaksi/verifikasi/'.$notifDetail->batch_id);
             case 7:

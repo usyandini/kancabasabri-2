@@ -314,9 +314,10 @@ class TransaksiController extends Controller
     {
         $update = $this->updateBatchStat($batch_id, 2);
 
-        NotificationSystem::send($this->current_batch['id'], 1);
+        NotificationSystem::send($batch_id, 1);
+        $batch = Batch::where('id', $batch_id)->first();
 
-        session()->flash('success_submit', $this->current_batch['created_at']);
+        session()->flash('success_submit', $batch->batchNo());
         return redirect('transaksi/'.$batch_id);
     }
 
@@ -326,18 +327,6 @@ class TransaksiController extends Controller
             Transaksi::insert($batch_insert);
         }
     }
-
-    // public function doUpdate($batch_update)
-    // {
-    //     if (count($batch_update) > 0) {
-    //         foreach ($batch_update as $value) {
-    //             $id = $value['id'];
-    //             unset($value['id']);
-    //             unset($value['created_at']);
-    //             Transaksi::where('id', $id)->update($value);
-    //         }
-    //     }
-    // }
 
     public function doUpdate($batch_update)
     {
@@ -453,7 +442,7 @@ class TransaksiController extends Controller
         $input = $request->only('is_approved', 'reason');
         $this->approveOrReject($type, $batch_id, $input);
 
-        NotificationSystem::send($this->current_batch['id'], $type == 1 ? ($request->is_approved ? 3 : 2) : ($request->is_approved ? 6 : 5));
+        NotificationSystem::send($batch_id, $type == 1 ? ($request->is_approved ? 3 : 2) : ($request->is_approved ? 6 : 5));
 
         session()->flash('success', true);
         return redirect()->back();   

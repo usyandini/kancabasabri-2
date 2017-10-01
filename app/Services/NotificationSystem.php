@@ -24,7 +24,6 @@ use App\User;
 // 12 = Submit verifikasi lvl 1 penyesuaian dropping approved | Receiver : Akuntansi
 // 13 = Submit verifikasi lvl 2 penyesuaian dropping rejected | Receiver : id submitter
 // 14 = Submit verifikasi lvl 2 penyesuaian dropping approved | Reveiver : id submitter
-
 // ------------------------------------
 class NotificationSystem
 {
@@ -96,7 +95,7 @@ class NotificationSystem
             array_push($array_type,4);
         }
         if(isset($user->perizinan['notif_ubah_t'])){
-            array_push($array_type,3,5,6);
+            array_push($array_type,2,3,5,6);
             if (!in_array(4, $array_type)) {
                 array_push($array_type,4);
             }
@@ -212,7 +211,7 @@ class NotificationSystem
             array_push($array_type,4);
         }
         if(isset($user->perizinan['notif_ubah_t'])){
-            array_push($array_type,3,5,6);
+            array_push($array_type,2,3,5,6);
             if (!in_array(4, $array_type)) {
                 array_push($array_type,4);
             }
@@ -279,7 +278,7 @@ class NotificationSystem
         if(count($array_type) == 0){
             return null;
         }
-
+        
         // $notifications = Notification::where('type', $array_type[0]);
         // $notifications = 
         // 	Notification::where(function ($query,) {
