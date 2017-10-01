@@ -18,6 +18,7 @@ use App\Models\BudgetControl;
 
 use Validator;
 use Carbon;
+use Response;
 
 use App\Services\FileUpload;
 use App\Services\NotificationSystem;
@@ -220,7 +221,7 @@ class TransaksiController extends Controller
     public function store(Request $request)
     {
         $batch_insert = $batch_update = $batch_delete = [];
-        $batch_id = null;
+        $batch_id = $calibrate = null;
         if (!isset($request->batch_id)) {
             $this->current_batch = $this->defineNewBatch();
             $batch_id = $this->current_batch['id'];
@@ -230,7 +231,9 @@ class TransaksiController extends Controller
         }
 
         foreach (json_decode($request->batch_values) as $value) {
-            $calibrate = $this->calibrateAnggaran($value, true);
+            if (!isset($value->toBeDeleted)) {
+                $calibrate = $this->calibrateAnggaran($value, true);
+            }
             $store_values = [
                     'id'            => $value->id,
                     'tgl'           => date("Y-m-d",strtotime($value->tgl)),
@@ -241,8 +244,8 @@ class TransaksiController extends Controller
                     'mata_anggaran' => $value->mata_anggaran,
                     'akun_bank'     => $value->bank,
                     'account'       => $value->account,
-                    'anggaran'      => (int)$calibrate['anggaran'],
-                    'actual_anggaran' => (int)$calibrate['actual_anggaran'],
+                    'anggaran'      => isset($value->toBeDeleted) ? 0 : (int)$calibrate['anggaran'],
+                    'actual_anggaran' => isset($value->toBeDeleted) ? 0 : (int)$calibrate['actual_anggaran'],
                     'total'         => (int)$value->total,
                     'created_by'    => \Auth::user()->id,
                     'batch_id'      => (int)$batch_id,
@@ -259,12 +262,17 @@ class TransaksiController extends Controller
                 array_push($batch_update, $store_values);
             }
         }
+        
+        $accounts = \DB::select("SELECT 
+                DATEPART(YEAR, tgl) as year, DATEPART(MONTH, tgl) as month, account FROM dbo.transaksi 
+                    WHERE batch_id = ". $batch_id.
+                " GROUP BY DATEPART(YEAR, tgl), DATEPART(MONTH, tgl), account");
 
         $this->doInsert($batch_insert);
         $this->doUpdate($batch_update);
         $this->doDelete($batch_delete);
         $this->storeBerkas($request->berkas, $batch_id);
-        
+
         $batch_counter = array(
             count($batch_insert), // inserted items count
             count($batch_update), // updated items count
@@ -276,16 +284,11 @@ class TransaksiController extends Controller
         $this->doRefreshAnggaran($transaksis);
 
         if (count($batch_delete) > 0 || count($batch_update) > 0) {
-            $accounts = \DB::select("SELECT 
-                DATEPART(YEAR, tgl) as year, DATEPART(MONTH, tgl) as month, account FROM dbo.transaksi 
-                    WHERE batch_id = ". $this->current_batch['id'].
-                " GROUP BY DATEPART(YEAR, tgl), DATEPART(MONTH, tgl), account");
-
             $this->resetCalibrateBecauseDeleteOrUpdate($accounts, $transaksis);
         }
 
         session()->flash('success', $batch_counter);
-        return redirect('transaksi');
+        return redirect('transaksi/'.$batch_id);
     }
 
     public function refreshAnggaran($batch_id)
@@ -293,7 +296,7 @@ class TransaksiController extends Controller
         $transaksis = Transaksi::where('batch_id', $batch_id)->get();
         $this->doRefreshAnggaran($transaksis);
 
-        return redirect('transaksi');
+        return redirect('transaksi/'.$batch_id);
     }
 
     public function doRefreshAnggaran($transaksis, $isInsert = false)
@@ -307,14 +310,14 @@ class TransaksiController extends Controller
         }
     }
 
-    public function submit(Request $request)
+    public function submit(Request $request, $batch_id)
     {
-        $update = $this->updateBatchStat($this->current_batch, 2);
+        $update = $this->updateBatchStat($batch_id, 2);
 
         NotificationSystem::send($this->current_batch['id'], 1);
 
         session()->flash('success_submit', $this->current_batch['created_at']);
-        return redirect('transaksi');
+        return redirect('transaksi/'.$batch_id);
     }
 
     public function doInsert($batch_insert)

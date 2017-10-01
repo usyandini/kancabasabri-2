@@ -32,6 +32,7 @@ class NotificationSystem
 	{
 		switch ($type) {
 			case 1:
+            case 4:
 				$receiver_id = null;
 				break;
 			default:

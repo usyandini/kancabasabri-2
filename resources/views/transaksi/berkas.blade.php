@@ -10,8 +10,8 @@
     <table>
       @forelse($berkas as $value)
       <tr>
-        <td width="25%">Berkas: <a href="{{ url('transaksi/berkas/download').'/'.$value->id }}" target="_blank">{{ $value->file_name }}</a></td>
-        <td width="25%">Diunggah: <b>{{ $value->created_at }}</b></td>
+        <td width="25%"><a href="{{ url('transaksi/berkas/download').'/'.$value->id }}" target="_blank">{{ $value->file_name }}</a></td>
+        <td width="25%"><b>{{ $value->created_at }}</b></td>
         <td width="5%">
           @if($editable && Gate::check('berkas_t'))
           <a href="javascript:deleteBerkas('{{ $value->id }}', '{{ $value->file_name }}');"><i class="fa fa-times"></i> Hapus</a>

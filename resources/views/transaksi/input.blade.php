@@ -196,7 +196,7 @@
                       <p>Apakah anda yakin dengan <b>data batch</b> yang anda input sudah sesuai?</p>
                     </div>
                     <div class="modal-footer">
-                      <form method="POST" action="{{ url('transaksi/submit/verify') }}">
+                      <form method="POST" action="{{ url('transaksi/submit/verify').'/'.$active_batch->id }}">
                         {{ csrf_field() }}
                         <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">Tidak, kembali</button>
                         <button type="submit" class="btn btn-outline-primary">Ya, submit untuk verifikasi</button>

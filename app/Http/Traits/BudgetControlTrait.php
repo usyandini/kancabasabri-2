@@ -46,18 +46,22 @@ trait BudgetControlTrait
 			$localBudgetControl = BudgetControlHistory::where([
 				['month_period', $acc->month], 
 				['year_period', $acc->year],
-				['account', $acc->account]])->first();;
+				['account', $acc->account]])->first();
 			$this->updateSavePoint((int)$localBudgetControl->savepoint_amount, $localBudgetControl->id);
-		}
 
-		foreach ($transaksi_batch as $transaksi) {
-			$transaksi_date = new Carbon(str_replace(':AM', ' AM', $transaksi->tgl));
-			$currentHistory = $this->getHistory($transaksi_date, $transaksi->account);
-			$budgetUpdate['actual_amount'] = $transaksiUpdate['actual_anggaran'] = (int)$currentHistory->actual_amount - (int)$transaksi->total;
-			$transaksiUpdate['is_anggaran_safe'] = ((int)$budgetUpdate['actual_amount'] < 0) ? false : true;
+			$transaksis = Transaksi::where('account', $acc->account)
+							->whereYear('tgl', '=', $acc->year)
+							->whereMonth('tgl', '=', $acc->month)->get();
 
-			BudgetControlHistory::where('id', $currentHistory->id)->update($budgetUpdate);				
-			Transaksi::where('id', $transaksi->id)->update($transaksiUpdate);
+			foreach ($transaksis as $transaksi) {
+				$transaksi_date = new Carbon(str_replace(':AM', ' AM', $transaksi->tgl));
+				$currentHistory = $this->getHistory($transaksi_date, $transaksi->account);
+				$budgetUpdate['actual_amount'] = $transaksiUpdate['actual_anggaran'] = (int)$currentHistory->actual_amount - (int)$transaksi->total;
+				$transaksiUpdate['is_anggaran_safe'] = ((int)$budgetUpdate['actual_amount'] < 0) ? false : true;
+
+				BudgetControlHistory::where('id', $currentHistory->id)->update($budgetUpdate);				
+				Transaksi::where('id', $transaksi->id)->update($transaksiUpdate);
+			}
 		}
 	}
 
