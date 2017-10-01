@@ -7,7 +7,7 @@ use App\Models\Batch;
 use App\User;
 
 // ---------------- Types -------------
-// 1 = Submit verifikasi lvl 1 | Receiver : null (All Kasmin)
+// 1 = Submit verifikasi lvl 1 | Receiver : null (All Kakancab)
 // 2 = Submit verifikasi lvl 1 rejected | Reveiver : id batch submitter
 // 3 = Submit verifikasi lvl 1 approved | Receiver : id batch submitter
 // 4 = Submit verifikasi lvl 1 approved | Receiver : null (All Akutansi)

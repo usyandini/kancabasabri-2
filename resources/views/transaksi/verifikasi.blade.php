@@ -94,7 +94,7 @@
                               </div>
                               <div class="col-sm-12 col-lg-3 col-xl-2 pull-right">
                                 <div class="form-group">
-                                  <button onclick="checkBatchSubmit()" class="btn btn-primary pull-right" id="simpan" value="Simpan"><i class="fa fa-refresh"></i> Tindaklanjuti</button>
+                                  <button data-toggle="modal" data-target="#xSmall" class="btn btn-primary pull-right" id="simpan" value="Simpan"><i class="fa fa-refresh"></i> Tindaklanjuti</button>
                                 </div>
                               </div>
                               @endif
@@ -124,7 +124,7 @@
                       <div class="col-md-12">
                         <form method="POST" action="{{ url('transaksi/submit/verifikasi').'/2/'.$active_batch->id }}" id="verification">
                           {{ csrf_field() }}
-                          <p>Anda akan <b>memverifikasi batch ini</b> sebagai Kasimin. Informasi batch ini : 
+                          <p>Anda akan <b>memverifikasi batch ini</b> sebagai Kakancab. Informasi batch ini : 
                             <ul>
                               <li>Batch saat ini : <code>{{ date("d-m-Y", strtotime($active_batch->created_at)) }}</code></li>
                               <li>Terkahir Update : <code>{{ $active_batch->updated_at }}</code> oleh <code>{{ $active_batch['creator']['name'] }}</code></li>

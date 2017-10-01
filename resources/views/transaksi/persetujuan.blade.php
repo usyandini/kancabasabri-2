@@ -61,7 +61,7 @@
                       <div class="alert alert-info alert-dismissible fade in mb-2" role="alert">
                         <h4 class="alert-heading mb-2">Perlu Diperhatikan!</h4>
                         <ul>
-                          <li>Persetujuan hanya bisa diberikan oleh <b>Kasimin</b>.</li>
+                          <li>Persetujuan hanya bisa diberikan oleh <b>Kakancab</b>.</li>
                           <li>Persetujuan hanya bisa diberikan pada <b><i>batch</i> yang telah disubmit</b> oleh user.</li>
                         </ul>
                       </div>
@@ -84,6 +84,13 @@
                                 </div>
                               </div>
                               @endif
+                              @if(session('failed_safe'))
+                              <div class="col-xs-6">
+                                <div class="alert alert-danger">
+                                  Anggaran pada Batch ini tidak memadai.
+                                </div>
+                              </div>
+                              @endif
                             </div>
                             <div id="basicScenario"></div><br>
                             <div class="row">
@@ -100,7 +107,7 @@
                               </div>
                               <div class="col-md-3 pull-right">
                                 <div class="form-group">
-                                  <button onclick="checkBatchSubmit()" class="btn btn-info pull-right" id="simpan" value="Simpan"><i class="fa fa-refresh"></i> Tindaklanjuti</button>
+                                  <button data-toggle="modal" data-target="#xSmall" class="btn btn-info pull-right" id="simpan" value="Simpan"><i class="fa fa-refresh"></i> Tindaklanjuti</button>
                                 </div>
                               </div>
                               @endif
@@ -130,7 +137,7 @@
                       <div class="col-md-12">
                         <form method="POST" action="{{ url('transaksi/submit/verifikasi').'/1/'.$active_batch->id }}" id="verification">
                           {{ csrf_field() }}
-                          <p>Anda akan <b>memverifikasi batch ini</b> sebagai Kasimin. Informasi batch ini : 
+                          <p>Anda akan <b>memverifikasi batch ini</b> sebagai Kakancab. Informasi batch ini : 
                             <ul>
                               <li>Batch saat ini : <code>{{ date("d-m-Y", strtotime($active_batch->created_at)) }}</code></li>
                               <li>Terkahir Update : <code>{{ $active_batch->updated_at }}</code> oleh <code>{{ $active_batch['submitter']['name'] }}</code></li>

@@ -40,7 +40,7 @@ trait BudgetControlTrait
 		return $result;
 	}
 
-	public function resetCalibrateBecauseDeleteOrUpdate($accounts, $transaksi_batch)
+	public function resetCalibrateBecauseDeleteOrUpdate($accounts)
 	{
 		foreach ($accounts as $acc) {
 			$localBudgetControl = BudgetControlHistory::where([
@@ -65,23 +65,24 @@ trait BudgetControlTrait
 		}
 	}
 
-	public function calibrateSavePointAndActual($transaksi_data)
+	public function calibrateSavePointAndActual($account_data)
 	{
-		$transaksi_date = new Carbon(str_replace(':AM', ' AM', $transaksi_data->tgl));
-		$axActual = $this->getAxActual($transaksi_data, $transaksi_date);
-		$localActual = $this->getHistory($transaksi_date, $transaksi_data->account);
-
-		if ($axActual && $localActual && ((int)$axActual->PIL_AMOUNTAVAILABLE != (int)$localActual->savepoint_amount)) {
-			$this->updateSavePoint((int)$axActual->PIL_AMOUNTAVAILABLE, $localActual->id);
-			return false;
-		}	
-
-		return true;
+		$localBudgetControl = BudgetControlHistory::where([
+				['month_period', $account_data->month], 
+				['year_period', $account_data->year],
+				['account', $account_data->account]])->first();
+		$axActual = $this->getAxActual($account_data);
+		
+		if ($axActual && $localBudgetControl && ((int)$axActual->PIL_AMOUNTAVAILABLE != (int)$localBudgetControl->savepoint_amount)) {
+			$this->updateSavePoint((int)$axActual->PIL_AMOUNTAVAILABLE, $localBudgetControl->id);
+			return true;
+		}
+		return false;
 	}
 
 	public function createHistory($transaksi_data, $transaksi_date)
 	{
-		$axBudgetControl = $this->getAxActual($transaksi_data, $transaksi_date);
+		$axBudgetControl = $this->axActual($transaksi_data, $transaksi_date);
 		if ($axBudgetControl) {
 			$historyInput = [
 				'month_period' 	=> $transaksi_date->month,
@@ -106,7 +107,19 @@ trait BudgetControlTrait
 		return $isAvailable ? $isAvailable : false;
 	}
 
-	public function getAxActual($transaksi_data, $transaksi_date)
+	public function getAxActual($account_data)
+	{
+		$axBudgetControl = BudgetControl::where('PIL_DISPLAYVALUE', $account_data->account)
+			->whereYear('PIL_PERIODENDDATE', '=', $account_data->year)
+			->whereYear('PIL_PERIODSTARTDATE', '=', $account_data->year)
+			->whereMonth('PIL_PERIODENDDATE', '=', $account_data->month)
+			->whereMonth('PIL_PERIODSTARTDATE', '=', $account_data->month)
+			->first();
+
+		return $axBudgetControl ? $axBudgetControl : false;	
+	}
+
+	public function axActual($transaksi_data, $transaksi_date)
 	{
 		$axBudgetControl = BudgetControl::where([
 			['PIL_DISPLAYVALUE', $transaksi_data->account], 

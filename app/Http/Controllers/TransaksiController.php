@@ -28,9 +28,9 @@ use App\Http\Traits\BudgetControlTrait;
 //  ----------- BATCH STAT / HISTORY DESC -------------
 //          0 = Inserted 
 //          1 = Updated
-//          2 = Posted / Submitted to Kasmin
+//          2 = Posted / Submitted to Kakancab
 //          3 = Rejected for revision
-//          4 = Verified by Kasmin (lvl 1) / Submitted to Akuntansi 
+//          4 = Verified by Kakancab (lvl 1) / Submitted to Akuntansi 
 //          5 = Rejected for revision
 //          6 = Verified by Akuntansi (lvl 2)
 //  -----------------------------------------
@@ -74,6 +74,7 @@ class TransaksiController extends Controller
         $empty_batch = $editable = true;
         
         $this->current_batch = ($batch_id == null) ? $this->current_batch : Batch::where('id', $batch_id)->first();
+        // dd($this->isAllAnggaranSafe($this->current_batch['id']));
         if ($this->current_batch) {
             $editable = $this->current_batch->isUpdatable();
             $berkas = BerkasTransaksi::where('batch_id', $this->current_batch['id'])->get();
@@ -280,32 +281,44 @@ class TransaksiController extends Controller
             $request->berkas[0] ? count($request->berkas) : 0 // berkas uploaded
         );
 
-        $transaksis = Transaksi::where('batch_id', $batch_id)->get();
-        $this->doRefreshAnggaran($transaksis);
+        $this->doRefreshAnggaran($batch_id);
 
         if (count($batch_delete) > 0 || count($batch_update) > 0) {
-            $this->resetCalibrateBecauseDeleteOrUpdate($accounts, $transaksis);
+            $this->resetCalibrateBecauseDeleteOrUpdate($accounts);
         }
 
         session()->flash('success', $batch_counter);
         return redirect('transaksi/'.$batch_id);
     }
 
-    public function refreshAnggaran($batch_id)
+    public function isAllAnggaranSafe($batch_id)
     {
-        $transaksis = Transaksi::where('batch_id', $batch_id)->get();
-        $this->doRefreshAnggaran($transaksis);
-
-        return redirect('transaksi/'.$batch_id);
+        return Transaksi::where([['batch_id', $batch_id], ['is_anggaran_safe', 0]])->first() ? false : true;
     }
 
-    public function doRefreshAnggaran($transaksis, $isInsert = false)
+    public function refreshAnggaran($batch_id)
     {
-        foreach ($transaksis as $transaksi) {
-            $this->calibrateSavePointAndActual($transaksi);
-            $calibrate = $this->calibrateAnggaran($transaksi, $isInsert);
-            if (count($calibrate) > 0) {
-                Transaksi::where('id', $transaksi->id)->update($calibrate);
+        $this->doRefreshAnggaran($batch_id);
+        return redirect()->back();
+    }
+
+    public function doRefreshAnggaran($batch_id)
+    {
+        $accounts = \DB::select("SELECT 
+                DATEPART(YEAR, tgl) as year, DATEPART(MONTH, tgl) as month, account FROM dbo.transaksi 
+                    WHERE batch_id = ". $batch_id.
+                " GROUP BY DATEPART(YEAR, tgl), DATEPART(MONTH, tgl), account");
+
+        foreach ($accounts as $account) {
+            if($this->calibrateSavePointAndActual($account)) {
+                $transaksis = Transaksi::where('account', $account->account)->get();
+                
+                foreach ($transaksis as $transaksi) {
+                    $calibrate = $this->calibrateAnggaran($transaksi, false);
+                    if (count($calibrate) > 0) {
+                        Transaksi::where('id', $transaksi->id)->update($calibrate);
+                    }
+                }
             }
         }
     }
@@ -439,6 +452,12 @@ class TransaksiController extends Controller
 
     public function submitVerification($type, $batch_id, Request $request)
     {
+        $this->doRefreshAnggaran($batch_id);
+        if (!$this->isAllAnggaranSafe($batch_id) && $request->is_approved) {
+            session()->flash('failed_safe', true);
+            return redirect()->back();
+        }
+
         $input = $request->only('is_approved', 'reason');
         $this->approveOrReject($type, $batch_id, $input);
 

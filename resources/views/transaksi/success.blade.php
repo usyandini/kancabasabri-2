@@ -20,7 +20,7 @@
   @if(session('success_submit'))
   <div class="col-xs-6">
     <div class="alert alert-info">
-      Batch <code>{{ date("d-m-Y", strtotime(session('success_submit'))) }}</code> berhasil disubmit. <b>Silahkan tunggu verifikasi dari user.</b></code>
+      Batch <code>{{ session('success_submit') }}</code> berhasil disubmit. <b>Silahkan tunggu verifikasi dari user.</b></code>
     </div>
   </div>
   @endif

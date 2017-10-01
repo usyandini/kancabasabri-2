@@ -108,7 +108,7 @@
                                                 	<label class="control-label"><b> : </b></label>
 											        <select class="select form-control" name="keterangan" required="required" >
 				                                    <option value="">Pilih keterangan</option>
-				                                    <option value="1">Reject transaksi by kasimin (lv1)</option>
+				                                    <option value="1">Reject transaksi by Kakancab (lv1)</option>
 													<option value="2">Reject transaksi by akuntansi (lv2)</option>  
 													<option value="3">Reject tarik tunai by akuntansi (lv1)</option>
 													<option value="4">Reject penyesuaian dropping by bia (lv1)</option>
@@ -152,7 +152,7 @@
 			                        			<td><center>{{ $no }}</center></td>
 			                        			<td>{{ $reason->content }}</td>
 												<td><?php 
-														  if($reason->type=='1'){ echo "Reject transaksi by kasimin (lv1)";}
+														  if($reason->type=='1'){ echo "Reject transaksi by Kakancab (lv1)";}
 														  if($reason->type=='2'){ echo "Reject transaksi by akuntansi (lv2)";}
 														  if($reason->type=='3'){ echo "Reject tarik tunai by akuntansi (lv1)";}
 														  if($reason->type=='4'){ echo "Reject penyesuaian dropping by bia (lv1)";}
@@ -208,7 +208,7 @@
                                                 						<label class="control-label"><b> : </b></label>
 											                            <select class="select form-control" name="keterangan" required="required"/>
 					                                                    	<option value="">Pilih keterangan</option>
-					                                                    	<option value="1" @if ($reason->type=="1")Selected @endif>Reject transaksi by kasimin (lv1)</option>
+					                                                    	<option value="1" @if ($reason->type=="1")Selected @endif>Reject transaksi by Kakancab (lv1)</option>
 																			<option value="2" @if ($reason->type=="2")Selected @endif>Reject transaksi by akuntansi (lv2)</option>  
 																			<option value="3" @if ($reason->type=="3")Selected @endif>Reject tarik tunai by akuntansi (lv1)</option>
 																			<option value="4" @if ($reason->type=="4")Selected @endif>Reject penyesuaian dropping by bia (lv1)</option>
