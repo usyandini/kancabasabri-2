@@ -205,7 +205,7 @@ class ItemController extends Controller
                     ItemAnggaranMaster::create($inputAll);
                     break;
             }
-            session()->flash('success', true);   
+            session()->flash('add', true);   
         }
         return redirect()->back()->withInput();
     }
