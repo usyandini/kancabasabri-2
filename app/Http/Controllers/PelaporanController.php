@@ -298,25 +298,6 @@ class PelaporanController extends Controller
 
             }
 
-            // $active_list = '0';
-            // if($request->setuju == 'Simpan'){
-            //     $active_list = '1';
-            // }
-
-            // if($kategori == "laporan_anggaran"){
-            //     $form_master_update_list = [
-            //     'uraian_progress'   => $value->uraian_progress,
-            //     'active'            => $active_list,
-            //     'updated_at'        => \Carbon\Carbon::now()
-            //     ];
-            // }else if($kategori == "arahan_rups-rups"){
-            //     $form_master_update_list = [
-            //     'progres_tindak_lanjut' => $value->progres_tindak_lanjut,
-            //     'active'                => $active_list,
-            //     'updated_at'            => \Carbon\Carbon::now()
-            //     ];
-            // }
-
             $LFormMasterInsert;
             $LFormMasterUpdate;
             if($request->status == 'Tambah'){
@@ -326,34 +307,18 @@ class PelaporanController extends Controller
                     $LFormMasterInsert  = MasterItemArahanRUPS::create($form_master_insert_item);
                 }
             }
-            // else if($request->status == 'Simpan'){
-            //     $LFormMasterUpdate  = ListLaporanAnggaran::where('id', $value->id)->where('active', '1')->update($form_master_update_list);
-            // }else{
-            //     $LFormMasterInsert  = ListLaporanAnggaran::create($form_master_insert_list);
-            //     $LFormMasterUpdate  = ListLaporanAnggaran::where('id', $value->id)->where('active', '1')->update($form_master_update_list);
-            // }
 
             
             $index2 = 0;
             $id_list_form_master;
-            // if($request->status == 'Simpan'){
-            //     if($value->id_before== 0){
-            //         $id_list_form_master = $value->id;
-            //     }else{
-            //         $id_list_form_master = $value->id_before;
-            //     }  
-            // }else 
             if($request->status == 'Tambah'){
                 $id_list_form_master = $LFormMasterInsert->id;
             }
 
-
-            // if($value->delete == "none"){
                 if(isset($_POST['count_file_'.$index])){
                     for($i=0;$i<$_POST['count_file_'.$index];$i++){
                         $data = $_POST['file_'.$index."_".$index2];
                         if($data!="null"){
-                            // echo $index."_".$index2."<br />";
                             $file_name = $_POST['file_name_'.$index."_".$index2];
                             $file_type = $_POST['file_type_'.$index."_".$index2];
                             $file_size = $_POST['file_size_'.$index."_".$index2];
@@ -379,7 +344,6 @@ class PelaporanController extends Controller
             $index++;
 
         }
-        // if($request->kategori == "laporan_anggaran")
         return redirect('pelaporan/detail/'.$kategori."/".urlencode($id_form_master)."/0");
     }   
 

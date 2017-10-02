@@ -22,6 +22,14 @@
             <input type="checkbox" name="perizinan[manajemen_a_m]" {{ isset($user->perizinan['manajemen_a_m']) ? 'checked=""' : '' }}>
             <label>Manajemen Alasan Menolak</label>
           </fieldset>
+          <fieldset>
+            <input type="checkbox" name="perizinan[manajemen_p_p]" {{ isset($user->perizinan['manajemen_p_p']) ? 'checked=""' : '' }}>
+            <label>Manajemen Program Prioritas</label>
+          </fieldset>
+          <fieldset>
+            <input type="checkbox" name="perizinan[manajemen_a_RUPS]" {{ isset($user->perizinan['manajemen_a_RUPS']) ? 'checked=""' : '' }}>
+            <label>Manajemen Arahan RUPS</label>
+          </fieldset>
         </div>
       </div>
     </div>

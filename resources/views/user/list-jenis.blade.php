@@ -57,7 +57,7 @@
 			                        	@forelse($users as $user)
 			                        		<tr>
 			                        			<td>{{  $user->nama }}</td>
-			                        			<td>{{  $user->creator['name'] }}</td>
+			                        			<td>{{  $user->creator() }}</td>
 			                        			<td>{!! date('Y-m-d, H:m', strtotime($user->created_at)) !!}</td>
 			                        			<td>{!! date('Y-m-d, H:m', strtotime($user->updated_at)) !!}</td>
 			                        			<td>{!! $user->countUsers() !!}</td>
