@@ -141,4 +141,49 @@ Route::group(['middleware' => 'auth'], function() {
 		Route::get('/delete/{id}', 'ItemController@delete');
 		
 	});
+
+	Route::group(['prefix' => 'program_prioritas'], function(){
+		Route::resource('/', 'ItemController@program_prioritas');
+		Route::post('/store_program_prioritas', 'ItemController@store_program_prioritas');
+		Route::post('/update_program_prioritas/{id}', 'ItemController@update_program_prioritas');
+		Route::get('/delete_program_prioritas/{id}', 'ItemController@delete_program_prioritas');
+		
+	});
+
+	Route::group(['prefix' => 'arahan_rups'], function(){
+		Route::resource('/', 'ItemController@arahan_rups');
+		Route::post('/store_arahan_rups', 'ItemController@store_arahan_rups');
+		Route::post('/update_arahan_rups/{id}', 'ItemController@update_arahan_rups');
+		Route::get('/delete_arahan_rups/{id}', 'ItemController@delete_arahan_rups');
+		
+	});
+
+	Route::group(['prefix' => 'unitkerja'], function(){
+		Route::resource('/', 'TindaklanjutController');
+		Route::post('/store_unitkerja', 'TindaklanjutController@store_unitkerja');
+		Route::post('/update_unitkerja/{id1}', 'TindaklanjutController@update_unitkerja');
+		Route::get('/delete_unitkerja/{id1}', 'TindaklanjutController@delete_unitkerja');
+		Route::get('/tindaklanjut/{id1}', 'TindaklanjutController@tindaklanjut');
+		
+	});
+
+	Route::group(['prefix' => 'tindaklanjut'], function(){
+		Route::resource('/', 'TindaklanjutController');
+		Route::post('/store_temuan/{id1}', 'TindaklanjutController@store_temuan');
+		Route::post('/update_temuan/{id1}', 'TindaklanjutController@update_temuan');
+		Route::post('/store_rekomendasi/{id2}', 'TindaklanjutController@store_rekomendasi');
+		Route::post('/update_rekomendasi/{id2}', 'TindaklanjutController@update_rekomendasi');
+		Route::post('/store_tindaklanjut/{id3}', 'TindaklanjutController@store_tindaklanjut');
+		Route::post('/update_tindaklanjut/{id3}', 'TindaklanjutController@update_tindaklanjut');
+		Route::post('/update_unitkerja/{id1}', 'TindaklanjutController@update_unitkerja');
+		Route::get('/delete_unitkerja/{id1}', 'TindaklanjutController@delete_unitkerja');
+		Route::get('/delete_temuan/{id2}', 'TindaklanjutController@delete_temuan');
+		Route::get('/delete_rekomendasi/{id3}', 'TindaklanjutController@delete_rekomendasi');
+		Route::get('/delete_tindaklanjut/{id4}', 'TindaklanjutController@delete_tindaklanjut');
+		Route::get('/download/{id4}', 'TindaklanjutController@downloadberkas');
+		Route::get('/tindaklanjut/{id1}', 'TindaklanjutController@tindaklanjut');
+		Route::get('/export/{id1}', 'TindaklanjutController@export_tindaklanjut');
+		Route::get('/print/{id1}', 'TindaklanjutController@print_tindaklanjut');
+		
+	});
  });
