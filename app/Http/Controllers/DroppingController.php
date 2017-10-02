@@ -246,7 +246,7 @@ class DroppingController extends Controller
         $validatorTT = Validator::make($inputsTT,
             [
                 'berkas.*' => 'required|max:100000',
-                //'berkas.*' => 'required|mimes:jpg,jpeg,png,bmp|max:20000', // batasan image file max 20 mb
+                //'berkas.*' => 'required|mimes:jpg,jpeg,png,bmp|max:100000', // batasan image file max 20 mb
                 'nominal_tarik' => 'not_in:0|required|regex:/^\d+([\.]\d+)*([\,]\d+)?$/' //titik separator
                 //'nominal_tarik' => 'not_in:0|required|regex:/^\d+([\,]\d+)*([\.]\d+)?$/' //koma separator
                 //'nominal_tarik' => 'not_in:0|required|regex:/^[1-8](,[1-8])*$/'
@@ -692,17 +692,12 @@ class DroppingController extends Controller
 
         $inputStagingTT = [
             'DATAAREAID'       => 'asbr',
-            // 'RECVERSION'
-            // 'PARTITION'
             'RECID'             => $tariktunai['id'],
             'PIL_TRANSDATE'     => $tariktunai['updated_at'],
             'PIL_TXT'           => $tariktunai['cabang'], //deskripsi optional
-            //'PIL_JOURNALNUM'    => $tariktunai['dropping']['JOURNALNUM'], //kosong
             'PIL_AMOUNT'        => $tariktunai['nominal_tarik'],
             'PIL_BANK'          => $tariktunai['akun_bank'],
             'PIL_ACCOUNT'       => $tariktunai['SEGMEN_1'],
-            //'PIL_VOUCHER'       => $tariktunai['dropping']['JOURNALNAME'] //kosong
-            //'PIL_POSTED'
             'PIL_PROGRAM'       => $tariktunai['SEGMEN_2'],
             'PIL_KPKC'          => $tariktunai['SEGMEN_3'],
             'PIL_DIVISI'        => $tariktunai['SEGMEN_4'],

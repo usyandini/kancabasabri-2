@@ -196,7 +196,7 @@
     	                        	  <div class="col-md-7">
                                     <select class = "select2 form-control" id="kpkc" name="kpkc" onchange="getVal('kpkc', 'segmen3');" required>
                                       <option value="" disabled selected>KPKC</option>
-                                      <option {{ old('kpkc') == '00' ? 'selected=""' : '' }} value="00">None</option>
+                                      <option {{ $items->SEGMEN_3 == '00' ? 'selected=""' : '' }} value="00">None</option>
                                       @foreach($kpkc as $unit)
                                       {{ $id = $unit->VALUE."00" }}
                                       @if(Gate::check("unit_".$id) )
@@ -214,7 +214,7 @@
     		                          <div class="col-md-7">
                                     <select class = "select2 form-control" id="divisi" name="divisi" onchange="getVal('divisi', 'segmen4');" required>
                                       <option value="" disabled selected>Divisi</option>
-                                      <option {{ old('divisi') == 'None' ? 'selected=""' : '' }} value="00">None</option>
+                                      <option {{$items->SEGMEN_4 == '00' ? 'selected=""' : '' }} value="00">None</option>
                                       @foreach($divisi as $div)
                                       {{ $id = "00".$div->VALUE }}
                                       @if(Gate::check("unit_".$id))                                        
