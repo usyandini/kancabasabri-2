@@ -22,7 +22,8 @@ class JenisUser extends Model
 
     public function creator()
     {
-        return $this->belongsTo('App\User', 'id', 'created_by');
+        // return $this->belongsTo('App\User', 'id', 'created_by');
+        return \App\User::where('id', $this->created_by)->first()->name;
     }
 
     public function updater()

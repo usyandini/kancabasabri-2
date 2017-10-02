@@ -341,7 +341,7 @@ class ItemController extends Controller
         return redirect()->back();
     }
 
-    public function reason() : \Illuminate\View\View
+    public function reason() 
     {
 
     	$reject_reasons = RejectReason::orderBy('id','DESC')->paginate(10);
