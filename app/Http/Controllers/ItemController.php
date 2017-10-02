@@ -217,7 +217,7 @@ class ItemController extends Controller
                     ItemAnggaranMaster::create($inputAll);
                     break;
             }
-            session()->flash('success', true);   
+            session()->flash('add', true);   
         }
         return redirect()->back()->withInput();
     }
@@ -341,7 +341,8 @@ class ItemController extends Controller
         return redirect()->back();
     }
 
-    public function reason() 
+
+    public function reason()
     {
 
     	$reject_reasons = RejectReason::orderBy('id','DESC')->paginate(10);
