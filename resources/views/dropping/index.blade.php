@@ -65,9 +65,12 @@
                                                 <div class="form-grpup">
                                                   <label>Kantor Cabang</label>
                                                   <select class="select2 form-control" name="kcabang">
-                                                    <option value="0">Semua Cabang</option>
+                                                    <option value="0" selected>Semua Cabang</option>
                                                     @foreach($kcabangs as $cabang)
+                                                      {{ $id = $cabang->VALUE."00" }}
+                                                      @if(Gate::check("unit_".$id) )
                                                       <option value="{{ $cabang->DESCRIPTION }}" {{ ($cabang->DESCRIPTION == $filters['kcabang'] ? 'selected=""' : '') }}>{{ $cabang->DESCRIPTION }}</option>
+                                                      @endif
                                                     @endforeach
                                                   </select>
                                                 </div>
@@ -164,16 +167,20 @@
                               return "<span class='tag "+tag+"'>"+content+"</span>" ;
                             } 
                           },*/
+                          @if(Gate::check('lihat_p_d'))
                           { name: "id_dropping", type: "text", align:"center", title: "Penyesuaian",  
                             itemTemplate:function(l) {
                               return "<a href='{{ url('/dropping/penyesuaian') }}/"+ l +"' class='btn btn-warning btn-sm'>Pilih</a>"
                             }
                           },
+                          @endif
+                          @if(Gate::check('lihat_tt_d'))
                           { name: "id_dropping", type: "text", align:"center", title: "Penarikan",  
                             itemTemplate:function(e) {
                               return "<a href='{{ url('/dropping/tariktunai') }}/"+ e +"' class='btn btn-success btn-sm'>Lanjut</a>"
                             }
                           }
+                          @endif
                       ]
                     })
                   });

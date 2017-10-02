@@ -4,12 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-//  ----------- BATCH STAT DESC -------------
+//  ----------- BATCH STAT / HISTORY DESC -------------
 //          0 = Inserted 
 //          1 = Updated
-//          2 = Posted / Submitted to Kasimin
+//          2 = Posted / Submitted to Kakancab
 //          3 = Rejected for revision
-//          4 = Verified by Kasmin (lvl 1) / Submitted to Akuntansi 
+//          4 = Verified by Kakancab (lvl 1) / Submitted to Akuntansi 
 //          5 = Rejected for revision
 //          6 = Verified by Akuntansi (lvl 2)
 //  -----------------------------------------
@@ -20,7 +20,8 @@ class BatchStatus extends Model
 
     protected $table = 'batches_status';
 
-    protected $dateFormat = 'Y-m-d H:i:s';
+    // protected $dateFormat = 'Y-m-d H:i:s';
+
     protected $dates =['dob'];
 
     protected $fillable = [
@@ -45,13 +46,13 @@ class BatchStatus extends Model
             case 0:
                 return "Pertama dibuat";
             case 1:
-                return "Terakhir diupdate";
+                return "Terakhir diperbarui";
             case 2:
-                return "Submit persetujuan ke Kasimin";
+                return "Submit persetujuan ke Kakancab";
             case 3:
-                return "Tidak disetujui Kasimin";
+                return "Tidak disetujui Kakancab";
             case 4:
-                return "Mendapat persetujuan dari Kasimin";
+                return "Mendapat persetujuan dari Kakancab";
             case 5:
                 return "Tidak diverifikasi Akutansi";
             case 6:

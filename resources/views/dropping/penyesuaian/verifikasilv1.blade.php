@@ -15,7 +15,7 @@
                 @section('content')
                 <div class="content-header row">
                     <div class="content-header-left col-md-6 col-xs-12 mb-2">
-                        <h3 class="content-header-title mb-0">Verifikasi Penyesuaian Dropping</h3>
+                        <h3 class="content-header-title mb-0">Verifikasi Penyesuaian Dropping Level 1</h3>
                         <div class="row breadcrumbs-top">
                             <div class="breadcrumb-wrapper col-xs-12">
                                 <ol class="breadcrumb">
@@ -37,13 +37,13 @@
                       <div class="col-xs-12">
                         <div class="col-md-6">
                           <div class="alert alert-info alert-dismissible fade in mb-2" role="alert">
-                            <b>Verifikasi hanya dilakukan oleh user <i>Bia</i></b>
+                            <b>Verifikasi dilakukan oleh verifikator <i>level 1</i></b>
                           </div>
                         </div>
                         @if(session('success'))
                         <div class="col-xs-7">
                             <div class="alert alert-success">
-                              <b>Data penyesuaian dropping {{ $penyesuaian->cabang }} sudah diverifikasi dan dikirim ke <i>Akuntansi</i>.</b>
+                              <b>Data penyesuaian dropping {{ $penyesuaian->cabang }} sudah diverifikasi dan dikirim ke verifikator <i>level 2</i>.</b>
                             </div>
                         </div>
                         @elseif(session('reject'))
@@ -228,13 +228,6 @@
                                           <input type="text" id="kegiatan" class="form-control" name="kegiatan" value="{{ $kegiatan->DESCRIPTION }}" disabled>
                                         </div>
       				                        </div>
-                                      {{--<div class="form-group row">
-                                        <label class="col-md-3 label-control" for="account">Account</label>
-                                        <div class="col-md-9">
-                                          <input type="text" id="account" class="form-control" placeholder="Mata Anggaran"
-                                          name="ccount" value="{{ $penyesuaian->ACCOUNT }}" disabled>
-                                        </div>
-                                      </div>--}}
                                     </form>
                                   </div>
                                 </div>

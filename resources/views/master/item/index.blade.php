@@ -3,25 +3,25 @@
                 @section('additional-vendorcss')
                 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/tables/jsgrid/jsgrid-theme.min.css') }}">
                 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/tables/jsgrid/jsgrid.min.css') }}">
-                <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/forms/selects/select2.min.css') }}">
-                <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/forms/toggle/switchery.min.css') }}">
-                <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/plugins/forms/switch.min.css') }}">
-                <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/extensions/toastr.css') }}">
-                <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/plugins/extensions/toastr.min.css') }}">
-                <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/plugins/forms/validation/form-validation.css') }}">
-                <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/forms/icheck/icheck.css') }}">
+                <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/tables/datatable/dataTables.bootstrap4.min.css') }}">
+                <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/tables/extensions/responsive.dataTables.min.css') }}">               
+                <style type="text/css">
+                  .hide {
+                    display: none;
+                  }
+                </style>
                 @endsection
 
                 @section('content')
                	<div class="content-header row">
                     <div class="content-header-left col-md-6 col-xs-12 mb-2">
-                        <h3 class="content-header-title mb-0">Manajemen Kombinasi Item</h3>
+                        <h3 class="content-header-title mb-0">Master Item</h3>
                         <div class="row breadcrumbs-top">
                             <div class="breadcrumb-wrapper col-xs-12">
                                 <ol class="breadcrumb">
                                     <li class="breadcrumb-item"><a href="{{ url('/') }}">Manajemen Item</a>
                                     </li>
-                                    <li class="breadcrumb-item active"><a href="{{ url('/dropping') }}">Master Item</a>
+                                    <li class="breadcrumb-item active"><a href="{{ url('/item') }}">Manajemen Kombinasi Item</a>
                                     </li>
                                 </ol>
                             </div>
@@ -43,58 +43,55 @@
 			                </div>
 			                <div class="card-body collapse in">			                
 			                  <div class="card-block">
-		                  		@if(session('success'))
-				                  	<div class="alert alert-success">
-				                  		{!! session('success') !!}
-				                	</div>
+			                  	@if(session('deleted'))
+				                  <div class="col-xs-6">
+				                    <div class="alert alert-success">
+				                      <b>{!! session('deleted') !!}</b>
+				                    </div>
+				                  </div>
 				                @endif
-			                    <div class="table-responsive">
-			                      <table class="table table-striped table-bordered datatable-select-inputs nowrap" cellspacing="0" width="100%">
+			                  	<name="data" id="data">
+			                  	<div class="table-responsive">
+			                      <table class="table table-striped table-bordered datatable-select-inputs wrap" cellspacing="0" width="120%">
 			                        <thead>
 			                          <tr>
-			                            <th id="filterable" width="200px">Item</th>
-			                            <th id="filterable" width="200px">Jenis Anggaran</th>
-			                            <th id="filterable" width="200px">Kelompok Anggaran</th>
-			                            <th id="filterable" width="200px">Pos Anggaran</th>
-			                            <th id="filterable" width="200px">Sub Pos</th>
-			                            <th id="filterable" width="200px">Mata Anggaran</th>
-			                            <th>Aksi</th>
+			                          	<th width="5%">No</th>
+			                          	<th id="filterable" width="5%"><center>Kode Item</center></th>
+			                            <th id="filterable" width="20%">Item</th>
+			                            <th id="filterable" width="10%">Jenis Anggaran</th>
+			                            <th id="filterable" width="10%">Kelompok Anggaran</th>
+			                            <th id="filterable" width="10%">Pos Anggaran</th>
+			                            <th id="filterable" width="10%">Sub Pos</th>
+			                            <th id="filterable" width="10%">Mata Anggaran</th>
+			                            <th width="40%"><center>Aksi</center></th>
 			                          </tr>
 			                        </thead>
 			                        <tbody>
-			                        		<tr>
-			                        			<td>Laptop</td>
-			                        			<td>Belanja Modal</td>
-			                        			<td>Komputer</td>
-			                        			<td>Komputer KC/KCP</td>
-			                        			<td>Hardware</td>
-			                        			<td>Laptop</td>
-			                        			{{-- {!! $user->deleted_at ? '<td class="red">Deleted</td>' : '<td class="blue">Aktif</td>' !!}
-			                        			<td>
-			                        				<a class="btn btn-sm btn-primary" href="{{ url('user').'/'.$user->id }}"><i class="fa fa-info"></i> Detil</a>
-			                        				@if(!$user->deleted_at)
-			                        					<a class="btn btn-sm btn-primary" href="{{ url('user').'/'.$user->id.'/edit' }}"><i class="fa fa-edit"></i> Edit</a>
-		                        					@endif
-		                        					@if(Auth::user()->id != $user->id && !$user->deleted_at)
-				                        				<a class="btn btn-sm btn-danger" href="#" onclick="deleteUser({{ $user->id }}, false)"><i class="fa fa-times"></i> Hapus</a>
-				                        			@endif
-				                        			@if($user->deleted_at)
-				                        				<a class="btn btn-sm btn-warning" href="#" onclick="restoreUser({{ $user->id }})"><i class="fa fa-backward"></i> Restore</a>
-				                        				<a class="btn btn-sm btn-danger" href="#" onclick="deleteUser({{ $user->id }}, true)"><i class="fa fa-times"></i> Hapus permanen</a>
-			                        				@endif
-		                        				</td> --}}
-		                        				<td></td>
-			                        		</tr>
+			                        @foreach($items as $item)
+		                        		<tr>
+		                        			<td width="5%">{{ $no++ }}</td>
+		                        			<td width="5%">{{ $item->kode_item }}</td>
+		                        			<td width="20%">{{ $item->nama_item }}</td>
+		                        			<td width="10%">{{ $jenis->where('kode', $item->jenis_anggaran)->first()['name'] }}</td>
+		                        			<td width="10%">{{ $kelompok->where('kode', $item->kelompok_anggaran)->first()['name'] }}</td>
+		                        			<td width="10%">{{ $pos->where('kode', $item->pos_anggaran)->first()['name'] }}</td>
+		                        			<td width="10%">{{ $item->sub_pos }}</td>
+		                        			<td width="10%">{{ $item->mata_anggaran }}</td>
+	                        				<td width="40%"><center>
+	                        					<a href="{{ url('item/edit').'/'.$item->id }}" class="btn btn-info btn-sm">
+	                        					<i class="fa fa-edit"></i> Edit</a>
+
+	                        					<a href="#" class="btn btn-danger btn-sm" onclick="deleteUser({{ $item->id }})">
+	                        					<i class="fa fa-trash"></i> Hapus</a>
+	                        				</center></td>
+		                        		</tr>
+		                        	@endforeach
 			                        </tbody>
 			                      </table>
-			                      {{-- <form method="post" action="#" id="restoreU">
-                					 {{ csrf_field() }}
-	                			  </form>
-	                			  <form method="post" action="#" id="deleteU">
+			                      <form method="GET" action="#" id="deleteU">
                 					 {{ csrf_field() }}
                 					 {{ method_field('DELETE') }}
-                					 <input type="hidden" name="is_force" value="0">
-                				   </form> --}}
+                				   </form>
 			                    </div>
 			                  </div>
 			                </div>
@@ -120,8 +117,22 @@
 				<script src="{{ asset('app-assets/vendors/js/tables/datatable/dataTables.responsive.min.js') }}"
 				  type="text/javascript"></script>
 				<script type="text/javascript">
-					/*$('.datatable-select-inputs').DataTable( {
+					$('.datatable-select-inputs').DataTable( {
 							scrollX: true,
+							"language": {
+								"paginate": {
+								  "previous": "Sebelumnya",
+								  "next": "Selanjutnya"
+								},
+
+    							"emptyTable":  "Tidak Ada Item Tersimpan",
+    							"info":  "Data Item _START_-_END_ dari _TOTAL_ Item",
+    							"infoEmpty":  "Data Item 0-0 dari _TOTAL_ Item ",
+    							"search": "Pencarian:",
+    							"lengthMenu": "Perlihatkan _MENU_ masukan",
+    							"infoFiltered": "(telah di filter dari _MAX_ total masukan)",
+    							"zeroRecords": "Tidak ada data ditemukan"
+							},
 						    initComplete: function () {
 						        this.api().columns('#filterable').every( function () {
 						            var column = this;
@@ -142,7 +153,14 @@
 						            } );
 						        } );
 						    }
-						} );*/
+						});
 
+					function deleteUser(id) {
+						$('form[id="deleteU"').attr('action', '{{ url('item') }}' + '/delete/master/' + id);
+						var con = confirm("Apakah anda yakin untuk menghapus item ini?");
+						if (con) {
+							$('form[id="deleteU"').submit();	
+						}
+					}
 				</script>
                 @endsection

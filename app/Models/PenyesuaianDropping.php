@@ -49,6 +49,6 @@ class PenyesuaianDropping extends Model
 
     public function integrated()
     {
-        return $this->hasOne('App\Models\StagingPenyesuaian', 'RECID', 'id');
+        return $this->hasOne('App\Models\StagingPengembalian', 'RECID', 'id');
     }
 }

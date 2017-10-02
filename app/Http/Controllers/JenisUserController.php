@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Models\JenisUser;
+use App\Models\Divisi;
+use App\Models\KantorCabang;
 use Validator;
 
 class JenisUserController extends Controller
@@ -25,22 +27,56 @@ class JenisUserController extends Controller
 
     public function create()
     {
-    	return view('user.input-jenis');
+    	// return view('user.input-jenis');
+        return view('user.input-jenis', [
+            'cabang' => KantorCabang::get(),
+            'divisi' => Divisi::get()
+            ]);
     }
 
     public function edit($id)
     {
+        // return view('user.edit-jenis', [
+        //     'user' => JenisUser::withTrashed()->where('id', $id)->first()]);
+        $user = JenisUser::withTrashed()->where('id', $id)->first();
         return view('user.edit-jenis', [
-            'user' => JenisUser::withTrashed()->where('id', $id)->first()]);
+            'user' => $user,
+            'cabang' => KantorCabang::get(),
+            'divisi' => Divisi::get()
+            ]);
+
+        // return response()->json(JenisUser::withTrashed()->where('id', $id)->first());
     }
+
+    public function restore(Request $request, $id)
+    {
+      JenisUser::where('id', $id)->restore();
+      $jenis_user = JenisUser::where('id', $id)->first()->nama;
+
+      session()->flash('success', 'Jenis User atas nama <b>'.$jenis_user.'</b> berhasil direstore');
+      return redirect()->back();
+    }
+
+    public function destroy(Request $request, $id)
+    {
+        // $user = JenisUser::withTrashed()->where('id', $id)->first();
+        $jenis_user = JenisUser::withTrashed()->where('id', $id)->first()->nama;
+        if ($request->is_force == '1') {
+            JenisUser::where('id', $id)->forceDelete();
+        } else {
+            JenisUser::where('id', $id)->delete();
+        }
+        session()->flash('success', 'Jenis user <b>'.$jenis_user.'</b> berhasil dihapus.');
+        return redirect()->back();
     
+    }
     public function store(Request $request)
     {
     	$input = $request->except('_method', '_token');
         $validator = $this->validateInputs($input);
 
     	if ($validator->passes()) {
-            if ($input['perizinan']['data-cabang'] == 'off') { unset($input['perizinan']['data-cabang']); }    
+            // if ($input['perizinan']['data_cabang'] == 'off') { unset($input['perizinan']['data_cabang']); }    
             $input['created_by'] = $input['updated_by'] = \Auth::user()->id;
 
     		JenisUser::create($input);
@@ -57,7 +93,7 @@ class JenisUserController extends Controller
         $validator = $this->validateInputs($input, $id);
 
         if ($validator->passes()) {
-            if ($input['perizinan']['data_cabang'] == 'off') { unset($input['perizinan']['data-cabang']); } 
+            // if ($input['perizinan']['data-cabang'] == 'off') { unset($input['perizinan']['data-cabang']); } 
             $input['updated_by'] = \Auth::user()->id;
 
             $jenisUser = JenisUser::withTrashed()->where('id', $id)->first();

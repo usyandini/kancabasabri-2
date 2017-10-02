@@ -17,7 +17,7 @@
                         <div class="row breadcrumbs-top">
                             <div class="breadcrumb-wrapper col-xs-12">
                                 <ol class="breadcrumb">
-                                    <li class="breadcrumb-item"><a href="index-2.html">Dashboard</a>
+                                    <li class="breadcrumb-item"><a href="{{url('/anggaran')}}">Anggaran dan Kegiatan</a>
                                     </li>
                                     <li class="breadcrumb-item active">{{$title}}
                                     </li>
@@ -71,6 +71,7 @@
                                           <div class="form-group">
                                             <label>Unit Kerja</label>
                                             <input id="unit_kerja" name="unit_kerja" class="form-control" readonly>
+                                            <input id="view_unit_kerja" name="view_unit_kerja" class="form-control" type="hidden">
                                               
                                           </div>
                                       </div>
@@ -128,8 +129,6 @@
                                             </div>
                                           </div>
                                         </div>
-
-                                           
                                       </div>
                                     </div>
                                     <input type="hidden" name="list_anggaran_values" id="list_anggaran_values">
@@ -146,21 +145,27 @@
                                       <div class="col-xs-3 ">
                                       </div>
                                       <div class="col-xs-2 ">
+                                        @if($beda)
                                         <div class="form-group" id="save_button" style="display:{{$display['save']}}">
                                           <div id="save" name="save" onclick="check('Simpan')"class="btn btn-primary"><i class="fa fa-save"></i> Simpan</div>
                                         </div>
+                                        @endif
                                       </div>
                                       <div class="col-xs-3 ">
                                       </div>
                                       <div class="col-xs-2" style="horizontal-align:center">
+                                        @if($beda && Gate::check('kirim_a'))
                                         <div class="form-group" id="send_button" style="display:{{$display['send']}}">
                                           <div id="send" name="send" onclick="check('Kirim')" class="btn btn-success"><i class="fa fa-send"></i> Kirim</div>
                                         </div>
+                                        @endif
                                       </div>
                                       <div class="col-xs-2 ">
+                                        @if($beda)
                                         <div class="form-group" id="edit_button" style="display:{{$display['edit']}}">
                                           <a href="{{ url('anggaran/edit/'.$filters['nd_surat'].'/1') }}" id="edit" name="edit" class="btn btn-primary"><i class="fa fa-edit"></i> Ubah</a>
                                         </div>
+                                        @endif
                                       </div>
                                     </div>
 
@@ -226,7 +231,7 @@
                                     </div>
                                   </div>
                                   
-                                  </form>
+                                  
                               </div>
                           </div>
                         </div>
@@ -242,7 +247,7 @@
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                           <span aria-hidden="true">&times;</span>
                           </button>
-                          @if($editable)
+                          @if(((Gate::check('tambah_item_a')||Gate::check('ubah_item_a')||Gate::check('hapus_item_a'))&& $beda)||(Gate::check('tambah_a')&&$status == "tambah"))
                           <h4 class="modal-title" id="titleModal">Unggah Berkas</h4>
                           @else
                           <h4 class="modal-title" id="titleModal">Unduh Berkas</h4>
@@ -256,14 +261,14 @@
                           </div>
                           <br />
                           <br />
-                          @if($editable)
+                          @if(((Gate::check('tambah_item_a')||Gate::check('ubah_item_a')||Gate::check('hapus_item_a'))&& $beda)||(Gate::check('tambah_a')&&$status == "tambah"))
                           <input type="file" id="files" name="files" multiple>
                           @endif
                         </div>
                       </div>
                       <div class="modal-footer">
                         <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">Kembali</button>
-                        @if($editable)
+                        @if(((Gate::check('tambah_item_a')||Gate::check('ubah_item_a')||Gate::check('hapus_item_a'))&& $beda)||(Gate::check('tambah_a')&&$status == "tambah"))
                         <button id="simpan_file" class="btn btn-outline-primary">Simpan</button>
                         @endif
                       </div>
@@ -300,7 +305,7 @@
                     </div>
                   </div>
                 </div>
-
+                </form>
                 @endsection
 
                 @section('customjs')
@@ -319,9 +324,9 @@
                 <!-- END PAGE LEVEL JS-->
                 <script type="text/javascript">
                 // Set the date we're counting down to
-                  var countDownDate = new Date("Aug 30, 2017 00:00:00").getTime();
+                  var countDownDate = new Date("{{$batas}}").getTime();
 
-                  var disableCountDown = false;
+                  var disableCountDown = true;
                   if(disableCountDown){
                     var x = setInterval(function() {
 
@@ -362,7 +367,7 @@
                             document.getElementById("send").style.display = "none";
                         }
                     }, 1000);
-                  window.setUnitKerja();
+                  // window.setUnitKerja();
 
                   }
                 </script>
@@ -372,11 +377,11 @@
                   var upload_file = [];
                   var temp_file = [];
                   var list_berkas=[];
-                  var editableStat = {{ $editable ? 1 : 0 }};
                   var insertableStat = {{ $status=='edit' ? 1 : 0 }};
                   var id_field_item = id_field_edit = jenis_field_insert = jenis_field_edit = null;
                   var kelompok_field_insert = kelompok_field_edit = pos_field_insert = pos_field_edit = null;
-                  var sub_field_insert = sub_field_edit = satuan_field_insert = satuan_field_edit = null;
+                  var sub_field_insert = sub_field_edit = mata_anggaran_insert = mata_anggaran_edit = null;
+                  var satuan_field_insert = satuan_field_edit = null;
                   var unitk_field_insert = kuantitas_field_insert = nilai_field_insert = null;
                   var unitk_field_edit = kuantitas_field_edit = nilai_field_edit= null;
                   var twi_field_insert = twii_field_insert = twiii_field_insert = twiv_field_insert = anggarant_field_insert = null
@@ -390,7 +395,7 @@
                   var countFile = 0;
                   
                   $(document).ready(function() {
-
+                    // alert("{{ $beda?1:0}}")
                     $("#basicScenario").jsGrid( {
                       width: "100%",
                
@@ -398,8 +403,17 @@
                       paging: true,
                       autoload: true,
 
-                      editing: editableStat == 1 ? true : false,
-                      inserting: editableStat == 1 ? true : false,
+                      
+                      @if((Gate::check('ubah_item_a')||(Gate::check('tambah_a')&&$status=="tambah"))&& $beda)
+                        editing: true,
+                      @else
+                        editing: false,
+                      @endif
+                      @if((Gate::check('tambah_item_a')||(Gate::check('tambah_a')&&$status=="tambah"))&& $beda)
+                        inserting: true,
+                      @else
+                        inserting: false,
+                      @endif
                       deleteConfirm: "Apalakh anda yakin akan menghapus anggaran baris ini?",
                
                       pageSize: 5,
@@ -415,11 +429,6 @@
                           })
                         },
                         insertItem: function (item) {
-                          if(inputs.length >0){
-                            item['file'] = inputs.length;
-                          }else{
-                            item['file'] = tempIdCounter;
-                          }
                           
                           item["isNew"] = true;
                           item["tempId"] = tempIdCounter++;
@@ -431,6 +440,7 @@
                           item["tw_iv"]= validDigits(item.tw_iv);
                           item["anggarana_setahun"]= validDigits(item.anggarana_setahun);
                           item["delete"]="none";
+                          item["file"]=[];
 
                           click_berkas =true;
                                                       
@@ -534,25 +544,8 @@
                             }
                           }
                         }
-
-                        // if(args.item.file.length>0){
-                        //   for(i =0;i<args.item.file.length;i++){
-                        //     if(list_berkas[index_modal][i]["delete"]=="none"){
-                        //         count_berkas++;
-                        //     }
-
-
-                              // alert("update : "+list_berkas[index_modal][i]["delete"]);
-                            
-                        //   }
-                        // }
-
-                        // inputs[index_modal]["file"]=list_berkas[index_modal];
-
-                        // alert("update : "+JSON.stringify(inputs[index_modal]["file"]));
                       },
                       onItemUpdated: function(args) {
-                        // alert("updated-"+args.item.file);
                           statusTable = "null";
                       },
                       fields: [
@@ -570,7 +563,17 @@
                           },
                           { type: "control",
                             width: 90,
-                            css: editableStat == 1? "":"hide",
+                            @if(((Gate::check('tambah_item_a')||Gate::check('ubah_item_a')||Gate::check('hapus_item_a'))&& $beda)||(Gate::check('tambah_a')&&$status == "tambah"))
+                              css: "",
+                            @else
+                              css: "hide",
+                            @endif
+                            @if(Gate::check('hapus_item_a'))
+                              deleteButton: true,
+                            @else
+                              deleteButton: false,
+                            @endif
+                            // css: editableStat == 1? "":"hide",
                             headerTemplate: function() {
                                 var control_field = jsGrid.fields.control.prototype.headerTemplate.call(this);
                                 // alert("add");
@@ -589,7 +592,7 @@
                           { name: "jenis", 
                             type: "text", 
                             title: "Jenis", 
-                            width: 90,
+                            width: 130,
                             align: "left",
                             insertTemplate: function() {
                               jenis_field_insert = jsGrid.fields.text.prototype.insertTemplate.call(this);
@@ -604,7 +607,7 @@
                           { name: "kelompok", 
                             type: "text", 
                             title: "Kelompok", 
-                            width: 90,
+                            width: 130,
                             align: "left",
                             readOnly:true,
                             insertTemplate: function() {
@@ -620,7 +623,7 @@
                           { name: "pos_anggaran", 
                             type: "text", 
                             title: "Pos Anggaran", 
-                            width: 120,
+                            width: 130,
                             align: "left",
                             readOnly:true,
                             insertTemplate: function() {
@@ -650,12 +653,28 @@
                             } 
                           },
                           { name: "mata_anggaran", 
-                            type: "select", 
-                            title: "Mata Anggaran",
+                            type: "text", 
+                            title: "Mata Anggaran", 
                             width: 130,
                             align: "left",
-                            valueField: "DESCRIPTION", 
-                            textField: "DESCRIPTION", 
+                            readOnly:true,
+                            insertTemplate: function() {
+                              mata_anggaran_insert = jsGrid.fields.text.prototype.insertTemplate.call(this);
+                              return mata_anggaran_insert; 
+                            },
+                            editTemplate: function(value) {
+                              mata_anggaran_edit= jsGrid.fields.text.prototype.editTemplate.call(this);
+                              $(mata_anggaran_edit).val(value);
+                              return mata_anggaran_edit; 
+                            } 
+                          },
+                          { name: "item", 
+                            type: "select", 
+                            title: "Item",
+                            width: 130,
+                            align: "left",
+                            valueField: "item", 
+                            textField: "item", 
                             items: getData('mataanggaran'),
                             insertTemplate: function() {
                               var result = jsGrid.fields.select.prototype.insertTemplate.call(this);
@@ -673,7 +692,7 @@
                               return result; 
                             },
                             validate: {
-                              message : "Pilih Mata Anggaran Terlebih dahulu." ,
+                              message : "Pilih Item Terlebih dahulu." ,
                               validator :function(value, item) {
                                   return value !== "00" ;
                               } 
@@ -1090,6 +1109,11 @@
                               // document.getElementById('button_'+index_modal).innerHTML = countFile+" Berkas";
                               if(count_berkas==0){
                                 title = "Unggah Berkas";
+                                for(i=0;i<inputs.length;i++){
+                                  if(inputs[i]["id"]==item.id){
+                                    id_list = inputs[i]["tempId"];
+                                  }
+                                }
                               }else{
                                 title = count_berkas+" Berkas";
                               }
@@ -1122,7 +1146,7 @@
                               return button;
                             },
                             
-                            editTemplate: function(value) {
+                            editTemplate: function(value,item) {
                               // alert("update");
                               var id_list=0;
                               var count_berkas=0;
@@ -1145,6 +1169,13 @@
                               var title="";
                               if(count_berkas==0){
                                 title = "Unggah Berkas";
+                                for(i=0;i<inputs.length;i++){
+                                  if(inputs[i]["id"]==item.id){
+                                    id_list = inputs[i]["tempId"];
+                                  }
+                                }
+
+                              // alert(item.tempId);
                               }else{
                                 title = count_berkas+" Berkas";
                               }
@@ -1154,7 +1185,16 @@
                           },
                           { type: "control",
                             width: 50,
-                            css: editableStat == 1? "":"hide"
+                            @if(((Gate::check('tambah_item_a')||Gate::check('ubah_item_a')||Gate::check('hapus_item_a'))&& $beda)||(Gate::check('tambah_a')&&$status == "tambah"))
+                             css: "",
+                            @else
+                              css: "hide",
+                            @endif
+                            @if(Gate::check('hapus_item_a'))
+                              deleteButton: true,
+                            @else
+                              deleteButton: false,
+                            @endif
                           }
                       ]
                     })
@@ -1176,15 +1216,22 @@
                   }
                   function setUnitKerja(id_type,id_unit){
                     var type = "";
+                    var unit = "";
                     if(id_type == "00 "){
                       type = "divisi";
+                      unit = id_unit;
                     }else{
                       type = "cabang";
+                      unit = id_type;
                     }
+
                     $.ajax({
-                        'async': false, 'type': "GET", 'dataType': 'JSON', 'url': "{{ url('anggaran/get/attributes') }}/"+type+"/"+id_unit,
+                        'async': false, 'type': "GET", 'dataType': 'JSON', 'url': "{{ url('anggaran/get/attributes') }}/"+type+"/"+unit,
                         'success': function (data) {
+                            @if($status=='tambah'?1:0)
                             document.getElementById("unit_kerja").value = data[0].DESCRIPTION;
+                            @endif
+                            document.getElementById("view_unit_kerja").value = data[0].DESCRIPTION;
                         }
                     });
                   }
@@ -1205,7 +1252,7 @@
                                   case "6" : persetujuan="Persetujuan RUPS";break;
                                   case "7" : persetujuan="Persetujuan FinRUPS";break;
                                   case "8" : persetujuan="Persetujuan Risalah RUPS";break;
-                                  case "9" : persetujuan="Disetujuai dan Ditandatangani";break;
+                                  // case "9" : persetujuan="Disetujuai dan Ditandatangani";break;
                                 }
                                 switch(data[0].status_anggaran){
                                   case "1" : status_anggaran="Draft";break;
@@ -1214,9 +1261,27 @@
                                 }
                                 var tgl = data[0].tanggal;
                                 var tgl_split = tgl.split("-");
+
+                                if(document.getElementById("view_unit_kerja").value == data[0].unit_kerja){
+                                 
+                                  $("#basicScenario").jsGrid( {
+                               
+                                      editing: true,
+                                      inserting: true,
+                                    });
+                                   // alert("sama");
+                                }else{
+                                  $("#basicScenario").jsGrid( {
+                               
+                                      editing: false,
+                                      inserting: false,
+                                    });
+                                }
+                                   // alert('{{$beda}}');
                                 document.getElementById("nd_surat").value = nd_surat;
                                 document.getElementById("id_anggaran").value = data[0].id;
                                 document.getElementById("stat_anggaran").value = status_anggaran;
+                                document.getElementById("unit_kerja").value = data[0].unit_kerja;
                                 document.getElementById("persetujuan").value = persetujuan;
                                 document.getElementById("tipe_anggaran").value = data[0].tipe_anggaran;
                                 document.getElementById("tanggal").value = tgl_split[2]+"/"+tgl_split[1]+"/"+tgl_split[0];
@@ -1225,52 +1290,52 @@
                                   document.getElementById("grup_m").style.display="none";
                                   document.getElementById("grup_r").style.display="none";
                                   document.getElementById("grup_uk").style.display="block";
-                                }else if(data[0].persetujuan == "9"){
+                                }else if(data[0].persetujuan == "8"){
                                   document.getElementById("grup_m").style.display="none";
                                   document.getElementById("grup_r").style.display="none";
                                   document.getElementById("grup_uk").style.display="none";
                                 }else if(data[0].persetujuan =="1"){
                                   document.getElementById("grup_m").style.display="none";
-                                  if({{$status == 'edit' ? 1 : 0}}){
-                                    document.getElementById("grup_r").style.display="none";
-                                  }else{
+                                  @if($status=='setuju'&&$beda)
                                     document.getElementById("grup_r").style.display="block";
-                                  }
+                                  @else
+                                    document.getElementById("grup_r").style.display="none";
+                                  @endif
                                   document.getElementById("grup_uk").style.display="none";
                                 }else{
-                                  if({{$status=='edit'?1:0}}){
-                                    document.getElementById("grup_m").style.display="none";
-                                  }else{
+                                  @if($status=='setuju'&&$beda)
                                     document.getElementById("grup_m").style.display="block";
-                                  }
+                                  @else
+                                    document.getElementById("grup_m").style.display="none";
+                                  @endif
                                   document.getElementById("grup_r").style.display="none";
                                   document.getElementById("grup_uk").style.display="none";
                                 }
-                                if(editableStat){
-                                  document.getElementById("accept_r").style.display="none";
-                                  document.getElementById("download_r").style.display="none";
-                                  document.getElementById("edit_r").style.display="none";
-                                  document.getElementById("save_r").style.display="block";
-                                  document.getElementById("send_r").style.display="block";
-                                  var reject = {{$reject ? 1:0}};
-                                  if(reject == 1)
-                                    document.getElementById("send_r").setAttribute('onclick','check("Tolak");');
-                                  else{
-                                    document.getElementById("send_r").setAttribute('onclick','check("Setuju");');
-                                  }
-                                  
-                                }else{
-                                  for(i=1;i<data.length;i++){
-                                    if(parseInt(data[0].persetujuan) < parseInt(data[i].persetujuan)){
-
-                                      changeButton();
-                                      document.getElementById("send_r").style.display="block";
-                                      document.getElementById("accept_r").style.display="none";
-                                      break;
+                                if(data[0].persetujuan =="1"&&{{Gate::check('setuju_iia')?1:0}}){
+                                  @if($beda)
+                                    document.getElementById("accept_r").style.display="none";
+                                    document.getElementById("download_r").style.display="none";
+                                    document.getElementById("edit_r").style.display="none";
+                                    document.getElementById("save_r").style.display="block";
+                                    document.getElementById("send_r").style.display="block";
+                                    var reject = {{$reject ? 1:0}};
+                                    if(reject == 1)
+                                      document.getElementById("send_r").setAttribute('onclick','check("Tolak");');
+                                    else{
+                                      document.getElementById("send_r").setAttribute('onclick','check("Setuju");');
                                     }
-                                  }
+                                  @else
+                                    for(i=1;i<data.length;i++){
+                                      if(parseInt(data[0].persetujuan) < parseInt(data[i].persetujuan)){
+
+                                        changeButton();
+                                        document.getElementById("send_r").style.display="block";
+                                        document.getElementById("accept_r").style.display="none";
+                                        break;
+                                      }
+                                    }
+                                  @endif
                                 }
-                              
                           }
                       });
                   }
@@ -1366,20 +1431,23 @@
                   function changeData(kegiatan,type){
                     var tmp = null;
                     $.ajax({
-                        'async': false, 'type': "GET", 'dataType': 'JSON', 'url': "{{ url('anggaran/get/attributes') }}/mataanggaran/-1",
+                        'async': false, 'type': "GET", 'dataType': 'JSON', 'url': "{{ url('anggaran/get/attributes') }}/mataanggaran/"+encodeURI(kegiatan),
                         'success': function (data) {
                             tmp = data;
+                            // alert(data[0]['jenis']);
                             if(type == "edit"){
-                              $(jenis_field_edit).val("Contoh Jenis");
-                              $(kelompok_field_edit).val("Contoh Kelompok");
-                              $(pos_field_edit).val("Contoh Pos Anggaran");
-                              $(sub_field_edit).val("Contoh Sub Pos");
+                              $(jenis_field_edit).val(data[0]['jenis']);
+                              $(kelompok_field_edit).val(data[0]['kelompok']);
+                              $(pos_field_edit).val(data[0]['pos_anggaran']);
+                              $(sub_field_edit).val(data[0]['sub_pos']);
+                              $(mata_anggaran_edit).val(data[0]['mata_anggaran']);
                               $(satuan_field_edit).val("Contoh Satuan");
                             }else if(type == "insert"){
-                              $(jenis_field_insert).val("Contoh Jenis");
-                              $(kelompok_field_insert).val("Contoh Kelompok");
-                              $(pos_field_insert).val("Contoh Pos Anggaran");
-                              $(sub_field_insert).val("Contoh Sub Pos");
+                              $(jenis_field_insert).val(data[0]['jenis']);
+                              $(kelompok_field_insert).val(data[0]['kelompok']);
+                              $(pos_field_insert).val(data[0]['pos_anggaran']);
+                              $(sub_field_insert).val(data[0]['sub_pos']);
+                              $(mata_anggaran_insert).val(data[0]['mata_anggaran']);
                               $(satuan_field_insert).val("Contoh Satuan");
                             }
                         }
@@ -1399,9 +1467,11 @@
                         if(nameClass.length != 0){
                           count=0;
                           for(j=0;j<nameClass.length;j++){
-                            file = document.getElementById("file_name_"+i+"_"+j).value;
-                            if(file=="null"){
-                              count++;
+                            if(document.getElementById("file_name_"+i+"_"+j) != null){
+                              file = document.getElementById("file_name_"+i+"_"+j).value;
+                              if(file=="null"){
+                                count++;
+                              }
                             }
                           }
                           if(count==nameClass.length){
@@ -1536,12 +1606,12 @@
                               if(list_berkas[index][i]["delete"]=="none"){
                                 link = "{{url('anggaran/get/download')}}/"+ list_berkas[index][i]['id'];
                                 hasil2[i] = '<div id="db_file_'+i+'"><div class="col-xs-10"><a href="'+link+'" ><li>'+ list_berkas[index][i]['name']+'</li></div>';
-                                if(editableStat == 1){
+                                @if(Gate::check('ubah_item_a')&&$beda)
                                   hasil2[i] += '<div class="col-xs-1" ><i class="fa fa-download "></i></div></a>';
                                   hasil2[i] += '<div class="col-xs-1" onclick="deleteFileDB('+i+')"><i style="color:red" class="fa fa-close "></i></div><br/><br/></div>';
-                                }else{
+                                @else
                                   hasil2[i] += '<div class="col-xs-2"><i class="fa fa-download "></i></div></a><br/><br/></div>';
-                                }
+                                @endif
                               }
                             }
                           }
@@ -1636,7 +1706,8 @@
                   $("#alasan_penolakan").click(function(){
                     document.getElementById("alasan_penolakan").value="";
                   });
-                  window.setUnitKerja({{$userCabang.",".$userDivisi}});
+                  
+                  window.setUnitKerja("{{$userCabang}}","{{$userDivisi}}");
                   window.setDetailAnggaran('{{$filters['nd_surat']}}');
                   window.getListData();
                 </script>

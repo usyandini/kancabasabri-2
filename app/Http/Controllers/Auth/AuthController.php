@@ -85,8 +85,8 @@ class AuthController extends Controller
         $username = $credentials['username'];
         $password = $credentials['password'];
         
-        if (\App::environment('server')) {
-            if (Adldap::auth()->attempt($username, $password, $bindAsUser = true)) {
+        if (!\App::environment('local-ilyas')) {
+            if (Adldap::auth()->attempt($username, $password, $bindAsUser = true)||Adldap::auth()->attempt($username."@asabri.co.id", $password, $bindAsUser = true)) {
                 if (strpos($username, '@') != false) {
                     $exp = explode('@', $username);
                     $username = $exp[0];
@@ -94,12 +94,16 @@ class AuthController extends Controller
 
                 $user = \App\User::where('username', $username)->first();
                 if (!$user) {
-                    $new = ['username' => $username, 'name' => $username, 'password' => bcrypt($password)];
-                    $user = User::create($new);
-                } 
-
-                \Auth::login($user);
-                return redirect()->intended('/');
+                    // $new = ['username' => $username, 'name' => $username, 'password' => bcrypt($password)];
+                    // $user = User::create($new);
+                    return redirect()->back()->withInput()->withErrors(['username' => 'Silahkan Daftarkan Terlebih dahulu di bagian Admin']);
+                }else{
+                    $save_password = [ 'password' => bcrypt($password)];
+                    User::where('username',$username)->update($save_password);
+                    // dd($user);
+                   \Auth::login($user);
+                    return redirect()->intended('/'); 
+                }
             }
         } 
 

@@ -79,17 +79,19 @@
                                 </li>
                                 <li class="list-group scrollable-container" id="notifList">
                                 </li>
-                                <li class="dropdown-menu-footer"><a href="javascript:void(0)" class="dropdown-item text-muted text-xs-center">Read all notifications</a></li>
+                                <li class="dropdown-menu-footer"><a href="{{url('notification/read_all')}}" class="dropdown-item text-muted text-xs-center">Baca semua notifikasi</a></li>
                               </ul>
                             </li>
                             <li class="dropdown dropdown-user nav-item">
                                 <a href="#" data-toggle="dropdown" class="dropdown-toggle nav-link dropdown-user-link">
                                     <span class="avatar avatar-online">
                                         <img src="{{ asset('app-assets/images/empty-profile-grey.jpg', $secure = null) }}" alt="avatar"><i></i></span>
-                                    <span class="user-name">{{ Auth::user()->name }}</span>
+                                    <span class="user-name">{!! Auth::user()->name !!}</span>
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right">
+                                    {{-- @can('edit_u') --}}
                                     <a href="{{ url('user/profile').'/'.Auth::user()->id }}" class="dropdown-item"><i class="ft-user"></i> Edit Profile</a>
+                                    {{-- @endcan --}}
                                     <div class="dropdown-divider"></div><a href="{{ url('logout', $parameters = [], $secure = null) }}" class="dropdown-item"><i class="ft-power"></i> Logout</a>
                                 </div>
                             </li>
@@ -105,46 +107,74 @@
                     <li class="navigation-header">
                     </li>
                     <li class="navigation-header"><span >Menu Utama</span><i data-toggle="tooltip" data-placement="right" data-original-title="General"class=" ft-minus"></i></li>
-                    
+                    <?php
+                        $open_dropping = false;
+                        $dropping =["cari_d","lihat_tt_d","masuk_tt_d","setuju_tt_d","lihat_p_d","masuk_p_d","setuju_p_d",
+                                "setuju_p2_d","notif_setuju_tt_d","notif_setuju_p_d","notif_setuju_p2_d",
+                                "notif_ubah_tt_d","notif_ubah_p_d"] ;
+                        for($i =0;$i< count($dropping);$i++){
+                            if(Gate::check($dropping[$i])){
+                                $open_dropping =true;
+                                break;
+                            }
+                        }
+                    ?>
+                    @if ($open_dropping)
                     <li class="nav-item {{ checkActiveMenu('dropping') }}"><a href="{{ url('/dropping', $parameters = [], $secure = null) }}"><i class="ft-box"></i><span data-i18n="" class="menu-title">Dropping</span></a></li>
-                    
-                    @if (Gate::check('info_t') || Gate::check('tambahBatch_t') || Gate::check('verifikasi_t') || Gate::check('verifikasi2_t'))
+                    @endif
+                    @if (Gate::check('info_t'))
                     <li class="nav-item has-sub {{ checkOpenedMenu('transaksi') }}"><a href=""><i class="ft-layout"></i><span data-i18n="" class="menu-title">Transaksi</span></a>
                         <ul class="menu-content">
-                            @can('info_t')
+                            @can ('info_t')
                                 <li class="is-shown {{ checkActiveMenu('transaksi') }}"><a href="{{ url('/transaksi', $parameters = [], $secure = null) }}" class="menu-item">Informasi Transaksi</a>
                             @endcan
-                            @can('tambahBatch_t')
-                                <li class="is-shown {{ checkActiveMenu('transaksi/new') }}"><a href="{{ url('/transaksi', $parameters = [], $secure = null) }}" class="menu-item">Tambah Batch Baru</a>
-                            @endcan
-                            @can('verifikasi_t')
-                                <li class="is-shown {{ checkActiveMenu('transaksi/persetujuan') }}"><a href="{{ url('/transaksi/persetujuan', $parameters = [], $secure = null) }}" class="menu-item">Persetujuan Transaksi</a>
-                            @endcan
-                            @can('verifikasi2_t')
-                                <li class="is-shown {{ checkActiveMenu('transaksi/verifikasi') }}"><a href="{{ url('/transaksi/verifikasi', $parameters = [], $secure = null) }}" class="menu-item">Verifikasi Transaksi</a>
-                            @endcan
+                                <li class="is-shown {{ checkActiveMenu('transaksi/create') }}"><a href="{{ url('/transaksi/create', $parameters = [], $secure = null) }}" class="menu-item">Tambah Batch Baru</a>
+                            
+                                <!-- <li class="is-shown {{ checkActiveMenu('transaksi/persetujuan') }}"><a href="{{ url('/transaksi/persetujuan', $parameters = [], $secure = null) }}" class="menu-item">Persetujuan Transaksi</a> -->
+                           
+                                <!-- <li class="is-shown {{ checkActiveMenu('transaksi/verifikasi') }}"><a href="{{ url('/transaksi/verifikasi', $parameters = [], $secure = null) }}" class="menu-item">Verifikasi Transaksi</a> -->
+                            
                         </ul>
                     </li>
                     @endif
-                    @if (Gate::check('info_a') || Gate::check('riwayat_a') || Gate::check('persetujuan_a') || Gate::check('persetujuan2_a'))
+                    @if (Gate::check('info_a')||Gate::check('riwayat_a'))
                     <li class="nav-item has-sub {{ checkOpenedMenu('anggaran') }}"><a href=""><i class="ft-edit"></i><span data-i18n="" class="menu-title">Anggaran Kegiatan</span></a>
                         <ul class="menu-content">
-                            @can('info_a')
-                            <li class="is-shown {{ checkActiveMenu('pelaporan') }}"><a href="{{ url('/pelaporan/lihat/laporan_anggaran', $parameters = [], $secure = null) }}" class="menu-item">Pelaporan Anggaran Kegiatan</a></li>
-                            <li class="is-shown {{ checkActiveMenu('arahan') }}"><a href="{{ url('/pelaporan/lihat/arahan_rups', $parameters = [], $secure = null) }}" class="menu-item">Arahan RUPS</a></li>
-                            <li class="is-shown {{ checkActiveMenu('usulan') }}"><a href="{{ url('/pelaporan/lihat/usulan_program', $parameters = [], $secure = null) }}" class="menu-item">Usulan Program Prioritas</a></li>
-                            @endcan
                             @can('info_a')
                                 <li class="is-shown {{ checkActiveMenu('anggaran') }}"><a href="{{ url('/anggaran', $parameters = [], $secure = null) }}" class="menu-item">Informasi Anggaran</a>
                             @endcan
                             @can('riwayat_a')
-                                <li class="is-shown {{ checkActiveMenu('persetujuan') }}"><a href="{{ url('/anggaran/riwayat', $parameters = [], $secure = null) }}" class="menu-item">Riwayat Anggaran</a>
+                                <li class="is-shown {{ checkActiveMenu('riwayat') }}"><a href="{{ url('/anggaran/riwayat', $parameters = [], $secure = null) }}" class="menu-item">Riwayat Anggaran</a>
                             @endcan
-                            @can('persetujuan_a')
-                                <li class="is-shown {{ checkActiveMenu('persetujuan') }}"><a href="{{ url('/anggaran/persetujuan/333/1', $parameters = [], $secure = null) }}" class="menu-item">Persetujuan Rembang</a>
+                            @can('batas_a')
+                                <li class="is-shown {{ checkActiveMenu('batas') }}"><a href="{{ url('/anggaran/batas', $parameters = [], $secure = null) }}" class="menu-item">Manajemen Pengajuan</a>
                             @endcan
-                            @can('persetujuan2_a')
-                                <li class="is-shown {{ checkActiveMenu('persetujuan') }}"><a href="{{ url('/anggaran/persetujuan/333/2', $parameters = [], $secure = null) }}" class="menu-item">Persetujuan Manajemen</a>
+                        </ul>
+                    </li>
+                    @endif
+                    @if (Gate::check('pelaporan_anggaran') || Gate::check('pelaporan_a_RUPS') || Gate::check('form_master'))
+                    <li class="nav-item has-sub {{ checkOpenedMenu('pelaporan') }}"><a href=""><i class="ft-edit"></i><span data-i18n="" class="menu-title">Pelaporan</span></a>
+                        <ul class="menu-content">
+                            @can('pelaporan_anggaran')
+                            <li class="is-shown {{ checkActiveMenu('laporan_anggaran') }}"><a href="{{ url('/pelaporan/lihat/laporan_anggaran', $parameters = [], $secure = null) }}" class="menu-item">Pelaporan Anggaran Kegiatan</a></li>
+                            @endcan
+                            @can('pelaporan_a_RUPS')
+                            <li class="is-shown {{ checkActiveMenu('arahan_rups') }}"><a href="{{ url('/pelaporan/lihat/arahan_rups', $parameters = [], $secure = null) }}" class="menu-item">Arahan RUPS</a></li>
+                            @endcan
+                            @can('form_master')
+                            <li class="nav-item has-sub {{ checkOpenedMenu('form_master_laporan_anggaran') }}"><a href=""><span data-i18n="" class="menu-title">Form Master</span></a>
+                                <ul class="menu-content">
+                                    @can('master_pelaporan_anggaran')
+                                    <li class="is-shown {{ checkActiveMenu('form_master_laporan_anggaran') }}"><a href="{{ url('/pelaporan/form_master/laporan_anggaran', $parameters = [], $secure = null) }}" class="menu-item">Pelaporan Anggaran Kegiatan</a></li>
+                                    @endcan
+                                    @can('master_arahan_a_RUPS')
+                                    <li class="is-shown {{ checkActiveMenu('form_master_arahan_rups') }}"><a href="{{ url('/pelaporan/form_master/arahan_rups', $parameters = [], $secure = null) }}" class="menu-item">Arahan RUPS</a></li>
+                                    @endcan
+                                    @can('master_usulan_p_p')
+                                    <li class="is-shown {{ checkActiveMenu('form_master_usulan') }}"><a href="{{ url('/pelaporan/form_master/usulan_program', $parameters = [], $secure = null) }}" class="menu-item">Usulan Program Prioritas</a></li>
+                                    @endcan
+                                </ul>
+                            </li>
                             @endcan
                         </ul>
                     </li>
@@ -166,12 +196,24 @@
                         @endcan
                     </ul>
                     @endif
+                    @if (Gate::check('manajemen_k_i') ||Gate::check('manajemen_i_a') ||  Gate::check('manajemen_a_m'))
                     <li class="nav-item has-sub {{ checkOpenedMenu('item') }}"><a href=""><i class="ft-file"></i><span data-i18n="" class="menu-title">Manajemen Item</span></a>
                     <ul class="menu-content">
+                        @can('manajemen_k_i')
                         <li class="is-shown {{ checkActiveMenu('item') }}"><a href="{{ url('/item', $parameters = [], $secure = null) }}" class="menu-item">Manajemen Kombinasi Item</a>
+                        @endcan
+                        @can('manajemen_i_a')
+                        <li class="is-shown {{ checkActiveMenu('item/anggaran') }}"><a href="{{ url('/item/anggaran', $parameters = [], $secure = null) }}" class="menu-item">Manajemen Item Anggaran</a>
+                        @endcan
+                        @can('manajemen_a_m')
                         <li class="is-shown {{ checkActiveMenu('reason') }}"><a href="{{ url('/reason', $parameters = [], $secure = null) }}" class="menu-item">Manajemen Alasan Menolak</a>
+                        @endcan
+                        @can('manajemen_a_m')
                         <li class="is-shown {{ checkActiveMenu('program_prioritas') }}"><a href="{{ url('/program_prioritas', $parameters = [], $secure = null) }}" class="menu-item">Manajemen Program Prioritas</a>
+                        @endcan
+                        @can('manajemen_a_m')
                         <li class="is-shown {{ checkActiveMenu('arahan_rups') }}"><a href="{{ url('/arahan_rups', $parameters = [], $secure = null) }}" class="menu-item">Manajemen Arahan RUPS</a>
+                        @endcan
                         
                     </ul>
                     <li class="nav-item has-sub {{ checkOpenedMenu('tindaklanjut') }}"><a href=""><i class="ft-edit"></i><span data-i18n="" class="menu-title">Tindak Lanjut Temuan</span></a>
@@ -180,6 +222,7 @@
                         <li class="is-shown {{ checkActiveMenu('temuandanrekomendasiin') }}"><a href="{{ url('/temuandanrekomendasiin', $parameters = [], $secure = null) }}" class="menu-item">Tindak Lanjut Internal</a>
                         <li class="is-shown {{ checkActiveMenu('temuandanrekomendasieks') }}"><a href="{{ url('/temuandanrekomendasieks', $parameters = [], $secure = null) }}" class="menu-item">Tindak Lanjut Eksternal</a>
                     </ul>
+                    @endif
                 </ul>
             </div>
         </div>

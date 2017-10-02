@@ -10,7 +10,7 @@ class Transaksi extends Model
 
     protected $table = 'transaksi';
 
-    protected $dateFormat = 'Y-m-d H:i:s';
+    // protected $dateFormat = 'Y-m-d H:i:s';
     protected $dates = ['dob'];
 
     protected $fillable = [
@@ -23,9 +23,11 @@ class Transaksi extends Model
     	'akun_bank',
     	'account',
     	'anggaran',
+        'actual_anggaran',
     	'total',
     	'created_by',
-        'batch_id'
+        'batch_id',
+        'is_anggaran_safe'
     ];
 
     public function stat()

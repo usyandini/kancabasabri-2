@@ -46,6 +46,7 @@
 			                            <th id="filterable">Username</th>
 			                            <th id="filterable">Email</th>
 			                            <th id="filterable">Kantor Cabang</th>
+			                            <TH id="filterable">Divisi</TH>
 			                            <th>Terakhir diperbarui</th>
 			                            <th id="filterable">Status</th>
 			                            <th>Aksi</th>
@@ -57,7 +58,8 @@
 			                        			<td>{!! $user->name !!}</td>
 			                        			<td>{!! $user->username ? $user->username : '-' !!}</td>
 			                        			<td>{!! $user->email ? $user->email : '-' !!}</td>
-			                        			<td>{!! $user['kantorCabang']['DESCRIPTION'] ? $user['kantorCabang']['DESCRIPTION'] : '-' !!}</td>
+			                        			<td>{!! $user->kantorCabang() ? $user->kantorCabang()->DESCRIPTION : '-' !!}</td>
+			                        			<td>{!! $user->divisi() ? $user->divisi()->DESCRIPTION : '-' !!}</td>
 			                        			<td>{{ date('Y-m-d, H:m', strtotime($user->updated_at)) }}</td>
 			                        			{!! $user->deleted_at ? '<td class="red">Deleted</td>' : '<td class="blue">Aktif</td>' !!}
 			                        			<td>
@@ -86,6 +88,7 @@
 			                            <th>Username</th>
 			                            <th>Email</th>
 			                            <th>Kantor Cabang</th>
+			                            <th>Divisi</th>
 			                            <th></th>
 			                            <th>Deleted</th>
 			                            <th></th>

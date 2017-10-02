@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests;
+use Illuminate\Support\Facades\Gate;
 
 use App\User;
 use App\Models\PaymentJournalDropping;
@@ -74,6 +75,15 @@ class DroppingController extends Controller
         $this->droppingModel = $droppingTable;
         $this->penyesuaianModel = $kesesuaianDropping;
         $this->berkasTTModel = $berkasTT;
+
+        $this->middleware('can:cari_d', ['only' => 'index', 'filterHandle', 'filter', 'getFiltered']);
+        $this->middleware('can:lihat_tt_d', ['only' => 'tarik_tunai']);
+        $this->middleware('can:masuk_tt_d', ['only' => 'tarik_tunai_process']);
+        $this->middleware('can:lihat_p_d', ['only' => 'penyesuaian']);
+        $this->middleware('can:masuk_p_d', ['only' => 'penyesuaian_process']);
+        $this->middleware('can:setuju_tt_d', ['only' => 'verifikasiTarikTunai']);
+        $this->middleware('can:setuju_p_d', ['only' => 'verifikasiPenyesuaian']);
+        $this->middleware('can:setuju_p2_d', ['only' => 'verifikasiPenyesuaianLv2']);
     }
 
     public function index() 
@@ -113,8 +123,17 @@ class DroppingController extends Controller
 
     public function getFiltered($transyear, $periode, $kcabang)
     {
-        $droppings = $this->jDroppingModel->where('DEBIT', '>', 0);
-        
+        $cabang = $this->kantorCabangs;
+        $unit = array();
+
+        foreach($cabang as $cab){
+            if(Gate::check('unit_'.$cab->VALUE."00")){
+                array_push($unit, $cab->DESCRIPTION);
+            }
+        }   
+
+        $droppings = $this->jDroppingModel->where('DEBIT', '>', 0)->whereIn('CABANG_DROPPING', $unit)->orderby('TRANSDATE', 'desc');
+                
         if ($transyear != '0') {
             $droppings = $droppings->whereYear('TRANSDATE', '=', $transyear);
         }
@@ -150,7 +169,6 @@ class DroppingController extends Controller
                 'sisa'          => 'IDR '. number_format($dropping->tarikTunai['sisa_dropping'])
             ];
         }
-
         return response()->json($result);
     }
 
@@ -187,8 +205,6 @@ class DroppingController extends Controller
 
         $dropping = $this->droppingModel->where([['RECID', $id_drop], ['DEBIT', '>', 0]])->firstOrFail();
 
-        //dd(StagingTarikTunai::get());
-
         $tariktunai = TarikTunai::where([['id_dropping', $id_drop], ['nominal_tarik', '>', 0], ['stat', 3]])->orderby('sisa_dropping', 'asc')->get();
 
         $status = TarikTunai::where('id_dropping', $id_drop)->orderby('updated_at', 'desc')->first();
@@ -201,16 +217,7 @@ class DroppingController extends Controller
                 $notif = RejectTarikTunai::where('id_tariktunai', $status['id'])->orderby('updated_at', 'desc')->first();
                 session()->flash('reject1', true);
             }
-            // elseif($status['stat'] == 3){
-            //     $integrated = StagingTarikTunai::where([['RECID', $status['id']],['PIL_POSTED', 1]])->orderby('PIL_TRANSDATE', 'desc')->first();
-            //     if($integrated){
-            //         session()->flash('integrated', true);
-            //     }else{
-            //         session()->flash('notintegrated', true);
-            //     }
-            // }
         }
-        //dd($berkas);
         return view(
             'dropping.tariktunai.tariktunai', 
                 ['tariktunai' => $tariktunai, 
@@ -238,7 +245,7 @@ class DroppingController extends Controller
 
         $validatorTT = Validator::make($inputsTT,
             [
-                'berkas.*' => 'required',
+                'berkas.*' => 'required|max:100000',
                 //'berkas.*' => 'required|mimes:jpg,jpeg,png,bmp|max:20000', // batasan image file max 20 mb
                 'nominal_tarik' => 'not_in:0|required|regex:/^\d+([\.]\d+)*([\,]\d+)?$/' //titik separator
                 //'nominal_tarik' => 'not_in:0|required|regex:/^\d+([\,]\d+)*([\.]\d+)?$/' //koma separator
@@ -248,7 +255,8 @@ class DroppingController extends Controller
                 'nominal_tarik.not_in'  => 'Nominal tarik tunai tidak boleh dikosongkan !',
                 'nominal_tarik.required'  => 'Nominal tarik tunai harus diisi !',
                 'nominal_tarik.regex'  => 'Nominal tarik tunai hanya bisa diisi oleh angka !',
-                'berkas.*.required'  => 'Attachment bukti tarik tunai tidak boleh dikosongkan !'
+                'berkas.*.required'  => 'Attachment bukti tarik tunai tidak boleh dikosongkan !',
+                'berkas.*.max'  => 'Attachment bukti tarik tunai tidak boleh lebih dari 100 Mb !'
             ]);
 
         //----- Fungsi tarik tunai, jika tidak ada record maka tariktunai berasal dari nominal awal - nominal tarik -----//
@@ -280,10 +288,6 @@ class DroppingController extends Controller
                 $seg5 = $inputsTT['SEGMEN_5'] = $subpos->VALUE;
                 $seg6 = $inputsTT['SEGMEN_6'] = $kegiatan->VALUE;
                 $inputsTT['ACCOUNT'] = $seg1.'-'.$seg2.'-'.$seg3.'-'.$seg4.'-'.$seg5.'-'.$seg6;
-
-
-                // $attach = $this->storeBerkas($request->berkas, 'tariktunai');
-                // $inputsTT['berkas_tariktunai'] = $attach['id'];
                 $inputsTT['stat'] = 1;
 
                 //dd($inputsTT);
@@ -292,7 +296,6 @@ class DroppingController extends Controller
 
                 $this->storeBerkas($request->berkas, 'tariktunai', $TT->id);
                 NotificationSystem::send($TT->id, 7);
-
 
                 session()->flash('success', true);
             } else {
@@ -330,7 +333,7 @@ class DroppingController extends Controller
                 session()->flash('reject2', true);
              }
         }
-
+        $integrated = StagingPengembalian::where('PIL_POSTED', 1);
         //dd($notif);
         return view('dropping.penyesuaian.penyesuaian', ['dropping' => $dropping, 'kesesuaian' => $kesesuaian, 'kcabangs' => $this->kantorCabangs, 'berkas' => $berkas, 'notif' => $notif]); 
     }
@@ -339,14 +342,15 @@ class DroppingController extends Controller
     {
         $inputsPD = $request->except('_method', '_token', 'p_akun_bank', 'p_cabang', 'is_pengembalian', 'p_nominal', 'p_rek_bank', 'p_tgl_dropping');
 
+
         $validatorPD = Validator::make($request->all(),
             [
 
                 'p_akun_bank'       => 'not_in:0|required',
                 'p_cabang'          => 'not_in:0|required',
-                'p_nominal'         => 'not_in:0|required|regex:/^\d+([\,]\d+)*([\.]\d+)?$/',
+                'p_nominal'         => 'not_in:0|required|regex:/^\d+([\.]\d+)*([\,]\d+)?$/',
                 'p_rek_bank'        => 'not_in:0|required',
-                'berkas.*'          => 'required'
+                'berkas.*'          => 'required|max:100000' // max 5mb
             ],
             [
                 'p_nominal.not_in'    => 'Nominal transaksi penyesuaian dropping tidak boleh dikosongkan !',
@@ -359,8 +363,8 @@ class DroppingController extends Controller
                 'p_rek_bank.not_in'   => 'Pilihan nomor rekening tidak boleh dikosongkan !',
                 'p_rek_bank.required' => 'Pilihan nomor rekening tidak boleh dikosongkan !',
 
-                'berkas.*.required'   => 'Attachment bukti penyesuaian tidak boleh dikosongkan !'
-
+                'berkas.*.required'   => 'Attachment bukti penyesuaian tidak boleh dikosongkan !',
+                'berkas.*.max'        => 'Attachment bukti penyesuaian tidak boleh lebih dari 100 Mb'
             ]);
 
         $submitted = PenyesuaianDropping::where([['id_dropping', $id_drop], ['stat', 4]])->orderby('created_at', 'desc')->first();
@@ -368,7 +372,7 @@ class DroppingController extends Controller
         $verLv2 = PenyesuaianDropping::where([['id_dropping', $id_drop], ['stat', 8]])->orderby('created_at', 'desc')->first();
         //dd($findstat1);
         $string_penyesuaian = $request->p_nominal;
-        $penyesuaian = floatval(str_replace('.', ',', str_replace(',', '', $string_penyesuaian)));
+        $penyesuaian = floatval(str_replace('.', '', $string_penyesuaian));
 
         if($submitted){
             session()->flash('fail', true);
@@ -407,8 +411,6 @@ class DroppingController extends Controller
                 $inputsPD['nominal_dropping']  = $request->nominal_dropping;
 
                 $inputsPD['stat'] = 4;
-                // $attach = $this->storeBerkas($request->berkas, 'penyesuaian');
-                // $inputsPD['berkas_penyesuaian'] = $attach['id'];
                 
                 //dd($inputsPD);
                 $PD = PenyesuaianDropping::create($inputsPD); 
@@ -434,17 +436,17 @@ class DroppingController extends Controller
                         
             switch($route){
                 case 'tariktunai':
-                foreach($store as $key => $value){
-                    $value['id_tariktunai'] = $id;
-                    BerkasTarikTunai::insert($value);
-                }
-                break;
+                    foreach($store as $key => $value){
+                        $value['id_tariktunai'] = $id;
+                        BerkasTarikTunai::insert($value);
+                    }
+                    break;
                 case 'penyesuaian':
-                foreach($store as $key => $value){
-                    $value['id_penyesuaian'] = $id;
-                    BerkasPenyesuaian::insert($value);
-                }
-                break;
+                    foreach($store as $key => $value){
+                        $value['id_penyesuaian'] = $id;
+                        BerkasPenyesuaian::insert($value);
+                    }
+                    break;
             }
         }
     }
@@ -610,7 +612,7 @@ class DroppingController extends Controller
             $kegiatan = Kegiatan::where('VALUE', $dataPD->SEGMEN_6)->first();
         }
 
-        $integrated = StagingTarikTunai::where([['RECID', $id], ['PIL_POSTED', 1]])->first();
+        $integrated = StagingPengembalian::where([['RECID', $id], ['PIL_POSTED', 1]])->first();
         if($integrated){
             session()->flash('integrated', true);
         }else{

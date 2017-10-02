@@ -22,7 +22,8 @@ class User extends Authenticatable
 
     protected $connection = 'sqlsrv';
 
-    protected $dateFormat = 'Y-m-d H:i:s';
+    // protected $dateFormat = 'Y-m-d H:i:s';
+
     protected $dates = ['dob'];
 
     protected $casts = ['perizinan' => 'array'];
@@ -37,7 +38,8 @@ class User extends Authenticatable
         'divisi', 
         'cabang',
         'perizinan',
-        'jenis_user'
+        'jenis_user',
+        'as_ldap'
     ];
 
     protected $hidden = [
@@ -46,12 +48,12 @@ class User extends Authenticatable
 
     public function divisi()
     {
-        return $this->hasOne('App\Models\Divisi', 'VALUE', 'divisi');
+        return $this->hasOne('App\Models\Divisi', 'VALUE', 'divisi')->first();
     }
 
     public function kantorCabang()
     {
-        return $this->hasOne('App\Models\KantorCabang', 'VALUE', 'cabang');
+        return $this->hasOne('App\Models\KantorCabang', 'VALUE', 'cabang')->first();
     }
 
     public function hasAccess($permission)

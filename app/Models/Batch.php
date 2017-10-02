@@ -4,12 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-//  ----------- BATCH STAT DESC -------------
+//  ----------- BATCH STAT / HISTORY DESC -------------
 //          0 = Inserted 
 //          1 = Updated
-//          2 = Posted / Submitted to Kasmin
+//          2 = Posted / Submitted to Kakancab
 //          3 = Rejected for revision
-//          4 = Verified by Kasmin (lvl 1) / Submitted to Akuntansi 
+//          4 = Verified by Kakancab (lvl 1) / Submitted to Akuntansi 
 //          5 = Rejected for revision
 //          6 = Verified by Akuntansi (lvl 2)
 //  -----------------------------------------
@@ -19,11 +19,11 @@ class Batch extends Model
 	protected $connection = 'sqlsrv';
 
 	protected $table = 'batches';
-
     protected $dateFormat = 'Y-m-d H:i:s';
+
     protected $dates = ['dob'];
 
-	protected $fillable = ['created_by'];    
+	protected $fillable = ['divisi','cabang','seq_number','created_by'];    
 
 	public function creator()
 	{
@@ -35,13 +35,37 @@ class Batch extends Model
 		return $this->hasMany('App\Models\Transaksi', 'batch_id', 'id');
 	}
 
+    public function batchNo()
+    {
+        return date('ymd', strtotime($this->created_at)).'-'.$this->cabang.'/'.$this->divisi.'-'.$this->seq_number;
+    }
+
+    public function divisi()
+    {
+        return $this->hasOne('App\Models\Divisi', 'VALUE', 'divisi')->first();
+    }
+
+    public function kantorCabang()
+    {
+        return $this->hasOne('App\Models\KantorCabang', 'VALUE', 'cabang')->first();
+    }
+
 	public function latestStat()
 	{
 		return $this->hasOne('App\Models\BatchStatus', 'batch_id', 'id')->orderBy('updated_at', 'desc')->first();
 	}
 
+    public function latestUpdate()
+    {
+        return $this->hasOne('App\Models\BatchStatus', 'batch_id', 'id')->where('stat', 1)->first();
+    }
+
 	public function isUpdatable()
     {
+        if (!$this->latestStat()) {
+            return null;
+        }
+        
         switch ($this->latestStat()->stat) {
             case 0:
                 return true;

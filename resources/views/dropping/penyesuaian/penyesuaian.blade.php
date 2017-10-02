@@ -34,7 +34,8 @@
                 <!-- Basic scenario start -->
                   <section id ="basic-form-layouts">
                     <div class="row match-height">
-                    <div class="row">
+                      <div class="row">
+                        @can('masuk_p_d')
                         @if(session('success'))
                         <div class="col-xs-8">
                             <div class="alert alert-success">
@@ -50,7 +51,7 @@
                         @elseif(session('verifikasi1'))
                         <div class="col-xs-8">
                             <div class="alert alert-warning">
-                              <b>Anda sudah melakukan penyesuaian dropping. Telah diverifikasi oleh <i>Bia</i> dan diteruskan ke <i>Akuntansi</i></b>
+                              <b>Anda sudah melakukan penyesuaian dropping. Telah diverifikasi dan diteruskan ke <i>Verifikator Level 2</i></b>
                             </div>
                         </div>
                         @elseif(session('verifikasi2'))
@@ -62,13 +63,13 @@
                         @elseif(session('reject1'))
                         <div class="col-xs-8">
                             <div class="alert alert-warning">
-                              <b>Penyesuaian dropping anda ditolak oleh Bia dengan alasan {{ $notif->reason['content'] }}.<br>Silahkan melakukan <i>penyesuaian dropping</i> kembali.</b>
+                              <b>Penyesuaian dropping anda ditolak dengan alasan {{ $notif->reason['content'] }}.<br>Silahkan melakukan <i>penyesuaian dropping</i> kembali.</b>
                             </div>
                         </div>
                         @elseif(session('reject2'))
                         <div class="col-xs-8">
                             <div class="alert alert-warning">
-                              <b>Penyesuaian dropping anda ditolak oleh Akuntansi dengan alasan {{ $notif->reason['content'] }}.<br>Silahkan melakukan <i>penyesuaian dropping</i> kembali.</b>
+                              <b>Penyesuaian dropping anda ditolak dengan alasan {{ $notif->reason['content'] }}.<br>Silahkan melakukan <i>penyesuaian dropping</i> kembali.</b>
                             </div>
                         </div>
                         @endif
@@ -85,8 +86,15 @@
                                 </div>
                             </div>
                         @endif
+                        @endcan
                       </div>
-                      <div class="col-md-6">
+                      @if(Gate::check('masuk_p_d'))
+                        @can('masuk_p_d')
+                        <div class="col-md-6">
+                        @endcan
+                      @else
+                      <div class="col-md-6 offset-md-3">
+                      @endif
                         <div class="card" style="height: 100px;">
                           <div class="card-header">
                             <h4 class="card-title" id="basic-layout-form">Detail Dropping <b><br>{{ $dropping->CABANG_DROPPING }}</b></h4>
@@ -145,6 +153,7 @@
                         </div>
                       </div>
 
+                      @can('masuk_p_d')
                       <div class="col-md-6">
                         <div class="card" id="kesesuaian" style="height: 1800px;">
                           <div class="card-header">
@@ -214,7 +223,10 @@
                                           <select class="form-control kcabang" id="cabang" name="p_cabang" required>
                                               <option value="0">--Pilih Kantor Cabang</option>
                                             @foreach($kcabangs as $cabang)
+                                              {{ $id = $cabang->VALUE."00" }}
+                                              @if(Gate::check("unit_".$id) )
                                               <option value="{{ $cabang->DESCRIPTION }}">{{ $cabang->DESCRIPTION }}</option>
+                                              @endif
                                             @endforeach
                                           </select>
                                         </div>
@@ -243,7 +255,6 @@
                                       </div>
                                     </div>
                                   </div>
-
                                   <div class="row">
                                     <div class="col-md-12">
                                       <div class="form-group">
@@ -251,7 +262,6 @@
                                         <span class="required"> *</span>
                                         <div class="controls">
                                           <input type="file" class="form-control-file" id="berkas" name="berkas[]" multiple="" required>
-
                                         </div>
                                       </div>
                                     </div>
@@ -263,7 +273,7 @@
                         </div>
                       </div>
                     </div>
-
+                    @endcan
                     @if(isset($kesesuaian))
                     <div class="row match-height">
                       <div class="col-md-12">
@@ -290,6 +300,7 @@
                                               <th>Nominal Penyesuaian</th>
                                               <th>Status</th>
                                               <th>Attachment</th>
+                                              <th>Status Ax</th>
                                             </tr>
                                           </thead>
                                           <tbody>
@@ -307,6 +318,13 @@
                                                   <li><a href="{{ url('dropping/penyesuaian/berkas/download').'/'.$value->id }}" target="_blank">{{ $value->name }}</a></li>
                                                   @endforeach
                                                 </td>
+                                                <td>
+                                                  @if($kesesuaian->integrated['PIL_POSTED'] == 1)
+                                                  Terintegrasi
+                                                  @else
+                                                    -
+                                                  @endif
+                                                </td>
                                             </tr>
                                           </tbody>
                                         </table>
@@ -321,7 +339,7 @@
                       </div>
                     </div>
                     @endif
-
+                    @can('masuk_p_d')
                     <div class="row match-height">
                       <div class="col-md-12">
                         <div class="card">
@@ -362,6 +380,7 @@
                         </div>
                       </div>
                     </div>
+                    @endcan
                   </section>
 
                 <!-- Basic scenario end -->

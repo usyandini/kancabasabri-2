@@ -106,7 +106,7 @@
                                                 	<label class="control-label"><b> : </b></label>
 											        <select class="select form-control" name="keterangan" required="required" >
 				                                    <option value="">Pilih keterangan</option>
-				                                    <option value="1">Reject transaksi by kasimin (lv1)</option>
+				                                    <option value="1">Reject transaksi by Kakancab (lv1)</option>
 													<option value="2">Reject transaksi by akuntansi (lv2)</option>  
 													<option value="3">Reject tarik tunai by akuntansi (lv1)</option>
 													<option value="4">Reject penyesuaian dropping by bia (lv1)</option>
@@ -148,7 +148,7 @@
 			                        			<td><center>{{ $no }}</center></td>
 			                        			<td>{{ $reason->content }}</td>
 												<td><?php 
-														  if($reason->type=='1'){ echo "Reject transaksi by kasimin (lv1)";}
+														  if($reason->type=='1'){ echo "Reject transaksi by Kakancab (lv1)";}
 														  if($reason->type=='2'){ echo "Reject transaksi by akuntansi (lv2)";}
 														  if($reason->type=='3'){ echo "Reject tarik tunai by akuntansi (lv1)";}
 														  if($reason->type=='4'){ echo "Reject penyesuaian dropping by bia (lv1)";}
@@ -169,10 +169,12 @@
                                                 					<div class="modal-body">
                                                    						<h4>Anda yakin ingin menghapus alasan <br><span class=text-danger>{{ $reason->content }}</span> ?</h4>
                                                 					</div>
+
                                                 				<div class="modal-footer">
                                                    					<a href="{{ URL('reason/delete/'. $reason->id) }}"" class="btn btn-success btn-sm"><i class="fa fa-check"></i> Ya</a>
                                                     				<button type="button" class="btn btn-danger btn-sm" data-dismiss="modal"><i class="fa fa-times"></i> Tidak</button>
                                                 				</div>
+
                                             				</div>
                                             			</div>
                                         			</div>
@@ -200,7 +202,7 @@
                                                 						<label class="control-label"><b> : </b></label>
 											                            <select class="select form-control" name="keterangan" required="required"/>
 					                                                    	<option value="">Pilih keterangan</option>
-					                                                    	<option value="1" @if ($reason->type=="1")Selected @endif>Reject transaksi by kasimin (lv1)</option>
+					                                                    	<option value="1" @if ($reason->type=="1")Selected @endif>Reject transaksi by Kakancab (lv1)</option>
 																			<option value="2" @if ($reason->type=="2")Selected @endif>Reject transaksi by akuntansi (lv2)</option>  
 																			<option value="3" @if ($reason->type=="3")Selected @endif>Reject tarik tunai by akuntansi (lv1)</option>
 																			<option value="4" @if ($reason->type=="4")Selected @endif>Reject penyesuaian dropping by bia (lv1)</option>
@@ -249,6 +251,20 @@
 					
 					$('.datatable-select-inputs').DataTable( {
 							scrollX: true,
+							"language": {
+								"paginate": {
+								  "previous": "Sebelumnya",
+								  "next": "Selanjutnya"
+								},
+
+    							"emptyTable":  "Tidak Ada Alasan Menolak Tersimpan",
+    							"info":  "Data Alasan _START_-_END_ dari _TOTAL_ Alasan",
+    							"infoEmpty":  "Data Alasan 0-0 dari _TOTAL_ Alasan ",
+    							"search": "Pencarian:",
+    							"lengthMenu": "Perlihatkan _MENU_ masukan",
+    							"infoFiltered": "(telah di filter dari _MAX_ total masukan)",
+    							"zeroRecords": "Tidak ada data ditemukan"
+    						},
 						    initComplete: function () {
 						        this.api().columns('#filterable').every( function () {
 						            var column = this;

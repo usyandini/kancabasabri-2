@@ -61,6 +61,8 @@
                                             @else
                                                 <input id="nd_surat" name="nd_surat" class="form-control" readonly>
                                             @endif
+
+                                            <input id="id_anggaran" name="id_anggaran" type="hidden"/>
                                            
                                             
                                           </div>
@@ -126,11 +128,10 @@
                                             </div>
                                           </div>
                                         </div>
-
-                                           
                                       </div>
                                     </div>
                                     <input type="hidden" name="list_anggaran_values" id="list_anggaran_values">
+                                    <input type="hidden" name="list_delete_anggaran" id="list_delete_anggaran">
                                     <div id="file_grid"></div>
                                     <input type="hidden" name="status" id="status" value="{{$status}}">
                                     <input type="hidden" name="setuju" id="setuju" >
@@ -367,7 +368,7 @@
                   var inputs = [];
                   var hasil=[];
                   var upload_file = [];
-                  var convert_file =[];
+                  var temp_file = [];
                   var list_berkas=[];
                   var editableStat = {{ $editable ? 1 : 0 }};
                   var insertableStat = {{ $status=='edit' ? 1 : 0 }};
@@ -382,35 +383,9 @@
                   var tempIdCounter = totalRows  = jumlah_file=0
                   var simpan_file =false;
                   var index_modal = -1;
-                  var isInput = false;
+                  var click_berkas = true;
                   var statusTable = "null";
                   var countFile = 0;
-                  $('#modal_berkas').on('hidden.bs.modal', function () {
-                      if(!simpan_file){
-                        hasil=[];
-                        for(i = 0; i < upload_file.length ; i++){
-                          for(j = 0; j < upload_file[i].length ; j++){
-                            if(convert_file[i]==null){
-                              if(convert_file[i][j]==null){
-                                // alert("null");
-                                upload_file[i][j]==null
-                                // document.getElementById('file_'+i+'_'+j).value="null";
-                                // document.getElementById('file_name_'+i+'_'+j).value = "null";
-                                // document.getElementById('file_type_'+i+'_'+j).value = "null";
-                                // document.getElementById('file_size_'+i+'_'+j).value = "null";
-                              }else{
-
-                                // alert(convert_file[i][j].name);
-                              }
-                            }
-                          }
-                        }
-                        
-                      }
-                      simpan_file = false;
-                      // alert("close");
-                  })
-
                   
                   $(document).ready(function() {
 
@@ -438,34 +413,58 @@
                           })
                         },
                         insertItem: function (item) {
-
-                          item['file'] = tempIdCounter;
+                          if(inputs.length >0){
+                            item['file'] = inputs.length;
+                          }else{
+                            item['file'] = tempIdCounter;
+                          }
+                          
                           item["isNew"] = true;
-                          item["tempId"] = ++tempIdCounter;
+                          item["tempId"] = tempIdCounter++;
+                          item["id"] = -1;
+                          item["nilai_persatuan"]= validDigits(item.nilai_persatuan);
+                          item["tw_i"]= validDigits(item.tw_i);
+                          item["tw_ii"]= validDigits(item.tw_ii);
+                          item["tw_iii"]= validDigits(item.tw_iii);
+                          item["tw_iv"]= validDigits(item.tw_iv);
+                          item["anggarana_setahun"]= validDigits(item.anggarana_setahun);
+                          item["delete"]="none";
+			  item['file']=[];
+
+
+                          click_berkas =true;
                                                       
                           inputs.push(item);
-                          // console.log(item);
 
                         },
                         updateItem: function(item) {
 
-                          // console.log(item);
-                          // alert("update");
-                          if (item["isNew"]) {
-                            inputs.splice(item["tempId"]-1, 1, item);  
-                          } else {
-
-                            for(i=0;i<inputs.length;i++){
-                              if(inputs[i]['id']==item['id']){
-                                inputs[i]=item;
-                                // alert("change "+item['id']);
-                              }else{
-                                // alert("not "+item['id']);
+                          item["nilai_persatuan"]= validDigits(item.nilai_persatuan);
+                          item["tw_i"]= validDigits(item.tw_i);
+                          item["tw_ii"]= validDigits(item.tw_ii);
+                          item["tw_iii"]= validDigits(item.tw_iii);
+                          item["tw_iv"]= validDigits(item.tw_iv);
+                          item["anggarana_setahun"]= validDigits(item.anggarana_setahun);
+                          item["delete"]="none";
+                          if(item["isNew"]){
+                            inputs.splice(item["tempId"], 1, item); 
+                          }else{
+                            if(inputs.length>0){
+                              for(i=0;i<inputs.length;i++){
+                                if(inputs[i]["id"]==item.id){
+                                  item["tempId"]=inputs[i]["tempId"];
+                                  if(inputs[i]["file"].length>0){
+                                    for(j=0;j<inputs[i]["file"].length;j++){
+                                      item["file"][j]["delete"]=inputs[i]["file"][j]["delete"];
+                                    }
+                                    inputs[i] = item; 
+                                  }
+                                }
                               }
                             }
-                            // inputs.push(item);
                           }
-                          // console.log(item);  
+
+                          click_berkas = true;
                         },
                       }, 
                       onRefreshed: function(args) {
@@ -475,60 +474,99 @@
 
                         });
                       },
-                      onItemInsert:function(args){
+                      onItemInserted:function(args){
                         statusTable = "null";
                       },
+                      onItemInserting:function(args){
+                        var count_berkas = 0;
+                        if(upload_file[inputs.length] != null){
+                          for(i=0;i<upload_file[inputs.length].length;i++){
+                            if(upload_file[inputs.length][i]!=null){
+                              count_berkas++;
+                              readerPrev(i,index_modal);
+                            }
+                          }
+                        }
+                      },
                       onItemEditing: function(args) {
-                        // alert($row.length)
+
+                          if(statusTable=="edit"){
+                            args.cancel =true;
+                          }
                           statusTable = "edit";
-                          // alert("editing");
                            window.setTimeout(function() {
                               $('.jsgrid-cancel-edit-button').one('click.avoidAuthorClickHandler', function() {
-                                  // alert("cancel");
-                                  // document.getElementById('button_'+index_modal).innerHTML = countFile+" Berkas";
                                   statusTable = "null";
 
+                                  list_berkas[index_modal] = inputs[index_modal]["file"];
+                                  click_berkas = true;
+                                  
+                                  // alert("Cancel : "+JSON.stringify(inputs[index_modal]["file"]));
                               });
                            }, 200);
+                      },
+                      onItemDeleted:function(args){
+                        for(i=0;i<inputs.length;i++){
+                          if(inputs[i]['id']==args.item['id']){
+                            if(args.item["id"]==-1){
+                              if(inputs[i]['tempId']==args.item['tempId']){
+                                inputs[i]["delete"]="delete";
+                              }
+                            }else{
+                              inputs[i]["delete"]="delete";
+                            }
+                            
+                            break;
+                          }else{
+                          }
+                        }
+                          statusTable = "null";
 
-                          
+                      },
+                      onItemUpdating:function(args){
+                        var count_berkas = 0;
+                        
+                        if(upload_file[index_modal] != null){
+                          for(i=0;i<upload_file[index_modal].length;i++){
+                            if(upload_file[index_modal][i]!=null){
+                              count_berkas++;
+                              readerPrev(i,index_modal);
+                            }
+                          }
+                        }
+
+                        // if(args.item.file.length>0){
+                        //   for(i =0;i<args.item.file.length;i++){
+                        //     if(list_berkas[index_modal][i]["delete"]=="none"){
+                        //         count_berkas++;
+                        //     }
+
+
+                              // alert("update : "+list_berkas[index_modal][i]["delete"]);
+                            
+                        //   }
+                        // }
+
+                        // inputs[index_modal]["file"]=list_berkas[index_modal];
+
+                        // alert("update : "+JSON.stringify(inputs[index_modal]["file"]));
                       },
                       onItemUpdated: function(args) {
-                          // alert("updated");
-                          // document.getElementB yId('button_'+index_modal).innerHTML = countFile+" Berkas";
+                        // alert("updated-"+args.item.file);
                           statusTable = "null";
                       },
                       fields: [
-                          {
-                            name: "id",
+                          { name: "id",
                             css: "hide",
                             type: "number", 
                             width: 0,
-                            readOnly: true,
-                            itemTemplate: function(value) {
-
-                              // alert("item "+value);
-                              id_field_item = jsGrid.fields.text.prototype.itemTemplate.call(this);
-                              $(id_field_item).val(value);
-                              return id_field_item; 
-                            },
-                            editTemplate: function(value) {
-                              // alert("edit "+value);
-                              id_field_edit = jsGrid.fields.text.prototype.editTemplate.call(this);
-                              $(id_field_edit).val(value);
-                              return id_field_edit; 
-                            },  
-                            insertValue: function() {
-                                return (tempIdCounter); 
-                            }
+                            readOnly: true
                           },
-                          {
-                            name: "id_first",
+                          {name: "id_first",
                             css: "hide",
                             width: 0,
                             type: "number",
                             readOnly: true
-
                           },
                           { type: "control",
                             width: 90,
@@ -539,13 +577,9 @@
                                 window.setTimeout(function() {
                                     $('.jsgrid-insert-mode-button').on('click', function() {
                                         if($('.jsgrid-mode-on-button').length==0){
-                                          // statusTable = "insert";
                                           statusTable = "null";
-                                          // alert("null");
                                         }else{
-                                          // alert("insert");
                                           statusTable = "insert";
-                                          // statusTable = "null";
                                         }
                                     });
                                  }, 10);
@@ -556,6 +590,7 @@
                             type: "text", 
                             title: "Jenis", 
                             width: 90,
+                            align: "left",
                             insertTemplate: function() {
                               jenis_field_insert = jsGrid.fields.text.prototype.insertTemplate.call(this);
                               return jenis_field_insert; 
@@ -570,6 +605,7 @@
                             type: "text", 
                             title: "Kelompok", 
                             width: 90,
+                            align: "left",
                             readOnly:true,
                             insertTemplate: function() {
                               kelompok_field_insert = jsGrid.fields.text.prototype.insertTemplate.call(this);
@@ -585,6 +621,7 @@
                             type: "text", 
                             title: "Pos Anggaran", 
                             width: 120,
+                            align: "left",
                             readOnly:true,
                             insertTemplate: function() {
                               pos_field_insert = jsGrid.fields.text.prototype.insertTemplate.call(this);
@@ -600,6 +637,7 @@
                             type: "text", 
                             title: "Sub Pos", 
                             width: 70,
+                            align: "left",
                             readOnly:true,
                             insertTemplate: function() {
                               sub_field_insert = jsGrid.fields.text.prototype.insertTemplate.call(this);
@@ -615,6 +653,7 @@
                             type: "select", 
                             title: "Mata Anggaran",
                             width: 130,
+                            align: "left",
                             valueField: "DESCRIPTION", 
                             textField: "DESCRIPTION", 
                             items: getData('mataanggaran'),
@@ -642,13 +681,19 @@
                           },
                           { name: "kuantitas", 
                             type: "number", 
+                            align: "left",
                             title: "Kuantitas", 
                             width: 90, 
                             insertTemplate: function() {
                               kuantitas_field_insert = jsGrid.fields.text.prototype.insertTemplate.call(this);
                               kuantitas_field_insert.on("change", function() {
                                   $(kuantitas_field_insert).val($(this).val());
-                                  changeAnggaranSetahun("insert");
+                                  var qty = $(this).val();
+                                  var persatuan = validDigits($(nilai_field_insert).val());
+
+                                  var nilai = persatuan*qty;
+                                  var val = addCommas(nilai);
+                                  $(anggarant_field_insert).val(val);
 
                               });
                               return kuantitas_field_insert; 
@@ -656,12 +701,14 @@
                             editTemplate: function(value) {
                               kuantitas_field_edit = jsGrid.fields.text.prototype.editTemplate.call(this);
                               $(kuantitas_field_edit).val(value);
-                              // alert("Sebelum "+$(kuantitas_field_edit).val());
                               kuantitas_field_edit.on("change", function() {
                                   $(kuantitas_field_edit).val($(this).val());
-                                  changeAnggaranSetahun("edit");
-
-                                   // alert("Berubah "+$(kuantitas_field_edit).val());
+                                  var qty = $(this).val();
+                                  var persatuan = validDigits($(nilai_field_edit).val());
+                                  
+                                  var nilai = persatuan*qty;
+                                  var val = addCommas(nilai);
+                                  $(anggarant_field_edit).val(val);
                               });
                               return kuantitas_field_edit; 
                             },
@@ -674,6 +721,7 @@
                           },
                           { name: "satuan", 
                             type: "text", 
+                            align: "left",
                             title: "Satuan", 
                             width: 80,
                             readOnly:true,
@@ -688,43 +736,68 @@
                             } 
                           },
                           { name: "nilai_persatuan", 
-                            type: "number", 
+                            type: "text", 
+                            align: "left",
                             title: "Nilai Per Satuan", 
                             width: 130, 
                             itemTemplate: function(value) {
-                              var display ="<span class='tag tag-info'>IDR " + parseInt(value).toLocaleString() + ",00</span>";
+                              var display ="<span class='tag tag-info'>IDR " + addCommas(value)+ "</span>";
                               
                               return display;
                             },
                             insertTemplate: function() {
                               nilai_field_insert= jsGrid.fields.text.prototype.insertTemplate.call(this);
                               nilai_field_insert.on("change", function() {
-                                  $(nilai_field_insert).val($(this).val());
-                                  changeAnggaranSetahun("insert");
+                                $(nilai_field_insert).val($(this).val());
+                                var persatuan = validDigits($(this).val());
+                                var qty= $(kuantitas_field_insert).val();
+
+                                var nilai = persatuan*qty;
+                                var val = addCommas(nilai);
+                                $(anggarant_field_insert).val(val);
+                              });
+
+                              nilai_field_insert.on("keyup", function() {
+                                  var nilai = validDigits($(this).val());
+                                  var val = addCommas(nilai);
+                                  $(nilai_field_insert).val(val);
                               });
                               return nilai_field_insert; 
                             },
-                            editTemplate: function(value) {
+                            editTemplate: function(value,item) {
                               nilai_field_edit= jsGrid.fields.text.prototype.editTemplate.call(this);
-                              $(nilai_field_edit).val(value);
-                               // alert("Sebelum "+$(nilai_field_edit).val());
+                              $(nilai_field_edit).val(addCommas(value));
                               nilai_field_edit.on("change", function() {
-                                  $(nilai_field_edit).val($(this).val());
-                                  changeAnggaranSetahun("edit");
-
-                                   // alert("Berubah "+$(nilai_field_edit).val());
+                                $(nilai_field_edit).val($(this).val());
+                                var persatuan = validDigits($(this).val());
+                                var qty= $(kuantitas_field_edit).val();
+                                var nilai = persatuan*qty;
+                                var val = addCommas(nilai);
+                                $(anggarant_field_edit).val(val);
                               });
+
+                              nilai_field_edit.on("keyup", function() {
+                                  var nilai = validDigits($(this).val());
+                                  var val = addCommas(nilai);
+                                  $(nilai_field_edit).val(val);
+                              });
+
+
                               return nilai_field_edit; 
                             }, 
+                            // itemInsert()
                             validate: {
                                 message : "Isi Kolom Nilai Per Satuan.",
                                 validator :function(value, item) {
-                                    return value > 0 ;
+                                    var val = validDigits(value);
+
+                                    return val > 0 ;
                                 } 
                               }
                           },
                           { name: "terpusat", 
                             type: "select", 
+                            align: "left",
                             title: "Terpusat", 
                             width: 80, items:[
                                 { Name: "None", Id: 0 },
@@ -757,8 +830,9 @@
                           },
                           { name: "unit_kerja", 
                             type: "text", 
+                            align: "left",
                             title: "Unit Kerja", 
-                            width: 100, 
+                            width: 200, 
                             readOnly:true,
                             insertTemplate: function() {
                               unitk_field_insert = jsGrid.fields.text.prototype.insertTemplate.call(this);
@@ -772,155 +846,175 @@
                             } 
                           },
                           { name: "tw_i", 
-                            type: "number", 
+                            type: "text", 
+                            align: "left",
                             title: "TW I", 
-                            width: 100,
+                            width: 200,
                             itemTemplate: function(value) {
-                              var display ="<span class='tag tag-info'>IDR " + parseInt(value).toLocaleString() + ",00</span>";
+                              var display ="<span class='tag tag-info'>IDR " + addCommas(value) + "</span>";
                               
-                              if(parseInt(value).toLocaleString() < 1){
+                              if(parseInt(value).toLocaleString() < 1||value == ""){
                                 display = "<span >---</span>";
                               }
 
+                              // alert(parseInt(value).toLocaleString());
                               return display;
                             },
                             insertTemplate: function() {
                               // var valField=this._grid.fields[12];
                               twi_field_insert = jsGrid.fields.text.prototype.insertTemplate.call(this);
-                              twi_field_insert.on("change", function(e) {
-                                  $(twi_field_insert).val($(this).val());
-                                  changeAnggaranSetahun("insert");
+                              twi_field_insert.on("keyup", function() {
+                                  var nilai = validDigits($(this).val());
+                                  var val = addCommas(nilai);
+                                  $(twi_field_insert).val(val);
                               });
                               return twi_field_insert; 
                             },
-                            editTemplate: function(value) {
+                            editTemplate: function(value,item) {
                               twi_field_edit = jsGrid.fields.text.prototype.editTemplate.call(this);
-                              $(twi_field_edit).val(value);
-                              twi_field_edit.on("change", function() {
-                                  $(twi_field_edit).val($(this).val());
-                                  changeAnggaranSetahun("edit");
+                              $(twi_field_edit).val(addCommas(value));
+                              twi_field_edit.on("keyup", function() {
+                                  var nilai = validDigits($(this).val());
+                                  var val = addCommas(nilai);
+                                  $(twi_field_edit).val(val);
                               });
                               return twi_field_edit; 
                             },
                             validate: {
                               message : "Isi minimal pada salah satu Kolom dari TWI, TWII, TWIII, TWIV.",
                               validator :function(value, item) {
-                                  var twi_val_ins = $(twi_field_insert).val() == "" ? 0:parseInt($(twi_field_insert).val());
-                                  var twii_val_ins = $(twii_field_insert).val() == "" ? 0:parseInt($(twii_field_insert).val());
-                                  var twiii_val_ins = $(twiii_field_insert).val() == "" ? 0:parseInt($(twiii_field_insert).val());
-                                  var twiv_val_ins = $(twiv_field_insert).val() == "" ? 0:parseInt($(twiv_field_insert).val());
-                                  var anggaran_val_ins = parseInt($(anggarant_field_insert).val());
-                                  var sum_ins = twi_val_ins+twii_val_ins+twiii_val_ins+twiv_val_ins;
-
-                                  var twi_val_edt = $(twi_field_edit).val() == "" ? 0:parseInt($(twi_field_edit).val());
-                                  var twii_val_edt = $(twii_field_edit).val() == "" ? 0:parseInt($(twii_field_edit).val());
-                                  var twiii_val_edt = $(twiii_field_edit).val() == "" ? 0:parseInt($(twiii_field_edit).val());
-                                  var twiv_val_edt = $(twiv_field_edit).val() == "" ? 0:parseInt($(twiv_field_edit).val());
-                                  var anggaran_val_edt = parseInt($(anggarant_field_edit).val());
-                                  var sum_edt = twi_val_edt+twii_val_edt+twiii_val_edt+twiv_val_edt;
-                                  // alert(twi_val_edt+"+"+twii_val_edt+"+"+twiii_val_edt+"+"+twiv_val_edt);
-                                  return (sum_ins <= anggaran_val_ins && sum_ins >= anggaran_val_ins) || (sum_edt <= anggaran_val_edt && sum_edt >= anggaran_val_edt) ;
+                                // alert(item.terpusat);
+                                  // alert("sebelum");
+                                  var twi_val = item.tw_i == "" ? 0:parseInt(validDigits(item.tw_i ));
+                                  var twii_val = item.tw_ii == "" ? 0:parseInt(validDigits(item.tw_ii));
+                                  var twiii_val = item.tw_iii == "" ? 0:parseInt(validDigits(item.tw_iii));
+                                  var twiv_val = item.tw_iv == "" ? 0:parseInt(validDigits(item.tw_iv));
+                                  // alert("sebelum tw");
+                                  var anggaran_val = parseInt(validDigits(item.anggarana_setahun));
+                                  // alert("anggarant");
+                                  var sum = twi_val+twii_val+twiii_val+twiv_val;
+                                  
+                                  // alert(twi_val+"+"+twii_val+"+"+twiii_val+"+"+twiv_val);
+                                  if(item.terpusat == 1){
+                                    return true;
+                                  }else{
+                                    return (sum <= anggaran_val && sum >= anggaran_val) ;
+                                  }
                               }
                             }
                           },
                           { name: "tw_ii", 
-                            type: "number", 
+                            type: "text", 
+                            align: "left",
                             title: "TW II", 
-                            width: 100 ,
+                            width: 200 ,
                             itemTemplate: function(value) {
-                              var display ="<span class='tag tag-info'>IDR " + parseInt(value).toLocaleString() + ",00</span>";
+                              var display ="<span class='tag tag-info'>IDR " + addCommas(value) + "</span>";
                               
-                              if(parseInt(value).toLocaleString() < 1){
-                                display = "<span>---</span>";
+                              if(parseInt(value).toLocaleString() < 1||value == ""){
+                                display = "<span >---</span>";
                               }
                               return display;
                             },
                             insertTemplate: function() {
                               twii_field_insert = jsGrid.fields.text.prototype.insertTemplate.call(this);
-                              twii_field_insert.on("change", function() {
-                                  $(twii_field_insert).val($(this).val());
-                                  changeAnggaranSetahun("insert");
+                              twii_field_insert.on("keyup", function() {
+                                  var nilai = validDigits($(this).val());
+                                  var val = addCommas(nilai);
+                                  $(twii_field_insert).val(val);
                               });
                               return twii_field_insert; 
                             },
                             editTemplate: function(value) {
                               twii_field_edit = jsGrid.fields.text.prototype.editTemplate.call(this);
-                              $(twii_field_edit).val(value);
-                              twii_field_edit.on("change", function() {
-                                  $(twii_field_edit).val($(this).val());
-                                  changeAnggaranSetahun("edit");
+                              $(twii_field_edit).val(addCommas(value));
+                              twii_field_edit.on("keyup", function() {
+                                  var nilai = validDigits($(this).val());
+                                  var val = addCommas(nilai);
+                                  $(twii_field_edit).val(val);
                               });
                               return twii_field_edit; 
                             }
                           },
                           { name: "tw_iii", 
-                            type: "number", 
+                            type: "text", 
+                            align: "left",
                             title: "TW III", 
-                            width: 100 ,
+                            width: 200 ,
                             itemTemplate: function(value) {
-                              var display ="<span class='tag tag-info'>IDR " + parseInt(value).toLocaleString() + ",00</span>";
+                              var display ="<span class='tag tag-info'>IDR " + addCommas(value) + "</span>";
                               
-                              if(parseInt(value).toLocaleString() < 1){
-                                display = "<span>---</span>";
+                              if(parseInt(value).toLocaleString() < 1||value == ""){
+                                display = "<span >---</span>";
                               }
                               return display;
                             },
                             insertTemplate: function() {
                               twiii_field_insert = jsGrid.fields.text.prototype.insertTemplate.call(this);
-                              twiii_field_insert.on("change", function() {
-                                  $(twiii_field_insert).val($(this).val());
-                                  changeAnggaranSetahun("insert");
+                              twiii_field_insert.on("keyup", function() {
+                                  var nilai = validDigits($(this).val());
+                                  var val = addCommas(nilai);
+                                  $(twiii_field_insert).val(val);
                               });
                               return twiii_field_insert; 
                             },
                             editTemplate: function(value) {
                               twiii_field_edit= jsGrid.fields.text.prototype.editTemplate.call(this);
-                              $(twiii_field_edit).val(value);
-                              twiii_field_edit.on("change", function() {
-                                  $(twiii_field_edit).val($(this).val());
-                                  changeAnggaranSetahun("edit");
+                              $(twiii_field_edit).val(addCommas(value));
+                              twiii_field_edit.on("keyup", function() {
+                                  var nilai = validDigits($(this).val());
+                                  var val = addCommas(nilai);
+                                  $(twiii_field_edit).val(val);
                               });
                               return twiii_field_edit; 
                             }
                           },
                           { name: "tw_iv", 
-                            type: "number", 
+                            type: "text", 
+                            align: "left",
                             title: "TW IV",
-                            width: 100,
+                            width: 200,
                             itemTemplate: function(value) {
-                              var display ="<span class='tag tag-info'>IDR " + parseInt(value).toLocaleString() + ",00</span>";
+                              var display ="<span class='tag tag-info'>IDR " + addCommas(value) + "</span>";
                               
-                              if(parseInt(value).toLocaleString() < 1){
-                                display = "<span>---</span>";
+                              if(parseInt(value).toLocaleString() < 1||value == ""){
+                                display = "<span >---</span>";
                               }
                               return display;
                             },
                             insertTemplate: function() {
                               twiv_field_insert = jsGrid.fields.text.prototype.insertTemplate.call(this);
-                              twiv_field_insert.on("change", function() {
-                                  $(twiv_field_insert).val($(this).val());
-                                  changeAnggaranSetahun("insert");
+                              twiv_field_insert.on("keyup", function() {
+                                  var nilai = validDigits($(this).val());
+                                  var val = addCommas(nilai);
+                                  $(twiv_field_insert).val(val);
                               });
                               return twiv_field_insert; 
                             },
                             editTemplate: function(value) {
                               twiv_field_edit = jsGrid.fields.text.prototype.editTemplate.call(this);
-                              $(twiv_field_edit).val(value);
-                              twiv_field_edit.on("change", function() {
-                                  $(twiv_field_edit).val($(this).val());
-                                  changeAnggaranSetahun("edit");
+                              $(twiv_field_edit).val(addCommas(value));
+                              twiv_field_edit.on("keyup", function() {
+                                  var nilai = validDigits($(this).val());
+                                  var val = addCommas(nilai);
+
+                                  $(twiv_field_edit).val(val);
                               });
                               return twiv_field_edit; 
                             }
                            },
                           { name: "anggarana_setahun", 
-                            type: "number", 
+                            type: "text", 
+                            align: "left",
                             title: "Anggaran Setahun", 
-                            width: 150 ,
+                            width: 200 ,
                             readOnly:true,
-                            itemTemplate: function(value) {
-                              var display ="<span class='tag tag-info'>IDR " + parseInt(value).toLocaleString() + ",00</span>";
+                            itemTemplate: function(value) {var val=0
+                              var display ="<span class='tag tag-info'>IDR " + addCommas(value) + "</span>";
                               
+                              if(parseInt(value).toLocaleString() < 1||value == ""){
+                                display = "<span >---</span>";
+                              }
                               return display;
                             },
                             insertTemplate: function() {
@@ -929,67 +1023,64 @@
                             },
                             editTemplate: function(value) {
                               anggarant_field_edit = jsGrid.fields.text.prototype.editTemplate.call(this);
-                              $(anggarant_field_edit).val(value);
+                              $(anggarant_field_edit).val(addCommas(value));
                               return anggarant_field_edit; 
                             },
                             validate: {
                               message :function(value, item) {
                                   var status1 = "lebih";
                                   var status2 = "kurang";
-                                  var twi_val_ins = $(twi_field_insert).val() == "" ? 0:parseInt($(twi_field_insert).val());
-                                  var twii_val_ins = $(twii_field_insert).val() == "" ? 0:parseInt($(twii_field_insert).val());
-                                  var twiii_val_ins = $(twiii_field_insert).val() == "" ? 0:parseInt($(twiii_field_insert).val());
-                                  var twiv_val_ins = $(twiv_field_insert).val() == "" ? 0:parseInt($(twiv_field_insert).val());
-                                  var anggaran_val_ins = parseInt($(anggarant_field_insert).val());
-                                  var sum_ins = twi_val_ins+twii_val_ins+twiii_val_ins+twiv_val_ins;
+                                  var twi_val = item.tw_i == "" ? 0:parseInt(validDigits(item.tw_i ));
+                                  var twii_val = item.tw_ii == "" ? 0:parseInt(validDigits(item.tw_ii));
+                                  var twiii_val = item.tw_iii == "" ? 0:parseInt(validDigits(item.tw_iii));
+                                  var twiv_val = item.tw_iv == "" ? 0:parseInt(validDigits(item.tw_iv));
+                                  // alert("sebelum tw");
+                                  var anggaran_val = parseInt(validDigits(item.anggarana_setahun));
+                                  // alert("anggarant");
+                                  var sum = twi_val+twii_val+twiii_val+twiv_val;
 
-                                  var twi_val_edt = $(twi_field_edit).val() == "" ? 0:parseInt($(twi_field_edit).val());
-                                  var twii_val_edt = $(twii_field_edit).val() == "" ? 0:parseInt($(twii_field_edit).val());
-                                  var twiii_val_edt = $(twiii_field_edit).val() == "" ? 0:parseInt($(twiii_field_edit).val());
-                                  var twiv_val_edt = $(twiv_field_edit).val() == "" ? 0:parseInt($(twiv_field_edit).val());
-                                  var anggaran_val_edt = parseInt($(anggarant_field_edit).val());
-                                  var sum_edt = twi_val_edt+twii_val_edt+twiii_val_edt+twiv_val_edt;
-                                  return  "Jumlah Anggaran yang di minta di semua periode "+ ((sum_ins > anggaran_val_ins || sum_edt > anggaran_val_edt) ? status1: status2)+" dari Anggaran Setahun" ;
+                                  return  "Jumlah Anggaran yang di minta di semua periode "+ (sum> anggaran_val ? status1: status2)+" dari Anggaran Setahun" ;
                               },
                               validator :function(value, item) {
-                                  var twi_val_ins = $(twi_field_insert).val() == "" ? 0:parseInt($(twi_field_insert).val());
-                                  var twii_val_ins = $(twii_field_insert).val() == "" ? 0:parseInt($(twii_field_insert).val());
-                                  var twiii_val_ins = $(twiii_field_insert).val() == "" ? 0:parseInt($(twiii_field_insert).val());
-                                  var twiv_val_ins = $(twiv_field_insert).val() == "" ? 0:parseInt($(twiv_field_insert).val());
-                                  var anggaran_val_ins = parseInt($(anggarant_field_insert).val());
-                                  var sum_ins = twi_val_ins+twii_val_ins+twiii_val_ins+twiv_val_ins;
-
-                                  var twi_val_edt = $(twi_field_edit).val() == "" ? 0:parseInt($(twi_field_edit).val());
-                                  var twii_val_edt = $(twii_field_edit).val() == "" ? 0:parseInt($(twii_field_edit).val());
-                                  var twiii_val_edt = $(twiii_field_edit).val() == "" ? 0:parseInt($(twiii_field_edit).val());
-                                  var twiv_val_edt = $(twiv_field_edit).val() == "" ? 0:parseInt($(twiv_field_edit).val());
-                                  var anggaran_val_edt = parseInt($(anggarant_field_edit).val());
-                                  var sum_edt = twi_val_edt+twii_val_edt+twiii_val_edt+twiv_val_edt;
-                                  
-                                  return (sum_ins <= anggaran_val_ins && sum_ins >= anggaran_val_ins) || (sum_edt <= anggaran_val_edt && sum_edt >= anggaran_val_edt) ;
+                                  var twi_val = item.tw_i == "" ? 0:parseInt(validDigits(item.tw_i ));
+                                  var twii_val = item.tw_ii == "" ? 0:parseInt(validDigits(item.tw_ii));
+                                  var twiii_val = item.tw_iii == "" ? 0:parseInt(validDigits(item.tw_iii));
+                                  var twiv_val = item.tw_iv == "" ? 0:parseInt(validDigits(item.tw_iv));
+                                  // alert("sebelum tw");
+                                  var anggaran_val = parseInt(validDigits(item.anggarana_setahun));
+                                  // alert("anggarant");
+                                  var sum = twi_val+twii_val+twiii_val+twiv_val;
+                                  // alert(sum);
+                                  if(item.terpusat == 1){
+                                    return true;
+                                  }else{
+                                    return (sum <= anggaran_val && sum >= anggaran_val) ;
+                                  }
                               }
                             }
                           },
                           { name: "file", align:"center", title: "Berkas",  width: 150 ,
 
-                            itemTemplate: function(value) {
+                            itemTemplate: function(value,item) {
                               // alert("null");
+
+                              // alert(item.tempId);
                               var id_list=0;
                               var count_berkas=0;
                               if(value.length>0){
                                 for(i =0;i<value.length;i++){
                                   id_list = value[i]['count'];
-                                  count_berkas++;
+                                  // alert(JSON.stringify(inputs[id_list]["file"][i]));
+                                  if(inputs[id_list]["file"][i]["delete"]=="none")
+                                    count_berkas++;
                                 }
                               }else{
                                 id_list=value
                               }
+
                               if(upload_file[id_list] != null){
                                 for(i=0;i<upload_file[id_list].length;i++){
-                                  alert
-                                  file_name = document.getElementById("file_name_"+id_list+"_"+i).value;
-                                  // alert(file_name);
-                                  if(file_name !="null"){
+                                  if(upload_file[id_list][i]!=null){
                                     count_berkas++;
                                   }
                                 }
@@ -999,21 +1090,29 @@
                               // document.getElementById('button_'+index_modal).innerHTML = countFile+" Berkas";
                               if(count_berkas==0){
                                 title = "Unggah Berkas";
+                                for(i=0;i<inputs.length;i++){
+                                  if(inputs[i]["id"]==item.id){
+                                    id_list = inputs[i]["tempId"];
+                                  }
+                                }
                               }else{
-                                title = "Berkas Siap";
+                                title = count_berkas+" Berkas";
                               }
                               var button = "<span class='btn btn-primary' id='button_"+id_list+"' onclick='setModalFile("+id_list+")' >"+title+"</span>";
                               return button;
                             },
 
                             insertTemplate: function() {
-                              var id_list=tempIdCounter;
+                              var id_list;
+                              if(inputs.length>0){
+                                id_list=inputs.length;
+                              }else{
+                                id_list=tempIdCounter;
+                              }
                               var count_berkas=0;
                               if(upload_file[id_list] != null){
                                 for(i=0;i<upload_file[id_list].length;i++){
-                                  file_name = document.getElementById("file_name_"+id_list+"_"+i).value;
-                                  // alert(file_name);
-                                  if(file_name !="null"){
+                                  if(upload_file[id_list][i]!=null){
                                     count_berkas++;
                                   }
                                 }
@@ -1022,29 +1121,28 @@
                               if(count_berkas == 0){
                                 title = "Unggah Berkas";
                               }else{
-                                title = "Berkas Siap";
+                                title = count_berkas+" Berkas";
                               }
                               var button = "<span class='btn btn-primary' id='button_"+id_list+"' onclick='setModalFile("+id_list+")' >"+title+"</span>";
                               return button;
                             },
                             
-                            editTemplate: function(value) {
+                            editTemplate: function(value,item) {
                               // alert("update");
                               var id_list=0;
                               var count_berkas=0;
                               if(value.length>0){
                                 for(i =0;i<value.length;i++){
                                   id_list = value[i]['count'];
-                                  count_berkas++;
+                                  if(inputs[id_list]["file"][i]["delete"]=="none")
+                                    count_berkas++;
                                 }
                               }else{
                                 id_list=value
                               }
                               if(upload_file[id_list] != null){
                                 for(i=0;i<upload_file[id_list].length;i++){
-                                  file_name = document.getElementById("file_name_"+id_list+"_"+i).value;
-                                  // alert(file_name);
-                                  if(file_name !="null"){
+                                  if(upload_file[id_list][i]!=null){
                                     count_berkas++;
                                   }
                                 }
@@ -1052,8 +1150,15 @@
                               var title="";
                               if(count_berkas==0){
                                 title = "Unggah Berkas";
+                                for(i=0;i<inputs.length;i++){
+                                  if(inputs[i]["id"]==item.id){
+                                    id_list = inputs[i]["tempId"];
+                                  }
+                                }
+
+                              // alert(item.tempId);
                               }else{
-                                title = "Berkas Siap";
+                                title = count_berkas+" Berkas";
                               }
                               var button = "<span class='btn btn-primary' id='button_"+id_list+"' onclick='setModalFile("+id_list+")' >"+title+"</span>";
                               return button;
@@ -1100,7 +1205,6 @@
                       $.ajax({
                           'async': false, 'type': "GET", 'dataType': 'JSON', 'url': "{{ url('anggaran/get/filtered/') }}/"+nd_surat+"/anggaran",
                           'success': function (data) {
-                              // alert(document.getElementById("stat_anggaran").value);
                                 var persetujuan = status_anggaran = "";
                                 switch(data[0].persetujuan){
                                   case "-1" : persetujuan="";break;
@@ -1123,6 +1227,7 @@
                                 var tgl = data[0].tanggal;
                                 var tgl_split = tgl.split("-");
                                 document.getElementById("nd_surat").value = nd_surat;
+                                document.getElementById("id_anggaran").value = data[0].id;
                                 document.getElementById("stat_anggaran").value = status_anggaran;
                                 document.getElementById("persetujuan").value = persetujuan;
                                 document.getElementById("tipe_anggaran").value = data[0].tipe_anggaran;
@@ -1132,9 +1237,6 @@
                                   document.getElementById("grup_m").style.display="none";
                                   document.getElementById("grup_r").style.display="none";
                                   document.getElementById("grup_uk").style.display="block";
-                                  // document.getElementById("edit_button").style.display = "none";
-                                  // document.getElementById("save_button").style.display = "none";
-                                  // document.getElementById("send_button").style.display = "none";
                                 }else if(data[0].persetujuan == "9"){
                                   document.getElementById("grup_m").style.display="none";
                                   document.getElementById("grup_r").style.display="none";
@@ -1156,14 +1258,12 @@
                                   document.getElementById("grup_r").style.display="none";
                                   document.getElementById("grup_uk").style.display="none";
                                 }
-
                                 if(editableStat){
                                   document.getElementById("accept_r").style.display="none";
                                   document.getElementById("download_r").style.display="none";
                                   document.getElementById("edit_r").style.display="none";
                                   document.getElementById("save_r").style.display="block";
                                   document.getElementById("send_r").style.display="block";
-                                  // alert({{$reject}});
                                   var reject = {{$reject ? 1:0}};
                                   if(reject == 1)
                                     document.getElementById("send_r").setAttribute('onclick','check("Tolak");');
@@ -1173,11 +1273,10 @@
                                   
                                 }else{
                                   for(i=1;i<data.length;i++){
-                                // alert(data[0].persetujuan+"???"+data[i].persetujuan);
                                     if(parseInt(data[0].persetujuan) < parseInt(data[i].persetujuan)){
 
                                       changeButton();
-                                      document.getElementById("send_r").style.display="none";
+                                      document.getElementById("send_r").style.display="block";
                                       document.getElementById("accept_r").style.display="none";
                                       break;
                                     }
@@ -1191,17 +1290,68 @@
                     if(type2 == "insert"){
                       if(type == 1){
                         $(unitk_field_insert).val("");
+                        $(twi_field_insert).val("");
+                        $(twi_field_insert).attr("readOnly", true);
+                        $(twii_field_insert).val("");
+                        $(twii_field_insert).attr("readOnly", true);
+                        $(twiii_field_insert).val("");
+                        $(twiii_field_insert).attr("readOnly", true);
+                        $(twiv_field_insert).val("");
+                        $(twiv_field_insert).attr("readOnly", true);
                       }else{
                         $(unitk_field_insert).val(document.getElementById("unit_kerja").value);
+                        $(twi_field_insert).val("");
+                        $(twi_field_insert).attr("readOnly", false);
+                        $(twii_field_insert).val("");
+                        $(twii_field_insert).attr("readOnly", false);
+                        $(twiii_field_insert).val("");
+                        $(twiii_field_insert).attr("readOnly", false);
+                        $(twiv_field_insert).val("");
+                        $(twiv_field_insert).attr("readOnly", false);
                       } 
                     }else if(type2 == "edit"){
                       if(type == 1){
                         $(unitk_field_edit).val("");
+                        $(twi_field_edit).val("");
+                        $(twi_field_edit).attr("readOnly", true);
+                        $(twii_field_edit).val("");
+                        $(twii_field_edit).attr("readOnly", true);
+                        $(twiii_field_edit).val("");
+                        $(twiii_field_edit).attr("readOnly", true);
+                        $(twiv_field_edit).val("");
+                        $(twiv_field_edit).attr("readOnly", true);
                       }else{
                         $(unitk_field_edit).val(document.getElementById("unit_kerja").value);
+                        $(twi_field_edit).val("");
+                        $(twi_field_edit).attr("readOnly", false);
+                        $(twii_field_edit).val("");
+                        $(twii_field_edit).attr("readOnly", false);
+                        $(twiii_field_edit).val("");
+                        $(twiii_field_edit).attr("readOnly", false);
+                        $(twiv_field_edit).val("");
+                        $(twiv_field_edit).attr("readOnly", false);
                       } 
+                    }        
+                  }
+                  function addCommas(n){
+                    var rx=  /(\d+)(\d{3})/;
+                    return String(n).replace(/^\d+/, function(w){
+                      while(rx.test(w)){
+                        w= w.replace(rx, '$1.$2');
+                      }
+                      return w;
+                    });
+                  }
+                  function validDigits(n, dec){
+                    n= n.replace(/[^\d]+/g, '');
+                    var ax1= n.indexOf('.'), ax2= -1;
+                    if(ax1!= -1){
+                      ++ax1;
+                      ax2= n.indexOf('.', ax1);
+                      if(ax2> ax1) n= n.substring(0, ax2);
+                      if(typeof dec=== 'number') n= n.substring(0, ax1+dec);
                     }
-                        
+                    return n;
                   }
                   function getListData() {
                     $.ajax({
@@ -1210,17 +1360,19 @@
                               inputs = data;
                               download="";
                               for(i=0;i<data.length;i++){
-                                list_berkas[i] = [];
-                                list_berkas[i] = data[i]["file"];
-                                for(j=0;j<list_berkas[i].length;j++){
-                                  download+=list_berkas[i][j]["id"]+":db-";
+
+                                inputs[i]["delete"]="none";
+                                inputs[i]["tempId"]= tempIdCounter++;
+                                for(j=0;j<inputs[i]["file"].length;j++){
+                                  inputs[i]["file"][j]["delete"]="none";
                                 }
-                                // alert(JSON.stringify(data[i]["file"]));
+                                list_berkas[i] = {};
+                                list_berkas[i] = data[i]["file"];
+                                
+                                // alert(JSON.stringify(inputs[i]));
                               }
-                              var downloadHidden = $('<input/>',{type:'hidden',id:('db_file'),
-                              name:('db_file'),value:download});
-                              downloadHidden.appendTo("#file_grid");
                           }
+                          
                       });
                   }
                   function changeData(kegiatan,type){
@@ -1228,8 +1380,6 @@
                     $.ajax({
                         'async': false, 'type': "GET", 'dataType': 'JSON', 'url': "{{ url('anggaran/get/attributes') }}/mataanggaran/-1",
                         'success': function (data) {
-
-                            // alert("berhasil");
                             tmp = data;
                             if(type == "edit"){
                               $(jenis_field_edit).val("Contoh Jenis");
@@ -1244,25 +1394,8 @@
                               $(sub_field_insert).val("Contoh Sub Pos");
                               $(satuan_field_insert).val("Contoh Satuan");
                             }
-                            
-                            // $(unitk_field).val("Contoh Unit Kerja");
                         }
                     });
-                  }
-                  function changeAnggaranSetahun(type){
-                    if(type == "insert"){
-                      if($(kuantitas_field_insert).val() !="" && $(nilai_field_insert).val()!= ""){
-                        qty = $(kuantitas_field_insert).val();
-                        nilai = $(nilai_field_insert).val();
-                        $(anggarant_field_insert).val(qty*nilai);
-                      }
-                    }else if(type=="edit"){
-                      if($(kuantitas_field_edit).val() !=0 && $(nilai_field_edit).val()!= 0){
-                        qty = $(kuantitas_field_edit).val();
-                        nilai = $(nilai_field_edit).val();
-                        $(anggarant_field_edit).val(qty*nilai);
-                      }
-                    }
                   }
                   function check(type){
                     if(document.getElementById("nd_surat").value==""){
@@ -1275,33 +1408,30 @@
                       status = {{ $status=='edit' ? 1 : 0 }};
                       for(i=0;i<inputs.length;i++){
                         nameClass = $('.file_'+i);
-                        if(nameClass.length == 0){
-                          // alert("kosong")
-                          // toastr.error("Silahkan tambahkan berkas minimal 1 pada anggaran baris ke-"+(i+1)+" untuk melakukan penyimpanan. Terima kasih.", "Minimal satu berkas yang diunggah.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
-                          stop = true;
-                          break;
-                        }else{
+                        if(nameClass.length != 0){
                           count=0;
-                          for(j=0;j<inputs.length;j++){
+                          for(j=0;j<nameClass.length;j++){
                             file = document.getElementById("file_name_"+i+"_"+j).value;
                             if(file=="null"){
                               count++;
                             }
                           }
                           if(count==nameClass.length){
-                            // alert("null semua");
-                            // toastr.error("Silahkan tambahkan berkas minimal 1 pada anggaran baris ke-"+(i+1)+" untuk melakukan penyimpanan. Terima kasih.", "Minimal satu berkas yang diunggah.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
                             stop=true;
                           }
                         }
                         if(!stop){
-                          var countFile = $('<input/>',{type:'hidden',id:('count_file_'+i),
-                          name:('count_file_'+i),value:nameClass.length});
-                          countFile.appendTo("#file_grid");
+                          if(nameClass.length!=0){
+                            var countFile = $('<input/>',{type:'hidden',id:('count_file_'+i),
+                            name:('count_file_'+i),value:nameClass.length});
+                            countFile.appendTo("#file_grid");
+                          }
+                          
                         }
                       }
-                      // alert(status==1);
                       if(status == 1){
+                        stop = false;
+                      }else{
                         stop = false;
                       }
 
@@ -1346,9 +1476,6 @@
                           document.getElementById("form_penolakan").style.display = form_penolakan;
                           document.getElementById("button_peryataan").innerHTML = "Ya, "+type;
 
-                          // $('input[name="list_anggaran_values"]').val(JSON.stringify(inputs));
-                          // alert(JSON.stringify(inputs));
-                          // $('form[id="insertAnggaran"]').submit();
                           if(type == "Tolak"&&document.getElementById("alasan_penolakan".value="")){
                             toastr.error("Silahkan Isi Alasan Penolakan Anda. Terima kasih.", "Alasan Penolakan Kosong.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
                           }else{
@@ -1407,80 +1534,116 @@
                     };
                   }
                   function setModalFile(index) {
-                    $('#files').replaceWith($('#files').val('').clone(true));
-                    $('#list_file').empty();
-                    $('#list_download').empty();
-                    banyak = 0;
-                    hasil2 = []
-                    if(list_berkas.length>0){
-                      for(i = 0; i<list_berkas[index].length; i++){
-                        link = "{{url('anggaran/get/download')}}/"+list_berkas[index][i]['id'];
-                        hasil2[i] = '<div class="col-xs-10"><a href="'+link+'" ><li>'+list_berkas[index][i]['name']+'</li></div>';
-                        hasil2[i] += '<div class="col-xs-1"><i class="fa fa-download "></i></div></a><br/><br/>';
-                        // hasil2[i] += '<div class="col-xs-1" onclick="deleteRowFile('+i+','+index+')"><i class="fa fa-close " style="color:red"></i></div><br/><br/>';
-                      }
-                      $("#list_download").append(hasil2);
-                    }
-                    if(convert_file[index]!=null){
-                      var nameCon = "";
-                      for(i = 0; i<convert_file[index].length; i++){
-                        if(convert_file[index][i]!=null){
-                          nameCon += '<div id="upload_'+i+'" ><div class="col-xs-10"> <li> '+convert_file[index][i]['name']+'</li></div>';
-                          nameCon += '<div class="col-xs-2" onclick="deleteRowFile('+i+','+index+')"><i class="fa fa-close "></i></div><br/><br/></div>';
-                          
-                        }
-                      }
-                     $("#list_file").append(nameCon);
-                    }
-                    index_modal = index;
-                    if(document.getElementById('files') !=null ){
-                      document.getElementById('files').onchange = function () {;
-                        // hasil=[];
-                        $('#list_file').empty();
-                        value = this.files;
-                        upload_file[index]=[];
-                        for(i = banyak; i<(banyak+value.length); i++){
-                          hasil[i] = '<div id="upload_'+i+'" ><div class="col-xs-10"> <li> '+value[(i-banyak)]['name']+'</li></div>';
-                          hasil[i] += '<div class="col-xs-2" onclick="deleteRowFile('+i+','+index+')"><i class="fa fa-close "></i></div><br/><br/></div>';
-                          upload_file[index][i]=value[(i-banyak)];
-                        }
-                        
-                        banyak+=value.length; 
-                        $("#list_file").append(hasil);
-                      };
-                    }
+                    if(click_berkas){
+                      $('#files').replaceWith($('#files').val('').clone(true));
+                      $('#list_file').empty();
+                      $('#list_download').empty();
+                      banyak = 0;
+                      hasil2 = [];
                       
-                    $('#modal_berkas').modal({
-                        backdrop: 'static'
-                    })
+                      if( list_berkas[index]!=null){
+                        if( list_berkas[index].length>0){
+                          for(i = 0; i< list_berkas[index].length; i++){
+                            if( list_berkas[index][i]!=null){
+                              if(list_berkas[index][i]["delete"]=="none"){
+                                link = "{{url('anggaran/get/download')}}/"+ list_berkas[index][i]['id'];
+                                hasil2[i] = '<div id="db_file_'+i+'"><div class="col-xs-10"><a href="'+link+'" ><li>'+ list_berkas[index][i]['name']+'</li></div>';
+                                if(editableStat == 1){
+                                  hasil2[i] += '<div class="col-xs-1" ><i class="fa fa-download "></i></div></a>';
+                                  hasil2[i] += '<div class="col-xs-1" onclick="deleteFileDB('+i+')"><i style="color:red" class="fa fa-close "></i></div><br/><br/></div>';
+                                }else{
+                                  hasil2[i] += '<div class="col-xs-2"><i class="fa fa-download "></i></div></a><br/><br/></div>';
+                                }
+                              }
+                            }
+                          }
+                          $("#list_download").append(hasil2);
+                        }
+                      }
+
+                      if(upload_file[index]!=null){
+                        var nameCon = "";
+                        for(i = 0; i<upload_file[index].length; i++){
+                          if(upload_file[index][i]!=null){
+                            nameCon += '<div id="upload_'+i+'" ><div class="col-xs-10"> <li> '+upload_file[index][i]['name']+'</li></div>';
+                            nameCon += '<div class="col-xs-2" onclick="deleteRowFile('+i+','+index+')"><i class="fa fa-close "></i></div><br/><br/></div>';
+                            temp_file[i]=upload_file[index][i];
+                          }
+                        }
+                        banyak+=upload_file[index].length;
+                       $("#list_file").append(nameCon);
+                      }
+
+                      //;
+                      index_modal = index;
+                      if(document.getElementById('files') !=null ){
+                        document.getElementById('files').onchange = function () {
+                          value = this.files;
+                          for(i = banyak; i<(banyak+value.length); i++){
+                            hasil[i] = '<div id="upload_'+i+'" ><div class="col-xs-10"> <li> '+value[(i-banyak)]['name']+'</li></div>';
+                            hasil[i] += '<div class="col-xs-2" onclick="deleteRowFile('+i+','+index+')"><i class="fa fa-close "></i></div><br/><br/></div>';
+                            temp_file[i]=value[(i-banyak)];
+                          }
+                          
+                          banyak+=value.length; 
+                          $("#list_file").append(hasil);
+                        };
+                      }
+                      $('#modal_berkas').modal({
+                          backdrop: 'static'
+                      })
+                    }else{
+                      alert("Silahkan simpan atau batalkan perubahan data untuk menambah atau menghapus berkas kembali");
+                    
+                    }
                   }
                   function deleteRowFile(i,index){
                       $("#upload_"+i).remove();
                       hasil[i] = "";
-                      upload_file[index][i] = null;
-                      // alert(upload_file[0].length);
-                      document.getElementById('file_'+index+'_'+i).value="null";
-                      document.getElementById('file_name_'+tempIdCount+'_'+index).value = "null";
-                      document.getElementById('file_type_'+tempIdCount+'_'+index).value = "null";
-                      document.getElementById('file_size_'+tempIdCount+'_'+index).value = "null";
+                      temp_file[i] = null;
+                  }
+                  function deleteFileDB(i){
+                      $("#db_file_"+i).remove();
+                      hasil2[i] = "";
                   }
                   $('#simpan_file').click(function() {
+                    click_berkas = false;
                     simpan_file =true;
-                    convert_file[index_modal]=[];
-                    convert_file[index_modal]=upload_file[index_modal];
                     countFile=0;
-                    for(i=0;i<upload_file[index_modal].length;i++){
+                    hasil=[];
+                    // temp_file=[];
+                     upload_file[index_modal]=[];
+                    for(i=0;i<temp_file.length;i++){
 
-                        readerPrev(i,index_modal);
+                        // readerPrev(i,index_modal);
+                        upload_file[index_modal][i]=temp_file[i];
+                        if(temp_file[i]!=null){
+                          countFile++;
+                        }
+                    }
+
+                    for(i=0;i<hasil2.length;i++){
+                      if(hasil2[i] == ""){
+                        list_berkas[index_modal][i]["delete"]="delete";
+                      }else{
                         countFile++;
+                      }
                     }
                     var title = "Unggah Berkas";
                     if(countFile>0){
-                      title="Berkas Siap"
+                      title=countFile+" Berkas"
                     }
+                    temp_file=[];
                     document.getElementById('button_'+index_modal).innerHTML = title;
                     $('#modal_berkas').modal('hide');
                   });
+                  $('#modal_berkas').on('hidden.bs.modal', function () {
+                      if(!simpan_file){
+                        hasil=[];
+                        temp_file=[];
+                      }
+                      simpan_file = false;
+                  })
 
                   $("#alasan_penolakan").click(function(){
                     document.getElementById("alasan_penolakan").value="";

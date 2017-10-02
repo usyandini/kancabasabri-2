@@ -17,7 +17,7 @@
                         <div class="row breadcrumbs-top">
                             <div class="breadcrumb-wrapper col-xs-12">
                                 <ol class="breadcrumb">
-                                    <li class="breadcrumb-item"><a href="index-2.html">Dashboard</a>
+                                    <li class="breadcrumb-item"><a href="{{url('/anggaran')}}">Anggaran dan Kegiatan</a>
                                     </li>
                                     <li class="breadcrumb-item active">{{$title}}
                                     </li>
@@ -113,7 +113,6 @@
                             </div>
                             <div class="card-body collapse in">
                                 <div class="card-block">
-                                  <form method="POST" action="{{url('anggaran/submit/tambah') }}" id="insertAnggaran" name="insertAnggaran" enctype="multipart/form-data">
                                   <div class="row">
 
                                     <div class="col-xs-12">
@@ -147,13 +146,12 @@
                                     <br />
                                     <div class="pull-right">
                                       <div class="form-group">
-                                        <button type="submit" class="btn btn-secondary"><i class="fa fa-download"></i> Unduh</button>
+                                        <a type="submit" class="btn btn-secondary"><i class="fa fa-download"></i> Unduh</a>
                                       </div>
                                     </div>
                                   </div>
                                 </div>
                                 
-                                </form>
                             </div>
                         </div>
                       </div>
