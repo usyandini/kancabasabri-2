@@ -132,6 +132,7 @@
                                             </div>
                                           </div>
                                         </div>
+                                        @if(!$profile_edit)
                                         <div class="card">
                                           <div class="card-header">
                                             <h4 class="card-title" id="basic-layout-card-center">Perizinan <code>User</code></h4>
@@ -203,6 +204,7 @@
                                             </div>
                                           </div>
                                         </div>
+                                        @endif
                                       </div>
                                     </div>
                                     <div class="row">
