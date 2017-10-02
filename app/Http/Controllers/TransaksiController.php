@@ -18,18 +18,19 @@ use App\Models\BudgetControl;
 
 use Validator;
 use Carbon;
+use Response;
 
 use App\Services\FileUpload;
 use App\Services\NotificationSystem;
 use App\Http\Traits\BatchTrait;
 use App\Http\Traits\BudgetControlTrait;
 
-//  ----------- BATCH STAT DESC -------------
+//  ----------- BATCH STAT / HISTORY DESC -------------
 //          0 = Inserted 
 //          1 = Updated
-//          2 = Posted / Submitted to Kasmin
+//          2 = Posted / Submitted to Kakancab
 //          3 = Rejected for revision
-//          4 = Verified by Kasmin (lvl 1) / Submitted to Akuntansi 
+//          4 = Verified by Kakancab (lvl 1) / Submitted to Akuntansi 
 //          5 = Rejected for revision
 //          6 = Verified by Akuntansi (lvl 2)
 //  -----------------------------------------
@@ -46,7 +47,7 @@ class TransaksiController extends Controller
     protected $transaksiModel;
 
     protected $current_batch;
-    protected $batches_dates;
+    protected $batch_nos;
 
     public function __construct(AkunBank $bank, Item $item, SubPos $subPos, Kegiatan $kegiatan, Transaksi $transaksi)
     {
@@ -56,7 +57,7 @@ class TransaksiController extends Controller
         $this->kegiatanModel = $kegiatan;
         $this->transaksiModel = $transaksi;
         $this->current_batch = $this->defineCurrentBatch();
-        $this->batches_dates = Batch::get();
+        $this->batch_nos = $this->getBatchNos();
 
         $this->middleware('can:info_t', ['only' => 'index']);
         // $this->middleware('can:tambahBatch_t', ['only' => 'store']);
@@ -65,22 +66,25 @@ class TransaksiController extends Controller
         $this->middleware('can:cari_t', ['only' => 'filter_handle', 'filter_result']);
     }
 
-    public function index()
+    public function index($batch_id = null)
     {
         $jsGrid_url = 'transaksi';
         $berkas = $history = [];
+        $no_batch = null;
         $empty_batch = $editable = true;
         
+        $this->current_batch = ($batch_id == null) ? $this->current_batch : Batch::where('id', $batch_id)->first();
+        // dd($this->isAllAnggaranSafe($this->current_batch['id']));
         if ($this->current_batch) {
             $editable = $this->current_batch->isUpdatable();
             $berkas = BerkasTransaksi::where('batch_id', $this->current_batch['id'])->get();
-            $history = BatchStatus::where('batch_id', $this->current_batch['id'])->orderBy('updated_at', 'desc')->get();
-            $jsGrid_url = 'transaksi/get/batch/'.$this->current_batch['id'];
+            $history = $this->getBatchHistory($this->current_batch['id']);
             $empty_batch = false;
+            $jsGrid_url = 'transaksi/get/batch/'.$this->current_batch['id'];
         }
 
         return view('transaksi.input', [
-            'batches_dates' => $this->batches_dates,
+            'batch_nos'     => $this->batch_nos,
             'filters'       => null,
             'active_batch'  => $this->current_batch,
             'editable'      => $editable,
@@ -90,21 +94,27 @@ class TransaksiController extends Controller
             'jsGrid_url'    => $jsGrid_url]);
     }
 
-    public function filter_handle(Request $request) 
+    public function create()
     {
-        $request->batch_no = $request->batch_no ? $request->batch_no : '0';
-        if ($request->batch_no && $request->date != '0') {
-            session()->flash('failed_filter', 'Filter dengan <b>dua field</b> tidak diperbolehkan.');
-            return redirect('transaksi');
-        } elseif (!$request->batch_no && $request->date == '0') {
-            session()->flash('failed_filter', '<b>Silahkan input</b> salah satu field untuk melakukan filter.');
-            return redirect('transaksi');
-        } 
-        session()->flash('success_filtering', true);
-        return redirect('transaksi/filter/result/'.$request->date.'/'.$request->batch_no);
+        return view('transaksi.new', [
+            'cabang'    => \Auth::user()->kantorCabang()->DESCRIPTION,
+            'divisi'    => \Auth::user()->cabang == '00' ? \Auth::user()->divisi()->DESCRIPTION : 'Non-Divisi',
+            'no_batch'  => date('ymd').'-'.\Auth::user()->cabang.'/'.\Auth::user()->divisi.'-'.$this->defineCurentSequenceNo()]);
     }
 
-    public function filter_result($batch_id, $batch_no)
+    public function createProcess(Request $request)
+    {
+        $newBatch = $this->defineNewBatch();
+        session()->flash('success_newBatch', true);
+        return redirect('transaksi/'.$newBatch->id);
+    }
+
+    public function filter_handle(Request $request) 
+    {
+        return redirect('transaksi/filter/result/'.$request->batch);
+    }
+
+    public function filter_result($batch_id)
     {
         $empty_batch = null;
         $berkas = $history = [];
@@ -114,15 +124,15 @@ class TransaksiController extends Controller
         if ($active_batch) {
             $editable = $active_batch->isUpdatable();
             $berkas = BerkasTransaksi::where('batch_id', $active_batch['id'])->get();
-            $history = BatchStatus::where('batch_id', $active_batch['id'])->get();
+            $history = $this->getBatchHistory($active_batch['id']);
             $jsGrid_url = 'transaksi/get/batch/'.$active_batch['id'];
         } else {
             $empty_batch = $editable = true;
         }
 
         return view('transaksi.input', [
-            'batches_dates' => $this->batches_dates,
-            'filters'       => [$batch_id, $batch_no],
+            'batch_nos'     => $this->batch_nos,
+            'filters'       => [$batch_id],
             'active_batch'  => $active_batch,
             'editable'      => $editable,
             'empty_batch'   => $empty_batch,
@@ -212,15 +222,19 @@ class TransaksiController extends Controller
     public function store(Request $request)
     {
         $batch_insert = $batch_update = $batch_delete = [];
-        if (!$this->current_batch) {
+        $batch_id = $calibrate = null;
+        if (!isset($request->batch_id)) {
             $this->current_batch = $this->defineNewBatch();
-            $this->updateBatchStat($this->current_batch, 0);
+            $batch_id = $this->current_batch['id'];
         } else {
-            $this->updateBatchStat($this->current_batch, 1);
+            $batch_id = $request->batch_id;
+            $this->updateBatchStat($batch_id, 1);
         }
 
         foreach (json_decode($request->batch_values) as $value) {
-            $calibrate = $this->calibrateAnggaran($value, true);
+            if (!isset($value->toBeDeleted)) {
+                $calibrate = $this->calibrateAnggaran($value, true);
+            }
             $store_values = [
                     'id'            => $value->id,
                     'tgl'           => date("Y-m-d",strtotime($value->tgl)),
@@ -231,11 +245,11 @@ class TransaksiController extends Controller
                     'mata_anggaran' => $value->mata_anggaran,
                     'akun_bank'     => $value->bank,
                     'account'       => $value->account,
-                    'anggaran'      => $calibrate['anggaran'] ? $calibrate['anggaran'] : (int)$value->anggaran,
-                    'actual_anggaran' => $calibrate['actual_anggaran'] ? $calibrate['actual_anggaran'] : (int)$value->anggaran,
+                    'anggaran'      => isset($value->toBeDeleted) ? 0 : (int)$calibrate['anggaran'],
+                    'actual_anggaran' => isset($value->toBeDeleted) ? 0 : (int)$calibrate['actual_anggaran'],
                     'total'         => (int)$value->total,
                     'created_by'    => \Auth::user()->id,
-                    'batch_id'      => (int)$this->current_batch['id'],
+                    'batch_id'      => (int)$batch_id,
                     'is_anggaran_safe' => $calibrate['is_anggaran_safe'],
                     'created_at'    => \Carbon\Carbon::now(),
                     'updated_at'    => \Carbon\Carbon::now()];
@@ -249,12 +263,17 @@ class TransaksiController extends Controller
                 array_push($batch_update, $store_values);
             }
         }
+        
+        $accounts = \DB::select("SELECT 
+                DATEPART(YEAR, tgl) as year, DATEPART(MONTH, tgl) as month, account FROM dbo.transaksi 
+                    WHERE batch_id = ". $batch_id.
+                " GROUP BY DATEPART(YEAR, tgl), DATEPART(MONTH, tgl), account");
 
         $this->doInsert($batch_insert);
         $this->doUpdate($batch_update);
         $this->doDelete($batch_delete);
-        $this->storeBerkas($request->berkas, $this->current_batch['id']);
-        
+        $this->storeBerkas($request->berkas, $batch_id);
+
         $batch_counter = array(
             count($batch_insert), // inserted items count
             count($batch_update), // updated items count
@@ -262,49 +281,57 @@ class TransaksiController extends Controller
             $request->berkas[0] ? count($request->berkas) : 0 // berkas uploaded
         );
 
-        $transaksis = Transaksi::where('batch_id', $this->current_batch['id'])->get();
-        $this->doRefreshAnggaran($transaksis);
+        $this->doRefreshAnggaran($batch_id);
 
         if (count($batch_delete) > 0 || count($batch_update) > 0) {
-            $accounts = \DB::select("SELECT 
-                DATEPART(YEAR, tgl) as year, DATEPART(MONTH, tgl) as month, account FROM dbo.transaksi 
-                    WHERE batch_id = ". $this->current_batch['id'].
-                " GROUP BY DATEPART(YEAR, tgl), DATEPART(MONTH, tgl), account");
-
-            $this->resetCalibrateBecauseDeleteOrUpdate($accounts, $transaksis);
+            $this->resetCalibrateBecauseDeleteOrUpdate($accounts);
         }
 
         session()->flash('success', $batch_counter);
-        return redirect('transaksi');
+        return redirect('transaksi/'.$batch_id);
+    }
+
+    public function isAllAnggaranSafe($batch_id)
+    {
+        return Transaksi::where([['batch_id', $batch_id], ['is_anggaran_safe', 0]])->first() ? false : true;
     }
 
     public function refreshAnggaran($batch_id)
     {
-        $transaksis = Transaksi::where('batch_id', $batch_id)->get();
-        $this->doRefreshAnggaran($transaksis);
-
-        return redirect('transaksi');
+        $this->doRefreshAnggaran($batch_id);
+        return redirect()->back();
     }
 
-    public function doRefreshAnggaran($transaksis)
+    public function doRefreshAnggaran($batch_id)
     {
-        foreach ($transaksis as $transaksi) {
-            $this->calibrateSavePointAndActual($transaksi);
-            $calibrate = $this->calibrateAnggaran($transaksi, false);
-            if (count($calibrate) > 0) {
-                Transaksi::where('id', $transaksi->id)->update($calibrate);
+        $accounts = \DB::select("SELECT 
+                DATEPART(YEAR, tgl) as year, DATEPART(MONTH, tgl) as month, account FROM dbo.transaksi 
+                    WHERE batch_id = ". $batch_id.
+                " GROUP BY DATEPART(YEAR, tgl), DATEPART(MONTH, tgl), account");
+
+        foreach ($accounts as $account) {
+            if($this->calibrateSavePointAndActual($account)) {
+                $transaksis = Transaksi::where('account', $account->account)->get();
+                
+                foreach ($transaksis as $transaksi) {
+                    $calibrate = $this->calibrateAnggaran($transaksi, false);
+                    if (count($calibrate) > 0) {
+                        Transaksi::where('id', $transaksi->id)->update($calibrate);
+                    }
+                }
             }
         }
     }
 
-    public function submit(Request $request)
+    public function submit(Request $request, $batch_id)
     {
-        $update = $this->updateBatchStat($this->current_batch, 2);
+        $update = $this->updateBatchStat($batch_id, 2);
 
-        NotificationSystem::send($this->current_batch['id'], 1);
+        NotificationSystem::send($batch_id, 1);
+        $batch = Batch::where('id', $batch_id)->first();
 
-        session()->flash('success_submit', $this->current_batch['created_at']);
-        return redirect('transaksi');
+        session()->flash('success_submit', $batch->batchNo());
+        return redirect('transaksi/'.$batch_id);
     }
 
     public function doInsert($batch_insert)
@@ -318,12 +345,11 @@ class TransaksiController extends Controller
     {
         if (count($batch_update) > 0) {
             foreach ($batch_update as $value) {
-                $id = $value['id'];
+                Transaksi::where('id', $value['id'])->delete();
                 unset($value['id']);
-                unset($value['created_at']);
-                Transaksi::where('id', $id)->update($value);
+                Transaksi::create($value);
             }
-        }
+        }        
     }
 
     public function doDelete($batch_delete)
@@ -372,15 +398,6 @@ class TransaksiController extends Controller
         return redirect()->back();
     }
 
-
-    public function persetujuan2()
-    {
-        
-        return view('transaksi.persetujuan2');
-    }   
-
-
-
     // lvl 1
     public function persetujuan($batch)
     {
@@ -392,7 +409,7 @@ class TransaksiController extends Controller
         if ($valid_batch) {
             $verifiable = $valid_batch->lvl1Verifiable();
             $berkas     = BerkasTransaksi::where('batch_id', $valid_batch['id'])->get();
-            $history    = BatchStatus::where('batch_id', $valid_batch['id'])->orderBy('updated_at', 'desc')->get();
+            $history    = $this->getBatchHistory($valid_batch['id']);
             $jsGrid_url = 'transaksi/get/batch/'.$valid_batch['id'];
         } 
 
@@ -418,7 +435,7 @@ class TransaksiController extends Controller
         if ($valid_batch) {
             $verifiable = $valid_batch->lvl2Verifiable();
             $berkas     = BerkasTransaksi::where('batch_id', $valid_batch['id'])->get();
-            $history    = BatchStatus::where('batch_id', $valid_batch['id'])->orderBy('updated_at', 'desc')->get();
+            $history    = $this->getBatchHistory($valid_batch['id']);
             $jsGrid_url = 'transaksi/get/batch/'.$valid_batch['id'];
         } 
 
@@ -435,10 +452,16 @@ class TransaksiController extends Controller
 
     public function submitVerification($type, $batch_id, Request $request)
     {
+        $this->doRefreshAnggaran($batch_id);
+        if (!$this->isAllAnggaranSafe($batch_id) && $request->is_approved) {
+            session()->flash('failed_safe', true);
+            return redirect()->back();
+        }
+
         $input = $request->only('is_approved', 'reason');
         $this->approveOrReject($type, $batch_id, $input);
 
-        NotificationSystem::send($this->current_batch['id'], $type == 1 ? ($request->is_approved ? 3 : 2) : ($request->is_approved ? 6 : 5));
+        NotificationSystem::send($batch_id, $type == 1 ? ($request->is_approved ? 3 : 2) : ($request->is_approved ? 6 : 5));
 
         session()->flash('success', true);
         return redirect()->back();   

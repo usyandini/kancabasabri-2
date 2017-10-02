@@ -7,7 +7,7 @@ use App\Models\Batch;
 use App\User;
 
 // ---------------- Types -------------
-// 1 = Submit verifikasi lvl 1 | Receiver : null (All Kasmin)
+// 1 = Submit verifikasi lvl 1 | Receiver : null (All Kakancab)
 // 2 = Submit verifikasi lvl 1 rejected | Reveiver : id batch submitter
 // 3 = Submit verifikasi lvl 1 approved | Receiver : id batch submitter
 // 4 = Submit verifikasi lvl 1 approved | Receiver : null (All Akutansi)
@@ -24,7 +24,6 @@ use App\User;
 // 12 = Submit verifikasi lvl 1 penyesuaian dropping approved | Receiver : Akuntansi
 // 13 = Submit verifikasi lvl 2 penyesuaian dropping rejected | Receiver : id submitter
 // 14 = Submit verifikasi lvl 2 penyesuaian dropping approved | Reveiver : id submitter
-
 // ------------------------------------
 class NotificationSystem
 {
@@ -32,6 +31,7 @@ class NotificationSystem
 	{
 		switch ($type) {
 			case 1:
+            case 4:
 				$receiver_id = null;
 				break;
 			default:
@@ -95,7 +95,7 @@ class NotificationSystem
             array_push($array_type,4);
         }
         if(isset($user->perizinan['notif_ubah_t'])){
-            array_push($array_type,3,5,6);
+            array_push($array_type,2,3,5,6);
             if (!in_array(4, $array_type)) {
                 array_push($array_type,4);
             }
@@ -211,7 +211,7 @@ class NotificationSystem
             array_push($array_type,4);
         }
         if(isset($user->perizinan['notif_ubah_t'])){
-            array_push($array_type,3,5,6);
+            array_push($array_type,2,3,5,6);
             if (!in_array(4, $array_type)) {
                 array_push($array_type,4);
             }
@@ -278,7 +278,7 @@ class NotificationSystem
         if(count($array_type) == 0){
             return null;
         }
-
+        
         // $notifications = Notification::where('type', $array_type[0]);
         // $notifications = 
         // 	Notification::where(function ($query,) {

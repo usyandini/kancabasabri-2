@@ -17,7 +17,7 @@
                         <div class="row breadcrumbs-top">
                             <div class="breadcrumb-wrapper col-xs-12">
                                 <ol class="breadcrumb">
-                                    <li class="breadcrumb-item"><a href="index-2.html">Dashboard</a>
+                                    <li class="breadcrumb-item"><a href="{{url('/anggaran')}}">Anggaran dan Kegiatan</a>
                                     </li>
                                     <li class="breadcrumb-item active">{{$title}}
                                     </li>
@@ -154,7 +154,7 @@
                                       <div class="col-xs-3 ">
                                       </div>
                                       <div class="col-xs-2" style="horizontal-align:center">
-                                        @if($beda)
+                                        @if($beda && Gate::check('kirim_a'))
                                         <div class="form-group" id="send_button" style="display:{{$display['send']}}">
                                           <div id="send" name="send" onclick="check('Kirim')" class="btn btn-success"><i class="fa fa-send"></i> Kirim</div>
                                         </div>
@@ -324,9 +324,9 @@
                 <!-- END PAGE LEVEL JS-->
                 <script type="text/javascript">
                 // Set the date we're counting down to
-                  var countDownDate = new Date("Aug 30, 2017 00:00:00").getTime();
+                  var countDownDate = new Date("{{$batas}}").getTime();
 
-                  var disableCountDown = false;
+                  var disableCountDown = true;
                   if(disableCountDown){
                     var x = setInterval(function() {
 
@@ -395,7 +395,7 @@
                   var countFile = 0;
                   
                   $(document).ready(function() {
-
+                    // alert("{{ $beda?1:0}}")
                     $("#basicScenario").jsGrid( {
                       width: "100%",
                
@@ -404,12 +404,12 @@
                       autoload: true,
 
                       
-                      @if((Gate::check('ubah_item_a')&& $beda)||(Gate::check('tambah_a')&&$status=="tambah"))
+                      @if((Gate::check('ubah_item_a')||(Gate::check('tambah_a')&&$status=="tambah"))&& $beda)
                         editing: true,
                       @else
                         editing: false,
                       @endif
-                      @if((Gate::check('tambah_item_a')&& $beda)||(Gate::check('tambah_a')&&$status=="tambah"))
+                      @if((Gate::check('tambah_item_a')||(Gate::check('tambah_a')&&$status=="tambah"))&& $beda)
                         inserting: true,
                       @else
                         inserting: false,
@@ -429,11 +429,6 @@
                           })
                         },
                         insertItem: function (item) {
-                          // if(inputs.length >0){
-                          //   item['file'] = inputs.length;
-                          // }else{
-                          //   item['file'] = tempIdCounter;
-                          // }
                           
                           item["isNew"] = true;
                           item["tempId"] = tempIdCounter++;
@@ -1229,8 +1224,6 @@
                       type = "cabang";
                       unit = id_type;
                     }
-
-                    // alert(unit);
 
                     $.ajax({
                         'async': false, 'type': "GET", 'dataType': 'JSON', 'url': "{{ url('anggaran/get/attributes') }}/"+type+"/"+unit,

@@ -109,6 +109,10 @@
               <input type="checkbox" name="perizinan[riwayat_a]" {{ isset(old("perizinan")['riwayat_a']) ? 'checked=""' : '' }}>
               <label>Riwayat Anggaran Kegiatan</label>
             </fieldset>
+            <fieldset>
+              <input type="checkbox" name="perizinan[batas_a]" {{ isset(old("perizinan")['batas_a']) ? 'checked=""' : '' }}>
+              <label>Manajemen Batas Pengajuan Anggaran dan Kegiatan</label>
+            </fieldset>
           </div>
         </div>
         <div class="card-block">

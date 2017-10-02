@@ -57,9 +57,12 @@
 			                          </tr>
 			                        </thead>
 			                        <tbody>
-			                        		<?php $no='1';?>
-			                        		@if(count($notification_all))
-			                        		@foreach($notification_all as $notif)
+			                        		<?php 
+			                        		$no='1';
+			                        		if(count($notification_all)){
+			                        			foreach($notification_all as $notif){
+			                        				// if(Gate::check('unit_'.$notif['unit_kerja'])||$notif['unit_kerja']=="00"){
+			                        		?>
 			                        		
 			                        		<tr>
 			                        			<td><center>{{ $no }}</center></td>
@@ -67,37 +70,35 @@
 			                        			<td><center>{{$notif['time']}}</center>
 												<td><center>
 													<?php
-														// $link = false;
 														$url =  url('notification/redirect')."/".$notif['id'];
 														if($notif['type'] == 17||$notif['type'] == 19||$notif['type'] == 21||
 															$notif['type'] == 23||$notif['type'] == 25||$notif['type'] == 27||$notif['type'] == 29){
 															if(Gate::check('notif_ubah_a')){
-													            
 																if($notif['type'] == 17&&Gate::check('notif_setuju_iia')){
 
-																}else if($notif['type'] == 19&&Gate::check('notif_setuju_iiia')){
+																}else if($notif['type'] == 19 && Gate::check('notif_setuju_iiia')){
 
-																}else if($notif['type'] == 21&&Gate::check('notif_setuju_iva')){
+																}else if($notif['type'] == 21 && Gate::check('notif_setuju_iva')){
 
-																}else if($notif['type'] == 23&&Gate::check('notif_setuju_va')){
+																}else if($notif['type'] == 23 && Gate::check('notif_setuju_va')){
 
-																}else if($notif['type'] == 25&&Gate::check('notif_setuju_via')){
+																}else if($notif['type'] == 25 && Gate::check('notif_setuju_via')){
 
-																}else if($notif['type'] == 27&&Gate::check('notif_setuju_viia')){
+																}else if($notif['type'] == 27 && Gate::check('notif_setuju_viia')){
 
-																}else if($notif['type'] == 29&&Gate::check('notif_setuju_viiia')){
+																}else if($notif['type'] == 29 && Gate::check('notif_setuju_viiia')){
 
 																}else{
 													            	$url = "";
 													            }
 													        }
 														}else if($notif['type'] == 12){
-															if(Gate::check('notif_ubah_d')&&!Gate::check('notif_setuju_p2_d')){
+															if(Gate::check('notif_ubah_d') && !Gate::check('notif_setuju_p2_d')){
 																$url = "";
 															}
 
 														}else if($notif['type'] == 4){
-															if(Gate::check('notif_ubah_t')&&!Gate::check('notif_setuju2_t')){
+															if(Gate::check('notif_ubah_t') && !Gate::check('notif_setuju2_t')){
 																$url = "";
 															}
 														}
@@ -109,9 +110,11 @@
 													</center>
 												</td>
 								     		</tr>
-			                        		<?php $no++;?>
-			                        		@endforeach
-			                        		@endif
+			                        		<?php $no++;
+					                        		// }
+					                        	}
+					                        }
+			                        		?>
 			                        </tbody>
 			                      </table>
 			                      

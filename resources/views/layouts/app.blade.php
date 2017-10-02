@@ -79,7 +79,7 @@
                                 </li>
                                 <li class="list-group scrollable-container" id="notifList">
                                 </li>
-                                <li class="dropdown-menu-footer"><a href="{{url('notification/read_all')}}" class="dropdown-item text-muted text-xs-center">Read all notifications</a></li>
+                                <li class="dropdown-menu-footer"><a href="{{url('notification/read_all')}}" class="dropdown-item text-muted text-xs-center">Baca semua notifikasi</a></li>
                               </ul>
                             </li>
                             <li class="dropdown dropdown-user nav-item">
@@ -128,7 +128,7 @@
                             @can ('info_t')
                                 <li class="is-shown {{ checkActiveMenu('transaksi') }}"><a href="{{ url('/transaksi', $parameters = [], $secure = null) }}" class="menu-item">Informasi Transaksi</a>
                             @endcan
-                                <!-- <li class="is-shown {{ checkActiveMenu('transaksi/new') }}"><a href="{{ url('/transaksi', $parameters = [], $secure = null) }}" class="menu-item">Tambah Batch Baru</a> -->
+                                <li class="is-shown {{ checkActiveMenu('transaksi/create') }}"><a href="{{ url('/transaksi/create', $parameters = [], $secure = null) }}" class="menu-item">Tambah Batch Baru</a>
                             
                                 <!-- <li class="is-shown {{ checkActiveMenu('transaksi/persetujuan') }}"><a href="{{ url('/transaksi/persetujuan', $parameters = [], $secure = null) }}" class="menu-item">Persetujuan Transaksi</a> -->
                            
@@ -145,6 +145,9 @@
                             @endcan
                             @can('riwayat_a')
                                 <li class="is-shown {{ checkActiveMenu('riwayat') }}"><a href="{{ url('/anggaran/riwayat', $parameters = [], $secure = null) }}" class="menu-item">Riwayat Anggaran</a>
+                            @endcan
+                            @can('batas_a')
+                                <li class="is-shown {{ checkActiveMenu('batas') }}"><a href="{{ url('/anggaran/batas', $parameters = [], $secure = null) }}" class="menu-item">Manajemen Pengajuan</a>
                             @endcan
                         </ul>
                     </li>
@@ -205,6 +208,19 @@
                         @can('manajemen_a_m')
                         <li class="is-shown {{ checkActiveMenu('reason') }}"><a href="{{ url('/reason', $parameters = [], $secure = null) }}" class="menu-item">Manajemen Alasan Menolak</a>
                         @endcan
+                        @can('manajemen_a_m')
+                        <li class="is-shown {{ checkActiveMenu('program_prioritas') }}"><a href="{{ url('/program_prioritas', $parameters = [], $secure = null) }}" class="menu-item">Manajemen Program Prioritas</a>
+                        @endcan
+                        @can('manajemen_a_m')
+                        <li class="is-shown {{ checkActiveMenu('arahan_rups') }}"><a href="{{ url('/arahan_rups', $parameters = [], $secure = null) }}" class="menu-item">Manajemen Arahan RUPS</a>
+                        @endcan
+                        
+                    </ul>
+                    <li class="nav-item has-sub {{ checkOpenedMenu('tindaklanjut') }}"><a href=""><i class="ft-edit"></i><span data-i18n="" class="menu-title">Tindak Lanjut Temuan</span></a>
+                    <ul class="menu-content">
+                        <li class="is-shown {{ checkActiveMenu('unitkerja') }}"><a href="{{ url('/unitkerja', $parameters = [], $secure = null) }}" class="menu-item">Manajemen Unit Kerja</a>
+                        <li class="is-shown {{ checkActiveMenu('temuandanrekomendasiin') }}"><a href="{{ url('/temuandanrekomendasiin', $parameters = [], $secure = null) }}" class="menu-item">Tindak Lanjut Internal</a>
+                        <li class="is-shown {{ checkActiveMenu('temuandanrekomendasieks') }}"><a href="{{ url('/temuandanrekomendasieks', $parameters = [], $secure = null) }}" class="menu-item">Tindak Lanjut Eksternal</a>
                     </ul>
                     @endif
                 </ul>

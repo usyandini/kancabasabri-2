@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 // ---------------- Types -------------
-// 1 = Submit verifikasi lvl 1 | Receiver : null (All Kasmin)
+// 1 = Submit verifikasi lvl 1 | Receiver : null (All Kakancab)
 // 2 = Submit verifikasi lvl 1 rejected | Reveiver : id batch submitter
 // 3 = Submit verifikasi lvl 1 approved | Receiver : id batch submitter
 // 4 = Submit verifikasi lvl 1 approved | Receiver : null (All Akutansi)
@@ -75,17 +75,17 @@ class Notification extends Model
     {
         switch ($this->type) {
             case 1:
-                return 'Batch '.date('d-m-Y', strtotime($this->batch['created_at'])).' butuh review anda untuk approval sebagai Kasimin.';
+                return 'Batch <b>'.$this->batch->batchNo().'</b> butuh review anda untuk approval sebagai Kakancab.';
             case 2:
-                return 'Batch '.date('d-m-Y', strtotime($this->batch['created_at'])).' anda ditolak dengan perbaikan oleh Kasimin. Silahkan lakukan perubahan dan submit kembali.';
+                return 'Batch <b>'.$this->batch->batchNo().'</b> anda ditolak dengan perbaikan oleh Kakancab. Silahkan lakukan perubahan dan submit kembali.';
             case 3:
-                return 'Batch '.date('d-m-Y', strtotime($this->batch['created_at'])).' anda telah disetujui oleh Kasimin. Silahkan Menunggu verifikasi dari user Akutansi.';
+                return 'Batch <b>'.$this->batch->batchNo().'</b> anda telah disetujui oleh Kakancab. Silahkan Menunggu verifikasi dari user Akutansi.';
             case 4:
-                return 'Batch '.date('d-m-Y', strtotime($this->batch['created_at'])).' telah disetujui oleh user Kasmin. Mohon review untuk verifikasi akhir anda sebagai user Akutansi.';
+                return 'Batch <b>'.$this->batch->batchNo().'</b> telah disetujui oleh user Kakancab. Mohon review untuk verifikasi akhir anda sebagai user Akutansi.';
             case 5:
-                return 'Batch '.date('d-m-Y', strtotime($this->batch['created_at'])).' anda ditolak dengan perbaikan oleh user Akutansi. Silahkan lakukan perubahan dan submit kembali.';
+                return 'Batch <b>'.$this->batch->batchNo().'</b> anda ditolak dengan perbaikan oleh user Akutansi. Silahkan lakukan perubahan dan submit kembali.';
             case 6: 
-                return 'Batch '.date('d-m-Y', strtotime($this->batch['created_at'])).' anda telah diverifikasi oleh user Akutansi. Harap menunggu konfirmasi dari Pusat.';
+                return 'Batch <b>'.$this->batch->batchNo().'</b> anda telah diverifikasi oleh user Akutansi. Harap menunggu konfirmasi dari Pusat.';
             case 7: 
                 return 'Tarik Tunai dilakukan oleh '.$this->idTarikTunai['cabang'].'. Mohon review untuk verifikasi level 1.';
             case 8:
