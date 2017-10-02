@@ -161,6 +161,14 @@
                             @can('pelaporan_a_RUPS')
                             <li class="is-shown {{ checkActiveMenu('arahan_rups') }}"><a href="{{ url('/pelaporan/lihat/arahan_rups', $parameters = [], $secure = null) }}" class="menu-item">Arahan RUPS</a></li>
                             @endcan
+                            @can('pelaporan_tindak_lanjut')
+                            <li class="nav-item has-sub {{ checkOpenedMenu('tindaklanjut') }}"><a href=""><span data-i18n="" class="menu-title">Tindak Lanjut Temuan</span></a>
+                            <ul class="menu-content">
+                                <li class="is-shown {{ checkActiveMenu('unitkerja') }}"><a href="{{ url('/unitkerja', $parameters = [], $secure = null) }}" class="menu-item">Manajemen Unit Kerja</a>
+                                <!-- <li class="is-shown {{ checkActiveMenu('temuandanrekomendasiin') }}"><a href="{{ url('/temuandanrekomendasiin', $parameters = [], $secure = null) }}" class="menu-item">Tindak Lanjut Internal</a>
+                                <li class="is-shown {{ checkActiveMenu('temuandanrekomendasieks') }}"><a href="{{ url('/temuandanrekomendasieks', $parameters = [], $secure = null) }}" class="menu-item">Tindak Lanjut Eksternal</a> -->
+                            </ul>
+                            @endcan
                             @can('form_master')
                             <li class="nav-item has-sub {{ checkOpenedMenu('form_master_laporan_anggaran') }}"><a href=""><span data-i18n="" class="menu-title">Form Master</span></a>
                                 <ul class="menu-content">
@@ -208,20 +216,15 @@
                         @can('manajemen_a_m')
                         <li class="is-shown {{ checkActiveMenu('reason') }}"><a href="{{ url('/reason', $parameters = [], $secure = null) }}" class="menu-item">Manajemen Alasan Menolak</a>
                         @endcan
-                        @can('manajemen_a_m')
+                        @can('manajemen_p_p')
                         <li class="is-shown {{ checkActiveMenu('program_prioritas') }}"><a href="{{ url('/program_prioritas', $parameters = [], $secure = null) }}" class="menu-item">Manajemen Program Prioritas</a>
                         @endcan
-                        @can('manajemen_a_m')
+                        @can('manajemen_a_RUPS')
                         <li class="is-shown {{ checkActiveMenu('arahan_rups') }}"><a href="{{ url('/arahan_rups', $parameters = [], $secure = null) }}" class="menu-item">Manajemen Arahan RUPS</a>
                         @endcan
                         
                     </ul>
-                    <li class="nav-item has-sub {{ checkOpenedMenu('tindaklanjut') }}"><a href=""><i class="ft-edit"></i><span data-i18n="" class="menu-title">Tindak Lanjut Temuan</span></a>
-                    <ul class="menu-content">
-                        <li class="is-shown {{ checkActiveMenu('unitkerja') }}"><a href="{{ url('/unitkerja', $parameters = [], $secure = null) }}" class="menu-item">Manajemen Unit Kerja</a>
-                        <li class="is-shown {{ checkActiveMenu('temuandanrekomendasiin') }}"><a href="{{ url('/temuandanrekomendasiin', $parameters = [], $secure = null) }}" class="menu-item">Tindak Lanjut Internal</a>
-                        <li class="is-shown {{ checkActiveMenu('temuandanrekomendasieks') }}"><a href="{{ url('/temuandanrekomendasieks', $parameters = [], $secure = null) }}" class="menu-item">Tindak Lanjut Eksternal</a>
-                    </ul>
+                    
                     @endif
                 </ul>
             </div>

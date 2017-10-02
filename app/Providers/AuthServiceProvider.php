@@ -80,14 +80,14 @@ class AuthServiceProvider extends ServiceProvider
              $permissions[] = $manajemen_user[$i];
         }
 
-        $pelaporan = ["pelaporan_anggaran","pelaporan_a_RUPS","form_master","master_pelaporan_anggaran",
+        $pelaporan = ["pelaporan_anggaran","pelaporan_a_RUPS","pelaporan_tindak_lanjut","form_master","master_pelaporan_anggaran",
                         "master_arahan_a_RUPS","master_usulan_p_p"];
 
         for($i=0;$i<count($pelaporan);$i++){
              $permissions[] = $pelaporan[$i];
         }
 
-        $manajemen_item = ["manajemen_k_i","manajemen_i_a","manajemen_a_m"];
+        $manajemen_item = ["manajemen_k_i","manajemen_i_a","manajemen_a_m","manajemen_p_p","manajemen_a_RUPS"];
 
         for($i=0;$i<count($manajemen_item);$i++){
              $permissions[] = $manajemen_item[$i];

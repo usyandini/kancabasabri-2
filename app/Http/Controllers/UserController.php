@@ -72,8 +72,7 @@ class UserController extends Controller
             'user' => $user, 
             'cabang' => KantorCabang::get(),
             'divisi' => Divisi::get(),
-            'jenis_user' => JenisUser::get(),
-            'profile_edit' => false]);
+            'jenis_user' => JenisUser::get()]);
     }
 
     public function profile($id)

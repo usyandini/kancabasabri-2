@@ -19,6 +19,10 @@
               <label>Arahan RUPS</label>
             </fieldset>
             <fieldset>
+              <input type="checkbox" name="perizinan[pelaporan_tindak_lanjut]" {{ isset(old("perizinan")['pelaporan_tindak_lanjut']) ? 'checked=""' : '' }}>
+              <label>Tindak Lanjut Temuan</label>
+            </fieldset>
+            <fieldset>
               <input id="form_master"type="checkbox" name="perizinan[form_master]" {{ isset(old("perizinan")['form_master']) ? 'checked=""' : '' }}>
               <label>Form Master</label>
             </fieldset>

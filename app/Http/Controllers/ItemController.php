@@ -69,6 +69,14 @@ class ItemController extends Controller
             $this->middleware('can:manajemen_k_i', ['only' => 'index']);
             $this->middleware('can:manajemen_i_a', ['only' => 'editItemAnggaran']);
             $this->middleware('can:manajemen_a_m', ['only' => 'reason']);
+            $this->middleware('can:manajemen_p_p', ['only' => 'program_prioritas',
+                                                        'store_program_prioritas',
+                                                        'update_program_prioritas',
+                                                        'delete_program_prioritas']);
+            $this->middleware('can:manajemen_a_RUPS', ['only' => 'arahan_rups',
+                                                        'store_arahan_rups',
+                                                        'update_arahan_rups',
+                                                        'delete_arahan_rups']);
             // $this->middleware('can:tambah_k_i', ['only' => 'create']);
             // $this->middleware('can:edit_k_i', ['only' => 'submitAnggaranItem']);
             // $this->middleware('can:pos_i', ['only' => 'submitAnggaranItem']);
