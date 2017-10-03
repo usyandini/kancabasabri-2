@@ -195,7 +195,7 @@ class ItemController extends Controller
                         'type'  => 1,
                         'created_by' => \Auth::id()
                     );
-                    ItemAnggaranMaster::create($inputJenis);
+                    ItemAnggaranMaster::create($inputJenis); // Jenis Anggaran
                     break;
                 case 'kelompok':
                     $inputKelompok = array(
@@ -204,7 +204,7 @@ class ItemController extends Controller
                         'type'  => 2,
                         'created_by' => \Auth::id()
                     );
-                    ItemAnggaranMaster::create($inputKelompok);
+                    ItemAnggaranMaster::create($inputKelompok); //Kelompok Anggaran
                     break;
                 case 'pos':
                     $inputPos = array(
@@ -213,7 +213,7 @@ class ItemController extends Controller
                         'type'  => 3,
                         'created_by' => \Auth::id()
                     );
-                    ItemAnggaranMaster::create($inputPos);
+                    ItemAnggaranMaster::create($inputPos); //Pos Anggaran
                     break;
                 case 'all':
                     $inputAll = array(
@@ -222,7 +222,7 @@ class ItemController extends Controller
                         'type'  => $request->type,
                         'created_by' => \Auth::id()
                     );
-                    ItemAnggaranMaster::create($inputAll);
+                    ItemAnggaranMaster::create($inputAll); //All item anggaran
                     break;
             }
             session()->flash('add', true);   

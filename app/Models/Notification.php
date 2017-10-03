@@ -73,19 +73,20 @@ class Notification extends Model
 
     public function wording()
     {
+        $batchNo = $this->batch ? $this->batch->batchNo() : '';
         switch ($this->type) {
             case 1:
-                return 'Batch <b>'.$this->batch->batchNo().'</b> butuh review anda untuk approval sebagai Kakancab.';
+                return 'Batch <b>'.$batchNo.'</b> butuh review anda untuk approval sebagai Kakancab.';
             case 2:
-                return 'Batch <b>'.$this->batch->batchNo().'</b> anda ditolak dengan perbaikan oleh Kakancab. Silahkan lakukan perubahan dan submit kembali.';
+                return 'Batch <b>'.$batchNo.'</b> anda ditolak dengan perbaikan oleh Kakancab. Silahkan lakukan perubahan dan submit kembali.';
             case 3:
-                return 'Batch <b>'.$this->batch->batchNo().'</b> anda telah disetujui oleh Kakancab. Silahkan Menunggu verifikasi dari user Akutansi.';
+                return 'Batch <b>'.$batchNo.'</b> anda telah disetujui oleh Kakancab. Silahkan Menunggu verifikasi dari user Akutansi.';
             case 4:
-                return 'Batch <b>'.$this->batch->batchNo().'</b> telah disetujui oleh user Kakancab. Mohon review untuk verifikasi akhir anda sebagai user Akutansi.';
+                return 'Batch <b>'.$batchNo.'</b> telah disetujui oleh user Kakancab. Mohon review untuk verifikasi akhir anda sebagai user Akutansi.';
             case 5:
-                return 'Batch <b>'.$this->batch->batchNo().'</b> anda ditolak dengan perbaikan oleh user Akutansi. Silahkan lakukan perubahan dan submit kembali.';
+                return 'Batch <b>'.$batchNo.'</b> anda ditolak dengan perbaikan oleh user Akutansi. Silahkan lakukan perubahan dan submit kembali.';
             case 6: 
-                return 'Batch <b>'.$this->batch->batchNo().'</b> anda telah diverifikasi oleh user Akutansi. Harap menunggu konfirmasi dari Pusat.';
+                return 'Batch <b>'.$batchNo.'</b> anda telah diverifikasi oleh user Akutansi. Harap menunggu konfirmasi dari Pusat.';
             case 7: 
                 return 'Tarik Tunai dilakukan oleh '.$this->idTarikTunai['cabang'].'. Mohon review untuk verifikasi level 1.';
             case 8:
