@@ -60,6 +60,11 @@ class Batch extends Model
         return $this->hasOne('App\Models\BatchStatus', 'batch_id', 'id')->where('stat', 1)->first();
     }
 
+    public function canReported()
+    {
+        return $this->hasOne('App\Models\BatchStatus', 'batch_id', 'id')->where('stat', 6);
+    }
+
 	public function isUpdatable()
     {
         if (!$this->latestStat()) {
