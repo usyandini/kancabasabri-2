@@ -414,7 +414,7 @@
                       @else
                         inserting: false,
                       @endif
-                      deleteConfirm: "Apalakh anda yakin akan menghapus anggaran baris ini?",
+                      deleteConfirm: "Apakah anda yakin akan menghapus anggaran baris ini?",
                
                       pageSize: 5,
                       pageButtonCount: 10,

@@ -32,89 +32,7 @@
                 </div>
                 <div class="content-body"><!-- Basic scenario start -->
                     <section id="basic">
-                      <div class="row">
-                        <div class="card">
-                          <form method="POST" action="{{url('anggaran/riwayat') }}" id="filterAnggaran" name="filterAnggaran" >
-                            <div class="card-header">
-                              <h4 class="card-title">Pencarian {{$sub_title}}</h4>
-                              <a class="heading-elements-toggle"><i class="ft-align-justify font-medium-3"></i></a>
-                            </div>
-                            <div class="card-body collapse in">
-                              <div class="card-block ">
-                                <form method="POST" action="">
-                                  <div class="col-xs-10">
-                                    {{ csrf_field() }}
-                                    <div class="col-xs-3">
-                                        <div class="form-group">
-                                          <label>Tahun</label>
-                                          <select class="select2 form-control" name="cari_tahun" id="cari_tahun">
-                                            <option value="0">Semua Tahun</option>
-                                            <option value="2017">2017</option>
-                                            <option value="2016">2016</option>
-                                            <option value="2015">2015</option>
-                                          </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-6">
-                                        <div class="form-group">
-                                          <label>Unit Kerja</label>
-                                          <select class="select2 form-control " name="cari_unit_kerja" id="cari_unit_kerja">
-                                            <option value="0">Semua</option>
-                                          </select>
-                                        </div>
-                                    </div>
-                                  </div>
-                                  <div class="col-xs-10">
-                                    <div class="col-xs-2">
-                                      <div class="form-group">
-                                        <label>TW</label>
-                                        <select class="select2 form-control" name="cari_tw_dari" id="cari_tw_dari">
-                                          <option value="0">None</option>
-                                          <option value="1">I</option>
-                                          <option value="2">II</option>
-                                          <option value="3">III</option>
-                                          <option value="4">IV</option>
-                                        </select>
-                                      </div>
-                                    </div>
-                                    <div class="col-xs-1">
-                                      <div class="form-group">
-                                        <div style="visibility:hidden">a</div>
-                                        <div style="visibility:hidden">a</div>
-                                        <label>s/d</label>
-                                      </div>
-                                    </div>
-                                    <div class="col-xs-2">
-                                      <div class="form-group">
-                                        <label>TW</label>
-                                        <select class="select2 form-control" name="cari_tw_dari" id="cari_tw_dari">
-                                          <option value="0">None</option>
-                                          <option value="1">I</option>
-                                          <option value="2">II</option>
-                                          <option value="3">III</option>
-                                          <option value="4">IV</option>
-                                        </select>
-                                      </div>
-                                    </div>
-                                    <div class="col-xs-2">
-                                      <div class="form-group">
-                                        <label style="visibility:hidden">TW</label>
-                                        <div class="btn btn-primary" onclick="cariAnggaran()" style="width:110px"><i class="fa fa-search"></i> Cari</div>                                            
-                                      </div>
-                                    </div>
-                                    <div class="col-xs-1">
-                                      <div class="form-group">
-                                        <label style="visibility:hidden">TW</label>
-                                        <a href="{{url('pelaporan/tambah/'.$type.'/'.$setting['kategori']) }}" class="btn btn-success" style="width:110px"><i class="fa fa-plus"></i> Tambah</a>                                          
-                                      </div>
-                                    </div>
-                                  </div>
-                                </form>
-                              </div>
-                            </div>
-                          </form>
-                        </div>
-                      </div>
+                      
                       <div class="row">
                         <div class="card">
                             <div class="card-body collapse in">
@@ -137,7 +55,7 @@
                                       <div class="form-group">
                                         <label>TW</label>
 
-                                        @if($setting['insert'])
+                                        @if($setting['status']=="Tambah"&& $type == "master")
                                         <select class="select2 form-control" name="tw_dari" id="tw_dari" onchange="changeTW(0)">
                                           <option value="0">None</option>
                                           <option value="1">I</option>
@@ -160,7 +78,7 @@
                                     <div class="col-xs-2">
                                       <div class="form-group">
                                         <label>TW</label>
-                                         @if($setting['insert'])
+                                         @if($setting['status']=="Tambah"&& $type == "master")
                                         <select class="select2 form-control" name="tw_ke" id="tw_ke" onchange="changeTW(1)">
                                           <option value="0">None</option>
                                           <option value="1">I</option>
@@ -459,16 +377,9 @@
                             title: "Jenis Arahan", 
                             width: 170,
                             readOnly:insertable == 1 ? false : true,
-                            valueField: "Name", 
-                            textField: "Name",
-                            items:[
-                                { Name: "None", Id: 0 },
-                                { Name: "Jenis Arahan 1", Id: 1},
-                                { Name: "Jenis Arahan 2", Id: 2},
-                                { Name: "Jenis Arahan 3", Id: 3},
-                                { Name: "Jenis Arahan 4", Id: 4},
-                                { Name: "Jenis Arahan 5", Id: 5}
-                            ],
+                            valueField: "arahan_rups", 
+                            textField: "arahan_rups", 
+                            items: getData('arahanrups'),
                             validate: {
                               message : "Pilih Jenis Arahan terlebih Dahulu." ,
                               validator :function(value, item) {
@@ -509,16 +420,9 @@
                             readOnly:insertable == 1 ? false : true,
                             title: "Program Prioritas", 
                             width: 170,
-                            valueField: "Name", 
-                            textField: "Name",
-                            items:[
-                                { Name: "None", Id: 0 },
-                                { Name: "Program Prioritas 1", Id: 1},
-                                { Name: "Program Prioritas 2", Id: 2},
-                                { Name: "Program Prioritas 3", Id: 3},
-                                { Name: "Program Prioritas 4", Id: 4},
-                                { Name: "Program Prioritas 5", Id: 5}
-                            ],
+                            valueField: "program_prioritas", 
+                            textField: "program_prioritas", 
+                            items: getData('programprioritas'),
                             validate: {
                               message : "Pilih Program Prioritas terlebih Dahulu." ,
                               validator :function(value, item) {
@@ -659,7 +563,7 @@
                         var tmp = null;
                         $.ajax({
                             'async': false, 'type': "GET", 'dataType': 'JSON', 
-                            'url': "{{ url('anggaran/get/attributes') }}/" +type+"/-1",
+                            'url': "{{ url('pelaporan/get/attributes') }}/" +type+"/-1",
                             'success': function (data) {
                                 tmp = data;
                             }
@@ -722,6 +626,8 @@
                           }
                           tw_dari.value = tw_dari_val;
                           tw_ke.value = tw_ke_val;
+
+                          // alert(tw_dari.value);
 
                           @if($type=="master")
                           tanggal_mulai = document.getElementById('tanggal_mulai');
@@ -831,14 +737,14 @@
                   };
 
                   function check(){
-                    @if($type=="master")
+
                     if(document.getElementById("tanggal_mulai").value == ""){
                       toastr.error("Silahkan Isi Tanggal Mulai Untuk memulai Pelaporan Anggaran Kegiatan. Terima kasih.", "Perhatian.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
                     }else if(document.getElementById("tanggal_selesai").value == ""){
                       toastr.error("Silahkan Isi Tanggal Selesai sebagai acuan berakhirnya Pelaporan Anggaran Kegiatan. Terima kasih.", "Perhatian.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
                     }else if(document.getElementById("tw_dari").value == "0"){
                       toastr.error("Pilih TW Pelaporan Anggaran Kegiatan. Terima kasih.", "Perhatian.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
-                    }else if(inputs.length == 0 ){
+                    }else if(inputs.length == 0&&{{$setting['kategori']!="usulan_program"?1:0}}){
                       toastr.error("Silahkan Isi Minimal Satu daftar Pelaporan Anggaran Kegiatan. Terima kasih.", "Perhatian.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
                     }else{
                       var stop = false;
@@ -855,28 +761,6 @@
                                 backdrop: 'static'
                             });
                     }
-                    @endif
-                    @if($type=="item")
-
-
-                    // if(inputs.length)
-                    var stop = false;
-
-                    for(i=0;i<inputs.length;i++){
-                      nameClass = $('.file_'+i);
-                      if(nameClass.length!=0){
-                        var countFile = $('<input/>',{type:'hidden',id:('count_file_'+i),
-                        name:('count_file_'+i),value:nameClass.length});
-                        countFile.appendTo("#file_grid");
-                      }
-                    }
-
-                    $('#modal_pernyataan').modal({
-                              backdrop: 'static'
-                          });
-                    @endif
-
-
                   }
 
                   function startDate(){
@@ -953,9 +837,15 @@
                                 link = "{{url('anggaran/get/download')}}/"+ list_berkas[index][i]['id'];
                                 hasil2[i] = '<div id="db_file_'+i+'"><div class="col-xs-10"><a href="'+link+'" ><li>'+ list_berkas[index][i]['name']+'</li></div>';
                                 
-                                hasil2[i] += '<div class="col-xs-1" ><i class="fa fa-download "></i></div></a>';
-                                hasil2[i] += '<div class="col-xs-1" onclick="deleteFileDB('+i+')"><i style="color:red" class="fa fa-close "></i></div><br/><br/></div>';
-                                
+                                if((list_berkas[index][i]['is_template']==1&&{{$type=="master"?1:0}})&&{{$setting['status']=="Tambah"}}){
+                                  hasil2[i] += '<div class="col-xs-1" ><i class="fa fa-download "></i></div></a>';
+                                  hasil2[i] += '<div class="col-xs-1" onclick="deleteFileDB('+i+')"><i style="color:red" class="fa fa-close "></i></div><br/><br/></div>';
+                                }else if((list_berkas[index][i]['is_template']==0&&{{$type=="item"?1:0}})&&{{$setting['status']=="Tambah"}}){
+                                  hasil2[i] += '<div class="col-xs-1" ><i class="fa fa-download "></i></div></a>';
+                                  hasil2[i] += '<div class="col-xs-1" onclick="deleteFileDB('+i+')"><i style="color:red" class="fa fa-close "></i></div><br/><br/></div>';
+                                }else{
+                                  hasil2[i] += '<div class="col-xs-2"><i class="fa fa-download "></i></div></a><br/><br/></div>';
+                                }
                               }
                             }
                           }
@@ -1123,12 +1013,12 @@
                     }
                   }
 
-                  window.setUnitKerja();
                   window.setDetailFormMaster();
                   @if($setting['status']=="Tambah"&&$type=="master")
                   window.setTWFirst();
                   @endif
                   window.getListData();
+                  // window.startDate();
 
 
                 </script>

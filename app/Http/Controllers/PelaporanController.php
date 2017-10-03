@@ -12,6 +12,8 @@ use App\Models\Divisi;
 use App\Models\MasterItemPelaporanAnggaran;
 use App\Models\MasterItemArahanRUPS;
 use App\Models\BerkasFormItemMaster;
+use App\Models\ProgramPrioritas;
+use App\Models\ArahanRups;
 
 
 class PelaporanController extends Controller
@@ -40,32 +42,6 @@ class PelaporanController extends Controller
     public function index(Request $request) 
     {
 
-        $filter = null;
-        $editable = true;
-        $setting = array('editable' => true,
-                    'berkas'=>true,
-                    'master'=>true,
-                    'status'=>"Tambah",
-                    'jenis_berkas'=>"download",
-                    'kategori'=>'laporan anggaran'
-
-            );
-
-        if(isset($request->cari_tahun)){
-            $filter = array('tahun' => $request->cari_tahun,
-                    'unit_kerja' =>$request->cari_unit_kerja,
-                    'kategori' =>$request->cari_kategori,
-                    'keyword' =>$request->cari_keyword,
-                );
-        }
-
-        return view('anggaran.master.pelaporan', [
-            'title' => 'Form Master',
-            'sub_title' => 'Pelaporan Anggaran dan Kegiatan',
-            'setting' => $setting , 
-            'userCabang' =>$this->userCabang,
-            'userDivisi' =>$this->userDivisi,
-            'filters' => $filter]);
     }
 
     public function form_master_detail($kategori,$id,$type) 
@@ -115,7 +91,7 @@ class PelaporanController extends Controller
         if($type == 1){
             $text_type =  "master";
         }
-        return view('anggaran.master.pelaporan', [
+        return view('pelaporan.index', [
             'title' => 'Form Master',
             'sub_title' => $sub_title,
             'setting' => $setting , 
@@ -155,7 +131,7 @@ class PelaporanController extends Controller
         
 
 
-        return view('anggaran.master.pelaporan', [
+        return view('pelaporan.index', [
             'title' => 'Form Master',
             'sub_title' => $sub_title,
             'type' => 'master',
@@ -173,7 +149,7 @@ class PelaporanController extends Controller
                     'berkas'        =>true,
                     'edit'          =>false,
                     'insert'          =>false,
-                    'status'        =>"Cari",
+                    'status'        =>"Info",
                     'jenis_berkas'  =>"upload",
                     'kategori'      =>$kategori,
                     'id_form_master'=>-1,
@@ -193,7 +169,63 @@ class PelaporanController extends Controller
         }
         
 
-        return view('anggaran.master.pelaporan', [
+        return view('pelaporan.index', [
+            'title' => $sub_title,
+            'sub_title' => '',
+            'setting' => $setting ,
+            'type' => 'item',
+            'userCabang' =>$this->userCabang,
+            'userDivisi' =>$this->userDivisi,
+            'filters' => $filter]);
+    }
+
+    public function usulan_program_prioritas() 
+    {
+
+        $filter = null;
+        $setting = array('editable' => false,
+                    'edit'          =>false,
+                    'insert'          =>false,
+                    'status'        =>"Info",
+                    'kategori'      =>'usulan_program',
+                    'id_form_master'=>-1,
+                    'table'         => true
+
+            );
+        
+        $sub_title = "Usulan Program Prioritas";
+        
+        
+
+        return view('pelaporan.usulan_program_prioritas', [
+            'title' => $sub_title,
+            'sub_title' => '',
+            'setting' => $setting ,
+            'type' => 'item',
+            'userCabang' =>$this->userCabang,
+            'userDivisi' =>$this->userDivisi,
+            'filters' => $filter]);
+    }
+
+    public function tambah_usulan_program_prioritas() 
+    {
+
+        $filter = null;
+        $setting = array('editable' => false,
+                    'edit'          =>true,
+                    'insert'          =>true,
+                    'status'        =>"Tambah",
+                    'kategori'      =>'usulan_program',
+                    'id_form_master'=>-1,
+                    'table'         => true
+
+            );
+        
+        $sub_title = "Usulan Program Prioritas";
+        
+        
+
+        return view('pelaporan.usulan_program_prioritas', [
             'title' => $sub_title,
             'sub_title' => '',
             'setting' => $setting ,
@@ -220,15 +252,15 @@ class PelaporanController extends Controller
             );
         $sub_title = "";
         if($kategori == "laporan_anggaran"){
-            if($type=="item"){
-                $setting['insert'] = false;
+            if($type=='item'){
+                $setting['insert']=false;
             }
             $setting['table'] = true;
             $sub_title = "Pelaporan Anggaran dan Kegiatan";
         }else if($kategori == "arahan_rups"){
             $setting['table'] = true;
-            if($type=="item"){
-                $setting['insert'] = false;
+            if($type=='item'){
+                $setting['insert']=false;
             }
             if($type == "master"){
                 $setting['berkas'] = false;
@@ -239,8 +271,7 @@ class PelaporanController extends Controller
             $sub_title = "Usulan Program Prioritas";
         }
         
-        // echo "tambah";
-        return view('anggaran.master.pelaporan', [
+        return view('pelaporan.add', [
             'title' => 'Form Master',
             'sub_title' => $sub_title,
             'setting' => $setting , 
@@ -274,75 +305,76 @@ class PelaporanController extends Controller
         }else{
             $id_form_master = $request->id_form_master;
         }
+        if($kategori != "usulan_program"){
+            $index = 0;
+            foreach (json_decode($request->item_form_master) as $value) {
+                if($request->status == 'Tambah'){
+                    if($kategori == "laporan_anggaran"){
+                        $form_master_insert_item = [
+                        'unit_kerja' => $value->unit_kerja,
+                        'program_prioritas' => $value->program_prioritas,
+                        'sasaran_dicapai'   => $value->sasaran_dicapai,
+                        'id_form_master'    => $id_form_master,
+                        'active'            => '1'
+                        ];
+                    }else if($kategori == "arahan_rups"){
+                        $form_master_insert_item = [
+                        'unit_kerja' => $value->unit_kerja,
+                        'jenis_arahan'          => $value->jenis_arahan,
+                        'arahan'                => $value->arahan,
+                        'id_form_master'        => $id_form_master,
+                        'active'                => '1'
+                        ];
+                    }
 
-        $index = 0;
-        foreach (json_decode($request->item_form_master) as $value) {
-            if($request->status == 'Tambah'){
-                if($kategori == "laporan_anggaran"){
-                    $form_master_insert_item = [
-                    'unit_kerja' => $value->unit_kerja,
-                    'program_prioritas' => $value->program_prioritas,
-                    'sasaran_dicapai'   => $value->sasaran_dicapai,
-                    'id_form_master'    => $id_form_master,
-                    'active'            => '1'
-                    ];
-                }else if($kategori == "arahan_rups"){
-                    $form_master_insert_item = [
-                    'unit_kerja' => $value->unit_kerja,
-                    'jenis_arahan'          => $value->jenis_arahan,
-                    'arahan'                => $value->arahan,
-                    'id_form_master'        => $id_form_master,
-                    'active'                => '1'
-                    ];
                 }
 
-            }
-
-            $LFormMasterInsert;
-            $LFormMasterUpdate;
-            if($request->status == 'Tambah'){
-                if($kategori == "laporan_anggaran"){
-                    $LFormMasterInsert  = MasterItemPelaporanAnggaran::create($form_master_insert_item);
-                }else if($kategori == "arahan_rups"){
-                    $LFormMasterInsert  = MasterItemArahanRUPS::create($form_master_insert_item);
-                }
-            }
-
-            
-            $index2 = 0;
-            $id_list_form_master;
-            if($request->status == 'Tambah'){
-                $id_list_form_master = $LFormMasterInsert->id;
-            }
-
-                if(isset($_POST['count_file_'.$index])){
-                    for($i=0;$i<$_POST['count_file_'.$index];$i++){
-                        $data = $_POST['file_'.$index."_".$index2];
-                        if($data!="null"){
-                            $file_name = $_POST['file_name_'.$index."_".$index2];
-                            $file_type = $_POST['file_type_'.$index."_".$index2];
-                            $file_size = $_POST['file_size_'.$index."_".$index2];
-                            $base64 = explode(";base64,", $data);
-                            $store_file_list_values = [
-                                'id_item_master'   => $id_list_form_master,
-                                'name'                  => $file_name,
-                                'type'                  => $file_type,
-                                'size'                  => $file_size,
-                                'data'                  => $base64[1],
-                                'kategori'              => $kategori,
-                                'active'                => '1',
-                                'created_at'            => \Carbon\Carbon::now(),
-                                'updated_at'            => \Carbon\Carbon::now()];
-
-                            BerkasFormItemMaster::insert($store_file_list_values);
-                            $index2++;
-                        }
+                $LFormMasterInsert;
+                $LFormMasterUpdate;
+                if($request->status == 'Tambah'){
+                    if($kategori == "laporan_anggaran"){
+                        $LFormMasterInsert  = MasterItemPelaporanAnggaran::create($form_master_insert_item);
+                    }else if($kategori == "arahan_rups"){
+                        $LFormMasterInsert  = MasterItemArahanRUPS::create($form_master_insert_item);
                     }
                 }
-            // }
-            
-            $index++;
 
+                
+                $index2 = 0;
+                $id_list_form_master;
+                if($request->status == 'Tambah'){
+                    $id_list_form_master = $LFormMasterInsert->id;
+                }
+
+                    if(isset($_POST['count_file_'.$index])){
+                        for($i=0;$i<$_POST['count_file_'.$index];$i++){
+                            $data = $_POST['file_'.$index."_".$index2];
+                            if($data!="null"){
+                                $file_name = $_POST['file_name_'.$index."_".$index2];
+                                $file_type = $_POST['file_type_'.$index."_".$index2];
+                                $file_size = $_POST['file_size_'.$index."_".$index2];
+                                $base64 = explode(";base64,", $data);
+                                $store_file_list_values = [
+                                    'id_item_master'   => $id_list_form_master,
+                                    'name'                  => $file_name,
+                                    'type'                  => $file_type,
+                                    'size'                  => $file_size,
+                                    'data'                  => $base64[1],
+                                    'kategori'              => $kategori,
+                                    'active'                => '1',
+                                    'created_at'            => \Carbon\Carbon::now(),
+                                    'updated_at'            => \Carbon\Carbon::now()];
+
+                                BerkasFormItemMaster::insert($store_file_list_values);
+                                $index2++;
+                            }
+                        }
+                    }
+                // }
+                
+                $index++;
+
+            }
         }
         return redirect('pelaporan/detail/'.$kategori."/".urlencode($id_form_master)."/0");
     }   
@@ -360,21 +392,38 @@ class PelaporanController extends Controller
         }
 
         $result = [];
-        if($kategori == "form_master"){$result = $this->FormMasterPelaporanModel->where('tw_dari', $tw)->where('active','1')->get();
+        $userUnit = "";
+        if($this->userCabang != "00"){
+            $cabang = KantorCabang::where('VALUE',$this->userCabang)->get();
+            foreach ($cabang as $cab ) {
+                $userUnit =  $cab->DESCRIPTION;
+            } 
+        }else if($this->userDivisi != "00"){
+            $divisi = Divisi::where('VALUE',$this->userDivisi)->get();
+            foreach ($divisi as $div ) {
+                $userUnit = $div->DESCRIPTION;
+            } 
+        }
+        if($kategori == "form_master"){
+            $FormMaster = $this->FormMasterPelaporanModel->where('tw_dari', $tw)->where('active','1');
+            $ItemPelaporanAnggaran;
+            foreach ($FormMaster->get() as $form_master) {
+                $ItemPelaporanAnggaran = $this->MasterItemPelaporanAnggaranModel
+                    ->where('id_form_master', $form_master->id)->where('unit_kerja', $userUnit)
+                    ->where('active', '1')->get();
+            }
+            // echo $userUnit.":".count($ItemPelaporanAnggaran);
+            $result = null;
+            if(count($ItemPelaporanAnggaran)>0){
+                $result = $FormMaster->get();
+            }
 
         }else if($kategori == "laporan_anggaran"){
             $FormMaster = $this->FormMasterPelaporanModel->where('tw_dari', $tw);
             foreach ($FormMaster->get() as $form_master) {
-                $query ;
-                if($this->userCabang == "00"){
-                    $query = Divisi::select('DESCRIPTION')->where('VALUE', $this->userDivisi)->get();
-                }else{
-                    $query = KantorCabang::select('DESCRIPTION')->where('VALUE', $this->userCabang)->get();
-                }
-                $divisi =  $query[0]["DESCRIPTION"];
 
                 $ItemPelaporanAnggaran = $this->MasterItemPelaporanAnggaranModel
-                    ->where('id_form_master', $form_master->id)->where('unit_kerja', $divisi)
+                    ->where('id_form_master', $form_master->id)->where('unit_kerja', $userUnit)
                     ->where('active', '1');
 
                 
@@ -390,6 +439,7 @@ class PelaporanController extends Controller
                         $fileList[] = [
                             'id'   => $berkas_form_item->id,
                             'count' => $countIndex,
+                            'is_template' => $berkas_form_item->is_template,
                             'name' => $berkas_form_item->name,
                             'type' => $berkas_form_item->type,
                             'size' => $berkas_form_item->size
@@ -439,6 +489,7 @@ class PelaporanController extends Controller
                         $fileList[] = [
                             'id'   => $berkas_form_item->id,
                             'count' => $countIndex,
+                            'is_template' => $berkas_form_item->is_template,
                             'name' => $berkas_form_item->name,
                             'type' => $berkas_form_item->type,
                             'size' => $berkas_form_item->size
@@ -461,6 +512,29 @@ class PelaporanController extends Controller
 
         
         return response()->json($result);
+    }
+
+    public function getAttributes($type,$id)
+    {
+        $return = null;
+        switch ($type) {
+            case 'unitkerja':
+                $second="SELECT * 
+                    FROM (SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_DIVISI] 
+                    WHERE VALUE!='00') AS A 
+                    UNION ALL 
+                    SELECT * FROM (SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_KPKC]  
+                    WHERE VALUE!='00') AS B";
+                $return = \DB::select($second);
+                break;
+            case 'programprioritas':
+                $return = ProgramPrioritas::select('program_prioritas')->get();
+                break;
+            case 'arahanrups':
+                $return = ArahanRups::select('arahan_rups')->get();
+                break;
+        }
+        return response()->json($return);
     }
 
     public function removeFormMasterAll(){

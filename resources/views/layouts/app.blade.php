@@ -161,6 +161,9 @@
                             @can('pelaporan_a_RUPS')
                             <li class="is-shown {{ checkActiveMenu('arahan_rups') }}"><a href="{{ url('/pelaporan/lihat/arahan_rups', $parameters = [], $secure = null) }}" class="menu-item">Arahan RUPS</a></li>
                             @endcan
+                            @can('pelaporan_a_RUPS')
+                            <li class="is-shown {{ checkActiveMenu('usulan_program_prioritas') }}"><a href="{{ url('/pelaporan/usulan_program_prioritas', $parameters = [], $secure = null) }}" class="menu-item">Usulan Program Prioritas</a></li>
+                            @endcan
                             @can('pelaporan_tindak_lanjut')
                             <li class="nav-item has-sub {{ checkOpenedMenu('tindaklanjut') }}"><a href=""><span data-i18n="" class="menu-title">Tindak Lanjut Temuan</span></a>
                             <ul class="menu-content">
