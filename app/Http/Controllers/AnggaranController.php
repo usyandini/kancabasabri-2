@@ -355,7 +355,7 @@ class AnggaranController extends Controller
             'userDivisi' =>$this->userDivisi,
             'nd_surat' => $nd_surat,
             'beda' => $beda , 
-            'batas' =>$date,
+            'batas' =>$date_selesai,
             'status' => 'edit',
             'reject' => false,
             'filters' => array('nd_surat' => $nd_surat),
@@ -717,17 +717,6 @@ class AnggaranController extends Controller
             $index++;
 
         }
-        // if($request->status == 'tambah'){
-        //     session()->flash('tambah', true);
-        // }else if($request->setuju =='Tolak'){
-        //     session()->flash('tolak', true);
-        // }else if($request->setuju =='Simpan'){
-        //     session()->flash('simpan', true);
-        // }else if($request->setuju =='Kirim'){
-        //     session()->flash('kirim', true);
-        // }else if($request->setuju =='Setuju'){
-        //     session()->flash('setuju', true);
-        // }
 
         $status_view = redirect('anggaran/edit/'.$request->nd_surat); 
         // echo $setuju;

@@ -17,7 +17,9 @@ class MasterItemArahanRUPS extends Model
             'unit_kerja', 
     		'jenis_arahan',
     		'arahan', 
-    		'active',
+            'active',
+    		'is_template',
+            'progress_tindak_lanjut',
     		'created_at', 
     		'updated_at'];
 

@@ -106,17 +106,16 @@
       }else{
         $('input[name="perizinan[info_u]"]').iCheck('check');
       }
-
       if($('#jenis_user input').filter(':checked').length == 0){
-        $('input[name="perizinan[form_master]"]').iCheck('uncheck');
-      }else{
-        $('input[name="perizinan[form_master]"]').iCheck('check');
-      }
-
-      if($('#form_master input').filter(':checked').length == 0){
         $('input[name="perizinan[jenis_u]"]').iCheck('uncheck');
       }else{
         $('input[name="perizinan[jenis_u]"]').iCheck('check');
+      }
+
+      if($('#form_master input').filter(':checked').length == 0){
+        $('input[name="perizinan[form_master]"]').iCheck('uncheck');
+      }else{
+        $('input[name="perizinan[form_master]"]').iCheck('check');
       }
 
       if ($('#unit_kerja input').filter(':checked').length > $('#unit_kerja input').length/2) {

@@ -228,7 +228,7 @@
 
                             itemTemplate: function(value) {
                               
-                              var button = "<a href='{{ url('anggaran/edit/')}}/"+value+"'   class='btn btn-primary'> Detail</a>";
+                              var button = "<a href='{{ url('anggaran/edit/')}}/"+value+"'   class='btn btn-sm btn-primary'> Detail</a>";
                               return button;
                             }
                           }
