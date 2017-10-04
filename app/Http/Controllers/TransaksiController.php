@@ -525,16 +525,6 @@ class TransaksiController extends Controller
                 $inline = 'transaksi.export-realisasi'; break;
         }
 
-        // dd($transaksi->get()->where('item', '5402010210')->sum('total'));
-        // $realisasi = array();
-        // foreach($transaksi as $trans){
-        // $sum = \DB::select("SELECT 
-        //         id, item, tgl, anggaran, mata_anggaran, batch_id, SUM(total) as total, FROM dbo.transaksi 
-        //             WHERE item = ". $trans->item." GROUP BY item");
-        //             array_push($realisasi, $sum);
-
-        // }
-
         return view($inline, [
             'cabangs'   => KantorCabang::get(),
             'filters'   => array('cabang' => $cabang, 'awal'=>$awal, 'akhir'=>$akhir,  'transyear' => $transyear),
@@ -548,7 +538,25 @@ class TransaksiController extends Controller
     
     public function filter_handle_realisasi(Request $request)
     {
-        return redirect('transaksi/filter/realisasi/'.$request->cabang.'/'.$request->awal.'/'.$request->akhir.'/'.$request->transyear);
+        $validatorRR = Validator::make($request->all(),
+            [
+                'cabang'    => 'required',
+                'awal'      => 'required',
+                'akhir'     => 'required',
+                'transyear' => 'required'
+            ], 
+            [
+                'cabang.required'  => 'Kantor cabang harus dipilih.',
+                'awal.required'  => 'Periode awal harus dipilih.',
+                'akhir.required'  => 'Periode akhir harus dipilih.',
+                'transyear.required'  => 'Tahun periode harus dipilih.'
+            ]);
+
+        if($validatorRR->passes()){
+            return redirect('transaksi/filter/realisasi/'.$request->cabang.'/'.$request->awal.'/'.$request->akhir.'/'.$request->transyear);    
+        }else{
+            return redirect()->back()->withErrors($validatorRR)->withInput();
+        }
     }
     
     public function filter_result_realisasi($cabang, $awal, $akhir, $transyear)
@@ -571,7 +579,7 @@ class TransaksiController extends Controller
         if ($transyear != '0') {
             $transaksi = $transaksi->whereYear('tgl', '=', $transyear);
         }
-
+        // dd($transaksi->get());
         return view('transaksi.realisasi', [
             'cabang'    => $cabangs,
             'filters'   => array('cabang'=>$cabang, 'awal'=>$awal, 'akhir'=>$akhir, 'transyear' => $transyear),

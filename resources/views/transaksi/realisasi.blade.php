@@ -35,7 +35,15 @@
               <div class="content-body"><!-- Basic scenario start -->
                 <section id="basic">
                   <div class="row">
-                    @can('cari_t')
+                    @if(count($errors->all()) > 0)
+                    <duv class="col-xs-6">
+                      <div class="alert alert-danger alert-dismissable">
+                        @foreach ($errors->all() as $error)
+                        {!! $error !!}<br>
+                        @endforeach
+                      </div>
+                    </div>
+                    @endif
                     <div class="col-xs-12">
                       <div class="card">
                         <div class="card-header">
@@ -110,12 +118,11 @@
                                   </div>
                                   @endif
                                 </div>
-                              </form>
-                            </div>
+                              </div>
+                            </form>
                           </div>
                         </div>
-                      </div>
-                      @endcan                    
+                      </div>                   
                     </div>
                     <div class="row">
                       <div class="col-xs-12">
@@ -184,7 +191,6 @@
               <script type="text/javascript" src="{{ asset('app-assets/vendors/js/charts/jquery.sparkline.min.js') }}"></script>
               <script src="{{ asset('app-assets/vendors/js/tables/jsgrid/jsgrid.min.js') }}" type="text/javascript"></script>
               <script src="{{ asset('app-assets/vendors/js/tables/jsgrid/griddata.js') }}" type="text/javascript"></script>
-              <script src="{{ asset('app-assets/vendors/js/tables/jsgrid/jquery.validate.min.js') }}" type="text/javascript"></script>
               <!-- END PAGE VENDOR JS-->
               <!-- BEGIN PAGE LEVEL JS-->
               <script type="text/javascript" src="{{ asset('app-assets/js/scripts/ui/breadcrumbs-with-stats.min.js') }}"></script>
