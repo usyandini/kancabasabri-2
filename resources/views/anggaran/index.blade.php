@@ -1233,7 +1233,7 @@
                   function setUnitKerja(id_type,id_unit){
                     var type = "";
                     var unit = "";
-                    if(id_type == "00 "){
+                    if(id_type == "00"){
                       type = "divisi";
                       unit = id_unit;
                     }else{
