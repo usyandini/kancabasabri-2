@@ -55,7 +55,7 @@
                                       <div class="form-group">
                                         <label>TW</label>
 
-                                        @if($setting['status']=="Tambah"&& $type == "master")
+                                        @if($setting['status']=="Edit"&& $type == "master")
                                         <select class="select2 form-control" name="tw_dari" id="tw_dari" onchange="changeTW(0)">
                                           <option value="0">None</option>
                                           <option value="1">I</option>
@@ -78,7 +78,7 @@
                                     <div class="col-xs-2">
                                       <div class="form-group">
                                         <label>TW</label>
-                                         @if($setting['status']=="Tambah"&& $type == "master")
+                                         @if($setting['status']=="Edit"&& $type == "master")
                                         <select class="select2 form-control" name="tw_ke" id="tw_ke" onchange="changeTW(1)">
                                           <option value="0">None</option>
                                           <option value="1">I</option>
@@ -101,7 +101,7 @@
                                         <div class="form-group">
                                           <label>Tanggal Mulai</label>
                                           @if($setting['insert'])
-                                          <input type="date" id="tanggal_mulai" name="tanggal_mulai" min = <?php echo date('Y-m-d')?> onchange="startDate()" class="form-control">
+                                          <input type="date" id="tanggal_mulai" name="tanggal_mulai" onchange="startDate()" class="form-control">
                                           @else
                                           <input id="tanggal_mulai" name="tanggal_mulai" class="form-control" readOnly>
                                           @endif
@@ -284,7 +284,7 @@
                         loadData: function(filter) {
                           return $.ajax({
                               type: "GET",
-                              url:"{{ ($type == 'item' ? url('pelaporan/get/filteredMaster/'.$setting['kategori']) : url('pelaporan/get/filtered/'.$filters['id'].'/'.$setting['kategori'])) }}",
+                              url:"{{ url('pelaporan/get/filtered/'.$type.'/'.$filters['id'].'/'.$setting['kategori']) }}",
                               data: filter,
                               dataType: "JSON"
                           })
@@ -313,14 +313,16 @@
 
                         },
                         updateItem: function(item) {
+                          // alert(item["tempId"]);
                           item["delete"]="none";
-                          inputs.splice(item["tempId"]-1, 1, item);  
+                          inputs.splice(item["tempId"], 1, item);  
                           click_berkas = true;
                           if(upload_file[item["tempId"]]!=null){
                             for(i = 0 ;i< upload_file[item["tempId"]].length;i++){
                               readerPrev(i,item["tempId"]);
                             }
                           } 
+
                         },
                       }, 
 
@@ -341,9 +343,22 @@
                               });
                            }, 200);
                       },
+                      onItemUpdated: function(args) {
+                          statusTable = "null";
+                      },
+
+                      onItemInserted:function(args){
+                        statusTable = "null";
+                      },
                       fields: [
                           {
                             name: "id",
+                            css: "hide",
+                            width: 0,
+
+                          },
+                          {
+                            name: "tempId",
                             css: "hide",
                             width: 0,
 
@@ -460,17 +475,23 @@
                           @if($setting['berkas'])
                           { name: "file", align:"center", title: "Berkas",  width: 150 ,
 
-                            itemTemplate: function(value) {
+                            itemTemplate: function(value,item) {
                               // alert("null");
                               var id_list=0;
                               var count_berkas=0;
+                              for(i=0;i<inputs.length;i++){
+                                if(inputs[i]["id"]==item.id){
+                                  id_list = inputs[i]["tempId"];
+                                }
+                              }
+
+
+                              var count_berkas=0;
                               if(value.length>0){
                                 for(i =0;i<value.length;i++){
-                                  id_list = value[i]['count'];
+                                  // id_list = value[i]['count'];
                                   count_berkas++;
                                 }
-                              }else{
-                                id_list=value
                               }
                               if(upload_file[id_list] != null){
                                 for(i=0;i<upload_file[id_list].length;i++){
@@ -487,7 +508,7 @@
                               }else{
                                 title = count_berkas+" Berkas";
                               }
-                              var button = "<span class='btn btn-primary' id='button_"+id_list+"' onclick='setModalFile("+id_list+")' >"+title+"</span>";
+                              var button = "<span class='btn btn-sm btn-primary' id='button_"+id_list+"' onclick='setModalFile("+id_list+")' >"+title+"</span>";
                               return button;
                             },
 
@@ -512,21 +533,27 @@
                               }else{
                                 title = count_berkas+" Berkas";
                               }
-                              var button = "<span class='btn btn-primary' id='button_"+id_list+"' onclick='setModalFile("+id_list+")' >"+title+"</span>";
+                              var button = "<span class='btn btn-sm btn-primary' id='button_"+id_list+"' onclick='setModalFile("+id_list+")' >"+title+"</span>";
                               return button;
                             },
                             
-                            editTemplate: function(value) {
+                            editTemplate: function(value,item) {
                               // alert("update");
+                              var count_berkas=0;
                               var id_list=0;
+                              for(i=0;i<inputs.length;i++){
+                                if(inputs[i]["id"]==item.id){
+                                  id_list = inputs[i]["tempId"];
+                                }
+                              }
+
+
                               var count_berkas=0;
                               if(value.length>0){
                                 for(i =0;i<value.length;i++){
-                                  id_list = value[i]['count'];
+                                  // id_list = value[i]['count'];
                                   count_berkas++;
                                 }
-                              }else{
-                                id_list=value
                               }
                               if(upload_file[id_list] != null){
                                 for(i=0;i<upload_file[id_list].length;i++){
@@ -541,7 +568,7 @@
                               }else{
                                 title = count_berkas+" Berkas";
                               }
-                              var button = "<span class='btn btn-primary' id='button_"+id_list+"' onclick='setModalFile("+id_list+")' >"+title+"</span>";
+                              var button = "<span class='btn btn-sm btn-primary' id='button_"+id_list+"' onclick='setModalFile("+id_list+")' >"+title+"</span>";
                               return button;
                             },
                           },
@@ -599,14 +626,16 @@
                   function setDetailFormMaster(){
                     // alert('{{ url('pelaporan/get/filtered/'.$filters['id'].'/form_master') }}');
                     $.ajax({
-                        'async': false, 'type': "GET", 'dataType': 'JSON', 'url': "{{ ($type == 'item' ? url('pelaporan/get/filteredMaster/form_master') : url('pelaporan/get/filtered/'.$filters['id'].'/form_master')) }}",
+                        'async': false, 'type': "GET", 'dataType': 'JSON', 'url': "{{ url('pelaporan/get/filtered/'.$type.'/'.$filters['id'].'/form_master') }}",
                         'success': function (data) {
 
                           tanggal = document.getElementById('tanggal');
                           tw_dari = document.getElementById('tw_dari');
                           tw_ke = document.getElementById('tw_ke');
                           // alert(JSON.stringify(data));
-
+                          if({{($type=='item'&&$status='Tambah')?1:0}}){
+                            document.getElementById('id_form_master').value = data[0].id;
+                          }
                           now = data[0].created_at.split(' ')
                           tanggal.value = now[0];
                           tw_dari_val="";
@@ -694,7 +723,7 @@
                   function getListData() {
                     $.ajax({
                           'async': false, 'type': "GET", 'dataType': 'JSON', 
-                          'url': "{{ ($type == 'item' ? url('pelaporan/get/filteredMaster/'.$setting['kategori']) : url('pelaporan/get/filtered/'.$filters['id'].'/'.$setting['kategori'])) }}",
+                          'url': "{{ url('pelaporan/get/filtered/'.$type.'/'.$filters['id'].'/'.$setting['kategori']) }}",
                           'success': function (data) {
                               inputs = data;
                               download="";
@@ -713,7 +742,7 @@
                                 }
                                 list_berkas[i] = {};
                                 list_berkas[i] = data[i]["file"];
-                                
+                                // alert(tempIdCounter);
                                 // alert(JSON.stringify(inputs[i]));
                               }
                           }
@@ -737,39 +766,50 @@
                   };
 
                   function check(){
+                    if({{$type == "master"?1:0}}){
+                      if(document.getElementById("tanggal_mulai").value == ""){
+                        toastr.error("Silahkan Isi Tanggal Mulai Untuk memulai Pelaporan Anggaran Kegiatan. Terima kasih.", "Perhatian.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
+                      }else if(document.getElementById("tanggal_selesai").value == ""){
+                        toastr.error("Silahkan Isi Tanggal Selesai sebagai acuan berakhirnya Pelaporan Anggaran Kegiatan. Terima kasih.", "Perhatian.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
+                      }else if(document.getElementById("tw_dari").value == "0"){
+                        toastr.error("Pilih TW Pelaporan Anggaran Kegiatan. Terima kasih.", "Perhatian.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
+                      }else if(inputs.length == 0&&{{$setting['kategori']!="usulan_program"?1:0}}){
+                        toastr.error("Silahkan Isi Minimal Satu daftar Pelaporan Anggaran Kegiatan. Terima kasih.", "Perhatian.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
+                      }else{
+                        var stop = false;
 
-                    if(document.getElementById("tanggal_mulai").value == ""){
-                      toastr.error("Silahkan Isi Tanggal Mulai Untuk memulai Pelaporan Anggaran Kegiatan. Terima kasih.", "Perhatian.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
-                    }else if(document.getElementById("tanggal_selesai").value == ""){
-                      toastr.error("Silahkan Isi Tanggal Selesai sebagai acuan berakhirnya Pelaporan Anggaran Kegiatan. Terima kasih.", "Perhatian.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
-                    }else if(document.getElementById("tw_dari").value == "0"){
-                      toastr.error("Pilih TW Pelaporan Anggaran Kegiatan. Terima kasih.", "Perhatian.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
-                    }else if(inputs.length == 0&&{{$setting['kategori']!="usulan_program"?1:0}}){
-                      toastr.error("Silahkan Isi Minimal Satu daftar Pelaporan Anggaran Kegiatan. Terima kasih.", "Perhatian.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
+                        for(i=0;i<inputs.length;i++){
+                          nameClass = $('.file_'+i);
+                          if(nameClass.length!=0){
+                            var countFile = $('<input/>',{type:'hidden',id:('count_file_'+i),
+                            name:('count_file_'+i),value:nameClass.length});
+                            countFile.appendTo("#file_grid");
+                          }
+                        }
+                        $('#modal_pernyataan').modal({
+                                  backdrop: 'static'
+                              });
+                      }
                     }else{
                       var stop = false;
 
-                      for(i=0;i<inputs.length;i++){
-                        nameClass = $('.file_'+i);
-                        if(nameClass.length!=0){
-                          var countFile = $('<input/>',{type:'hidden',id:('count_file_'+i),
-                          name:('count_file_'+i),value:nameClass.length});
-                          countFile.appendTo("#file_grid");
+                        for(i=0;i<inputs.length;i++){
+                          nameClass = $('.file_'+i);
+                          if(nameClass.length!=0){
+                            var countFile = $('<input/>',{type:'hidden',id:('count_file_'+i),
+                            name:('count_file_'+i),value:nameClass.length});
+                            countFile.appendTo("#file_grid");
+                          }
                         }
-                      }
-                      $('#modal_pernyataan').modal({
-                                backdrop: 'static'
-                            });
+                        $('#modal_pernyataan').modal({
+                                  backdrop: 'static'
+                              });
                     }
                   }
 
                   function startDate(){
                     start_date = document.getElementById('tanggal_mulai').value;
-                    // start_date = document.getElementById('tanggal_mulai').value;
-
-                    // var today = new Date().toISOString().split('T')[0];
-                    // document.getElementById("tanggal_mulai")[0].setAttribute('min', today);
-                    // alert(start_date);
+                    
                     var now = start_date.split('-');
                     var day ="" ;
                     var next = parseInt(now[2])+1;
@@ -834,13 +874,13 @@
                           for(i = 0; i< list_berkas[index].length; i++){
                             if( list_berkas[index][i]!=null){
                               if(list_berkas[index][i]["delete"]=="none"){
-                                link = "{{url('anggaran/get/download')}}/"+ list_berkas[index][i]['id'];
+                                link = "{{url('pelaporan/get/download')}}/"+ list_berkas[index][i]['id'];
                                 hasil2[i] = '<div id="db_file_'+i+'"><div class="col-xs-10"><a href="'+link+'" ><li>'+ list_berkas[index][i]['name']+'</li></div>';
-                                
-                                if((list_berkas[index][i]['is_template']==1&&{{$type=="master"?1:0}})&&{{$setting['status']=="Tambah"}}){
+                                // alert({{$type=="item"?1:0}});
+                                if((list_berkas[index][i]['is_template']==1&&{{$type=="master"?1:0}})&&{{$setting['status']=="Edit"?1:0}}){
                                   hasil2[i] += '<div class="col-xs-1" ><i class="fa fa-download "></i></div></a>';
                                   hasil2[i] += '<div class="col-xs-1" onclick="deleteFileDB('+i+')"><i style="color:red" class="fa fa-close "></i></div><br/><br/></div>';
-                                }else if((list_berkas[index][i]['is_template']==0&&{{$type=="item"?1:0}})&&{{$setting['status']=="Tambah"}}){
+                                }else if((list_berkas[index][i]['is_template']==0&&{{$type=="item"?1:0}})&&{{$setting['status']=="Edit"?1:0}}){
                                   hasil2[i] += '<div class="col-xs-1" ><i class="fa fa-download "></i></div></a>';
                                   hasil2[i] += '<div class="col-xs-1" onclick="deleteFileDB('+i+')"><i style="color:red" class="fa fa-close "></i></div><br/><br/></div>';
                                 }else{

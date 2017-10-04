@@ -44,136 +44,125 @@ class PelaporanController extends Controller
 
     }
 
-    public function form_master_detail($kategori,$id,$type) 
+    public function cari(Request $request,$kategori,$type) 
+    {
+
+        $filter = null;
+        // if(isset($request->cari_stat_anggaran)){
+        $filter = array('cari_tahun' => $request->cari_tahun,
+                'unit_kerja' =>$request->cari_unit_kerja,
+                'cari_tw_dari' =>$request->cari_tw_dari,
+                'cari_tw_ke' =>$request->cari_tw_ke
+            );
+        // }
+        $query="SELECT * 
+                    FROM (SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_DIVISI] 
+                    WHERE VALUE!='00') AS A 
+                    UNION ALL 
+                    SELECT * FROM (SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_KPKC]  
+                    WHERE VALUE!='00') AS B";
+        $unit_kerja = \DB::select($query);
+        $sub_title = "";
+        if($kategori == "laporan_anggaran"){
+            $sub_title = "Pelaporan Anggaran dan Kegiatan";
+        }else if($kategori == "arahan_rups"){
+            $sub_title = "Arahan RUPS";
+        }else if($kategori == "usulan_program"){
+            $sub_title = "Usulan Program Prioritas";
+        }
+        
+
+        return view('pelaporan.informasi', [
+            'title' => $sub_title,
+            'sub_title' => '',
+            'kategori'=>$kategori,
+            'unit_kerja'=>$unit_kerja,
+            'type' => $type,
+            'filters'=>$filter,
+            'userCabang' =>$this->userCabang,
+            'userDivisi' =>$this->userDivisi,
+            'filters' => $filter]);
+    }
+
+    public function pelaporan($type,$kategori) 
+    {
+
+        $filter = null;
+        
+        $sub_title = "";
+        if($kategori == "laporan_anggaran"){
+            $sub_title = "Pelaporan Anggaran dan Kegiatan";
+        }else if($kategori == "arahan_rups"){
+            $sub_title = "Arahan RUPS";
+        }else if($kategori == "usulan_program"){
+            $sub_title = "Usulan Program Prioritas";
+        }
+
+        $query="SELECT * 
+                    FROM (SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_DIVISI] 
+                    WHERE VALUE!='00') AS A 
+                    UNION ALL 
+                    SELECT * FROM (SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_KPKC]  
+                    WHERE VALUE!='00') AS B";
+        
+
+        $unit_kerja = \DB::select($query);
+        return view('pelaporan.informasi', [
+            'title' => $sub_title,
+            'sub_title' => '',
+            'kategori'=>$kategori,
+            'unit_kerja'=>$unit_kerja,
+            'type' => $type,
+            'filters'=>$filter,
+            'userCabang' =>$this->userCabang,
+            'userDivisi' =>$this->userDivisi,
+            'filters' => $filter]);
+    }
+
+    public function edit($type,$kategori,$id) 
     {
 
         $filter =  array(
-                'id'        => $id,
-                'kategori'  => $kategori
-
-            );
+                'id'        => $id);
         $setting = array('editable' => false,
                     'berkas'        =>true,
-                    'edit'          =>false,
-                    'insert'          =>false,
-                    'status'        =>"View",
-                    'jenis_berkas'  =>"upload",
+                    'edit'          =>true,
+                    'insert'          =>true,
+                    'status'        =>"Edit",
+                    'jenis_berkas'  =>"1",
                     'kategori'      =>$kategori,
-                    'id_form_master'=>$id,
+                    'id_form_master'=>-1,
                     'table'         => true
 
             );
-
         $sub_title = "";
         if($kategori == "laporan_anggaran"){
-            if($type == "1"){
-                $setting['edit'] = true;
-                $setting['jenis_berkas'] = "download";
+            if($type=='item'){
+                $setting['insert']=false;
+                $setting['jenis_berkas']="0";
             }
             $setting['table'] = true;
-            $setting['kategori'] = "laporan_anggaran";
             $sub_title = "Pelaporan Anggaran dan Kegiatan";
         }else if($kategori == "arahan_rups"){
-            if($type == "1"){
-                $setting['edit'] = true;
+            $setting['table'] = true;
+            if($type=='item'){
+                $setting['insert']=false;
+                $setting['jenis_berkas']="0";
+            }
+            if($type == "master"){
                 $setting['berkas'] = false;
             }
-            $setting['table'] = true;
-            $setting['kategori'] = "arahan_rups";
             $sub_title = "Arahan RUPS";
         }else if($kategori == "usulan_program"){
             $setting['table'] = false;
-            $setting['kategori'] = "usulan_program";
             $sub_title = "Usulan Program Prioritas";
         }
         
-        $text_type =  "item";
-        if($type == 1){
-            $text_type =  "master";
-        }
-        return view('pelaporan.index', [
+        return view('pelaporan.edit', [
             'title' => 'Form Master',
             'sub_title' => $sub_title,
             'setting' => $setting , 
-            'type' => $text_type , 
-            'userCabang' =>$this->userCabang,
-            'userDivisi' =>$this->userDivisi,
-            'filters' => $filter]);
-    }
-
-    public function form_master($kategori) 
-    {
-
-        $filter = null;
-        $setting = array('editable' => false,
-                    'berkas'        =>true,
-                    'edit'          =>false,
-                    'insert'          =>false,
-                    'status'        =>"Cari",
-                    'jenis_berkas'  =>"upload",
-                    'kategori'      =>$kategori,
-                    'id_form_master'=>-1,
-                    'table'         => true
-
-            );
-        $sub_title = "";
-        if($kategori == "laporan_anggaran"){
-            $setting['table'] = true;
-            $sub_title = "Pelaporan Anggaran dan Kegiatan";
-        }else if($kategori == "arahan_rups"){
-            $setting['berkas'] = false;
-            $setting['table'] = true;
-            $sub_title = "Arahan RUPS";
-        }else if($kategori == "usulan_program"){
-            $setting['table'] = false;
-            $sub_title = "Usulan Program Prioritas";
-        }
-        
-
-
-        return view('pelaporan.index', [
-            'title' => 'Form Master',
-            'sub_title' => $sub_title,
-            'type' => 'master',
-            'setting' => $setting , 
-            'userCabang' =>$this->userCabang,
-            'userDivisi' =>$this->userDivisi,
-            'filters' => $filter]);
-    }
-
-    public function pelaporan($kategori) 
-    {
-
-        $filter = null;
-        $setting = array('editable' => false,
-                    'berkas'        =>true,
-                    'edit'          =>false,
-                    'insert'          =>false,
-                    'status'        =>"Info",
-                    'jenis_berkas'  =>"upload",
-                    'kategori'      =>$kategori,
-                    'id_form_master'=>-1,
-                    'table'         => true
-
-            );
-        $sub_title = "";
-        if($kategori == "laporan_anggaran"){
-            $setting['table'] = true;
-            $sub_title = "Pelaporan Anggaran dan Kegiatan";
-        }else if($kategori == "arahan_rups"){
-            $setting['table'] = true;
-            $sub_title = "Arahan RUPS";
-        }else if($kategori == "usulan_program"){
-            $setting['table'] = false;
-            $sub_title = "Usulan Program Prioritas";
-        }
-        
-
-        return view('pelaporan.index', [
-            'title' => $sub_title,
-            'sub_title' => '',
-            'setting' => $setting ,
-            'type' => 'item',
+            'type' => $type,
             'userCabang' =>$this->userCabang,
             'userDivisi' =>$this->userDivisi,
             'filters' => $filter]);
@@ -244,7 +233,7 @@ class PelaporanController extends Controller
                     'edit'          =>true,
                     'insert'          =>true,
                     'status'        =>"Tambah",
-                    'jenis_berkas'  =>"upload",
+                    'jenis_berkas'  =>"1",
                     'kategori'      =>$kategori,
                     'id_form_master'=>-1,
                     'table'         => true
@@ -254,6 +243,7 @@ class PelaporanController extends Controller
         if($kategori == "laporan_anggaran"){
             if($type=='item'){
                 $setting['insert']=false;
+                $setting['jenis_berkas']="0";
             }
             $setting['table'] = true;
             $sub_title = "Pelaporan Anggaran dan Kegiatan";
@@ -261,6 +251,7 @@ class PelaporanController extends Controller
             $setting['table'] = true;
             if($type=='item'){
                 $setting['insert']=false;
+                $setting['jenis_berkas']="0";
             }
             if($type == "master"){
                 $setting['berkas'] = false;
@@ -271,7 +262,7 @@ class PelaporanController extends Controller
             $sub_title = "Usulan Program Prioritas";
         }
         
-        return view('pelaporan.add', [
+        return view('pelaporan.input', [
             'title' => 'Form Master',
             'sub_title' => $sub_title,
             'setting' => $setting , 
@@ -288,13 +279,27 @@ class PelaporanController extends Controller
         $kategori =$request->kategori;
 
         if($request->status == 'Tambah'){
-            $form_master_insert = [
-                'tanggal_mulai'    => $request->tanggal_mulai, 
-                'tanggal_selesai'  => $request->tanggal_selesai,
-                'tw_dari'           => $request->tw_dari, 
-                'tw_ke'             => $request->tw_ke, 
-                'kategori'          => $kategori,
-                'active'            => '1'];
+            if($request->jenis_berkas == '1'){
+                $form_master_insert = [
+                    'tanggal_mulai'    => $request->tanggal_mulai, 
+                    'tanggal_selesai'  => $request->tanggal_selesai,
+                    'tw_dari'           => $request->tw_dari, 
+                    'tw_ke'             => $request->tw_ke, 
+                    'kategori'          => $kategori,
+                    'is_template'       => $request->jenis_berkas,
+                    'active'            => '1'];
+            }else if($request->jenis_berkas == '0'){
+                $FormMaster = FormMasterPelaporan::where('id',$request->id_form_master)->first();
+                $form_master_insert = [
+                    'tanggal_mulai'    => $FormMaster->tanggal_mulai, 
+                    'tanggal_selesai'  => $FormMaster->tanggal_selesai,
+                    'tw_dari'           => $FormMaster->tw_dari, 
+                    'tw_ke'             => $FormMaster->tw_ke, 
+                    'kategori'          => $kategori,
+                    'is_template'       => $request->jenis_berkas,
+                    'active'            => '1'];
+
+            }
         }
 
 
@@ -310,20 +315,35 @@ class PelaporanController extends Controller
             foreach (json_decode($request->item_form_master) as $value) {
                 if($request->status == 'Tambah'){
                     if($kategori == "laporan_anggaran"){
+                        $uraian_progress="";
+                        $id_list_master=0;
+                        if($request->jenis_berkas == '0'){
+                            $uraian_progress = $value->uraian_progress;
+                            $id_list_master = $value->id;
+                        }
                         $form_master_insert_item = [
                         'unit_kerja' => $value->unit_kerja,
                         'program_prioritas' => $value->program_prioritas,
                         'sasaran_dicapai'   => $value->sasaran_dicapai,
                         'id_form_master'    => $id_form_master,
+                        'uraian_progress'   => $uraian_progress,
+                        'is_template'       => $request->jenis_berkas,
+                        'id_list_master'    => $id_list_master,
                         'active'            => '1'
                         ];
                     }else if($kategori == "arahan_rups"){
+                        $progress_tindak_lanjut="";
+                        if($request->jenis_berkas == '0'){
+                            $progress_tindak_lanjut = $value->progress_tindak_lanjut;
+                        }
                         $form_master_insert_item = [
                         'unit_kerja' => $value->unit_kerja,
-                        'jenis_arahan'          => $value->jenis_arahan,
-                        'arahan'                => $value->arahan,
-                        'id_form_master'        => $id_form_master,
-                        'active'                => '1'
+                        'jenis_arahan'              => $value->jenis_arahan,
+                        'arahan'                    => $value->arahan,
+                        'id_form_master'            => $id_form_master,
+                        'progress_tindak_lanjut'    => $progress_tindak_lanjut,
+                        'is_template'               => $request->jenis_berkas,
+                        'active'                    => '1'
                         ];
                     }
 
@@ -354,6 +374,7 @@ class PelaporanController extends Controller
                                 $file_type = $_POST['file_type_'.$index."_".$index2];
                                 $file_size = $_POST['file_size_'.$index."_".$index2];
                                 $base64 = explode(";base64,", $data);
+                                
                                 $store_file_list_values = [
                                     'id_item_master'   => $id_list_form_master,
                                     'name'                  => $file_name,
@@ -362,6 +383,7 @@ class PelaporanController extends Controller
                                     'data'                  => $base64[1],
                                     'kategori'              => $kategori,
                                     'active'                => '1',
+                                    'is_template'           => $request->jenis_berkas,
                                     'created_at'            => \Carbon\Carbon::now(),
                                     'updated_at'            => \Carbon\Carbon::now()];
 
@@ -379,7 +401,50 @@ class PelaporanController extends Controller
         return redirect('pelaporan/detail/'.$kategori."/".urlencode($id_form_master)."/0");
     }   
 
-    public function getDataFormMaster($kategori){
+    public function getFilteredPelaporan($type,$kategori,$tahun,$tw_dari,$tw_ke,$unit_kerja){
+        $decode_unit = urldecode($unit_kerja);
+        $result = [];
+
+        $query =$this->FormMasterPelaporanModel;
+        if($tahun != "0"){
+            $query = $query->whereYear('created_at', '=', $tahun);
+            
+        }
+        $query = $query->where('tw_dari','<=',$tw_dari)->orWhere('tw_ke','<=',$tw_ke);
+        $is_template = 1;
+        if($type == "item"){
+            $is_template = 0;
+        }
+        $result = $query->where('kategori',$kategori)->where('is_template', $is_template)->orderBy('updated_at','DESC');
+        $item;
+        if($decode_unit !="0"){
+            if($kategori == 'laporan_anggaran'){
+                $item = $this->MasterItemPelaporanAnggaranModel
+                    ->where('id_form_master', $result->first()['id'])->where('unit_kerja', $decode_unit)->get();
+            }else if($kategori == 'arahan_rups'){
+                $item = $this->MasterItemArahanRUPSModel
+                    ->where('id_form_master', $result->first()['id'])->where('unit_kerja', $decode_unit)->get();
+            }
+        }else{
+            if($kategori == 'laporan_anggaran'){
+                $item = $this->MasterItemPelaporanAnggaranModel
+                    ->where('id_form_master', $result->first()['id'])->get();
+            }else if($kategori == 'arahan_rups'){
+                $item = $this->MasterItemArahanRUPSModel
+                    ->where('id_form_master', $result->first()['id'])->get();
+            }
+        }
+        if(count($item)>0){
+            if($result->first())
+                $result = $result->get();
+        }else{
+            $result = null;
+        }
+
+        return response()->json($result);
+    }
+
+    public function getDataFormMaster($kategori,$type){
         $tw = 0;
         if(date('n')>=1&&date('n')<=3){
             $tw = 1;
@@ -404,22 +469,25 @@ class PelaporanController extends Controller
                 $userUnit = $div->DESCRIPTION;
             } 
         }
-        if($kategori == "form_master"){
-            $FormMaster = $this->FormMasterPelaporanModel->where('tw_dari', $tw)->where('active','1');
+
+        // echo $kategori;
+        if($type == "0"){
+            $FormMaster = $this->FormMasterPelaporanModel->where('tw_dari', $tw)->where('kategori',$kategori)->where('active','1');
             $ItemPelaporanAnggaran;
             foreach ($FormMaster->get() as $form_master) {
                 $ItemPelaporanAnggaran = $this->MasterItemPelaporanAnggaranModel
                     ->where('id_form_master', $form_master->id)->where('unit_kerja', $userUnit)
                     ->where('active', '1')->get();
+
             }
             // echo $userUnit.":".count($ItemPelaporanAnggaran);
             $result = null;
-            if(count($ItemPelaporanAnggaran)>0){
+            if(count($ItemPelaporanAnggaran)>0||$kategori == 'usulan_program'){
                 $result = $FormMaster->get();
             }
 
-        }else if($kategori == "laporan_anggaran"){
-            $FormMaster = $this->FormMasterPelaporanModel->where('tw_dari', $tw);
+        }else if($kategori == "laporan_anggaran"&&$type=="1"){
+            $FormMaster = $this->FormMasterPelaporanModel->where('tw_dari', $tw)->where('kategori',$kategori);
             foreach ($FormMaster->get() as $form_master) {
 
                 $ItemPelaporanAnggaran = $this->MasterItemPelaporanAnggaranModel
@@ -448,9 +516,49 @@ class PelaporanController extends Controller
 
                     $result[] = [
                         'id'                        => $item_pelaporan_anggaran->id,
+                        'tempId'                    => $countIndex,
                         'unit_kerja'         => $item_pelaporan_anggaran->unit_kerja,
                         'program_prioritas'         => $item_pelaporan_anggaran->program_prioritas,
                         'sasaran_dicapai'           => $item_pelaporan_anggaran->sasaran_dicapai,
+                        'file'  => $fileList
+                        
+                    ];
+                    $countIndex++;
+                }  
+            }
+        }else if($kategori == "arahan_rups" && $type=="1"){
+            $FormMaster = $this->FormMasterPelaporanModel->where('tw_dari', $tw)->where('kategori',$kategori);
+            foreach ($FormMaster->get() as $form_master) {
+
+                $ItemArahaRUPS = $this->MasterItemArahanRUPS
+                    ->where('id_form_master', $form_master->id)->where('unit_kerja', $userUnit)
+                    ->where('active', '1');
+
+                
+                $countIndex=0;
+                foreach ($ItemArahaRUPS->get() as $item_arahan_rups) {
+                    $id_item_arahan_rups = $item_arahan_rups->id;
+                    $BerkasFormItem = $this->BerkasFormItemMasterModel
+                            ->where('id_item_master', $id_item_arahan_rups)
+                            ->where('kategori', $kategori)
+                            ->where('active', '1');
+                    $fileList = [];
+                    foreach ($BerkasFormItem->get() as $berkas_form_item) {
+                        $fileList[] = [
+                            'id'   => $berkas_form_item->id,
+                            'count' => $countIndex,
+                            'is_template' => $berkas_form_item->is_template,
+                            'name' => $berkas_form_item->name,
+                            'type' => $berkas_form_item->type,
+                            'size' => $berkas_form_item->size
+                        ];
+                    }
+
+                    $result[] = [
+                        'id'                        => $item_arahan_rups->id,
+                        'unit_kerja'         => $item_arahan_rups->unit_kerja,
+                        'jenis_arahan'         => $item_arahan_rups->jenis_arahan,
+                        'arahan'           => $item_arahan_rups->arahan,
                         'file'  => $fileList
                         
                     ];
@@ -463,16 +571,25 @@ class PelaporanController extends Controller
 
     }
 
-    public function getFiltered($id,$kategori){
+    public function getFiltered($type,$id,$kategori){
         $result = [];
 
         if($kategori == "form_master"){
-            $result = $this->FormMasterPelaporanModel->where('id', $id)->where('active','1')->get();
+            $result = [];
+
+            $query =$this->FormMasterPelaporanModel->where('id',$id)->where('active', '1');
+            $is_template = 1;
+            if($type == "item"){
+                $is_template = 0;
+            }
+
+            $result = $query->get();
 
         }else if($kategori == "laporan_anggaran"){
 
             $FormMaster = $this->FormMasterPelaporanModel->where('id', $id)->where('active', '1');
             foreach ($FormMaster->get() as $form_master) {
+
                 $ItemPelaporanAnggaran = $this->MasterItemPelaporanAnggaranModel
                     ->where('id_form_master', $form_master->id)->where('active', '1');
 
@@ -482,6 +599,7 @@ class PelaporanController extends Controller
                     $id_item_pelaporan_anggaran = $item_pelaporan_anggaran->id;
                     $BerkasFormItem = $this->BerkasFormItemMasterModel
                             ->where('id_item_master', $id_item_pelaporan_anggaran)
+                            ->orWhere('id_item_master',$item_pelaporan_anggaran->id_list_master)
                             ->where('kategori', $kategori)
                             ->where('active', '1');
                     $fileList = [];
@@ -501,6 +619,7 @@ class PelaporanController extends Controller
                         'unit_kerja'         => $item_pelaporan_anggaran->unit_kerja,
                         'program_prioritas'         => $item_pelaporan_anggaran->program_prioritas,
                         'sasaran_dicapai'           => $item_pelaporan_anggaran->sasaran_dicapai,
+                        'uraian_progress'           => $item_pelaporan_anggaran->uraian_progress,
                         'file'  => $fileList
                         
                     ];
@@ -535,6 +654,30 @@ class PelaporanController extends Controller
                 break;
         }
         return response()->json($return);
+    }
+
+    public function unduh_file($id){
+
+        $berkas = BerkasFormItemMaster::where('id', $id)->first();
+         
+        $decoded = base64_decode($berkas->data);
+        $file = $berkas->name;
+        file_put_contents($file, $decoded);
+        $data = bin2hex($decoded);
+
+        if (file_exists($file)) {
+            header('Content-Description: File Transfer');
+            header('Content-Type: '.$berkas->type);
+            header('Content-Disposition: attachment; filename="'.basename($file).'"');
+            header('Expires: 0');
+            header('Cache-Control: must-revalidate');
+            //header('Pragma: public');
+            header('Content-Length: '.$berkas->size);
+            readfile($file);
+            unlink($file); 
+            exit($data);
+
+        }
     }
 
     public function removeFormMasterAll(){

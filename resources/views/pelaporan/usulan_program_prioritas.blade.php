@@ -136,18 +136,7 @@
                                     <div class="col-xs-2">
                                       <div class="form-group">
                                         <label>TW</label>
-
-                                        @if($setting['insert'])
-                                        <select class="select2 form-control" name="tw_dari" id="tw_dari" onchange="changeTW(0)">
-                                          <option value="0">None</option>
-                                          <option value="1">I</option>
-                                          <option value="2">II</option>
-                                          <option value="3">III</option>
-                                          <option value="4">IV</option>
-                                        </select>
-                                        @else
                                         <input id="tw_dari" name="tw_dari" class="form-control"readOnly>
-                                        @endif
                                       </div>
                                     </div>
                                     <div class="col-xs-1">
@@ -160,17 +149,9 @@
                                     <div class="col-xs-2">
                                       <div class="form-group">
                                         <label>TW</label>
-                                         @if($setting['insert'])
-                                        <select class="select2 form-control" name="tw_ke" id="tw_ke" onchange="changeTW(1)">
-                                          <option value="0">None</option>
-                                          <option value="1">I</option>
-                                          <option value="2">II</option>
-                                          <option value="3">III</option>
-                                          <option value="4">IV</option>
-                                        </select>
-                                        @else
+                                        
                                         <input id="tw_ke" name="tw_ke" class="form-control" readOnly>
-                                        @endif
+                                        
                                       </div>
                                     </div>
                                     
@@ -178,28 +159,7 @@
 
                                   
                                   <div class="col-xs-10">
-                                    @if($type=="master")
-                                    <div class="col-xs-3">
-                                        <div class="form-group">
-                                          <label>Tanggal Mulai</label>
-                                          @if($setting['insert'])
-                                          <input type="date" id="tanggal_mulai" name="tanggal_mulai" min = <?php echo date('Y-m-d')?> onchange="startDate()" class="form-control">
-                                          @else
-                                          <input id="tanggal_mulai" name="tanggal_mulai" class="form-control" readOnly>
-                                          @endif
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-3">
-                                        <div class="form-group">
-                                          <label>Tanggal Selesai</label>
-                                          @if($setting['insert'])
-                                          <input type="date"  id="tanggal_selesai" name="tanggal_selesai" class="date form-control">
-                                          @else
-                                          <input id="tanggal_selesai" name="tanggal_selesai" class="form-control" readOnly>
-                                          @endif
-                                        </div>
-                                    </div>
-                                    @endif
+                                    
                                     @if($type=="item")
                                     <div class="col-xs-3">
                                       <div class="form-group">
@@ -332,7 +292,7 @@
                         loadData: function(filter) {
                           return $.ajax({
                               type: "GET",
-                              url:"{{ ($type == 'item' ? url('pelaporan/get/filteredMaster/usulan_program') : url('pelaporan/get/filtered/'.$filters['id'].'/usulan_program')) }}",
+                              url:"",
                               data: filter,
                               dataType: "JSON"
                           })
@@ -470,7 +430,7 @@
                   function setDetailFormMaster(){
                     // alert('{{ url('pelaporan/get/filtered/'.$filters['id'].'/form_master') }}');
                     $.ajax({
-                        'async': false, 'type': "GET", 'dataType': 'JSON', 'url': "{{ ($type == 'item' ? url('pelaporan/get/filteredMaster/form_master') : url('pelaporan/get/filtered/'.$filters['id'].'/form_master')) }}",
+                        'async': false, 'type': "GET", 'dataType': 'JSON', 'url': "{{ url('pelaporan/get/filteredMaster/usulan_program/0') }}",
                         'success': function (data) {
 
                           tanggal = document.getElementById('tanggal');
@@ -482,7 +442,7 @@
                           tanggal.value = now[0];
                           tw_dari_val="";
                           tw_ke_val="";
-                          // alert(data[0].tw_dari+data[0].tw_ke)
+                          // alert(data[0].tw_dari+data[0].tw_ke);
                           switch(data[0].tw_dari){
                             case "1" : tw_dari_val = "I";break;
                             case "2" : tw_dari_val = "II";break;
@@ -563,7 +523,7 @@
                   function getListData() {
                     $.ajax({
                           'async': false, 'type': "GET", 'dataType': 'JSON', 
-                          'url': "{{ ($type == 'item' ? url('pelaporan/get/filteredMaster/'.$setting['kategori']) : url('pelaporan/get/filtered/'.$filters['id'].'/'.$setting['kategori'])) }}",
+                          'url': "{{ ($type == 'item' ? url('pelaporan/get/filteredMaster/usulan_program/1') : url('pelaporan/get/filtered/'.$filters['id'].'/'.$setting['kategori'])) }}",
                           'success': function (data) {
                               inputs = data;
                               download="";
@@ -665,13 +625,12 @@
                   }
 
                   window.setUnitKerja();
-                  @if($setting['status']=='Lihat')
+                  @if($setting['status']=='Lihat'||$setting['status']=="Tambah")
                   window.setDetailFormMaster();
                   @endif
                   @if($setting['status']=="Tambah"&&$type=="master")
                   window.setTWFirst();
                   @endif
-                  window.getListData();
 
 
                 </script>

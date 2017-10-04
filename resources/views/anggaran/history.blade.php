@@ -218,7 +218,7 @@
                         loadData: function(filter) {
                           return $.ajax({
                               type: "GET",
-                              url:"{{ (checkActiveMenu('anggaran') == 'active' ? url('anggaran') : url('anggaran/get/filteredHistory/'.$filters['tahun'].'/'.$filters['nd_surat'].'/'.$filters['kategori'].'/'.urlencode(strtolower($filters['keyword'])) ) ) }}",
+                              url:"{{  url('anggaran/get/filteredHistory/'.$filters['tahun'].'/'.$filters['nd_surat'].'/'.$filters['kategori'].'/'.urlencode(strtolower($filters['keyword'])) ) }}",
                               data: filter,
                               dataType: "JSON"
                           })
