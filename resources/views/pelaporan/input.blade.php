@@ -267,6 +267,7 @@
                   var simpan_file = false;
                   $(document).ready(function() {
 
+
                     $("#basicScenario").jsGrid( {
                       width: "100%",
                
@@ -314,6 +315,13 @@
                         },
                         updateItem: function(item) {
                           item["delete"]="none";
+                          // alert(item["tempId"]);
+                          item["tempId"];
+                          for(i=0;i<inputs.length;i++){
+                            if(item.id == inputs[i]['id']){
+                              item["tempId"] = inputs[i]["tempId"];
+                            }
+                          }
                           inputs.splice(item["tempId"], 1, item);  
                           click_berkas = true;
                           if(upload_file[item["tempId"]]!=null){
@@ -482,7 +490,7 @@
                                 }
                               }
 
-
+                              // alert(inputs[0]["tempId"]);
                               var count_berkas=0;
                               if(value.length>0){
                                 for(i =0;i<value.length;i++){

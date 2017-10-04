@@ -161,7 +161,7 @@
                                     @endif
                                   </div>
 
-                                  @if($setting['edit'])
+                                  @if($setting['edit']&&$beda)
                                   <div class="row col-xs-12" style="display:block">
                                     <br />
                                     <div class="pull-right">
@@ -259,8 +259,8 @@
                   var hasil = [];
                   var count_file=0;
                   var tempIdCounter = 0;
-                  var insertable = {{$setting['insert']?1:0}};
-                  var editable = {{$setting['edit']?1:0}};
+                  var insertable = {{($setting['insert']&&$beda)?1:0}};
+                  var editable = {{($setting['edit']&&$beda)?1:0}};
                   var unit_field_insert,unit_field_edit = null;
                   var click_berkas = true;
                   var statusTable = "";
@@ -315,6 +315,12 @@
                         updateItem: function(item) {
                           // alert(item["tempId"]);
                           item["delete"]="none";
+                          item["tempId"];
+                          for(i=0;i<inputs.length;i++){
+                            if(item.id == inputs[i]['id']){
+                              item["tempId"] = inputs[i]["tempId"];
+                            }
+                          }
                           inputs.splice(item["tempId"], 1, item);  
                           click_berkas = true;
                           if(upload_file[item["tempId"]]!=null){
@@ -415,14 +421,14 @@
                             }
                           },
                           @if($type== "item")
-                          { name: "progres_tindak_lanjut", 
+                          { name: "progress_tindak_lanjut", 
                             type: "textarea", 
                             title: "Progres Tindak Lanjut", 
                             width: 300,
                             validate: {
                               message : "Isi Progres Tindak Lanjut terlebih dahulu." ,
                               validator :function(value, item) {
-                                  return true;
+                                  return value != "";
                               } 
                             }
                           },
@@ -485,8 +491,8 @@
                                 }
                               }
 
-
-                              var count_berkas=0;
+                              // alert(id_list);
+                              // var count_berkas=0;
                               if(value.length>0){
                                 for(i =0;i<value.length;i++){
                                   // id_list = value[i]['count'];
@@ -548,7 +554,7 @@
                               }
 
 
-                              var count_berkas=0;
+                              // var count_berkas=0;
                               if(value.length>0){
                                 for(i =0;i<value.length;i++){
                                   // id_list = value[i]['count'];
@@ -734,12 +740,6 @@
 
                                 inputs[i]["delete"]="none";
                                 inputs[i]["tempId"]= tempIdCounter++;
-                                @if($setting['kategori'] == "laporan_anggaran")
-                                inputs[i]['uraian_progress']="";
-                                @endif
-                                @if($setting['kategori'] == "arahan_rups")
-                                inputs[i]['progres_tindak_lanjut']="";
-                                @endif
                                 for(j=0;j<inputs[i]["file"].length;j++){
                                   inputs[i]["file"][j]["delete"]="none";
                                 }
