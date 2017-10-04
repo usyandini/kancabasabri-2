@@ -51,6 +51,20 @@ class TransaksiController extends Controller
     protected $current_batch;
     protected $batch_nos;
 
+    protected $months = array(
+            '1'     => 'Januari',
+            '2'     => 'Februari',
+            '3'     => 'Maret',
+            '4'     => 'April',
+            '5'     => 'Mei',
+            '6'     => 'Juni',
+            '7'     => 'Juli',
+            '8'     => 'Agustus',
+            '9'     => 'September',
+            '10'    => 'Oktober',
+            '11'    => 'November',
+            '12'    => 'Desember');
+
     public function __construct(AkunBank $bank, Item $item, SubPos $subPos, Kegiatan $kegiatan, Transaksi $transaksi)
     {
         $this->bankModel = $bank;
@@ -469,19 +483,20 @@ class TransaksiController extends Controller
         return redirect()->back();   
     }
     
-    public function realisasi($batch_id = null)
+    public function realisasi()
     {
         $cabang = KantorCabang::get();
 
         return view('transaksi.realisasi', [
             'cabang'    => $cabang,
+            'months'    => $this->months,
             'filters'   => null]);
     }
 
-    public function cetakRealisasi($cabang, $periode, $transyear, $type)
+    public function cetakRealisasi($cabang, $awal, $akhir, $transyear, $type)
     {   
         // dd($request->all());
-        $start = $end = null;
+        //$start = $end = null;
         // $cabang = $request->cabang;
         // $periode = $request->periode;
         // $transyear = $request->transyear;
@@ -493,29 +508,10 @@ class TransaksiController extends Controller
         }
         $transaksi = $this->transaksiModel->whereIn('batch_id', $reported);
                 
-        if ($periode != '0') {
-            switch($periode){
-                case '1':
-                    $transaksi = $transaksi->whereMonth('tgl', '>=', '1')->whereMonth('tgl', '<=', '3');
-                    $start = 'Januari';
-                    $end = 'Maret';
-                    break;
-                case '2':
-                    $transaksi = $transaksi->whereMonth('tgl', '>=', '4')->whereMonth('tgl', '<=', '6');
-                    $start = 'April';
-                    $end = 'Juni';
-                    break;
-                case '3':
-                    $transaksi = $transaksi->whereMonth('tgl', '>=', '7')->whereMonth('tgl', '<=', '9');
-                    $start = 'Juli';
-                    $end = 'September';
-                    break;
-                case '4':
-                    $transaksi = $transaksi->whereMonth('tgl', '>=', '10')->whereMonth('tgl', '<=', '12');
-                    $start = 'Oktober';
-                    $end = 'Desember';
-                    break;
-            }
+        if ($awal != '0' && $akhir !='0') {
+                $transaksi = $transaksi->whereMonth('tgl', '>=', $awal)->whereMonth('tgl', '<=', $akhir);
+                $start = $this->months[$awal];
+                $end = $this->months[$akhir];
         }
 
         if ($transyear != '0') {
@@ -531,20 +527,39 @@ class TransaksiController extends Controller
 
         return view($inline, [
             'cabangs'   => KantorCabang::get(),
-            'filters'   => array('cabang' => $cabang, 'periode' => $periode, 'transyear' => $transyear),
+            'filters'   => array('cabang' => $cabang, 'awal'=>$awal, 'akhir'=>$akhir,  'transyear' => $transyear),
             'transaksi' => $transaksi->get(),
             'items'     => ItemMaster::get(),
             'start'     => $start,
             'end'       => $end,
+            'months'    => $this->months,
             'year'      => $transyear]);
     }
     
     public function filter_handle_realisasi(Request $request)
     {
-        return redirect('transaksi/filter/realisasi/'.$request->cabang.'/'.$request->periode.'/'.$request->transyear);
+        $validatorRR = Validator::make($request->all(),
+            [
+                'cabang'    => 'required',
+                'awal'      => 'required',
+                'akhir'     => 'required',
+                'transyear' => 'required'
+            ], 
+            [
+                'cabang.required'  => 'Kantor cabang harus dipilih.',
+                'awal.required'  => 'Periode awal harus dipilih.',
+                'akhir.required'  => 'Periode akhir harus dipilih.',
+                'transyear.required'  => 'Tahun periode harus dipilih.'
+            ]);
+
+        if($validatorRR->passes()){
+            return redirect('transaksi/filter/realisasi/'.$request->cabang.'/'.$request->awal.'/'.$request->akhir.'/'.$request->transyear);    
+        }else{
+            return redirect()->back()->withErrors($validatorRR)->withInput();
+        }
     }
     
-    public function filter_result_realisasi($cabang, $periode, $transyear)
+    public function filter_result_realisasi($cabang, $awal, $akhir, $transyear)
     {
         $cabangs = KantorCabang::get();
         $batches = Batch::where('cabang', $cabang)->get();
@@ -554,29 +569,22 @@ class TransaksiController extends Controller
             array_push($reported, $id);
         }
         $transaksi = $this->transaksiModel->whereIn('batch_id', $reported);
-                
-        if ($periode != '0') {
-            switch($periode){
-                case '1':
-                    $transaksi = $transaksi->whereMonth('tgl', '>=', '1')->whereMonth('tgl', '<=', '3');break;
-                case '2':
-                    $transaksi = $transaksi->whereMonth('tgl', '>=', '4')->whereMonth('tgl', '<=', '6');break;
-                case '3':
-                    $transaksi = $transaksi->whereMonth('tgl', '>=', '7')->whereMonth('tgl', '<=', '9');break;
-                case '4':
-                    $transaksi = $transaksi->whereMonth('tgl', '>=', '10')->whereMonth('tgl', '<=', '12');break;
-            }
+        //START - END periode
+        if ($awal != '0' && $akhir !='0') {
+                $transaksi = $transaksi->whereMonth('tgl', '>=', $awal)->whereMonth('tgl', '<=', $akhir);
+                $start = array_search($awal, $this->months);
+                $end = array_search($akhir, $this->months);
         }
 
         if ($transyear != '0') {
             $transaksi = $transaksi->whereYear('tgl', '=', $transyear);
         }
-
+        // dd($transaksi->get());
         return view('transaksi.realisasi', [
             'cabang'    => $cabangs,
-            'filters'   => array('cabang' => $cabang, 'periode' => $periode, 'transyear' => $transyear),
+            'filters'   => array('cabang'=>$cabang, 'awal'=>$awal, 'akhir'=>$akhir, 'transyear' => $transyear),
             'transaksi' => $transaksi->get(),
+            'months'    => $this->months,
             'items'     => ItemMaster::get()]);
     }
-         
 }

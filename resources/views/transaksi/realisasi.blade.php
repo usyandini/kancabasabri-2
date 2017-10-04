@@ -35,8 +35,16 @@
               <div class="content-body"><!-- Basic scenario start -->
                 <section id="basic">
                   <div class="row">
-                    @can('cari_t')
-                    <div class="col-xs-7">
+                    @if(count($errors->all()) > 0)
+                    <duv class="col-xs-6">
+                      <div class="alert alert-danger alert-dismissable">
+                        @foreach ($errors->all() as $error)
+                        {!! $error !!}<br>
+                        @endforeach
+                      </div>
+                    </div>
+                    @endif
+                    <div class="col-xs-12">
                       <div class="card">
                         <div class="card-header">
                           <h4 class="card-title">Pencarian Report</h4>
@@ -47,7 +55,7 @@
                             <form method="POST" action="{{ url('transaksi/filter/reports') }}">
                               <div class="row">
                                 {{ csrf_field() }}
-                                <div class="col-xs-5">
+                                <div class="col-xs-3">
                                   <div class="form-group">
                                     <label>Kantor Cabang</label>
                                     <select class="select2 form-control" name="cabang" required>
@@ -60,17 +68,27 @@
                                 </div>
                                 <div class="col-xs-3">
                                   <div class="form-grpup">
-                                    <label>Periode</label>
-                                    <select class="select2 form-control" name="periode" required>
-                                      <option selected disabled>Pilih Periode</option>
-                                      <option {{ $filters['periode'] == '1' ? 'selected=""' : '' }} value="1">I</option>
-                                      <option {{ $filters['periode'] == '2' ? 'selected=""' : '' }} value="2">II</option>
-                                      <option {{ $filters['periode'] == '3' ? 'selected=""' : '' }} value="3">III</option>
-                                      <option {{ $filters['periode'] == '4' ? 'selected=""' : '' }} value="4">IV</option>
+                                    <label>Periode Awal</label>
+                                    <select class="select2 form-control" name="awal" required>
+                                      <option selected disabled>Pilih Periode Awal</option>
+                                      @foreach($months as $month)
+                                      <option value="{{ array_search($month, $months) }}" {{ $filters['awal'] == array_search($month, $months)? 'selected=""' : '' }}>{{ $month }}</option>
+                                      @endforeach
                                     </select>
                                   </div>
                                 </div>
-                                <div class="col-xs-4">
+                                <div class="col-xs-3">
+                                  <div class="form-grpup">
+                                    <label>Periode Akhir</label>
+                                    <select class="select2 form-control" name="akhir" required>
+                                      <option selected disabled>Pilih Periode Akhir</option>
+                                      @foreach($months as $month)
+                                      <option value="{{ array_search($month, $months) }}" {{ $filters['akhir'] == array_search($month, $months)? 'selected=""' : '' }}>{{ $month }}</option>
+                                      @endforeach
+                                    </select>
+                                  </div>
+                                </div>
+                                <div class="col-xs-2">
                                   <div class="form-group">
                                     <label>Tahun</label>
                                     <select class="select2 form-control" name="transyear" required>
@@ -100,28 +118,29 @@
                                   </div>
                                   @endif
                                 </div>
-                              </form>
-                            </div>
+                              </div>
+                            </form>
                           </div>
                         </div>
-                      </div>
-                      @endcan                    
+                      </div>                   
                     </div>
                     <div class="row">
                       <div class="col-xs-12">
                         <div class="card">
                           <div class="card-header">
                             @if ($filters)
-                            <h4 class="card-title">Hasil Pencarian Transaksi</h4><br>
+                            <h4 class="card-title">Hasil Pencarian Realisasi</h4><br>
+                            
+                            <table align="right"><tr>
+                              <td><span><a href="{{ URL('transaksi/print/realisasi/'.$filters['cabang'].'/'.$filters['awal'].'/'.$filters['akhir'].'/'.$filters['transyear'].'/export') }}" class="btn btn-success" target="_blank"><i class="fa fa-file-pdf-o"></i> <b> Ekspor ke PDF </b></a></span></td>
+
+                              <td><span><a href="{{ URL('transaksi/print/realisasi/'.$filters['cabang'].'/'.$filters['awal'].'/'.$filters['akhir'].'/'.$filters['transyear'].'/print') }}" class="btn btn-success" target="_blank"><i class="fa fa-print"></i> <b> Cetak Realisasi </b></a></span></td> 
+                            </tr></table>
                             @else
                             <h4 class="card-title">Daftar Realisasi</h4><br>
                             @endif
                             <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
-                            <table align="right"><tr>
-                              <td><span><a href="{{ URL('transaksi/print/realisasi/'.$filters['cabang'].'/'.$filters['periode'].'/'.$filters['transyear'].'/export') }}" class="btn btn-success" target="_blank"><i class="fa fa-file-pdf-o"></i> <b> Ekspor ke PDF </b></a></span></td>
-
-                              <td><span><a href="{{ URL('transaksi/print/realisasi/'.$filters['cabang'].'/'.$filters['periode'].'/'.$filters['transyear'].'/print') }}" class="btn btn-success" target="_blank"><i class="fa fa-print"></i> <b> Cetak Realisasi </b></a></span></td> 
-                            </tr></table>
+                            
                           </div>
                           <div class="card-body collapse in ">
                             <div class="card-block card-dashboard ">
@@ -145,8 +164,10 @@
   		                        			<td><center>{{ $no++ }}</center></td>
   		                        			<td>{{$items->where('SEGMEN_1',$trans->item)->first()['nama_item']}}</td>
   		                        			<td>Rp. {{ number_format($trans->anggaran, 2, ',','.') }}</td>
-  		                        			<td>Rp. {{ number_format($trans->total, 2, ',','.') }}</td>
-  		                        			<td>Rp. {{ number_format($trans->actual_anggaran, 2, ',','.') }}</td>
+                                    <?php $total_real = $transaksi->where('item', $trans->item)->sum('total'); ?>
+  		                        			<td>Rp. {{ number_format($total_real, 2, ',','.') }}</td>
+                                    <?php $sisa_angg = ($trans->anggaran - $total_real);?>
+  		                        			<td>Rp. {{ number_format($sisa_angg, 2, ',','.') }}</td>
   		                        		</tr>
                                   @endforeach
                                 @endif
@@ -170,7 +191,6 @@
               <script type="text/javascript" src="{{ asset('app-assets/vendors/js/charts/jquery.sparkline.min.js') }}"></script>
               <script src="{{ asset('app-assets/vendors/js/tables/jsgrid/jsgrid.min.js') }}" type="text/javascript"></script>
               <script src="{{ asset('app-assets/vendors/js/tables/jsgrid/griddata.js') }}" type="text/javascript"></script>
-              <script src="{{ asset('app-assets/vendors/js/tables/jsgrid/jquery.validate.min.js') }}" type="text/javascript"></script>
               <!-- END PAGE VENDOR JS-->
               <!-- BEGIN PAGE LEVEL JS-->
               <script type="text/javascript" src="{{ asset('app-assets/js/scripts/ui/breadcrumbs-with-stats.min.js') }}"></script>

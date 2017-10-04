@@ -75,9 +75,9 @@ Route::group(['middleware' => 'auth'], function() {
 
 		Route::get('/report/realisasi', 'TransaksiController@realisasi');
 		Route::post('/filter/reports', 'TransaksiController@filter_handle_realisasi');
-		Route::get('/filter/realisasi/{cabang}/{periode}/{transyear}', 'TransaksiController@filter_result_realisasi');
+		Route::get('/filter/realisasi/{cabang}/{awal}/{akhir}/{transyear}', 'TransaksiController@filter_result_realisasi');
 
-		Route::get('/print/realisasi/{cabang}/{periode}/{transyear}/{type}', 'TransaksiController@cetakRealisasi');
+		Route::get('/print/realisasi/{cabang}/{awal}/{akhir}/{transyear}/{type}', 'TransaksiController@cetakRealisasi');
 	});
 
 
