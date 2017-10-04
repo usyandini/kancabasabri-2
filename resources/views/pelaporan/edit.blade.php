@@ -491,11 +491,8 @@
                                 }
                               }
 
-                              // alert(id_list);
-                              // var count_berkas=0;
                               if(value.length>0){
                                 for(i =0;i<value.length;i++){
-                                  // id_list = value[i]['count'];
                                   count_berkas++;
                                 }
                               }
