@@ -622,6 +622,7 @@
 
                   function setDetailFormMaster(){
                     // alert('{{ url('pelaporan/get/filtered/'.$filters['id'].'/form_master') }}');
+                    console.log("{{url('pelaporan/get/filteredMaster/'.$setting['kategori'].'/0')}}");
                     $.ajax({
                         'async': false, 'type': "GET", 'dataType': 'JSON', 'url': "{{ ($type == 'item' ? url('pelaporan/get/filteredMaster/'.$setting['kategori'].'/0') : url('pelaporan/get/filtered/'.$filters['id'].'/form_master')) }}",
                         'success': function (data) {

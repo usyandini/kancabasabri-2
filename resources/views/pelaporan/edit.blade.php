@@ -653,12 +653,13 @@
                             case "3" : tw_ke_val = "III";break;
                             case "4" : tw_ke_val = "IV";break;
                           }
-                          tw_dari.value = tw_dari_val;
-                          tw_ke.value = tw_ke_val;
+                          
 
-                          // alert(tw_dari.value);
+                          // alert(tw_dari_val);
 
                           @if($type=="master")
+                          tw_dari.value = data[0].tw_dari;
+                          tw_ke.value = data[0].tw_ke;
                           tanggal_mulai = document.getElementById('tanggal_mulai');
                           tanggal_selesai = document.getElementById('tanggal_selesai');
                           tanggal_mulai.value = data[0].tanggal_mulai;
@@ -670,6 +671,8 @@
                           // alert(data[0].tanggal_selesai);
 
                           @if($type=="item")
+                          tw_dari.value = tw_dari_val;
+                          tw_ke.value = tw_ke_val;
                           var countDownDate = new Date(data[0].tanggal_selesai).getTime();
 
                           var disableCountDown = true;

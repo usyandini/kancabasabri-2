@@ -472,14 +472,19 @@ class PelaporanController extends Controller
 
         // echo $kategori;
         if($type == "0"){
-            $FormMaster = $this->FormMasterPelaporanModel->where('tw_dari', $tw)->where('kategori',$kategori)->where('active','1');
+            $FormMaster = $this->FormMasterPelaporanModel->where('tw_dari', $tw)->where('kategori',$kategori)->where('active','1')->where('is_template','1');
             $ItemPelaporanAnggaran;
             foreach ($FormMaster->get() as $form_master) {
-                $ItemPelaporanAnggaran = $this->MasterItemPelaporanAnggaranModel
+                $Item = $this->MasterItemPelaporanAnggaranModel
                     ->where('id_form_master', $form_master->id)->where('unit_kerja', $userUnit)
-                    ->where('active', '1')->get();
+                    ->where('active', '1');
+                if(count($Item)>0){
+                    $ItemPelaporanAnggaran = $Item;
+                }
+                    // echo $FormMaster->first()['id'];
 
             }
+
             // echo $userUnit.":".count($ItemPelaporanAnggaran);
             $result = null;
             if(count($ItemPelaporanAnggaran)>0||$kategori == 'usulan_program'){
@@ -487,7 +492,7 @@ class PelaporanController extends Controller
             }
 
         }else if($kategori == "laporan_anggaran"&&$type=="1"){
-            $FormMaster = $this->FormMasterPelaporanModel->where('tw_dari', $tw)->where('kategori',$kategori);
+            $FormMaster = $this->FormMasterPelaporanModel->where('tw_dari', $tw)->where('kategori',$kategori)->where('is_template','1');
             foreach ($FormMaster->get() as $form_master) {
 
                 $ItemPelaporanAnggaran = $this->MasterItemPelaporanAnggaranModel
@@ -527,7 +532,7 @@ class PelaporanController extends Controller
                 }  
             }
         }else if($kategori == "arahan_rups" && $type=="1"){
-            $FormMaster = $this->FormMasterPelaporanModel->where('tw_dari', $tw)->where('kategori',$kategori);
+            $FormMaster = $this->FormMasterPelaporanModel->where('tw_dari', $tw)->where('kategori',$kategori)->where('is_template','1');
             foreach ($FormMaster->get() as $form_master) {
 
                 $ItemArahaRUPS = $this->MasterItemArahanRUPS
