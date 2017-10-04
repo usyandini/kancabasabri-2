@@ -3,11 +3,7 @@
 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/tables/jsgrid/jsgrid.min.css') }}">
 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/tables/datatable/dataTables.bootstrap4.min.css') }}">
 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/tables/extensions/responsive.dataTables.min.css') }}">
-<?php
-// header("Content-type: application/pdf");
-// header('Content-Description: File Transfer');
-// // Mendefinisikan nama file ekspor "hasil-export.xls"
-// header("Content-Disposition: attachment; filename=cetak-realisasi.pdf");?>
+
 <body onload="window.print()">
 	<style>
         body {
@@ -21,6 +17,7 @@
         }
         th {
             background-color: #cccccc;
+            text-transform: uppercase;
         }
         th, td {
             border: 1px solid #000;
@@ -68,21 +65,17 @@
               <tr>
                 <td style="padding-left:20px;" width="35%">{{$no++}}) {{$items->where('SEGMEN_1',$trans->item)->first()['nama_item']}}</td>
                 <td align="right" width="20%">Rp. {{ number_format($trans->anggaran, 2, ',','.') }}</td>
-                <td align="right" width="20%">Rp. {{ number_format($trans->total, 2, ',','.') }}</td>
-                <td align="right" width="25%">Rp. {{ number_format($trans->actual_anggaran, 2, ',','.') }}</td>
+                <?php $total_real = $transaksi->where('item', $trans->item)->sum('total'); ?>
+                <td align="right" width="20%">Rp. {{ number_format($total_real, 2, ',','.') }}</td>
+                <?php $sisa_angg = ($trans->anggaran - $total_real);?>
+                <td align="right" width="25%">Rp. {{ number_format($sisa_angg, 2, ',','.') }}</td>
               </tr>
               <?php 
                 $tmp_anggaran = $tmp_anggaran + $trans->anggaran;
                 $tmp_realisasi = $tmp_realisasi + $trans->total;
-                $tmp_sisa = $tmp_sisa + $trans->actual_anggaran;
+                $tmp_sisa = $tmp_sisa + $sisa_angg;
               ?>
               @endforeach
-              {{--<tr>
-                <td style="padding-left:20px;">{{$no++}}) Perbaikan Plafon</td>
-                <td align="right">Rp. {{ number_format(0, 2, ',','.') }}</td>
-                <td align="right">Rp. {{ number_format(0, 2, ',','.') }}</td>
-                <td align="right">Rp. {{ number_format(0, 2, ',','.') }}</td>
-              </tr>--}}
               <tr id="tf1">
                 <td><center>JUMLAH</center></td>
                 <td align="right">Rp. {{ number_format($tmp_anggaran, 2, ',','.') }}</td>
@@ -97,3 +90,4 @@
           </table>
     </div>
 </body>
+</html>
