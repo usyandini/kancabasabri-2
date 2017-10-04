@@ -72,6 +72,12 @@ Route::group(['middleware' => 'auth'], function() {
 		Route::get('/berkas/download/{id}', 'TransaksiController@downloadBerkas');
 
 		Route::get('/refresh/anggaran/{batch_id}', 'TransaksiController@refreshAnggaran');
+
+		Route::get('/report/realisasi', 'TransaksiController@realisasi');
+		Route::post('/filter/reports', 'TransaksiController@filter_handle_realisasi');
+		Route::get('/filter/realisasi/{cabang}/{periode}/{transyear}', 'TransaksiController@filter_result_realisasi');
+
+		Route::get('/print/realisasi/{cabang}/{periode}/{transyear}/{type}', 'TransaksiController@cetakRealisasi');
 	});
 
 

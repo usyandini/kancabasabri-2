@@ -120,8 +120,8 @@
 			                      <table class="table table-striped table-bordered datatable-select-inputs wrap" cellspacing="0" width="100%">
 			                        <thead>
 			                          <tr>
-			                          	<th>No</th>
-			                          	<th id="filterable"><center>Kode Item Anggaran</center></th>
+			                          	<th><center>No</center></th>
+			                          	<th id="filterable">Kode Item Anggaran</th>
 			                            <th id="filterable">Nama Item Anggaran</th>
 			                            <th id="filterable">Tipe Item Anggaran</th>
 			                            <th><center>Aksi</center></th>
@@ -131,7 +131,7 @@
 			                        @foreach($items as $item)
 			                        @if(!$item->deleted_at)
 		                        		<tr>
-		                        			<td>{{ $no++ }}</td>
+		                        			<td><center>{{ $no++ }}</center></td>
 		                        			<td>{{ $item->kode }}</td>
 		                        			<td>{{ $item->name }}</td>
 		                        			<td>
