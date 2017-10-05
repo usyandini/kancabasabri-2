@@ -322,9 +322,16 @@ class PelaporanController extends Controller
             // echo count($this->check_tambah($kategori,0));
             if(count($this->check_tambah($kategori,0))>0){
                 session()->flash('back', 'Unit Kerja Anda Telah mengisi '.$sub_title.'. Silahkan Melakukan pencarian jika ingin merubah sebelum waktu pengajuan berakhir');
-                session()->flash('title', $sub_title);
+                session()->flash('title', $sub_title." telah tersedia");
                 return redirect('pelaporan/informasi/item/'.$kategori);
             }  
+
+
+            if(count($this->check_tambah($kategori,1))==0){
+                session()->flash('back', 'Unit Kerja Renbang belum membuat Form Master '.$sub_title.'. Silahkan Hubungi Unit Kerja Renbang.');
+                session()->flash('title', "Form Master ".$sub_title." belum tersedia");
+                return redirect('pelaporan/informasi/item/'.$kategori);
+            } 
             $date_now = date("Y-m-d");
             $date_mulai;
             $date_selesai;
@@ -600,15 +607,21 @@ class PelaporanController extends Controller
                 }
                 if(count($hasil)>0){
                     foreach ($hasil as $itm) {
+                        if($is_template == "1")
+                            $unit_kerja = "Master";
+                        else
+                            $unit_kerja = $itm['unit_kerja'];
                         $result[] = [
                             'id'                => $row->id,
                             'created_at'        => $row->created_at,
                             'tw_dari'           => $row->tw_dari,
                             'tw_ke'             => $row->tw_ke,
-                            'unit_kerja'        => $itm['unit_kerja']
+                            'unit_kerja'        => $unit_kerja
                             
                         ];
+                        break;
                     }
+                    
                 }
             }
         }else{
@@ -639,14 +652,19 @@ class PelaporanController extends Controller
 
                 if(count($hasil)>0){
                     foreach ($hasil as $itm) {
+                        if($is_template == "1")
+                            $unit_kerja = "Master";
+                        else
+                            $unit_kerja = $itm['unit_kerja'];
                         $result[] = [
                             'id'                => $row->id,
                             'created_at'        => $row->created_at,
                             'tw_dari'           => $row->tw_dari,
                             'tw_ke'             => $row->tw_ke,
-                            'unit_kerja'        => $itm['unit_kerja']
+                            'unit_kerja'        => $unit_kerja
                             
                         ];
+                        break;
                     }
                 }
             }

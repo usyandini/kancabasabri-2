@@ -19,6 +19,10 @@
               <label>Arahan RUPS</label>
             </fieldset>
             <fieldset>
+              <input type="checkbox" name="perizinan[pelaporan_usulan_p_p]" {{ isset($user->perizinan['pelaporan_usulan_p_p']) ? 'checked=""' : '' }}>
+              <label>Usulan Program Prioritas</label>
+            </fieldset>
+            <fieldset>
               <input type="checkbox" name="perizinan[pelaporan_tindak_lanjut]" {{ isset($user->perizinan['pelaporan_tindak_lanjut']) ? 'checked=""' : '' }}>
               <label>Tindak Lanjut Temuan</label>
             </fieldset>

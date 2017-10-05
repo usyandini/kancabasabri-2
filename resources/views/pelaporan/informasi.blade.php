@@ -177,7 +177,7 @@
                  
                   $(document).ready(function() {
                     @if (session('back'))
-                      toastr.error("{!! session('back') !!}", "{!! session('title') !!} Telah Tersedia", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:5000});
+                      toastr.error("{!! session('back') !!}", "{!! session('title') !!}", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:5000});
                     @endif
                     $("#basicScenario").jsGrid( {
                       width: "100%",
