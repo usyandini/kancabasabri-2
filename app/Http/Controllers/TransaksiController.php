@@ -27,6 +27,9 @@ use App\Services\NotificationSystem;
 use App\Http\Traits\BatchTrait;
 use App\Http\Traits\BudgetControlTrait;
 
+use PDF;
+
+
 //  ----------- BATCH STAT / HISTORY DESC -------------
 //          0 = Inserted 
 //          1 = Updated
@@ -495,45 +498,43 @@ class TransaksiController extends Controller
 
     public function cetakRealisasi($cabang, $awal, $akhir, $transyear, $type)
     {   
-        // dd($request->all());
-        //$start = $end = null;
-        // $cabang = $request->cabang;
-        // $periode = $request->periode;
-        // $transyear = $request->transyear;
         $batches = Batch::where('cabang', $cabang)->get();
         $reported = array();
         foreach($batches as $batch){
             $id = BatchStatus::where([['batch_id', $batch->id], ['stat', 6]])->first()['batch_id'];
             array_push($reported, $id);
         }
-        $transaksi = $this->transaksiModel->whereIn('batch_id', $reported);
-                
-        if ($awal != '0' && $akhir !='0') {
-                $transaksi = $transaksi->whereMonth('tgl', '>=', $awal)->whereMonth('tgl', '<=', $akhir);
-                $start = $this->months[$awal];
-                $end = $this->months[$akhir];
-        }
 
-        if ($transyear != '0') {
-            $transaksi = $transaksi->whereYear('tgl', '=', $transyear);
-        }
+        $query = "SELECT item, anggaran, SUM(total) as total 
+                    FROM [dbcabang].[dbo].[transaksi] as transaksi
+                    JOIN [dbcabang].[dbo].[batches] as batches on batches.id = transaksi.batch_id 
+                    JOIN [dbcabang].[dbo].[batches_status] as batches_status on batches_status.batch_id = batches.id 
+                    WHERE batches.cabang = ".$cabang." and batches_status.stat = '6' and DATEPART(MONTH, transaksi.tgl) >= ".$awal." 
+                    and DATEPART(MONTH, transaksi.tgl) <= ".$akhir." and DATEPART(YEAR, transaksi.tgl) = ".$transyear."
+                    GROUP BY transaksi.item, transaksi.anggaran";
+        
+        $transaksi = \DB::select($query);
 
-        switch($type){
-            case 'print' :
-                $inline = 'transaksi.cetak-realisasi'; break;
-            case 'export' :
-                $inline = 'transaksi.export-realisasi'; break;
-        }
+        $start = $this->months[$awal];
+        $end = $this->months[$akhir];
 
-        return view($inline, [
+        $data = [
             'cabangs'   => KantorCabang::get(),
             'filters'   => array('cabang' => $cabang, 'awal'=>$awal, 'akhir'=>$akhir,  'transyear' => $transyear),
-            'transaksi' => $transaksi->get(),
+            'transaksi' => $transaksi,
             'items'     => ItemMaster::get(),
             'start'     => $start,
             'end'       => $end,
             'months'    => $this->months,
-            'year'      => $transyear]);
+            'year'      => $transyear];
+
+        if($type == 'export'){
+            $pdf = PDF::loadView('transaksi.export-realisasi', $data);
+            // $pdf = PDF::loadHtml('<b>Hello World!!</b>');
+            return $pdf->download('Realisasi Anggaran-'.date("dmY").'.pdf');
+        }else{
+          return view('transaksi.cetak-realisasi', $data);
+        }
     }
     
     public function filter_handle_realisasi(Request $request)
@@ -562,28 +563,25 @@ class TransaksiController extends Controller
     public function filter_result_realisasi($cabang, $awal, $akhir, $transyear)
     {
         $cabangs = KantorCabang::get();
-        $batches = Batch::where('cabang', $cabang)->get();
-        $reported = array();
-        foreach($batches as $batch){
-            $id = BatchStatus::where([['batch_id', $batch->id], ['stat', 6]])->first()['batch_id'];
-            array_push($reported, $id);
-        }
-        $transaksi = $this->transaksiModel->whereIn('batch_id', $reported);
-        //START - END periode
-        if ($awal != '0' && $akhir !='0') {
-                $transaksi = $transaksi->whereMonth('tgl', '>=', $awal)->whereMonth('tgl', '<=', $akhir);
-                $start = array_search($awal, $this->months);
-                $end = array_search($akhir, $this->months);
-        }
 
-        if ($transyear != '0') {
-            $transaksi = $transaksi->whereYear('tgl', '=', $transyear);
-        }
-        // dd($transaksi->get());
+        // $transaksi = $this->transaksiModel->select('item','anggaran','total')->groupBy(['item', 'anggaran', 'total'])->whereIn('batch_id', $reported);
+        $query = "SELECT item, anggaran, SUM(total) as total 
+                    FROM [dbcabang].[dbo].[transaksi] as transaksi
+                    JOIN [dbcabang].[dbo].[batches] as batches on batches.id = transaksi.batch_id 
+                    JOIN [dbcabang].[dbo].[batches_status] as batches_status on batches_status.batch_id = batches.id 
+                    WHERE batches.cabang = ".$cabang." and batches_status.stat = '6' and DATEPART(MONTH, transaksi.tgl) >= ".$awal." 
+                    and DATEPART(MONTH, transaksi.tgl) <= ".$akhir." and DATEPART(YEAR, transaksi.tgl) = ".$transyear."
+                    GROUP BY transaksi.item, transaksi.anggaran";
+        
+        $transaksi = \DB::select($query);
+
+        $start = array_search($awal, $this->months);
+        $end = array_search($akhir, $this->months);
+        // dd($transaksi);
         return view('transaksi.realisasi', [
             'cabang'    => $cabangs,
             'filters'   => array('cabang'=>$cabang, 'awal'=>$awal, 'akhir'=>$akhir, 'transyear' => $transyear),
-            'transaksi' => $transaksi->get(),
+            'transaksi' => $transaksi,
             'months'    => $this->months,
             'items'     => ItemMaster::get()]);
     }
