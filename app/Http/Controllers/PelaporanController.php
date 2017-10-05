@@ -160,8 +160,7 @@ class PelaporanController extends Controller
         $diff1 = strtotime($date_now) - strtotime($date_mulai);
         $diff2 = strtotime($date_selesai) - strtotime($date_now);
 
-
-        if(count($item->get())>0){
+        if($kategori=="usulan_program"){
             $beda = true;
             if($diff2 <= 0){
                 $beda = false;
@@ -171,6 +170,19 @@ class PelaporanController extends Controller
             if($diff1 < 0){
                 $beda = false;
                 echo "sebelum";
+            }
+        }else{
+            if(count($item->get())>0){
+                $beda = true;
+                if($diff2 <= 0){
+                    $beda = false;
+                    echo "sesudah";
+                }
+
+                if($diff1 < 0){
+                    $beda = false;
+                    echo "sebelum";
+                }
             }
         }
 
@@ -332,6 +344,10 @@ class PelaporanController extends Controller
                 session()->flash('title', "Form Master ".$sub_title." belum tersedia");
                 return redirect('pelaporan/informasi/item/'.$kategori);
             } 
+
+            if($kategori == "usulan_program" && $type=="item"){
+                return redirect('pelaporan/tambah_usulan_program');
+            }
             $date_now = date("Y-m-d");
             $date_mulai;
             $date_selesai;
