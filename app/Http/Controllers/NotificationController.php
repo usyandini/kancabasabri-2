@@ -13,6 +13,7 @@ use App\Models\Anggaran;
 use App\Models\Notification;
 use App\Models\KantorCabang;
 use App\Models\Divisi;
+use App\Models\FormMasterPelaporan;
 
 use App\Services\NotificationSystem;
 
@@ -64,8 +65,10 @@ class NotificationController extends Controller
                 }else{
                     $unit_kerja = $value->idPenyesuaian['cabang'];
                 }
-            }else {
+            }else if($value->type <32){
                 $unit_kerja = $value->idAnggaran['unit_kerja'];
+            }else if($value->type <36){
+                $unit_kerja = $value->formMaster->unit_kerja();
             }
             $val_unit = "";
             if(count(explode("Cabang",$unit_kerja))>1){
@@ -104,6 +107,7 @@ class NotificationController extends Controller
         $tariktunai = TarikTunai::where('id', $notifDetail->batch_id)->first();
         $penyesuaian = PenyesuaianDropping::where('id', $notifDetail->batch_id)->first();
         $anggaran = Anggaran::where('id', $notifDetail->batch_id)->first();
+        $form_master = FormMasterPelaporan::where('id', $notifDetail->batch_id)->first();
     	
     	switch ($notifDetail->type) {
     		case 1:
@@ -153,6 +157,14 @@ class NotificationController extends Controller
             case 30:
             case 31:
                 return redirect('anggaran/persetujuan/'.$anggaran->nd_surat."/1");
+            case 32:
+                return redirect('pelaporan/edit/master/laporan_anggaran/'.$form_master->id);
+            case 33:
+                return redirect('pelaporan/edit/item/laporan_anggaran/'.$form_master->id);
+            case 34:
+                return redirect('pelaporan/edit/master/arahan_rups/'.$form_master->id);
+            case 35:
+                return redirect('pelaporan/edit/item/arahan_rups/'.$form_master->id);
 			default:
 				return redirect('transaksi/');
     	}
@@ -174,13 +186,14 @@ class NotificationController extends Controller
                     }
                 }else if($value->type < 15){
                     if($value->type < 10){
-                        // $cabang = $value->idTarikTunai();
                         $unit_kerja = $value->idTarikTunai['cabang'];
                     }else{
                         $unit_kerja = $value->idPenyesuaian['cabang'];
                     }
-                }else {
+                }else if($value->type <32){
                     $unit_kerja = $value->idAnggaran['unit_kerja'];
+                }else if($value->type <36){
+                    $unit_kerja = $value->formMaster->unit_kerja();
                 }
                 $val_unit = "";
                 if(count(explode("Cabang",$unit_kerja))>1){

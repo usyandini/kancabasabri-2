@@ -15,6 +15,7 @@ use App\Models\MasterItemArahanRUPS;
 use App\Models\BerkasFormItemMaster;
 use App\Models\ProgramPrioritas;
 use App\Models\ArahanRups;
+use App\Services\NotificationSystem;
 
 
 class PelaporanController extends Controller
@@ -470,6 +471,16 @@ class PelaporanController extends Controller
                             }
                         }
                     }
+                    if (is_array($value->file) || is_object($value->file)){
+                        foreach ($value->file as $list_file) {
+                            if($list_file->delete == "delete"){
+                                $file_update = [
+                                        'active'         => '0',
+                                        'updated_at'    => \Carbon\Carbon::now()];
+                                BerkasFormItemMaster::where('id', $list_file->id)->update($file_update);
+                            }
+                        }
+                    }
                 // }
                 
                 $index++;
@@ -479,6 +490,18 @@ class PelaporanController extends Controller
         $type = "master";
         if($request->jenis_berkas == '0'){
             $type = 'item';
+            if($kategori == "laporan_anggaran"){
+                NotificationSystem::send($id_form_master, 33);
+            }else if($kategori == "arahan_rups"){
+                NotificationSystem::send($id_form_master, 35);
+            }
+            
+        }else{
+            if($kategori == "laporan_anggaran"){
+                NotificationSystem::send($id_form_master, 32);
+            }else if($kategori == "arahan_rups"){
+                NotificationSystem::send($id_form_master, 34);
+            }
         }
         return redirect('pelaporan/edit/'.$type."/".$kategori."/".$id_form_master);
     }   
@@ -704,14 +727,24 @@ class PelaporanController extends Controller
 
         if($kategori == "form_master"){
             $result = [];
-
-            $query =$this->FormMasterPelaporanModel->where('id',$id)->where('active', '1');
             $is_template = 1;
             if($type == "item"){
                 $is_template = 0;
             }
-
-            $result = $query->get();
+            $query =$this->FormMasterPelaporanModel->where('id',$id)->where('is_template', $is_template);
+            foreach ($query->get() as $row) {
+                $result[] = [
+                    'id'                => $row->id,
+                    'created_at'        => $row->created_at,
+                    'tw_dari'           => $row->tw_dari,
+                    'tw_ke'             => $row->tw_ke,
+                    'tanggal_mulai'     => $row->tanggal_mulai,
+                    'tanggal_selesai'   => $row->tanggal_selesai,
+                    'data'              => $row->unit_kerja()
+                ];
+            }
+            
+            // $result = $query->get();
 
         }else if($kategori == "laporan_anggaran"){
 
@@ -726,10 +759,10 @@ class PelaporanController extends Controller
                 foreach ($ItemPelaporanAnggaran->get() as $item_pelaporan_anggaran) {
                     $id_item_pelaporan_anggaran = $item_pelaporan_anggaran->id;
                     $BerkasFormItem = $this->BerkasFormItemMasterModel
-                            ->where('id_item_master', $id_item_pelaporan_anggaran)
-                            ->orWhere('id_item_master',$item_pelaporan_anggaran->id_list_master)
                             ->where('kategori', $kategori)
-                            ->where('active', '1');
+                            ->where('active', '1')
+                            ->where('id_item_master', $id_item_pelaporan_anggaran)
+                            ->orWhere('id_item_master',$item_pelaporan_anggaran->id_list_master);
                     $fileList = [];
                     foreach ($BerkasFormItem->get() as $berkas_form_item) {
                         $fileList[] = [

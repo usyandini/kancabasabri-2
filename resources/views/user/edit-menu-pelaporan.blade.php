@@ -47,6 +47,28 @@
                 </li>
             </ul>
           </div>
+
+        </div>
+        <div class="card-block">
+          <h5>Notifikasi</h5>
+          <div class="form-group skin skin-square" id="pelaporan">
+            <fieldset >
+              <input type="checkbox" name="perizinan[notif_ajukan_p_a]" {{ isset($user->perizinan['notif_ajukan_p_a']) ? 'checked=""' : '' }}>
+              <label>Pengajuan Pelaporan Anggaran Kegiatan</label>
+            </fieldset>
+            <fieldset >
+              <input type="checkbox" name="perizinan[notif_ajukan_a_RUPS]" {{ isset($user->perizinan['notif_ajukan_a_RUPS']) ? 'checked=""' : '' }}>
+              <label>Pengajuan Arahan RUPS</label>
+            </fieldset>
+            <fieldset >
+              <input type="checkbox" name="perizinan[notif_ajukan_master_p_a]" {{ isset($user->perizinan['notif_ajukan_master_p_a']) ? 'checked=""' : '' }}>
+              <label>Pengajuan Form Master Pelaporan Anggaran Kegiatan</label>
+            </fieldset>
+            <fieldset >
+              <input type="checkbox" name="perizinan[notif_ajukan_master_a_RUPS]" {{ isset($user->perizinan['notif_ajukan_master_a_RUPS']) ? 'checked=""' : '' }}>
+              <label>Pengajuan Form Master Arahan RUPS</label>
+            </fieldset>
+           </div>
         </div>
       </div>
     </div>

@@ -316,19 +316,24 @@
                         updateItem: function(item) {
                           item["delete"]="none";
                           // alert(item["tempId"]);
-                          item["tempId"];
-                          for(i=0;i<inputs.length;i++){
-                            if(item.id == inputs[i]['id']){
-                              item["tempId"] = inputs[i]["tempId"];
+                          if(item["isNew"]){
+                            inputs.splice(item["tempId"], 1, item); 
+                          }else{
+                            if(inputs.length>0){
+                              for(i=0;i<inputs.length;i++){
+                                if(inputs[i]["id"]==item.id){
+                                  item["tempId"]=inputs[i]["tempId"];
+                                  if(inputs[i]["file"].length>0){
+                                    for(j=0;j<inputs[i]["file"].length;j++){
+                                      item["file"][j]["delete"]=inputs[i]["file"][j]["delete"];
+                                    }
+                                    inputs[i] = item; 
+                                  }
+                                }
+                              }
                             }
                           }
-                          inputs.splice(item["tempId"], 1, item);  
                           click_berkas = true;
-                          if(upload_file[item["tempId"]]!=null){
-                            for(i = 0 ;i< upload_file[item["tempId"]].length;i++){
-                              readerPrev(i,item["tempId"]);
-                            }
-                          } 
 
                         },
                       }, 
@@ -373,6 +378,11 @@
                             type: "control",
                             css:editable == 1 ?"":"hide",
                             width: 50,
+                            @if($setting['status']=="Tambah"&&$type=="master")
+                              deleteButton: true,
+                            @else
+                              deleteButton: false,
+                            @endif
 
                           },
                           { name: "unit_kerja", 
@@ -583,6 +593,11 @@
                             type: "control",
                             css:editable == 1 ?"":"hide",
                             width: 50,
+                            @if($setting['status']=="Tambah"&&$type=="master")
+                              deleteButton: true,
+                            @else
+                              deleteButton: false,
+                            @endif
 
                           }
                       ]
@@ -755,22 +770,6 @@
                           
                       });
                   }
-
-                  function setBerkas(index) {
-                    $('#list_file').empty();
-                    var name="";
-                      for(i = 0; i<list_berkas[index].length; i++){
-                        link = "{{url('anggaran/get/download')}}/"+list_berkas[index][i]['id'];
-                        name += '<div class="col-xs-10"><a href="'+link+'" >'+list_berkas[index][i]['name']+'</div>';
-                        name += '<div class="col-xs-2"><i class="fa fa-download "></i></div></a><br/><br/>';
-                      }
-
-                     $("#list_file").append(name);
-
-
-                      $('#modal_berkas').modal('show');
-                  };
-
                   function check(){
                     if({{$type == "master"?1:0}}){
                       if(document.getElementById("tanggal_mulai").value == ""){
@@ -945,26 +944,34 @@
                       hasil2[i] = "";
                   }
                   $('#simpan_file').click(function() {
+                    click_berkas = false;
                     simpan_file =true;
                     countFile=0;
                     hasil=[];
                     // temp_file=[];
-                    upload_file[index_modal]=[];
+                     upload_file[index_modal]=[];
                     for(i=0;i<temp_file.length;i++){
 
+                        // readerPrev(i,index_modal);
                         upload_file[index_modal][i]=temp_file[i];
                         if(temp_file[i]!=null){
                           countFile++;
                         }
                     }
-                    // alert(JSON.stringify(temp_file));
+
+                    for(i=0;i<hasil2.length;i++){
+                      if(hasil2[i] == ""){
+                        list_berkas[index_modal][i]["delete"]="delete";
+                      }else{
+                        countFile++;
+                      }
+                    }
                     var title = "Unggah Berkas";
                     if(countFile>0){
                       title=countFile+" Berkas"
                     }
                     temp_file=[];
                     document.getElementById('button_'+index_modal).innerHTML = title;
-                    click_berkas = false;
                     $('#modal_berkas').modal('hide');
                   });
 
@@ -999,32 +1006,31 @@
                       now_month = new Date().getMonth();
 
                       min_dari_date = new Date(now_year, bulan_dari, 1);
-                      max_dari_date = new Date(now_year, bulan_dari+3, 0);
-                      min_ke_date = new Date(now_year, bulan_ke, 1);
+                      // max_dari_date = new Date(now_year, bulan_dari+3, 0);
+                      // min_ke_date = new Date(now_year, bulan_ke, 1);
                       max_ke_date = new Date(now_year, bulan_ke+3, 0);
 
                       min_hari_dari = min_dari_date.getDate();
-                      max_hari_dari = max_dari_date.getDate();
-                      min_hari_ke = min_ke_date.getDate();
+                      // max_hari_dari = max_dari_date.getDate();
+                      // min_hari_ke = min_ke_date.getDate();
                       max_hari_ke = max_ke_date.getDate();
 
                       min_bulan_dari = min_dari_date.getMonth()+1;
-                      max_bulan_dari = max_dari_date.getMonth()+1;
-                      min_bulan_ke = min_ke_date.getMonth()+1;
+                      // max_bulan_dari = max_dari_date.getMonth()+1;
+                      // min_bulan_ke = min_ke_date.getMonth()+1;
                       max_bulan_ke = max_ke_date.getMonth()+1;
 
                       min_dari = now_year+"-"+(min_bulan_dari<9?"0":'')+min_bulan_dari+"-"+(min_hari_dari<9?"0":'')+min_hari_dari;
-                      max_dari = now_year+"-"+(max_bulan_dari<9?"0":'')+max_bulan_dari+"-"+(max_hari_dari<9?"0":'')+max_hari_dari;
-                      min_ke = now_year+"-"+(min_bulan_ke<9?"0":'')+min_bulan_ke+"-"+(min_hari_ke<9?"0":'')+min_hari_ke;
+                      // max_dari = now_year+"-"+(max_bulan_dari<9?"0":'')+max_bulan_dari+"-"+(max_hari_dari<9?"0":'')+max_hari_dari;
+                      // min_ke = now_year+"-"+(min_bulan_ke<9?"0":'')+min_bulan_ke+"-"+(min_hari_ke<9?"0":'')+min_hari_ke;
                       max_ke = now_year+"-"+(max_bulan_ke<9?"0":'')+max_bulan_ke+"-"+(max_hari_ke<9?"0":'')+max_hari_ke;
-                      // tanggal_mulai.setAttribute("min", '2013-12-9');
+                      
 
-                      tanggal_mulai.setAttribute("max",max_dari);
+                      tanggal_mulai.setAttribute("max",max_ke);
                       tanggal_mulai.setAttribute("min",min_dari);
 
                       tanggal_selesai.setAttribute("max",max_ke);
-                      tanggal_selesai.setAttribute("min",min_ke);
-                      // alert(min_dari+":"+max_ke);
+                      tanggal_selesai.setAttribute("min",min_dari);
                     }
                   }
 

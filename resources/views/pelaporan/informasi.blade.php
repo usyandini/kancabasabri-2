@@ -347,8 +347,5 @@
                   }
 
 
-                  // window.setUnitKerja();
-
-
                 </script>
                 @endsection
