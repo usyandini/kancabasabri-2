@@ -50,7 +50,14 @@ class NotificationController extends Controller
     	foreach (NotificationSystem::getUnreads() as $value) {
             $unit_kerja = "";
             if($value->type < 7){
-                $unit_kerja = "transaksi";
+
+                $divisi = $value->batch['divisi'];
+                $cabang = $value->batch['cabang'];
+                if($cabang == "00"){
+                    $unit_kerja = $divisi;
+                }else{
+                    $unit_kerja = $cabang;
+                }
             }else if($value->type < 15){
                 if($value->type < 10){
                     $unit_kerja = $value->idTarikTunai['cabang'];
@@ -71,7 +78,7 @@ class NotificationController extends Controller
                     $val_unit = $unit_kerja;
                 }
             }
-            if(Gate::check('unit_'.$val_unit)||$val_unit == "transaksi"){
+            if(Gate::check('unit_'.$val_unit)){
         		$result['notifications'][] = [
         			'id' 		=> $value->id,
                     'unit_kerja'=> $val_unit,
@@ -158,7 +165,13 @@ class NotificationController extends Controller
             foreach (NotificationSystem::getAll() as $value) {
                 $unit_kerja = "";
                 if($value->type < 7){
-                    $unit_kerja = "transaksi";
+                    $divisi = $value->batch['divisi'];
+                    $cabang = $value->batch['cabang'];
+                    if($cabang == "00"){
+                        $unit_kerja = $divisi;
+                    }else{
+                        $unit_kerja = $cabang;
+                    }
                 }else if($value->type < 15){
                     if($value->type < 10){
                         // $cabang = $value->idTarikTunai();
@@ -180,7 +193,7 @@ class NotificationController extends Controller
                         $val_unit = $unit_kerja;
                     }
                 }
-                if(Gate::check('unit_'.$val_unit)||$val_unit == "transaksi"){
+                if(Gate::check('unit_'.$val_unit)){
                     $notification_all[] = [
                         'id'        => $value->id,
                         'unit_kerja'=> $val_unit,
