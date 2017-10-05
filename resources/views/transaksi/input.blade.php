@@ -113,6 +113,13 @@
                               <span>KPKC: <code>{{ $active_batch->kantorCabang()->DESCRIPTION }}</code> <span>Divisi:</span> <code>{{ $active_batch->divisi == '00' ? 'Non-Divisi' : $active_batch->divisi()->DESCRIPTION  }}</code></span>
                               @endif
                             </div>
+                            <div class="row">
+                              <div class="col-sm-12 col-lg-3 col-xl-2 pull-right">
+                              <div class="form-group">
+                                <button class="btn btn-pink pull-right" onclick="location.href='{{ url('transaksi/create') }}'"><i class="fa fa-plus"></i> Buat Batch baru</button>
+                              </div>
+                            </div>
+                            </div>
                           </div>
                           <div class="card-body collapse in ">
                             <div class="card-block card-dashboard ">
@@ -156,12 +163,7 @@
                                   </div>
                                 </div>
                                 @endif
-                                @endif
-                                <div class="col-sm-12 col-lg-3 col-xl-2">
-                                  <div class="form-group">
-                                    <button class="btn btn-pink" onclick="location.href='{{ url('transaksi/create') }}'"><i class="fa fa-plus"></i> Buat Batch baru</button>
-                                  </div>
-                                </div>
+                                @endif 
                               </div>
                             </div>
                           </div>
