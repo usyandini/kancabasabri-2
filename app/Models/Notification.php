@@ -186,11 +186,11 @@ class Notification extends Model
             case 32:
                 return 'Form Master untuk Pelaporan Anggaran dan kegiatan untuk '.$TW.' telah dibuat dan dapat di isi mulai dari '.$this->formMaster['tanggal_mulai'].' sampai '.$this->formMaster['tanggal_selesai'];
             case 33:
-                return 'Pelaporan Anggaran dan kegiatan telah diisi oleh '.$this->formMaster->unit_kerja().' untuk '.$TW.'.';
+                return 'Pelaporan Anggaran dan kegiatan telah diisi oleh '.$this->formMaster->unit_kerja()[0].' untuk '.$TW.'.';
             case 34:
                 return 'Form Master untuk Arahan RUPS untuk '.$TW.' telah dibuat dan dapat di isi mulai dari '.$this->formMaster['tanggal_mulai'].' sampai '.$this->formMaster['tanggal_selesai'];
             case 35:
-                return 'Arahan RUPS telah diisi oleh '.$this->formMaster->unit_kerja().' untuk '.$TW.'.';
+                return 'Arahan RUPS telah diisi oleh '.$this->formMaster->unit_kerja()[0].' untuk '.$TW.'.';
         }
     }
 }

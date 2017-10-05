@@ -32,22 +32,23 @@ class FormMasterPelaporan extends Model
     public function unit_kerja(){
         
         $kategori = $this->kategori;
-        $unit="";
+        $unit = array();
         if($kategori == "laporan_anggaran"){
             $item = MasterItemPelaporanAnggaran::where('id_form_master',$this->id)->get();
             foreach ($item as $row) {
-                $unit = $row->unit_kerja;
+                array_push($unit,$row->unit_kerja);
             }
         }else if($kategori == "arahan_rups"){
             $item = MasterItemArahanRUPS::where('id_form_master',$this->id)->get();
             foreach ($item as $row) {
-                $unit = $row->unit_kerja;
+                array_push($unit,$row->unit_kerja);
             }
         }
 
-        if($this->is_template == 1){
-            $unit_kerja = "master";
-        }
+        // if($this->is_template == 1){
+            // $unit_kerja = "master";
+            // array_push($unit,"master");
+        // }
         
         return $unit;
     }

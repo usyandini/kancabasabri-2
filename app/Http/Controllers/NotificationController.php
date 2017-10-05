@@ -50,14 +50,18 @@ class NotificationController extends Controller
         $count_unread = 0 ;
     	foreach (NotificationSystem::getUnreads() as $value) {
             $unit_kerja = "";
+            $notif = false;
             if($value->type < 7){
 
                 $divisi = $value->batch['divisi'];
                 $cabang = $value->batch['cabang'];
                 if($cabang == "00"){
-                    $unit_kerja = DIVISI::where('VALUE',$divisi)->first()['DESCRIPTION'];
+                    $unit_kerja = "00".$divisi;
                 }else{
-                    $unit_kerja = KantorCabang::where('VALUE',$cabang)->first()['DESCRIPTION'];
+                    $unit_kerja = $cabang."00";
+                }
+                if(Gate::check('unit_'.$unit_kerja)){
+                    $notif = true;
                 }
             }else if($value->type < 15){
                 if($value->type < 10){
@@ -65,26 +69,27 @@ class NotificationController extends Controller
                 }else{
                     $unit_kerja = $value->idPenyesuaian['cabang'];
                 }
+                if(Gate::check('unit_'.$this->check($unit_kerja))){
+                    $notif = true;
+                }
             }else if($value->type <32){
                 $unit_kerja = $value->idAnggaran['unit_kerja'];
+                if(Gate::check('unit_'.$this->check($unit_kerja))){
+                    $notif = true;
+                }
             }else if($value->type <36){
-                $unit_kerja = $value->formMaster->unit_kerja();
-            }
-            $val_unit = "";
-            if(count(explode("Cabang",$unit_kerja))>1){
-                $val_unit = KantorCabang::where('DESCRIPTION',$unit_kerja)->first();
-                $val_unit = $val_unit['VALUE']."00";
-            }else{  
-                $val_unit = DIVISI::where('DESCRIPTION',$unit_kerja)->first();
-                $val_unit = "00".$val_unit['VALUE'];
-                if($unit_kerja == 'transaksi'){
-                    $val_unit = $unit_kerja;
+                $unit = $value->formMaster->unit_kerja();
+                for($i=0;$i<count($unit);$i++){
+                    if(Gate::check('unit_'.$this->check($unit[$i]))){
+                        $notif = true;
+                        break;
+                    }
                 }
             }
-            if(Gate::check('unit_'.$val_unit)){
+
+            if($notif){
         		$result['notifications'][] = [
         			'id' 		=> $value->id,
-                    'unit_kerja'=> $val_unit,
                     'type'      => $value->type,
         			'wording' 	=> $value->wording(),
         			'is_read'	=> $value->is_read,
@@ -175,14 +180,19 @@ class NotificationController extends Controller
         $notification_all = [];
         if(NotificationSystem::getAll()!=null)
             foreach (NotificationSystem::getAll() as $value) {
+                $notif = false;
                 $unit_kerja = "";
                 if($value->type < 7){
                     $divisi = $value->batch['divisi'];
                     $cabang = $value->batch['cabang'];
+
                     if($cabang == "00"){
-                        $unit_kerja = DIVISI::where('VALUE',$divisi)->first()['DESCRIPTION'];
+                        $unit_kerja = "00".$divisi;
                     }else{
-                        $unit_kerja = KantorCabang::where('VALUE',$cabang)->first()['DESCRIPTION'];
+                        $unit_kerja = $cabang."00";
+                    }
+                    if(Gate::check('unit_'.$unit_kerja)){
+                        $notif = true;
                     }
                 }else if($value->type < 15){
                     if($value->type < 10){
@@ -190,26 +200,28 @@ class NotificationController extends Controller
                     }else{
                         $unit_kerja = $value->idPenyesuaian['cabang'];
                     }
+                    if(Gate::check('unit_'.$this->check($unit_kerja))){
+                        $notif = true;
+                    }
                 }else if($value->type <32){
                     $unit_kerja = $value->idAnggaran['unit_kerja'];
+                    if(Gate::check('unit_'.$this->check($unit_kerja))){
+                        $notif = true;
+                    }
                 }else if($value->type <36){
-                    $unit_kerja = $value->formMaster->unit_kerja();
-                }
-                $val_unit = "";
-                if(count(explode("Cabang",$unit_kerja))>1){
-                    $val_unit = KantorCabang::where('DESCRIPTION',$unit_kerja)->first();
-                    $val_unit = $val_unit['VALUE']."00";
-                }else{  
-                    $val_unit = DIVISI::where('DESCRIPTION',$unit_kerja)->first();
-                    $val_unit = "00".$val_unit['VALUE'];
-                    if($unit_kerja == 'transaksi'){
-                        $val_unit = $unit_kerja;
+                    $unit = $value->formMaster->unit_kerja();
+                    for($i=0;$i<count($unit);$i++){
+                        if(Gate::check('unit_'.$this->check($unit[$i]))){
+                            $notif = true;
+                            break;
+                        }
                     }
                 }
-                if(Gate::check('unit_'.$val_unit)){
+                
+                
+                if($notif){
                     $notification_all[] = [
                         'id'        => $value->id,
-                        'unit_kerja'=> $val_unit,
                         'type'      => $value->type,
                         'wording'   => $value->wording(),
                         'is_read'   => $value->is_read,
@@ -223,5 +235,21 @@ class NotificationController extends Controller
         //     $notification_all = null;
         // }
         return view('notification.index', compact('notification_all'));
+    }
+
+
+    public function check($unit_kerja){
+        $val_unit="";
+        if(count(explode("Cabang",$unit_kerja))>1){
+            $val_unit = KantorCabang::where('DESCRIPTION',$unit_kerja)->first();
+            $val_unit = $val_unit['VALUE']."00";
+        }else{  
+            $val_unit = DIVISI::where('DESCRIPTION',$unit_kerja)->first();
+            $val_unit = "00".$val_unit['VALUE'];
+            if($unit_kerja == 'transaksi'){
+                $val_unit = $unit_kerja;
+            }
+        }
+        return $val_unit;
     }
 }

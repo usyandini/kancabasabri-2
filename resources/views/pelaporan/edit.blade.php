@@ -664,7 +664,7 @@
                     $.ajax({
                         'async': false, 'type': "GET", 'dataType': 'JSON', 'url': "{{ url('pelaporan/get/filtered/'.$type.'/'.$filters['id'].'/form_master') }}",
                         'success': function (data) {
-                          // alert(JSON.stringify(data[0]));
+                          // alert(JSON.stringify(data[0]['data'].length));
                           tanggal = document.getElementById('tanggal');
                           tw_dari = document.getElementById('tw_dari');
                           tw_ke = document.getElementById('tw_ke');
