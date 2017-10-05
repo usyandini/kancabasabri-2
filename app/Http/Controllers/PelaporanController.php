@@ -503,12 +503,12 @@ class PelaporanController extends Controller
             foreach ($query->get() as $row) {
                 $hasil;
                 if($kategori == 'laporan_anggaran'){
-                    echo 'laporan_anggaran';
+                    // echo 'laporan_anggaran';
                     $hasil = $this->MasterItemPelaporanAnggaranModel
                         ->where('id_form_master', $row->id)->where('unit_kerja', $decode_unit)->get();
                 }else if($kategori == 'arahan_rups'){
 
-                    echo 'arahan';
+                    // echo 'arahan';
                     $hasil = $this->MasterItemArahanRUPSModel
                         ->where('id_form_master', $row->id)->where('unit_kerja', $decode_unit)->get();
                 }
