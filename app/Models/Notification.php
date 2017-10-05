@@ -71,9 +71,39 @@ class Notification extends Model
         return $this->belongsTo('App\Models\RejectPenyesuaian', 'batch_id', 'id_penyesuaian');
     }
 
+    public function formMaster()
+    {
+        return $this->belongsTo('App\Models\FormMasterPelaporan', 'batch_id', 'id');
+    }
+
     public function wording()
     {
         $batchNo = $this->batch ? $this->batch->batchNo() : '';
+        $tw_dari="";
+        $tw_ke="";
+        $TW="";
+        if($this->type >= 32&& $this->type <= 33){
+            $tw_dari = $this->formMaster['tw_dari'];
+            $tw_ke = $this->formMaster['tw_ke'];
+            switch ($tw_dari) {
+                case '1': $tw_dari = "I";break;
+                case '2': $tw_dari = "II";break;
+                case '3': $tw_dari = "III";break;
+                case '4': $tw_dari = "IV";break;  
+            }
+            switch ($tw_ke) {
+                case '1': $tw_ke = "I";break;
+                case '2': $tw_ke = "II";break;
+                case '3': $tw_ke = "III";break;
+                case '4': $tw_ke = "IV";break;  
+            }
+            if($tw_dari == $tw_ke){
+                $TW = "TW ".$tw_dari;
+            }else{
+                $TW = "TW ".$tw_dari." Sampai TW ".$tw_ke;
+            }
+        }
+        
         switch ($this->type) {
             case 1:
                 return 'Batch <b>'.$batchNo.'</b> butuh review anda untuk approval sebagai Kakancab.';
@@ -153,6 +183,14 @@ class Notification extends Model
             case 31:
                 return 'Risalah RUPS Anggaran dengan Nomer Dinas/Surat '.$this->idAnggaran['nd_surat'].' diajukan oleh '.$this->idAnggaran['unit_kerja'].' pada tanggal '.date('d F Y', strtotime($this->idAnggaran['updated_at'])).
                 ' telah disetujui dan ditandatangani';
+            case 32:
+                return 'Form Master untuk Pelaporan Anggaran dan kegiatan untuk '.$TW.' telah dibuat dan dapat di isi mulai dari '.$this->formMaster['tanggal_mulai'].' sampai '.$this->formMaster['tanggal_selesai'];
+            case 33:
+                return 'Pelaporan Anggaran dan kegiatan telah diisi oleh '.$this->formMaster->unit_kerja()[0].' untuk '.$TW.'.';
+            case 34:
+                return 'Form Master untuk Arahan RUPS untuk '.$TW.' telah dibuat dan dapat di isi mulai dari '.$this->formMaster['tanggal_mulai'].' sampai '.$this->formMaster['tanggal_selesai'];
+            case 35:
+                return 'Arahan RUPS telah diisi oleh '.$this->formMaster->unit_kerja()[0].' untuk '.$TW.'.';
         }
     }
 }

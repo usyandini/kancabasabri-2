@@ -176,7 +176,9 @@
                 <script type="text/javascript">
                  
                   $(document).ready(function() {
-
+                    @if (session('back'))
+                      toastr.error("{!! session('back') !!}", "{!! session('title') !!}", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:5000});
+                    @endif
                     $("#basicScenario").jsGrid( {
                       width: "100%",
                
@@ -214,13 +216,19 @@
                             width: 100,
                             itemTemplate:function(value){
                               // var tanggal = "";
-                              var date = new Date(value);
+                              var date = new Date(value['date']);
                               var month = ["Januari", "Februari", "Maret", "April", "Mei", "Juni",
                               "Juli", "Agustus", "September", "Oktober", "November", "Desember"][date.getMonth()];
                               var tanggal = date.getDate()+' '+month + ' ' + date.getFullYear();
                               // tanggal = value.split(" ")
                               return tanggal;
                             }
+                          },
+                          { name: "unit_kerja", 
+                            type: "text",
+                            align:"center",
+                            title: "Unit Kerja", 
+                            width: 100
                           },
                           { name: "tw_dari", 
                             type: "text",
@@ -337,9 +345,6 @@
                       $('form[id="filterPelaporan"]').submit();
                     }
                   }
-
-
-                  // window.setUnitKerja();
 
 
                 </script>

@@ -4,6 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+use App\Models\MasterItemPelaporanAnggaran;
+use App\Models\MasterItemArahanRUPS;
+
 class FormMasterPelaporan extends Model
 {
     //
@@ -16,12 +19,37 @@ class FormMasterPelaporan extends Model
     		['tanggal_mulai', 
     		'tanggal_selesai',
     		'tw_dari', 
-    		'tw_ke', 
-    		'unit_kerja', 
+    		'tw_ke',
     		'kategori',
             'active',
-    		'is_template',
+            'is_template',
+    		'id_master',
     		'created_at', 
     		'updated_at'];
 
+
+
+    public function unit_kerja(){
+        
+        $kategori = $this->kategori;
+        $unit = array();
+        if($kategori == "laporan_anggaran"){
+            $item = MasterItemPelaporanAnggaran::where('id_form_master',$this->id)->get();
+            foreach ($item as $row) {
+                array_push($unit,$row->unit_kerja);
+            }
+        }else if($kategori == "arahan_rups"){
+            $item = MasterItemArahanRUPS::where('id_form_master',$this->id)->get();
+            foreach ($item as $row) {
+                array_push($unit,$row->unit_kerja);
+            }
+        }
+
+        // if($this->is_template == 1){
+            // $unit_kerja = "master";
+            // array_push($unit,"master");
+        // }
+        
+        return $unit;
+    }
 }

@@ -120,6 +120,7 @@ Route::group(['middleware' => 'auth'], function() {
 		Route::get('/removeFormMaster', 'PelaporanController@removeFormMasterAll');
 		Route::get('/get/filtered/{type}/{id}/{kategori}', 'PelaporanController@getFiltered');
 		Route::get('/get/attributes/{type}/{id}', 'PelaporanController@getAttributes');
+		Route::get('/get/check/{kategori}/', 'PelaporanController@check_tambah');
 		Route::get('/get/filteredMaster/{kategori}/{type}', 'PelaporanController@getDataFormMaster');
 		Route::get('/get/filteredPelaporan/{type}/{kategori}/{tahun}/{tw_dari}/{tw_ke}/{unit_kerja}', 'PelaporanController@getFilteredPelaporan');
 		Route::get('/get/download/{id}', 'PelaporanController@unduh_file');

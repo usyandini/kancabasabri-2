@@ -647,7 +647,7 @@ class AnggaranController extends Controller
             }else if($value->delete == "delete"){
                 if($value->id != -1){
                     ListAnggaran::where('id', $value->id)->delete();
-                    FileListAnggaran::where('id_list_anggaran', $value->id)->update(["active" =>'1']);
+                    FileListAnggaran::where('id_list_anggaran', $value->id)->update(["active" =>'0']);
                 }
             }
 

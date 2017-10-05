@@ -162,7 +162,7 @@
                             @can('pelaporan_a_RUPS')
                             <li class="is-shown {{ checkActiveMenu('pelaporan/informasi/item/arahan_rups') }}"><a href="{{ url('/pelaporan/informasi/item/arahan_rups', $parameters = [], $secure = null) }}" class="menu-item">Arahan RUPS</a></li>
                             @endcan
-                            @can('pelaporan_a_RUPS')
+                            @can('pelaporan_usulan_p_p')
                             <li class="is-shown {{ checkActiveMenu('pelaporan/informasi/item/usulan_program') }}"><a href="{{ url('/pelaporan/informasi/item/usulan_program', $parameters = [], $secure = null) }}" class="menu-item">Usulan Program Prioritas</a></li>
                             @endcan
                             @can('pelaporan_tindak_lanjut')
