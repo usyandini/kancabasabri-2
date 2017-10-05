@@ -71,7 +71,7 @@ class NotificationController extends Controller
                     $val_unit = $unit_kerja;
                 }
             }
-            // if(Gate::check('unit_'.$val_unit)){
+            if(Gate::check('unit_'.$val_unit)||$val_unit == "transaksi"){
         		$result['notifications'][] = [
         			'id' 		=> $value->id,
                     'unit_kerja'=> $val_unit,
@@ -82,7 +82,7 @@ class NotificationController extends Controller
         			'time'		=> date('d F Y, H:m', strtotime($value->created_at))
         		];
                 $count_unread++;
-            // }
+            }
     	}
         $result['totalUnread'] = $count_unread;
 
@@ -180,7 +180,7 @@ class NotificationController extends Controller
                         $val_unit = $unit_kerja;
                     }
                 }
-                // if(Gate::check('unit_'.$val_unit)){
+                if(Gate::check('unit_'.$val_unit)||$val_unit == "transaksi"){
                     $notification_all[] = [
                         'id'        => $value->id,
                         'unit_kerja'=> $val_unit,
@@ -190,7 +190,7 @@ class NotificationController extends Controller
                         'time_dif'  => \Carbon\Carbon::createFromTimeStamp(strtotime($value->created_at))->diffForHumans(),
                         'time'      => date('d F Y, H:m', strtotime($value->created_at))
                     ];
-                // }
+                }
             }
         // $notification_all = null;
         // if(count($notification_all)){
