@@ -232,6 +232,7 @@ class TransaksiController extends Controller
         }
 
         foreach (json_decode($request->batch_values) as $value) {
+            $value->total = str_replace(',', '', $value->total);
             if (!isset($value->toBeDeleted)) {
                 $calibrate = $this->calibrateAnggaran($value, true);
             }
