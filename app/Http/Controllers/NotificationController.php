@@ -54,9 +54,9 @@ class NotificationController extends Controller
                 $divisi = $value->batch['divisi'];
                 $cabang = $value->batch['cabang'];
                 if($cabang == "00"){
-                    $unit_kerja = $divisi;
+                    $unit_kerja = DIVISI::where('VALUE',$divisi)->first()['DESCRIPTION'];
                 }else{
-                    $unit_kerja = $cabang;
+                    $unit_kerja = KantorCabang::where('VALUE',$cabang)->first()['DESCRIPTION'];
                 }
             }else if($value->type < 15){
                 if($value->type < 10){
@@ -168,9 +168,9 @@ class NotificationController extends Controller
                     $divisi = $value->batch['divisi'];
                     $cabang = $value->batch['cabang'];
                     if($cabang == "00"){
-                        $unit_kerja = $divisi;
+                        $unit_kerja = DIVISI::where('VALUE',$divisi)->first()['DESCRIPTION'];
                     }else{
-                        $unit_kerja = $cabang;
+                        $unit_kerja = KantorCabang::where('VALUE',$cabang)->first()['DESCRIPTION'];
                     }
                 }else if($value->type < 15){
                     if($value->type < 10){
