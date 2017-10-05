@@ -161,7 +161,7 @@
                                     @endif
                                   </div>
 
-                                  @if($setting['edit'])
+                                  @if($setting['edit']&&$beda)
                                   <div class="row col-xs-12" style="display:block">
                                     <br />
                                     <div class="pull-right">
@@ -199,12 +199,16 @@
                           </div>
                           <br />
                           <br />
+                          @if($beda)
                           <input type="file" id="files" name="files" multiple>
+                          @endif
                         </div>
                       </div>
                       <div class="modal-footer">
                         <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">Kembali</button>
-                        <button id="simpan_file" class="btn btn-outline-primary">Simpan</button>
+                        @if($beda)
+                        <div id="simpan_file" class="btn btn-outline-primary">Simpan</div>
+                        @endif
                       </div>
                     </div>
                   </div>
@@ -260,7 +264,7 @@
                   var count_file=0;
                   var tempIdCounter = 0;
                   var insertable = {{$setting['insert']?1:0}};
-                  var editable = {{$setting['edit']?1:0}};
+                  var editable = {{($setting['edit']&&$beda)?1:0}};
                   var unit_field_insert,unit_field_edit = null;
                   var click_berkas = true;
                   var statusTable = "";

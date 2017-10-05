@@ -138,12 +138,18 @@ class PelaporanController extends Controller
             } 
         }
 
-        $beda = false;
+        $beda = true;
 
         $pelaporan = FormMasterPelaporan::where('id', $id)->get();
         
         $item;
+
+        $date_now = date("Y-m-d");
+        $date_selesai;
+        $date_mulai;
         foreach ($pelaporan as $row) {
+            $date_mulai = $row->tanggal_mulai;
+            $date_selesai = $row->tanggal_selesai;
             if($kategori == 'laporan_anggaran')
                 $item = MasterItemPelaporanAnggaran::where('id_form_master',$row->id)->where('unit_kerja',$userUnit);
             else if($kategori == 'arahan_rups')
@@ -151,8 +157,21 @@ class PelaporanController extends Controller
             
         }
 
+        $diff1 = strtotime($date_now) - strtotime($date_mulai);
+        $diff2 = strtotime($date_selesai) - strtotime($date_now);
+
+
         if(count($item->get())>0){
             $beda = true;
+            if($diff2 <= 0){
+                $beda = false;
+                echo "sesudah";
+            }
+
+            if($diff1 < 0){
+                $beda = false;
+                echo "sebelum";
+            }
         }
 
         $filter =  array(
@@ -191,7 +210,6 @@ class PelaporanController extends Controller
             $setting['table'] = false;
             $sub_title = "Usulan Program Prioritas";
         }
-        
         return view('pelaporan.edit', [
             'title' => 'Form Master',
             'sub_title' => $sub_title,
@@ -274,6 +292,8 @@ class PelaporanController extends Controller
                     'table'         => true
 
             );
+
+
         $sub_title = "";
         if($kategori == "laporan_anggaran"){
             if($type=='item'){
@@ -297,13 +317,36 @@ class PelaporanController extends Controller
             $sub_title = "Usulan Program Prioritas";
         }
 
-
+        $beda =  true;
         if($type == 'item'){
-            if($this->check_tambah($kategori)){
+            // echo count($this->check_tambah($kategori,0));
+            if(count($this->check_tambah($kategori,0))>0){
                 session()->flash('back', 'Unit Kerja Anda Telah mengisi '.$sub_title.'. Silahkan Melakukan pencarian jika ingin merubah sebelum waktu pengajuan berakhir');
                 session()->flash('title', $sub_title);
                 return redirect('pelaporan/informasi/item/'.$kategori);
             }  
+            $date_now = date("Y-m-d");
+            $date_mulai;
+            $date_selesai;
+            if(count($this->check_tambah($kategori,1))>0){
+                $form = $this->check_tambah($kategori,1);
+                foreach ($form as $row) {
+                    $date_mulai = $row->tanggal_mulai;
+                    $date_selesai = $row->tanggal_selesai;
+                }
+            }  
+
+            $diff1 = strtotime($date_now) - strtotime($date_mulai);
+            $diff2 = strtotime($date_selesai) - strtotime($date_now);
+
+            if($diff2 <= 0){
+                $beda = false;
+            }
+
+            if($diff1 < 0){
+                $beda = false;
+            }
+
         }
 
         return view('pelaporan.input', [
@@ -311,6 +354,7 @@ class PelaporanController extends Controller
             'sub_title' => $sub_title,
             'setting' => $setting , 
             'type' => $type,
+            'beda' => $beda,
             'userCabang' =>$this->userCabang,
             'userDivisi' =>$this->userDivisi,
             'filters' => $filter]);
@@ -319,7 +363,7 @@ class PelaporanController extends Controller
     }
 
     public function store(Request $request){
-        $form_master_insert ;
+        $form_master_insert ;$form_master_update1 ;$form_master_update2 ;
         $form_master_insert_item = $form_master_update_item = [];
         $form_master_insert_file_item  = $form_master_update_file_item = [];
         $kategori =$request->kategori;
@@ -333,6 +377,7 @@ class PelaporanController extends Controller
                     'tw_ke'             => $request->tw_ke, 
                     'kategori'          => $kategori,
                     'is_template'       => $request->jenis_berkas,
+                    'id_master'       => 0,
                     'active'            => '1'];
             }else if($request->jenis_berkas == '0'){
                 $FormMaster = FormMasterPelaporan::where('id',$request->id_form_master)->first();
@@ -343,9 +388,19 @@ class PelaporanController extends Controller
                     'tw_ke'             => $FormMaster->tw_ke, 
                     'kategori'          => $kategori,
                     'is_template'       => $request->jenis_berkas,
+                    'id_master'       => $request->id_form_master,
                     'active'            => '1'];
 
             }
+        }else if($request->status == 'Edit'){
+            $form_master_update1 = [
+                'tanggal_mulai'    => $request->tanggal_mulai, 
+                'tanggal_selesai'  => $request->tanggal_selesai,
+                'tw_dari'           => $request->tw_dari, 
+                'tw_ke'             => $request->tw_ke];
+            $form_master_update2 = [
+                'tanggal_mulai'    => $request->tanggal_mulai, 
+                'tanggal_selesai'  => $request->tanggal_selesai];
         }
 
 
@@ -353,9 +408,17 @@ class PelaporanController extends Controller
         if($request->status == 'Tambah'){
             $formMaster=FormMasterPelaporan::create($form_master_insert);
             $id_form_master = $formMaster->id;
-        }else{
+        }else if($request->status == 'Edit'){
             $id_form_master = $request->id_form_master;
+            if($request->jenis_berkas == '1'){
+                FormMasterPelaporan::where('id',$id_form_master)->update($form_master_update1);
+                FormMasterPelaporan::Where('id_master',$id_form_master)->update($form_master_update2);
+            }else if($request->jenis_berkas == '0'){
+                FormMasterPelaporan::where('id',$id_form_master)->update($form_master_update);
+            }
+            
         }
+
         if($kategori != "usulan_program"){
             $index = 0;
             foreach (json_decode($request->item_form_master) as $value) {
@@ -921,7 +984,7 @@ class PelaporanController extends Controller
     }
 
 
-    public function check_tambah($kategori){
+    public function check_tambah($kategori,$type){
         $tw = 0;
         if(date('n')>=1&&date('n')<=3){
             $tw = 1;
@@ -946,7 +1009,7 @@ class PelaporanController extends Controller
             } 
         }
 
-        $FormMaster = $this->FormMasterPelaporanModel->where('tw_dari', $tw)->where('kategori',$kategori)->where('active','1')->where('is_template','0');
+        $FormMaster = $this->FormMasterPelaporanModel->where('tw_dari', $tw)->where('kategori',$kategori)->where('active','1')->where('is_template',$type);
         $ItemPelaporanAnggaran;
 
         $result = null;
@@ -956,7 +1019,7 @@ class PelaporanController extends Controller
             foreach ($FormMaster->get() as $form_master) {
                 $Item = $this->MasterItemPelaporanAnggaranModel
                     ->where('id_form_master', $form_master->id)->where('unit_kerja', $userUnit)
-                    ->where('active', '1')->where('is_template','0')->get();
+                    ->where('active', '1')->where('is_template',$type)->get();
                 if(count($Item)>0){
                     $ItemPelaporanAnggaran = $Item;
                 }
@@ -969,12 +1032,13 @@ class PelaporanController extends Controller
                 $result = null;
             }
         }
-        if($result == null){
-            return false;
-        }else{
-            return true;
-        }
-        // return response()->json($result);
+        // if($result == null){
+        //     return false;
+        // }else{
+        //     return true;
+        // }
+
+        return $result;
         
     }
 

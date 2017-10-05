@@ -160,6 +160,7 @@
                                     </div>
                                     @endif
                                   </div>
+                                  {{$beda?1:0}}
 
                                   @if($setting['edit']&&$beda)
                                   <div class="row col-xs-12" style="display:block">
@@ -659,7 +660,7 @@
                   }
 
                   function setDetailFormMaster(){
-                    // alert('{{ url('pelaporan/get/filtered/'.$filters['id'].'/form_master') }}');
+                    // alert('{{ url('pelaporan/get/filtered/'.$type.'/'.$filters['id'].'/form_master') }}');
                     $.ajax({
                         'async': false, 'type': "GET", 'dataType': 'JSON', 'url': "{{ url('pelaporan/get/filtered/'.$type.'/'.$filters['id'].'/form_master') }}",
                         'success': function (data) {

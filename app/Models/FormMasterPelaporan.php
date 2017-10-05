@@ -22,7 +22,8 @@ class FormMasterPelaporan extends Model
     		'tw_ke',
     		'kategori',
             'active',
-    		'is_template',
+            'is_template',
+    		'id_master',
     		'created_at', 
     		'updated_at'];
 
