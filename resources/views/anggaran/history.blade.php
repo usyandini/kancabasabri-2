@@ -429,24 +429,11 @@
                     if(tahun == '0'){
                       tahun = '2015 sampai 2017';
                     }
+
+
                     document.getElementById('tahun').value = tahun;
                     document.getElementById('unit_kerja').value = '{{$filters["unit_kerja"]}}';
-                    $.ajax({
-                        'async': false, 'type': "GET", 'dataType': 'JSON', 'url': "{{ url('anggaran/get/attributes/unitkerja/1') }}",
-                        'success': function (data) {
-
-                          unit_kerja = document.getElementById('cari_unit_kerja');
-
-                         
-                          for(i =0 ;i<data.length;i++){
-                            var value = "";
-                            var desc = data[i].DESCRIPTION;
-                            value = data[i].DESCRIPTION;
-                            unit_kerja.options[unit_kerja.options.length] = new Option(desc, value);
-                          }
-                             
-                        }
-                    });
+                    
                   }
 
                   
@@ -502,7 +489,7 @@
                     // alert(document.getElementById("cari_nd_surat").value);
                   }
 
-                  // window.setUnitKerja();
+                  window.setUnitKerja();
                   // window.setNDSurat();
 
 
