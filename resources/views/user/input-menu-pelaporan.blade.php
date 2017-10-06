@@ -11,17 +11,59 @@
           <h5>Aksi</h5>
           <div class="form-group skin skin-square" id="pelaporan">
             <fieldset >
-              <input id="info_transaksi" type="checkbox"  name="perizinan[pelaporan_anggaran]" {{ isset(old("perizinan")['pelaporan_anggaran']) ? 'checked=""' : '' }} >
+              <input id="pelaporan_anggaran" type="checkbox"  name="perizinan[pelaporan_anggaran]" {{ isset(old("perizinan")['pelaporan_anggaran']) ? 'checked=""' : '' }} >
               <label>Pelaporan Anggaran Kegiatan</label>
             </fieldset>
+            <ul id="pelaporan_anggaran">
+                <li>
+                  <fieldset>
+                    <input type="checkbox" name="perizinan[cari_pelaporan_anggaran]" {{ isset(old("perizinan")['cari_pelaporan_anggaran']) ? 'checked=""' : '' }}>
+                    <label >Pencarian Pelaporan Anggaran Kegiatan</label>
+                  </fieldset>
+                </li>
+                <li>
+                  <fieldset>
+                    <input type="checkbox" name="perizinan[tambah_pelaporan_anggaran]" {{ isset(old("perizinan")['tambah_pelaporan_anggaran']) ? 'checked=""' : '' }}>
+                    <label >Tambah Pelaporan Anggaran Kegiatan</label>
+                  </fieldset>
+                </li>
+            </ul>
             <fieldset>
-              <input type="checkbox" name="perizinan[pelaporan_a_RUPS]" {{ isset(old("perizinan")['pelaporan_a_RUPS']) ? 'checked=""' : '' }}>
+              <input id="pelaporan_a_RUPS" type="checkbox" name="perizinan[pelaporan_a_RUPS]" {{ isset(old("perizinan")['pelaporan_a_RUPS']) ? 'checked=""' : '' }}>
               <label>Arahan RUPS</label>
             </fieldset>
+            <ul id="pelaporan_a_RUPS">
+                <li>
+                  <fieldset>
+                    <input type="checkbox" name="perizinan[cari_pelaporan_a_RUPS]" {{ isset(old("perizinan")['cari_pelaporan_a_RUPS']) ? 'checked=""' : '' }}>
+                    <label >Pencarian Arahan RUPS</label>
+                  </fieldset>
+                </li>
+                <li>
+                  <fieldset>
+                    <input type="checkbox" name="perizinan[tambah_pelaporan_a_RUPS]" {{ isset(old("perizinan")['tambah_pelaporan_a_RUPS']) ? 'checked=""' : '' }}>
+                    <label >Tambah Arahan RUPS</label>
+                  </fieldset>
+                </li>
+            </ul>
             <fieldset>
-              <input type="checkbox" name="perizinan[pelaporan_usulan_p_p]" {{ isset(old("perizinan")['pelaporan_usulan_p_p']) ? 'checked=""' : '' }}>
+              <input id="pelaporan_usulan_p_p" type="checkbox" name="perizinan[pelaporan_usulan_p_p]" {{ isset(old("perizinan")['pelaporan_usulan_p_p']) ? 'checked=""' : '' }}>
               <label>Usulan Program Prioritas</label>
             </fieldset>
+            <ul id="pelaporan_usulan_p_p">
+                <li>
+                  <fieldset>
+                    <input type="checkbox" name="perizinan[cari_pelaporan_usulan_p_p]" {{ isset(old("perizinan")['cari_pelaporan_usulan_p_p']) ? 'checked=""' : '' }}>
+                    <label >Pencarian Usulan Program Prioritas</label>
+                  </fieldset>
+                </li>
+                <li>
+                  <fieldset>
+                    <input type="checkbox" name="perizinan[tambah_pelaporan_usulan_p_p]" {{ isset(old("perizinan")['tambah_pelaporan_usulan_p_p']) ? 'checked=""' : '' }}>
+                    <label >Tambah Usulan Program Prioritas</label>
+                  </fieldset>
+                </li>
+            </ul>
             <fieldset>
               <input type="checkbox" name="perizinan[pelaporan_tindak_lanjut]" {{ isset(old("perizinan")['pelaporan_tindak_lanjut']) ? 'checked=""' : '' }}>
               <label>Tindak Lanjut Temuan</label>
@@ -33,21 +75,63 @@
             <ul id="form_master">
                 <li>
                   <fieldset>
-                    <input type="checkbox" name="perizinan[master_pelaporan_anggaran]" {{ isset(old("perizinan")['master_pelaporan_anggaran']) ? 'checked=""' : '' }}>
+                    <input id="master_pelaporan_anggaran" type="checkbox" name="perizinan[master_pelaporan_anggaran]" {{ isset(old("perizinan")['master_pelaporan_anggaran']) ? 'checked=""' : '' }}>
                     <label >Pelaporan Anggaran Kegiatan</label>
                   </fieldset>
+                  <ul id="master_pelaporan_anggaran">
+                      <li>
+                        <fieldset>
+                          <input type="checkbox" name="perizinan[cari_master_pelaporan_anggaran]" {{ isset(old("perizinan")['cari_master_pelaporan_anggaran']) ? 'checked=""' : '' }}>
+                          <label >Pencarian Usulan Program Prioritas</label>
+                        </fieldset>
+                      </li>
+                      <li>
+                        <fieldset>
+                          <input type="checkbox" name="perizinan[tambah_master_pelaporan_anggaran]" {{ isset(old("perizinan")['tambah_master_pelaporan_anggaran']) ? 'checked=""' : '' }}>
+                          <label >Tambah Usulan Program Prioritas</label>
+                        </fieldset>
+                      </li>
+                  </ul>
                 </li>
                 <li>
                   <fieldset>
-                    <input type="checkbox" name="perizinan[master_arahan_a_RUPS]" {{ isset(old("perizinan")['master_arahan_a_RUPS']) ? 'checked=""' : '' }}>
+                    <input id="master_arahan_a_RUPS" type="checkbox" name="perizinan[master_arahan_a_RUPS]" {{ isset(old("perizinan")['master_arahan_a_RUPS']) ? 'checked=""' : '' }}>
                     <label>Arahan RUPS</label>
                   </fieldset>
+                  <ul id="master_arahan_a_RUPS">
+                      <li>
+                        <fieldset>
+                          <input type="checkbox" name="perizinan[cari_master_arahan_a_RUPS]" {{ isset(old("perizinan")['cari_master_arahan_a_RUPS']) ? 'checked=""' : '' }}>
+                          <label >Pencarian Arahan RUPS</label>
+                        </fieldset>
+                      </li>
+                      <li>
+                        <fieldset>
+                          <input type="checkbox" name="perizinan[tambah_master_arahan_a_RUPS]" {{ isset(old("perizinan")['tambah_master_arahan_a_RUPS']) ? 'checked=""' : '' }}>
+                          <label >Tambah Arahan RUPS</label>
+                        </fieldset>
+                      </li>
+                  </ul>
                 </li>
                 <li>
                   <fieldset>
-                    <input type="checkbox" name="perizinan[master_usulan_p_p]" {{ isset(old("perizinan")['master_usulan_p_p']) ? 'checked=""' : '' }}>
+                    <input id="master_usulan_p_p" type="checkbox" name="perizinan[master_usulan_p_p]" {{ isset(old("perizinan")['master_usulan_p_p']) ? 'checked=""' : '' }}>
                     <label>Usulan Program Prioritas</label>
                   </fieldset>
+                  <ul id="master_usulan_p_p">
+                      <li>
+                        <fieldset>
+                          <input type="checkbox" name="perizinan[cari_master_usulan_p_p]" {{ isset(old("perizinan")['cari_master_usulan_p_p']) ? 'checked=""' : '' }}>
+                          <label >Pencarian Usulan Program Prioritas</label>
+                        </fieldset>
+                      </li>
+                      <li>
+                        <fieldset>
+                          <input type="checkbox" name="perizinan[tambah_master_usulan_p_p]" {{ isset(old("perizinan")['tambah_master_usulan_p_p']) ? 'checked=""' : '' }}>
+                          <label >Tambah Usulan Program Prioritas</label>
+                        </fieldset>
+                      </li>
+                  </ul>
                 </li>
             </ul>
           </div>
@@ -63,6 +147,10 @@
               <input type="checkbox" name="perizinan[notif_ajukan_a_RUPS]" {{ isset(old("perizinan")['notif_ajukan_a_RUPS']) ? 'checked=""' : '' }}>
               <label>Pengajuan Arahan RUPS</label>
             </fieldset>
+            <fieldset>
+              <input type="checkbox" name="perizinan[notif_ajukan_usulan_p_p]" {{ isset(old("perizinan")['notif_ajukan_usulan_p_p']) ? 'checked=""' : '' }}>
+              <label>Pengajuan Usulan Program Prioritas</label>
+            </fieldset>
             <fieldset >
               <input type="checkbox" name="perizinan[notif_ajukan_master_p_a]" {{ isset(old("perizinan")['notif_ajukan_master_p_a']) ? 'checked=""' : '' }}>
               <label>Pengajuan Form Master Pelaporan Anggaran Kegiatan</label>
@@ -70,6 +158,10 @@
             <fieldset >
               <input type="checkbox" name="perizinan[notif_ajukan_master_a_RUPS]" {{ isset(old("perizinan")['notif_ajukan_master_a_RUPS']) ? 'checked=""' : '' }}>
               <label>Pengajuan Form Master Arahan RUPS</label>
+            </fieldset>
+            <fieldset>
+              <input type="checkbox" name="perizinan[notif_ajukan_master_usulan_p_p]" {{ isset(old("perizinan")['notif_ajukan_master_usulan_p_p']) ? 'checked=""' : '' }}>
+              <label>Pengajuan Form Master Usulan Program Prioritas</label>
             </fieldset>
            </div>
         </div>

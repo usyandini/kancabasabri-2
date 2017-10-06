@@ -444,6 +444,13 @@ class AnggaranController extends Controller
     }
     public function riwayat(Request $request ) 
     {
+        $query="SELECT * 
+                    FROM (SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_DIVISI] 
+                    WHERE VALUE!='00') AS A 
+                    UNION ALL 
+                    SELECT * FROM (SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_KPKC]  
+                    WHERE VALUE!='00') AS B";
+        $unit_kerja = \DB::select($query);
         $filter = null;
         $keyword = $request->cari_keyword;
         if($request->cari_keyword == ""){
@@ -460,9 +467,10 @@ class AnggaranController extends Controller
 
         return view('anggaran.history', [
             'title' => 'Riwayat Kegiatan dan Anggaran',
-            'userCabang' =>$this->userCabang,
-            'userDivisi' =>$this->userDivisi,
-            'filters' => $filter]);
+            'userCabang'    =>$this->userCabang,
+            'userDivisi'    =>$this->userDivisi,
+            'unit_kerja'    => $unit_kerja,
+            'filters'       => $filter]);
     }
 
     public function store(Request $request)

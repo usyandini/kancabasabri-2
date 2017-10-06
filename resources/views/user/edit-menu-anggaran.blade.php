@@ -18,7 +18,7 @@
                 <li>
                   <fieldset>
                     <input type="checkbox" name="perizinan[cari_a]" {{ isset($user->perizinan['cari_a']) ? 'checked=""' : '' }}>
-                    <label >Cari anggaran dan kegiatan</label>
+                    <label >Pencarian anggaran dan kegiatan</label>
                   </fieldset>
                 </li>
                 <li>

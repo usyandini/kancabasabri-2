@@ -77,13 +77,17 @@ class NotificationController extends Controller
                 if(Gate::check('unit_'.$this->check($unit_kerja))){
                     $notif = true;
                 }
-            }else if($value->type <36){
-                $unit = $value->formMaster->unit_kerja();
-                for($i=0;$i<count($unit);$i++){
-                    if(Gate::check('unit_'.$this->check($unit[$i]))){
-                        $notif = true;
-                        break;
+            }else if($value->type <38){
+                if($value->type != 36){
+                    $unit = $value->formMaster->unit_kerja();
+                    for($i=0;$i<count($unit);$i++){
+                        if(Gate::check('unit_'.$this->check($unit[$i]))){
+                            $notif = true;
+                            break;
+                        }
                     }
+                }else{
+                    $notif = true;
                 }
             }
 
@@ -106,9 +110,22 @@ class NotificationController extends Controller
 
     public function redirect($id)
     {
-    	NotificationSystem::markAsRead($id);
-        
+        $read = true;
         $notifDetail = NotificationSystem::get($id);
+        if(!Gate::check('master_pelaporan_anggaran')&&$notifDetail->type == 32){
+            $read = false;
+        }
+        if(!Gate::check('master_arahan_a_RUPS')&&$notifDetail->type == 34){
+            $read = false;
+        }
+        if(!Gate::check('master_usulan_p_p')&&$notifDetail->type == 36){
+            $read = false;
+        }
+       
+            
+	   if($read)
+            NotificationSystem::markAsRead($id); 
+        
         $tariktunai = TarikTunai::where('id', $notifDetail->batch_id)->first();
         $penyesuaian = PenyesuaianDropping::where('id', $notifDetail->batch_id)->first();
         $anggaran = Anggaran::where('id', $notifDetail->batch_id)->first();
@@ -163,13 +180,26 @@ class NotificationController extends Controller
             case 31:
                 return redirect('anggaran/persetujuan/'.$anggaran->nd_surat."/1");
             case 32:
-                return redirect('pelaporan/edit/master/laporan_anggaran/'.$form_master->id);
+                if(Gate::check('master_pelaporan_anggaran'))
+                    return redirect('pelaporan/edit/master/laporan_anggaran/'.$form_master->id);
+                else
+                    return redirect('pelaporan/informasi/item/laporan_anggaran');
             case 33:
                 return redirect('pelaporan/edit/item/laporan_anggaran/'.$form_master->id);
             case 34:
-                return redirect('pelaporan/edit/master/arahan_rups/'.$form_master->id);
+                if(Gate::check('master_arahan_a_RUPS'))
+                    return redirect('pelaporan/edit/master/arahan_rups/'.$form_master->id);
+                else
+                    return redirect('pelaporan/informasi/item/arahan_rups');
             case 35:
                 return redirect('pelaporan/edit/item/arahan_rups/'.$form_master->id);
+            case 36:
+                if(Gate::check('master_usulan_p_p'))
+                    return redirect('pelaporan/edit/master/usulan_program/'.$form_master->id);
+                else
+                    return redirect('pelaporan/informasi/item/usulan_program');
+            case 37:
+                return redirect('pelaporan/edit_usulan_program/'.$form_master->id);
 			default:
 				return redirect('transaksi/');
     	}
@@ -208,13 +238,17 @@ class NotificationController extends Controller
                     if(Gate::check('unit_'.$this->check($unit_kerja))){
                         $notif = true;
                     }
-                }else if($value->type <36){
-                    $unit = $value->formMaster->unit_kerja();
-                    for($i=0;$i<count($unit);$i++){
-                        if(Gate::check('unit_'.$this->check($unit[$i]))){
-                            $notif = true;
-                            break;
+                }else if($value->type <38){
+                    if($value->type != 36){
+                        $unit = $value->formMaster->unit_kerja();
+                        for($i=0;$i<count($unit);$i++){
+                            if(Gate::check('unit_'.$this->check($unit[$i]))){
+                                $notif = true;
+                                break;
+                            }
                         }
+                    }else{
+                        $notif = true;
                     }
                 }
                 

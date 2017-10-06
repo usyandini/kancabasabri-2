@@ -265,8 +265,12 @@
                           { name: "id", align:"center", title: "Detail",  width: 50 ,
 
                             itemTemplate: function(value) {
-                              
-                              var button = "<a href='{{url('pelaporan/edit/'.$type.'/'.$kategori).'/'}}"+value+"' class='btn btn-sm btn-primary '> Detail</a>";
+                              @if($type=="item"&&$kategori=="usulan_program")
+                              var url = "{{url('pelaporan/edit_usulan_program').'/'}}"+value;
+                              @else
+                              var url = "{{url('pelaporan/edit/'.$type.'/'.$kategori).'/'}}"+value;
+                              @endif
+                              var button = "<a href='"+url+"' class='btn btn-sm btn-primary '> Detail</a>";
                               return button;
                             }
                           }

@@ -162,17 +162,21 @@ class NotificationSystem
         if(isset($user->perizinan['notif_ajukan_p_a'])){
             array_push($array_type,33);
         }
-
         if(isset($user->perizinan['notif_ajukan_a_RUPS'])){
             array_push($array_type,35);
+        }
+        if(isset($user->perizinan['notif_ajukan_usulan_p_p'])){
+            array_push($array_type,37);
         }
 
         if(isset($user->perizinan['notif_ajukan_master_p_a'])){
             array_push($array_type,32);
         }
-
         if(isset($user->perizinan['notif_ajukan_master_a_RUPS'])){
             array_push($array_type,34);
+        }
+        if(isset($user->perizinan['notif_ajukan_master_usulan_p_p'])){
+            array_push($array_type,36);
         }
 
         if(count($array_type) == 0){
@@ -295,17 +299,21 @@ class NotificationSystem
         if(isset($user->perizinan['notif_ajukan_p_a'])){
             array_push($array_type,33);
         }
-
         if(isset($user->perizinan['notif_ajukan_a_RUPS'])){
             array_push($array_type,35);
+        }
+        if(isset($user->perizinan['notif_ajukan_usulan_p_p'])){
+            array_push($array_type,37);
         }
 
         if(isset($user->perizinan['notif_ajukan_master_p_a'])){
             array_push($array_type,32);
         }
-
         if(isset($user->perizinan['notif_ajukan_master_a_RUPS'])){
             array_push($array_type,34);
+        }
+        if(isset($user->perizinan['notif_ajukan_master_usulan_p_p'])){
+            array_push($array_type,36);
         }
         
         if(count($array_type) == 0){

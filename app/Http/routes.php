@@ -116,6 +116,7 @@ Route::group(['middleware' => 'auth'], function() {
 		Route::post('/cari/{kategori}/{type}', 'PelaporanController@cari');
 		Route::get('/usulan_program_prioritas', 'PelaporanController@usulan_program_prioritas');
 		Route::get('/tambah_usulan_program', 'PelaporanController@tambah_usulan_program_prioritas');
+		Route::get('/edit_usulan_program/{id}', 'PelaporanController@edit_usulan_program_prioritas');
 		Route::get('/tambah/{type}/{kategori}', 'PelaporanController@tambah');
 		Route::get('/removeFormMaster', 'PelaporanController@removeFormMasterAll');
 		Route::get('/get/filtered/{type}/{id}/{kategori}', 'PelaporanController@getFiltered');
