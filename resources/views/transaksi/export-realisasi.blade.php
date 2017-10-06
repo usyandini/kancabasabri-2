@@ -6,15 +6,17 @@
         }
 		table{
 			border-collapse:collapse;
+			
 			margin-left:auto;
 			margin-right:auto;
 		}
+		td, th{
+        	border: 1px solid #000;			
+		}
         th {
             background-color: #cccccc;
-            border: 1px solid #000;
         }
         td{
-        	border: 1px solid #000;
         	border-bottom: 1px solid #000;
         	padding: 3px;
             font-size: 90%;
@@ -82,6 +84,7 @@
 	              <tr id="tf2">
 	                <td><center>TOTAL DROPPING PERIODE <br>{{$start}} s.d {{$end}} {{$year}}</br></center></td>
 	                <td align="right">Rp. {{ number_format($tmp_realisasi, 2, ',','.') }}</td>
+	                <td colspan="2"></td>
 	              </tr>
 	            </tbody>
 	    	</table>

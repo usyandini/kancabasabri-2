@@ -486,6 +486,7 @@ class TransaksiController extends Controller
         return redirect()->back();   
     }
     
+    // Report ralisasi anggaran
     public function realisasi()
     {
         $cabang = KantorCabang::get();
@@ -498,13 +499,6 @@ class TransaksiController extends Controller
 
     public function cetakRealisasi($cabang, $awal, $akhir, $transyear, $type)
     {   
-        $batches = Batch::where('cabang', $cabang)->get();
-        $reported = array();
-        foreach($batches as $batch){
-            $id = BatchStatus::where([['batch_id', $batch->id], ['stat', 6]])->first()['batch_id'];
-            array_push($reported, $id);
-        }
-
         $query = "SELECT item, anggaran, SUM(total) as total 
                     FROM [dbcabang].[dbo].[transaksi] as transaksi
                     JOIN [dbcabang].[dbo].[batches] as batches on batches.id = transaksi.batch_id 
@@ -530,7 +524,6 @@ class TransaksiController extends Controller
 
         if($type == 'export'){
             $pdf = PDF::loadView('transaksi.export-realisasi', $data);
-            // $pdf = PDF::loadHtml('<b>Hello World!!</b>');
             return $pdf->download('Realisasi Anggaran-'.date("dmY").'.pdf');
         }else{
           return view('transaksi.cetak-realisasi', $data);
@@ -564,7 +557,6 @@ class TransaksiController extends Controller
     {
         $cabangs = KantorCabang::get();
 
-        // $transaksi = $this->transaksiModel->select('item','anggaran','total')->groupBy(['item', 'anggaran', 'total'])->whereIn('batch_id', $reported);
         $query = "SELECT item, anggaran, SUM(total) as total 
                     FROM [dbcabang].[dbo].[transaksi] as transaksi
                     JOIN [dbcabang].[dbo].[batches] as batches on batches.id = transaksi.batch_id 
