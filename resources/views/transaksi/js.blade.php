@@ -4,6 +4,7 @@
                   var tempIdCounter = totalRows = 0;
                   var is_all_anggaran_safe = true;
                   var berkas = {{ count($berkas) }}
+                  var empty_batch = {{ $empty_batch ? 'true' : 'false' }}
                   var editableStat = {{ $editable ? 1 : 0 }};
 
                   $(document).ready(function() {
@@ -385,7 +386,7 @@
                                 tmp = data;
                             }
                         });
-                        if (type == 'item' && tmp.length == 1) {
+                        if (type == 'item' && tmp.length == 1 && !empty_batch) {
                             toastr.error("<b>Kombinasi Account</b> tidak ditemukan sama sekali untuk cabang dan/atau divisi anda.", "Kombinasi Account diperlukan.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:10e3});
                         }
                         return tmp;

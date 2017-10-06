@@ -115,10 +115,12 @@
                             </div>
                             <div class="row">
                               <div class="col-sm-12 col-lg-3 col-xl-2 pull-right">
-                              <div class="form-group">
-                                <button class="btn btn-pink pull-right" onclick="location.href='{{ url('transaksi/create') }}'"><i class="fa fa-plus"></i> Buat Batch baru</button>
+                                @if (Gate::check('tambah_t'))
+                                <div class="form-group">
+                                  <button class="btn btn-pink pull-right" onclick="location.href='{{ url('transaksi/create') }}'"><i class="fa fa-plus"></i> Buat Batch baru</button>
+                                </div>
+                                @endif
                               </div>
-                            </div>
                             </div>
                           </div>
                           <div class="card-body collapse in ">
