@@ -38,7 +38,7 @@ class AuthServiceProvider extends ServiceProvider
                     "unit_1300","unit_1400","unit_1500","unit_1600","unit_1700","unit_1800",
                     "unit_1900","unit_2000","unit_2100","unit_2200","unit_2300","unit_2400",
                     "unit_2500","unit_2600","unit_2700","unit_2800","unit_2900","unit_3000",
-                    "unit_3100","unit_3200","unit_3300","unit_0001","unit_0002","unit_0003",
+                    "unit_3100","unit_3200","unit_3300","unit_0000","unit_0001","unit_0002","unit_0003",
                     "unit_0004","unit_0005","unit_0006","unit_0007","unit_0008","unit_0009",
                     "unit_0010","unit_0011","unit_0012","unit_0013","unit_0014","unit_0015"
                     ,"unit_0016"];
@@ -54,7 +54,7 @@ class AuthServiceProvider extends ServiceProvider
              $permissions[] = $dropping[$i];
         }
 
-        $transaksi = ["info_t","cari_t","tambah_item_t","ubah_item_t","hapus_item_t","berkas_t",
+        $transaksi = ["tambah_t","info_t","cari_t","tambah_item_t","ubah_item_t","hapus_item_t","berkas_t",
                     "simpan_t","ajukan_t","setuju_t","setuju2_t","notif_setuju_t","notif_setuju2_t",
                     "notif_ubah_t"];
 
