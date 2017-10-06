@@ -71,7 +71,7 @@
                                 </div>
                                 <div class="form-group">
                                   <label for="eventRegInput1">Item</label>
-                                  <input type="text" required="" class="form-control" placeholder="Item" name="nama_item" value="{{ old('nama_item') }}">
+                                  <input type="text" required="" class="form-control" placeholder="Item" id="nama_item" name="nama_item" value="{{ old('nama_item') }}">
                                 </div>
                                 <div class="form-group">
                                 <label for="jenis">Jenis Anggaran</label>
@@ -378,9 +378,14 @@
                   function getVal(s, v){
                     var inv_nrs;
                     inv_nrs = document.getElementById(s);
+                    /* Ketika nama item diambil dari nama mata anggaran */
+                    // if(s = 'kegiatan'){
+                    //   document.getElementById('nama_item').value = inv_nrs.options[inv_nrs.selectedIndex].text;
+                    // }
                     return document.getElementById(v).value = inv_nrs.options[inv_nrs.selectedIndex].value;
                   }
 
+                  //alert for required in bahasa
                   document.addEventListener("DOMContentLoaded", function() {
                       var elements = document.getElementsByTagName("INPUT");
                       for (var i = 0; i < elements.length; i++) {
