@@ -1,4 +1,10 @@
 <script type="text/javascript">
+  var perizinan = ["info_t","info_a","info_u","jenis_u","form_master",
+                    "pelaporan_anggaran","pelaporan_a_RUPS","pelaporan_usulan_p_p",
+                    "master_pelaporan_anggaran","master_arahan_a_RUPS","master_usulan_p_p"];
+  var input_izin = ["info_transaksi","info_anggaran","info_user","jenis_user","form_master",
+                    "pelaporan_anggaran","pelaporan_a_RUPS","pelaporan_usulan_p_p",
+                    "master_pelaporan_anggaran","master_arahan_a_RUPS","master_usulan_p_p"];
   $(document).ready(function() {
 
     $('select[name="cabang"]').on('change', function() {
@@ -70,52 +76,23 @@
         calibrateCentang();
     });
 
-    $('input[name="perizinan[info_t]"]').on('ifClicked', function (event) {
+    for(i=0;i<perizinan.length;i++){
+      $('input[name="perizinan['+perizinan[i]+']"]').on('ifClicked', function (event) {
           checkChild(this) 
       });
-    $('input[name="perizinan[info_a]"]').on('ifClicked', function (event) {
-         checkChild(this) 
-      });
-    $('input[name="perizinan[info_u]"]').on('ifClicked', function (event) {
-         checkChild(this) 
-      });
-    $('input[name="perizinan[jenis_u]"]').on('ifClicked', function (event) {
-         checkChild(this) 
-      });
-    $('input[name="perizinan[form_master]"]').on('ifClicked', function (event) {
-         checkChild(this) 
-      });
+    }
+    
   })
 
 
     function calibrateCentang() {
-      if($('#info_transaksi input').filter(':checked').length == 0){
-        $('input[name="perizinan[info_t]"]').iCheck('uncheck');
-      }else{
-        $('input[name="perizinan[info_t]"]').iCheck('check');
-      }
 
-      if($('#info_anggaran input').filter(':checked').length == 0){
-        $('input[name="perizinan[info_a]"]').iCheck('uncheck');
-      }else{
-        $('input[name="perizinan[info_a]"]').iCheck('check');
-      }
-
-      if($('#info_user input').filter(':checked').length == 0){
-        $('input[name="perizinan[info_u]"]').iCheck('uncheck');
-      }else{
-        $('input[name="perizinan[info_u]"]').iCheck('check');
-      }
-      if($('#jenis_user input').filter(':checked').length == 0){
-        $('input[name="perizinan[jenis_u]"]').iCheck('uncheck');
-      }else{
-        $('input[name="perizinan[jenis_u]"]').iCheck('check');
-      }
-
-      if($('#form_master input').filter(':checked').length == 0){
-        $('input[name="perizinan[form_master]"]').iCheck('uncheck');
-      }else{
-        $('input[name="perizinan[form_master]"]').iCheck('check');
+      for(i=0;i<input_izin.length;i++){
+        if($('#'+input_izin[i]+' input').filter(':checked').length == 0){
+          $('input[name="perizinan['+perizinan[i]+']"]').iCheck('uncheck');
+        }else{
+          $('input[name="perizinan['+perizinan[i]+']"]').iCheck('check');
+        }
       }
 
       if ($('#unit_kerja input').filter(':checked').length > $('#unit_kerja input').length/2) {

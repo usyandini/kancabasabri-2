@@ -58,6 +58,20 @@
                                           <label>Unit Kerja</label>
                                           <select class="select2 form-control " name="cari_unit_kerja" id="cari_unit_kerja" onchange="setNDSurat()">
                                             <option value="0">None</option>
+                                            @foreach($unit_kerja as $unit)
+                                            <?php
+                                              $cabang = explode(" Cabang ", $unit->DESCRIPTION);
+                                              // echo count($cabang);
+                                              $id = "00".$unit->VALUE;
+                                              if(count($cabang) > 1){
+                                                // echo $cabang[1];
+                                                $id = $unit->VALUE."00";
+                                              }
+                                            ?>
+                                            @if(Gate::check("unit_".$id) )
+                                              <option value="{{ $unit->DESCRIPTION }}">{{  $unit->DESCRIPTION}}</option>
+                                            @endif
+                                            @endforeach
                                           </select>
                                         </div>
                                     </div>
@@ -488,7 +502,7 @@
                     // alert(document.getElementById("cari_nd_surat").value);
                   }
 
-                  window.setUnitKerja();
+                  // window.setUnitKerja();
                   // window.setNDSurat();
 
 
