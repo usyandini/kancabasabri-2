@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 use App\Models\MasterItemPelaporanAnggaran;
 use App\Models\MasterItemArahanRUPS;
+use App\Models\ItemUsulanProgram;
 
 class FormMasterPelaporan extends Model
 {
@@ -40,6 +41,11 @@ class FormMasterPelaporan extends Model
             }
         }else if($kategori == "arahan_rups"){
             $item = MasterItemArahanRUPS::where('id_form_master',$this->id)->get();
+            foreach ($item as $row) {
+                array_push($unit,$row->unit_kerja);
+            }
+        }else if($kategori == "usulan_program"){
+            $item = ItemUsulanProgram::where('id_form_master',$this->id)->get();
             foreach ($item as $row) {
                 array_push($unit,$row->unit_kerja);
             }

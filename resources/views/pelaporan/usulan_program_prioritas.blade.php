@@ -38,16 +38,13 @@
                                 <div class="card-block">
                                   <form method="POST" action="{{url('pelaporan/submit/tambah') }}" id="insertLaporanAnggaran" name="insertLaporanAnggaran" enctype="multipart/form-data">
                                   <div class="row">
-                                  <div class="col-xs-10">
                                     {{ csrf_field() }}
+                                  <div class="col-xs-10">
                                     <div class="col-xs-3">
                                         <div class="form-group">
                                           <label>Tanggal</label>
-                                          @if($setting['insert'])
-                                          <input id="tanggal" name="tanggal" class="form-control" value="{{date('d/m/Y')}}"readOnly>
-                                          @else
                                           <input id="tanggal" name="tanggal" class="form-control" readOnly>
-                                          @endif
+                                          
                                         </div>
                                     </div>
                                     <div class="col-xs-2">
@@ -77,7 +74,6 @@
                                   
                                   <div class="col-xs-10">
                                     
-                                    @if($type=="item")
                                     <div class="col-xs-3">
                                       <div class="form-group">
                                         <label >Batas Waktu Pengisian &nbsp; :</label>
@@ -102,21 +98,19 @@
                                         <input id="bts_detik" name="bts_detik" class="form-control" value="---" readonly>
                                       </div>
                                     </div>
-                                    @endif
                                   </div>
                                   <hr />
                                   <div class="col-xs-12">
                                     <input type="hidden" name="item_form_master" id="item_form_master">
                                     <input type="hidden" name="kategori" id="kategori" value="{{$setting['kategori']}}">
                                     <input type="hidden" name="status" id="status" value="{{$setting['status']}}">
+                                    <input type="hidden" name="unit_kerja" id="unit_kerja" value="">
                                     <input type="hidden" name="id_form_master" id="id_form_master" value="{{$setting['id_form_master']}}">
-                                    @if($setting['table'])
-                                    <div id="file_grid"></div>
-                                      <!-- <p>Grid with filtering, editing, inserting, deleting, sorting and paging. Data provided by controller.</p> -->
+                                    <input type="hidden" name="jenis_berkas" id="jenis_berkas" value="{{$setting['jenis_berkas']}}">
                                     <div class="col-xs-12">
                                       <div id="basicScenario"></div>
                                     </div>
-                                    @endif
+                                    
                                   </div>
 
                                   @if($setting['edit'])
@@ -189,7 +183,6 @@
                   var editable = {{$setting['edit']?1:0}};
                   var unit_field_insert,unit_field_edit = null;
                   var statusTable = "";
-                  var simpan_file = false;
                   $(document).ready(function() {
 
                     $("#basicScenario").jsGrid( {
@@ -209,33 +202,36 @@
                         loadData: function(filter) {
                           return $.ajax({
                               type: "GET",
-                              url:"",
+                              url:"{{ url('pelaporan/get/filtered/item/'.$setting['id_form_master'].'/usulan_program') }}",
                               data: filter,
                               dataType: "JSON"
                           })
                         },
                         insertItem: function (item) {
-                          if(inputs.length >0){
-                            item['file'] = inputs.length;
-                          }else{
-                            item['file'] = tempIdCounter;
-                          }
                           
                           item["isNew"] = true;
                           item["tempId"] = tempIdCounter++;
                           item["id"] = -1;
-                          item["id_before"] = 0;
                           item["delete"]="none";
                                                       
                           inputs.push(item);
-                          
-                          
-
+                          statusTable = "null";
                         },
                         updateItem: function(item) {
                           item["delete"]="none";
-                          inputs.splice(item["tempId"]-1, 1, item);  
-                          
+                          if(item["isNew"]){
+                            inputs.splice(item["tempId"], 1, item); 
+                          }else{
+                            if(inputs.length>0){
+                              for(i=0;i<inputs.length;i++){
+                                if(inputs[i]["id"]==item.id){
+                                  item["tempId"]=inputs[i]["tempId"];
+                                  inputs[i] = item;
+                                }
+                              }
+                            }
+                          }
+                          statusTable = "null";
                         },
                       }, 
 
@@ -253,6 +249,23 @@
                                   
                               });
                            }, 200);
+                      },
+                      onItemDeleted:function(args){
+                        for(i=0;i<inputs.length;i++){
+                          if(inputs[i]['id']==args.item['id']){
+                            if(args.item["id"]==-1){
+                              if(inputs[i]['tempId']==args.item['tempId']){
+                                inputs[i]["delete"]="delete";
+                              }
+                            }else{
+                              inputs[i]["delete"]="delete";
+                            }
+                            
+                            break;
+                          }
+                        }
+                        statusTable = "null";
+
                       },
                       fields: [
                           {
@@ -327,23 +340,6 @@
                     
                   });
 
-                  function setUnitKerja(){
-                    $.ajax({
-                        'async': false, 'type': "GET", 'dataType': 'JSON', 'url': "{{ url('anggaran/get/attributes/unitkerja/1') }}",
-                        'success': function (data) {
-
-                          cari_unit_kerja = document.getElementById('cari_unit_kerja');
-                          for(i =0 ;i<data.length;i++){
-                            var value = "";
-                            var desc = data[i].DESCRIPTION;
-                            value = data[i].DESCRIPTION;
-                            cari_unit_kerja.options[cari_unit_kerja.options.length] = new Option(desc, value);
-                          }
-                             
-                        }
-                    });
-                  }
-
                   function setDetailFormMaster(){
                     // alert('{{ url('pelaporan/get/filtered/'.$filters['id'].'/form_master') }}');
                     $.ajax({
@@ -354,7 +350,10 @@
                           tw_dari = document.getElementById('tw_dari');
                           tw_ke = document.getElementById('tw_ke');
                           // alert(JSON.stringify(data));
-
+                          if({{($type=='item'&&$setting['status']=='Tambah')?1:0}}){
+                            document.getElementById('id_form_master').value = data[0].id;
+                            // alert(data[0].id);
+                          }
                           now = data[0].created_at.split(' ')
                           tanggal.value = now[0];
                           tw_dari_val="";
@@ -374,17 +373,6 @@
                           }
                           tw_dari.value = tw_dari_val;
                           tw_ke.value = tw_ke_val;
-
-                          @if($type=="master")
-                          tanggal_mulai = document.getElementById('tanggal_mulai');
-                          tanggal_selesai = document.getElementById('tanggal_selesai');
-                          tanggal_mulai.value = data[0].tanggal_mulai;
-                          tanggal_selesai.value = data[0].tanggal_selesai;
-                          id_form_master = document.getElementById('id_form_master');
-                          id_form_master.value = data[0].id;
-                          @endif
-
-                          // alert(data[0].tanggal_selesai);
 
                           @if($type=="item")
                           var countDownDate = new Date(data[0].tanggal_selesai).getTime();
@@ -422,12 +410,6 @@
                                     document.getElementById("bts_menit").value= "---";
                                     document.getElementById("bts_detik").value= "---";
                                     document.getElementById("bts").innerHTML = "EXPIRED";
-                                    document.getElementById("nd_surat").disabled  = true;
-                                    document.getElementById("unit_kerja").disabled  = true;
-                                    document.getElementById("tipe_anggaran").disabled  = true;
-                                    document.getElementById("stat_anggaran").disabled  = true;
-                                    document.getElementById("save").style.display = "none";
-                                    document.getElementById("send").style.display = "none";
                                 }
                             }, 1000);
                           }
@@ -440,7 +422,7 @@
                   function getListData() {
                     $.ajax({
                           'async': false, 'type': "GET", 'dataType': 'JSON', 
-                          'url': "{{ ($type == 'item' ? url('pelaporan/get/filteredMaster/usulan_program/1') : url('pelaporan/get/filtered/'.$filters['id'].'/'.$setting['kategori'])) }}",
+                          'url': "{{url('pelaporan/get/filtered/item/'.$setting['id_form_master'].'/usulan_program')}}",
                           'success': function (data) {
                               inputs = data;
                               download="";
@@ -448,107 +430,50 @@
 
                                 inputs[i]["delete"]="none";
                                 inputs[i]["tempId"]= tempIdCounter++;
-                                @if($setting['kategori'] == "laporan_anggaran")
-                                inputs[i]['uraian_progress']="";
-                                @endif
-                                @if($setting['kategori'] == "arahan_rups")
-                                inputs[i]['progres_tindak_lanjut']="";
-                                @endif
-                                for(j=0;j<inputs[i]["file"].length;j++){
-                                  inputs[i]["file"][j]["delete"]="none";
-                                }
+                                
                               }
                           }
                           
                       });
                   }
-
-                  function changeTW(type){
-                    tw_dari = document.getElementById('tw_dari').value;
-                    if(type == 0){
-                      document.getElementById('tw_ke').selectedIndex = tw_dari;
-                      document.getElementById('select2-tw_ke-container').innerHTML = document.getElementById('tw_ke').options.item(tw_dari).text;
-                      document.getElementById('select2-tw_ke-container').title = document.getElementById('tw_ke').options.item(tw_dari).text;
+                  function setUnitKerja(id_type,id_unit){
+                    var type = "";
+                    var unit = "";
+                    if(id_type == "00"){
+                      type = "divisi";
+                      unit = id_unit;
+                    }else{
+                      type = "cabang";
+                      unit = id_type;
                     }
-                    tw_ke = document.getElementById('tw_ke').value;
-                    tanggal_mulai = document.getElementById('tanggal_mulai');
-                    tanggal_selesai = document.getElementById('tanggal_selesai');
 
-                    if(tw_dari > 0){
-                      var bulan_dari = 0 + ((tw_dari-1)*3) ;
-                      var bulan_ke = 0 + ((tw_ke-1)*3);
-                      now_year = new Date().getFullYear();
-                      now_month = new Date().getMonth();
-
-                      min_dari_date = new Date(now_year, bulan_dari, 1);
-                      max_dari_date = new Date(now_year, bulan_dari+3, 0);
-                      min_ke_date = new Date(now_year, bulan_ke, 1);
-                      max_ke_date = new Date(now_year, bulan_ke+3, 0);
-
-                      min_hari_dari = min_dari_date.getDate();
-                      max_hari_dari = max_dari_date.getDate();
-                      min_hari_ke = min_ke_date.getDate();
-                      max_hari_ke = max_ke_date.getDate();
-
-                      min_bulan_dari = min_dari_date.getMonth()+1;
-                      max_bulan_dari = max_dari_date.getMonth()+1;
-                      min_bulan_ke = min_ke_date.getMonth()+1;
-                      max_bulan_ke = max_ke_date.getMonth()+1;
-
-                      min_dari = now_year+"-"+(min_bulan_dari<9?"0":'')+min_bulan_dari+"-"+(min_hari_dari<9?"0":'')+min_hari_dari;
-                      max_dari = now_year+"-"+(max_bulan_dari<9?"0":'')+max_bulan_dari+"-"+(max_hari_dari<9?"0":'')+max_hari_dari;
-                      min_ke = now_year+"-"+(min_bulan_ke<9?"0":'')+min_bulan_ke+"-"+(min_hari_ke<9?"0":'')+min_hari_ke;
-                      max_ke = now_year+"-"+(max_bulan_ke<9?"0":'')+max_bulan_ke+"-"+(max_hari_ke<9?"0":'')+max_hari_ke;
-                      // tanggal_mulai.setAttribute("min", '2013-12-9');
-
-                      tanggal_mulai.setAttribute("max",max_dari);
-                      tanggal_mulai.setAttribute("min",min_dari);
-
-                      tanggal_selesai.setAttribute("max",max_ke);
-                      tanggal_selesai.setAttribute("min",min_ke);
-                      // alert(min_dari+":"+max_ke);
-                    }
+                    $.ajax({
+                        'async': false, 'type': "GET", 'dataType': 'JSON', 'url': "{{ url('anggaran/get/attributes') }}/"+type+"/"+unit,
+                        'success': function (data) {
+                            document.getElementById("unit_kerja").value = data[0].DESCRIPTION;
+                        }
+                    });
                   }
+                  function check(){
+                      if(inputs.length == 0){
+                        toastr.error("Silahkan Isi Minimal Satu daftar Pelaporan Anggaran Kegiatan. Terima kasih.", "Perhatian.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
+                      }else{
+                        var stop = false;
 
-                  function setTWFirst(){
-                    var status = '{{$setting['status']}}';
-                    var type = '{{$type}}';
-
-                    if(status != "Tambah"||type!="item"){
-                        tw_dari = document.getElementById('tw_dari');
-                      tw_ke = document.getElementById('tw_ke');
-
-                      now = new Date().getMonth();
-                      tw = 0;
-                      if(now >=0 && now <=2){
-                        tw = 1;
-                      }else if(now >=3 && now <=5){
-                        tw = 2;
-                      }else if(now >=6 && now <=8){
-                        tw = 3;
-                      }else if(now >=9 && now <=11){
-                        tw = 4;
+                        $('#modal_pernyataan').modal({
+                                  backdrop: 'static'
+                              });
                       }
-
-                      tw_dari.value = tw;
-                      tw_ke.value = tw_dari.value;
-                      document.getElementById('select2-tw_dari-container').innerHTML = tw_dari.options.item(tw).text;
-                      document.getElementById('select2-tw_dari-container').title = tw_dari.options.item(tw).text;
-                      document.getElementById('select2-tw_ke-container').innerHTML = tw_ke.options.item(tw).text;
-                      document.getElementById('select2-tw_ke-container').title = tw_ke.options.item(tw).text;
-                        
-                      changeTW(0);
-                    }
+                    
+                  }
+                  function sumbit_post(){
+                    $('input[name="item_form_master"]').val(JSON.stringify(inputs));
+                    // alert(JSON.stringify(inputs));
+                    $('form[id="insertLaporanAnggaran"]').submit();
                   }
 
-                  window.setUnitKerja();
-                  @if($setting['status']=='Lihat'||$setting['status']=="Tambah")
                   window.setDetailFormMaster();
-                  @endif
-                  @if($setting['status']=="Tambah"&&$type=="master")
-                  window.setTWFirst();
-                  @endif
-
-
+                  window.getListData();
+                  window.setUnitKerja("{{$userCabang}}","{{$userDivisi}}");
                 </script>
                 @endsection

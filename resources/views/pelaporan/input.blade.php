@@ -730,12 +730,6 @@
                                     document.getElementById("bts_menit").value= "---";
                                     document.getElementById("bts_detik").value= "---";
                                     document.getElementById("bts").innerHTML = "EXPIRED";
-                                    document.getElementById("nd_surat").disabled  = true;
-                                    document.getElementById("unit_kerja").disabled  = true;
-                                    document.getElementById("tipe_anggaran").disabled  = true;
-                                    document.getElementById("stat_anggaran").disabled  = true;
-                                    document.getElementById("save").style.display = "none";
-                                    document.getElementById("send").style.display = "none";
                                 }
                             }, 1000);
                           }

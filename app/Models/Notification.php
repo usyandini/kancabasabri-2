@@ -82,7 +82,7 @@ class Notification extends Model
         $tw_dari="";
         $tw_ke="";
         $TW="";
-        if($this->type >= 32&& $this->type <= 33){
+        if($this->type >= 32&& $this->type <= 37){
             $tw_dari = $this->formMaster['tw_dari'];
             $tw_ke = $this->formMaster['tw_ke'];
             switch ($tw_dari) {
@@ -191,6 +191,11 @@ class Notification extends Model
                 return 'Form Master untuk Arahan RUPS untuk '.$TW.' telah dibuat dan dapat di isi mulai dari '.$this->formMaster['tanggal_mulai'].' sampai '.$this->formMaster['tanggal_selesai'];
             case 35:
                 return 'Arahan RUPS telah diisi oleh '.$this->formMaster->unit_kerja()[0].' untuk '.$TW.'.';
+            case 36:
+                return 'Form Master untuk Usulan Program Prioritas untuk '.$TW.' telah dibuat dan dapat di isi mulai dari '.$this->formMaster['tanggal_mulai'].' sampai '.$this->formMaster['tanggal_selesai'];
+            case 37:
+                return 'Usulan Program Prioritas telah diisi oleh '.$this->formMaster->unit_kerja()[0].' untuk '.$TW.'.';
+        
         }
     }
 }

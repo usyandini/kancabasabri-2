@@ -64,6 +64,10 @@
               <input type="checkbox" name="perizinan[notif_ajukan_a_RUPS]" {{ isset($user->perizinan['notif_ajukan_a_RUPS']) ? 'checked=""' : '' }}>
               <label>Pengajuan Arahan RUPS</label>
             </fieldset>
+            <fieldset>
+              <input type="checkbox" name="perizinan[notif_ajukan_usulan_p_p]" {{ isset($user->perizinan['notif_ajukan_usulan_p_p']) ? 'checked=""' : '' }}>
+              <label>Pengajuan Usulan Program Prioritas</label>
+            </fieldset>
             <fieldset >
               <input type="checkbox" name="perizinan[notif_ajukan_master_p_a]" {{ isset($user->perizinan['notif_ajukan_master_p_a']) ? 'checked=""' : '' }}>
               <label>Pengajuan Form Master Pelaporan Anggaran Kegiatan</label>
@@ -71,6 +75,10 @@
             <fieldset >
               <input type="checkbox" name="perizinan[notif_ajukan_master_a_RUPS]" {{ isset($user->perizinan['notif_ajukan_master_a_RUPS']) ? 'checked=""' : '' }}>
               <label>Pengajuan Form Master Arahan RUPS</label>
+            </fieldset>
+            <fieldset>
+              <input type="checkbox" name="perizinan[notif_ajukan_master_usulan_p_p]" {{ isset($user->perizinan['notif_ajukan_master_usulan_p_p']) ? 'checked=""' : '' }}>
+              <label>Pengajuan Form Master Usulan Program Prioritas</label>
             </fieldset>
            </div>
         </div>
