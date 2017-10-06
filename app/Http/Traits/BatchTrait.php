@@ -23,10 +23,11 @@ trait BatchTrait
 {
 	public function defineCurrentBatch()
     {
-        $current_batch = Batch::orderBy('id','desc')
-            ->where([['divisi', \Auth::user()->divisi], ['cabang', \Auth::user()->cabang]])
-            ->first();  
-        return $current_batch ? $current_batch : null;
+        $current_batch = Batch::latest()->get()->filter(function($batch) {
+            return $batch->isAccessibleByUnitKerja();
+        });
+
+        return isset($current_batch[0]) ? $current_batch[0] : null;
     }
 
     public function defineNewBatch()

@@ -60,6 +60,14 @@ class Batch extends Model
         return $this->hasOne('App\Models\BatchStatus', 'batch_id', 'id')->where('stat', 1)->first();
     }
 
+    public function isAccessibleByUnitKerja()
+    {
+        $divisi = 'unit_'.$this->divisi.'00';
+        $cabang = 'unit_'.$this->cabang.'00';
+        
+        return \Auth::user()->hasAccess($divisi) && \Auth::user()->hasAccess($cabang) ? true : false;
+    }
+
 	public function isUpdatable()
     {
         if (!$this->latestStat()) {
