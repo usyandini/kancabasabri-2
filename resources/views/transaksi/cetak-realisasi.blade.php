@@ -4,7 +4,7 @@
 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/tables/datatable/dataTables.bootstrap4.min.css') }}">
 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/tables/extensions/responsive.dataTables.min.css') }}">
 
-<body onload="window.print()">
+  <body onload="window.print()">
 	<style>
         body {
             font-family: Arial;
@@ -26,7 +26,7 @@
             padding: 3px;
             font-size: 90%;
         }
-    </style>
+  </style>
     <div id="header">
         <img src="{{ asset('app-assets/images/asabri-logo-kecil.png', $secure = null) }}" align="left">
         <h3><center>LAPORAN ANGGARAN PT ASABRI (PERSERO)</center></h3>
@@ -65,7 +65,7 @@
               <tr>
                 <td style="padding-left:20px;" width="35%">{{$no++}}) {{$items->where('SEGMEN_1',$trans->item)->first()['nama_item']}}</td>
                 <td align="right" width="20%">Rp. {{ number_format($trans->anggaran, 2, ',','.') }}</td>
-                <?php $total_real = $transaksi->where('item', $trans->item)->sum('total'); ?>
+                <?php $total_real = $trans->total; ?>
                 <td align="right" width="20%">Rp. {{ number_format($total_real, 2, ',','.') }}</td>
                 <?php $sisa_angg = ($trans->anggaran - $total_real);?>
                 <td align="right" width="25%">Rp. {{ number_format($sisa_angg, 2, ',','.') }}</td>
@@ -89,5 +89,5 @@
             </tbody>
           </table>
     </div>
-</body>
+  </body>
 </html>

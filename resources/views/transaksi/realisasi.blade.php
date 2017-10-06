@@ -164,7 +164,7 @@
   		                        			<td><center>{{ $no++ }}</center></td>
   		                        			<td>{{$items->where('SEGMEN_1',$trans->item)->first()['nama_item']}}</td>
   		                        			<td>Rp. {{ number_format($trans->anggaran, 2, ',','.') }}</td>
-                                    <?php $total_real = $transaksi->where('item', $trans->item)->sum('total'); ?>
+                                    <?php $total_real = $trans->total;//$transaksi->where('item', $trans->item)->sum('total'); ?>
   		                        			<td>Rp. {{ number_format($total_real, 2, ',','.') }}</td>
                                     <?php $sisa_angg = ($trans->anggaran - $total_real);?>
   		                        			<td>Rp. {{ number_format($sisa_angg, 2, ',','.') }}</td>
