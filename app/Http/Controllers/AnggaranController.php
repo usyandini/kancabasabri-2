@@ -1082,16 +1082,4 @@ class AnggaranController extends Controller
         }
     }
 
-    public function removeAnggaranAll(){
-
-                \DB::table('anggaran')->delete();
-                \DB::table('list_anggaran')->delete();
-                \DB::table('file_list_anggaran')->delete();
-    }
-
-    public function activeFileListAnggaranAll(){
-
-        \DB::table('file_list_anggaran')->update(['active'=>'1']);
-    }
-
 }

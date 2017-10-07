@@ -147,8 +147,6 @@
                                       </div>
                                     </div>
                                   <div class="col-xs-12">
-                                    <input type="hidden" name="list_anggaran_values" id="list_anggaran_values">
-                                    <div id="file_grid"></div>
                                       <!-- <p>Grid with filtering, editing, inserting, deleting, sorting and paging. Data provided by controller.</p> -->
                                     <div class="col-xs-12">
                                       <div id="basicScenario"></div>
@@ -160,7 +158,7 @@
                                     <br />
                                     <div class="pull-right">
                                       <div class="form-group">
-                                        <a type="submit" class="btn btn-secondary"><i class="fa fa-download"></i> Unduh</a>
+                                        <a onclick="download_report()" class="btn btn-secondary"><i class="fa fa-download"></i> Unduh</a>
                                       </div>
                                     </div>
                                   </div>
@@ -195,6 +193,10 @@
                     </div>
                   </div>
                 </div>
+
+                <form method="POST" action="" id="downloadAnggaran" name="downloadAnggaran" enctype="multipart/form-data">
+                  <input type="hidden" name="list_anggaran_values" id="list_anggaran_values">
+                </form>
                 @endsection
 
                 @section('customjs')
@@ -214,6 +216,7 @@
                 <script type="text/javascript">
                   var list_berkas = [];
                   var count_file=0;
+                  var inputs;
                   $(document).ready(function() {
 
                     $("#basicScenario").jsGrid( {
@@ -420,11 +423,6 @@
                   
                   function setUnitKerja(){
 
-                    // $("select").select2({
-                    //   tags: "true",
-                    //   placeholder: "Selectn",
-                    //   allowClear: true
-                    // });
                     var tahun = '{{$filters["tahun"]}}';
                     if(tahun == '0'){
                       tahun = '2015 sampai 2017';
@@ -440,9 +438,6 @@
                   function setNDSurat(){
 
                      unit_kerja = document.getElementById('cari_unit_kerja').value;
-                    // alert('<?php echo urlencode(strtolower('+unit_kerja+')) ?>');
-                    // alert("{{ url('anggaran/get/attributes/nd_surat').'/'}}"+encodeURI(unit_kerja));
-                    // unit_kerja = document.getElementById('cari_unit_kerja').value;
 
                     $.ajax({
                         'async': false, 'type': "GET", 'dataType': 'JSON', 'url': "{{ url('anggaran/get/attributes/nd_surat').'/'}}"+ encodeURI(unit_kerja),
@@ -478,19 +473,31 @@
                   };
 
                   function cariRiwayat(){
-                    // if(document.getElementById("cari_keyword").value==""){
-                    //   toastr.error("Silahkan Isi Kata Kunci Pencarian. Terima kasih.", "Kata Kunci Pencarian Kosong.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
-                    // }else 
                     if(document.getElementById("cari_unit_kerja").value=="0"){
                       toastr.error("Silahkan Pilih Salah Satu Unit Kerja. Terima kasih.", "Unit Kerja Belum Dipilih.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
                     }else{
                       $('form[id="filterAnggaran"]').submit();
                     }
-                    // alert(document.getElementById("cari_nd_surat").value);
+                  }
+                  function getListData() {
+                    $.ajax({
+                          'async': false, 'type': "GET", 'dataType': 'JSON', 'url': "{{  url('anggaran/get/filteredHistory/'.$filters['tahun'].'/'.$filters['nd_surat'].'/'.$filters['kategori'].'/'.urlencode(strtolower($filters['keyword'])) ) }}",
+                          'success': function (data) {
+                              inputs = data;
+                              // alert(JSON.stringify(inputs));
+                          }
+                          
+                      });
+                  }
+
+                  function download_report(){
+                    $('input[name="list_anggaran_values"]').val(JSON.stringify(inputs));
+                    alert(JSON.stringify(inputs));
+                    // $('form[id="downloadAnggaran"]').submit();
                   }
 
                   window.setUnitKerja();
-                  // window.setNDSurat();
+                  window.getListData();
 
 
                 </script>

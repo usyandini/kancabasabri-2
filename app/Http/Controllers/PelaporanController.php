@@ -1159,7 +1159,6 @@ class PelaporanController extends Controller
                     $string2 = "AND (".$string2.")";
                 }
 
-                // echo $string1;
                 $second="SELECT * 
                     FROM (SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_DIVISI] 
                     WHERE VALUE!='00' ".$string2.") AS A 

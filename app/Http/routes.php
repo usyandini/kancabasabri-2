@@ -98,8 +98,6 @@ Route::group(['middleware' => 'auth'], function() {
 		Route::get('/riwayat/', 'AnggaranController@riwayat');
 		Route::post('/riwayat/', 'AnggaranController@riwayat');
 		Route::post('/cari/', 'AnggaranController@cari');
-		Route::get('/removeAnggaran/', 'AnggaranController@removeAnggaranAll');
-		Route::get('/activeFileListAnggaran/', 'AnggaranController@activeFileListAnggaranAll');
 		Route::post('/submit/tambah', 'AnggaranController@store');
 
 	});
