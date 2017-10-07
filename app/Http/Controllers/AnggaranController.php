@@ -355,7 +355,7 @@ class AnggaranController extends Controller
             'userDivisi' =>$this->userDivisi,
             'nd_surat' => $nd_surat,
             'beda' => $beda , 
-            'batas' =>$date,
+            'batas' =>$date_selesai,
             'status' => 'edit',
             'reject' => false,
             'filters' => array('nd_surat' => $nd_surat),
@@ -444,6 +444,13 @@ class AnggaranController extends Controller
     }
     public function riwayat(Request $request ) 
     {
+        $query="SELECT * 
+                    FROM (SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_DIVISI] 
+                    WHERE VALUE!='00') AS A 
+                    UNION ALL 
+                    SELECT * FROM (SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_KPKC]  
+                    WHERE VALUE!='00') AS B";
+        $unit_kerja = \DB::select($query);
         $filter = null;
         $keyword = $request->cari_keyword;
         if($request->cari_keyword == ""){
@@ -460,9 +467,10 @@ class AnggaranController extends Controller
 
         return view('anggaran.history', [
             'title' => 'Riwayat Kegiatan dan Anggaran',
-            'userCabang' =>$this->userCabang,
-            'userDivisi' =>$this->userDivisi,
-            'filters' => $filter]);
+            'userCabang'    =>$this->userCabang,
+            'userDivisi'    =>$this->userDivisi,
+            'unit_kerja'    => $unit_kerja,
+            'filters'       => $filter]);
     }
 
     public function store(Request $request)
@@ -647,7 +655,7 @@ class AnggaranController extends Controller
             }else if($value->delete == "delete"){
                 if($value->id != -1){
                     ListAnggaran::where('id', $value->id)->delete();
-                    FileListAnggaran::where('id_list_anggaran', $value->id)->update(["active" =>'1']);
+                    FileListAnggaran::where('id_list_anggaran', $value->id)->update(["active" =>'0']);
                 }
             }
 
@@ -717,17 +725,6 @@ class AnggaranController extends Controller
             $index++;
 
         }
-        // if($request->status == 'tambah'){
-        //     session()->flash('tambah', true);
-        // }else if($request->setuju =='Tolak'){
-        //     session()->flash('tolak', true);
-        // }else if($request->setuju =='Simpan'){
-        //     session()->flash('simpan', true);
-        // }else if($request->setuju =='Kirim'){
-        //     session()->flash('kirim', true);
-        // }else if($request->setuju =='Setuju'){
-        //     session()->flash('setuju', true);
-        // }
 
         $status_view = redirect('anggaran/edit/'.$request->nd_surat); 
         // echo $setuju;

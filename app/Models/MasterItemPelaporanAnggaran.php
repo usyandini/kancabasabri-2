@@ -17,7 +17,10 @@ class MasterItemPelaporanAnggaran extends Model
             'unit_kerja', 
     		'program_prioritas',
     		'sasaran_dicapai', 
-    		'active',
+            'active',
+    		'is_template',
+            'uraian_progress',
+            'id_list_master',
     		'created_at', 
     		'updated_at'];
 

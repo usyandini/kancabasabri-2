@@ -122,7 +122,6 @@ class ItemController extends Controller
 
     public function create()
     {
-        //dd(ItemAnggaranMaster::where('type', 1)->first());
         $jenis = ItemAnggaranMaster::where('type', 1)->get();
         $kelompok = ItemAnggaranMaster::where('type', 2)->get();
         $pos = ItemAnggaranMaster::where('type', 3)->get();

@@ -13,6 +13,7 @@ use App\Models\Anggaran;
 use App\Models\Notification;
 use App\Models\KantorCabang;
 use App\Models\Divisi;
+use App\Models\FormMasterPelaporan;
 
 use App\Services\NotificationSystem;
 
@@ -49,32 +50,50 @@ class NotificationController extends Controller
         $count_unread = 0 ;
     	foreach (NotificationSystem::getUnreads() as $value) {
             $unit_kerja = "";
+            $notif = false;
             if($value->type < 7){
-                $unit_kerja = "transaksi";
+
+                $divisi = $value->batch['divisi'];
+                $cabang = $value->batch['cabang'];
+                if($cabang == "00"){
+                    $unit_kerja = "00".$divisi;
+                }else{
+                    $unit_kerja = $cabang."00";
+                }
+                if(Gate::check('unit_'.$unit_kerja)){
+                    $notif = true;
+                }
             }else if($value->type < 15){
                 if($value->type < 10){
                     $unit_kerja = $value->idTarikTunai['cabang'];
                 }else{
                     $unit_kerja = $value->idPenyesuaian['cabang'];
                 }
-            }else {
+                if(Gate::check('unit_'.$this->check($unit_kerja))){
+                    $notif = true;
+                }
+            }else if($value->type <32){
                 $unit_kerja = $value->idAnggaran['unit_kerja'];
-            }
-            $val_unit = "";
-            if(count(explode("Cabang",$unit_kerja))>1){
-                $val_unit = KantorCabang::where('DESCRIPTION',$unit_kerja)->first();
-                $val_unit = $val_unit['VALUE']."00";
-            }else{  
-                $val_unit = DIVISI::where('DESCRIPTION',$unit_kerja)->first();
-                $val_unit = "00".$val_unit['VALUE'];
-                if($unit_kerja == 'transaksi'){
-                    $val_unit = $unit_kerja;
+                if(Gate::check('unit_'.$this->check($unit_kerja))){
+                    $notif = true;
+                }
+            }else if($value->type <38){
+                if($value->type != 36){
+                    $unit = $value->formMaster->unit_kerja();
+                    for($i=0;$i<count($unit);$i++){
+                        if(Gate::check('unit_'.$this->check($unit[$i]))){
+                            $notif = true;
+                            break;
+                        }
+                    }
+                }else{
+                    $notif = true;
                 }
             }
-            // if(Gate::check('unit_'.$val_unit)){
+
+            if($notif){
         		$result['notifications'][] = [
         			'id' 		=> $value->id,
-                    'unit_kerja'=> $val_unit,
                     'type'      => $value->type,
         			'wording' 	=> $value->wording(),
         			'is_read'	=> $value->is_read,
@@ -82,7 +101,7 @@ class NotificationController extends Controller
         			'time'		=> date('d F Y, H:m', strtotime($value->created_at))
         		];
                 $count_unread++;
-            // }
+            }
     	}
         $result['totalUnread'] = $count_unread;
 
@@ -91,12 +110,26 @@ class NotificationController extends Controller
 
     public function redirect($id)
     {
-    	NotificationSystem::markAsRead($id);
-        
+        $read = true;
         $notifDetail = NotificationSystem::get($id);
+        if(!Gate::check('master_pelaporan_anggaran')&&$notifDetail->type == 32){
+            $read = false;
+        }
+        if(!Gate::check('master_arahan_a_RUPS')&&$notifDetail->type == 34){
+            $read = false;
+        }
+        if(!Gate::check('master_usulan_p_p')&&$notifDetail->type == 36){
+            $read = false;
+        }
+       
+            
+	   if($read)
+            NotificationSystem::markAsRead($id); 
+        
         $tariktunai = TarikTunai::where('id', $notifDetail->batch_id)->first();
         $penyesuaian = PenyesuaianDropping::where('id', $notifDetail->batch_id)->first();
         $anggaran = Anggaran::where('id', $notifDetail->batch_id)->first();
+        $form_master = FormMasterPelaporan::where('id', $notifDetail->batch_id)->first();
     	
     	switch ($notifDetail->type) {
     		case 1:
@@ -146,6 +179,27 @@ class NotificationController extends Controller
             case 30:
             case 31:
                 return redirect('anggaran/persetujuan/'.$anggaran->nd_surat."/1");
+            case 32:
+                if(Gate::check('master_pelaporan_anggaran'))
+                    return redirect('pelaporan/edit/master/laporan_anggaran/'.$form_master->id);
+                else
+                    return redirect('pelaporan/informasi/item/laporan_anggaran');
+            case 33:
+                return redirect('pelaporan/edit/item/laporan_anggaran/'.$form_master->id);
+            case 34:
+                if(Gate::check('master_arahan_a_RUPS'))
+                    return redirect('pelaporan/edit/master/arahan_rups/'.$form_master->id);
+                else
+                    return redirect('pelaporan/informasi/item/arahan_rups');
+            case 35:
+                return redirect('pelaporan/edit/item/arahan_rups/'.$form_master->id);
+            case 36:
+                if(Gate::check('master_usulan_p_p'))
+                    return redirect('pelaporan/edit/master/usulan_program/'.$form_master->id);
+                else
+                    return redirect('pelaporan/informasi/item/usulan_program');
+            case 37:
+                return redirect('pelaporan/edit_usulan_program/'.$form_master->id);
 			default:
 				return redirect('transaksi/');
     	}
@@ -156,46 +210,80 @@ class NotificationController extends Controller
         $notification_all = [];
         if(NotificationSystem::getAll()!=null)
             foreach (NotificationSystem::getAll() as $value) {
+                $notif = false;
                 $unit_kerja = "";
                 if($value->type < 7){
-                    $unit_kerja = "transaksi";
+                    $divisi = $value->batch['divisi'];
+                    $cabang = $value->batch['cabang'];
+
+                    if($cabang == "00"){
+                        $unit_kerja = "00".$divisi;
+                    }else{
+                        $unit_kerja = $cabang."00";
+                    }
+                    if(Gate::check('unit_'.$unit_kerja)){
+                        $notif = true;
+                    }
                 }else if($value->type < 15){
                     if($value->type < 10){
-                        // $cabang = $value->idTarikTunai();
                         $unit_kerja = $value->idTarikTunai['cabang'];
                     }else{
                         $unit_kerja = $value->idPenyesuaian['cabang'];
                     }
-                }else {
+                    if(Gate::check('unit_'.$this->check($unit_kerja))){
+                        $notif = true;
+                    }
+                }else if($value->type <32){
                     $unit_kerja = $value->idAnggaran['unit_kerja'];
-                }
-                $val_unit = "";
-                if(count(explode("Cabang",$unit_kerja))>1){
-                    $val_unit = KantorCabang::where('DESCRIPTION',$unit_kerja)->first();
-                    $val_unit = $val_unit['VALUE']."00";
-                }else{  
-                    $val_unit = DIVISI::where('DESCRIPTION',$unit_kerja)->first();
-                    $val_unit = "00".$val_unit['VALUE'];
-                    if($unit_kerja == 'transaksi'){
-                        $val_unit = $unit_kerja;
+                    if(Gate::check('unit_'.$this->check($unit_kerja))){
+                        $notif = true;
+                    }
+                }else if($value->type <38){
+                    if($value->type != 36){
+                        $unit = $value->formMaster->unit_kerja();
+                        for($i=0;$i<count($unit);$i++){
+                            if(Gate::check('unit_'.$this->check($unit[$i]))){
+                                $notif = true;
+                                break;
+                            }
+                        }
+                    }else{
+                        $notif = true;
                     }
                 }
-                // if(Gate::check('unit_'.$val_unit)){
+                
+                
+                if($notif){
                     $notification_all[] = [
                         'id'        => $value->id,
-                        'unit_kerja'=> $val_unit,
                         'type'      => $value->type,
                         'wording'   => $value->wording(),
                         'is_read'   => $value->is_read,
                         'time_dif'  => \Carbon\Carbon::createFromTimeStamp(strtotime($value->created_at))->diffForHumans(),
                         'time'      => date('d F Y, H:m', strtotime($value->created_at))
                     ];
-                // }
+                }
             }
         // $notification_all = null;
         // if(count($notification_all)){
         //     $notification_all = null;
         // }
         return view('notification.index', compact('notification_all'));
+    }
+
+
+    public function check($unit_kerja){
+        $val_unit="";
+        if(count(explode("Cabang",$unit_kerja))>1){
+            $val_unit = KantorCabang::where('DESCRIPTION',$unit_kerja)->first();
+            $val_unit = $val_unit['VALUE']."00";
+        }else{  
+            $val_unit = DIVISI::where('DESCRIPTION',$unit_kerja)->first();
+            $val_unit = "00".$val_unit['VALUE'];
+            if($unit_kerja == 'transaksi'){
+                $val_unit = $unit_kerja;
+            }
+        }
+        return $val_unit;
     }
 }

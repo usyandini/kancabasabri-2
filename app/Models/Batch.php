@@ -68,6 +68,11 @@ class Batch extends Model
         return \Auth::user()->hasAccess($divisi) && \Auth::user()->hasAccess($cabang) ? true : false;
     }
 
+    public function canReported()
+    {
+        return $this->hasOne('App\Models\BatchStatus', 'batch_id', 'id')->where('stat', 6);
+    }
+
 	public function isUpdatable()
     {
         if (!$this->latestStat()) {

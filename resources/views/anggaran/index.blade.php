@@ -100,6 +100,7 @@
                                             <input id="persetujuan" name="persetujuan" class="form-control" readonly>
                                           </div>
                                       </div>
+                                      @if($status!="setuju")
                                       <div class="col-xs-6">
                                         <div class="row">
                                             <div class="col-xs-6">
@@ -130,6 +131,7 @@
                                           </div>
                                         </div>
                                       </div>
+                                      @endif
                                     </div>
                                     <input type="hidden" name="list_anggaran_values" id="list_anggaran_values">
                                     <input type="hidden" name="list_delete_anggaran" id="list_delete_anggaran">
@@ -269,7 +271,7 @@
                       <div class="modal-footer">
                         <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">Kembali</button>
                         @if(((Gate::check('tambah_item_a')||Gate::check('ubah_item_a')||Gate::check('hapus_item_a'))&& $beda)||(Gate::check('tambah_a')&&$status == "tambah"))
-                        <button id="simpan_file" class="btn btn-outline-primary">Simpan</button>
+                        <div id="simpan_file" class="btn btn-outline-primary">Simpan</div>
                         @endif
                       </div>
                     </div>
@@ -326,7 +328,11 @@
                 // Set the date we're counting down to
                   var countDownDate = new Date("{{$batas}}").getTime();
 
+                  @if($status!="setuju")
                   var disableCountDown = true;
+                  @else
+                  var disableCountDown = false;
+                  @endif
                   if(disableCountDown){
                     var x = setInterval(function() {
 
@@ -367,8 +373,7 @@
                             document.getElementById("send").style.display = "none";
                         }
                     }, 1000);
-                  // window.setUnitKerja();
-
+                
                   }
                 </script>
                 <script type="text/javascript">
@@ -414,7 +419,7 @@
                       @else
                         inserting: false,
                       @endif
-                      deleteConfirm: "Apalakh anda yakin akan menghapus anggaran baris ini?",
+                      deleteConfirm: "Apakah anda yakin akan menghapus anggaran baris ini?",
                
                       pageSize: 5,
                       pageButtonCount: 10,
@@ -547,6 +552,8 @@
                       },
                       onItemUpdated: function(args) {
                           statusTable = "null";
+
+                          // alert(statusTable);
                       },
                       fields: [
                           { name: "id",
@@ -1096,6 +1103,11 @@
                               }else{
                                 id_list=value
                               }
+                              for(i=0;i<inputs.length;i++){
+                                if(inputs[i]["id"]==item.id){
+                                  id_list = inputs[i]["tempId"];
+                                }
+                              }
 
                               if(upload_file[id_list] != null){
                                 for(i=0;i<upload_file[id_list].length;i++){
@@ -1104,20 +1116,18 @@
                                   }
                                 }
                               }
+
+                              // alert(JSON.stringify(upload_file[id_list]));
                               
                               var title="";
                               // document.getElementById('button_'+index_modal).innerHTML = countFile+" Berkas";
                               if(count_berkas==0){
                                 title = "Unggah Berkas";
-                                for(i=0;i<inputs.length;i++){
-                                  if(inputs[i]["id"]==item.id){
-                                    id_list = inputs[i]["tempId"];
-                                  }
-                                }
+                                
                               }else{
                                 title = count_berkas+" Berkas";
                               }
-                              var button = "<span class='btn btn-primary' id='button_"+id_list+"' onclick='setModalFile("+id_list+")' >"+title+"</span>";
+                              var button = "<span class='btn btn-sm btn-primary' id='button_"+id_list+"' onclick='setModalFile("+id_list+")' >"+title+"</span>";
                               return button;
                             },
 
@@ -1142,7 +1152,7 @@
                               }else{
                                 title = count_berkas+" Berkas";
                               }
-                              var button = "<span class='btn btn-primary' id='button_"+id_list+"' onclick='setModalFile("+id_list+")' >"+title+"</span>";
+                              var button = "<span class='btn btn-sm btn-primary' id='button_"+id_list+"' onclick='setModalFile("+id_list+")' >"+title+"</span>";
                               return button;
                             },
                             
@@ -1159,6 +1169,12 @@
                               }else{
                                 id_list=value
                               }
+                              for(i=0;i<inputs.length;i++){
+                                if(inputs[i]["id"]==item.id){
+                                  id_list = inputs[i]["tempId"];
+                                }
+                              }
+                              
                               if(upload_file[id_list] != null){
                                 for(i=0;i<upload_file[id_list].length;i++){
                                   if(upload_file[id_list][i]!=null){
@@ -1179,7 +1195,7 @@
                               }else{
                                 title = count_berkas+" Berkas";
                               }
-                              var button = "<span class='btn btn-primary' id='button_"+id_list+"' onclick='setModalFile("+id_list+")' >"+title+"</span>";
+                              var button = "<span class='btn btn-sm btn-primary' id='button_"+id_list+"' onclick='setModalFile("+id_list+")' >"+title+"</span>";
                               return button;
                             },
                           },
@@ -1217,7 +1233,7 @@
                   function setUnitKerja(id_type,id_unit){
                     var type = "";
                     var unit = "";
-                    if(id_type == "00 "){
+                    if(id_type == "00"){
                       type = "divisi";
                       unit = id_unit;
                     }else{

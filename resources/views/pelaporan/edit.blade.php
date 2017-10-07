@@ -32,89 +32,7 @@
                 </div>
                 <div class="content-body"><!-- Basic scenario start -->
                     <section id="basic">
-                      <div class="row">
-                        <div class="card">
-                          <form method="POST" action="{{url('anggaran/riwayat') }}" id="filterAnggaran" name="filterAnggaran" >
-                            <div class="card-header">
-                              <h4 class="card-title">Pencarian {{$sub_title}}</h4>
-                              <a class="heading-elements-toggle"><i class="ft-align-justify font-medium-3"></i></a>
-                            </div>
-                            <div class="card-body collapse in">
-                              <div class="card-block ">
-                                <form method="POST" action="">
-                                  <div class="col-xs-10">
-                                    {{ csrf_field() }}
-                                    <div class="col-xs-3">
-                                        <div class="form-group">
-                                          <label>Tahun</label>
-                                          <select class="select2 form-control" name="cari_tahun" id="cari_tahun">
-                                            <option value="0">Semua Tahun</option>
-                                            <option value="2017">2017</option>
-                                            <option value="2016">2016</option>
-                                            <option value="2015">2015</option>
-                                          </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-6">
-                                        <div class="form-group">
-                                          <label>Unit Kerja</label>
-                                          <select class="select2 form-control " name="cari_unit_kerja" id="cari_unit_kerja">
-                                            <option value="0">Semua</option>
-                                          </select>
-                                        </div>
-                                    </div>
-                                  </div>
-                                  <div class="col-xs-10">
-                                    <div class="col-xs-2">
-                                      <div class="form-group">
-                                        <label>TW</label>
-                                        <select class="select2 form-control" name="cari_tw_dari" id="cari_tw_dari">
-                                          <option value="0">None</option>
-                                          <option value="1">I</option>
-                                          <option value="2">II</option>
-                                          <option value="3">III</option>
-                                          <option value="4">IV</option>
-                                        </select>
-                                      </div>
-                                    </div>
-                                    <div class="col-xs-1">
-                                      <div class="form-group">
-                                        <div style="visibility:hidden">a</div>
-                                        <div style="visibility:hidden">a</div>
-                                        <label>s/d</label>
-                                      </div>
-                                    </div>
-                                    <div class="col-xs-2">
-                                      <div class="form-group">
-                                        <label>TW</label>
-                                        <select class="select2 form-control" name="cari_tw_dari" id="cari_tw_dari">
-                                          <option value="0">None</option>
-                                          <option value="1">I</option>
-                                          <option value="2">II</option>
-                                          <option value="3">III</option>
-                                          <option value="4">IV</option>
-                                        </select>
-                                      </div>
-                                    </div>
-                                    <div class="col-xs-2">
-                                      <div class="form-group">
-                                        <label style="visibility:hidden">TW</label>
-                                        <div class="btn btn-primary" onclick="cariAnggaran()" style="width:110px"><i class="fa fa-search"></i> Cari</div>                                            
-                                      </div>
-                                    </div>
-                                    <div class="col-xs-1">
-                                      <div class="form-group">
-                                        <label style="visibility:hidden">TW</label>
-                                        <a href="{{url('pelaporan/tambah/'.$type.'/'.$setting['kategori']) }}" class="btn btn-success" style="width:110px"><i class="fa fa-plus"></i> Tambah</a>                                          
-                                      </div>
-                                    </div>
-                                  </div>
-                                </form>
-                              </div>
-                            </div>
-                          </form>
-                        </div>
-                      </div>
+                      
                       <div class="row">
                         <div class="card">
                             <div class="card-body collapse in">
@@ -137,7 +55,7 @@
                                       <div class="form-group">
                                         <label>TW</label>
 
-                                        @if($setting['insert'])
+                                        @if($setting['status']=="Edit"&& $type == "master")
                                         <select class="select2 form-control" name="tw_dari" id="tw_dari" onchange="changeTW(0)">
                                           <option value="0">None</option>
                                           <option value="1">I</option>
@@ -160,7 +78,7 @@
                                     <div class="col-xs-2">
                                       <div class="form-group">
                                         <label>TW</label>
-                                         @if($setting['insert'])
+                                         @if($setting['status']=="Edit"&& $type == "master")
                                         <select class="select2 form-control" name="tw_ke" id="tw_ke" onchange="changeTW(1)">
                                           <option value="0">None</option>
                                           <option value="1">I</option>
@@ -183,7 +101,7 @@
                                         <div class="form-group">
                                           <label>Tanggal Mulai</label>
                                           @if($setting['insert'])
-                                          <input type="date" id="tanggal_mulai" name="tanggal_mulai" min = <?php echo date('Y-m-d')?> onchange="startDate()" class="form-control">
+                                          <input type="date" id="tanggal_mulai" name="tanggal_mulai" onchange="startDate()" class="form-control">
                                           @else
                                           <input id="tanggal_mulai" name="tanggal_mulai" class="form-control" readOnly>
                                           @endif
@@ -242,8 +160,9 @@
                                     </div>
                                     @endif
                                   </div>
+                                  {{$beda?1:0}}
 
-                                  @if($setting['edit'])
+                                  @if($setting['edit']&&$beda)
                                   <div class="row col-xs-12" style="display:block">
                                     <br />
                                     <div class="pull-right">
@@ -281,12 +200,16 @@
                           </div>
                           <br />
                           <br />
+                          @if($beda)
                           <input type="file" id="files" name="files" multiple>
+                          @endif
                         </div>
                       </div>
                       <div class="modal-footer">
                         <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">Kembali</button>
-                        <button id="simpan_file" class="btn btn-outline-primary">Simpan</button>
+                        @if($beda)
+                        <div id="simpan_file" class="btn btn-outline-primary">Simpan</div>
+                        @endif
                       </div>
                     </div>
                   </div>
@@ -341,8 +264,8 @@
                   var hasil = [];
                   var count_file=0;
                   var tempIdCounter = 0;
-                  var insertable = {{$setting['insert']?1:0}};
-                  var editable = {{$setting['edit']?1:0}};
+                  var insertable = {{($setting['insert']&&$beda)?1:0}};
+                  var editable = {{($setting['edit']&&$beda)?1:0}};
                   var unit_field_insert,unit_field_edit = null;
                   var click_berkas = true;
                   var statusTable = "";
@@ -360,13 +283,13 @@
                       editing: editable == 1 ? true : false,
                       pageSize: 5,
                       pageButtonCount: 10,
-                      deleteConfirm: "Apalakh anda yakin akan menghapus anggaran baris ini?",
+                      deleteConfirm: "Apakah anda yakin akan menghapus anggaran baris ini?",
 
                       controller: {
                         loadData: function(filter) {
                           return $.ajax({
                               type: "GET",
-                              url:"{{ ($type == 'item' ? url('pelaporan/get/filteredMaster/'.$setting['kategori']) : url('pelaporan/get/filtered/'.$filters['id'].'/'.$setting['kategori'])) }}",
+                              url:"{{ url('pelaporan/get/filtered/'.$type.'/'.$filters['id'].'/'.$setting['kategori']) }}",
                               data: filter,
                               dataType: "JSON"
                           })
@@ -395,14 +318,28 @@
 
                         },
                         updateItem: function(item) {
+                          // alert(item["tempId"]);
                           item["delete"]="none";
-                          inputs.splice(item["tempId"]-1, 1, item);  
-                          click_berkas = true;
-                          if(upload_file[item["tempId"]]!=null){
-                            for(i = 0 ;i< upload_file[item["tempId"]].length;i++){
-                              readerPrev(i,item["tempId"]);
+                          if(item["isNew"]){
+                            inputs.splice(item["tempId"], 1, item); 
+                          }else{
+                            if(inputs.length>0){
+                              for(i=0;i<inputs.length;i++){
+                                if(inputs[i]["id"]==item.id){
+                                  item["tempId"]=inputs[i]["tempId"];
+                                  if(inputs[i]["file"].length>0){
+                                    for(j=0;j<inputs[i]["file"].length;j++){
+                                      item["file"][j]["delete"]=inputs[i]["file"][j]["delete"];
+                                    }
+                                  }
+                                  
+                                  inputs[i] = item; 
+                                }
+                              }
                             }
-                          } 
+                          }
+                          click_berkas = true;
+
                         },
                       }, 
 
@@ -423,9 +360,40 @@
                               });
                            }, 200);
                       },
+                      onItemDeleted:function(args){
+                        for(i=0;i<inputs.length;i++){
+                          if(inputs[i]['id']==args.item['id']){
+                            if(args.item["id"]==-1){
+                              if(inputs[i]['tempId']==args.item['tempId']){
+                                inputs[i]["delete"]="delete";
+                              }
+                            }else{
+                              inputs[i]["delete"]="delete";
+                            }
+                            
+                            break;
+                          }else{
+                          }
+                        }
+                          statusTable = "null";
+
+                      },
+                      onItemUpdated: function(args) {
+                          statusTable = "null";
+                      },
+
+                      onItemInserted:function(args){
+                        statusTable = "null";
+                      },
                       fields: [
                           {
                             name: "id",
+                            css: "hide",
+                            width: 0,
+
+                          },
+                          {
+                            name: "tempId",
                             css: "hide",
                             width: 0,
 
@@ -435,6 +403,11 @@
                             type: "control",
                             css:editable == 1 ?"":"hide",
                             width: 50,
+                            @if(($setting['status']=="Edit"&&$type=="master")&&$beda)
+                              deleteButton: true,
+                            @else
+                              deleteButton: false,
+                            @endif
 
                           },
                           { name: "unit_kerja", 
@@ -459,16 +432,9 @@
                             title: "Jenis Arahan", 
                             width: 170,
                             readOnly:insertable == 1 ? false : true,
-                            valueField: "Name", 
-                            textField: "Name",
-                            items:[
-                                { Name: "None", Id: 0 },
-                                { Name: "Jenis Arahan 1", Id: 1},
-                                { Name: "Jenis Arahan 2", Id: 2},
-                                { Name: "Jenis Arahan 3", Id: 3},
-                                { Name: "Jenis Arahan 4", Id: 4},
-                                { Name: "Jenis Arahan 5", Id: 5}
-                            ],
+                            valueField: "arahan_rups", 
+                            textField: "arahan_rups", 
+                            items: getData('arahanrups'),
                             validate: {
                               message : "Pilih Jenis Arahan terlebih Dahulu." ,
                               validator :function(value, item) {
@@ -489,14 +455,14 @@
                             }
                           },
                           @if($type== "item")
-                          { name: "progres_tindak_lanjut", 
+                          { name: "progress_tindak_lanjut", 
                             type: "textarea", 
                             title: "Progres Tindak Lanjut", 
                             width: 300,
                             validate: {
                               message : "Isi Progres Tindak Lanjut terlebih dahulu." ,
                               validator :function(value, item) {
-                                  return true;
+                                  return value != "";
                               } 
                             }
                           },
@@ -509,16 +475,9 @@
                             readOnly:insertable == 1 ? false : true,
                             title: "Program Prioritas", 
                             width: 170,
-                            valueField: "Name", 
-                            textField: "Name",
-                            items:[
-                                { Name: "None", Id: 0 },
-                                { Name: "Program Prioritas 1", Id: 1},
-                                { Name: "Program Prioritas 2", Id: 2},
-                                { Name: "Program Prioritas 3", Id: 3},
-                                { Name: "Program Prioritas 4", Id: 4},
-                                { Name: "Program Prioritas 5", Id: 5}
-                            ],
+                            valueField: "program_prioritas", 
+                            textField: "program_prioritas", 
+                            items: getData('programprioritas'),
                             validate: {
                               message : "Pilih Program Prioritas terlebih Dahulu." ,
                               validator :function(value, item) {
@@ -556,17 +515,20 @@
                           @if($setting['berkas'])
                           { name: "file", align:"center", title: "Berkas",  width: 150 ,
 
-                            itemTemplate: function(value) {
+                            itemTemplate: function(value,item) {
                               // alert("null");
                               var id_list=0;
                               var count_berkas=0;
+                              for(i=0;i<inputs.length;i++){
+                                if(inputs[i]["id"]==item.id){
+                                  id_list = inputs[i]["tempId"];
+                                }
+                              }
+
                               if(value.length>0){
                                 for(i =0;i<value.length;i++){
-                                  id_list = value[i]['count'];
                                   count_berkas++;
                                 }
-                              }else{
-                                id_list=value
                               }
                               if(upload_file[id_list] != null){
                                 for(i=0;i<upload_file[id_list].length;i++){
@@ -579,11 +541,16 @@
                               var title="";
                               // document.getElementById('button_'+index_modal).innerHTML = countFile+" Berkas";
                               if(count_berkas==0){
+                                @if(!$beda)
+                                title = "Berkas";
+                                @else
                                 title = "Unggah Berkas";
+                                @endif
+                                
                               }else{
                                 title = count_berkas+" Berkas";
                               }
-                              var button = "<span class='btn btn-primary' id='button_"+id_list+"' onclick='setModalFile("+id_list+")' >"+title+"</span>";
+                              var button = "<span class='btn btn-sm btn-primary' id='button_"+id_list+"' onclick='setModalFile("+id_list+")' >"+title+"</span>";
                               return button;
                             },
 
@@ -604,25 +571,35 @@
                               }
                               var title="";
                               if(count_berkas == 0){
+                                @if(!$beda)
+                                title = "Berkas";
+                                @else
                                 title = "Unggah Berkas";
+                                @endif
                               }else{
                                 title = count_berkas+" Berkas";
                               }
-                              var button = "<span class='btn btn-primary' id='button_"+id_list+"' onclick='setModalFile("+id_list+")' >"+title+"</span>";
+                              var button = "<span class='btn btn-sm btn-primary' id='button_"+id_list+"' onclick='setModalFile("+id_list+")' >"+title+"</span>";
                               return button;
                             },
                             
-                            editTemplate: function(value) {
+                            editTemplate: function(value,item) {
                               // alert("update");
-                              var id_list=0;
                               var count_berkas=0;
+                              var id_list=0;
+                              for(i=0;i<inputs.length;i++){
+                                if(inputs[i]["id"]==item.id){
+                                  id_list = inputs[i]["tempId"];
+                                }
+                              }
+
+
+                              // var count_berkas=0;
                               if(value.length>0){
                                 for(i =0;i<value.length;i++){
-                                  id_list = value[i]['count'];
+                                  // id_list = value[i]['count'];
                                   count_berkas++;
                                 }
-                              }else{
-                                id_list=value
                               }
                               if(upload_file[id_list] != null){
                                 for(i=0;i<upload_file[id_list].length;i++){
@@ -633,11 +610,15 @@
                               }
                               var title="";
                               if(count_berkas==0){
+                                @if(!$beda)
+                                title = "Berkas";
+                                @else
                                 title = "Unggah Berkas";
+                                @endif
                               }else{
                                 title = count_berkas+" Berkas";
                               }
-                              var button = "<span class='btn btn-primary' id='button_"+id_list+"' onclick='setModalFile("+id_list+")' >"+title+"</span>";
+                              var button = "<span class='btn btn-sm btn-primary' id='button_"+id_list+"' onclick='setModalFile("+id_list+")' >"+title+"</span>";
                               return button;
                             },
                           },
@@ -647,6 +628,11 @@
                             type: "control",
                             css:editable == 1 ?"":"hide",
                             width: 50,
+                            @if(($setting['status']=="Edit"&&$type=="master")&&$beda)
+                              deleteButton: true,
+                            @else
+                              deleteButton: false,
+                            @endif
 
                           }
                       ]
@@ -659,7 +645,7 @@
                         var tmp = null;
                         $.ajax({
                             'async': false, 'type': "GET", 'dataType': 'JSON', 
-                            'url': "{{ url('anggaran/get/attributes') }}/" +type+"/-1",
+                            'url': "{{ url('pelaporan/get/attributes') }}/" +type+"/-1",
                             'success': function (data) {
                                 tmp = data;
                             }
@@ -693,17 +679,19 @@
                   }
 
                   function setDetailFormMaster(){
-                    // alert('{{ url('pelaporan/get/filtered/'.$filters['id'].'/form_master') }}');
+                    // alert('{{ url('pelaporan/get/filtered/'.$type.'/'.$filters['id'].'/form_master') }}');
                     $.ajax({
-                        'async': false, 'type': "GET", 'dataType': 'JSON', 'url': "{{ ($type == 'item' ? url('pelaporan/get/filteredMaster/form_master') : url('pelaporan/get/filtered/'.$filters['id'].'/form_master')) }}",
+                        'async': false, 'type': "GET", 'dataType': 'JSON', 'url': "{{ url('pelaporan/get/filtered/'.$type.'/'.$filters['id'].'/form_master') }}",
                         'success': function (data) {
-
+                          // alert(JSON.stringify(data[0]['data'].length));
                           tanggal = document.getElementById('tanggal');
                           tw_dari = document.getElementById('tw_dari');
                           tw_ke = document.getElementById('tw_ke');
                           // alert(JSON.stringify(data));
-
-                          now = data[0].created_at.split(' ')
+                          if({{($type=='item'&&$status='Tambah')?1:0}}){
+                            document.getElementById('id_form_master').value = data[0].id;
+                          }
+                          now = data[0]['created_at']['date'].split(' ')
                           tanggal.value = now[0];
                           tw_dari_val="";
                           tw_ke_val="";
@@ -720,10 +708,13 @@
                             case "3" : tw_ke_val = "III";break;
                             case "4" : tw_ke_val = "IV";break;
                           }
-                          tw_dari.value = tw_dari_val;
-                          tw_ke.value = tw_ke_val;
+                          
+
+                          // alert(tw_dari_val);
 
                           @if($type=="master")
+                          tw_dari.value = data[0].tw_dari;
+                          tw_ke.value = data[0].tw_ke;
                           tanggal_mulai = document.getElementById('tanggal_mulai');
                           tanggal_selesai = document.getElementById('tanggal_selesai');
                           tanggal_mulai.value = data[0].tanggal_mulai;
@@ -735,6 +726,8 @@
                           // alert(data[0].tanggal_selesai);
 
                           @if($type=="item")
+                          tw_dari.value = tw_dari_val;
+                          tw_ke.value = tw_ke_val;
                           var countDownDate = new Date(data[0].tanggal_selesai).getTime();
 
                           var disableCountDown = true;
@@ -770,12 +763,6 @@
                                     document.getElementById("bts_menit").value= "---";
                                     document.getElementById("bts_detik").value= "---";
                                     document.getElementById("bts").innerHTML = "EXPIRED";
-                                    document.getElementById("nd_surat").disabled  = true;
-                                    document.getElementById("unit_kerja").disabled  = true;
-                                    document.getElementById("tipe_anggaran").disabled  = true;
-                                    document.getElementById("stat_anggaran").disabled  = true;
-                                    document.getElementById("save").style.display = "none";
-                                    document.getElementById("send").style.display = "none";
                                 }
                             }, 1000);
                           }
@@ -785,55 +772,74 @@
                     });
                   }
 
-                  function setBerkas(index) {
-                    $('#list_file').empty();
-                    var name="";
-                      for(i = 0; i<list_berkas[index].length; i++){
-                        link = "{{url('anggaran/get/download')}}/"+list_berkas[index][i]['id'];
-                        name += '<div class="col-xs-10"><a href="'+link+'" >'+list_berkas[index][i]['name']+'</div>';
-                        name += '<div class="col-xs-2"><i class="fa fa-download "></i></div></a><br/><br/>';
-                      }
+                  function getListData() {
+                    $.ajax({
+                          'async': false, 'type': "GET", 'dataType': 'JSON', 
+                          'url': "{{ url('pelaporan/get/filtered/'.$type.'/'.$filters['id'].'/'.$setting['kategori']) }}",
+                          'success': function (data) {
+                              inputs = data;
+                              download="";
+                              for(i=0;i<data.length;i++){
 
-                     $("#list_file").append(name);
-
-
-                      $('#modal_berkas').modal('show');
-                  };
-
+                                inputs[i]["delete"]="none";
+                                inputs[i]["tempId"]= tempIdCounter++;
+                                for(j=0;j<inputs[i]["file"].length;j++){
+                                  inputs[i]["file"][j]["delete"]="none";
+                                }
+                                list_berkas[i] = {};
+                                list_berkas[i] = data[i]["file"];
+                                // alert(tempIdCounter);
+                                // alert(JSON.stringify(inputs[i]));
+                              }
+                          }
+                          
+                      });
+                  }
                   function check(){
+                    if({{$type == "master"?1:0}}){
+                      if(document.getElementById("tanggal_mulai").value == ""){
+                        toastr.error("Silahkan Isi Tanggal Mulai Untuk memulai Pelaporan Anggaran Kegiatan. Terima kasih.", "Perhatian.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
+                      }else if(document.getElementById("tanggal_selesai").value == ""){
+                        toastr.error("Silahkan Isi Tanggal Selesai sebagai acuan berakhirnya Pelaporan Anggaran Kegiatan. Terima kasih.", "Perhatian.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
+                      }else if(document.getElementById("tw_dari").value == "0"){
+                        toastr.error("Pilih TW Pelaporan Anggaran Kegiatan. Terima kasih.", "Perhatian.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
+                      }else if(inputs.length == 0&&{{$setting['kategori']!="usulan_program"?1:0}}){
+                        toastr.error("Silahkan Isi Minimal Satu daftar Pelaporan Anggaran Kegiatan. Terima kasih.", "Perhatian.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
+                      }else{
+                        var stop = false;
 
-                    if(document.getElementById("tanggal_mulai").value == ""){
-                      toastr.error("Silahkan Isi Tanggal Mulai Untuk memulai Pelaporan Anggaran Kegiatan. Terima kasih.", "Perhatian.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
-                    }else if(document.getElementById("tanggal_selesai").value == ""){
-                      toastr.error("Silahkan Isi Tanggal Selesai sebagai acuan berakhirnya Pelaporan Anggaran Kegiatan. Terima kasih.", "Perhatian.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
-                    }else if(document.getElementById("tw_dari").value == "0"){
-                      toastr.error("Pilih TW Pelaporan Anggaran Kegiatan. Terima kasih.", "Perhatian.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
-                    }else if(inputs.length == 0 ){
-                      toastr.error("Silahkan Isi Minimal Satu daftar Pelaporan Anggaran Kegiatan. Terima kasih.", "Perhatian.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
+                        for(i=0;i<inputs.length;i++){
+                          nameClass = $('.file_'+i);
+                          if(nameClass.length!=0){
+                            var countFile = $('<input/>',{type:'hidden',id:('count_file_'+i),
+                            name:('count_file_'+i),value:nameClass.length});
+                            countFile.appendTo("#file_grid");
+                          }
+                        }
+                        $('#modal_pernyataan').modal({
+                                  backdrop: 'static'
+                              });
+                      }
                     }else{
                       var stop = false;
 
-                      for(i=0;i<inputs.length;i++){
-                        nameClass = $('.file_'+i);
-                        if(nameClass.length!=0){
-                          var countFile = $('<input/>',{type:'hidden',id:('count_file_'+i),
-                          name:('count_file_'+i),value:nameClass.length});
-                          countFile.appendTo("#file_grid");
+                        for(i=0;i<inputs.length;i++){
+                          nameClass = $('.file_'+i);
+                          if(nameClass.length!=0){
+                            var countFile = $('<input/>',{type:'hidden',id:('count_file_'+i),
+                            name:('count_file_'+i),value:nameClass.length});
+                            countFile.appendTo("#file_grid");
+                          }
                         }
-                      }
-                      $('#modal_pernyataan').modal({
-                                backdrop: 'static'
-                            });
+                        $('#modal_pernyataan').modal({
+                                  backdrop: 'static'
+                              });
                     }
                   }
 
                   function startDate(){
                     start_date = document.getElementById('tanggal_mulai').value;
-                    // start_date = document.getElementById('tanggal_mulai').value;
-
-                    // var today = new Date().toISOString().split('T')[0];
-                    // document.getElementById("tanggal_mulai")[0].setAttribute('min', today);
-                    // alert(start_date);
+                    
                     var now = start_date.split('-');
                     var day ="" ;
                     var next = parseInt(now[2])+1;
@@ -886,7 +892,6 @@
                     
                   }
                   function setModalFile(index) {
-
                     if(click_berkas){
                       $('#files').replaceWith($('#files').val('').clone(true));
                       $('#list_file').empty();
@@ -894,18 +899,31 @@
                       banyak = 0;
                       hasil2 = [];
                       
-                      if(list_berkas[index]!=null){
-                        if(list_berkas[index].length>0){
-                          for(i = 0; i<list_berkas[index].length; i++){
-                            link = "{{url('anggaran/get/download')}}/"+list_berkas[index][i]['id'];
-                            hasil2[i] = '<div id="db_file_'+i+'"><div class="col-xs-10"><a href="'+link+'" ><li>'+delete_temp[i]['name']+'</li></div>';
-                            hasil2[i] += '<div class="col-xs-1"><i class="fa fa-download "></i></div></a></div>';
+                      if( list_berkas[index]!=null){
+                        if( list_berkas[index].length>0){
+                          for(i = 0; i< list_berkas[index].length; i++){
+                            if( list_berkas[index][i]!=null){
+                              if(list_berkas[index][i]["delete"]=="none"){
+                                link = "{{url('pelaporan/get/download')}}/"+ list_berkas[index][i]['id'];
+                                hasil2[i] = '<div id="db_file_'+i+'"><div class="col-xs-10"><a href="'+link+'" ><li>'+ list_berkas[index][i]['name']+'</li></div>';
+                                // alert({{$type=="item"?1:0}});
+                                if((list_berkas[index][i]['is_template']==1&&{{$type=="master"?1:0}})&&{{$setting['status']=="Edit"?1:0}}){
+                                  hasil2[i] += '<div class="col-xs-1" ><i class="fa fa-download "></i></div></a>';
+                                  hasil2[i] += '<div class="col-xs-1" onclick="deleteFileDB('+i+')"><i style="color:red" class="fa fa-close "></i></div><br/><br/></div>';
+                                }else if((list_berkas[index][i]['is_template']==0&&{{$type=="item"?1:0}})&&{{($setting['status']=="Edit"&&$beda)?1:0}}){
+                                  hasil2[i] += '<div class="col-xs-1" ><i class="fa fa-download "></i></div></a>';
+                                  hasil2[i] += '<div class="col-xs-1" onclick="deleteFileDB('+i+')"><i style="color:red" class="fa fa-close "></i></div><br/><br/></div>';
+                                }else{
+                                  hasil2[i] += '<div class="col-xs-2"><i class="fa fa-download "></i></div></a><br/><br/></div>';
+                                }
+                              }
+                            }
                           }
                           $("#list_download").append(hasil2);
                         }
                       }
 
-                      if(upload_file[index]!=null){;
+                      if(upload_file[index]!=null){
                         var nameCon = "";
                         for(i = 0; i<upload_file[index].length; i++){
                           if(upload_file[index][i]!=null){
@@ -920,23 +938,25 @@
 
                       //;
                       index_modal = index;
-                      document.getElementById('files').onchange = function () {
-                        // $('#list_file').empty();
-                        value = this.files;
-                        for(i = banyak; i<(banyak+value.length); i++){
-                          hasil[i] = '<div id="upload_'+i+'" ><div class="col-xs-10"> <li> '+value[(i-banyak)]['name']+'</li></div>';
-                          hasil[i] += '<div class="col-xs-2" onclick="deleteRowFile('+i+','+index+')"><i class="fa fa-close "></i></div><br/><br/></div>';
-                          temp_file[i]=value[(i-banyak)];
-                        }
-                        
-                        banyak+=value.length; 
-                        $("#list_file").append(hasil);
+                      if(document.getElementById('files') !=null ){
+                        document.getElementById('files').onchange = function () {
+                          value = this.files;
+                          for(i = banyak; i<(banyak+value.length); i++){
+                            hasil[i] = '<div id="upload_'+i+'" ><div class="col-xs-10"> <li> '+value[(i-banyak)]['name']+'</li></div>';
+                            hasil[i] += '<div class="col-xs-2" onclick="deleteRowFile('+i+','+index+')"><i class="fa fa-close "></i></div><br/><br/></div>';
+                            temp_file[i]=value[(i-banyak)];
+                          }
+                          
+                          banyak+=value.length; 
+                          $("#list_file").append(hasil);
+                        };
                       }
                       $('#modal_berkas').modal({
                           backdrop: 'static'
                       })
                     }else{
                       alert("Silahkan simpan atau batalkan perubahan data untuk menambah atau menghapus berkas kembali");
+                    
                     }
                   }
                   function deleteRowFile(i,index){
@@ -944,27 +964,39 @@
                       hasil[i] = "";
                       temp_file[i] = null;
                   }
+                  function deleteFileDB(i){
+                      $("#db_file_"+i).remove();
+                      hasil2[i] = "";
+                  }
                   $('#simpan_file').click(function() {
+                    click_berkas = false;
                     simpan_file =true;
                     countFile=0;
                     hasil=[];
                     // temp_file=[];
-                    upload_file[index_modal]=[];
+                     upload_file[index_modal]=[];
                     for(i=0;i<temp_file.length;i++){
 
+                        // readerPrev(i,index_modal);
                         upload_file[index_modal][i]=temp_file[i];
                         if(temp_file[i]!=null){
                           countFile++;
                         }
                     }
-                    // alert(JSON.stringify(temp_file));
+
+                    for(i=0;i<hasil2.length;i++){
+                      if(hasil2[i] == ""){
+                        list_berkas[index_modal][i]["delete"]="delete";
+                      }else{
+                        countFile++;
+                      }
+                    }
                     var title = "Unggah Berkas";
                     if(countFile>0){
                       title=countFile+" Berkas"
                     }
                     temp_file=[];
                     document.getElementById('button_'+index_modal).innerHTML = title;
-                    click_berkas = false;
                     $('#modal_berkas').modal('hide');
                   });
 
@@ -991,7 +1023,6 @@
                     tw_ke = document.getElementById('tw_ke').value;
                     tanggal_mulai = document.getElementById('tanggal_mulai');
                     tanggal_selesai = document.getElementById('tanggal_selesai');
-
                     if(tw_dari > 0){
                       var bulan_dari = 0 + ((tw_dari-1)*3) ;
                       var bulan_ke = 0 + ((tw_ke-1)*3);
@@ -999,32 +1030,31 @@
                       now_month = new Date().getMonth();
 
                       min_dari_date = new Date(now_year, bulan_dari, 1);
-                      max_dari_date = new Date(now_year, bulan_dari+3, 0);
-                      min_ke_date = new Date(now_year, bulan_ke, 1);
+                      // max_dari_date = new Date(now_year, bulan_dari+3, 0);
+                      // min_ke_date = new Date(now_year, bulan_ke, 1);
                       max_ke_date = new Date(now_year, bulan_ke+3, 0);
 
                       min_hari_dari = min_dari_date.getDate();
-                      max_hari_dari = max_dari_date.getDate();
-                      min_hari_ke = min_ke_date.getDate();
+                      // max_hari_dari = max_dari_date.getDate();
+                      // min_hari_ke = min_ke_date.getDate();
                       max_hari_ke = max_ke_date.getDate();
 
                       min_bulan_dari = min_dari_date.getMonth()+1;
-                      max_bulan_dari = max_dari_date.getMonth()+1;
-                      min_bulan_ke = min_ke_date.getMonth()+1;
+                      // max_bulan_dari = max_dari_date.getMonth()+1;
+                      // min_bulan_ke = min_ke_date.getMonth()+1;
                       max_bulan_ke = max_ke_date.getMonth()+1;
 
                       min_dari = now_year+"-"+(min_bulan_dari<9?"0":'')+min_bulan_dari+"-"+(min_hari_dari<9?"0":'')+min_hari_dari;
-                      max_dari = now_year+"-"+(max_bulan_dari<9?"0":'')+max_bulan_dari+"-"+(max_hari_dari<9?"0":'')+max_hari_dari;
-                      min_ke = now_year+"-"+(min_bulan_ke<9?"0":'')+min_bulan_ke+"-"+(min_hari_ke<9?"0":'')+min_hari_ke;
+                      // max_dari = now_year+"-"+(max_bulan_dari<9?"0":'')+max_bulan_dari+"-"+(max_hari_dari<9?"0":'')+max_hari_dari;
+                      // min_ke = now_year+"-"+(min_bulan_ke<9?"0":'')+min_bulan_ke+"-"+(min_hari_ke<9?"0":'')+min_hari_ke;
                       max_ke = now_year+"-"+(max_bulan_ke<9?"0":'')+max_bulan_ke+"-"+(max_hari_ke<9?"0":'')+max_hari_ke;
-                      // tanggal_mulai.setAttribute("min", '2013-12-9');
+                      
 
-                      tanggal_mulai.setAttribute("max",max_dari);
+                      tanggal_mulai.setAttribute("max",max_ke);
                       tanggal_mulai.setAttribute("min",min_dari);
 
                       tanggal_selesai.setAttribute("max",max_ke);
-                      tanggal_selesai.setAttribute("min",min_ke);
-                      // alert(min_dari+":"+max_ke);
+                      tanggal_selesai.setAttribute("min",min_dari);
                     }
                   }
 
@@ -1059,9 +1089,11 @@
                     }
                   }
 
-                  window.setUnitKerja();
                   window.setDetailFormMaster();
+                  @if($setting['status']=="Tambah"&&$type=="master")
                   window.setTWFirst();
+                  @endif
+                  window.getListData();
                   // window.startDate();
 
 

@@ -58,6 +58,20 @@
                                           <label>Unit Kerja</label>
                                           <select class="select2 form-control " name="cari_unit_kerja" id="cari_unit_kerja" onchange="setNDSurat()">
                                             <option value="0">None</option>
+                                            @foreach($unit_kerja as $unit)
+                                            <?php
+                                              $cabang = explode(" Cabang ", $unit->DESCRIPTION);
+                                              // echo count($cabang);
+                                              $id = "00".$unit->VALUE;
+                                              if(count($cabang) > 1){
+                                                // echo $cabang[1];
+                                                $id = $unit->VALUE."00";
+                                              }
+                                            ?>
+                                            @if(Gate::check("unit_".$id) )
+                                              <option value="{{ $unit->DESCRIPTION }}">{{  $unit->DESCRIPTION}}</option>
+                                            @endif
+                                            @endforeach
                                           </select>
                                         </div>
                                     </div>
@@ -218,7 +232,7 @@
                         loadData: function(filter) {
                           return $.ajax({
                               type: "GET",
-                              url:"{{ (checkActiveMenu('anggaran') == 'active' ? url('anggaran') : url('anggaran/get/filteredHistory/'.$filters['tahun'].'/'.$filters['nd_surat'].'/'.$filters['kategori'].'/'.urlencode(strtolower($filters['keyword'])) ) ) }}",
+                              url:"{{  url('anggaran/get/filteredHistory/'.$filters['tahun'].'/'.$filters['nd_surat'].'/'.$filters['kategori'].'/'.urlencode(strtolower($filters['keyword'])) ) }}",
                               data: filter,
                               dataType: "JSON"
                           })
@@ -415,24 +429,11 @@
                     if(tahun == '0'){
                       tahun = '2015 sampai 2017';
                     }
+
+
                     document.getElementById('tahun').value = tahun;
                     document.getElementById('unit_kerja').value = '{{$filters["unit_kerja"]}}';
-                    $.ajax({
-                        'async': false, 'type': "GET", 'dataType': 'JSON', 'url': "{{ url('anggaran/get/attributes/unitkerja/1') }}",
-                        'success': function (data) {
-
-                          unit_kerja = document.getElementById('cari_unit_kerja');
-
-                         
-                          for(i =0 ;i<data.length;i++){
-                            var value = "";
-                            var desc = data[i].DESCRIPTION;
-                            value = data[i].DESCRIPTION;
-                            unit_kerja.options[unit_kerja.options.length] = new Option(desc, value);
-                          }
-                             
-                        }
-                    });
+                    
                   }
 
                   

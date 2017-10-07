@@ -156,20 +156,45 @@ class NotificationSystem
             array_push($array_type,30);
             array_push($array_type,31);
         }
+        if(isset($user->perizinan['notif_ajukan_p_a'])){
+            array_push($array_type,33);
+        }
+        if(isset($user->perizinan['notif_ajukan_a_RUPS'])){
+            array_push($array_type,35);
+        }
+        if(isset($user->perizinan['notif_ajukan_usulan_p_p'])){
+            array_push($array_type,37);
+        }
+
+        if(isset($user->perizinan['notif_ajukan_master_p_a'])){
+            array_push($array_type,32);
+        }
+        if(isset($user->perizinan['notif_ajukan_master_a_RUPS'])){
+            array_push($array_type,34);
+        }
+        if(isset($user->perizinan['notif_ajukan_master_usulan_p_p'])){
+            array_push($array_type,36);
+        }
 
         return $array_type;
     }
 
 	public static function getAll($receiver_id = null)
 	{	
-		$array_type = static::checkArrayTypes();
+        $array_type = static::checkArrayTypes();
         
         if(count($array_type) == 0) { return null; }
-		return Notification::where('receiver_id', \Auth::user()->id)
+        return Notification::where('receiver_id', \Auth::user()->id)
                         ->orWhereNull('receiver_id')
                         ->whereIn('type',$array_type)
                         ->orderBy('id', 'desc')
                         ->get();
+        // $notifications = Notification::where('type', $array_type[0]);
+        // if(count($array_type) > 1 ){
+        //     for($i=1;$i<count($array_type);$i++){
+        //         $notifications=$notifications->orWhere('type', $array_type[$i]);
+        //     }
+        // }
 	}
 
 	public static function markAsRead($id)
