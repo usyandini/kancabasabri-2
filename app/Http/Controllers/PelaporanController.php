@@ -917,7 +917,7 @@ class PelaporanController extends Controller
                     $result[] = [
                         'id'                        => $item_pelaporan_anggaran->id,
                         'tempId'                    => $countIndex,
-                        'unit_kerja'         => $item_pelaporan_anggaran->unit_kerja,
+                        'unit_kerja'                => $item_pelaporan_anggaran->unit_kerja,
                         'program_prioritas'         => $item_pelaporan_anggaran->program_prioritas,
                         'sasaran_dicapai'           => $item_pelaporan_anggaran->sasaran_dicapai,
                         'file'  => $fileList
@@ -1151,13 +1151,21 @@ class PelaporanController extends Controller
                     $count2++;
                 }
 
+                if($string1 != ""){
+                    $string1 = "AND (".$string1.")";
+                }
+
+                if($string2 != ""){
+                    $string2 = "AND (".$string2.")";
+                }
+
                 // echo $string1;
                 $second="SELECT * 
                     FROM (SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_DIVISI] 
-                    WHERE VALUE!='00' AND (".$string2.")) AS A 
+                    WHERE VALUE!='00' ".$string2.") AS A 
                     UNION ALL 
                     SELECT * FROM (SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_KPKC]  
-                    WHERE VALUE!='00' AND (".$string1.")) AS B";
+                    WHERE VALUE!='00' ".$string1.") AS B";
                 $return = \DB::select($second);
                 break;
             case 'programprioritas':
@@ -1225,7 +1233,6 @@ class PelaporanController extends Controller
                                     $query->where('tw_dari', $tw)
                                           ->orWhere('tw_ke', $tw);
                                 })->where('kategori',$kategori)->where('is_template',$type);
-        $ItemMaster;
 
         $result = null;
         // echo count($FormMaster->get());
@@ -1236,21 +1243,18 @@ class PelaporanController extends Controller
                 if($kategori == "laporan_anggaran"){
                     $Item = $this->MasterItemPelaporanAnggaranModel
                         ->where('id_form_master', $form_master->id)->where('unit_kerja', $userUnit)
-                        ->where('active', '1')->where('is_template',$type)->get();
-                    if(count($Item)>0){
-                        $ItemMaster = $Item;
-                    }
+                        ->where('is_template',$type)->get();
+                    
+                    // echo count($ItemMaster);
                 }else if($kategori == "arahan_rups"){
                     $Item = $this->MasterItemArahanRUPSModel
                         ->where('id_form_master', $form_master->id)->where('unit_kerja', $userUnit)
-                        ->where('active', '1')->where('is_template',$type)->get();
-                    if(count($Item)>0){
-                        $ItemMaster = $Item;
-                    }
+                        ->where('is_template',$type)->get();
+                    
                 }
                 // echo count($kategori);
             }
-            if(count($ItemMaster)>0||$kategori == 'usulan_program'){
+            if(count($Item)>0||$kategori == 'usulan_program'){
                 $result = $FormMaster->get();
                 // $result = $ItemPelaporanAnggaran;
             }else{

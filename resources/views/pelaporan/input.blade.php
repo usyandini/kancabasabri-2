@@ -441,7 +441,7 @@
                             validate: {
                               message : "Isi Progres Tindak Lanjut terlebih dahulu." ,
                               validator :function(value, item) {
-                                  return true;
+                                  return value !="";
                               } 
                             }
                           },
