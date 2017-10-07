@@ -75,6 +75,7 @@
                     </div>
                 </div>
                 
+
                 <div class="row">
                     <section id="select-inputs">
 			          <div class="row">
@@ -86,11 +87,11 @@
 			                  	<div class="card-body collapse in">
 			                  	
 			                  		<table>
-			                  		<form enctype="multipart/form-data" role="form" action="{{ URL('tindaklanjut') }}" method="GET" >
+			                  		<form enctype="multipart/form-data" role="form" action="{{ URL('tindaklanjutex/tindaklanjuteksternal') }}" method="GET" >
 				                    {{ csrf_field() }}
 			                  			<tr>
 			                  				<td><b>Unit Kerja</b></td><td>  </td><td><b> : </b></td><td>  </td>
-			                  				<td><select class="form-control" name="unitkerja" id="unitkerja" onchange="changeUnit()" required="required">
+			                  				<td><select class="form-control" name="unitkerja" id="unitkerja" onchange="changeUnit()">
                                                     <option value="0"> - Pilih Unit Kerja - </option>
                                                     <?php
                                                     $second="SELECT * FROM (SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_DIVISI] WHERE VALUE!='00') AS A UNION ALL SELECT * FROM (SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_KPKC]  WHERE VALUE!='00') AS B";
@@ -110,7 +111,7 @@
 			                  				<script type="text/javascript">
 											    function changeUnit(){
 										    		var unitkerja = $('#unitkerja').val();
-									                var uri = "{{ url('tindaklanjut/myform').'/'}}"+ encodeURI(unitkerja);
+									                var uri = "{{ url('tindaklanjutex/myform').'/'}}"+ encodeURI(unitkerja);
 
 									                $.ajax({
 								                        'async': false, 
@@ -129,14 +130,12 @@
 											                        	$('select[name="tgl_mulai"]').append('<option value="'+ value +'">'+ tanggal +' '+ bulana +' '+ tahun +'</option>');
 											                        	//$('select[name="tgl_mulai"]').append('<option value="'+ value +'">'+ value +'</option>');
 											                        });
+								                             
 								                        }
 								                    });
 										    	}
 											</script>
 											
-			                  			</tr>
-			                  			<tr>
-			                  				<td>  </td>
 			                  			</tr>
 			                  			<tr>
 			                  				<td>  </td>
@@ -155,8 +154,7 @@
 			          </div>
 			        </div>
 
-
-                  	<div class="row">
+                  <div class="row">
                     <section id="select-inputs">
 			          <div class="row">
 			            <div class="col-xs-12">
@@ -174,7 +172,7 @@
                                                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><center>
                                                     <center><h4 class="modal-title text-success" id="myModalLabel" ><i class="fa fa-plus"></i> Tambah Tindak Lanjut</h4></center>
                                                 </div>
-                                                <form enctype="multipart/form-data" role="form" action="{{ URL('unitkerja/store_unitkerja') }}" method="POST" >
+                                                <form enctype="multipart/form-data" role="form" action="{{ URL('tindaklanjutex/store_unitkerjaex') }}" method="POST" >
                                                  {{ csrf_field() }}
                                                 <div class="modal-body">
                                                 <label class="control-label"><b> Unit Kerja </b></label>
@@ -237,9 +235,11 @@
 			                        		<?php 
 			                        			$tanggal = $reason->tgl_mulai;
 			                        			$tanggal2 = $reason->tgl_selesai;
+			                        			$tanggal3=date('d-m-Y');
+			                        			$tanggal4=date('Y-m-d');
+			                        			$durasi=$reason->durasi;
 												$tanggal3=date('Y-m-d');
 												$selisih=((abs(strtotime($tanggal2)-strtotime($tanggal3)))/(60*60*24));
-			                        			$durasi=$reason->durasi;
 												$tgl= date('d', strtotime($tanggal)); 
 												  $b= date('m', strtotime($tanggal));
 												  if ($b=="01"){
@@ -326,12 +326,12 @@
 			                        			<td>{{ $reason->unitkerja }}</td>
 			                        			<td><center>{{ $tgl }} {{ $bulan }} {{ $tahun }}</center></td>
 			                        			<td align="right">{{ $reason->durasi }} Hari</td>
-			                        			<td align="right">@if ($tanggal2>$tanggal3)<p class="info"> {{ $selisih }} Hari </p>@endif
-			                        							  @if ($tanggal3>$tanggal2)<p class="danger"> -{{ $selisih }} Hari </p>@endif
+			                        			<td align="right">@if ($tanggal2>$tanggal4)<p class="info"> {{ $selisih }} Hari </p>@endif
+			                        							  @if ($tanggal4>$tanggal2)<p class="danger"> -{{ $selisih }} Hari </p>@endif
 			                        							  @if ($selisih=="")<p class="warning"> 0 Hari </p>@endif</td>
 			                        			<td><center>{{ $tgls }} {{ $bulans }} {{ $tahuns }}</center></td>
 												<td><center>
-													<span data-toggle='tooltip' title='Proses'><a href="{{ URL('unitkerja/tindaklanjut/'. $reason->id1) }}" class="btn btn-success btn-sm"><i class="fa fa-share-square-o"></i> </a></span>											
+													<span data-toggle='tooltip' title='Proses'><a href="{{ URL('tindaklanjutex/tindaklanjutext/'. $reason->id1) }}" class="btn btn-success btn-sm"><i class="fa fa-share-square-o"></i> </a></span>											
 													<span data-toggle='tooltip' title='Ubah'><a class="btn btn-info btn-sm" data-target="#ubah{{$reason->id1}}" data-toggle="modal"><i class="fa fa-edit"></i> </a></span>
                                         			<?php
                                         			$z = DB::table('tl_temuan')

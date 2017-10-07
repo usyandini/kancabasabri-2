@@ -132,7 +132,7 @@
 				                @endif
 				                
 			                    <div class="table-responsive">
-			                      <table class="table table-striped table-bordered datacol-column-ordering">
+			                      <table class="table table-striped table-bordered datatable-select-inputs nowrap" cellspacing="0" width="100%">
 			                        <thead>
 			                          <tr>
 			                            <th><center>No</center></th>
