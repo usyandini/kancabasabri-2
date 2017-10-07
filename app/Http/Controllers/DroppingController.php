@@ -58,6 +58,8 @@ class DroppingController extends Controller
     protected $penyesuaianModel;
     protected $berkasTTModel;
 
+    protected $fileAllowed =  array('application/msword', 'application/vnd.ms-office', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/pdf');
+
     public function __construct(
         PaymentJournalDropping $jDropping, 
         KantorCabang $kanCab, 
@@ -245,8 +247,8 @@ class DroppingController extends Controller
 
         $validatorTT = Validator::make($inputsTT,
             [
-                'berkas.*' => 'required|max:100000',
-                //'berkas.*' => 'required|mimes:jpg,jpeg,png,bmp|max:20000', // batasan image file max 20 mb
+                'berkas.*' => 'required|max:100000|mimes:jpg,jpeg,png,doc,docx,xls,xlsx,pdf',
+                //'berkas.*' => 'required|mimes:jpg,jpeg,png,bmp|max:100000', // batasan image file max 20 mb
                 'nominal_tarik' => 'not_in:0|required|regex:/^\d+([\.]\d+)*([\,]\d+)?$/' //titik separator
                 //'nominal_tarik' => 'not_in:0|required|regex:/^\d+([\,]\d+)*([\.]\d+)?$/' //koma separator
                 //'nominal_tarik' => 'not_in:0|required|regex:/^[1-8](,[1-8])*$/'
@@ -256,7 +258,8 @@ class DroppingController extends Controller
                 'nominal_tarik.required'  => 'Nominal tarik tunai harus diisi !',
                 'nominal_tarik.regex'  => 'Nominal tarik tunai hanya bisa diisi oleh angka !',
                 'berkas.*.required'  => 'Attachment bukti tarik tunai tidak boleh dikosongkan !',
-                'berkas.*.max'  => 'Attachment bukti tarik tunai tidak boleh lebih dari 100 Mb !'
+                'berkas.*.max'  => 'Attachment bukti tarik tunai tidak boleh lebih dari 100 Mb !',
+                'berkas.*.mimes'  => 'Attachment bukti tarik tunai yang diperbolehkan hanya .doc, .docx, .xls, .xlsx, .jpg, .jpeg, .png, .pdf'
             ]);
 
         //----- Fungsi tarik tunai, jika tidak ada record maka tariktunai berasal dari nominal awal - nominal tarik -----//
@@ -350,7 +353,7 @@ class DroppingController extends Controller
                 'p_cabang'          => 'not_in:0|required',
                 'p_nominal'         => 'not_in:0|required|regex:/^\d+([\.]\d+)*([\,]\d+)?$/',
                 'p_rek_bank'        => 'not_in:0|required',
-                'berkas.*'          => 'required|max:100000' // max 5mb
+                'berkas.*'          => 'required|max:100000|mimes:jpg,jpeg,png,doc,docx,xls,xlsx,pdf' // max 5mb
             ],
             [
                 'p_nominal.not_in'    => 'Nominal transaksi penyesuaian dropping tidak boleh dikosongkan !',
@@ -364,7 +367,8 @@ class DroppingController extends Controller
                 'p_rek_bank.required' => 'Pilihan nomor rekening tidak boleh dikosongkan !',
 
                 'berkas.*.required'   => 'Attachment bukti penyesuaian tidak boleh dikosongkan !',
-                'berkas.*.max'        => 'Attachment bukti penyesuaian tidak boleh lebih dari 100 Mb'
+                'berkas.*.max'        => 'Attachment bukti penyesuaian tidak boleh lebih dari 100 Mb',
+                'berkas.*.mimes'  => 'Attachment bukti tarik tunai yang diperbolehkan hanya .doc, .docx, .xls, .xlsx, .jpg, .jpeg, .png, .pdf'
             ]);
 
         $submitted = PenyesuaianDropping::where([['id_dropping', $id_drop], ['stat', 4]])->orderby('created_at', 'desc')->first();
@@ -692,17 +696,12 @@ class DroppingController extends Controller
 
         $inputStagingTT = [
             'DATAAREAID'       => 'asbr',
-            // 'RECVERSION'
-            // 'PARTITION'
             'RECID'             => $tariktunai['id'],
             'PIL_TRANSDATE'     => $tariktunai['updated_at'],
             'PIL_TXT'           => $tariktunai['cabang'], //deskripsi optional
-            //'PIL_JOURNALNUM'    => $tariktunai['dropping']['JOURNALNUM'], //kosong
             'PIL_AMOUNT'        => $tariktunai['nominal_tarik'],
             'PIL_BANK'          => $tariktunai['akun_bank'],
             'PIL_ACCOUNT'       => $tariktunai['SEGMEN_1'],
-            //'PIL_VOUCHER'       => $tariktunai['dropping']['JOURNALNAME'] //kosong
-            //'PIL_POSTED'
             'PIL_PROGRAM'       => $tariktunai['SEGMEN_2'],
             'PIL_KPKC'          => $tariktunai['SEGMEN_3'],
             'PIL_DIVISI'        => $tariktunai['SEGMEN_4'],

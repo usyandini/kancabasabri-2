@@ -80,14 +80,22 @@ class AuthServiceProvider extends ServiceProvider
              $permissions[] = $manajemen_user[$i];
         }
 
-        $pelaporan = ["pelaporan_anggaran","pelaporan_a_RUPS","form_master","master_pelaporan_anggaran",
-                        "master_arahan_a_RUPS","master_usulan_p_p"];
+        $pelaporan = ["pelaporan_anggaran","cari_pelaporan_anggaran","tambah_pelaporan_anggaran",
+                        "pelaporan_a_RUPS","cari_pelaporan_a_RUPS","tambah_pelaporan_a_RUPS",
+                        "pelaporan_usulan_p_p","cari_pelaporan_usulan_p_p","tambah_pelaporan_usulan_p_p",
+                        "pelaporan_tindak_lanjut","form_master","master_pelaporan_anggaran",
+                        "cari_master_pelaporan_anggaran","tambah_master_pelaporan_anggaran",
+                        "master_arahan_a_RUPS","cari_master_arahan_a_RUPS","tambah_master_arahan_a_RUPS",
+                        "master_usulan_p_p","cari_master_usulan_p_p","tambah_master_usulan_p_p",
+                        "notif_ajukan_p_a","notif_ajukan_a_RUPS",
+                        "notif_ajukan_usulan_p_p","notif_ajukan_master_p_a","notif_ajukan_master_a_RUPS",
+                        "notif_ajukan_master_usulan_p_p"];
 
         for($i=0;$i<count($pelaporan);$i++){
              $permissions[] = $pelaporan[$i];
         }
 
-        $manajemen_item = ["manajemen_k_i","manajemen_i_a","manajemen_a_m"];
+        $manajemen_item = ["manajemen_k_i","manajemen_i_a","manajemen_a_m","manajemen_p_p","manajemen_a_RUPS"];
 
         for($i=0;$i<count($manajemen_item);$i++){
              $permissions[] = $manajemen_item[$i];

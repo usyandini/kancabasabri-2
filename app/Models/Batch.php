@@ -19,7 +19,7 @@ class Batch extends Model
 	protected $connection = 'sqlsrv';
 
 	protected $table = 'batches';
-    protected $dateFormat = 'Y-m-d H:i:s';
+    //protected $dateFormat = 'Y-m-d H:i:s';
 
     protected $dates = ['dob'];
 
@@ -58,6 +58,11 @@ class Batch extends Model
     public function latestUpdate()
     {
         return $this->hasOne('App\Models\BatchStatus', 'batch_id', 'id')->where('stat', 1)->first();
+    }
+
+    public function canReported()
+    {
+        return $this->hasOne('App\Models\BatchStatus', 'batch_id', 'id')->where('stat', 6);
     }
 
 	public function isUpdatable()

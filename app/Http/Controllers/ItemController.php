@@ -69,6 +69,14 @@ class ItemController extends Controller
             $this->middleware('can:manajemen_k_i', ['only' => 'index']);
             $this->middleware('can:manajemen_i_a', ['only' => 'editItemAnggaran']);
             $this->middleware('can:manajemen_a_m', ['only' => 'reason']);
+            $this->middleware('can:manajemen_p_p', ['only' => 'program_prioritas',
+                                                        'store_program_prioritas',
+                                                        'update_program_prioritas',
+                                                        'delete_program_prioritas']);
+            $this->middleware('can:manajemen_a_RUPS', ['only' => 'arahan_rups',
+                                                        'store_arahan_rups',
+                                                        'update_arahan_rups',
+                                                        'delete_arahan_rups']);
             // $this->middleware('can:tambah_k_i', ['only' => 'create']);
             // $this->middleware('can:edit_k_i', ['only' => 'submitAnggaranItem']);
             // $this->middleware('can:pos_i', ['only' => 'submitAnggaranItem']);
@@ -114,7 +122,6 @@ class ItemController extends Controller
 
     public function create()
     {
-        //dd(ItemAnggaranMaster::where('type', 1)->first());
         $jenis = ItemAnggaranMaster::where('type', 1)->get();
         $kelompok = ItemAnggaranMaster::where('type', 2)->get();
         $pos = ItemAnggaranMaster::where('type', 3)->get();
@@ -187,7 +194,7 @@ class ItemController extends Controller
                         'type'  => 1,
                         'created_by' => \Auth::id()
                     );
-                    ItemAnggaranMaster::create($inputJenis);
+                    ItemAnggaranMaster::create($inputJenis); // Jenis Anggaran
                     break;
                 case 'kelompok':
                     $inputKelompok = array(
@@ -196,7 +203,7 @@ class ItemController extends Controller
                         'type'  => 2,
                         'created_by' => \Auth::id()
                     );
-                    ItemAnggaranMaster::create($inputKelompok);
+                    ItemAnggaranMaster::create($inputKelompok); //Kelompok Anggaran
                     break;
                 case 'pos':
                     $inputPos = array(
@@ -205,7 +212,7 @@ class ItemController extends Controller
                         'type'  => 3,
                         'created_by' => \Auth::id()
                     );
-                    ItemAnggaranMaster::create($inputPos);
+                    ItemAnggaranMaster::create($inputPos); //Pos Anggaran
                     break;
                 case 'all':
                     $inputAll = array(
@@ -214,10 +221,10 @@ class ItemController extends Controller
                         'type'  => $request->type,
                         'created_by' => \Auth::id()
                     );
-                    ItemAnggaranMaster::create($inputAll);
+                    ItemAnggaranMaster::create($inputAll); //All item anggaran
                     break;
             }
-            session()->flash('success', true);   
+            session()->flash('add', true);   
         }
         return redirect()->back()->withInput();
     }
@@ -340,6 +347,7 @@ class ItemController extends Controller
         session()->flash('deleted', 'Item <b>'.$item.'</b> berhasil dihapus');
         return redirect()->back();
     }
+
 
     public function reason()
     {

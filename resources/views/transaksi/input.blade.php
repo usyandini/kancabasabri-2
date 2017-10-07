@@ -123,8 +123,8 @@
                                   {{ csrf_field() }}
                                   @if ($active_batch)
                                   <input type="hidden" name="batch_id" value="{{ $active_batch->id }}">
-                                  <input type="hidden" name="batch_values" id="batch_values">
                                   @endif
+                                  <input type="hidden" name="batch_values" id="batch_values">
                                   @include('transaksi.berkas')
                                 </form>
                                 <form method="POST" id="deleteBerkas" action="{{ url('transaksi/berkas/remove') }}">

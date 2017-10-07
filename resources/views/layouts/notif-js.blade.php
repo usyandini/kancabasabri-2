@@ -74,7 +74,6 @@
                 $('#notifList, notifList2').append(''+
                      link+
                         '<div class="media">' +
-                          '<div class="media-left valign-middle"><i class="ft-plus-square icon-bg-circle bg-cyan"></i></div>' +
                           '<div class="media-body">' +
                             '<p class="notification-text font-small-3 text-muted">'+ val.wording +'</p>' +
                             '<small>' +

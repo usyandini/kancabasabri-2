@@ -55,7 +55,7 @@
 			                      <table class="table table-striped table-bordered datatable-select-inputs wrap" cellspacing="0" width="120%">
 			                        <thead>
 			                          <tr>
-			                          	<th width="5%">No</th>
+			                          	<th width="5%"><center>No</center></th>
 			                          	<th id="filterable" width="5%"><center>Kode Item</center></th>
 			                            <th id="filterable" width="20%">Item</th>
 			                            <th id="filterable" width="10%">Jenis Anggaran</th>
@@ -69,7 +69,7 @@
 			                        <tbody>
 			                        @foreach($items as $item)
 		                        		<tr>
-		                        			<td width="5%">{{ $no++ }}</td>
+		                        			<td width="5%"><center>{{ $no++ }}</center></td>
 		                        			<td width="5%">{{ $item->kode_item }}</td>
 		                        			<td width="20%">{{ $item->nama_item }}</td>
 		                        			<td width="10%">{{ $jenis->where('kode', $item->jenis_anggaran)->first()['name'] }}</td>
