@@ -289,7 +289,7 @@
                         loadData: function(filter) {
                           return $.ajax({
                               type: "GET",
-                              url:"{{ ($type == 'item' ? url('pelaporan/get/filteredMaster/'.$setting['kategori'].'/1') : url('pelaporan/get/filtered/'.$filters['id'].'/'.$setting['kategori'])) }}",
+                              url:"{{ ($type == 'item' ? url('pelaporan/get/filteredMaster/'.$setting['kategori'].'/1/'.$setting['id_form_master']) : url('pelaporan/get/filtered/'.$filters['id'].'/'.$setting['kategori'])) }}",
                               data: filter,
                               dataType: "JSON"
                           })
@@ -649,9 +649,8 @@
 
                   function setDetailFormMaster(){
                     // alert('{{ url('pelaporan/get/filtered/'.$filters['id'].'/form_master') }}');
-                    console.log("{{url('pelaporan/get/filteredMaster/'.$setting['kategori'].'/0')}}");
                     $.ajax({
-                        'async': false, 'type': "GET", 'dataType': 'JSON', 'url': "{{ ($type == 'item' ? url('pelaporan/get/filteredMaster/'.$setting['kategori'].'/0') : url('pelaporan/get/filtered/'.$filters['id'].'/form_master')) }}",
+                        'async': false, 'type': "GET", 'dataType': 'JSON', 'url': "{{ ($type == 'item' ? url('pelaporan/get/filteredMaster/'.$setting['kategori'].'/0/'.$setting['id_form_master']) : url('pelaporan/get/filtered/'.$filters['id'].'/form_master')) }}",
                         'success': function (data) {
 
                           tanggal = document.getElementById('tanggal');
@@ -742,7 +741,7 @@
                   function getListData() {
                     $.ajax({
                           'async': false, 'type': "GET", 'dataType': 'JSON', 
-                          'url': "{{ ($type == 'item' ? url('pelaporan/get/filteredMaster/'.$setting['kategori'].'/1') : url('pelaporan/get/filtered/'.$filters['id'].'/'.$setting['kategori'])) }}",
+                          'url': "{{ ($type == 'item' ? url('pelaporan/get/filteredMaster/'.$setting['kategori'].'/1/'.$setting['id_form_master']) : url('pelaporan/get/filtered/'.$filters['id'].'/'.$setting['kategori'])) }}",
                           'success': function (data) {
                               inputs = data;
                               download="";

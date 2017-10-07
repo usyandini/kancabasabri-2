@@ -41,89 +41,88 @@
                             </div>
                             <div class="card-body collapse in">
                               <div class="card-block ">
-                                <form method="POST" action="{{url('pelaporan/cari') }}">
-                                  <div class="col-xs-10">
-                                    {{ csrf_field() }}
-                                    <div class="col-xs-3">
-                                        <div class="form-group">
-                                          <label>Tahun</label>
-                                          <select class="select2 form-control" name="cari_tahun" id="cari_tahun">
-                                            <option value="0">Semua Tahun</option>
-                                            <option value="2017">2017</option>
-                                            <option value="2016">2016</option>
-                                            <option value="2015">2015</option>
-                                          </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-6">
-                                        <div class="form-group">
-                                          <label>Unit Kerja</label>
-                                          <select class="select2 form-control " name="cari_unit_kerja" id="cari_unit_kerja">
-                                            <option value="0">Semua</option>
-                                            @foreach($unit_kerja as $unit)
-                                            <?php
-                                              $cabang = explode(" Cabang ", $unit->DESCRIPTION);
-                                              // echo count($cabang);
-                                              $id = "00".$unit->VALUE;
-                                              if(count($cabang) > 1){
-                                                // echo $cabang[1];
-                                                $id = $unit->VALUE."00";
-                                              }
-                                            ?>
-                                            @if(Gate::check("unit_".$id) )
-                                              <option value="{{ $unit->DESCRIPTION }}">{{  $unit->DESCRIPTION}}</option>
-                                            @endif
-                                            @endforeach
-                                          </select>
-                                        </div>
-                                    </div>
-                                  </div>
-                                  <div class="col-xs-10">
-                                    <div class="col-xs-2">
+                                <div class="col-xs-10">
+                                  {{ csrf_field() }}
+                                  <div class="col-xs-3">
                                       <div class="form-group">
-                                        <label>TW</label>
-                                        <select class="select2 form-control" name="cari_tw_dari" id="cari_tw_dari" onchange="changeTW(0,this)">
-                                          <option value="0">None</option>
-                                          <option value="1">I</option>
-                                          <option value="2">II</option>
-                                          <option value="3">III</option>
-                                          <option value="4">IV</option>
+                                        <label>Tahun</label>
+                                        <select class="select2 form-control" name="cari_tahun" id="cari_tahun">
+                                          <option value="0">Semua Tahun</option>
+                                          <option value="2017">2017</option>
+                                          <option value="2016">2016</option>
+                                          <option value="2015">2015</option>
                                         </select>
                                       </div>
-                                    </div>
-                                    <div class="col-xs-1">
+                                  </div>
+                                  <div class="col-xs-6">
                                       <div class="form-group">
-                                        <div style="visibility:hidden">a</div>
-                                        <div style="visibility:hidden">a</div>
-                                        <label>s/d</label>
-                                      </div>
-                                    </div>
-                                    <div class="col-xs-2">
-                                      <div class="form-group">
-                                        <label>TW</label>
-                                        <select class="select2 form-control" name="cari_tw_ke" id="cari_tw_ke" onchange="changeTW(1,this)">
-                                          <option value="0">None</option>
-                                          <option value="1">I</option>
-                                          <option value="2">II</option>
-                                          <option value="3">III</option>
-                                          <option value="4">IV</option>
+                                        <label>Unit Kerja</label>
+                                        <select class="select2 form-control " name="cari_unit_kerja" id="cari_unit_kerja">
+                                          <option value="0">Semua</option>
+                                          @foreach($unit_kerja as $unit)
+                                          <?php
+                                            $cabang = explode(" Cabang ", $unit->DESCRIPTION);
+                                            // echo count($cabang);
+                                            $id = "00".$unit->VALUE;
+                                            if(count($cabang) > 1){
+                                              // echo $cabang[1];
+                                              $id = $unit->VALUE."00";
+                                            }
+                                          ?>
+                                          @if(Gate::check("unit_".$id) )
+                                            <option value="{{ $unit->DESCRIPTION }}">{{  $unit->DESCRIPTION}}</option>
+                                          @endif
+                                          @endforeach
                                         </select>
                                       </div>
-                                    </div>
-                                    <div class="col-xs-2">
-                                      <div class="form-group">
-                                        <label style="visibility:hidden">TW</label>
-                                        <div class="btn btn-primary" onclick="cariPelaporan()" style="width:110px"><i class="fa fa-search"></i> Cari</div>                                            
-                                      </div>
-                                    </div>
-                                    <div class="col-xs-1">
-                                      <div class="form-group">
-                                        <label style="visibility:hidden">TW</label>
-                                        <a href="{{url('pelaporan/tambah/'.$type.'/'.$kategori) }}" class="btn btn-success" style="width:110px"><i class="fa fa-plus"></i> Tambah</a>                                          
-                                      </div>
+                                  </div>
+                                </div>
+                                <div class="col-xs-10">
+                                  <div class="col-xs-2">
+                                    <div class="form-group">
+                                      <label>TW</label>
+                                      <select class="select2 form-control" name="cari_tw_dari" id="cari_tw_dari" onchange="changeTW(0,this)">
+                                        <option value="0">None</option>
+                                        <option value="1">I</option>
+                                        <option value="2">II</option>
+                                        <option value="3">III</option>
+                                        <option value="4">IV</option>
+                                      </select>
                                     </div>
                                   </div>
-                                </form>
+                                  <div class="col-xs-1">
+                                    <div class="form-group">
+                                      <div style="visibility:hidden">a</div>
+                                      <div style="visibility:hidden">a</div>
+                                      <label>s/d</label>
+                                      <input type="hidden" name="type" id="type" value="Cari">
+                                    </div>
+                                  </div>
+                                  <div class="col-xs-2">
+                                    <div class="form-group">
+                                      <label>TW</label>
+                                      <select class="select2 form-control" name="cari_tw_ke" id="cari_tw_ke" onchange="changeTW(1,this)">
+                                        <option value="0">None</option>
+                                        <option value="1">I</option>
+                                        <option value="2">II</option>
+                                        <option value="3">III</option>
+                                        <option value="4">IV</option>
+                                      </select>
+                                    </div>
+                                  </div>
+                                  <div class="col-xs-2">
+                                    <div class="form-group">
+                                      <label style="visibility:hidden">TW</label>
+                                      <div class="btn btn-primary" onclick="cariPelaporan()" style="width:110px"><i class="fa fa-search"></i> Cari</div>                                            
+                                    </div>
+                                  </div>
+                                  <div class="col-xs-1">
+                                    <div class="form-group">
+                                      <label style="visibility:hidden">TW</label>
+                                      <div onclick="tambahPelaporan()" class="btn btn-success" style="width:110px"><i class="fa fa-plus"></i> Tambah</div>                                          
+                                    </div>
+                                  </div>
+                                </div>
                               </div>
                             </div>
                           </form>
@@ -194,9 +193,15 @@
 
                       controller: {
                         loadData: function(filter) {
+                          <?php 
+                            $tp = $type;
+                            if($type == 'item' && $filters['type'] == 'Tambah'){
+                              $tp = 1;
+                            }
+                          ?>
                           return $.ajax({
                               type: "GET",
-                              url:"{{url('pelaporan/get/filteredPelaporan/'.$type.'/'.$kategori.'/'.$filters['cari_tahun'].'/'.$filters['cari_tw_dari'].'/'.$filters['cari_tw_ke'].'/'.urlencode(strtolower($filters['unit_kerja'])))}} ",
+                              url:"{{url('pelaporan/get/filteredPelaporan/'.$tp.'/'.$kategori.'/'.$filters['cari_tahun'].'/'.$filters['cari_tw_dari'].'/'.$filters['cari_tw_ke'].'/'.urlencode(strtolower($filters['unit_kerja'])))}} ",
                               data: filter,
                               dataType: "JSON"
                           })
@@ -265,8 +270,10 @@
                           { name: "id", align:"center", title: "Detail",  width: 50 ,
 
                             itemTemplate: function(value) {
-                              @if($type=="item"&&$kategori=="usulan_program")
+                              @if($type=="item"&&$kategori=="usulan_program"&&$filters['type']!="Tambah")
                               var url = "{{url('pelaporan/edit_usulan_program').'/'}}"+value;
+                              @elseif($type=="item"&&$filters['type']=="Tambah")
+                              var url = "{{url('pelaporan/tambah/'.$type.'/'.$kategori).'/'}}"+value;
                               @else
                               var url = "{{url('pelaporan/edit/'.$type.'/'.$kategori).'/'}}"+value;
                               @endif
@@ -348,6 +355,33 @@
                     }else{
                       $('form[id="filterPelaporan"]').submit();
                     }
+                  }
+
+                  function tambahPelaporan(){
+                    @if($type == "item")
+                    now = new Date().getMonth();
+                    tw = 0;
+                    if(now >=0 && now <=2){
+                      tw = 1;
+                    }else if(now >=3 && now <=5){
+                      tw = 2;
+                    }else if(now >=6 && now <=8){
+                      tw = 3;
+                    }else if(now >=9 && now <=11){
+                      tw = 4;
+                    }
+                    $("#type").val("Tambah")
+                    $('select[name="cari_tahun"] option[value=0]').attr("selected","selected");
+                    $('select[name="cari_unit_kerja"] option[value="{{$units}}"]').attr("selected","selected");
+                    $('select[name="cari_tw_dari"] option[value='+tw+']').attr("selected","selected");
+                    $('select[name="cari_tw_ke"] option[value='+tw+']').attr("selected","selected");
+                    $('form[id="filterPelaporan"]').submit();
+                    
+                    @else
+                    url = "{{url('pelaporan/tambah/'.$type.'/'.$kategori.'/-1') }}";
+                    window.location.href = url;
+                    @endif
+                    
                   }
 
 
