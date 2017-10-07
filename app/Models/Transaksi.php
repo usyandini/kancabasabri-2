@@ -10,7 +10,7 @@ class Transaksi extends Model
 
     protected $table = 'transaksi';
 
-    // protected $dateFormat = 'Y-m-d H:i:s';
+    protected $dateFormat = 'Y-m-d H:i:s';
     protected $dates = ['dob'];
 
     protected $fillable = [
@@ -33,6 +33,11 @@ class Transaksi extends Model
     public function stat()
     {
         return $this->hasMany('App\Models\BatchStatus', 'batch_id', 'batch_id');
+    }
+
+    public function batch()
+    {
+        return $this->belongsTo('App\Models\Batch', 'batch_id', 'id');
     }
 
     public function latestStat()
