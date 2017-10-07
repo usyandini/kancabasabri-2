@@ -3,6 +3,8 @@
                   var item = m_anggaran = subpos = mainaccount = account_field = date_field = anggaran_field = actual_anggaran = null;
                   var tempIdCounter = totalRows = 0;
                   var is_all_anggaran_safe = true;
+                  var berkas = {{ count($berkas) }}
+                  var empty_batch = {{ $empty_batch ? 'true' : 'false' }}
                   var editableStat = {{ $editable ? 1 : 0 }};
 
                   $(document).ready(function() {
@@ -300,10 +302,34 @@
                             name: "total", 
                             align: "left",
                             width: 200, 
-                            type: "number", 
+                            type: "text", 
                             title: "Jumlah Diajukan (IDR)",
+                            insertTemplate: function() {
+                              var result = jsGrid.fields.text.prototype.insertTemplate.call(this)
+                              result.on("keyup", function() {
+                                var nilai = validDigits($(this).val());
+                                var val = addCommas(nilai);
+                                $(result).val(val)
+                              })
+                              return result
+                            },
                             itemTemplate: function(value) {
-                              return "<b>IDR " + parseInt(value).toLocaleString() + ",00</b>";
+                              var nilai = validDigits(value);
+                              value = addCommas(nilai);
+                              return "<b>IDR " + value + ",00</b>";
+                            },
+                            editTemplate: function(value) {
+                              var nilai = validDigits(value);
+                              var val = addCommas(nilai);
+                              var result = jsGrid.fields.text.prototype.editTemplate.call(this)
+                              $(result).val(val)
+
+                              result.on("keyup", function() {
+                                nilai = validDigits($(this).val());
+                                val = addCommas(nilai);
+                                $(result).val(val)
+                              })
+                              return result 
                             },
                             valdiate: {
                               validator: "min",
@@ -360,7 +386,7 @@
                                 tmp = data;
                             }
                         });
-                        if (type == 'item' && tmp.length == 1) {
+                        if (type == 'item' && tmp.length == 1 && !empty_batch) {
                             toastr.error("<b>Kombinasi Account</b> tidak ditemukan sama sekali untuk cabang dan/atau divisi anda.", "Kombinasi Account diperlukan.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:10e3});
                         }
                         return tmp;
@@ -402,7 +428,7 @@
                     var rx=  /(\d+)(\d{3})/;
                     return String(n).replace(/^\d+/, function(w){
                       while(rx.test(w)){
-                        w= w.replace(rx, '$1.$2');
+                        w= w.replace(rx, '$1,$2');
                       }
                       return w;
                     });
@@ -410,10 +436,10 @@
 
                   function validDigits(n, dec){
                     n= n.replace(/[^\d]+/g, '');
-                    var ax1= n.indexOf('.'), ax2= -1;
+                    var ax1= n.indexOf(','), ax2= -1;
                     if(ax1!= -1){
                       ++ax1;
-                      ax2= n.indexOf('.', ax1);
+                      ax2= n.indexOf(',', ax1);
                       if(ax2> ax1) n= n.substring(0, ax2);
                       if(typeof dec=== 'number') n= n.substring(0, ax1+dec);
                     }
@@ -470,12 +496,12 @@
                   };
 
                   function checkBatchSubmit() {
-                    if (totalRows > 0 && is_all_anggaran_safe) {
+                    if (totalRows > 0 && is_all_anggaran_safe && berkas > 0) {
                       $('#xSmall').modal()
                     } else if(!is_all_anggaran_safe) {
                       toastr.error("Anggaran yang bersangkutan tidak mencukupi untuk disubmit. Terima kasih.", "Peringatan Anggaran", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:10e3});                      
                     } else {
-                      toastr.error("Silahkan input data yang hendak disubmit. Terima kasih.", "Data tidak boleh kosong", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:10e3});                      
+                      toastr.error("Silahkan input <b>data dan berkas</b> yang hendak disubmit. Terima kasih.", "Data tidak boleh kosong", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:10e3});                      
                     }
                   };
 

@@ -21,7 +21,6 @@ trait BudgetControlTrait
 		} else {
 			$transaksi_date = new Carbon(str_replace(':AM', ' AM', $trans->tgl));
 		}
-
 		$currentHistory = $this->getHistory($transaksi_date, $trans->account);
 		
 		if (!$currentHistory) {

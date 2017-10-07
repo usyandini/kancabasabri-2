@@ -35,6 +35,11 @@ class Transaksi extends Model
         return $this->hasMany('App\Models\BatchStatus', 'batch_id', 'batch_id');
     }
 
+    public function batch()
+    {
+        return $this->belongsTo('App\Models\Batch', 'batch_id', 'id');
+    }
+
     public function latestStat()
     {
         $check = $this->hasOne('App\Models\BatchStatus', 'batch_id', 'batch_id')->limit(1)->orderBy('id', 'desc')->first();

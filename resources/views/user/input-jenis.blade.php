@@ -225,12 +225,12 @@
                                         <div class="col-md-4 col-sm-4">
                                           <div class="form-group">
                                             @foreach($divisi as $div)
-                                              @if($div->VALUE!="00")
+                                              {{-- @if($div->VALUE!="00") --}}
                                               <fieldset>
                                                 <input type="checkbox" name="perizinan[unit_{{'00'.$div->VALUE}}]" {{ isset(old('perizinan')['unit_00'.$div->VALUE]) ? 'checked=""' : '' }}>
-                                                <label>{{$div->DESCRIPTION}}</label>
+                                                <label>{{$div->VALUE != "00" ? $div->DESCRIPTION : "Non Divisi"}}</label>
                                               </fieldset>
-                                              @endif
+                                              {{-- @endif --}}
                                             @endforeach
                                           </div>
                                         </div>
