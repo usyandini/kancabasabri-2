@@ -489,7 +489,7 @@ class TransaksiController extends Controller
     // Report ralisasi anggaran
     public function realisasi()
     {
-        $cabang = KantorCabang::get();
+        $cabang = KantorCabang::where('VALUE','<>','00')->get();
 
         return view('transaksi.realisasi', [
             'cabang'    => $cabang,

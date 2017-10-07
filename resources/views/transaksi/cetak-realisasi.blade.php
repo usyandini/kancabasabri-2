@@ -29,7 +29,7 @@
   </style>
     <div id="header">
         <img src="{{ asset('app-assets/images/asabri-logo-kecil.png', $secure = null) }}" align="left">
-        <h3><center>LAPORAN ANGGARAN PT ASABRI (PERSERO)</center></h3>
+        <h3><center>LAPORAN REALISASI ANGGARAN PT ASABRI (PERSERO)</center></h3>
         <h3><center>{{ $cabangs->where('VALUE', $filters['cabang'])->first()['DESCRIPTION']}}</center></h3>
         <h4><center>Periode {{$start}} s.d. {{$end}} Th. {{$year}}</center></h4>
     </div>

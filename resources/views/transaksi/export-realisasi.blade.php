@@ -26,7 +26,7 @@
 	<div id="header">
 		<img src='<?php echo $_SERVER["DOCUMENT_ROOT"].'/app-assets/images/asabri-logo.png'; ?>' align="left" style="max-width: 132px;">
         <div="title">
-	        <h3><center>LAPORAN ANGGARAN PT ASABRI (PERSERO)</center></h3>
+	        <h3><center>LAPORAN REALISASI ANGGARAN PT ASABRI (PERSERO)</center></h3>
 	        <h3><center>{{ $cabangs->where('VALUE', $filters['cabang'])->first()['DESCRIPTION']}}</center></h3>
 	        <h4><center>Periode {{$start}} s.d. {{$end}} Th. {{$year}}</center></h4>
 	    </div>
