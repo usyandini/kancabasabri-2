@@ -15,6 +15,7 @@ use App\Models\Batch;
 use App\Models\BatchStatus;
 use App\Models\BerkasTransaksi;
 use App\Models\BudgetControl;
+use App\Models\StagingTransaksi;
 
 use Validator;
 use Carbon;
@@ -74,7 +75,6 @@ class TransaksiController extends Controller
         $empty_batch = $editable = true;
         
         $this->current_batch = ($batch_id == null) ? $this->current_batch : Batch::where('id', $batch_id)->first();
-        // dd($this->isAllAnggaranSafe($this->current_batch['id']));
         if ($this->current_batch) {
             $editable = $this->current_batch->isUpdatable();
             $berkas = BerkasTransaksi::where('batch_id', $this->current_batch['id'])->get();
@@ -467,4 +467,33 @@ class TransaksiController extends Controller
         session()->flash('success', true);
         return redirect()->back();   
     }      
+
+    public function insertStaging($batch_id)
+    {
+        $transaksi = Transaksi::where('batch_id', $batch_id)->get();
+
+        foreach ($transaksi as $trans) {
+            $input = [
+                'PIL_ACCOUNT'   => $trans->item,
+                'PIL_AMOUNT'    => $trans->total,
+                'PIL_BANK'      => $trans->akun_bank,
+                'PIL_DIVISI'    => $trans['batch']['divisi'],
+                // 'PIL_JOURNALNUM',
+                'PIL_KPKC'      => $trans['batch']['cabang'],
+                'PIL_MATAANGGARAN'  => $trans->mata_anggaran,
+                // 'PIL_PROGRAM',
+                'PIL_SUBPOS'    => $trans->sub_pos,
+                'PIL_TRANSDATE' => $trans->tgl,
+                'PIL_TXT'       => $trans->desc,
+                // 'PIL_VOUCHER',
+                // 'DATAAREADID',
+                // 'RECVERSION',
+                // 'PARTITION',
+                'RECID'         => $trans->id,
+                // 'PIL_TRANSACTIONID'
+            ];
+
+            StagingTransaksi::create($input);
+        }
+    }
 }
