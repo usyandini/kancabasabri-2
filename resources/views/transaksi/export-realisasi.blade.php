@@ -86,7 +86,7 @@
 	              <tr id="tf2">
 	                <td><center>TOTAL DROPPING PERIODE <br>{{$start}} s.d {{$end}} {{$year}}</br></center></td>
 	                <td align="right">{{ number_format($tmp_realisasi, 2, ',','.') }}</td>
-	                <td colspan="2"></td>
+	                <td colspan="2" style="border-bottom:none; border-right:none"></td>
 	              </tr>
 	            </tbody>
 	    	</table>

@@ -4,20 +4,7 @@
 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/tables/datatable/dataTables.bootstrap4.min.css') }}">
 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/tables/extensions/responsive.dataTables.min.css') }}">
 <body onload="window.print()">
-<style>
-        body {
-            font-family: Arial;
-        }
-        table {
-            border-collapse: collapse;
-        }
-        th {
-            background-color: #cccccc;
-        }
-        th, td {
-            border: 1px solid #000;
-        }
-    </style>
+
 @if(count($a))
 @foreach($a as $bb)
 <?php 							
@@ -106,11 +93,23 @@
 				?>
 				@endforeach
 			    @endif
-				
-			                  <h2><center>Form Laporan Tindak Lanjut Pengawasan Internal</center></h2></br>
-                              <b> Unit Kerja : {{ $bb->unitkerja}} </b></br>
-                              <b> Tanggal Mulai : {{ $tgls }} {{ $bulans }} {{ $tahuns }} </b></br>
-                              <b> Durasi : {{ $bb->durasi }} Hari </b></br>
+			                  <h2><center><img src="{{ asset('app-assets/images/asabri-logo.png', $secure = null) }}" width="6%" align="middle" hspace="1%">
+			                  @if ($bb->internal=='1')
+			                  Form Laporan Tindak Lanjut Pengawasan Internal
+			                  @else
+			                  Form Laporan Tindak Lanjut Pengawasan Eksternal
+			                  @endif
+			                  </center></h2></br>
+			                  <table>
+			                  <tr>
+			                  <td><b> Unit Kerja </b></td><td><b> : </b></td><td><b>{{ $bb->unitkerja}}</b></td>
+			                  </tr>
+			                  <tr>
+                              <td><b> Tanggal Mulai </b></td><td><b> : </b></td><td><b>{{ $tgls }} {{ $bulans }} {{ $tahuns }} </b></td>
+                              </tr>
+                              <tr>
+                              <td><b> Durasi </b></td><td><b> : </b></td><td><b>{{ $bb->durasi }} Hari </b></td>
+                              </tr>
                                 <?php 
                                 $id1=$bb->id1;
                                 $ab1= DB::table('tl_temuan')
@@ -136,23 +135,49 @@
 						        	 	$ab4="0";
 						        	 }
                                 ?>
-                                	<b>Total Temuan : {{$ab1}}</b></br>
-                                	<b>Total Rekomendasi : </b></td><td><b>{{$ab2}}</b></br>
-                                	<b>Dalam Proses : {{$ab3}}</b></br>
-                                	<b>Selesai : {{$ab4}}</b></br>
+                                	<tr>
+                                	<td><b>Total Temuan </b></td><td><b> : </b></td><td><b>{{$ab1}}</b></td>
+                                	</tr>
+                                	<tr>
+                                	<td><b>Total Rekomendasi </b></td><td><b> : </b></td><td><b>{{$ab2}}</b></td>
+                                	</tr>
+                                	<tr>
+                                	<td><b>Dalam Proses </b></td><td><b> : </b></td><td><b>{{$ab3}}</b></td>
+                                	</tr>
+                                	<tr>
+                                	<td><b>Selesai </b></td><td><b> : </b></td><td><b>{{$ab4}}</b></td>
+                                	</tr>
+                                	</table>
                                 	
 							<br>
-								<table class="table table-striped table-bordered datatable-select-inputs nowrap" cellspacing="0" width="100%">
+							<style>
+							        body {
+							            font-family: Arial;
+							        }
+							        .classtable {
+							            border-collapse: collapse;
+							        }
+							        .classth {
+							            background-color: #cccccc;
+							            border: 1px solid #000;
+							            padding: 15px;
+							        }
+							        .classtd {
+							            border: 1px solid #000;
+							            padding: 15px;
+							        }
+							</style>
+								<table class="classtable">
 			                        <thead>
 			                          <tr>
-			                            <th class="bg-success bg-lighten-2" id="filterable"><center>No</center></th>
-			                            <th class="bg-success bg-lighten-2" id="filterable"><center>Unit Kerja</center></th>
-			                            <th class="bg-danger bg-lighten-2" id="filterable"><center>Temuan</center></th>
-			                            <th class="bg-warning bg-lighten-2" id="filterable"><center>Rekomendasi</center></th>
-			                            <th class="bg-info bg-lighten-2" id="filterable"><center>Tindak Lanjut</center></th>
-			                            <th class="bg-info bg-lighten-2" id="filterable"><center>Berkas</center></th>
-			                            <th class="bg-info bg-lighten-2" id="filterable"><center>Status</center></th>
-			                            <th class="bg-info bg-lighten-2" id="filterable"><center>Keterangan</center></th>
+			                            <th class="classth"><center>No</center></th>
+			                            <th class="classth"><center>Unit Kerja</center></th>
+			                            <th class="classth"><center>Temuan</center></th>
+			                            <th class="classth"><center>Rekomendasi</center></th>
+			                            <th class="classth"><center>Tindak Lanjut</center></th>
+			                            <th class="classth"><center>Berkas</center></th>
+			                            <th class="classth"><center>Status</center></th>
+			                            <th class="classth"><center>Keterangan</center></th>
 			                          </tr>
 			                        </thead>
 			                        <tbody>
@@ -163,40 +188,40 @@
 					                @if(count($a))
 								    @foreach($a as $b)
 								    <tr>
-			                        			<td><center>
+			                        			<td class="classtd"><center>
 			                        			@if ($longkap != $b->unitkerja)
 												{{$no}}
 												@endif
 			                        			</center></td>
-			                        			<td><center>
+			                        			<td class="classtd"><center>
 			                        			@if ($longkap != $b->unitkerja) 
 			                        			{{ $b->unitkerja }}
 			                        			@endif
 			                        			</center></td>
-			                        			<td><center>
+			                        			<td class="classtd">
 			                        			@if ($longkap2 != $b->temuan) 
 				                           			{{ $b->temuan }}
 				                           		@endif
-				                           		</center></td>
-			                        			<td><center>
+				                           		</td>
+			                        			<td class="classtd">
 			                        			@if ($longkap3 != $b->rekomendasi) 
 					                           			{{ $b->rekomendasi }}
 					                           	@endif
-					                            </center></td>
-			                        			<td><center>
+					                            </td>
+			                        			<td class="classtd">
 			                        			@if ($b->rekomendasi!="")
 			                        			{{ $b->tindaklanjut }}
 					                           	@endif
-				                           		</center></td>
-				                           		<td><center>@if ($b->tindaklanjut!="")
+				                           		</td>
+				                           		<td class="classtd"><center>@if ($b->tindaklanjut!="")
 				                           			@if ($b->name=="") Tidak Ada
 				                           				@else 
 				                           					{{ $b->name }}</a>
 				                           				@endif
 				                           			@endif</center></td>
-			                        			<td><center>@if ($b->status=='1') Dalam Proses @endif
+			                        			<td class="classtd"><center>@if ($b->status=='1') Dalam Proses @endif
 			                        				@if ($b->status=='2') Selesai @endif</center></td>
-			                        			<td><center>{{ $b->keterangan }}</center></td>
+			                        			<td class="classtd"><center>{{ $b->keterangan }}</center></td>
 			                        			</tr>
 			                        				
 				                	<?php $longkap = $b->unitkerja;

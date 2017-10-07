@@ -183,13 +183,22 @@ Route::group(['middleware' => 'auth'], function() {
 		
 	});
 
+	Route::group(['prefix' => 'tindaklanjutex'], function(){
+		Route::resource('/', 'TindaklanjutController@unitkerjaex');
+		Route::post('/store_unitkerjaex', 'TindaklanjutController@store_unitkerjaex');
+		Route::get('/tindaklanjutext/{id1}', 'TindaklanjutController@tindaklanjutext');
+		Route::get('/tindaklanjuteksternal', 'TindaklanjutController@tindaklanjuteksternal');
+		Route::get('/myform/{unitkerja}', 'TindaklanjutController@myformAjaxtindaklanjut');
+		
+	});
+
 	Route::group(['prefix' => 'tindaklanjut'], function(){
-		Route::resource('/', 'TindaklanjutController');
-		Route::post('/store_temuan/{id1}', 'TindaklanjutController@store_temuan');
+		Route::get('/', 'TindaklanjutController@tindaklanjutmaster');
+		Route::post('/store_temuan', 'TindaklanjutController@store_temuan');
 		Route::post('/update_temuan/{id1}', 'TindaklanjutController@update_temuan');
-		Route::post('/store_rekomendasi/{id2}', 'TindaklanjutController@store_rekomendasi');
+		Route::post('/store_rekomendasi', 'TindaklanjutController@store_rekomendasi');
 		Route::post('/update_rekomendasi/{id2}', 'TindaklanjutController@update_rekomendasi');
-		Route::post('/store_tindaklanjut/{id3}', 'TindaklanjutController@store_tindaklanjut');
+		Route::post('/store_tindaklanjut', 'TindaklanjutController@store_tindaklanjut');
 		Route::post('/update_tindaklanjut/{id3}', 'TindaklanjutController@update_tindaklanjut');
 		Route::post('/update_unitkerja/{id1}', 'TindaklanjutController@update_unitkerja');
 		Route::get('/delete_unitkerja/{id1}', 'TindaklanjutController@delete_unitkerja');
@@ -197,10 +206,21 @@ Route::group(['middleware' => 'auth'], function() {
 		Route::get('/delete_rekomendasi/{id3}', 'TindaklanjutController@delete_rekomendasi');
 		Route::get('/delete_tindaklanjut/{id4}', 'TindaklanjutController@delete_tindaklanjut');
 		Route::get('/download/{id4}', 'TindaklanjutController@downloadberkas');
+		Route::get('/lihat/{id4}', 'TindaklanjutController@lihatberkas');
 		Route::get('/tindaklanjut/{id1}', 'TindaklanjutController@tindaklanjut');
 		Route::get('/export/{id1}', 'TindaklanjutController@export_tindaklanjut');
 		Route::get('/print/{id1}', 'TindaklanjutController@print_tindaklanjut');
+		Route::get('/kirim/{id1}', 'TindaklanjutController@kirim_tindaklanjut');
+		Route::get('/myform/{unitkerja}', 'TindaklanjutController@myformAjaxunitkerja');
 		
 	});
+
+	Route::group(['prefix' => 'tindaklanjutinternal'], function(){
+		Route::get('/', 'TindaklanjutController@tindaklanjutinternal');
+		Route::get('/myform/{unitkerja}', 'TindaklanjutController@myformAjax');
+		Route::get('/kirim2/{id1}', 'TindaklanjutController@kirim_tindaklanjut2');
+		
+	});
+	// Route::get('myform/ajax/{unitkerja}',array('as'=>'myform.ajax','uses'=>'TindaklanjutController@myformAjax'));
 });
 

@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class ChangecolumntlTindaklanjut2 extends Migration
+class AddColumnTlTanggalKe2 extends Migration
 {
     /**
      * Run the migrations.
@@ -12,8 +12,9 @@ class ChangecolumntlTindaklanjut2 extends Migration
      */
     public function up()
     {
-        Schema::table('tl_tindaklanjut', function(Blueprint $table) {
-            $table->longtext('data')->change();
+        //
+         Schema::table('tl_tanggal', function(Blueprint $table) {
+            $table->date('tgl_input')->nullable();
         });
     }
 
@@ -24,8 +25,9 @@ class ChangecolumntlTindaklanjut2 extends Migration
      */
     public function down()
     {
-        Schema::table('tl_tindaklanjut', function(Blueprint $table) {
-            $table->string('data')->change();
+        //
+        Schema::table('tl_tanggal', function(Blueprint $table) {
+            $table->dropColumn(['tgl_input']);
         });
     }
 }

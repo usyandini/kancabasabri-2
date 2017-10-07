@@ -61,13 +61,13 @@
 
                	<div class="content-header row">
                     <div class="content-header-left col-md-12 col-xs-12 mb-2">
-                        <h3 class="content-header-title mb-0">Laporan Tindak Lanjut Pengawasan Internal</h3>
+                        <h3 class="content-header-title mb-0">Laporan Tindak Lanjut Pengawasan Eksternal</h3>
                         <div class="row breadcrumbs-top">
                             <div class="breadcrumb-wrapper col-xs-12">
                                 <ol class="breadcrumb">
-                                    <li class="breadcrumb-item active"><a href="{{ url('/unitkerja') }}">Manajemen Tindak Lanjut</a>
+                                    <li class="breadcrumb-item active"><a href="{{ url('/tindaklanjutex') }}">Manajemen Tindak Lanjut Eksternal</a>
                                     </li>
-                                    <li class="breadcrumb-item active"><a href="#">Laporan Tindak Lanjut Pengawasan Internal</a>
+                                    <li class="breadcrumb-item active"><a href="#">Laporan Tindak Lanjut Pengawasan Eksternal</a>
                                     </li>
                                 </ol>
                             </div>
@@ -85,11 +85,11 @@
 			                  	<div class="card-body collapse in">
 			                  	
 			                  		<table>
-			                  		<form enctype="multipart/form-data" role="form" action="{{ URL('tindaklanjut') }}" method="GET" >
+			                  		<form enctype="multipart/form-data" role="form" action="{{ URL('tindaklanjutex/tindaklanjuteksternal') }}" method="GET" >
 				                    {{ csrf_field() }}
 			                  			<tr>
 			                  				<td><b>Unit Kerja</b></td><td>  </td><td><b> : </b></td><td>  </td>
-			                  				<td><select class="form-control" name="unitkerja" style="width:300px" id="unitkerja" onchange="changeUnit()" required="required">
+			                  				<td><select class="form-control" name="unitkerja" id="unitkerja" onchange="changeUnit()">
                                                     <option value="0"> - Pilih Unit Kerja - </option>
                                                     <?php
                                                     $second="SELECT * FROM (SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_DIVISI] WHERE VALUE!='00') AS A UNION ALL SELECT * FROM (SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_KPKC]  WHERE VALUE!='00') AS B";
@@ -105,11 +105,11 @@
 			                  			</tr>
 			                  			<tr>
 			                  				<td><b>Tanggal Mulai</b></td><td>  </td><td><b> : </b></td><td>  </td>
-			                  				<td><select name="tgl_mulai" class="form-control" required="required"></select></td>
+			                  				<td><select name="tgl_mulai" class="form-control" style="width:300px" required="required"></select></td>
 			                  				<script type="text/javascript">
 											    function changeUnit(){
 										    		var unitkerja = $('#unitkerja').val();
-									                var uri = "{{ url('tindaklanjut/myform').'/'}}"+ encodeURI(unitkerja);
+									                var uri = "{{ url('tindaklanjutex/myform').'/'}}"+ encodeURI(unitkerja);
 
 									                $.ajax({
 								                        'async': false, 
@@ -128,14 +128,12 @@
 											                        	$('select[name="tgl_mulai"]').append('<option value="'+ value +'">'+ tanggal +' '+ bulana +' '+ tahun +'</option>');
 											                        	//$('select[name="tgl_mulai"]').append('<option value="'+ value +'">'+ value +'</option>');
 											                        });
+								                             
 								                        }
 								                    });
 										    	}
 											</script>
 											
-			                  			</tr>
-			                  			<tr>
-			                  				<td>  </td>
 			                  			</tr>
 			                  			<tr>
 			                  				<td>  </td>
@@ -315,30 +313,7 @@
 							<div class="col-xs-12">
 								<table align="right">
 									<tr>	
-			                      	@if ($ab2)	
-			                      		@if ($bb->kirim=='1') <td><span><a class="btn btn-primary btn-lighten-4 pull-right" data-target="#kirim" data-toggle="modal"><i class="fa fa-send"></i> <b>Kirim</b></a></span></td><td> </td><td> </td> 
-			                      		<div class="modal fade" data-backdrop="static" id="kirim" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-		                                    <div class="modal-dialog">
-		                                        <div class="modal-content">
-		                                            <div class="modal-header">
-		                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-		                                                <center><h4 class="modal-title text-primary" id="myModalLabel" ><i class="fa fa-send"></i> Dialog Konfirmasi</h4></center>
-		                                            </div>
-		                                        	<div class="modal-body">
-		                                            	<center><h4>Anda yakin ingin mengirim temuan dan rekomendasi <br>ke unit kerja <span class=text-info>{{ $bb->unitkerja }}</span> ?</h4></center>
-		                                        	</div>
-		                                        	<div class="modal-footer">
-		                                           	 	<a href="{{ URL('tindaklanjut/kirim/'. $bb->id1) }}"" class="btn btn-success btn-sm"><i class="fa fa-check"></i> Ya</a>
-		                                        		<button type="button" class="btn btn-danger btn-sm" data-dismiss="modal"><i class="fa fa-times"></i> Tidak</button>
-		                                        	</div>
-		                                    	</div>
-		                                	</div>
-		                                </div>
-			                      		@elseif ($bb->kirim=='2') <td><span><a class="btn btn-primary btn-lighten-4" disabled><b>Temuan dan Rekomendasi telah dikirim ke unit kerja {{$bb->unitkerja}}</b></a></span></td><td> </td><td> </td>
-			                      		@else <td><span><a class="btn btn-primary btn-lighten-4" disabled><b>Tindak Lanjut telah dikirim oleh unit kerja {{$bb->unitkerja}}</b></a></span></td><td> </td><td> </td> 
-			                      		@endif
-									@endif
-									@if ($ab5)	
+			                      	@if ($ab5)	
 										<td><span><a href="{{ URL('tindaklanjut/export/'. $bb->id1) }}" class="btn btn-success pull-right" target="_blank"><i class="fa fa-file-excel-o"></i> <b> Export to Excel </b></a></span></td><td> </td><td> </td>
 										<td><span><a href="{{ URL('tindaklanjut/print/'. $bb->id1) }}" class="btn btn-success pull-right" target="_blank"><i class="fa fa-print"></i> <b> Print </b></a></span></td>
 			                		@endif
@@ -368,7 +343,7 @@
 			                            <th id="filterable"><center>Berkas Tindak Lanjut</center></th>
 			                            <th id="filterable"><center>Status</center></th>
 			                            <th id="filterable"><center>Keterangan</center></th>
-			                            <th><center>Aksi</center></th>
+			                            <th><center>Aksi Tindak Lanjut</center></th>
 			                          </tr>
 			                        </thead>
 			                        <tbody>
@@ -379,7 +354,7 @@
 					                @if(count($a))
 								    @foreach($a as $b)
 								    		<tr>
-												<td><center>
+			                        			<td><center>
 			                        			@if ($longkap != $b->unitkerja)
 												{{$no}}
 												@endif
@@ -391,54 +366,53 @@
 			                        			</td>
 			                        			<td>
 			                        			@if ($b->temuan=="")
-			                        				@if ($b->kirim!='3')
-			                        					<center><span><a class="btn btn-success btn-sm" data-target="#tambahtemuan{{$b->id1}}" data-toggle="modal"><i class="fa fa-plus"></i> <b>Tambah Temuan</b></a></span></center>
-			                        				@endif
-			                        			@else
+			                        			<center><span><a class="btn btn-success btn-sm" data-target="#tambahtemuan{{$b->id1}}" data-toggle="modal"><i class="fa fa-plus"></i> <b>Tambah Temuan</b></a></span></center>
+			                        				
+				                           		@else
 				                           			@if ($longkap2 != $b->temuan) 
-				                           			  @if ($b->kirim!='3')
 				                           				{{ $b->temuan }}<br>
 				                           				<span data-toggle='tooltip' title='Tambah Temuan'><a class="btn btn-success btn-sm" data-target="#tambahtemuan{{$b->id2}}" data-toggle="modal"><i class="fa fa-plus"></i> </a></span>
 				                           				<span data-toggle='tooltip' title='Ubah Temuan'><a class="btn btn-info btn-sm" data-target="#ubahtemuan{{$b->id2}}" data-toggle="modal"><i class="fa fa-edit"></i> </a></span>
                                         				@if ($b->rekomendasi=="")
                                         				<span data-toggle='tooltip' title='Hapus Temuan'><a class="btn btn-danger btn-sm" data-target="#hapustemuan{{$b->id2}}" data-toggle="modal"><i class="fa fa-trash"></i> </a></span>
 				                           				@endif
-				                           			  @else
-				                           			  	{{ $b->temuan }}
-				                           			  @endif
 				                           			@endif
 				                           		@endif
 				                           		</td>
 			                        			<td>
 			                        			@if ($b->temuan!="")
 			                        				@if ($b->rekomendasi=="")
-			                        					@if ($b->kirim!='3')
-				                        				<center><span><a class="btn btn-success btn-sm" data-target="#tambahrekomendasi{{$b->id2}}" data-toggle="modal"><i class="fa fa-plus"></i> <b>Tambah Rekomendasi</b></a></span></center>
-				                        				@endif
+				                        			<center><span><a class="btn btn-success btn-sm" data-target="#tambahrekomendasi{{$b->id2}}" data-toggle="modal"><i class="fa fa-plus"></i> <b>Tambah Rekomendasi</b></a></span></center>
+				                        			
 					                           		@else
 						                           		@if ($longkap3 != $b->rekomendasi) 
-							                           		@if ($b->kirim!='3')
-							                           			{{ $b->rekomendasi }}<br>
-							                           			<span data-toggle='tooltip' title='Tambah Rekomendasi'><a class="btn btn-success btn-sm" data-target="#tambahrekomendasi{{$b->id3}}" data-toggle="modal"><i class="fa fa-plus"></i> </a></span>
-							                           			<span data-toggle='tooltip' title='Ubah Rekomendasi'><a class="btn btn-info btn-sm" data-target="#ubahrekomendasi{{$b->id3}}" data-toggle="modal"><i class="fa fa-edit"></i> </a></span>
-		                                        				@if ($b->tindaklanjut=="")
-		                                        				<span data-toggle='tooltip' title='Hapus Rekomendasi'><a class="btn btn-danger btn-sm" data-target="#hapusrekomendasi{{$b->id3}}" data-toggle="modal"><i class="fa fa-trash"></i> </a></span>
-						                           				@endif
-						                           			@else
-						                           				{{ $b->rekomendasi }}
-						                           			@endif
+					                           			{{ $b->rekomendasi }}<br>
+					                           			<span data-toggle='tooltip' title='Tambah Rekomendasi'><a class="btn btn-success btn-sm" data-target="#tambahrekomendasi{{$b->id3}}" data-toggle="modal"><i class="fa fa-plus"></i> </a></span>
+					                           			<span data-toggle='tooltip' title='Ubah Rekomendasi'><a class="btn btn-info btn-sm" data-target="#ubahrekomendasi{{$b->id3}}" data-toggle="modal"><i class="fa fa-edit"></i> </a></span>
+	                                        				@if ($b->tindaklanjut=="")
+	                                        				<span data-toggle='tooltip' title='Hapus Rekomendasi'><a class="btn btn-danger btn-sm" data-target="#hapusrekomendasi{{$b->id3}}" data-toggle="modal"><i class="fa fa-trash"></i> </a></span>
+					                           				@endif
 					                           			@endif
 					                           		@endif
 				                           		@endif
 				                           		</td>
 			                        			<td>
-					                           		{{ $b->tindaklanjut }}
-					                           	</td>
+			                        			@if ($b->rekomendasi!="")
+			                        				@if ($b->tindaklanjut=="")
+				                        			<center><span><a class="btn btn-success btn-sm" data-target="#tambahtindaklanjut{{$b->id3}}" data-toggle="modal"><i class="fa fa-plus"></i> <b>Tambah Tindak Lanjut</b></a></span></center>
+				                        			@else
+					                           		{{ $b->tindaklanjut }}<br>
+					                           		<span data-toggle='tooltip' title='Tambah Tindak Lanjut'><a class="btn btn-success btn-sm" data-target="#tambahtindaklanjut{{$b->id4}}" data-toggle="modal"><i class="fa fa-plus"></i> </a></span>
+					                           		@endif
+				                           		@endif
+				                           		</td>
 				                           		<td><center>
 				                           			@if ($b->tindaklanjut!="")
 				                           				@if ($b->name=="") Tidak Ada
 				                           				@else 
-				                           					<a href="{{ URL('tindaklanjut/download/'. $b->id4) }}">{{ $b->name }}</a>
+				                           					{{ $b->name }}<br>
+				                           					<span data-toggle='tooltip' title='Lihat Dokumen'><a href="{{ URL('tindaklanjut/lihat/'. $b->id4) }}" class="btn btn-success btn-sm" target="_blank"><i class="fa fa-eye"></i> </a></span>
+				                           					<span data-toggle='tooltip' title='Download Dokumen'><a href="{{ URL('tindaklanjut/download/'. $b->id4) }}" class="btn btn-info btn-sm" target="_blank"><i class="fa fa-download"></i> </a></span>
 				                           				@endif
 				                           			@endif</center></td>
 			                        			<td><center>
@@ -446,10 +420,9 @@
 			                        				@if ($b->status=='2') <div class="tag tag-primary label-square"><span>Selesai</span></div> @endif</center></td>
 			                        			<td>{{ $b->keterangan }}</td>
 			                        			<td><center>
-			                        			@if ($b->tindaklanjut!="")	
-			                        				@if ($b->kirim=='3')										
-													<span data-toggle='tooltip' title='Proses Tindak Lanjut'><a class="btn btn-info btn-sm" data-target="#ubahtindaklanjut{{$b->id4}}" data-toggle="modal"><i class="fa fa-edit"></i></a></span>
-                                        			@endif
+			                        			@if ($b->tindaklanjut!="")											
+													<span data-toggle='tooltip' title='Ubah Tindak Lanjut'><a class="btn btn-info btn-sm" data-target="#ubahtindaklanjut{{$b->id4}}" data-toggle="modal"><i class="fa fa-edit"></i></a></span>
+                                        			<span data-toggle='tooltip' title='Hapus Tindak Lanjut'><a class="btn btn-danger btn-sm" data-target="#hapustindaklanjut{{$b->id4}}" data-toggle="modal"><i class="fa fa-trash"></i></a></span>
                                         		@endif</center></td>
 			                        			</tr>
 			                        				<div class="modal fade" data-backdrop="static" id="tambahtemuan{{$b->id1}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -544,8 +517,82 @@
 				                							</div>
 				                						</div>
 				                					</div>
-				                					
-				                					
+				                					<div class="modal fade" data-backdrop="static" id="tambahtindaklanjut{{$b->id3}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				                                        <div class="modal-dialog">
+				                                            <div class="modal-content">
+				                                                <div class="modal-header">
+				                                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><center>
+				                                                    <center><h4 class="modal-title text-success" id="myModalLabel" ><i class="fa fa-plus"></i> Tambah Tindak Lanjut</h4></center>
+				                                                </div>
+				                                                <form enctype="multipart/form-data" role="form" action="{{ URL('tindaklanjut/store_tindaklanjut') }}" method="POST" >
+				                                                 {{ csrf_field() }}
+				                                                <div class="modal-body">
+				                                                <input type="hidden" name="id3" value="{{$b->id3}}" />
+				                                                <label class="control-label"><b> Tindak Lanjut </b></label>
+				                                                <label class="control-label"><b> : </b></label>
+				                                                	<textarea class="form-control" name="tindaklanjut" rows="3" required="required" placeholder="masukkan tindaklanjut"></textarea>
+															    <br>
+															    <label class="control-label"><b> Dokumen </b></label>
+				                                                <label class="control-label"><b> : </b></label>
+															        <input class="form-control" type="file" name="inputs"/>
+															    <br>    
+															    <label class="control-label"><b> Status </b></label>
+				                                                <label class="control-label"><b> : </b></label>
+				                                                	<select class="select form-control" name="status" required="required" />
+								                                    <option value="1">Dalam Proses</option>
+																	<option value="2">Selesai</option>                                                  
+								                                    </select>
+															    <br>
+															    <label class="control-label"><b> Keterangan </b></label>
+				                                                <label class="control-label"><b> : </b></label>
+															        <textarea class="form-control" name="keterangan" rows="3" placeholder="masukkan keterangan"></textarea>
+															    </div>
+				                                            	<div class="modal-footer">
+				                                                <button type="submit" name="save" class="btn btn-sm btn-primary"><i class="fa fa-check "></i> Tambah</button>
+				                                                <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal"><i class="fa fa-times"></i> Batal</button>
+				                                            	</div>
+				                                            	</form>
+				                							</div>
+				                						</div>
+				                					</div>
+				                					<div class="modal fade" data-backdrop="static" id="tambahtindaklanjut{{$b->id4}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				                                        <div class="modal-dialog">
+				                                            <div class="modal-content">
+				                                                <div class="modal-header">
+				                                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><center>
+				                                                    <center><h4 class="modal-title text-success" id="myModalLabel" ><i class="fa fa-plus"></i> Tambah Tindak Lanjut</h4></center>
+				                                                </div>
+				                                                <form enctype="multipart/form-data" role="form" action="{{ URL('tindaklanjut/store_tindaklanjut') }}" method="POST" >
+				                                                 {{ csrf_field() }}
+				                                                <div class="modal-body">
+				                                                <input type="hidden" name="id3" value="{{$b->id3}}" />
+				                                                <label class="control-label"><b> Tindak Lanjut </b></label>
+				                                                <label class="control-label"><b> : </b></label>
+															        <textarea class="form-control" name="tindaklanjut" rows="3" required="required" placeholder="masukkan tindaklanjut"></textarea>
+															    <br>
+															    <label class="control-label"><b> Dokumen </b></label>
+				                                                <label class="control-label"><b> : </b></label>
+															        <input class="form-control" type="file" name="inputs"/>
+															    <br>    
+															    <label class="control-label"><b> Status </b></label>
+				                                                <label class="control-label"><b> : </b></label>
+				                                                	<select class="select form-control" name="status" required="required" />
+								                                    <option value="1">Dalam Proses</option>
+																	<option value="2">Selesai</option>                                                  
+								                                    </select>
+															    <br>
+															    <label class="control-label"><b> Keterangan </b></label>
+				                                                <label class="control-label"><b> : </b></label>
+															        <textarea class="form-control" name="keterangan" rows="3" placeholder="masukkan keterangan"></textarea>
+															    </div>
+				                                            	<div class="modal-footer">
+				                                                <button type="submit" name="save" class="btn btn-sm btn-primary"><i class="fa fa-check "></i> Tambah</button>
+				                                                <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal"><i class="fa fa-times"></i> Batal</button>
+				                                            	</div>
+				                                            	</form>
+				                							</div>
+				                						</div>
+				                					</div>
 			                        				<div class="modal fade" data-backdrop="static" id="ubahtemuan{{$b->id2}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 				                                        <div class="modal-dialog">
 				                                            <div class="modal-content">
@@ -602,19 +649,17 @@
 				                                                <form enctype="multipart/form-data" role="form" action="{{ URL('tindaklanjut/update_tindaklanjut/'. $b->id3) }}" method="POST" >
 				                                                 {{ csrf_field() }}
 				                                                <input type="hidden" name="id4" value="{{$b->id4}}" />
-				                                                <input type="hidden" name="tindaklanjut" value="{{$b->tindaklanjut}}" />
 				                                                <div class="modal-body">
 				                                                <label class="control-label"><b> Tindak Lanjut </b></label>
 				                                                <label class="control-label"><b> : </b></label>
-															        <textarea class="form-control" rows="3" required="required" placeholder="masukkan tindak lanjut" disabled="disabled">{{ $b->tindaklanjut }}</textarea>
+															        <textarea class="form-control" name="tindaklanjut" rows="3" required="required" placeholder="masukkan tindak lanjut">{{ $b->tindaklanjut }}</textarea>
 															    <br>
 															    <label class="control-label"><b> Dokumen </b></label>
 				                                                <label class="control-label"><b> : </b></label>
-															        @if ($b->name!="") 
-															        <input class="form-control" type="text" disabled="disabled" value="{{ $b->name }}"/>
-															    	@else
-															    	Tidak ada
-															    	@endif
+															        <input class="form-control" type="file" name="inputs"/>
+															        @if ($b->name!="")
+															        <p class="help-block">*Kosongkan jika tidak ingin mengganti berkas.</br> Berkas Lama = {{ $b->name }}.</p>
+															        @endif
 															    <br>
 															    <label class="control-label"><b> Status </b></label>
 				                                                <label class="control-label"><b> : </b></label>

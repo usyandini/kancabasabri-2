@@ -169,8 +169,8 @@
                             <li class="nav-item has-sub {{ checkOpenedMenu('tindaklanjut') }}"><a href=""><span data-i18n="" class="menu-title">Tindak Lanjut Temuan</span></a>
                             <ul class="menu-content">
                                 <li class="is-shown {{ checkActiveMenu('unitkerja') }}"><a href="{{ url('/unitkerja', $parameters = [], $secure = null) }}" class="menu-item">Manajemen Unit Kerja</a>
-                                <!-- <li class="is-shown {{ checkActiveMenu('temuandanrekomendasiin') }}"><a href="{{ url('/temuandanrekomendasiin', $parameters = [], $secure = null) }}" class="menu-item">Tindak Lanjut Internal</a>
-                                <li class="is-shown {{ checkActiveMenu('temuandanrekomendasieks') }}"><a href="{{ url('/temuandanrekomendasieks', $parameters = [], $secure = null) }}" class="menu-item">Tindak Lanjut Eksternal</a> -->
+                                <li class="is-shown {{ checkActiveMenu('tindaklanjutinternal') }}"><a href="{{ url('/tindaklanjutinternal', $parameters = [], $secure = null) }}" class="menu-item">Tindak Lanjut Internal</a>
+                                <li class="is-shown {{ checkActiveMenu('tindaklanjutex') }}"><a href="{{ url('/tindaklanjutex', $parameters = [], $secure = null) }}" class="menu-item">Tindak Lanjut Eksternal</a>
                             </ul>
                             @endcan
                             @can('form_master')
@@ -228,7 +228,7 @@
                         @endcan
                         
                     </ul>
-                    
+
                     @endif
                 </ul>
             </div>
