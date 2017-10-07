@@ -11,7 +11,9 @@
 			margin-right:auto;
 		}
 		td, th{
-        	border: 1px solid #000;			
+        	border: 1px solid #000;
+        	margin:auto;
+        	padding:5px;			
 		}
         th {
             background-color: #cccccc;
@@ -26,7 +28,7 @@
 	<div id="header">
 		<img src='<?php echo $_SERVER["DOCUMENT_ROOT"].'/app-assets/images/asabri-logo.png'; ?>' align="left" style="max-width: 132px;">
         <div="title">
-	        <h3><center>LAPORAN ANGGARAN PT ASABRI (PERSERO)</center></h3>
+	        <h3><center>LAPORAN REALISASI ANGGARAN PT ASABRI (PERSERO)</center></h3>
 	        <h3><center>{{ $cabangs->where('VALUE', $filters['cabang'])->first()['DESCRIPTION']}}</center></h3>
 	        <h4><center>Periode {{$start}} s.d. {{$end}} Th. {{$year}}</center></h4>
 	    </div>
@@ -63,11 +65,11 @@
 	              @foreach($transaksi as $trans)
 	              <tr>
 	                <td style="padding-left:20px;" width="35%">{{$no++}}) {{$items->where('SEGMEN_1',$trans->item)->first()['nama_item']}}</td>
-	                <td align="right" width="20%">Rp. {{ number_format($trans->anggaran, 2, ',','.') }}</td>
+	                <td align="right" width="20%">{{ number_format($trans->anggaran, 2, ',','.') }}</td>
 	                <?php $total_real = $trans->total; ?>
-	                <td align="right" width="20%">Rp. {{ number_format($total_real, 2, ',','.') }}</td>
+	                <td align="right" width="20%">{{ number_format($total_real, 2, ',','.') }}</td>
 	                <?php $sisa_angg = ($trans->anggaran - $total_real);?>
-	                <td align="right" width="25%">Rp. {{ number_format($sisa_angg, 2, ',','.') }}</td>
+	                <td align="right" width="25%">{{ number_format($sisa_angg, 2, ',','.') }}</td>
 	              </tr>
 	              <?php 
 	                $tmp_anggaran = $tmp_anggaran + $trans->anggaran;
@@ -77,14 +79,14 @@
 	              @endforeach
 	              <tr id="tf1">
 	                <td><center>JUMLAH</center></td>
-	                <td align="right">Rp. {{ number_format($tmp_anggaran, 2, ',','.') }}</td>
-	                <td align="right">Rp. {{ number_format($tmp_realisasi, 2, ',','.') }}</td>
-	                <td align="right">Rp. {{ number_format($tmp_sisa, 2, ',','.') }}</td>
+	                <td align="right">{{ number_format($tmp_anggaran, 2, ',','.') }}</td>
+	                <td align="right">{{ number_format($tmp_realisasi, 2, ',','.') }}</td>
+	                <td align="right">{{ number_format($tmp_sisa, 2, ',','.') }}</td>
 	              </tr>
 	              <tr id="tf2">
 	                <td><center>TOTAL DROPPING PERIODE <br>{{$start}} s.d {{$end}} {{$year}}</br></center></td>
-	                <td align="right">Rp. {{ number_format($tmp_realisasi, 2, ',','.') }}</td>
-	                <td colspan="2"></td>
+	                <td align="right">{{ number_format($tmp_realisasi, 2, ',','.') }}</td>
+	                <td colspan="2" style="border-bottom:none; border-right:none"></td>
 	              </tr>
 	            </tbody>
 	    	</table>

@@ -61,7 +61,10 @@
                                     <select class="select2 form-control" name="cabang" required>
                                       <option selected disabled>Pilih cabang</option>
                                       @foreach($cabang as $cab)
-                                      <option value="{{ $cab->VALUE }}" {{ $filters['cabang'] == $cab->VALUE ? 'selected=""' : '' }}>{{ $cab->DESCRIPTION }}</option>
+                                      {{ $id = $cab->VALUE."00" }}
+                                        @if(Gate::check("unit_".$id) )
+                                        <option value="{{ $cab->VALUE }}" {{ $filters['cabang'] == $cab->VALUE ? 'selected=""' : '' }}>{{ $cab->DESCRIPTION }}</option>
+                                        @endif
                                       @endforeach
                                     </select>
                                   </div>
