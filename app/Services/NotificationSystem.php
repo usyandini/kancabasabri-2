@@ -184,17 +184,11 @@ class NotificationSystem
         $array_type = static::checkArrayTypes();
         
         if(count($array_type) == 0) { return null; }
-        return Notification::where('receiver_id', \Auth::user()->id)
-                        ->orWhereNull('receiver_id')
-                        ->whereIn('type',$array_type)
+        return Notification::whereIn('type',$array_type)
                         ->orderBy('id', 'desc')
-                        ->get();
-        // $notifications = Notification::where('type', $array_type[0]);
-        // if(count($array_type) > 1 ){
-        //     for($i=1;$i<count($array_type);$i++){
-        //         $notifications=$notifications->orWhere('type', $array_type[$i]);
-        //     }
-        // }
+                        ->get()->filter(function($notif) {
+                            return $notif->receiver_id == \Auth::user()->id || $notif->receiver_id == null; 
+                        });
 	}
 
 	public static function markAsRead($id)
@@ -202,16 +196,35 @@ class NotificationSystem
 		Notification::where('id', $id)->update(['is_read' => 1]);
 	}
 
+    public static function markAllAsRead()
+    {
+        $notif = static::getAll();
+        foreach ($notif as $not) {
+            static::markAsRead($not->id);
+        }
+    } 
+
+    public static function deleteAll()
+    {
+        $notif = static::getAll();
+        foreach ($notif as $not) {
+            Notification::where('id', $not->id)->delete();
+        }
+    }
+
 	public static function getUnreads($receiver_id = null)
 	{
 	    $array_type = static::checkArrayTypes();	
         if(count($array_type) == 0) { return null; }
         
-        return Notification::where('is_read',0)
-                        ->where('receiver_id', \Auth::user()->id)
+        return Notification::where('receiver_id', \Auth::user()->id)
                         ->orWhereNull('receiver_id')
                         ->whereIn('type',$array_type)
                         ->orderBy('id', 'desc')
-                        ->get();
+                        ->get()->filter(function($notif) {
+                            $isread = $notif->is_read != 1 ? true : false;
+                            $receiver = $notif->receiver_id == \Auth::user()->id || $notif->receiver_id == null;
+                            return $isread && $receiver;
+                        });
 	}
 }

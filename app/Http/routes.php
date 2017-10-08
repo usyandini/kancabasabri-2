@@ -21,8 +21,9 @@ Route::group(['middleware' => 'auth'], function() {
 	Route::get('notification/', 'NotificationController@get');
 	Route::get('notification/redirect/{id}', 'NotificationController@redirect');
 	Route::get('notification/read_all/', 'NotificationController@read_all');
+	Route::get('notification/mark_all', 'NotificationController@markAllAsRead');
+	Route::get('notification/del_all', 'NotificationController@deleteAll');
 	Route::get('/dashboard', 'DashboardController@index');
-
 
 	Route::group(['prefix' => 'dropping'], function() {
 		Route::resource('/', 'DroppingController');
