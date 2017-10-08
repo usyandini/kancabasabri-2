@@ -225,25 +225,31 @@ class TransaksiController extends Controller
         $return = null;
         switch ($type) {
             case 'item':
-            $header = ['MAINACCOUNTID' => '-1', 'NAME' => 'Silahkan Pilih'];
-            $return = $this->itemModel->get(['MAINACCOUNTID', 'NAME'])->filter(function($item) {
-                return $item->kombinasiAvailable(\Auth::user()->cabang, \Auth::user()->divisi);
-            });
-            $return->prepend($header);
-            break;
+                $header = ['MAINACCOUNTID' => '-1', 'NAME' => 'Silahkan Pilih Barang/Jasa'];
+                $return = $this->itemModel->get(['MAINACCOUNTID', 'NAME'])->filter(function($item) {
+                    return $item->kombinasiAvailable(\Auth::user()->cabang, \Auth::user()->divisi);
+                });
+                $return->prepend($header);
+                break;
             case 'bank':
-            $return = $this->bankModel->get();
-            break;       
+                $header = ['BANK' => '-1', 'BANK_NAME' => 'Silahkan Pilih Bank'];
+                $KAS = ['BANK' => 'KAS KC/KCP', 'BANK_NAME' => 'KAS KC/KCP'];
+                $return = $this->bankModel->get(['BANK','BANK_NAME','ID_CABANG'])->filter(function($bank) {
+                    return $bank->isAccessibleByCabang();
+                });
+                $return->prepend($KAS);
+                $return->prepend($header);
+                break;       
             case 'subpos':
-            $header = ['VALUE' => '-1', 'DESCRIPTION' => 'Auto Generate dari Account'];
-            $return = $this->subPosModel->get(['VALUE', 'DESCRIPTION']);
-            $return->prepend($header);
-            break;
+                $header = ['VALUE' => '-1', 'DESCRIPTION' => 'Auto Generate dari Account'];
+                $return = $this->subPosModel->get(['VALUE', 'DESCRIPTION']);
+                $return->prepend($header);
+                break;
             case 'kegiatan':
-            $header = ['VALUE' => '-1', 'DESCRIPTION' => 'Auto Generate dari Account'];
-            $return = $this->kegiatanModel->get(['VALUE', 'DESCRIPTION']);
-            $return->prepend($header);
-            break;
+                $header = ['VALUE' => '-1', 'DESCRIPTION' => 'Auto Generate dari Account'];
+                $return = $this->kegiatanModel->get(['VALUE', 'DESCRIPTION']);
+                $return->prepend($header);
+                break;
         }
         return response()->json($return);
     }

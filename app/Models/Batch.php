@@ -76,10 +76,10 @@ class Batch extends Model
 
     public function isAccessibleByUnitKerja()
     {
-        $divisi = 'unit_'.$this->divisi.'00';
+        $divisi = 'unit_00'.$this->divisi;
         $cabang = 'unit_'.$this->cabang.'00';
         
-        return \Auth::user()->hasAccess($divisi) && \Auth::user()->hasAccess($cabang) ? true : false;
+        return \Auth::user()->hasAccess($divisi) && \Auth::user()->hasAccess($cabang);
     }
 
     public function canReported()
