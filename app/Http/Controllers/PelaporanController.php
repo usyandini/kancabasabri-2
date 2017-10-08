@@ -39,6 +39,7 @@ class PelaporanController extends Controller
         $this->BerkasFormItemMasterModel = $BerkasFormItemMaster;
         $this->userCabang = \Auth::user()->cabang;
         $this->userDivisi = \Auth::user()->divisi;
+
         
     }
 
@@ -55,7 +56,8 @@ class PelaporanController extends Controller
         $filter = array('cari_tahun' => $request->cari_tahun,
                 'unit_kerja' =>$request->cari_unit_kerja,
                 'cari_tw_dari' =>$request->cari_tw_dari,
-                'cari_tw_ke' =>$request->cari_tw_ke
+                'cari_tw_ke' =>$request->cari_tw_ke,
+                'type' => $request->type
             );
         // }
         $query="SELECT * 
@@ -73,6 +75,11 @@ class PelaporanController extends Controller
         }else if($kategori == "usulan_program"){
             $sub_title = "Usulan Program Prioritas";
         }
+
+        $unit = \Auth::user()->kantorCabang()['DESCRIPTION'];
+        if($this->userCabang == "00"){
+            $unit = \Auth::user()->divisi()['DESCRIPTION'];
+        }
         
 
         return view('pelaporan.informasi', [
@@ -81,9 +88,7 @@ class PelaporanController extends Controller
             'kategori'=>$kategori,
             'unit_kerja'=>$unit_kerja,
             'type' => $type,
-            'filters'=>$filter,
-            'userCabang' =>$this->userCabang,
-            'userDivisi' =>$this->userDivisi,
+            'units'  =>$unit,
             'filters' => $filter]);
     }
 
@@ -107,18 +112,21 @@ class PelaporanController extends Controller
                     UNION ALL 
                     SELECT * FROM (SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_KPKC]  
                     WHERE VALUE!='00') AS B";
-        
 
         $unit_kerja = \DB::select($query);
+
+        $unit = \Auth::user()->kantorCabang()['DESCRIPTION'];
+        if($this->userCabang == "00"){
+            $unit = \Auth::user()->divisi()['DESCRIPTION'];
+        }
+
         return view('pelaporan.informasi', [
             'title' => $sub_title,
             'sub_title' => '',
             'kategori'=>$kategori,
             'unit_kerja'=>$unit_kerja,
             'type' => $type,
-            'filters'=>$filter,
-            'userCabang' =>$this->userCabang,
-            'userDivisi' =>$this->userDivisi,
+            'units' =>$unit,
             'filters' => $filter]);
     }
 
@@ -347,7 +355,7 @@ class PelaporanController extends Controller
             'filters' => $filter]);
     }
 
-    public function tambah($type,$kategori) 
+    public function tambah($type,$kategori,$id) 
     {
 
         $filter = null;
@@ -358,7 +366,7 @@ class PelaporanController extends Controller
                     'status'        =>"Tambah",
                     'jenis_berkas'  =>"1",
                     'kategori'      =>$kategori,
-                    'id_form_master'=>-1,
+                    'id_form_master'=>$id,
                     'table'         => true
 
             );
@@ -390,14 +398,14 @@ class PelaporanController extends Controller
         $beda =  true;
         if($type == 'item'){
             // echo count($this->check_tambah($kategori,0));
-            if(count($this->check_tambah($kategori,0))>0){
+            if(count($this->check_tambah($id,0))>0){
                 session()->flash('back', 'Unit Kerja Anda Telah mengisi '.$sub_title.'. Silahkan Melakukan pencarian jika ingin merubah sebelum waktu pengajuan berakhir');
                 session()->flash('title', $sub_title." telah tersedia");
                 return redirect('pelaporan/informasi/item/'.$kategori);
             }  
 
 
-            if(count($this->check_tambah($kategori,1))==0){
+            if(count($this->check_tambah($id,1))==0){
                 session()->flash('back', 'Unit Kerja Renbang belum membuat Form Master '.$sub_title.'. Silahkan Hubungi Unit Kerja Renbang.');
                 session()->flash('title', "Form Master ".$sub_title." belum tersedia");
                 return redirect('pelaporan/informasi/item/'.$kategori);
@@ -409,8 +417,8 @@ class PelaporanController extends Controller
             $date_now = date("Y-m-d");
             $date_mulai;
             $date_selesai;
-            if(count($this->check_tambah($kategori,1))>0){
-                $form = $this->check_tambah($kategori,1);
+            if(count($this->check_tambah($id,1))>0){
+                $form = $this->check_tambah($id,1);
                 foreach ($form as $row) {
                     $date_mulai = $row->tanggal_mulai;
                     $date_selesai = $row->tanggal_selesai;
@@ -723,18 +731,21 @@ class PelaporanController extends Controller
             $query = $query->whereYear('created_at', '=', $tahun);
             
         }
-        $query = $query->where('tw_dari','<=',$tw_dari)->orWhere('tw_ke','<=',$tw_ke);
+        // $query = $query->where('tw_dari','<=',$tw_dari)->orWhere('tw_ke','<=',$tw_ke);
         $is_template = 1;
         if($type == "item"){
             $is_template = 0;
         }
-        $query = $query->where('kategori',$kategori)->where('is_template', $is_template)->orderBy('updated_at','DESC');
-        // echo count($query->get()); 
+
+        $query = $query-> where(function ($query) use ($tw_dari,$tw_ke){
+                                $query->where('tw_dari','<=',$tw_dari)
+                                      ->orWhere('tw_ke','<=',$tw_ke);
+                            })->where('kategori',$kategori)->where('is_template',$is_template)->orderBy('updated_at','DESC');
+         
         if($decode_unit !="0"){
             foreach ($query->get() as $row) {
                 $hasil;
                 if($kategori == 'laporan_anggaran'){
-                    // echo 'laporan_anggaran';
                     $hasil = $this->MasterItemPelaporanAnggaranModel
                         ->where('id_form_master', $row->id)->where('unit_kerja', $decode_unit)->get();
                 }else if($kategori == 'arahan_rups'){
@@ -745,23 +756,34 @@ class PelaporanController extends Controller
                 }else if($kategori == 'usulan_program'&&$is_template == 0){
                     $hasil = ItemUsulanProgram::where('id_form_master', $row->id)->where('unit_kerja', $decode_unit)->get();
                 }
-                if(count($hasil)>0){
-                    foreach ($hasil as $itm) {
-                        if($is_template == "1")
-                            $unit_kerja = "Master";
-                        else
-                            $unit_kerja = $itm['unit_kerja'];
-                        $result[] = [
-                            'id'                => $row->id,
-                            'created_at'        => $row->created_at,
-                            'tw_dari'           => $row->tw_dari,
-                            'tw_ke'             => $row->tw_ke,
-                            'unit_kerja'        => $unit_kerja
-                            
-                        ];
-                        break;
+                if(isset($hasil)){
+                    if(count($hasil)>0){
+                        foreach ($hasil as $itm) {
+                            if($is_template == "1")
+                                $unit_kerja = "Master";
+                            else
+                                $unit_kerja = $itm['unit_kerja'];
+                            $result[] = [
+                                'id'                => $row->id,
+                                'created_at'        => $row->created_at,
+                                'tw_dari'           => $row->tw_dari,
+                                'tw_ke'             => $row->tw_ke,
+                                'unit_kerja'        => $unit_kerja
+                                
+                            ];
+                            break;
+                        }
+                        
                     }
-                    
+                }else{
+                    $result[] = [
+                        'id'                => $row->id,
+                        'created_at'        => $row->created_at,
+                        'tw_dari'           => $row->tw_dari,
+                        'tw_ke'             => $row->tw_ke,
+                        'unit_kerja'        => "Master"
+                        
+                    ];
                 }
             }
         }else{
@@ -789,8 +811,6 @@ class PelaporanController extends Controller
                 }else if($kategori == 'usulan_program'&&$is_template == 0){
                     $hasil = ItemUsulanProgram::where('id_form_master', $row->id)->whereIn('unit_kerja', $unit)->get();
                 }
-                // if($hasil['unit_kerja']!=null)
-                //     $item[]=['unit_kerja'=>$hasil['unit_kerja']];
                 if(isset($hasil)){
                     if(count($hasil)>0){
                         foreach ($hasil as $itm) {
@@ -804,7 +824,6 @@ class PelaporanController extends Controller
                                 'tw_dari'           => $row->tw_dari,
                                 'tw_ke'             => $row->tw_ke,
                                 'unit_kerja'        => $unit_kerja
-                                
                             ];
                             break;
                         }
@@ -826,7 +845,7 @@ class PelaporanController extends Controller
         return response()->json($result);
     }
 
-    public function getDataFormMaster($kategori,$type){
+    public function getDataFormMaster($kategori,$type,$id){
         $tw = 0;
         if(date('n')>=1&&date('n')<=3){
             $tw = 1;
@@ -852,42 +871,42 @@ class PelaporanController extends Controller
             } 
         }
 
-        // echo $kategori;
         if($type == "0"){
-            $FormMaster = $this->FormMasterPelaporanModel->
+            $FormMaster;
+            if($kategori != "usulan_program"){
+                $FormMaster = $this->FormMasterPelaporanModel->where('id',$id);
+            }else {
+                $FormMaster = $this->FormMasterPelaporanModel->
                                 where(function ($query) use ($tw){
                                     $query->where('tw_dari', $tw)
                                           ->orWhere('tw_ke', $tw);
                                 })->where('kategori',$kategori)->where('is_template','1');
-            
-            $ItemMaster;
-            foreach ($FormMaster->get() as $form_master) {
-                if($kategori == "arahan_rups"){
-                    $Item = $this->MasterItemPelaporanAnggaranModel
-                        ->where('id_form_master', $form_master->id)->where('unit_kerja', $userUnit);
-                    if(count($Item)>0){
-                        $ItemMaster = $Item;
-                    }
-                }else if($kategori == "arahan_rups"){
-                    $Item = $this->MasterItemArahanRUPSModel
-                        ->where('id_form_master', $form_master->id)->where('unit_kerja', $userUnit);
-                    if(count($Item)>0){
-                        $ItemMaster = $Item;
-                    }
-                }
+            }
 
-            }
-            $result = null;
-            if(count($ItemMaster)>0||$kategori == 'usulan_program'){
+            // $ItemMaster;
+            // foreach ($FormMaster->get() as $form_master) {
+            //     if($kategori == "arahan_rups"){
+            //         $Item = $this->MasterItemPelaporanAnggaranModel
+            //             ->where('id_form_master', $form_master->id)->where('unit_kerja', $userUnit);
+            //         if(count($Item)>0){
+            //             $ItemMaster = $Item;
+            //         }
+            //     }else if($kategori == "arahan_rups"){
+            //         $Item = $this->MasterItemArahanRUPSModel
+            //             ->where('id_form_master', $form_master->id)->where('unit_kerja', $userUnit);
+            //         if(count($Item)>0){
+            //             $ItemMaster = $Item;
+            //         }
+            //     }
+
+            // }
+            // $result = null;
+            // if(count($ItemMaster)>0||$kategori == 'usulan_program'){
                 $result = $FormMaster->get();
-            }
+            // }
 
         }else if($kategori == "laporan_anggaran"&&$type=="1"){
-            $FormMaster = $this->FormMasterPelaporanModel->
-                                where(function ($query) use ($tw){
-                                    $query->where('tw_dari', $tw)
-                                          ->orWhere('tw_ke', $tw);
-                                })->where('kategori',$kategori)->where('is_template','1');
+            $FormMaster = $this->FormMasterPelaporanModel->where('id',$id);
             foreach ($FormMaster->get() as $form_master) {
 
                 $ItemPelaporanAnggaran = $this->MasterItemPelaporanAnggaranModel
@@ -927,11 +946,7 @@ class PelaporanController extends Controller
                 }  
             }
         }else if($kategori == "arahan_rups" && $type=="1"){
-            $FormMaster = $this->FormMasterPelaporanModel->
-                                where(function ($query) use ($tw){
-                                    $query->where('tw_dari', $tw)
-                                          ->orWhere('tw_ke', $tw);
-                                })->where('kategori',$kategori)->where('is_template','1');
+            $FormMaster = $this->FormMasterPelaporanModel->where('id',$id);
             // echo count($FormMaster);
             foreach ($FormMaster->get() as $form_master) {
 
@@ -1159,7 +1174,6 @@ class PelaporanController extends Controller
                     $string2 = "AND (".$string2.")";
                 }
 
-                // echo $string1;
                 $second="SELECT * 
                     FROM (SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_DIVISI] 
                     WHERE VALUE!='00' ".$string2.") AS A 
@@ -1203,7 +1217,7 @@ class PelaporanController extends Controller
     }
 
 
-    public function check_tambah($kategori,$type){
+    public function check_tambah($id,$type){
         $tw = 0;
         if(date('n')>=1&&date('n')<=3){
             $tw = 1;
@@ -1228,38 +1242,31 @@ class PelaporanController extends Controller
             } 
         }
 
-        $FormMaster = $this->FormMasterPelaporanModel->
-                                where(function ($query) use ($tw){
-                                    $query->where('tw_dari', $tw)
-                                          ->orWhere('tw_ke', $tw);
-                                })->where('kategori',$kategori)->where('is_template',$type);
+        $FormMaster;
+        if($type == "1"){
+            $FormMaster = $this->FormMasterPelaporanModel->where('id',$id)->get();
+        }else{
+            $FormMaster = $this->FormMasterPelaporanModel->where('id_master',$id)->get();
+            foreach ($FormMaster as $row) {
+                $ItemLA = MasterItemPelaporanAnggaran::where('id_form_master',$row->id)->get();
+                $ItemAR = MasterItemArahanRUPS::where('id_form_master',$row->id)->get();
+                $ItemUP = ItemUsulanProgram::where('id_form_master',$row->id)->get();
+                if(count($ItemLA)==0){
+                    $FormMaster = null;
+                }
+                if(count($ItemAR)==0){
+                    $FormMaster = null;
+                }
+                if(count($ItemUP)==0){
+                    $FormMaster = null;
+                }
+            }   
+        }
 
         $result = null;
-        // echo count($FormMaster->get());
-        // echo $type;
-        if(count($FormMaster->get())>0){
-            $Item = null;
-            foreach ($FormMaster->get() as $form_master) {
-                if($kategori == "laporan_anggaran"){
-                    $Item = $this->MasterItemPelaporanAnggaranModel
-                        ->where('id_form_master', $form_master->id)->where('unit_kerja', $userUnit)
-                        ->where('is_template',$type)->get();
-                    
-                    // echo count($ItemMaster);
-                }else if($kategori == "arahan_rups"){
-                    $Item = $this->MasterItemArahanRUPSModel
-                        ->where('id_form_master', $form_master->id)->where('unit_kerja', $userUnit)
-                        ->where('is_template',$type)->get();
-                    
-                }
-                // echo count($kategori);
-            }
-            if(count($Item)>0||$kategori == 'usulan_program'){
-                $result = $FormMaster->get();
-                // $result = $ItemPelaporanAnggaran;
-            }else{
-                $result = null;
-            }
+
+        if(count($FormMaster)>0){
+            $result = $FormMaster;
         }
 
         return $result;

@@ -99,8 +99,6 @@ Route::group(['middleware' => 'auth'], function() {
 		Route::get('/riwayat/', 'AnggaranController@riwayat');
 		Route::post('/riwayat/', 'AnggaranController@riwayat');
 		Route::post('/cari/', 'AnggaranController@cari');
-		Route::get('/removeAnggaran/', 'AnggaranController@removeAnggaranAll');
-		Route::get('/activeFileListAnggaran/', 'AnggaranController@activeFileListAnggaranAll');
 		Route::post('/submit/tambah', 'AnggaranController@store');
 
 	});
@@ -118,12 +116,12 @@ Route::group(['middleware' => 'auth'], function() {
 		Route::get('/usulan_program_prioritas', 'PelaporanController@usulan_program_prioritas');
 		Route::get('/tambah_usulan_program', 'PelaporanController@tambah_usulan_program_prioritas');
 		Route::get('/edit_usulan_program/{id}', 'PelaporanController@edit_usulan_program_prioritas');
-		Route::get('/tambah/{type}/{kategori}', 'PelaporanController@tambah');
+		Route::get('/tambah/{type}/{kategori}/{id}', 'PelaporanController@tambah');
 		Route::get('/removeFormMaster', 'PelaporanController@removeFormMasterAll');
 		Route::get('/get/filtered/{type}/{id}/{kategori}', 'PelaporanController@getFiltered');
 		Route::get('/get/attributes/{type}/{id}', 'PelaporanController@getAttributes');
-		Route::get('/get/check/{kategori}/{type}', 'PelaporanController@check_tambah');
-		Route::get('/get/filteredMaster/{kategori}/{type}', 'PelaporanController@getDataFormMaster');
+		Route::get('/get/check/{id}/{type}', 'PelaporanController@check_tambah');
+		Route::get('/get/filteredMaster/{kategori}/{type}/{id}', 'PelaporanController@getDataFormMaster');
 		Route::get('/get/filteredPelaporan/{type}/{kategori}/{tahun}/{tw_dari}/{tw_ke}/{unit_kerja}', 'PelaporanController@getFilteredPelaporan');
 		Route::get('/get/download/{id}', 'PelaporanController@unduh_file');
 		
