@@ -138,7 +138,6 @@ class TransaksiController extends Controller
         $berkas = $history = [];
         $jsGrid_url = 'transaksi';
         $active_batch = Batch::where('id', $batch_id)->first();
-        
         if ($active_batch) {
             $editable = $active_batch->isUpdatable();
             $berkas = BerkasTransaksi::where('batch_id', $active_batch['id'])->get();
@@ -273,337 +272,332 @@ class TransaksiController extends Controller
                 'created_at'    => \Carbon\Carbon::now(),
                 'updated_at'    => \Carbon\Carbon::now()];
 
-                if (isset($value->isNew)) {
-                    unset($store_values['id']);
-                    array_push($batch_insert, $store_values);
-                } elseif (isset($value->toBeDeleted)) {
-                    array_push($batch_delete, $value->id);
-                } else {
-                    array_push($batch_update, $store_values);
-                }
+            if (isset($value->isNew)) {
+                unset($store_values['id']);
+                array_push($batch_insert, $store_values);
+            } elseif (isset($value->toBeDeleted)) {
+                array_push($batch_delete, $value->id);
+            } else {
+                array_push($batch_update, $store_values);
             }
-            
-            $accounts = \DB::select("SELECT 
-                DATEPART(YEAR, tgl) as year, DATEPART(MONTH, tgl) as month, account FROM dbo.transaksi 
-                WHERE batch_id = ". $batch_id.
-                " GROUP BY DATEPART(YEAR, tgl), DATEPART(MONTH, tgl), account");
+        }
+        
+        $accounts = \DB::select("SELECT 
+            DATEPART(YEAR, tgl) as year, DATEPART(MONTH, tgl) as month, account FROM dbo.transaksi 
+            WHERE batch_id = ". $batch_id.
+            " GROUP BY DATEPART(YEAR, tgl), DATEPART(MONTH, tgl), account");
 
-            $this->doInsert($batch_insert);
-            $this->doUpdate($batch_update);
-            $this->doDelete($batch_delete);
-            $this->storeBerkas($request->berkas, $batch_id);
+        $this->doInsert($batch_insert);
+        $this->doUpdate($batch_update);
+        $this->doDelete($batch_delete);
+        $this->storeBerkas($request->berkas, $batch_id);
 
-            $batch_counter = array(
+        $batch_counter = array(
             count($batch_insert), // inserted items count
             count($batch_update), // updated items count
             count($batch_delete), // deleted items count
             $request->berkas[0] ? count($request->berkas) : 0 // berkas uploaded
         );
 
-            $this->doRefreshAnggaran($batch_id);
+        $this->doRefreshAnggaran($batch_id);
 
-            if (count($batch_delete) > 0 || count($batch_update) > 0) {
-                $this->resetCalibrateBecauseDeleteOrUpdate($accounts);
-            }
-
-            session()->flash('success', $batch_counter);
-            return redirect('transaksi/'.$batch_id);
+        if (count($batch_delete) > 0 || count($batch_update) > 0) {
+            $this->resetCalibrateBecauseDeleteOrUpdate($accounts);
         }
 
-        public function isAllAnggaranSafe($batch_id)
-        {
-            return Transaksi::where([['batch_id', $batch_id], ['is_anggaran_safe', 0]])->first() ? false : true;
-        }
+        session()->flash('success', $batch_counter);
+        return redirect('transaksi/'.$batch_id);
+    }
 
-        public function refreshAnggaran($batch_id)
-        {
-            $this->doRefreshAnggaran($batch_id);
-            return redirect()->back();
-        }
+    public function isAllAnggaranSafe($batch_id)
+    {
+        return Transaksi::where([['batch_id', $batch_id], ['is_anggaran_safe', 0]])->first() ? false : true;
+    }
 
-        public function doRefreshAnggaran($batch_id)
-        {
-            $accounts = \DB::select("SELECT 
-                DATEPART(YEAR, tgl) as year, DATEPART(MONTH, tgl) as month, account FROM dbo.transaksi 
-                WHERE batch_id = ". $batch_id.
-                " GROUP BY DATEPART(YEAR, tgl), DATEPART(MONTH, tgl), account");
+    public function refreshAnggaran($batch_id)
+    {
+        $this->doRefreshAnggaran($batch_id);
+        return redirect()->back();
+    }
 
-            foreach ($accounts as $account) {
-                if($this->calibrateSavePointAndActual($account)) {
-                    $transaksis = Transaksi::where('account', $account->account)->get();
-                    
-                    foreach ($transaksis as $transaksi) {
-                        $calibrate = $this->calibrateAnggaran($transaksi, false);
-                        if (count($calibrate) > 0) {
-                            Transaksi::where('id', $transaksi->id)->update($calibrate);
-                        }
+    public function doRefreshAnggaran($batch_id)
+    {
+        $accounts = \DB::select("SELECT 
+            DATEPART(YEAR, tgl) as year, DATEPART(MONTH, tgl) as month, account FROM dbo.transaksi 
+            WHERE batch_id = ". $batch_id.
+            " GROUP BY DATEPART(YEAR, tgl), DATEPART(MONTH, tgl), account");
+
+        foreach ($accounts as $account) {
+            if($this->calibrateSavePointAndActual($account)) {
+                $transaksis = Transaksi::where('account', $account->account)->get();
+                
+                foreach ($transaksis as $transaksi) {
+                    $calibrate = $this->calibrateAnggaran($transaksi, false);
+                    if (count($calibrate) > 0) {
+                        Transaksi::where('id', $transaksi->id)->update($calibrate);
                     }
                 }
             }
         }
+    }
 
-        public function submit(Request $request, $batch_id)
-        {
-            $update = $this->updateBatchStat($batch_id, 2);
+    public function submit(Request $request, $batch_id)
+    {
+        $update = $this->updateBatchStat($batch_id, 2);
 
-            NotificationSystem::send($batch_id, 1);
-            $batch = Batch::where('id', $batch_id)->first();
+        NotificationSystem::send($batch_id, 1);
+        $batch = Batch::where('id', $batch_id)->first();
 
-            session()->flash('success_submit', $batch->batchNo());
-            return redirect('transaksi/'.$batch_id);
+        session()->flash('success_submit', $batch->batchNo());
+        return redirect('transaksi/'.$batch_id);
+    }
+
+    public function doInsert($batch_insert)
+    {
+        if (count($batch_insert) > 0) {
+            Transaksi::insert($batch_insert);
         }
+    }
 
-        public function doInsert($batch_insert)
-        {
-            if (count($batch_insert) > 0) {
-                Transaksi::insert($batch_insert);
+    public function doUpdate($batch_update)
+    {
+        if (count($batch_update) > 0) {
+            foreach ($batch_update as $value) {
+                Transaksi::where('id', $value['id'])->delete();
+                unset($value['id']);
+                Transaksi::create($value);
+            }
+        }        
+    }
+
+    public function doDelete($batch_delete)
+    {
+        Transaksi::whereIn('id', $batch_delete)->delete();
+    }
+
+    public function storeBerkas($inputs, $current_batch)
+    {
+        if ($inputs[0] != null) {
+            $fileUpload = new FileUpload();
+            $store = $fileUpload->multipleBase64Upload($inputs);
+            foreach ($store as $key => $value) {
+                $value['batch_id'] = $current_batch;
+                BerkasTransaksi::insert($value);
             }
         }
+    }
 
-        public function doUpdate($batch_update)
-        {
-            if (count($batch_update) > 0) {
-                foreach ($batch_update as $value) {
-                    Transaksi::where('id', $value['id'])->delete();
-                    unset($value['id']);
-                    Transaksi::create($value);
-                }
-            }        
+    public function downloadBerkas($berkas_id)
+    {
+        $berkas = BerkasTransaksi::where('id', $berkas_id)->first();
+        $decoded = base64_decode($berkas->file);
+        $mime_type = explode('/', finfo_buffer(finfo_open(), $decoded, FILEINFO_MIME_TYPE)) ;
+        $file = $berkas->file_name.'.'.$mime_type[1];
+        file_put_contents($file, $decoded);
+
+        if (file_exists($file)) {
+            header('Content-Description: File Transfer');
+            header('Content-Type: application/octet-stream');
+            header('Content-Disposition: attachment; filename="'.basename($file).'"');
+            header('Expires: 0');
+            header('Cache-Control: must-revalidate');
+        // header('Pragma: public');
+            header('Content-Length: ' . filesize($file));
+            readfile($file);
+            exit;
         }
+    }
 
-        public function doDelete($batch_delete)
-        {
-            Transaksi::whereIn('id', $batch_delete)->delete();
-        }
+    public function removeBerkas(Request $request)
+    {
+        BerkasTransaksi::where('id', $request->file_id)->delete();
 
-        public function storeBerkas($inputs, $current_batch)
-        {
-            if ($inputs[0] != null) {
-                $fileUpload = new FileUpload();
-                $store = $fileUpload->multipleBase64Upload($inputs);
-                foreach ($store as $key => $value) {
-                    $value['batch_id'] = $current_batch;
-                    BerkasTransaksi::insert($value);
-                }
-            }
-        }
+        session()->flash('success_deletion', $request->file_name);
+        return redirect()->back();
+    }
 
-        public function downloadBerkas($berkas_id)
-        {
-            $berkas = BerkasTransaksi::where('id', $berkas_id)->first();
-            $decoded = base64_decode($berkas->file);
-            $mime_type = explode('/', finfo_buffer(finfo_open(), $decoded, FILEINFO_MIME_TYPE)) ;
-            $file = $berkas->file_name.'.'.$mime_type[1];
-            file_put_contents($file, $decoded);
+    // lvl 1
+    public function persetujuan($batch)
+    {
+        $berkas      = $history = [];
+        $jsGrid_url  = 'transaksi';
+        $empty_batch = $editable = false;
+        $valid_batch = Batch::where('id', $batch)->first();
 
-            if (file_exists($file)) {
-                header('Content-Description: File Transfer');
-                header('Content-Type: application/octet-stream');
-                header('Content-Disposition: attachment; filename="'.basename($file).'"');
-                header('Expires: 0');
-                header('Cache-Control: must-revalidate');
-            // header('Pragma: public');
-                header('Content-Length: ' . filesize($file));
-                readfile($file);
-                exit;
-            }
-        }
+        if ($valid_batch) {
+            $verifiable = $valid_batch->lvl1Verifiable();
+            $berkas     = BerkasTransaksi::where('batch_id', $valid_batch['id'])->get();
+            $history    = $this->getBatchHistory($valid_batch['id']);
+            $jsGrid_url = 'transaksi/get/batch/'.$valid_batch['id'];
+        } 
 
-        public function removeBerkas(Request $request)
-        {
-            BerkasTransaksi::where('id', $request->file_id)->delete();
+        return view('transaksi.persetujuan', [
+            'editable'      => false,
+            'verifiable'    => $verifiable,
+            'active_batch'  => $valid_batch,
+            'empty_batch'   => $empty_batch,
+            'berkas'        => $berkas,
+            'batch_history' => $history,
+            'jsGrid_url'    => $jsGrid_url,
+            'reject_reasons'    => RejectReason::where('type', 1)->get()]);
+    }   
 
-            session()->flash('success_deletion', $request->file_name);
+    // lvl 2
+    public function verifikasi($batch)
+    {
+        $berkas         = $history = [];
+        $jsGrid_url     = 'transaksi';
+        $empty_batch    = $editable = false;
+        $valid_batch    = Batch::where('id', $batch)->first();
+
+        if ($valid_batch) {
+            $verifiable = $valid_batch->lvl2Verifiable();
+            $berkas     = BerkasTransaksi::where('batch_id', $valid_batch['id'])->get();
+            $history    = $this->getBatchHistory($valid_batch['id']);
+            $jsGrid_url = 'transaksi/get/batch/'.$valid_batch['id'];
+        } 
+
+        return view('transaksi.verifikasi', [ 
+            'editable'      => false,
+            'verifiable'    => $verifiable,
+            'active_batch'  => $valid_batch,
+            'empty_batch'   => $empty_batch,
+            'berkas'        => $berkas,
+            'batch_history' => $history,
+            'jsGrid_url'    => $jsGrid_url,
+            'reject_reasons'    => RejectReason::where('type', 2)->get()]);
+    }
+
+    public function submitVerification($type, $batch_id, Request $request)
+    {
+        $this->doRefreshAnggaran($batch_id);
+        if (!$this->isAllAnggaranSafe($batch_id) && $request->is_approved) {
+            session()->flash('failed_safe', true);
             return redirect()->back();
         }
 
-    // lvl 1
-        public function persetujuan($batch)
-        {
-            $berkas      = $history = [];
-            $jsGrid_url  = 'transaksi';
-            $empty_batch = $editable = false;
-            $valid_batch = Batch::where('id', $batch)->first();
+        $input = $request->only('is_approved', 'reason');
+        $this->approveOrReject($type, $batch_id, $input);
 
-            if ($valid_batch) {
-                $verifiable = $valid_batch->lvl1Verifiable();
-                $berkas     = BerkasTransaksi::where('batch_id', $valid_batch['id'])->get();
-                $history    = $this->getBatchHistory($valid_batch['id']);
-                $jsGrid_url = 'transaksi/get/batch/'.$valid_batch['id'];
-            } 
+        NotificationSystem::send($batch_id, $type == 1 ? ($request->is_approved ? 3 : 2) : ($request->is_approved ? 6 : 5));
 
-            return view('transaksi.persetujuan', [
-                'editable'      => false,
-                'verifiable'    => $verifiable,
-                'active_batch'  => $valid_batch,
-                'empty_batch'   => $empty_batch,
-                'berkas'        => $berkas,
-                'batch_history' => $history,
-                'jsGrid_url'    => $jsGrid_url,
-                'reject_reasons'    => RejectReason::where('type', 1)->get()]);
-        }   
+        if ($type == 2 && $request->is_approved) { $this->insertStaging($batch_id); }
 
-    // lvl 2
-        public function verifikasi($batch)
-        {
-            $berkas         = $history = [];
-            $jsGrid_url     = 'transaksi';
-            $empty_batch    = $editable = false;
-            $valid_batch    = Batch::where('id', $batch)->first();
+        session()->flash('success', true);
+        return redirect()->back();   
+    }      
 
-            if ($valid_batch) {
-                $verifiable = $valid_batch->lvl2Verifiable();
-                $berkas     = BerkasTransaksi::where('batch_id', $valid_batch['id'])->get();
-                $history    = $this->getBatchHistory($valid_batch['id']);
-                $jsGrid_url = 'transaksi/get/batch/'.$valid_batch['id'];
-            } 
-
-            return view('transaksi.verifikasi', [ 
-                'editable'      => false,
-                'verifiable'    => $verifiable,
-                'active_batch'  => $valid_batch,
-                'empty_batch'   => $empty_batch,
-                'berkas'        => $berkas,
-                'batch_history' => $history,
-                'jsGrid_url'    => $jsGrid_url,
-                'reject_reasons'    => RejectReason::where('type', 2)->get()]);
-        }
-
-        public function submitVerification($type, $batch_id, Request $request)
-        {
-            $this->doRefreshAnggaran($batch_id);
-            if (!$this->isAllAnggaranSafe($batch_id) && $request->is_approved) {
-                session()->flash('failed_safe', true);
-                return redirect()->back();
-            }
-
-            $input = $request->only('is_approved', 'reason');
-            $this->approveOrReject($type, $batch_id, $input);
-
-            NotificationSystem::send($batch_id, $type == 1 ? ($request->is_approved ? 3 : 2) : ($request->is_approved ? 6 : 5));
-
-            session()->flash('success', true);
-            return redirect()->back();   
-        }      
-
-        public function insertStaging($batch_id)
-        {
-            $transaksi = Transaksi::where('batch_id', $batch_id)->get();
-
-            foreach ($transaksi as $trans) {
-                $input = [
-                    'PIL_ACCOUNT'   => $trans->item,
-                    'PIL_AMOUNT'    => $trans->total,
-                    'PIL_BANK'      => $trans->akun_bank,
-                    'PIL_DIVISI'    => $trans['batch']['divisi'],
-                // 'PIL_JOURNALNUM',
-                    'PIL_KPKC'      => $trans['batch']['cabang'],
-                    'PIL_MATAANGGARAN'  => $trans->mata_anggaran,
-                // 'PIL_PROGRAM',
-                    'PIL_SUBPOS'    => $trans->sub_pos,
-                    'PIL_TRANSDATE' => $trans->tgl,
-                    'PIL_TXT'       => $trans->desc,
-                // 'PIL_VOUCHER',
-                // 'DATAAREADID',
-                // 'RECVERSION',
-                // 'PARTITION',
-                    'RECID'         => $trans->id,
-                // 'PIL_TRANSACTIONID'
-                ];
-
-                StagingTransaksi::create($input);
-            }
-        }
-
-    // Report ralisasi anggaran
-        public function realisasi()
-        {
-            $cabang = KantorCabang::where('VALUE','<>','00')->get();
-
-            return view('transaksi.realisasi', [
-                'cabang'    => $cabang,
-                'months'    => $this->months,
-                'filters'   => null]);
-        }
-
-        public function cetakRealisasi($cabang, $awal, $akhir, $transyear, $type)
-        {   
-            $query = "SELECT item, anggaran, SUM(total) as total 
-            FROM [dbcabang].[dbo].[transaksi] as transaksi
-            JOIN [dbcabang].[dbo].[batches] as batches on batches.id = transaksi.batch_id 
-            JOIN [dbcabang].[dbo].[batches_status] as batches_status on batches_status.batch_id = batches.id 
-            WHERE batches.cabang = ".$cabang." and batches_status.stat = '6' and DATEPART(MONTH, transaksi.tgl) >= ".$awal." 
-            and DATEPART(MONTH, transaksi.tgl) <= ".$akhir." and DATEPART(YEAR, transaksi.tgl) = ".$transyear."
-            GROUP BY transaksi.item, transaksi.anggaran";
-            
-            $transaksi = \DB::select($query);
-
-            $start = $this->months[$awal];
-            $end = $this->months[$akhir];
-
-            $data = [
-                'cabangs'   => KantorCabang::get(),
-                'filters'   => array('cabang' => $cabang, 'awal'=>$awal, 'akhir'=>$akhir,  'transyear' => $transyear),
-                'transaksi' => $transaksi,
-                'items'     => ItemMaster::get(),
-                'start'     => $start,
-                'end'       => $end,
-                'months'    => $this->months,
-                'year'      => $transyear];
-
-                if($type == 'export'){
-                    $pdf = PDF::loadView('transaksi.export-realisasi', $data);
-                    return $pdf->download('Realisasi Anggaran-'.date("dmY").'.pdf');
-                }else{
-                  return view('transaksi.cetak-realisasi', $data);
-              }
-          }
-          
-          public function filter_handle_realisasi(Request $request)
-          {
-            $validatorRR = Validator::make($request->all(),
-                [
-                    'cabang'    => 'required',
-                    'awal'      => 'required',
-                    'akhir'     => 'required',
-                    'transyear' => 'required'
-                ], 
-                [
-                    'cabang.required'  => 'Kantor cabang harus dipilih.',
-                    'awal.required'  => 'Periode awal harus dipilih.',
-                    'akhir.required'  => 'Periode akhir harus dipilih.',
-                    'transyear.required'  => 'Tahun periode harus dipilih.'
-                ]);
-
-            if($validatorRR->passes()){
-                return redirect('transaksi/filter/realisasi/'.$request->cabang.'/'.$request->awal.'/'.$request->akhir.'/'.$request->transyear);    
-            }else{
-                return redirect()->back()->withErrors($validatorRR)->withInput();
-            }
-        }
-        
-        public function filter_result_realisasi($cabang, $awal, $akhir, $transyear)
-        {
-            $cabangs = KantorCabang::get();
-
-            $query = "SELECT item, anggaran, SUM(total) as total 
-            FROM [dbcabang].[dbo].[transaksi] as transaksi
-            JOIN [dbcabang].[dbo].[batches] as batches on batches.id = transaksi.batch_id 
-            JOIN [dbcabang].[dbo].[batches_status] as batches_status on batches_status.batch_id = batches.id 
-            WHERE batches.cabang = ".$cabang." and batches_status.stat = '6' and DATEPART(MONTH, transaksi.tgl) >= ".$awal." 
-            and DATEPART(MONTH, transaksi.tgl) <= ".$akhir." and DATEPART(YEAR, transaksi.tgl) = ".$transyear."
-            GROUP BY transaksi.item, transaksi.anggaran";
-            
-            $transaksi = \DB::select($query);
-
-            $start = array_search($awal, $this->months);
-            $end = array_search($akhir, $this->months);
-        // dd($transaksi);
-            return view('transaksi.realisasi', [
-                'cabang'    => $cabangs,
-                'filters'   => array('cabang'=>$cabang, 'awal'=>$awal, 'akhir'=>$akhir, 'transyear' => $transyear),
-                'transaksi' => $transaksi,
-                'months'    => $this->months,
-                'items'     => ItemMaster::get()]);
+    public function insertStaging($batch_id)
+    {
+        $transaksi = Transaksi::where('batch_id', $batch_id)->get();
+        foreach ($transaksi as $trans) {
+            $input = [
+                'PIL_ACCOUNT'   => $trans->item,
+                'PIL_AMOUNT'    => $trans->total,
+                'PIL_BANK'      => $trans->akun_bank,
+                'PIL_DIVISI'    => $trans['batch']['divisi'],
+                'PIL_KPKC'      => $trans['batch']['cabang'],
+                'PIL_MATAANGGARAN'  => $trans->mata_anggaran,
+                'BATCH_ID'    => $batch_id,
+                'PIL_PROGRAM'   => 'THT',
+                'PIL_SUBPOS'    => $trans->sub_pos,
+                'PIL_TRANSDATE' => new Carbon(str_replace(':AM', ' AM', $trans->tgl)),
+                'PIL_TXT'       => $trans->desc,
+                'PIL_TRANSACTIONID' => $trans->id];
+                
+            StagingTransaksi::create($input);
         }
     }
+
+    // Report ralisasi anggaran
+    public function realisasi()
+    {
+        $cabang = KantorCabang::where('VALUE','<>','00')->get();
+
+        return view('transaksi.realisasi', [
+            'cabang'    => $cabang,
+            'months'    => $this->months,
+            'filters'   => null]);
+    }
+
+    public function cetakRealisasi($cabang, $awal, $akhir, $transyear, $type)
+    {   
+        $query = "SELECT item, anggaran, SUM(total) as total 
+        FROM [dbcabang].[dbo].[transaksi] as transaksi
+        JOIN [dbcabang].[dbo].[batches] as batches on batches.id = transaksi.batch_id 
+        JOIN [dbcabang].[dbo].[batches_status] as batches_status on batches_status.batch_id = batches.id 
+        WHERE batches.cabang = ".$cabang." and batches_status.stat = '6' and DATEPART(MONTH, transaksi.tgl) >= ".$awal." 
+        and DATEPART(MONTH, transaksi.tgl) <= ".$akhir." and DATEPART(YEAR, transaksi.tgl) = ".$transyear."
+        GROUP BY transaksi.item, transaksi.anggaran";
+        
+        $transaksi = \DB::select($query);
+
+        $start = $this->months[$awal];
+        $end = $this->months[$akhir];
+
+        $data = [
+            'cabangs'   => KantorCabang::get(),
+            'filters'   => array('cabang' => $cabang, 'awal'=>$awal, 'akhir'=>$akhir,  'transyear' => $transyear),
+            'transaksi' => $transaksi,
+            'items'     => ItemMaster::get(),
+            'start'     => $start,
+            'end'       => $end,
+            'months'    => $this->months,
+            'year'      => $transyear];
+
+            if($type == 'export'){
+                $pdf = PDF::loadView('transaksi.export-realisasi', $data);
+                return $pdf->download('Realisasi Anggaran-'.date("dmY").'.pdf');
+            }else{
+              return view('transaksi.cetak-realisasi', $data);
+          }
+      }
+      
+      public function filter_handle_realisasi(Request $request)
+      {
+        $validatorRR = Validator::make($request->all(),
+            [
+                'cabang'    => 'required',
+                'awal'      => 'required',
+                'akhir'     => 'required',
+                'transyear' => 'required'
+            ], 
+            [
+                'cabang.required'  => 'Kantor cabang harus dipilih.',
+                'awal.required'  => 'Periode awal harus dipilih.',
+                'akhir.required'  => 'Periode akhir harus dipilih.',
+                'transyear.required'  => 'Tahun periode harus dipilih.'
+            ]);
+
+        if($validatorRR->passes()){
+            return redirect('transaksi/filter/realisasi/'.$request->cabang.'/'.$request->awal.'/'.$request->akhir.'/'.$request->transyear);    
+        }else{
+            return redirect()->back()->withErrors($validatorRR)->withInput();
+        }
+    }
+    
+    public function filter_result_realisasi($cabang, $awal, $akhir, $transyear)
+    {
+        $cabangs = KantorCabang::get();
+
+        $query = "SELECT item, anggaran, SUM(total) as total 
+        FROM [dbcabang].[dbo].[transaksi] as transaksi
+        JOIN [dbcabang].[dbo].[batches] as batches on batches.id = transaksi.batch_id 
+        JOIN [dbcabang].[dbo].[batches_status] as batches_status on batches_status.batch_id = batches.id 
+        WHERE batches.cabang = ".$cabang." and batches_status.stat = '6' and DATEPART(MONTH, transaksi.tgl) >= ".$awal." 
+        and DATEPART(MONTH, transaksi.tgl) <= ".$akhir." and DATEPART(YEAR, transaksi.tgl) = ".$transyear."
+        GROUP BY transaksi.item, transaksi.anggaran";
+        
+        $transaksi = \DB::select($query);
+
+        $start = array_search($awal, $this->months);
+        $end = array_search($akhir, $this->months);
+    // dd($transaksi);
+        return view('transaksi.realisasi', [
+            'cabang'    => $cabangs,
+            'filters'   => array('cabang'=>$cabang, 'awal'=>$awal, 'akhir'=>$akhir, 'transyear' => $transyear),
+            'transaksi' => $transaksi,
+            'months'    => $this->months,
+            'items'     => ItemMaster::get()]);
+    }
+}

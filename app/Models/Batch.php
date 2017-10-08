@@ -35,6 +35,16 @@ class Batch extends Model
 		return $this->hasMany('App\Models\Transaksi', 'batch_id', 'id');
 	}
 
+    public function staged()
+    {
+        return $this->hasMany('App\Models\StagingTransaksi', 'PIL_JOURNALNUM', 'id')->where('PIL_POSTED', 0)->count();
+    }
+
+    public function posted()
+    {
+        return $this->hasMany('App\Models\StagingTransaksi', 'PIL_JOURNALNUM', 'id')->where('PIL_POSTED', 1)->count();
+    }
+
     public function batchNo()
     {
         return date('ymd', strtotime($this->created_at)).'-'.$this->cabang.'/'.$this->divisi.'-'.$this->seq_number;

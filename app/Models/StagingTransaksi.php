@@ -29,7 +29,8 @@ class StagingTransaksi extends Model
     	'DATAAREADID',
     	'RECVERSION',
     	'PARTITION',
-    	'RECID',
-    	'PIL_TRANSACTIONID'
+    	// 'RECID',
+    	'PIL_TRANSACTIONID',
+        'BATCH_ID'
     ];
 }

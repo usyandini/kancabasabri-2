@@ -71,8 +71,14 @@
                     <div class="col-xs-12">
                       <div class="card">
                         <div class="card-header">
-                          <h4 class="card-title">List Transaksi</h4><br>
+                          <h4 class="card-title">Daftar Transaksi</h4><br>
                           <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
+                          <div>
+                            @if ($active_batch)
+                            <span>No. Batch (lokal) saat ini: <code>{{ $active_batch->batchNo() }}</code></span>
+                            <span>KPKC: <code>{{ $active_batch->kantorCabang()->DESCRIPTION }}</code> <span>Divisi:</span> <code>{{ $active_batch->divisi == '00' ? 'Non-Divisi' : $active_batch->divisi()->DESCRIPTION  }}</code></span>
+                            @endif
+                          </div>
                         </div>
                         <div class="card-body collapse in ">
                           <div class="card-block card-dashboard ">
@@ -100,11 +106,11 @@
                             <br>
                             <div class="row">
                               @if($verifiable)
-                              <div class="col-xs-2 pull-right">
+                              {{-- <div class="col-xs-2 pull-right">
                                 <div class="form-group">
                                   <button class="btn btn-info pull-right" id="keep_anggaran" value="Simpan"><i class="fa fa-money"></i> Perbarui Status Anggaran</button>
                                 </div>
-                              </div>
+                              </div> --}}
                               <div class="col-md-3 pull-right">
                                 <div class="form-group">
                                   <button data-toggle="modal" data-target="#xSmall" class="btn btn-info pull-right" id="simpan" value="Simpan"><i class="fa fa-refresh"></i> Tindaklanjuti</button>
