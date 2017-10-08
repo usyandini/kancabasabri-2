@@ -92,7 +92,19 @@ class TransaksiController extends Controller
         $no_batch = null;
         $empty_batch = $editable = true;
         
-        $this->current_batch = ($batch_id == null) ? $this->current_batch : Batch::where('id', $batch_id)->first();
+        if ($batch_id != null) {
+            $getByBatch = Batch::where('id', $batch_id)->get()->filter(function($batch) { 
+                return $batch->isAccessibleByUnitKerja();
+            });
+            
+            $getByBatch = isset($getByBatch[0]) ? $getByBatch[0] : null;
+            if ($getByBatch == null) {
+                session()->flash('batch_notvalid', true);
+                return redirect('transaksi');
+            }
+        }
+
+        $this->current_batch = ($batch_id == null) ? $this->current_batch : $getByBatch;
         if ($this->current_batch) {
             $editable = $this->current_batch->isUpdatable();
             $berkas = BerkasTransaksi::where('batch_id', $this->current_batch['id'])->get();
@@ -329,7 +341,10 @@ class TransaksiController extends Controller
 
         foreach ($accounts as $account) {
             if($this->calibrateSavePointAndActual($account)) {
-                $transaksis = Transaksi::where('account', $account->account)->get();
+                $transaksis = Transaksi::where('account', $account->account)
+                            ->get()->filter(function($transaksi) {
+                                return !$transaksi->batch->isPosted();
+                            });
                 
                 foreach ($transaksis as $transaksi) {
                     $calibrate = $this->calibrateAnggaran($transaksi, false);

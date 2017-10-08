@@ -19,7 +19,7 @@ class Batch extends Model
 	protected $connection = 'sqlsrv';
 
 	protected $table = 'batches';
-    //protected $dateFormat = 'Y-m-d H:i:s';
+    protected $dateFormat = 'Y-m-d H:i:s';
 
     protected $dates = ['dob'];
 
@@ -37,12 +37,16 @@ class Batch extends Model
 
     public function staged()
     {
-        return $this->hasMany('App\Models\StagingTransaksi', 'PIL_JOURNALNUM', 'id')->where('PIL_POSTED', 0)->count();
+        return $this->hasMany('App\Models\StagingTransaksi', 'BATCH_ID', 'id')->where('PIL_POSTED', 0)->count();
     }
 
     public function posted()
     {
-        return $this->hasMany('App\Models\StagingTransaksi', 'PIL_JOURNALNUM', 'id')->where('PIL_POSTED', 1)->count();
+        return $this->hasMany('App\Models\StagingTransaksi', 'BATCH_ID', 'id')->where('PIL_POSTED', 1)->count();
+    }
+
+    public function isPosted() {
+        return $this->posted() > 0 ? true : false;
     }
 
     public function batchNo()

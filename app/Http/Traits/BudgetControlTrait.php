@@ -50,7 +50,9 @@ trait BudgetControlTrait
 
 			$transaksis = Transaksi::where('account', $acc->account)
 							->whereYear('tgl', '=', $acc->year)
-							->whereMonth('tgl', '=', $acc->month)->get();
+							->whereMonth('tgl', '=', $acc->month)->get()->filter(function($transaksi) {
+						        return !$transaksi->batch->isPosted();
+						    });
 
 			foreach ($transaksis as $transaksi) {
 				$transaksi_date = new Carbon(str_replace(':AM', ' AM', $transaksi->tgl));

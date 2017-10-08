@@ -57,7 +57,9 @@ trait BatchTrait
     {
         $result = Batch::orderBy('id','desc')
             ->where([['divisi', \Auth::user()->divisi], ['cabang', \Auth::user()->cabang]])
-            ->get();
+            ->get()->filter(function($batch) {
+                return $batch->isAccessibleByUnitKerja();
+            });
         return $result;
     }
 

@@ -84,6 +84,13 @@
                                 </div>
                               </div>
                               @endif
+                              @if(session('failed_safe'))
+                              <div class="col-xs-6">
+                                <div class="alert alert-danger">
+                                  Anggaran pada Batch ini tidak memadai.
+                                </div>
+                              </div>
+                              @endif
                             </div>
                             <div id="basicScenario"></div><br>
                             <div class="row">
