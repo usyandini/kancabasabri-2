@@ -204,7 +204,7 @@ class Notification extends Model
             case 38:
                 return 'Temuan dan Rekomendasi telah dibuat dan akan dikirim ke unit kerja '.$this->tindakLanjut['unitkerja'].'.';
             case 39:
-                return 'Tindak Lanjut telah diisi oleh unit kerja '.$this->tindakLanjut['unitkerja'].'dan akan dikirim ke SPI.';
+                return 'Tindak Lanjut telah diisi oleh unit kerja '.$this->tindakLanjut['unitkerja'].' dan akan dikirim ke SPI.';
         
         }
     }
