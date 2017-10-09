@@ -314,6 +314,7 @@
                 </form>
 
                 <form method="POST" action="" id="downloadAnggaran" name="downloadAnggaran" enctype="multipart/form-data">
+                    <input type="hidden" name="header_anggaran_download" id="header_anggaran_download">
                     <input type="hidden" name="list_anggaran_download" id="list_anggaran_download">
                 </form>                  
                 @endsection
@@ -1579,9 +1580,17 @@
                     $('form[id="insertAnggaran"]').submit();
                   }
                   function download_post(){
+                    header={};
+                    header['tanggal'] = $('#tanggal').val();
+                    header['nd_surat'] = $('#nd_surat').val();
+                    header['unit_kerja'] = $('#unit_kerja').val();
+                    header['tipe_anggaran'] = $('#tipe_anggaran').val();
+                    header['stat_anggaran'] = $('#stat_anggaran').val();
+                    header['persetujuan'] = $('#persetujuan').val();
+                    $('input[name="header_anggaran_download"]').val(JSON.stringify(header));
                     $('input[name="list_anggaran_download"]').val(JSON.stringify(inputs));
-                    alert(JSON.stringify(inputs));
-                    // $('form[id="insertAnggaran"]').submit();
+                    alert(JSON.stringify(header));
+                    // $('form[id="downloadAnggaran"]').submit();
                   }
                   function changeButton(){
                     document.getElementById("send_r").addEventListener("click", function(event) {
