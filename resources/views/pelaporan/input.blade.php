@@ -271,7 +271,6 @@
                   var simpan_file = false;
                   $(document).ready(function() {
 
-
                     $("#basicScenario").jsGrid( {
                       width: "100%",
                
@@ -283,6 +282,8 @@
                       editing: editable == 1 ? true : false,
                       pageSize: 5,
                       pageButtonCount: 10,
+                      noDataContent: "Data Belum Tersedia",
+                      loadMessage: "Mohon, ditunggu...",
                       deleteConfirm: "Apakah anda yakin akan menghapus anggaran baris ini?",
 
                       controller: {
@@ -605,9 +606,11 @@
 
                           }
                       ]
-                    })
+                    })        
                     
                   });
+
+
 
                   function getData(type) {
                     var returned = function () {
@@ -649,6 +652,7 @@
 
                   function setDetailFormMaster(){
                     // alert('{{ url('pelaporan/get/filtered/'.$filters['id'].'/form_master') }}');
+
                     $.ajax({
                         'async': false, 'type': "GET", 'dataType': 'JSON', 'url': "{{ ($type == 'item' ? url('pelaporan/get/filteredMaster/'.$setting['kategori'].'/0/'.$setting['id_form_master']) : url('pelaporan/get/filtered/'.$filters['id'].'/form_master')) }}",
                         'success': function (data) {
@@ -680,7 +684,7 @@
                           tw_dari.value = tw_dari_val;
                           tw_ke.value = tw_ke_val;
 
-                          // alert(tw_dari.value);
+                          
 
                           @if($type=="master")
                           tanggal_mulai = document.getElementById('tanggal_mulai');
@@ -1032,6 +1036,7 @@
                   }
 
                   function setTWFirst(){
+                    $('input[type="date"]').datepicker();
                     var status = '{{$setting['status']}}';
                     var type = '{{$type}}';
 

@@ -1,9 +1,9 @@
 <script type="text/javascript">
   var perizinan = ["info_t","info_a","info_u","jenis_u","form_master",
-  "pelaporan_anggaran","pelaporan_a_RUPS","pelaporan_usulan_p_p",
+  "pelaporan_anggaran","pelaporan_a_RUPS","pelaporan_usulan_p_p","pelaporan_tindak_lanjut",
   "master_pelaporan_anggaran","master_arahan_a_RUPS","master_usulan_p_p"];
   var input_izin = ["info_transaksi","info_anggaran","info_user","jenis_user","form_master",
-  "pelaporan_anggaran","pelaporan_a_RUPS","pelaporan_usulan_p_p",
+  "pelaporan_anggaran","pelaporan_a_RUPS","pelaporan_usulan_p_p","pelaporan_tindak_lanjut",
   "master_pelaporan_anggaran","master_arahan_a_RUPS","master_usulan_p_p"];
   $(document).ready(function() {
 

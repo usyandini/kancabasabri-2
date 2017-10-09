@@ -432,6 +432,9 @@
                
                       pageSize: 5,
                       pageButtonCount: 10,
+                      noDataContent: "Data Belum Tersedia",
+                      loadMessage: "Mohon, ditunggu...",
+
 
                       controller: {
                         loadData: function(filter) {
@@ -1587,6 +1590,7 @@
                     header['tipe_anggaran'] = $('#tipe_anggaran').val();
                     header['stat_anggaran'] = $('#stat_anggaran').val();
                     header['persetujuan'] = $('#persetujuan').val();
+
                     array = new Array();
                     array.push(header);
                     $('input[name="header_anggaran_download"]').val(JSON.stringify(array));

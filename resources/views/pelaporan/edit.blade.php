@@ -283,6 +283,8 @@
                       editing: editable == 1 ? true : false,
                       pageSize: 5,
                       pageButtonCount: 10,
+                      noDataContent: "Data Belum Tersedia",
+                      loadMessage: "Mohon, ditunggu...",
                       deleteConfirm: "Apakah anda yakin akan menghapus anggaran baris ini?",
 
                       controller: {
@@ -679,6 +681,8 @@
                   }
 
                   function setDetailFormMaster(){
+                    
+                    $('input[type="date"]').datepicker();
                     // alert('{{ url('pelaporan/get/filtered/'.$type.'/'.$filters['id'].'/form_master') }}');
                     $.ajax({
                         'async': false, 'type': "GET", 'dataType': 'JSON', 'url': "{{ url('pelaporan/get/filtered/'.$type.'/'.$filters['id'].'/form_master') }}",
