@@ -142,6 +142,8 @@
                
                       pageSize: 5,
                       pageButtonCount: 10,
+                      noDataContent: "Data Belum Tersedia",
+                      loadMessage: "Mohon, ditunggu...",
                       
                       controller: {
                         loadData: function(filter) {

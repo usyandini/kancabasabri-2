@@ -12,51 +12,51 @@
           <div class="form-group skin skin-square" id="user">
             <fieldset>
               <input id="info_user" type="checkbox" name="perizinan[info_u]" {{ isset(old("perizinan")['info_u']) ? 'checked=""' : '' }}>
-              <label>Informasi user</label>
+              <label>Informasi Pengguna</label>
             </fieldset>
             <ul id="info_user">
               <li>
                 <fieldset>
                   <input type="checkbox" name="perizinan[edit_u]" {{ isset(old("perizinan")['edit_u']) ? 'checked=""' : '' }}>
-                  <label>Edit user</label>
+                  <label>Edit Pengguna</label>
                 </fieldset>
               </li>
               <li>
                 <fieldset>
                   <input type="checkbox" name="perizinan[sdelete_u]" {{ isset(old("perizinan")['sdelete_u']) ? 'checked=""' : '' }}>
-                  <label>Hapus user (soft delete)</label>
+                  <label>Hapus Pengguna (soft delete)</label>
                 </fieldset>
               </li>
               <li>
                 <fieldset>
                   <input type="checkbox" name="perizinan[pdelete_u]" {{ isset(old("perizinan")['pdelete_u']) ? 'checked=""' : '' }}>
-                  <label>Hapus user (permanent delete)</label>
+                  <label>Hapus Pengguna (permanent delete)</label>
                 </fieldset>
               </li>
               <li>
                 <fieldset>
                   <input type="checkbox" name="perizinan[restore_u]" {{ isset(old("perizinan")['restore_u']) ? 'checked=""' : '' }}>
-                  <label>Restore user</label>
+                  <label>Restore Pengguna</label>
                 </fieldset>
               </li>
             </ul>
             <fieldset>
               <input type="checkbox" name="perizinan[tambah_u]" {{ isset(old("perizinan")['tambah_u']) ? 'checked=""' : '' }}>
-              <label>Tambah user baru</label>
+              <label>Tambah Pengguna baru</label>
             </fieldset>
             <fieldset>
               <input id="jenis_user" type="checkbox" name="perizinan[jenis_u]" {{ isset(old("perizinan")['jenis_u']) ? 'checked=""' : '' }}>
-              <label>Perizinan Jenis User</label>
+              <label>Perizinan Jenis Pengguna</label>
             </fieldset>
             <ul id="jenis_user">
               <li>
                 <input type="checkbox" name="perizinan[edit_jenis]" {{ isset(old("perizinan")['edit_jenis']) ? 'checked=""' : '' }}>
-                <label>Edit Jenis User</label>
+                <label>Edit Jenis Pengguna</label>
               </li>
             </ul>
             <fieldset>
               <input type="checkbox" name="perizinan[tambah_jenis]" {{ isset(old("perizinan")['tambah_jenis']) ? 'checked=""' : '' }}>
-              <label>Tambah Jenis User</label>
+              <label>Tambah Jenis Pengguna</label>
             </fieldset>
           </div>
         </div>
