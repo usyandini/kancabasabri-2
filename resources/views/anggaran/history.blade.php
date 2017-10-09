@@ -195,6 +195,7 @@
                 </div>
 
                 <form method="POST" action="" id="downloadAnggaran" name="downloadAnggaran" enctype="multipart/form-data">
+                  <input type="hidden" name="header_anggaran_values" id="header_anggaran_values">
                   <input type="hidden" name="list_anggaran_values" id="list_anggaran_values">
                 </form>
                 @endsection

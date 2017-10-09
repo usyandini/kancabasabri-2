@@ -314,6 +314,7 @@
                 </form>
 
                 <form method="POST" action="" id="downloadAnggaran" name="downloadAnggaran" enctype="multipart/form-data">
+                    <input type="hidden" name="header_anggaran_download" id="header_anggaran_download">
                     <input type="hidden" name="list_anggaran_download" id="list_anggaran_download">
                 </form>                  
                 @endsection
