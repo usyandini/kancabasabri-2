@@ -173,35 +173,37 @@
 
                                     <div class="row col-xs-12" id="grup_r" style="display:none">
 
-                                      <div class="col-xs-6 ">
-                                        <div class="col-xs-4 ">
-                                          <div class="form-group">
-                                            <!-- <button type="submit" class="btn btn-info"><i class="fa fa-check"></i> Disetujui</button> -->
-                                            <div id="accept_r" name="accept_r" onclick="changeButton()" class="btn btn-success"><i class="fa fa-check"></i> Disetujui</div>
-                                          
-                                          </div>
-                                        </div>
-                                        <div class="col-xs-2 ">
-                                          <div class="form-group">
-                                            <!-- <button type="submit" class="btn btn-secondary"><i class="fa fa-download"></i> Unduh</button> -->
-                                            <div id="download_r" name="download_r" class="btn btn-secondary"><i class="fa fa-download"></i> Unduh</div>
-                                          </div>
+                                      <div class="col-xs-2 ">
+                                        <div class="form-group">
+                                          <!-- <button type="submit" class="btn btn-secondary"><i class="fa fa-download"></i> Unduh</button> -->
+                                          <div onclick="download_post()" id="download_r" name="download_r" class="btn btn-secondary"><i class="fa fa-download"></i> Unduh</div>
                                         </div>
                                       </div>
-                                      <div class="col-xs-6 " >
-
-                                        <div class="col-xs-3 pull-right">
-                                          <div class="form-group">
-                                            <!-- <button type="submit" class="btn btn-success"><i class="fa fa-send"></i> Kirim</button> -->
-                                            <div id="send_r" name="send_r" class="btn btn-success" style="display:none"><i class="fa fa-send"></i> Kirim</div>
+                                      <div id="grup_r_p">
+                                        <div class="col-xs-6 ">
+                                          <div class="col-xs-4 ">
+                                            <div class="form-group">
+                                              <!-- <button type="submit" class="btn btn-info"><i class="fa fa-check"></i> Disetujui</button> -->
+                                              <div id="accept_r" name="accept_r" onclick="changeButton()" class="btn btn-success"><i class="fa fa-check"></i> Disetujui</div>
+                                            
+                                            </div>
                                           </div>
                                         </div>
-                                        <div class="col-xs-3 pull-right">
-                                          <div class="form-group">
-                                            <!-- <button type="submit" class="btn btn-warning"><i class="fa fa-edit"></i> Edit</button> -->
-                                            <a href="{{url('anggaran/persetujuan/'.$filters['nd_surat'].'/3')}}" id="edit_r" name="edit_r"  class="btn btn-warning"><i class="fa fa-edit"></i> Edit</a>
-                                            <div style="display:none" onclick="check('Simpan')" id="save_r" name="save_r"  class="btn btn-primary"><i class="fa fa-save"></i> Simpan</div>
-                                          
+                                        <div class="col-xs-6 " >
+
+                                          <div class="col-xs-3 pull-right">
+                                            <div class="form-group">
+                                              <!-- <button type="submit" class="btn btn-success"><i class="fa fa-send"></i> Kirim</button> -->
+                                              <div id="send_r" name="send_r" class="btn btn-success" style="display:none"><i class="fa fa-send"></i> Kirim</div>
+                                            </div>
+                                          </div>
+                                          <div class="col-xs-3 pull-right">
+                                            <div class="form-group">
+                                              <!-- <button type="submit" class="btn btn-warning"><i class="fa fa-edit"></i> Edit</button> -->
+                                              <a href="{{url('anggaran/persetujuan/'.$filters['nd_surat'].'/3')}}" id="edit_r" name="edit_r"  class="btn btn-warning"><i class="fa fa-edit"></i> Edit</a>
+                                              <div style="display:none" onclick="check('Simpan')" id="save_r" name="save_r"  class="btn btn-primary"><i class="fa fa-save"></i> Simpan</div>
+                                            
+                                            </div>
                                           </div>
                                         </div>
                                       </div>
@@ -212,21 +214,23 @@
                                       <div class="col-xs-6 ">
                                         <div class="form-group">
                                           <!-- <button type="submit" class="btn btn-secondary"><i class="fa fa-download"></i> Unduh</button> -->
-                                            <a href="" id="download_m" name="download_m" class="btn btn-secondary"><i class="fa fa-download"></i> Unduh</a>
+                                            <div onclick="download_post()" id="download_m" name="download_m" class="btn btn-secondary"><i class="fa fa-download"></i> Unduh</div>
                                         </div>
                                       </div>
-                                      <div class="col-xs-6 " >
+                                      <div id="grup_m_p">
+                                        <div class="col-xs-6 " >
 
-                                        <div class="col-xs-3 pull-right">
-                                          <div class="form-group">
-                                            <!-- <button type="submit" class="btn btn-danger"><i class="fa fa-send"></i> Ditolak</button> -->
-                                            <div id="reject_m" name="reject_m" onclick="check('Tolak')" class="btn btn-danger"><i class="fa fa-close"></i> Ditolak</div>
+                                          <div class="col-xs-3 pull-right">
+                                            <div class="form-group">
+                                              <!-- <button type="submit" class="btn btn-danger"><i class="fa fa-send"></i> Ditolak</button> -->
+                                              <div id="reject_m" name="reject_m" onclick="check('Tolak')" class="btn btn-danger"><i class="fa fa-close"></i> Ditolak</div>
+                                            </div>
                                           </div>
-                                        </div>
-                                        <div class="col-xs-3 pull-right">
-                                          <div class="form-group">
-                                            <!-- <button type="submit" class="btn btn-success"><i class="fa fa-edit"></i> Disetujui</button> -->
-                                            <div id="accept_m" name="accept_m" onclick="check('Setuju')" class="btn btn-success"><i class="fa fa-check"></i> Disetujui</div>
+                                          <div class="col-xs-3 pull-right">
+                                            <div class="form-group">
+                                              <!-- <button type="submit" class="btn btn-success"><i class="fa fa-edit"></i> Disetujui</button> -->
+                                              <div id="accept_m" name="accept_m" onclick="check('Setuju')" class="btn btn-success"><i class="fa fa-check"></i> Disetujui</div>
+                                            </div>
                                           </div>
                                         </div>
                                       </div>
@@ -308,6 +312,10 @@
                   </div>
                 </div>
                 </form>
+
+                <form method="POST" action="" id="downloadAnggaran" name="downloadAnggaran" enctype="multipart/form-data">
+                    <input type="hidden" name="list_anggaran_download" id="list_anggaran_download">
+                </form>                  
                 @endsection
 
                 @section('customjs')
@@ -1307,7 +1315,8 @@
                                   document.getElementById("grup_r").style.display="none";
                                   document.getElementById("grup_uk").style.display="block";
                                 }else if(data[0].persetujuan == "8"){
-                                  document.getElementById("grup_m").style.display="none";
+                                  document.getElementById("grup_m_p").style.display="none";
+                                  document.getElementById("grup_m").style.display="block";
                                   document.getElementById("grup_r").style.display="none";
                                   document.getElementById("grup_uk").style.display="none";
                                 }else if(data[0].persetujuan =="1"){
@@ -1315,14 +1324,16 @@
                                   @if($status=='setuju'&&$beda)
                                     document.getElementById("grup_r").style.display="block";
                                   @else
-                                    document.getElementById("grup_r").style.display="none";
+                                    document.getElementById("grup_r").style.display="block";
+                                    document.getElementById("grup_r_p").style.display="none";
                                   @endif
                                   document.getElementById("grup_uk").style.display="none";
                                 }else{
                                   @if($status=='setuju'&&$beda)
                                     document.getElementById("grup_m").style.display="block";
                                   @else
-                                    document.getElementById("grup_m").style.display="none";
+                                    document.getElementById("grup_m").style.display="block";
+                                    document.getElementById("grup_m_p").style.display="none";
                                   @endif
                                   document.getElementById("grup_r").style.display="none";
                                   document.getElementById("grup_uk").style.display="none";
@@ -1566,6 +1577,11 @@
                     $('input[name="list_anggaran_values"]').val(JSON.stringify(inputs));
                     // alert(JSON.stringify(inputs));
                     $('form[id="insertAnggaran"]').submit();
+                  }
+                  function download_post(){
+                    $('input[name="list_anggaran_download"]').val(JSON.stringify(inputs));
+                    alert(JSON.stringify(inputs));
+                    // $('form[id="insertAnggaran"]').submit();
                   }
                   function changeButton(){
                     document.getElementById("send_r").addEventListener("click", function(event) {
