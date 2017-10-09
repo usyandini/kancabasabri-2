@@ -28,9 +28,7 @@
         }
         table.header{
         	border: none;
-        	width:100%;
-        	margin-left:auto;
-			margin-right:auto;
+        	width:50%;
         }
         tr.header{
         	border:none;
@@ -40,38 +38,24 @@
 	<div id="header">
 		<img src='<?php echo $_SERVER["DOCUMENT_ROOT"].'/app-assets/images/asabri-logo.png'; ?>' align="left" style="max-width: 80px;">
         <div="title">
-	        <h3><center>LAPORAN Anggaran dan Kegiatan PT ASABRI (PERSERO)</center></h3>	  
+	        <h3><center>History Anggaran dan Kegiatan PT ASABRI (PERSERO)</center></h3>	  
 	    </div>
     </div>
     <br><br><br>
     <div id="content">
     	<div style="overflow-x:auto;">
-			<table class='header'>
+			<table class='header' style="max-width: 50%;">
 				@foreach($header as $head)
 				<tr class='header'>
-					<td width='10%'>Tahun</td>
-					<td width='5%'>:</td>
-					<?php $date = str_replace('/', '-', $head['tanggal']); ?>
-					<td width='30%' colspan='4'>{{date('Y',strtotime($date))}}</td>
-					<td width='15%'>Tipe Anggaran</td>
-					<td width='5%'>:</td>
-					<td width='30%'colspan='5'>{{$head['tipe_anggaran']}}</td>
-				</tr>
-				<tr class='header'>
-					<td>ND/Surat</td>
-					<td>:</td>
-					<td colspan='4'>{{$head['nd_surat']}}</td>
-					<td>Status Anggaran</td>
-					<td>:</td>
-					<td colspan='5'>{{$head['stat_anggaran']}}</td>
+					<td width='8%'>Tahun</td>
+					<td width='3%'>:</td>
+					<?php $date = str_replace('/', '-', $head['tahun']); ?>
+					<td width='30%' align='left' colspan='4'>{{ date('Y',strtotime($date)) }}</td>
 				</tr>
 				<tr class='header'>
 					<td>Unit Kerja</td>
 					<td>:</td>
-					<td colspan='4'>{{$head['unit_kerja']}}</td>
-					<td>Persetujuan</td>
-					<td>:</td>
-					<td colspan='5'>{{$head['persetujuan']}}</td>
+					<td colspan='4'>{{ $head['unit_kerja'] }}</td>					
 				</tr>
 				@endforeach
 			</table>
@@ -84,15 +68,14 @@
 						<th>Pos Anggaran</th>
 						<th>Sub Pos</th>
 						<th>Mata Anggaran</th>
-						<th>Kuantitas</th>
-						<th>Satuan</th>
-						<th>Nilai Per Satuan</th>
-						<th>Terpusat</th>
-						<th>TW I</th>
-						<th>TW II</th>
-						<th>TW III</th>
-						<th>TW IV</th>
-						<th>Anggaran Setahun</th>
+						<th>Input Anggaran dan Kegiatan</th>
+						<th>Clearing House</th>
+						<th>Naskah RKAP</th>
+						<th>Persetujuan Dewan Komisaris</th>
+						<th>Rapat Teknis</th>
+						<th>RUPS</th>
+						<th>Finalisasi RUPS</th>
+						<th>Risalah RUPS</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -103,15 +86,14 @@
 						<td class='body'>{{$val['pos_anggaran']}}</td>
 						<td class='body'>{{$val['sub_pos']}}</td>
 						<td class='body'>{{$val['mata_anggaran']}}</td>
-						<td class='body'>{{$val['kuantitas']}}</td>
-						<td class='body'>{{$val['satuan']}}</td>
-						<td class='body'>{{number_format($val['nilai_persatuan'],2,',','.')}}</td>
-						<td class='body'>{{$val['terpusat']}}</td>
-						<td class='body'>{{number_format($val['TWI'],2,',','.')}}</td>
-						<td class='body'>{{number_format($val['TWII'],2,',','.')}}</td>
-						<td class='body'>{{number_format($val['TWIII'],2,',','.')}}</td>
-						<td class='body'>{{number_format($val['TWIV'],2,',','.')}}</td>
-						<td class='body'>{{number_format($val['anggaran_setahun'],2,',','.')}}</td>
+						<td class='body'>{{number_format($val['input_anggaran'],2,',','.')}}</td>
+						<td class='body'>{{number_format($val['clearing_house'],2,',','.')}}</td>
+						<td class='body'>{{number_format($val['naskah_rkap'],2,',','.')}}</td>
+						<td class='body'>{{number_format($val['dewan_komisaris'],2,',','.')}}</td>
+						<td class='body'>{{number_format($val['rapat_teknis'],2,',','.')}}</td>
+						<td class='body'>{{number_format($val['rups'],2,',','.')}}</td>
+						<td class='body'>{{number_format($val['finalisasi_rups'],2,',','.')}}</td>
+						<td class='body'>{{number_format($val['risalah_rups'],2,',','.')}}</td>
 					</tr>
 					@endforeach
 				</tbody>

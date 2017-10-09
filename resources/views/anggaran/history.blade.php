@@ -194,9 +194,9 @@
                   </div>
                 </div>
 
-                <form method="POST" action="" id="downloadAnggaran" name="downloadAnggaran" enctype="multipart/form-data">
-                  <input type="hidden" name="header_anggaran_values" id="header_anggaran_values">
-                  <input type="hidden" name="list_anggaran_values" id="list_anggaran_values">
+                <form method="GET" action="{{ url('anggaran/reports/riwayat/export') }}" id="downloadRiwayat" name="downloadRiwayat" enctype="multipart/form-data">
+                  <input type="hidden" name="header_riwayat_values" id="header_riwayat_values">
+                  <input type="hidden" name="list_riwayat_values" id="list_riwayat_values">
                 </form>
                 @endsection
 
@@ -495,10 +495,12 @@
                     header = {};
                     header['tahun']=$('#tahun').val();
                     header['unit_kerja']=$('#unit_kerja').val();
-                    $('input[name="list_anggaran_values"]').val(JSON.stringify(inputs));
-                    $('input[name="header_anggaran_values"]').val(JSON.stringify(header));
-                    alert(JSON.stringify(header));
-                    // $('form[id="downloadAnggaran"]').submit();
+                    array = new Array();
+                    array.push(header);
+                    $('input[name="list_riwayat_values"]').val(JSON.stringify(inputs));
+                    $('input[name="header_riwayat_values"]').val(JSON.stringify(array));
+                    //alert(JSON.stringify(header));
+                    $('form[id="downloadRiwayat"]').submit();
                   }
 
                   window.setUnitKerja();

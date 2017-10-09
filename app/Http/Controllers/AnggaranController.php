@@ -1131,9 +1131,44 @@ class AnggaranController extends Controller
         ];
 
         $pdf = PDF::loadView('anggaran.report.export-anggaran', $data);
-        // $pdf = PDF::loadView('anggaran.report.export-anggaran');
-        return $pdf->setPaper('a4', 'landscape')->setWarnings(false)->stream('Anggaran dan kegiatan-'.date("dmY").'.pdf');
-
+        return $pdf->setPaper('a4', 'landscape')->setWarnings(false)->download('Anggaran dan Kegiatan-'.date("dmY").'.pdf');
     }
 
+    public function export_riwayat(Request $request)
+    {
+        $header_list = [];  
+        foreach(json_decode($request->header_riwayat_values) as $header){
+            $header_list[] = [
+                'tahun'       => $header->tahun,
+                'unit_kerja'    => $header->unit_kerja
+            ];
+        }
+
+        $riwayat_list = [];
+        foreach(json_decode($request->list_riwayat_values) as $value){
+            $riwayat_list[] = [
+                'jenis'             => $value->jenis,
+                'kelompok'          => $value->kelompok,
+                'pos_anggaran'      => $value->pos_anggaran,
+                'sub_pos'           => $value->sub_pos,
+                'mata_anggaran'     => $value->mata_anggaran,
+                'input_anggaran'    => $value->input_anggaran,
+                'clearing_house'    => $value->clearing_house,
+                'naskah_rkap'       => $value->naskah_rkap,
+                'dewan_komisaris'   => $value->dewan_komisaris,
+                'rapat_teknis'      => $value->rapat_teknis,
+                'rups'              => $value->rups,
+                'finalisasi_rups'   => $value->finalisasi_rups,
+                'risalah_rups'      => $value->risalah_rups
+            ];
+        }
+
+        $data = [
+            'list'      => $riwayat_list,
+            'header'    => $header_list
+        ];
+        $pdf = PDF::loadView('anggaran.report.export-history', $data);
+        //$pdf = PDF::loadHtml('<h2>Hello World</h2>');
+        return $pdf->setPaper('a4', 'landscape')->setWarnings(false)->stream('Riwayat Anggaran-'.date("dmY").'.pdf');
+    }
 }

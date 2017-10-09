@@ -101,6 +101,7 @@ Route::group(['middleware' => 'auth'], function() {
 		Route::post('/cari/', 'AnggaranController@cari');
 		Route::post('/submit/tambah', 'AnggaranController@store');
 		Route::get('/reports/export', 'AnggaranController@export_list_anggaran');
+		Route::get('/reports/riwayat/export', 'AnggaranController@export_riwayat');
 
 	});
 
