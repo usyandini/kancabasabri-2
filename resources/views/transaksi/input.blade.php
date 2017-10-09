@@ -107,7 +107,7 @@
                             <h4 class="card-title">Daftar Transaksi</h4><br>
                             @endif
                             <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
-                            <div class="font-small-3">
+                            <div>
                               @if ($active_batch)
                               <span>No. Batch (lokal) saat ini: <code>{{ $active_batch->batchNo() }}</code></span>
                               <span>KPKC: <code>{{ $active_batch->kantorCabang()->DESCRIPTION }}</code> <span>Divisi:</span> <code>{{ $active_batch->divisi == '00' ? 'Non-Divisi' : $active_batch->divisi()->DESCRIPTION  }}</code></span>
@@ -146,11 +146,11 @@
                               <br>
                               <div class="row">
                                 @if($editable)
-                                <div class="col-sm-12 col-lg-3 col-xl-2 pull-right">
+                                {{-- <div class="col-sm-12 col-lg-3 col-xl-2 pull-right">
                                   <div class="form-group">
                                     <button class="btn btn-info pull-right" id="keep_anggaran" value="Simpan"><i class="fa fa-money"></i> Perbarui Status Anggaran</button>
                                   </div>
-                                </div>
+                                </div> --}}
                                 @if (Gate::check('tambah_item_t') || Gate::check('ubah_item_t') || Gate::check('hapus_item_t'))
                                 <div class="col-sm-12 col-lg-3 col-xl-2 pull-right">
                                   <div class="form-group">

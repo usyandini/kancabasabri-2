@@ -9,6 +9,9 @@
                                           @if (isset($active_batch->latestStat()['rejectReason']))
                                           <span class="font-small-3">{{ $active_batch->latestStat()['rejectReason']['reason']->content }}</span>
                                           @endif
+                                          @if ($active_batch->latestStat()->stat == 6)
+                                          <span class="font-small-3">Berhasil distaging<code>({{ $active_batch->posted() }} item dari {{ $active_batch->staged() }} item posted)</code></span>  
+                                          @endif
                                         </td>
                                         <td>
                                           <code style="padding: 0;">{{ $active_batch->latestStat()->updated_at }}</code><br>

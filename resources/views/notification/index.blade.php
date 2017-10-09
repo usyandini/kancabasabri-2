@@ -10,14 +10,24 @@
             @section('content')
             <div class="content-header row">
             	<div class="content-header-left col-md-6 col-xs-12 mb-2">
-            		<h3 class="content-header-title mb-0">Semua Notifikasi</h3>
+            		<h3 class="content-header-title mb-0">Notifikasi</h3>
             	</div>
             </div>
             <div class="row">
             	<section id="select-inputs">
             		<div class="row">
+                        <div class="col-md-3">
+                            <div>
+                                <div class="card-body collapse in">
+                                    <div class="card-block">
+                                        <a class="btn btn-sm btn-secondary" href="{{ url('notification/mark_all') }}"><i class="fa fa-check"></i> Tandai semua dibaca</a>
+                                        {{-- <a class="btn btn-sm btn-secondary" href="{{ url('notification/del_all') }}"><i class="fa fa-times"></i> Hapus semua</a> --}}
+                                    </div>
+                                </div>  
+                            </div>
+                        </div>
                         @foreach ($notification_all as $notif)
-                        <div class="col-xs-8 offset-md-2">
+                        <div class="col-xs-10 offset-md-1">
                             <div class="card">
                                 <div class="card-body collapse in">                         
                                     <a href="{{ url('notification/redirect').'/'.$notif['id'] }}">

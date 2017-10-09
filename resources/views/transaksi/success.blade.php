@@ -45,6 +45,13 @@
     </div>
   </div>
   @endif
+  @if(session('batch_notvalid'))
+  <div class="col-xs-6">
+    <div class="alert alert-danger">
+      Batch yang dimaksud tidak tersedia. 
+    </div>
+  </div>
+  @endif
   @if(session('success_filtering'))
   <div class="col-xs-6">
     <div class="alert alert-success">

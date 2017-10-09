@@ -30,7 +30,11 @@
         <div="title">
 	        <h3><center>LAPORAN REALISASI ANGGARAN PT ASABRI (PERSERO)</center></h3>
 	        <h3><center>{{ $cabangs->where('VALUE', $filters['cabang'])->first()['DESCRIPTION']}}</center></h3>
+	        @if($start == $end)
+	        <h4><center>Periode {{$start}} Th. {{$year}}</center></h4>
+	        @else
 	        <h4><center>Periode {{$start}} s.d. {{$end}} Th. {{$year}}</center></h4>
+	        @endif
 	    </div>
     </div>
     <br><br>
@@ -84,7 +88,11 @@
 	                <td align="right">{{ number_format($tmp_sisa, 2, ',','.') }}</td>
 	              </tr>
 	              <tr id="tf2">
+	              	@if($start == $end)
+			        <td><center>TOTAL DROPPING PERIODE <br>{{$start}} {{$year}}</br></center></td>
+			        @else
 	                <td><center>TOTAL DROPPING PERIODE <br>{{$start}} s.d {{$end}} {{$year}}</br></center></td>
+	                @endif
 	                <td align="right">{{ number_format($tmp_realisasi, 2, ',','.') }}</td>
 	                <td colspan="2" style="border-bottom:none; border-right:none"></td>
 	              </tr>

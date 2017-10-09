@@ -41,57 +41,56 @@ class NotificationController extends Controller
 {
     public function get()
     {
-
-        $notifications = NotificationSystem::getAll();
+        $notifications = NotificationSystem::getUnreads();
     	$result = [
     		'total'	=> $notifications->count(),
     		'totalUnread' => NotificationSystem::getUnreads()->count(),
     		'notifications' => []];
         $count_unread = 0 ;
     	foreach (NotificationSystem::getUnreads() as $value) {
-            $unit_kerja = "";
-            $notif = false;
-            if($value->type < 7){
+            // $unit_kerja = "";
+            // $notif = false;
+            // if($value->type < 7){
 
-                $divisi = $value->batch['divisi'];
-                $cabang = $value->batch['cabang'];
-                if($cabang == "00"){
-                    $unit_kerja = "00".$divisi;
-                }else{
-                    $unit_kerja = $cabang."00";
-                }
-                if(Gate::check('unit_'.$unit_kerja)){
-                    $notif = true;
-                }
-            }else if($value->type < 15){
-                if($value->type < 10){
-                    $unit_kerja = $value->idTarikTunai['cabang'];
-                }else{
-                    $unit_kerja = $value->idPenyesuaian['cabang'];
-                }
-                if(Gate::check('unit_'.$this->check($unit_kerja))){
-                    $notif = true;
-                }
-            }else if($value->type <32){
-                $unit_kerja = $value->idAnggaran['unit_kerja'];
-                if(Gate::check('unit_'.$this->check($unit_kerja))){
-                    $notif = true;
-                }
-            }else if($value->type <38){
-                if($value->type != 36){
-                    $unit = $value->formMaster->unit_kerja();
-                    for($i=0;$i<count($unit);$i++){
-                        if(Gate::check('unit_'.$this->check($unit[$i]))){
-                            $notif = true;
-                            break;
-                        }
-                    }
-                }else{
-                    $notif = true;
-                }
-            }
+            //     $divisi = $value->batch['divisi'];
+            //     $cabang = $value->batch['cabang'];
+            //     if($cabang == "00"){
+            //         $unit_kerja = "00".$divisi;
+            //     }else{
+            //         $unit_kerja = $cabang."00";
+            //     }
+            //     if(Gate::check('unit_'.$unit_kerja)){
+            //         $notif = true;
+            //     }
+            // }else if($value->type < 15){
+            //     if($value->type < 10){
+            //         $unit_kerja = $value->idTarikTunai['cabang'];
+            //     }else{
+            //         $unit_kerja = $value->idPenyesuaian['cabang'];
+            //     }
+            //     if(Gate::check('unit_'.$this->check($unit_kerja))){
+            //         $notif = true;
+            //     }
+            // }else if($value->type <32){
+            //     $unit_kerja = $value->idAnggaran['unit_kerja'];
+            //     if(Gate::check('unit_'.$this->check($unit_kerja))){
+            //         $notif = true;
+            //     }
+            // }else if($value->type <38){
+            //     if($value->type != 36){
+            //         $unit = $value->formMaster->unit_kerja();
+            //         for($i=0;$i<count($unit);$i++){
+            //             if(Gate::check('unit_'.$this->check($unit[$i]))){
+            //                 $notif = true;
+            //                 break;
+            //             }
+            //         }
+            //     }else{
+            //         $notif = true;
+            //     }
+            // }
 
-            if($notif){
+            // if($notif){
         		$result['notifications'][] = [
         			'id' 		=> $value->id,
                     'type'      => $value->type,
@@ -100,10 +99,10 @@ class NotificationController extends Controller
         			'time_dif' 	=> \Carbon\Carbon::createFromTimeStamp(strtotime($value->created_at))->diffForHumans(),
         			'time'		=> date('d F Y, H:m', strtotime($value->created_at))
         		];
-                $count_unread++;
-            }
+                // $count_unread++;
+            // }
     	}
-        $result['totalUnread'] = $count_unread;
+        // $result['totalUnread'] = $count_unread;
 
     	return response()->json($result);
     }
@@ -210,50 +209,50 @@ class NotificationController extends Controller
         $notification_all = [];
         if(NotificationSystem::getAll()!=null)
             foreach (NotificationSystem::getAll() as $value) {
-                $notif = false;
-                $unit_kerja = "";
-                if($value->type < 7){
-                    $divisi = $value->batch['divisi'];
-                    $cabang = $value->batch['cabang'];
+                // $notif = false;
+                // $unit_kerja = "";
+                // if($value->type < 7){
+                //     $divisi = $value->batch['divisi'];
+                //     $cabang = $value->batch['cabang'];
 
-                    if($cabang == "00"){
-                        $unit_kerja = "00".$divisi;
-                    }else{
-                        $unit_kerja = $cabang."00";
-                    }
-                    if(Gate::check('unit_'.$unit_kerja)){
-                        $notif = true;
-                    }
-                }else if($value->type < 15){
-                    if($value->type < 10){
-                        $unit_kerja = $value->idTarikTunai['cabang'];
-                    }else{
-                        $unit_kerja = $value->idPenyesuaian['cabang'];
-                    }
-                    if(Gate::check('unit_'.$this->check($unit_kerja))){
-                        $notif = true;
-                    }
-                }else if($value->type <32){
-                    $unit_kerja = $value->idAnggaran['unit_kerja'];
-                    if(Gate::check('unit_'.$this->check($unit_kerja))){
-                        $notif = true;
-                    }
-                }else if($value->type <38){
-                    if($value->type != 36){
-                        $unit = $value->formMaster->unit_kerja();
-                        for($i=0;$i<count($unit);$i++){
-                            if(Gate::check('unit_'.$this->check($unit[$i]))){
-                                $notif = true;
-                                break;
-                            }
-                        }
-                    }else{
-                        $notif = true;
-                    }
-                }
+                //     if($cabang == "00"){
+                //         $unit_kerja = "00".$divisi;
+                //     }else{
+                //         $unit_kerja = $cabang."00";
+                //     }
+                //     if(Gate::check('unit_'.$unit_kerja)){
+                //         $notif = true;
+                //     }
+                // }else if($value->type < 15){
+                //     if($value->type < 10){
+                //         $unit_kerja = $value->idTarikTunai['cabang'];
+                //     }else{
+                //         $unit_kerja = $value->idPenyesuaian['cabang'];
+                //     }
+                //     if(Gate::check('unit_'.$this->check($unit_kerja))){
+                //         $notif = true;
+                //     }
+                // }else if($value->type <32){
+                //     $unit_kerja = $value->idAnggaran['unit_kerja'];
+                //     if(Gate::check('unit_'.$this->check($unit_kerja))){
+                //         $notif = true;
+                //     }
+                // }else if($value->type <38){
+                //     if($value->type != 36){
+                //         $unit = $value->formMaster->unit_kerja();
+                //         for($i=0;$i<count($unit);$i++){
+                //             if(Gate::check('unit_'.$this->check($unit[$i]))){
+                //                 $notif = true;
+                //                 break;
+                //             }
+                //         }
+                //     }else{
+                //         $notif = true;
+                //     }
+                // }
                 
                 
-                if($notif){
+                // if($notif){
                     $notification_all[] = [
                         'id'        => $value->id,
                         'type'      => $value->type,
@@ -262,7 +261,7 @@ class NotificationController extends Controller
                         'time_dif'  => \Carbon\Carbon::createFromTimeStamp(strtotime($value->created_at))->diffForHumans(),
                         'time'      => date('d F Y, H:m', strtotime($value->created_at))
                     ];
-                }
+                // }
             }
         // $notification_all = null;
         // if(count($notification_all)){
@@ -270,7 +269,6 @@ class NotificationController extends Controller
         // }
         return view('notification.index', compact('notification_all'));
     }
-
 
     public function check($unit_kerja){
         $val_unit="";
@@ -285,5 +283,17 @@ class NotificationController extends Controller
             }
         }
         return $val_unit;
+    } 
+
+    public function markAllAsRead()
+    {
+        NotificationSystem::markAllAsRead();
+        return redirect()->back();
+    }
+
+    public function deleteAll()
+    {
+        NotificationSystem::deleteAll();
+        return redirect()->back();   
     }
 }

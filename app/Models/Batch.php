@@ -19,7 +19,7 @@ class Batch extends Model
 	protected $connection = 'sqlsrv';
 
 	protected $table = 'batches';
-    //protected $dateFormat = 'Y-m-d H:i:s';
+    protected $dateFormat = 'Y-m-d H:i:s';
 
     protected $dates = ['dob'];
 
@@ -34,6 +34,20 @@ class Batch extends Model
 	{
 		return $this->hasMany('App\Models\Transaksi', 'batch_id', 'id');
 	}
+
+    public function staged()
+    {
+        return $this->hasMany('App\Models\StagingTransaksi', 'BATCH_ID', 'id')->where('PIL_POSTED', 0)->count();
+    }
+
+    public function posted()
+    {
+        return $this->hasMany('App\Models\StagingTransaksi', 'BATCH_ID', 'id')->where('PIL_POSTED', 1)->count();
+    }
+
+    public function isPosted() {
+        return $this->posted() > 0 ? true : false;
+    }
 
     public function batchNo()
     {
@@ -62,10 +76,10 @@ class Batch extends Model
 
     public function isAccessibleByUnitKerja()
     {
-        $divisi = 'unit_'.$this->divisi.'00';
+        $divisi = 'unit_00'.$this->divisi;
         $cabang = 'unit_'.$this->cabang.'00';
         
-        return \Auth::user()->hasAccess($divisi) && \Auth::user()->hasAccess($cabang) ? true : false;
+        return \Auth::user()->hasAccess($divisi) && \Auth::user()->hasAccess($cabang);
     }
 
     public function canReported()
