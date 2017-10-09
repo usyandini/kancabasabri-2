@@ -1580,8 +1580,16 @@
                     $('form[id="insertAnggaran"]').submit();
                   }
                   function download_post(){
+                    header={};
+                    header['tanggal'] = $('#tanggal').val();
+                    header['nd_surat'] = $('#nd_surat').val();
+                    header['unit_kerja'] = $('#unit_kerja').val();
+                    header['tipe_anggaran'] = $('#tipe_anggaran').val();
+                    header['stat_anggaran'] = $('#stat_anggaran').val();
+                    header['persetujuan'] = $('#persetujuan').val();
+                    $('input[name="header_anggaran_download"]').val(JSON.stringify(header));
                     $('input[name="list_anggaran_download"]').val(JSON.stringify(inputs));
-                    alert(JSON.stringify(inputs));
+                    alert(JSON.stringify(header));
                     // $('form[id="downloadAnggaran"]').submit();
                   }
                   function changeButton(){

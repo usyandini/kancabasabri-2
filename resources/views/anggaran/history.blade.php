@@ -492,8 +492,12 @@
                   }
 
                   function download_report(){
+                    header = {};
+                    header['tahun']=$('#tahun').val();
+                    header['unit_kerja']=$('#unit_kerja').val();
                     $('input[name="list_anggaran_values"]').val(JSON.stringify(inputs));
-                    alert(JSON.stringify(inputs));
+                    $('input[name="header_anggaran_values"]').val(JSON.stringify(header));
+                    alert(JSON.stringify(header));
                     // $('form[id="downloadAnggaran"]').submit();
                   }
 
