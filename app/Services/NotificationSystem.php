@@ -35,6 +35,10 @@ class NotificationSystem
             case 4:
 				$receiver_id = null;
 				break;
+            case 7:
+            case 39:
+                $receiver_id = null;
+                break;
 			default:
 				$receiver_id = Batch::where('id', $id)->first()['creator']['id'];
 				break;
