@@ -100,6 +100,7 @@ Route::group(['middleware' => 'auth'], function() {
 		Route::post('/riwayat/', 'AnggaranController@riwayat');
 		Route::post('/cari/', 'AnggaranController@cari');
 		Route::post('/submit/tambah', 'AnggaranController@store');
+		Route::get('/reports/export', 'AnggaranController@export_list_anggaran');
 
 	});
 

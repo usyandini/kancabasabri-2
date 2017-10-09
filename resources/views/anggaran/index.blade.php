@@ -176,7 +176,7 @@
                                       <div class="col-xs-2 ">
                                         <div class="form-group">
                                           <!-- <button type="submit" class="btn btn-secondary"><i class="fa fa-download"></i> Unduh</button> -->
-                                          <div onclick="download_post()" id="download_r" name="download_r" class="btn btn-secondary"><i class="fa fa-download"></i> Unduh</div>
+                                          <div onclick="download_post()" id="download_r" name="download_r" class="btn btn-secondary" target="_blank"><i class="fa fa-download"></i> Unduh</div>
                                         </div>
                                       </div>
                                       <div id="grup_r_p">
@@ -214,7 +214,7 @@
                                       <div class="col-xs-6 ">
                                         <div class="form-group">
                                           <!-- <button type="submit" class="btn btn-secondary"><i class="fa fa-download"></i> Unduh</button> -->
-                                            <div onclick="download_post()" id="download_m" name="download_m" class="btn btn-secondary"><i class="fa fa-download"></i> Unduh</div>
+                                            <div onclick="download_post()" id="download_m" name="download_m" class="btn btn-secondary" target="_blank"><i class="fa fa-download"></i> Unduh</div>
                                         </div>
                                       </div>
                                       <div id="grup_m_p">
@@ -313,7 +313,7 @@
                 </div>
                 </form>
 
-                <form method="POST" action="" id="downloadAnggaran" name="downloadAnggaran" enctype="multipart/form-data">
+                <form method="GET" action="{{ url('anggaran/reports/export') }}" id="downloadAnggaran" name="downloadAnggaran" enctype="multipart/form-data">
                     <input type="hidden" name="header_anggaran_download" id="header_anggaran_download">
                     <input type="hidden" name="list_anggaran_download" id="list_anggaran_download">
                 </form>                  
@@ -1587,11 +1587,14 @@
                     header['tipe_anggaran'] = $('#tipe_anggaran').val();
                     header['stat_anggaran'] = $('#stat_anggaran').val();
                     header['persetujuan'] = $('#persetujuan').val();
-                    $('input[name="header_anggaran_download"]').val(JSON.stringify(header));
+                    array = new Array();
+                    array.push(header);
+                    $('input[name="header_anggaran_download"]').val(JSON.stringify(array));
                     $('input[name="list_anggaran_download"]').val(JSON.stringify(inputs));
-                    alert(JSON.stringify(header));
-                    // $('form[id="downloadAnggaran"]').submit();
+                    //alert(JSON.stringify(header));
+                    $('form[id="downloadAnggaran"]').submit();
                   }
+
                   function changeButton(){
                     document.getElementById("send_r").addEventListener("click", function(event) {
                       check('Setuju');
