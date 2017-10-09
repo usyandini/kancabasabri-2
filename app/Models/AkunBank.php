@@ -13,5 +13,10 @@ class AkunBank extends Model
 	public function kcabang()
 	{
 		return $this->belongsTo('App\Models\KantorCabang', 'ID_CABANG', 'VALUE');
+	}
+
+	public function isAccessibleByCabang()
+	{
+		return \Auth::user()->hasAccess('unit_'.$this->ID_CABANG.'00') ? true : false;
 	}    
 }
