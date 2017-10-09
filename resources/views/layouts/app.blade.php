@@ -153,7 +153,7 @@
                         </ul>
                     </li>
                     @endif
-                    @if (Gate::check('pelaporan_anggaran') || Gate::check('pelaporan_a_RUPS') || Gate::check('form_master'))
+                    @if (Gate::check('pelaporan_anggaran') || Gate::check('pelaporan_a_RUPS')|| Gate::check('pelaporan_usulan_p_p') || Gate::check('pelaporan_tindak_lanjut')|| Gate::check('form_master'))
                     <li class="nav-item has-sub {{ checkOpenedMenu('pelaporan/informasi/laporan_anggaran') }}"><a href=""><i class="ft-edit"></i><span data-i18n="" class="menu-title">Pelaporan</span></a>
                         <ul class="menu-content">
                             @can('pelaporan_anggaran')
@@ -168,9 +168,15 @@
                             @can('pelaporan_tindak_lanjut')
                             <li class="nav-item has-sub {{ checkOpenedMenu('tindaklanjut') }}"><a href=""><span data-i18n="" class="menu-title">Tindak Lanjut Temuan</span></a>
                             <ul class="menu-content">
+                                @can('manajemen_u_k')
                                 <li class="is-shown {{ checkActiveMenu('unitkerja') }}"><a href="{{ url('/unitkerja', $parameters = [], $secure = null) }}" class="menu-item">Manajemen Unit Kerja</a>
+                                @endcan
+                                @can('t_l_internal')
                                 <li class="is-shown {{ checkActiveMenu('tindaklanjutinternal') }}"><a href="{{ url('/tindaklanjutinternal', $parameters = [], $secure = null) }}" class="menu-item">Tindak Lanjut Internal</a>
+                                @endcan
+                                @can('t_l_eksterenal')
                                 <li class="is-shown {{ checkActiveMenu('tindaklanjutex') }}"><a href="{{ url('/tindaklanjutex', $parameters = [], $secure = null) }}" class="menu-item">Tindak Lanjut Eksternal</a>
+                                @endcan
                             </ul>
                             @endcan
                             @can('form_master')
