@@ -78,7 +78,7 @@ class Notification extends Model
 
     public function tindakLanjut()
     {
-        return $this->belongsTo('App\Models\TlTanggal', 'batch_id', 'id');
+        return $this->belongsTo('App\Models\TlTanggal', 'batch_id', 'id1');
     }
 
     public function wording()
@@ -109,6 +109,7 @@ class Notification extends Model
             }
         }
         
+
         switch ($this->type) {
             case 1:
                 return 'Batch <b>'.$batchNo.'</b> butuh review anda untuk approval sebagai Kakancab.';
@@ -201,9 +202,9 @@ class Notification extends Model
             case 37:
                 return 'Usulan Program Prioritas telah diisi oleh '.$this->formMaster->unit_kerja()[0].' untuk '.$TW.'.';
             case 38:
-                return 'Temuan dan Rekomendasi telah dibuat dan akan dikirim ke unit kerja '.$this->tindakLanjut['unit_kerja'].'.';
+                return 'Temuan dan Rekomendasi telah dibuat dan akan dikirim ke unit kerja '.$this->tindakLanjut['unitkerja'].'.';
             case 39:
-                return 'Tindak Lanjut telah diisi oleh unit kerja '.$this->tindakLanjut['unit_kerja'].'dan akan dikirim ke SPI.';
+                return 'Tindak Lanjut telah diisi oleh unit kerja '.$this->tindakLanjut['unitkerja'].'dan akan dikirim ke SPI.';
         
         }
     }
