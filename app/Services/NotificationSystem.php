@@ -176,6 +176,14 @@ class NotificationSystem
             array_push($array_type,36);
         }
 
+        if(isset($user->perizinan['notif_tindak_lanjut'])){
+            array_push($array_type,38);
+        }
+
+        if(isset($user->perizinan['notif_tindak_lanjut2'])){
+            array_push($array_type,39);
+        }
+
         return $array_type;
     }
 

@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class tl_tangal extends Model
+class TlTanggal extends Model
 {
     protected $connection = 'sqlsrv';
 

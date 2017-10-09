@@ -76,6 +76,11 @@ class Notification extends Model
         return $this->belongsTo('App\Models\FormMasterPelaporan', 'batch_id', 'id');
     }
 
+    public function tindakLanjut()
+    {
+        return $this->belongsTo('App\Models\TlTanggal', 'batch_id', 'id');
+    }
+
     public function wording()
     {
         $batchNo = $this->batch ? $this->batch->batchNo() : '';
@@ -195,6 +200,10 @@ class Notification extends Model
                 return 'Form Master untuk Usulan Program Prioritas untuk '.$TW.' telah dibuat dan dapat di isi mulai dari '.$this->formMaster['tanggal_mulai'].' sampai '.$this->formMaster['tanggal_selesai'];
             case 37:
                 return 'Usulan Program Prioritas telah diisi oleh '.$this->formMaster->unit_kerja()[0].' untuk '.$TW.'.';
+            case 38:
+                return 'Temuan dan Rekomendasi telah dibuat dan akan dikirim ke unit kerja '.$this->tindakLanjut['unit_kerja'].'.';
+            case 39:
+                return 'Tindak Lanjut telah diisi oleh unit kerja '.$this->tindakLanjut['unit_kerja'].'dan akan dikirim ke SPI.';
         
         }
     }

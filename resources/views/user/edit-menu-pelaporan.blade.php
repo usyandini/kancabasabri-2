@@ -65,9 +65,29 @@
                 </li>
             </ul>
             <fieldset>
-              <input type="checkbox" name="perizinan[pelaporan_tindak_lanjut]" {{ isset($user->perizinan['pelaporan_tindak_lanjut']) ? 'checked=""' : '' }}>
+              <input id="pelaporan_tindak_lanjut" type="checkbox" name="perizinan[pelaporan_tindak_lanjut]" {{ isset($user->perizinan['pelaporan_tindak_lanjut']) ? 'checked=""' : '' }}>
               <label>Tindak Lanjut Temuan</label>
             </fieldset>
+            <ul id="pelaporan_tindak_lanjut">
+                <li>
+                  <fieldset>
+                    <input type="checkbox" name="perizinan[manajemen_u_k]" {{ isset($user->perizinan['manajemen_u_k']) ? 'checked=""' : '' }}>
+                    <label >Manajemen Unit Kerja</label>
+                  </fieldset>
+                </li>
+                <li>
+                  <fieldset>
+                    <input type="checkbox" name="perizinan[t_l_internal]" {{ isset($user->perizinan['t_l_internal']) ? 'checked=""' : '' }}>
+                    <label >Tindak Lanjut Internal</label>
+                  </fieldset>
+                </li>
+                <li>
+                  <fieldset>
+                    <input type="checkbox" name="perizinan[t_l_eksterenal]" {{ isset($user->perizinan['t_l_eksterenal']) ? 'checked=""' : '' }}>
+                    <label >Tindak Lanjut Eksternal</label>
+                  </fieldset>
+                </li>
+            </ul>
             <fieldset>
               <input id="form_master"type="checkbox" name="perizinan[form_master]" {{ isset($user->perizinan['form_master']) ? 'checked=""' : '' }}>
               <label>Form Master</label>
@@ -151,6 +171,14 @@
             <fieldset>
               <input type="checkbox" name="perizinan[notif_ajukan_usulan_p_p]" {{ isset($user->perizinan['notif_ajukan_usulan_p_p']) ? 'checked=""' : '' }}>
               <label>Pengajuan Usulan Program Prioritas</label>
+            </fieldset>
+            <fieldset>
+              <input type="checkbox" name="perizinan[notif_tindak_lanjut]" {{ isset($user->perizinan['notif_tindak_lanjut']) ? 'checked=""' : '' }}>
+              <label>Pengajuan Tindak Lanjut Temuan User Master</label>
+            </fieldset>
+            <fieldset>
+              <input type="checkbox" name="perizinan[notif_tindak_lanjut2]" {{ isset($user->perizinan['notif_tindak_lanjut2']) ? 'checked=""' : '' }}>
+              <label>Pengajuan Tindak Lanjut Temuan Unit Kerja</label>
             </fieldset>
             <fieldset >
               <input type="checkbox" name="perizinan[notif_ajukan_master_p_a]" {{ isset($user->perizinan['notif_ajukan_master_p_a']) ? 'checked=""' : '' }}>
