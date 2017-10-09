@@ -1582,7 +1582,7 @@
                   function download_post(){
                     $('input[name="list_anggaran_download"]').val(JSON.stringify(inputs));
                     alert(JSON.stringify(inputs));
-                    // $('form[id="insertAnggaran"]').submit();
+                    // $('form[id="downloadAnggaran"]').submit();
                   }
                   function changeButton(){
                     document.getElementById("send_r").addEventListener("click", function(event) {
