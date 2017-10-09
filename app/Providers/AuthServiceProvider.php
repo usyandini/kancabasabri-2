@@ -83,13 +83,14 @@ class AuthServiceProvider extends ServiceProvider
         $pelaporan = ["pelaporan_anggaran","cari_pelaporan_anggaran","tambah_pelaporan_anggaran",
                         "pelaporan_a_RUPS","cari_pelaporan_a_RUPS","tambah_pelaporan_a_RUPS",
                         "pelaporan_usulan_p_p","cari_pelaporan_usulan_p_p","tambah_pelaporan_usulan_p_p",
-                        "pelaporan_tindak_lanjut","form_master","master_pelaporan_anggaran",
+                        "pelaporan_tindak_lanjut","manajemen_u_k","t_l_internal","t_l_eksterenal",
+                        "form_master","master_pelaporan_anggaran",
                         "cari_master_pelaporan_anggaran","tambah_master_pelaporan_anggaran",
                         "master_arahan_a_RUPS","cari_master_arahan_a_RUPS","tambah_master_arahan_a_RUPS",
                         "master_usulan_p_p","cari_master_usulan_p_p","tambah_master_usulan_p_p",
-                        "notif_ajukan_p_a","notif_ajukan_a_RUPS",
-                        "notif_ajukan_usulan_p_p","notif_ajukan_master_p_a","notif_ajukan_master_a_RUPS",
-                        "notif_ajukan_master_usulan_p_p"];
+                        "notif_ajukan_p_a","notif_ajukan_a_RUPS","notif_ajukan_usulan_p_p",
+                        "notif_tindak_lanjut","notif_tindak_lanjut2",
+                        "notif_ajukan_master_p_a","notif_ajukan_master_a_RUPS","notif_ajukan_master_usulan_p_p"];
 
         for($i=0;$i<count($pelaporan);$i++){
              $permissions[] = $pelaporan[$i];

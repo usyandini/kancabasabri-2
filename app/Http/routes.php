@@ -183,6 +183,12 @@ Route::group(['middleware' => 'auth'], function() {
 		
 	});
 
+
+	Route::group(['prefix' => 'unitkerjainternal'], function(){
+		Route::resource('/', 'TindaklanjutController@unitkerjainternal');
+		
+	});
+
 	Route::group(['prefix' => 'tindaklanjutex'], function(){
 		Route::resource('/', 'TindaklanjutController@unitkerjaex');
 		Route::post('/store_unitkerjaex', 'TindaklanjutController@store_unitkerjaex');
@@ -191,6 +197,8 @@ Route::group(['middleware' => 'auth'], function() {
 		Route::get('/myform/{unitkerja}', 'TindaklanjutController@myformAjaxtindaklanjut');
 		
 	});
+
+
 
 	Route::group(['prefix' => 'tindaklanjut'], function(){
 		Route::get('/', 'TindaklanjutController@tindaklanjutmaster');
@@ -217,6 +225,8 @@ Route::group(['middleware' => 'auth'], function() {
 
 	Route::group(['prefix' => 'tindaklanjutinternal'], function(){
 		Route::get('/', 'TindaklanjutController@tindaklanjutinternal');
+		Route::post('/cari', 'TindaklanjutController@cari_unitkerjainternal');
+		Route::get('/{id}', 'TindaklanjutController@unitkerjainternal');
 		Route::get('/myform/{unitkerja}', 'TindaklanjutController@myformAjax');
 		Route::get('/kirim2/{id1}', 'TindaklanjutController@kirim_tindaklanjut2');
 		

@@ -35,6 +35,10 @@ class NotificationSystem
             case 4:
 				$receiver_id = null;
 				break;
+            case 7:
+            case 39:
+                $receiver_id = null;
+                break;
 			default:
 				$receiver_id = Batch::where('id', $id)->first()['creator']['id'];
 				break;
@@ -174,6 +178,14 @@ class NotificationSystem
         }
         if(isset($user->perizinan['notif_ajukan_master_usulan_p_p'])){
             array_push($array_type,36);
+        }
+
+        if(isset($user->perizinan['notif_tindak_lanjut'])){
+            array_push($array_type,38);
+        }
+
+        if(isset($user->perizinan['notif_tindak_lanjut2'])){
+            array_push($array_type,39);
         }
 
         return $array_type;
