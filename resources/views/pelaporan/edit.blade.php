@@ -252,7 +252,7 @@
                       </div>
                       <div class="modal-footer">
                         <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">Tidak, kembali</button>
-                        <button type="button" id="button_peryataan" onclick="sumbit_post()" class="btn btn-outline-primary">Ya, kirim</button>
+                        <div id="button_peryataan" onclick="sumbit_post()" class="btn btn-outline-primary">Ya, kirim</div>
                       </div>
                     </div>
                   </div>

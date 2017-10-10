@@ -244,7 +244,7 @@
                       </div>
                       <div class="modal-footer">
                         <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">Tidak, kembali</button>
-                        <button type="button" id="button_peryataan" onclick="sumbit_post()" class="btn btn-outline-primary">Ya, kirim</button>
+                        <div  id="button_peryataan" onclick="sumbit_post()" class="btn btn-outline-primary">Ya, kirim</div>
                       </div>
                     </div>
                   </div>
@@ -330,9 +330,12 @@
                         updateItem: function(item) {
                           item["delete"]="none";
                           // alert(item["tempId"]);
+
                           if(item["isNew"]){
                             inputs.splice(item["tempId"], 1, item); 
                           }else{
+
+                          // alert(item['progress_tindak_lanjut']);
                             if(inputs.length>0){
                               for(i=0;i<inputs.length;i++){
                                 if(inputs[i]["id"]==item.id){
@@ -341,8 +344,9 @@
                                     for(j=0;j<inputs[i]["file"].length;j++){
                                       item["file"][j]["delete"]=inputs[i]["file"][j]["delete"];
                                     }
-                                    inputs[i] = item; 
                                   }
+                                  inputs[i] = item; 
+                                  
                                 }
                               }
                             }
@@ -766,7 +770,7 @@
                                 inputs[i]['uraian_progress']="";
                                 @endif
                                 @if($setting['kategori'] == "arahan_rups")
-                                inputs[i]['progres_tindak_lanjut']="";
+                                inputs[i]['progress_tindak_lanjut']="";
                                 @endif
                                 for(j=0;j<inputs[i]["file"].length;j++){
                                   inputs[i]["file"][j]["delete"]="none";

@@ -15,7 +15,8 @@ class MasterItemArahanRUPS extends Model
     protected $fillable = 
     		['id_form_master', 
             'unit_kerja', 
-    		'jenis_arahan',
+            'jenis_arahan',
+    		'progress_tindak_lanjut',
     		'arahan', 
             'active',
     		'is_template',
