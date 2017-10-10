@@ -4,15 +4,7 @@
 		h3 {
             text-transform: uppercase;
         }
-		table.body{
-			border-collapse:collapse;
-			
-			margin-left:auto;
-			margin-right:auto;
-
-        	border: 1px solid #000;
-		}
-		td, th{
+        td, th{
         	margin:auto;
         	padding:5px;			
 		}
@@ -21,6 +13,14 @@
             text-align:center;
 			border: 1px solid #000;
         }
+		table.body{
+			border-collapse:collapse;
+			
+			margin-left:auto;
+			margin-right:auto;
+
+        	border: 1px solid #000;
+		}
         tr.body, td.body{
 			border: 1px solid #000;
         	padding: 5px;
