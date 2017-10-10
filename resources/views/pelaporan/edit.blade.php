@@ -258,9 +258,9 @@
                   </div>
                 </div>
 
-                <form method="GET" action="" id="downloadPelaporan" name="downloadPelaporan" enctype="multipart/form-data">
+                <form method="GET" action="{{url('pelaporan/reports/export')}}" id="downloadPelaporan" name="downloadPelaporan" enctype="multipart/form-data">
                     
-                    <input type="hidden" name="kategori_download" id="kategori_download" value="{{$setting['kategori']}}">
+                    <input type="hidden" name="kategori_download" id="kategori_download" value="{{$setting['kategori']}}">              
                     <input type="hidden" name="header_pelaporan_download" id="header_pelaporan_download">
                     <input type="hidden" name="list_pelaporan_download" id="list_pelaporan_download">
                 </form> 
@@ -1063,7 +1063,7 @@
                     array.push(header);
                     $('input[name="header_pelaporan_download"]').val(JSON.stringify(array));
                     $('input[name="list_pelaporan_download"]').val(JSON.stringify(inputs));
-                    //alert(JSON.stringify(header));
+                    // alert(JSON.stringify(header));
                     $('form[id="downloadPelaporan"]').submit();
                   }
                   $('#modal_berkas').on('hidden.bs.modal', function () {

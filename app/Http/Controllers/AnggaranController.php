@@ -1140,7 +1140,7 @@ class AnggaranController extends Controller
         foreach(json_decode($request->header_riwayat_values) as $header){
             $header_list[] = [
                 'tahun'       => $header->tahun,
-                'unit_kerja'    => $header->unit_kerja
+                'unit_kerja'  => $header->unit_kerja
             ];
         }
 
