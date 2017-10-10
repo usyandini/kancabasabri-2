@@ -1352,6 +1352,33 @@ class PelaporanController extends Controller
                 return $pdf->setPaper('a4', 'landscape')->setWarnings(false)->download('Pelaporan-'.date("dmY").'.pdf');
                 break;
 
+            case "arahan_rups": 
+                foreach(json_decode($request->header_pelaporan_download) as $header){
+                    $header_list[] = [
+                        'tanggal'       => $header->tanggal,
+                        'tw_dari'       => $header->tw_dari,
+                        'tw_ke'         => $header->tw_ke
+                    ];
+                }
+
+                foreach(json_decode($request->list_pelaporan_download) as $value){
+                    $pelaporan_list[] = [
+                        'unit_kerja'        => $value->unit_kerja,
+                        'jenis_arahan'      => $value->jenis_arahan,
+                        'arahan'            => $value->arahan,
+                        'progress_tindak_lanjut'   => $value->progress_tindak_lanjut
+                    ];
+                }
+
+                $data = [
+                    'list'      => $pelaporan_list,
+                    'header'    => $header_list
+                ];
+                
+                $pdf = PDF::loadView('pelaporan.reports.export-arahanrups', $data);
+                return $pdf->setPaper('a4', 'landscape')->setWarnings(false)->download('Arahan RUPS-'.date("dmY").'.pdf');
+                break;    
+
             case "usulan_program": 
                 foreach(json_decode($request->header_pelaporan_download) as $header){
                     $header_list[] = [
