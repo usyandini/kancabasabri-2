@@ -230,6 +230,20 @@
 					
 					$('.datatable-select-inputs').DataTable( {
 							scrollX: true,
+							"language": {
+								"paginate": {
+								  "previous": "Sebelumnya",
+								  "next": "Selanjutnya"
+								},
+
+    							"emptyTable":  "Tidak Ada Arahan RUPS Tersimpan",
+    							"info":  "Data Arahan _START_-_END_ dari _TOTAL_ Arahan",
+    							"infoEmpty":  "Data Arahan 0-0 dari _TOTAL_ Arahan ",
+    							"search": "Pencarian:",
+    							"lengthMenu": "Perlihatkan _MENU_ masukan",
+    							"infoFiltered": "(telah di filter dari _MAX_ total masukan)",
+    							"zeroRecords": "Tidak ada data ditemukan"
+							},
 						    initComplete: function () {
 						        this.api().columns('#filterable').every( function () {
 						            var column = this;
