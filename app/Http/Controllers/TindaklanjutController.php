@@ -7,6 +7,7 @@ use DB;
 use App\Http\Requests;
 use App\User;
 use App\Services\FileUpload;
+use App\Services\NotificationSystem;
 
 // table -> tl_tanggal :
 // status = 1 -> dalam proses
@@ -461,7 +462,7 @@ class TindaklanjutController extends Controller
          ];
  
          $update = DB::table('tl_tanggal')->where('id1', $id1)->update($data);
-
+         NotificationSystem::send($id1, 38);
          return redirect()->back()->with('after_update', $after_update);
          
          
@@ -480,6 +481,7 @@ class TindaklanjutController extends Controller
  
          $update = DB::table('tl_tanggal')->where('id1', $id1)->update($data);
 
+         NotificationSystem::send($id1, 39);
          return redirect()->back()->with('after_update', $after_update);
          
          

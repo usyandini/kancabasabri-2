@@ -233,5 +233,21 @@ Route::group(['middleware' => 'auth'], function() {
 		
 	});
 	// Route::get('myform/ajax/{unitkerja}',array('as'=>'myform.ajax','uses'=>'TindaklanjutController@myformAjax'));
+
+	Route::group(['prefix' => 'pengajuan_dropping'], function(){
+		Route::resource('/', 'PengajuanDroppingController');
+		Route::post('/store_pengajuandropping', 'PengajuanDroppingController@store_pengajuandropping');
+		Route::post('/update_pengajuandropping/{id1}', 'PengajuanDroppingController@update_pengajuandropping');
+		Route::get('/delete_pengajuandropping/{id1}', 'PengajuanDroppingController@delete_pengajuandropping');
+		Route::get('/kirim/{id}', 'PengajuanDroppingController@kirim_pengajuandropping');
+		Route::get('/download/{id}', 'PengajuanDroppingController@downloadberkas');
+		Route::get('/print/{id}', 'PengajuanDroppingController@print_pengajuandropping');
+	});
+
+	Route::group(['prefix' => 'acc_pengajuan_dropping'], function(){
+		Route::resource('/', 'PengajuanDroppingController@acc');
+		Route::post('/update_accpengajuandropping/{id1}', 'PengajuanDroppingController@update_verifikasi');
+		Route::get('/kirim/{id}', 'PengajuanDroppingController@kirim_pengajuandropping2');
+	});
 });
 
