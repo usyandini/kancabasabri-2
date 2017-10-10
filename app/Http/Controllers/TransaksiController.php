@@ -99,7 +99,7 @@ class TransaksiController extends Controller
             
             $getByBatch = isset($getByBatch[0]) ? $getByBatch[0] : null;
             if ($getByBatch == null) {
-                session()->flash('batch_notvalid', true);
+                // session()->flash('batch_notvalid', true);
                 return redirect('transaksi');
             }
         }
