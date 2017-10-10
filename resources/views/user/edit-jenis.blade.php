@@ -16,15 +16,15 @@
                 @section('content')
                 <div class="content-header row">
                   <div class="content-header-left col-md-6 col-xs-12 mb-2">
-                    <h3 class="content-header-title mb-0">Manajemen User</h3>
+                    <h3 class="content-header-title mb-0">Manajemen Pengguna</h3>
                     <div class="row breadcrumbs-top">
                       <div class="breadcrumb-wrapper col-xs-12">
                         <ol class="breadcrumb">
-                          <li class="breadcrumb-item"><a href="{{ url('user') }}">Manajemen User</a>
+                          <li class="breadcrumb-item"><a href="{{ url('user') }}">Manajemen Pengguna</a>
                           </li>
-                          <li class="breadcrumb-item"><a href="{{ url('jenis_user') }}">Perizinan Jenis User</a>
+                          <li class="breadcrumb-item"><a href="{{ url('jenis_user') }}">Perizinan Jenis Pengguna</a>
                           </li>
-                          <li class="breadcrumb-item active">Edit Jenis User
+                          <li class="breadcrumb-item active">Edit Jenis Pengguna
                           </li>
                         </ol>
                       </div>

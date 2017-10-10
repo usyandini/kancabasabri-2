@@ -15,13 +15,13 @@
                 @section('content')
                 <div class="content-header row">
                     <div class="content-header-left col-md-6 col-xs-12 mb-2">
-                        <h3 class="content-header-title mb-0">Perizinan Jenis User</h3>
+                        <h3 class="content-header-title mb-0">Perizinan Jenis Pengguna</h3>
                         <div class="row breadcrumbs-top">
                             <div class="breadcrumb-wrapper col-xs-12">
                                 <ol class="breadcrumb">
-                                    <li class="breadcrumb-item"><a href="{{ url('user') }}">Manajemen User</a>
+                                    <li class="breadcrumb-item"><a href="{{ url('user') }}">Manajemen Pengguna</a>
                                     </li>
-                                    <li class="breadcrumb-item active">Perizinan Jenis User
+                                    <li class="breadcrumb-item active">Perizinan Jenis Pengguna
                                     </li>
                                 </ol>
                             </div>
@@ -35,7 +35,7 @@
 			            <div class="col-xs-12">
 			              <div class="card">
 			                <div class="card-header">
-			                  <h4 class="card-title">List Jenis User</h4>
+			                  <h4 class="card-title">Daftar Jenis Pengguna</h4>
 			                  <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
 			                </div>
 			                <div class="card-body collapse in">
@@ -44,11 +44,11 @@
 			                      <table class="table table-striped table-bordered datatable-select-inputs nowrap" cellspacing="0" width="100%">
 			                        <thead>
 			                          <tr>
-			                            <th id="filterable" width="200px">Nama Jenis User</th>
+			                            <th id="filterable" width="200px">Nama Jenis Pengguna</th>
 			                            <th id="filterable">Dibuat oleh</th>
 			                            <th id="filterable">Dibuat pada</th>
 			                            <th id="filterable">Terakhir diperbarui</th>
-			                            <th>Banyak User</th>
+			                            <th>Banyak Pengguna</th>
 			                            <th id="filterable">Status</th>
 			                            <th>Aksi</th>
 			                          </tr>
@@ -148,6 +148,20 @@
 					}
 					$('.datatable-select-inputs').DataTable( {
 							scrollX: true,
+							"language": {
+								"paginate": {
+								  "previous": "Sebelumnya",
+								  "next": "Selanjutnya"
+								},
+
+    							"emptyTable":  "Tidak Ada Data Tersimpan",
+    							"info":  "Menampilkan _START_-_END_ dari _TOTAL_ Data",
+    							"infoEmpty":  "Menampilkan 0-0 dari _TOTAL_ Data ",
+    							"search": "Pencarian:",
+    							"lengthMenu": "Perlihatkan _MENU_ masukan",
+    							"infoFiltered": "(telah di filter dari _MAX_ total masukan)",
+    							"zeroRecords": "Tidak ada data ditemukan"
+    						},
 						    initComplete: function () {
 						        this.api().columns('#filterable').every( function () {
 						            var column = this;

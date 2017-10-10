@@ -208,29 +208,35 @@ class PelaporanController extends Controller
             );
 
         $sub_title = "";
+        $title = "Form Master";
         if($kategori == "laporan_anggaran"){
             if($type=='item'){
                 $setting['insert']=false;
                 $setting['jenis_berkas']="0";
+                $title = "Pelaporan Anggaran dan Kegiatan";
             }
-            $setting['table'] = true;
             $sub_title = "Pelaporan Anggaran dan Kegiatan";
+            $setting['table'] = true;
         }else if($kategori == "arahan_rups"){
             $setting['table'] = true;
             if($type=='item'){
                 $setting['insert']=false;
                 $setting['jenis_berkas']="0";
+                $title = "Arahan RUPS";
             }
             if($type == "master"){
                 $setting['berkas'] = false;
             }
             $sub_title = "Arahan RUPS";
         }else if($kategori == "usulan_program"){
+            if($type == 'item'){
+                $title = "Usulan Program Prioritas";
+            }
             $setting['table'] = false;
             $sub_title = "Usulan Program Prioritas";
         }
         return view('pelaporan.edit', [
-            'title' => 'Form Master',
+            'title' => $title,
             'sub_title' => $sub_title,
             'setting' => $setting , 
             'type' => $type,
@@ -373,10 +379,12 @@ class PelaporanController extends Controller
 
 
         $sub_title = "";
+        $title = "Form Master";
         if($kategori == "laporan_anggaran"){
             if($type=='item'){
                 $setting['insert']=false;
                 $setting['jenis_berkas']="0";
+                $title = "Pelaporan Anggaran dan Kegiatan";
             }
             $setting['table'] = true;
             $sub_title = "Pelaporan Anggaran dan Kegiatan";
@@ -385,19 +393,22 @@ class PelaporanController extends Controller
             if($type=='item'){
                 $setting['insert']=false;
                 $setting['jenis_berkas']="0";
+                $title = "Arahan RUPS";
             }
             if($type == "master"){
                 $setting['berkas'] = false;
             }
             $sub_title = "Arahan RUPS";
         }else if($kategori == "usulan_program"){
+            if($type=="item"){
+                $title = "Usulan Program Prioritas";
+            }
             $setting['table'] = false;
             $sub_title = "Usulan Program Prioritas";
         }
 
         $beda =  true;
         if($type == 'item'){
-            // echo count($this->check_tambah($kategori,0));
             if(count($this->check_tambah($id,0))>0){
                 session()->flash('back', 'Unit Kerja Anda Telah mengisi '.$sub_title.'. Silahkan Melakukan pencarian jika ingin merubah sebelum waktu pengajuan berakhir');
                 session()->flash('title', $sub_title." telah tersedia");
@@ -439,7 +450,7 @@ class PelaporanController extends Controller
         }
 
         return view('pelaporan.input', [
-            'title' => 'Form Master',
+            'title' => $title,
             'sub_title' => $sub_title,
             'setting' => $setting , 
             'type' => $type,
@@ -698,21 +709,26 @@ class PelaporanController extends Controller
         $type = "master";
         if($request->jenis_berkas == '0'){
             $type = 'item';
-            if($kategori == "laporan_anggaran"){
-                NotificationSystem::send($id_form_master, 33);
-            }else if($kategori == "arahan_rups"){
-                NotificationSystem::send($id_form_master, 35);
-            }else if($kategori == "usulan_program"){
-                NotificationSystem::send($id_form_master, 37);
+            if($request->kondisi == 'Kirim'){
+                if($kategori == "laporan_anggaran"){
+                    NotificationSystem::send($id_form_master, 33);
+                }else if($kategori == "arahan_rups"){
+                    NotificationSystem::send($id_form_master, 35);
+                }else if($kategori == "usulan_program"){
+                    NotificationSystem::send($id_form_master, 37);
+                }
             }
             
         }else{
-            if($kategori == "laporan_anggaran"){
-                NotificationSystem::send($id_form_master, 32);
-            }else if($kategori == "arahan_rups"){
-                NotificationSystem::send($id_form_master, 34);
-            }else if($kategori == "usulan_program"){
-                NotificationSystem::send($id_form_master, 36);
+
+            if($request->kondisi == 'Kirim'){
+                if($kategori == "laporan_anggaran"){
+                    NotificationSystem::send($id_form_master, 32);
+                }else if($kategori == "arahan_rups"){
+                    NotificationSystem::send($id_form_master, 34);
+                }else if($kategori == "usulan_program"){
+                    NotificationSystem::send($id_form_master, 36);
+                }
             }
         }
 
