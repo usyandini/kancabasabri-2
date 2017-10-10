@@ -99,7 +99,7 @@ class TransaksiController extends Controller
             
             $getByBatch = isset($getByBatch[0]) ? $getByBatch[0] : null;
             if ($getByBatch == null) {
-                session()->flash('batch_notvalid', true);
+                // session()->flash('batch_notvalid', true);
                 return redirect('transaksi');
             }
         }
@@ -267,6 +267,8 @@ class TransaksiController extends Controller
         }
 
         foreach (json_decode($request->batch_values) as $value) {
+            $value->anggaran = str_replace(',', '', $value->anggaran);
+            $value->actual_anggaran = str_replace(',', '', $value->actual_anggaran);
             $value->total = str_replace(',', '', $value->total);
             if (!isset($value->toBeDeleted)) {
                 $calibrate = $this->calibrateAnggaran($value, true);
@@ -524,7 +526,8 @@ class TransaksiController extends Controller
                 'PIL_SUBPOS'    => $trans->sub_pos,
                 'PIL_TRANSDATE' => new Carbon(str_replace(':AM', ' AM', $trans->tgl)),
                 'PIL_TXT'       => $trans->desc,
-                'PIL_TRANSACTIONID' => $trans->id];
+                'PIL_TRANSACTIONID' => '',
+                'RECID' => $trans->id];
                 
             StagingTransaksi::create($input);
         }

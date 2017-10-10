@@ -216,15 +216,12 @@
                             title: "Anggaran Tersedia (Awal)",
                             readOnly: true,
                             itemTemplate: function(value) {
-                              return "<b>IDR " + parseInt(value).toLocaleString() + ",00</b>";
+                              var nilai = validDigits(value);
+                              value = addCommas(nilai);
+                              return "<b>IDR " + value + ",00</b>";
                             },
                             insertTemplate: function(value) {
                               anggaran_field = jsGrid.fields.text.prototype.insertTemplate.call(this)
-                              anggaran_field.on("keyup", function() {
-                                var nilai = validDigits($(this).val());
-                                var val = addCommas(nilai);
-                                $(anggaran_field).val(val)
-                              })
                               return anggaran_field
                             },
                             valdiate: {
@@ -240,7 +237,9 @@
                             title: "Anggaran Tersedia (Aktual Estimasi)",
                             readOnly: true,
                             itemTemplate: function(value) {
-                              return "<b>IDR " + parseInt(value).toLocaleString() + ",00</b>";
+                              var nilai = validDigits(value);
+                              value = addCommas(nilai);
+                              return "<b>IDR " + value + ",00</b>";
                             },
                             insertTemplate: function(value) {
                               actual_anggaran = jsGrid.fields.text.prototype.insertTemplate.call(this)
@@ -453,7 +452,14 @@
                     $(m_anggaran).val(data.SEGMEN_6)
 
                     $(anggaran_field).val(data.ax_anggaran.PIL_AMOUNTAVAILABLE)
+                    var nilai = validDigits($(anggaran_field).val());
+                    var val = addCommas(nilai);
+                    $(anggaran_field).val(val)
+
                     $(actual_anggaran).val(data.actual_anggaran)
+                    nilai = validDigits($(actual_anggaran).val());
+                    val = addCommas(nilai);
+                    $(actual_anggaran).val(val)
                   }
                   
                   function pad(n) {
