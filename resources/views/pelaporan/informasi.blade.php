@@ -118,8 +118,30 @@
                                   </div>
                                   <div class="col-xs-1">
                                     <div class="form-group">
+                                      <?php
+                                          $tambah_b =  false;
+                                          if($type == "item"){
+                                            if($kategori == 'laporan_anggaran'&&Gate::check('tambah_pelaporan_anggaran')){
+                                              $tambah_b = true;
+                                            }else if($kategori == 'arahan_rups'&&Gate::check('tambah_pelaporan_a_RUPS')){
+                                              $tambah_b = true;
+                                            }else if($kategori == 'usulan_program'&&Gate::check('tambah_pelaporan_usulan_p_p')){
+                                              $tambah_b = true;
+                                            }
+                                          }else if($type == "master"){
+                                            if($kategori == 'laporan_anggaran'&&Gate::check('tambah_master_pelaporan_anggaran')){
+                                              $tambah_b = true;
+                                            }else if($kategori == 'arahan_rups'&&Gate::check('tambah_master_arahan_a_RUPS')){
+                                              $tambah_b = true;
+                                            }else if($kategori == 'usulan_program'&&Gate::check('tambah_master_usulan_p_p')){
+                                              $tambah_b = true;
+                                            }
+                                          }
+                                      ?>
                                       <label style="visibility:hidden">TW</label>
+                                      @if($tambah_b)
                                       <div onclick="tambahPelaporan()" class="btn btn-success" style="width:110px"><i class="fa fa-plus"></i> Tambah</div>                                          
+                                      @endif
                                     </div>
                                   </div>
                                 </div>
