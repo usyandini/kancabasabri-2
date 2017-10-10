@@ -17,6 +17,7 @@ use App\Models\BerkasFormItemMaster;
 use App\Models\ProgramPrioritas;
 use App\Models\ArahanRups;
 use App\Services\NotificationSystem;
+use PDF;
 
 
 class PelaporanController extends Controller
@@ -380,7 +381,6 @@ class PelaporanController extends Controller
                     'table'         => true
 
             );
-
 
         $sub_title = "";
         $title = "Form Master";
@@ -1415,4 +1415,92 @@ class PelaporanController extends Controller
                 \DB::table('berkas_form_item_master')->delete();
     }
 
+    public function export_pelaporan(Request $request)
+    {
+        $header_list = []; 
+        $pelaporan_list = [];
+        $type = $request->kategori_download;
+        switch($type){
+            case "laporan_anggaran": 
+                foreach(json_decode($request->header_pelaporan_download) as $header){
+                    $header_list[] = [
+                        'tanggal'       => $header->tanggal,
+                        'tw_dari'       => $header->tw_dari,
+                        'tw_ke'         => $header->tw_ke
+                    ];
+                }
+
+                foreach(json_decode($request->list_pelaporan_download) as $value){
+                    $pelaporan_list[] = [
+                        'unit_kerja'        => $value->unit_kerja,
+                        'program_prioritas' => $value->program_prioritas,
+                        'sasaran_dicapai'   => $value->sasaran_dicapai,
+                        'uraian_progress'   => $value->uraian_progress
+                    ];
+                }
+
+                $data = [
+                    'list'      => $pelaporan_list,
+                    'header'    => $header_list
+                ];
+                
+                $pdf = PDF::loadView('pelaporan.reports.export-pelaporan', $data);
+                return $pdf->setPaper('a4', 'landscape')->setWarnings(false)->download('Pelaporan-'.date("dmY").'.pdf');
+                break;
+
+            case "arahan_rups": 
+                foreach(json_decode($request->header_pelaporan_download) as $header){
+                    $header_list[] = [
+                        'tanggal'       => $header->tanggal,
+                        'tw_dari'       => $header->tw_dari,
+                        'tw_ke'         => $header->tw_ke
+                    ];
+                }
+
+                foreach(json_decode($request->list_pelaporan_download) as $value){
+                    $pelaporan_list[] = [
+                        'unit_kerja'        => $value->unit_kerja,
+                        'jenis_arahan'      => $value->jenis_arahan,
+                        'arahan'            => $value->arahan,
+                        'progress_tindak_lanjut'   => $value->progress_tindak_lanjut
+                    ];
+                }
+
+                $data = [
+                    'list'      => $pelaporan_list,
+                    'header'    => $header_list
+                ];
+                
+                $pdf = PDF::loadView('pelaporan.reports.export-arahanrups', $data);
+                return $pdf->setPaper('a4', 'landscape')->setWarnings(false)->download('Arahan RUPS-'.date("dmY").'.pdf');
+                break;    
+
+            case "usulan_program": 
+                foreach(json_decode($request->header_pelaporan_download) as $header){
+                    $header_list[] = [
+                        'tanggal'       => $header->tanggal,
+                        'tw_dari'       => $header->tw_dari,
+                        'tw_ke'         => $header->tw_ke
+                    ];
+                }
+
+                foreach(json_decode($request->list_pelaporan_download) as $value){
+                    $pelaporan_list[] = [
+                        'nama_program'     => $value->nama_program,
+                        'latar_belakang'   => $value->latar_belakang,
+                        'dampak_positif'   => $value->dampak_positif,
+                        'dampak_negatif'   => $value->dampak_negatif
+                    ];
+                }
+
+                $data = [
+                    'list'      => $pelaporan_list,
+                    'header'    => $header_list
+                ];
+                
+                $pdf = PDF::loadView('pelaporan.reports.export-usulan', $data);
+                return $pdf->setPaper('a4', 'landscape')->setWarnings(false)->download('Usulan Program Prioritas-'.date("dmY").'.pdf');
+                break;
+        }
+    }
 }

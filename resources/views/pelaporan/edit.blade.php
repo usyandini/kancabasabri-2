@@ -258,9 +258,9 @@
                   </div>
                 </div>
 
-                <form method="GET" action="" id="downloadPelaporan" name="downloadPelaporan" enctype="multipart/form-data">
+                <form method="GET" action="{{url('pelaporan/reports/export')}}" id="downloadPelaporan" name="downloadPelaporan" enctype="multipart/form-data">
                     
-                    <input type="hidden" name="kategori_download" id="kategori_download" value="{{$setting['kategori']}}">
+                    <input type="hidden" name="kategori_download" id="kategori_download" value="{{$setting['kategori']}}">              
                     <input type="hidden" name="header_pelaporan_download" id="header_pelaporan_download">
                     <input type="hidden" name="list_pelaporan_download" id="list_pelaporan_download">
                 </form> 
@@ -289,7 +289,7 @@
                   var tempIdCounter = 0;
                   var insertable = {{($setting['insert']&&$beda)?1:0}};
                   var editable = {{($setting['edit']&&$beda)?1:0}};
-                  var unit_field_insert,unit_field_edit = null;
+                  var unit = null;
                   var click_berkas = true;
                   var statusTable = "";
                   var simpan_file = false;
@@ -440,10 +440,22 @@
                             title: "Unit Kerja", 
                             width: 130,
                             align: "left",
+                            insertcss: "unitkerja",
                             readOnly:insertable == 1 ? false : true,
                             valueField: "DESCRIPTION", 
                             textField: "DESCRIPTION", 
                             items: getData('unitkerja'),
+                            insertTemplate: function() {
+                              unit = this._grid.fields[3];
+                              var $insertControl = jsGrid.fields.select.prototype.insertTemplate.call(this);
+                              return $insertControl;
+
+                            },
+                            editTemplate: function(value) {
+                              unit = this._grid.fields[3];
+                              var $editControl = jsGrid.fields.select.prototype.editTemplate.call(this);
+                              return $editControl;
+                            },
                             validate: {
                               message : "Pilih Unit Kerja Terlebih Dahulu." ,
                               validator :function(value, item) {
@@ -680,10 +692,40 @@
                     return returned;
                   }
 
-                  function changeUnitKerja(){
-                    unit_kerja = document.getElementById('unit_kerja').value;
-                    $(unit_field_edit).val(unit_kerja);
-                    $(unit_field_insert).val(unit_kerja);
+                  function getUnitKerja() {
+                    var tanggal = $('#tanggal').val().split("/");
+                    var tw_dari = $('#tw_dari').val();
+                    var tw_ke = $('#tw_ke').val();
+
+                    switch(tw_dari){
+                      case "I" : tw_dari = "1";break;
+                      case "II" : tw_dari = "2";break;
+                      case "III" : tw_dari = "3";break;
+                      case "IV" : tw_dari = "4";break;
+                    }
+
+                    switch(tw_ke){
+                      case "I" : tw_ke = "1";break;
+                      case "II" : tw_ke = "2";break;
+                      case "III" : tw_ke = "3";break;
+                      case "IV" : tw_ke = "4";break;
+                    }
+                    var returned = function () {
+                        var tmp = null;
+                        $.ajax({
+                            'async': false, 'type': "GET", 'dataType': 'JSON', 
+                            'url': "{{ url('pelaporan/get/unit_kerja_form')}}/"+tanggal[2]+"/"+tw_dari+"/"+tw_ke+"/"+"{{$setting['kategori']}}"+"/-1",
+                            'success': function (data) {
+                                tmp = data;
+
+                                // alert(JSON.stringify(data));
+                                unit.items = data;
+                                $(".unitkerja").empty().append(unit.insertTemplate());
+                            }
+                        });
+                        return tmp;
+                    }();
+                    return returned;
                   }
 
                   function setUnitKerja(){
@@ -1063,7 +1105,7 @@
                     array.push(header);
                     $('input[name="header_pelaporan_download"]').val(JSON.stringify(array));
                     $('input[name="list_pelaporan_download"]').val(JSON.stringify(inputs));
-                    //alert(JSON.stringify(header));
+                    // alert(JSON.stringify(header));
                     $('form[id="downloadPelaporan"]').submit();
                   }
                   $('#modal_berkas').on('hidden.bs.modal', function () {
@@ -1117,6 +1159,8 @@
                       tanggal_selesai.setAttribute("max",max_ke);
                       tanggal_selesai.setAttribute("min",min_dari);
                     }
+
+                    getUnitKerja();
                   }
 
                   function setTWFirst(){
@@ -1155,7 +1199,7 @@
                   window.setTWFirst();
                   @endif
                   window.getListData();
-                  // window.startDate();
+                  window.getUnitKerja();
 
 
                 </script>

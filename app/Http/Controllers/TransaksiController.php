@@ -267,9 +267,9 @@ class TransaksiController extends Controller
         }
 
         foreach (json_decode($request->batch_values) as $value) {
-            $value->anggaran = str_replace(',', '', $value->anggaran);
-            $value->actual_anggaran = str_replace(',', '', $value->actual_anggaran);
-            $value->total = str_replace(',', '', $value->total);
+            $value->anggaran = str_replace('.', '', $value->anggaran);
+            $value->actual_anggaran = str_replace('.', '', $value->actual_anggaran);
+            $value->total = str_replace('.', '', $value->total);
             if (!isset($value->toBeDeleted)) {
                 $calibrate = $this->calibrateAnggaran($value, true);
             }
@@ -558,6 +558,11 @@ class TransaksiController extends Controller
 
         $start = $this->months[$awal];
         $end = $this->months[$akhir];
+        $excel = false;
+
+        if($type == 'excel'){
+            $excel = true;
+        }
 
         $data = [
             'cabangs'   => KantorCabang::get(),
@@ -567,14 +572,22 @@ class TransaksiController extends Controller
             'start'     => $start,
             'end'       => $end,
             'months'    => $this->months,
-            'year'      => $transyear];
+            'year'      => $transyear,
+            'excel'     => $excel];
 
-            if($type == 'export'){
-                $pdf = PDF::loadView('transaksi.export-realisasi', $data);
-                return $pdf->download('Realisasi Anggaran-'.date("dmY").'.pdf');
-            }else{
-              return view('transaksi.cetak-realisasi', $data);
-          }
+            switch($type){
+                case 'print' :
+                    return view('transaksi.cetak-realisasi', $data);
+                    break;
+                case 'export' :
+                    $pdf = PDF::loadView('transaksi.export-realisasi', $data);
+                    return $pdf->download('Realisasi Anggaran-'.date("dmY").'.pdf');
+                    break;
+                case 'excel' :
+                    return view('transaksi.export-realisasi', $data);
+                    break;
+            }
+
       }
       
       public function filter_handle_realisasi(Request $request)

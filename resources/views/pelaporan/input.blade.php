@@ -274,7 +274,7 @@
                   var tempIdCounter = 0;
                   var insertable = {{$setting['insert']?1:0}};
                   var editable = {{($setting['edit']&&$beda)?1:0}};
-                  var unit_field_insert,unit_field_edit = null;
+                  var unit = null;
                   var click_berkas = true;
                   var statusTable = "";
                   var simpan_file = false;
@@ -413,6 +413,17 @@
                             valueField: "DESCRIPTION", 
                             textField: "DESCRIPTION", 
                             items: getData('unitkerja'),
+                            insertTemplate: function() {
+                              unit = this._grid.fields[3];
+                              var $insertControl = jsGrid.fields.select.prototype.insertTemplate.call(this);
+                              return $insertControl;
+
+                            },
+                            editTemplate: function(value) {
+                              unit = this._grid.fields[3];
+                              var $editControl = jsGrid.fields.select.prototype.editTemplate.call(this);
+                              return $editControl;
+                            },
                             validate: {
                               message : "Pilih Unit Kerja Terlebih Dahulu." ,
                               validator :function(value, item) {
@@ -668,19 +679,13 @@
                                 tmp = data;
 
                                 // alert(JSON.stringify(data));
+                                unit.items = data;
+                                $(".unitkerja").empty().append(unit.insertTemplate());
                             }
                         });
                         return tmp;
                     }();
                     return returned;
-                  }
-
-
-
-                  function changeUnitKerja(){
-                    unit_kerja = document.getElementById('unit_kerja').value;
-                    $(unit_field_edit).val(unit_kerja);
-                    $(unit_field_insert).val(unit_kerja);
                   }
 
                   function setUnitKerja(){
@@ -1144,7 +1149,7 @@
                   window.setTWFirst();
                   @endif
                   window.getListData();
-                  // window.getUnitKerja();
+                  window.getUnitKerja();
                   // window.startDate();
 
 

@@ -34,15 +34,15 @@ use App\Services\NotificationSystem;
 
 //  ----------- DROPPING STAT DESC --------------
 //          0 = Belum melakukan aksi dropping
-//          1 = Submitted tarik tunai to Akuntansi
+//          1 = Submitted tarik tunai to Level 1
 //          2 = Rejected for re-input Tarik Tunai
-//          3 = Verified Tarik Tunai by Akuntansi
+//          3 = Verified Tarik Tunai by Level 1
 //
-//          4 = Submitted penyesuaian to BIA 
-//          5 = Rejected oleh BIA for re-input Penyesuaian
-//          6 = Verified Penyesuaian by BIA (lvl 1) / Submitted penyesuaian to Akuntansi 
-//          7 = Rejected oleh Akuntansi for re-input Penyesuaian
-//          8 = Verified Penyesuaian by Akuntansi (lvl 2)
+//          4 = Submitted penyesuaian to Level 1
+//          5 = Rejected by Level 1 for re-input Penyesuaian
+//          6 = Verified Penyesuaian by Level 1 / Submitted penyesuaian to c 
+//          7 = Rejected by Level 2 for re-input Penyesuaian
+//          8 = Verified Penyesuaian by Level 2
 //  ----------------------------------------------
 
 
@@ -243,15 +243,10 @@ class DroppingController extends Controller
         $subpos = SubPos::where('DESCRIPTION', 'None')->first();
         $kegiatan = Kegiatan::where('DESCRIPTION', 'None')->first();
 
-        //dd($request->all());
-
         $validatorTT = Validator::make($inputsTT,
             [
                 'berkas.*' => 'required|max:100000|mimes:jpg,jpeg,png,doc,docx,xls,xlsx,pdf',
-                //'berkas.*' => 'required|mimes:jpg,jpeg,png,bmp|max:100000', // batasan image file max 20 mb
                 'nominal_tarik' => 'not_in:0|required|regex:/^\d+([\.]\d+)*([\,]\d+)?$/' //titik separator
-                //'nominal_tarik' => 'not_in:0|required|regex:/^\d+([\,]\d+)*([\.]\d+)?$/' //koma separator
-                //'nominal_tarik' => 'not_in:0|required|regex:/^[1-8](,[1-8])*$/'
             ], 
             [
                 'nominal_tarik.not_in'  => 'Nominal tarik tunai tidak boleh dikosongkan !',
@@ -293,8 +288,6 @@ class DroppingController extends Controller
                 $inputsTT['ACCOUNT'] = $seg1.'-'.$seg2.'-'.$seg3.'-'.$seg4.'-'.$seg5.'-'.$seg6;
                 $inputsTT['stat'] = 1;
 
-                //dd($inputsTT);
-                
                 $TT = TarikTunai::create($inputsTT);
 
                 $this->storeBerkas($request->berkas, 'tariktunai', $TT->id);
@@ -308,7 +301,6 @@ class DroppingController extends Controller
             session()->flash('confirm', true);
         }
         else{
-            //dd($request->all());
             return redirect()->back()->withErrors($validatorTT)->withInput();
         }
         return redirect('/dropping/tariktunai/'.$id_drop);
@@ -337,7 +329,7 @@ class DroppingController extends Controller
              }
         }
         $integrated = StagingPengembalian::where('PIL_POSTED', 1);
-        //dd($notif);
+        
         return view('dropping.penyesuaian.penyesuaian', ['dropping' => $dropping, 'kesesuaian' => $kesesuaian, 'kcabangs' => $this->kantorCabangs, 'berkas' => $berkas, 'notif' => $notif]); 
     }
 
@@ -348,12 +340,11 @@ class DroppingController extends Controller
 
         $validatorPD = Validator::make($request->all(),
             [
-
                 'p_akun_bank'       => 'not_in:0|required',
                 'p_cabang'          => 'not_in:0|required',
                 'p_nominal'         => 'not_in:0|required|regex:/^\d+([\.]\d+)*([\,]\d+)?$/',
                 'p_rek_bank'        => 'not_in:0|required',
-                'berkas.*'          => 'required|max:100000|mimes:jpg,jpeg,png,doc,docx,xls,xlsx,pdf' // max 5mb
+                'berkas.*'          => 'required|max:100000|mimes:jpg,jpeg,png,doc,docx,xls,xlsx,pdf' // max 100mb
             ],
             [
                 'p_nominal.not_in'    => 'Nominal transaksi penyesuaian dropping tidak boleh dikosongkan !',
@@ -368,13 +359,13 @@ class DroppingController extends Controller
 
                 'berkas.*.required'   => 'Attachment bukti penyesuaian tidak boleh dikosongkan !',
                 'berkas.*.max'        => 'Attachment bukti penyesuaian tidak boleh lebih dari 100 Mb',
-                'berkas.*.mimes'  => 'Attachment bukti tarik tunai yang diperbolehkan hanya .doc, .docx, .xls, .xlsx, .jpg, .jpeg, .png, .pdf'
+                'berkas.*.mimes'      => 'Attachment bukti tarik tunai yang diperbolehkan hanya .doc, .docx, .xls, .xlsx, .jpg, .jpeg, .png, .pdf'
             ]);
 
         $submitted = PenyesuaianDropping::where([['id_dropping', $id_drop], ['stat', 4]])->orderby('created_at', 'desc')->first();
         $verLv1 = PenyesuaianDropping::where([['id_dropping', $id_drop], ['stat', 6]])->orderby('created_at', 'desc')->first();
         $verLv2 = PenyesuaianDropping::where([['id_dropping', $id_drop], ['stat', 8]])->orderby('created_at', 'desc')->first();
-        //dd($findstat1);
+        
         $string_penyesuaian = $request->p_nominal;
         $penyesuaian = floatval(str_replace('.', '', $string_penyesuaian));
 
@@ -416,7 +407,6 @@ class DroppingController extends Controller
 
                 $inputsPD['stat'] = 4;
                 
-                //dd($inputsPD);
                 $PD = PenyesuaianDropping::create($inputsPD); 
                 $this->storeBerkas($request->berkas, 'penyesuaian', $PD->id); 
                 NotificationSystem::send($PD->id, 10);
@@ -638,7 +628,7 @@ class DroppingController extends Controller
 
     public function submitVerificationPenyesuaian($lvl, $reaction, $id_penyesuaian, Request $request)
     {
-        if($lvl == 1) // verification by Bia
+        if($lvl == 1) // verification level 1
         {
             $verificationlv1 = PenyesuaianDropping::where([['id', $id_penyesuaian], ['stat', 4]])->first();
             if($verificationlv1)
@@ -653,7 +643,7 @@ class DroppingController extends Controller
                         PenyesuaianDropping::where('id', $id_penyesuaian)
                         ->update(array(
                             'stat' => 5));
-                        //BerkasTarikTunai::where('id', $verification->berkas_tariktunai)->delete();
+
                         $reject_reason = ['id_penyesuaian' => $id_penyesuaian, 'level' => $lvl, 'rejected_by' => \Auth::id() ,'reject_reason' => $request->reason];
                         RejectPenyesuaian::create($reject_reason);
                         NotificationSystem::send($id_penyesuaian, 11);
@@ -661,7 +651,7 @@ class DroppingController extends Controller
                         break;
                 }
             }   
-        }elseif($lvl == 2) // Verification by Akun
+        }elseif($lvl == 2) // Verification level 2
         {
             $verificationlv2 = PenyesuaianDropping::where([['id', $id_penyesuaian], ['stat', 6]])->first();
             if($verificationlv2)
@@ -677,7 +667,7 @@ class DroppingController extends Controller
                         PenyesuaianDropping::where('id', $id_penyesuaian)
                         ->update(array(
                             'stat' => 7));
-                        //BerkasTarikTunai::where('id', $verification->berkas_tariktunai)->delete();
+
                         $reject_reason = ['id_penyesuaian' => $id_penyesuaian, 'level' => $lvl, 'rejected_by' => \Auth::id() ,'reject_reason' => $request->reason];
                         RejectPenyesuaian::create($reject_reason);
                         NotificationSystem::send($id_penyesuaian, 13);

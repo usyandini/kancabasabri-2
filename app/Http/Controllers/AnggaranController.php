@@ -1140,7 +1140,7 @@ class AnggaranController extends Controller
         foreach(json_decode($request->header_riwayat_values) as $header){
             $header_list[] = [
                 'tahun'       => $header->tahun,
-                'unit_kerja'    => $header->unit_kerja
+                'unit_kerja'  => $header->unit_kerja
             ];
         }
 
@@ -1168,7 +1168,6 @@ class AnggaranController extends Controller
             'header'    => $header_list
         ];
         $pdf = PDF::loadView('anggaran.report.export-history', $data);
-        //$pdf = PDF::loadHtml('<h2>Hello World</h2>');
         return $pdf->setPaper('a4', 'landscape')->setWarnings(false)->download('Riwayat Anggaran-'.date("dmY").'.pdf');
     }
 }

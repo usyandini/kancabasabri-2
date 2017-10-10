@@ -61,13 +61,11 @@
 
                	<div class="content-header row">
                     <div class="content-header-left col-md-6 col-xs-12 mb-2">
-                        <h3 class="content-header-title mb-0">Manajemen Program Prioritas</h3>
+                        <h3 class="content-header-title mb-0">Pengajuan Dropping Kantor Cabang</h3>
                         <div class="row breadcrumbs-top">
                             <div class="breadcrumb-wrapper col-xs-12">
                                 <ol class="breadcrumb">
-                                    <li class="breadcrumb-item"><a href="{{ url('/') }}">Manajemen Item</a>
-                                    </li>
-                                    <li class="breadcrumb-item active"><a href="{{ url('/program_prioritas') }}">Manajemen Program Prioritas</a>
+                                    <li class="breadcrumb-item"><a href="#">Pengajuan Dropping</a>
                                     </li>
                                 </ol>
                             </div>
@@ -84,37 +82,10 @@
 			            <div class="col-xs-12">
 			              <div class="card">
 			                <div class="card-header">
-			                  <h4 class="card-title">Daftar Program Prioritas</h4></br>
+			                  <h4 class="card-title">Daftar Pengajuan Dropping</h4></br>
 			                  <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
 			                  <div class="card-body collapse in">			                
-			                  	<div class="card-block">
-			                  	<span><a class="btn btn-success" data-target="#tambah" data-toggle="modal"><i class="fa fa-plus"></i> <b>Tambah Program Prioritas</b></a></span>
-                           			<div class="modal fade" data-backdrop="static" id="tambah" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><center>
-                                                    <center><h4 class="modal-title text-success" id="myModalLabel" ><i class="fa fa-plus"></i> Tambah Program Prioritas</h4></center>
-                                                </div>
-                                                <form enctype="multipart/form-data" role="form" action="{{ URL('program_prioritas/store_program_prioritas') }}" method="POST" >
-                                                 {{ csrf_field() }}
-                                                <div class="modal-body">
-                                                    
-                                                <label class="control-label"><b> Program Prioritas </b></label>
-                                                <label class="control-label"> : </label>
-											        <input class="form-control" type="text" name="program_prioritas" placeholder="masukkan program prioritas" required="required"/>
-											        
-                                                	
-                                            	</div>
-                                            	<div class="modal-footer">
-                                                <button type="submit" name="save" class="btn btn-sm btn-primary"><i class="fa fa-check "></i> Tambah</button>
-                                                <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal"><i class="fa fa-times"></i> Batal</button>
-                                            	</div>
-                                            	</form>
-                						</div>
-                					</div>
-                				</div>
-                			</div>
+			                  	
 						</div>
 			                <div class="card-body collapse in">			                
 			                  <div class="card-block">
@@ -129,69 +100,146 @@
 			                        <thead>
 			                          <tr>
 			                            <th><center>No</center></th>
-			                            <th id="filterable"><center>Program prioritas</center></th>
-			                            
+			                            <th id="filterable"><center>Kantor Cabang</center></th>
+			                            <th id="filterable"><center>Nomor</center></th>
+			                            <th id="filterable"><center>Tanggal</center></th>
+			                            <th id="filterable"><center>Jumlah Diajukan</center></th>
+			                            <th id="filterable"><center>Periode Realisasi</center></th>
+			                            <th id="filterable"><center>Lampiran</center></th>
+			                            <th id="filterable"><center>Verifikasi</center></th>
+			                            <th id="filterable"><center>Keterangan</center></th>
 			                            <th><center>Aksi</center></th>
 			                          </tr>
 			                        </thead>
 			                        <tbody>
 			                        		<?php $no='1';?>
-			                        		@if(count($program_prioritas))
-			                        		@foreach($program_prioritas as $reason)
-			                        		
+			                        		@if(count($a))
+			                        		@foreach($a as $b)
 			                        		<tr>
 			                        			<td><center>{{ $no }}</center></td>
-			                        			<td>{{ $reason->program_prioritas }}</td>
-												
+			                        			<td>{{ $b->kantor_cabang }}</td>
+												<td><center>{{ $b->nomor }}</center></td>
+												<?php
+												$tanggal=$b->tanggal;								  
+												$tgl= date('d', strtotime($tanggal)); 
+												  $bs= date('m', strtotime($tanggal));
+												  if ($bs=="01"){
+												    $bulans="Januari";
+												  }
+												  else if ($bs=="02"){
+												    $bulans="Februari";
+												  }
+												  else if ($bs=="03"){
+												    $bulans="Maret";
+												  }
+												  else if ($bs=="04"){
+												    $bulans="April";
+												  }
+												  else if ($bs=="05"){
+												    $bulans="Mei";
+												  }
+												  else if ($bs=="06"){
+												    $bulans="Juni";
+												  }
+												  else if ($bs=="07"){
+												    $bulans="Juli";
+												  }
+												  else if ($bs=="08"){
+												    $bulans="Agustus";
+												  }
+												  else if ($bs=="09"){
+												    $bulans="September";
+												  }
+												  else if ($bs=="10"){
+												    $bulans="Oktober";
+												  }
+												  else if ($bs=="11"){
+												    $bulans="November";
+												  }
+												  else if ($bs=="12"){
+												    $bulans="Desember";
+												  }
+												  $tahun= date('Y', strtotime($tanggal));
+												  $angka = number_format($b->jumlah_diajukan,0,"",".");
+												  ?>
+												<td><center>{{ $tgl }} {{ $bulans }} {{ $tahun }}</center></td>
+												<td><center>Rp {{ $angka }},-</center></td>
+												<td><center><?php 
+														  if($b->periode_realisasi=='1'){ echo "TW I";}
+														  if($b->periode_realisasi=='2'){ echo "TW II";}
+														  if($b->periode_realisasi=='3'){ echo "TW III";}
+														  if($b->periode_realisasi=='4'){ echo "TW IV";}
+													?></center></td>
 												<td><center>
-													<span data-toggle='tooltip' title='Ubah'><a class="btn btn-info btn-sm" data-target="#ubah{{$reason->id}}" data-toggle="modal"><i class="fa fa-edit"></i> </a></span>
-
-													
-
-                                        			<span data-toggle='tooltip' title='Hapus'><a class="btn btn-danger btn-sm" data-target="#hapus{{$reason->id}}" data-toggle="modal"><i class="fa fa-trash"></i> </a></span>
-
-													<div class="modal fade" data-backdrop="static" id="hapus{{$reason->id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                                        				<div class="modal-dialog">
-                                            				<div class="modal-content">
-                                                				<div class="modal-header">
-                                                    				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                                    				<h4 class="modal-title text-warning" id="myModalLabel" ><i class="fa fa-warning"></i> Perhatian !</h4>
-                                                				</div>
-                                                					<div class="modal-body">
-                                                   						<h4>Anda yakin ingin menghapus Program Prioritas <br><span class=text-danger>{{ $reason->program_prioritas }}</span> ?</h4>
-                                                					</div>
-                                                						<div class="modal-footer">
-                                                   							<a href="{{ URL('program_prioritas/delete_program_prioritas/'. $reason->id) }}"" class="btn btn-success btn-sm"><i class="fa fa-check"></i> Ya</a>
-                                                    						<button type="button" class="btn btn-danger btn-sm" data-dismiss="modal"><i class="fa fa-times"></i> Tidak</button>
-                                                						</div>
-                                            				</div>
-                                            			</div>
-                                        			</div>
-
+				                           			@if ($b->name=="") Tidak Ada
+				                           			@else 
+				                           			<a href="{{ URL('pengajuan_dropping/download/'. $b->id) }}">{{ $b->name }}</a>
+				                           			@endif
+				                           		</center></td>
+												<td><center><?php 
+														  if($b->verifikasi=='1'){ echo "<div class=\"tag tag-success label-square\"><span><b>Diterima</b></span></div>";}
+														  if($b->verifikasi=='2'){ echo "<div class=\"tag tag-danger label-square\"><span><b>Ditolak</b></span></div>";}
+													?></center></td>
+												<td><center>{{ $b->keterangan }}</center></td>
+												<td><center>
+												@if ($b->kirim==2)
+												  @if ($b->verifikasi!="")
+													<span data-toggle='tooltip' title='Kirim'><a class="btn btn-success btn-sm" data-target="#kirim{{$b->id}}" data-toggle="modal"><i class="fa fa-send"></i> </a></span>
+												  @endif
+												  	<span data-toggle='tooltip' title='Print'><a href="{{ URL('pengajuan_dropping/print/'. $b->id) }}" target="_blank" class="btn btn-warning btn-sm" ><i class="fa fa-print"></i> </a></span>
+													<span data-toggle='tooltip' title='Verifikasi'><a class="btn btn-info btn-sm" data-target="#ubah{{$b->id}}" data-toggle="modal"><i class="fa fa-check"></i> </a></span>
+												@else
+													<div class="btn btn-success btn-sm"><span><b>Telah Dikirim</b></span></div>
+												@endif		
+													<div class="modal fade" data-backdrop="static" id="kirim{{$b->id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+					                                    <div class="modal-dialog">
+					                                        <div class="modal-content">
+					                                            <div class="modal-header">
+					                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					                                                <center><h4 class="modal-title text-primary" id="myModalLabel" ><i class="fa fa-send"></i> Dialog Konfirmasi</h4></center>
+					                                            </div>
+					                                        	<div class="modal-body">
+					                                            	<center><h4>Anda yakin ingin mengirim pengajuan dropping ?</h4></center>
+					                                        	</div>
+					                                        	<div class="modal-footer">
+					                                           	 	<a href="{{ URL('acc_pengajuan_dropping/kirim/'. $b->id) }}"" class="btn btn-success btn-sm"><i class="fa fa-check"></i> Ya</a>
+					                                        		<button type="button" class="btn btn-danger btn-sm" data-dismiss="modal"><i class="fa fa-times"></i> Tidak</button>
+					                                        	</div>
+					                                    	</div>
+					                                	</div>
+					                                </div>
 												</center></td>
 								     		</tr>
-								     		<div class="modal fade" data-backdrop="static" id="ubah{{$reason->id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+								     		<div class="modal fade" data-backdrop="static" id="ubah{{$b->id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                                         				<div class="modal-dialog">
                                             				<div class="modal-content">
                                                 				<div class="modal-header">
                                                     				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                                    				<center><h4 class="modal-title text-info" id="myModalLabel" ><i class="fa fa-edit"></i> Ubah Program Prioritas</h4></center>
+                                                    				<center><h4 class="modal-title text-info" id="myModalLabel" ><i class="fa fa-check"></i> Verifikasi Pengajuan Dropping</h4></center>
                                                 				</div>
                                                 					<div class="modal-body">
-                                                						<form enctype="multipart/form-data" role="form" action="{{ URL('program_prioritas/update_program_prioritas/'. $reason->id) }}" method="POST" >
+                                                					<form enctype="multipart/form-data" role="form" action="{{ URL('acc_pengajuan_dropping/update_accpengajuandropping/'. $b->id) }}" method="POST" >
                                                  						{{ csrf_field() }}
-                                                 						<input type="hidden" name="id"  value="{{$reason->id}}" />
+                                                 						<input type="hidden" name="id" value="{{$b->id}}" />
                                                  						
-                                                 						
-                                                						<label class="control-label"><b> Program Prioritas </b></label>
-                                                						<label class="control-label"> : </label>
-											                            <input class="form-control" type="text" name="program_prioritas" placeholder="masukkan program prioritas" value="{{$reason->program_prioritas}}" required="required"/>
-											                        </div>
+																	    <label class="control-label"><b> Verifikasi </b></label>
+						                                                <label class="control-label"> : </label>
+																	        <select class="select form-control" name="verifikasi" required="required" value="{{$b->verifikasi}}" >
+										                                    
+										                                    <option value="1" @if ($b->verifikasi=='1')Selected @endif>Diterima</option>
+																			<option value="2" @if ($b->verifikasi=='2')Selected @endif>Ditolak</option>                                                 
+										                                    </select>   
+																		<br>
+																	    <label class="control-label"><b> Keterangan </b></label>
+						                                                <label class="control-label"><b> : </b></label>
+																	        <textarea class="form-control" name="keterangan" rows="3" placeholder="masukkan keterangan">{{ $b->keterangan }}</textarea>
+																	        
+						                                            </div>
                                                 					<div class="modal-footer">
-                                                						<button type="submit" name="save" class="btn btn-sm btn-primary"><i class="fa fa-check "></i> Ubah</button>
+                                                						<button type="submit" name="save" class="btn btn-sm btn-primary"><i class="fa fa-check"></i> Verifikasi</button>
                                                 						<button type="button" class="btn btn-danger btn-sm" data-dismiss="modal"><i class="fa fa-times"></i> Batal</button>
                                             						</div>
-                                            							</form>
+                                            					</form>
                                             				</div>
                                             			</div>
                                         			</div>
@@ -228,7 +276,8 @@
 				<script type="text/javascript">
 
 					
-					$('.datatable-select-inputs').DataTable( {
+					
+						$('.datatable-select-inputs').DataTable( {
 							scrollX: true,
 							"language": {
 								"paginate": {
@@ -244,7 +293,6 @@
     							"infoFiltered": "(telah di filter dari _MAX_ total masukan)",
     							"zeroRecords": "Tidak ada data ditemukan"
     						},
-    						
 						    initComplete: function () {
 						        this.api().columns('#filterable').every( function () {
 						            var column = this;
@@ -266,7 +314,6 @@
 						        } );
 						    }
 						} );
-
 				</script>
 				
                 @endsection

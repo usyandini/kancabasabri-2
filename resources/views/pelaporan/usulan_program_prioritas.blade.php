@@ -179,7 +179,7 @@
                     </div>
                   </div>
                 </div>
-                <form method="GET" action="" id="downloadPelaporan" name="downloadPelaporan" enctype="multipart/form-data">
+                <form method="GET" action="{{url('pelaporan/reports/export')}}" id="downloadPelaporan" name="downloadPelaporan" enctype="multipart/form-data">
                     
                     <input type="hidden" name="kategori_download" id="kategori_download" value="{{$setting['kategori']}}">
                     <input type="hidden" name="header_pelaporan_download" id="header_pelaporan_download">

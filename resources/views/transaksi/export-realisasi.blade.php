@@ -1,4 +1,10 @@
 <html>
+	@if($excel)
+		<?php 
+			header("Content-type: application/vnd-ms-excel");
+			header("Content-Disposition: attachment; filename=Realisasi Anggran-".date("dmY").".xls"); 
+		?>
+	@endif
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 	<style>
 		h3 {
@@ -26,7 +32,10 @@
 	</style>
 <body>
 	<div id="header">
+		@if($excel == false)
 		<img src='<?php echo $_SERVER["DOCUMENT_ROOT"].'/app-assets/images/asabri-logo.png'; ?>' align="left" style="max-width: 132px;">
+		@endif
+		
         <div="title">
 	        <h3><center>LAPORAN REALISASI ANGGARAN PT ASABRI (PERSERO)</center></h3>
 	        <h3><center>{{ $cabangs->where('VALUE', $filters['cabang'])->first()['DESCRIPTION']}}</center></h3>
