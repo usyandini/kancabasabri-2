@@ -113,7 +113,7 @@
                               <span>KPKC: <code>{{ $active_batch->kantorCabang()->DESCRIPTION }}</code> <span>Divisi:</span> <code>{{ $active_batch->divisi == '00' ? 'Non-Divisi' : $active_batch->divisi()->DESCRIPTION  }}</code></span>
                               @endif
                             </div>
-                            <div class="row">
+                            {{-- <div class="row">
                               <div class="col-sm-12 col-lg-3 col-xl-2 pull-right">
                                 @if (Gate::check('tambah_t'))
                                 <div class="form-group">
@@ -121,7 +121,7 @@
                                 </div>
                                 @endif
                               </div>
-                            </div>
+                            </div> --}}
                           </div>
                           <div class="card-body collapse in ">
                             <div class="card-block card-dashboard ">
