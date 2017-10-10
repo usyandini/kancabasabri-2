@@ -526,7 +526,8 @@ class TransaksiController extends Controller
                 'PIL_SUBPOS'    => $trans->sub_pos,
                 'PIL_TRANSDATE' => new Carbon(str_replace(':AM', ' AM', $trans->tgl)),
                 'PIL_TXT'       => $trans->desc,
-                'PIL_TRANSACTIONID' => $trans->id];
+                'PIL_TRANSACTIONID' => '',
+                'RECID' => $trans->id];
                 
             StagingTransaksi::create($input);
         }
