@@ -90,7 +90,7 @@
 				                    {{ csrf_field() }}
 			                  			<tr>
 			                  				<td><b>Unit Kerja</b></td><td>  </td><td><b> : </b></td><td>  </td>
-			                  				<td><select class="form-control" name="unitkerja" id="unitkerja" onchange="changeUnit()" required="required">
+			                  				<td><select class="select2 form-control block" name="unitkerja" id="unitkerja" onchange="changeUnit()" required="required">
                                                     <option value="0"> - Pilih Unit Kerja - </option>
                                                     <?php
                                                     $second="SELECT * FROM (SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_DIVISI] WHERE VALUE!='00') AS A UNION ALL SELECT * FROM (SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_KPKC]  WHERE VALUE!='00') AS B";
@@ -178,8 +178,8 @@
                                                  {{ csrf_field() }}
                                                 <div class="modal-body">
                                                 <label class="control-label"><b> Unit Kerja </b></label>
-                                                <label class="control-label"><b> : </b></label>
-												<select class="form-control" name="unitkerja">
+                                                <label class="control-label"><b> : </b></label><br>
+												<select class="select2 form-control block" name="unitkerja" style="width:300px">
                                                     <option value="0"> - Pilih Unit Kerja - </option>
                                                     <?php
                                                     $second="SELECT * FROM (SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_DIVISI] WHERE VALUE!='00') AS A UNION ALL SELECT * FROM (SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_KPKC]  WHERE VALUE!='00') AS B";
@@ -188,7 +188,7 @@
                                                     @foreach($return as $b)
                                                       <option value="{{ $b->DESCRIPTION }}" >{{ $b->DESCRIPTION }}</option>
                                                     @endforeach
-                                                  </select><br>
+                                                  </select><br><br>
                                                 <label class="control-label"><b> Tanggal Mulai </b></label>
                                                 <label class="control-label"><b> : </b></label>
 											        <input class="form-control" type="date" name="tgl_mulai" min=<?php echo date('Y-m-d')?> required="required"/>

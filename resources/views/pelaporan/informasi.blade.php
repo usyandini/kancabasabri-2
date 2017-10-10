@@ -189,6 +189,8 @@
                       editing:  false,
                       pageSize: 5,
                       pageButtonCount: 10,
+                      noDataContent: "Data Belum Tersedia",
+                      loadMessage: "Mohon, ditunggu...",
                       deleteConfirm: "Apakah anda yakin akan menghapus anggaran baris ini?",
 
                       controller: {

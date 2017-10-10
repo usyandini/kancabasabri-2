@@ -199,6 +199,10 @@ class NotificationController extends Controller
                     return redirect('pelaporan/informasi/item/usulan_program');
             case 37:
                 return redirect('pelaporan/edit_usulan_program/'.$form_master->id);
+            case 38:
+                return redirect('tindaklanjutinternal/'.$notifDetail->batch_id);
+            case 39:
+                return redirect('unitkerja/tindaklanjut/'.$notifDetail->batch_id);
 			default:
 				return redirect('transaksi/');
     	}

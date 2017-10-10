@@ -29,6 +29,43 @@ class TindaklanjutController extends Controller
         return view('tindaklanjut.unitkerja', compact('a'));
 	}
 
+	public function unitkerjainternal($id) 
+    {
+
+    	// $a =DB::table('tl_tanggal')
+     //    ->orderBy('id1','DESC')
+     //    ->where('internal','1')
+     //    ->where('id1',$id)
+     //    ->paginate(10);
+
+        $a = DB::table('tl_tanggal')
+        	 ->leftjoin('tl_temuan', 'tl_tanggal.id1','=','tl_temuan.id_unitkerja')
+        	 ->leftjoin('tl_rekomendasi', 'tl_temuan.id2','=','tl_rekomendasi.id_temuan')
+        	 ->leftjoin('tl_tindaklanjut', 'tl_rekomendasi.id3','=','tl_tindaklanjut.id_rekomendasi')
+        	 ->where('kirim', '<>', '1')
+        	 ->where('internal', '1')
+        	 ->where('id1', $id)
+        	 ->orderBy('id2','DESC')->get();
+        return view('tindaklanjut.tindaklanjutin', compact('a'));
+	}
+
+	public function cari_unitkerjainternal(Request $request) 
+    {
+
+    	$unitkerja = $request->unitkerja;
+        $tgl_mulai = $request->tgl_mulai;
+        $a = DB::table('tl_tanggal')
+        	 ->where('kirim', '<>', '1')
+        	 ->where('internal', '1')
+        	 ->where('unitkerja', $unitkerja)
+        	 ->where('tgl_mulai', $tgl_mulai)->first();
+
+       	$id = $a->id1;
+       	return redirect('tindaklanjutinternal/'.$id);
+
+
+	}
+
 	public function unitkerjaex() 
     {
     	$a =DB::table('tl_tanggal')

@@ -86,7 +86,7 @@
 			                  	<div class="card-body collapse in">
 			                  	
 			                  		<table>
-			                  		<form enctype="multipart/form-data" role="form" action="{{ URL('tindaklanjutinternal/cari') }}" method="POST" >
+			                  		<form enctype="multipart/form-data" role="form" action="{{ URL('tindaklanjutinternal') }}" method="GET" >
 				                    {{ csrf_field() }}
 			                  			<tr>
 			                  				<td><b>Unit Kerja</b></td><td>  </td><td><b> : </b></td><td>  </td>
