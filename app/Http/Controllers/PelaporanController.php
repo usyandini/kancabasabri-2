@@ -1218,6 +1218,103 @@ class PelaporanController extends Controller
         return response()->json($return);
     }
 
+    public function getUnitKerjaFormMaster($thn,$tw1,$tw2,$kategori,$id){
+        $return = null;
+        $unit = [];
+        // echo $tw1."-".$tw2;
+        $FormMaster = $this->FormMasterPelaporanModel->
+                                where(function ($query) use ($tw1){
+                                    $query->where('tw_dari','<=', $tw1)
+                                          ->where('tw_ke','>=', $tw1);
+                                })->
+                                orWhere(function ($query) use ($tw2){
+                                    $query->where('tw_dari','<=', $tw2)
+                                          ->where('tw_ke','>=', $tw2);
+                                })->where('kategori',$kategori)
+                                  ->where('is_template','1')
+                                  ->where('id',"<>",$id)
+                                  ->whereYear('created_at', '=', $thn)->get();
+        foreach ($FormMaster as $row) {
+            // echo $row->id;
+            switch ($kategori) {
+                case 'laporan_anggaran':
+                    $item = MasterItemPelaporanAnggaran::where('id_form_master',$row->id)->get();
+                    foreach ($item as $val) {
+                        if (!in_array($val->unit_kerja, $unit)) {
+                            array_push($unit,$val->unit_kerja);
+                        }
+                    }
+                    break;
+                case 'arahan_rups':
+                    $item = MasterItemArahanRUPS::where('id_form_master',$row->id)->get();
+                    foreach ($item as $val) {
+                        if (!in_array($val->unit_kerja, $unit)) {
+                            array_push($unit,$val->unit_kerja);
+                        }
+                    }
+                    break;
+            }
+        }
+
+        $query = array();
+        $query2 = array();
+        $cabang = KantorCabang::get();
+        $divisi = Divisi::get();
+        foreach($cabang as $cab){
+            if(Gate::check('unit_'.$cab->VALUE."00")){
+                if (!in_array($cab->DESCRIPTION, $unit)) {
+                    array_push($query, $cab->VALUE);
+                }
+            }
+        }  
+        foreach($divisi as $div){
+            if(Gate::check('unit_00'.$div->VALUE)){
+                if (!in_array($div->DESCRIPTION, $unit)) {
+                    array_push($query2, $div->VALUE);
+                }
+            }
+        } 
+        $string1 = "";
+        $count1=0;
+        foreach ($query as $row) {
+            if($count1 == 0)
+                $string1.="VALUE = '".$row."'";
+            else
+                $string1.=" OR VALUE = '".$row."'";
+            $count1++;
+        }
+        $string2 = "";
+        $count2=0;
+        foreach ($query2 as $row) {
+            if($count2 == 0)
+                $string2.="VALUE = '".$row."'";
+            else
+                $string2.=" OR VALUE = '".$row."'";
+
+            $count2++;
+        }
+
+        if($string1 != ""){
+            $string1 = "AND (".$string1.")";
+        }
+
+        if($string2 != ""){
+            $string2 = "AND (".$string2.")";
+        }
+
+        $second="SELECT * 
+            FROM (SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_DIVISI] 
+            WHERE VALUE!='00' ".$string2.") AS A 
+            UNION ALL 
+            SELECT * FROM (SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_KPKC]  
+            WHERE VALUE!='00' ".$string1.") AS B";
+        $return = \DB::select($second);
+        // $json = json_encode($unit);
+        // echo $json;
+        return response()->json($return);
+        
+    }
+
     public function unduh_file($id){
 
         $berkas = BerkasFormItemMaster::where('id', $id)->first();

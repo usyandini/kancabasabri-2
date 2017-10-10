@@ -408,6 +408,7 @@
                             title: "Unit Kerja", 
                             width: 130,
                             align: "left",
+                            insertcss: "unitkerja",
                             readOnly:insertable == 1 ? false : true,
                             valueField: "DESCRIPTION", 
                             textField: "DESCRIPTION", 
@@ -639,6 +640,42 @@
                     }();
                     return returned;
                   }
+
+                  function getUnitKerja() {
+                    var tanggal = $('#tanggal').val().split("/");
+                    var tw_dari = $('#tw_dari').val();
+                    var tw_ke = $('#tw_ke').val();
+
+                    switch(tw_dari){
+                      case "I" : tw_dari = "1";break;
+                      case "II" : tw_dari = "2";break;
+                      case "III" : tw_dari = "3";break;
+                      case "IV" : tw_dari = "4";break;
+                    }
+
+                    switch(tw_ke){
+                      case "I" : tw_ke = "1";break;
+                      case "II" : tw_ke = "2";break;
+                      case "III" : tw_ke = "3";break;
+                      case "IV" : tw_ke = "4";break;
+                    }
+                    var returned = function () {
+                        var tmp = null;
+                        $.ajax({
+                            'async': false, 'type': "GET", 'dataType': 'JSON', 
+                            'url': "{{ url('pelaporan/get/unit_kerja_form')}}/"+tanggal[2]+"/"+tw_dari+"/"+tw_ke+"/"+"{{$setting['kategori']}}"+"/-1",
+                            'success': function (data) {
+                                tmp = data;
+
+                                // alert(JSON.stringify(data));
+                            }
+                        });
+                        return tmp;
+                    }();
+                    return returned;
+                  }
+
+
 
                   function changeUnitKerja(){
                     unit_kerja = document.getElementById('unit_kerja').value;
@@ -1067,6 +1104,7 @@
                       tanggal_selesai.setAttribute("max",max_ke);
                       tanggal_selesai.setAttribute("min",min_dari);
                     }
+                    getUnitKerja();
                   }
 
                   function setTWFirst(){
@@ -1106,6 +1144,7 @@
                   window.setTWFirst();
                   @endif
                   window.getListData();
+                  // window.getUnitKerja();
                   // window.startDate();
 
 
