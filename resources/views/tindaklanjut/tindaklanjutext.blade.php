@@ -736,12 +736,8 @@
 				                		  $longkap3 = $b->rekomendasi;
 				                		  $no++; ?>
 				                	@endforeach
-			    					
-								    
-			                        </tbody>
+			    					</tbody>
 			                      </table>
-			                      					
-				                					
 			                    </div>
 			                  </div>
 			                </div>
@@ -805,8 +801,8 @@
 						            column.data().unique().sort().each( function ( d, j ) {
 						                select.append( '<option value="'+d+'">'+d+'</option>' );
 						            } );
-						        } );
-						    }
+						        } ); 
+						    } 
 						} );
 				</script>
 				

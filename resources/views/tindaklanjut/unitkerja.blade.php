@@ -376,7 +376,7 @@
                                                 						<label class="control-label"><b> Unit Kerja </b></label>
 						                                                <label class="control-label"><b> : </b></label>
 																		<select class="form-control" name="unitkerja" value="{{$reason->unitkerja}}">
-						                                                    <option value="0"> - Pilih Unit Kerja - </option>
+						                                                    <option value=""> - Pilih Unit Kerja - </option>
 						                                                    <?php
 						                                                    $secondq="SELECT * FROM (SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_DIVISI] WHERE VALUE!='00') AS A UNION ALL SELECT * FROM (SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_KPKC]  WHERE VALUE!='00') AS B";
 															                $returnq = DB::select($secondq);

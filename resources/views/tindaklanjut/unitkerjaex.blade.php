@@ -67,7 +67,7 @@
                                 <ol class="breadcrumb">
                                     <li class="breadcrumb-item"><a href="{{ url('/') }}">Tindak Lanjut dan Temuan</a>
                                     </li>
-                                    <li class="breadcrumb-item active"><a href="{{ url('/unitkerja') }}">Manajemen Tindak Lanjut</a>
+                                    <li class="breadcrumb-item active"><a href="#">Manajemen Tindak Lanjut</a>
                                     </li>
                                 </ol>
                             </div>
