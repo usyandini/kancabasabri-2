@@ -105,6 +105,7 @@
                                     <input type="hidden" name="kategori" id="kategori" value="{{$setting['kategori']}}">
                                     <input type="hidden" name="status" id="status" value="{{$setting['status']}}">
                                     <input type="hidden" name="unit_kerja" id="unit_kerja" value="">
+                                    <input type="hidden" name="kondisi" id="kondisi" value="">
                                     <input type="hidden" name="id_form_master" id="id_form_master" value="{{$setting['id_form_master']}}">
                                     <input type="hidden" name="jenis_berkas" id="jenis_berkas" value="{{$setting['jenis_berkas']}}">
                                     <div class="col-xs-12">
@@ -113,16 +114,33 @@
                                     
                                   </div>
 
-                                  @if($setting['edit'])
-                                  <div class="row col-xs-12" style="display:block">
-                                    <br />
-                                    <div class="pull-right">
-                                      <div class="form-group">
-                                        <div class="btn btn-success" onclick="check()"><i class="fa fa-send"></i> Kirim</div>
+                                  <div class="row col-xs-12">
+                                    <div class="col-xs-12" style="display:block">
+                                      <br />
+                                      @if($setting['status'] != "Tambah")
+                                      <div class="col-xs-3">
+                                        <div class="form-group">
+                                          <div div onclick="download_post()" class="btn btn-secondary" target="_blank"><i class="fa fa-download"></i> Unduh</div>
+                                        </div>
                                       </div>
+                                      @endif
+
+                                      <div class="col-xs-7">
+                                      </div>
+                                      @if($setting['edit'])
+                                      <div class="col-xs-1 pull-right">
+                                        <div class="form-group">
+                                          <div class="btn btn-success" onclick="check('Kirim')"><i class="fa fa-send"></i> Kirim</div>
+                                        </div>
+                                      </div>
+                                      <div class="col-xs-2 pull-right">
+                                        <div class="form-group">
+                                          <div class="btn btn-info" onclick="check('Simpan')"><i class="fa fa-save"></i> Simpan</div>
+                                        </div>
+                                      </div>
+                                      @endif
                                     </div>
                                   </div>
-                                  @endif
                                 </div>
                                 
                                 </form>
@@ -161,6 +179,12 @@
                     </div>
                   </div>
                 </div>
+                <form method="GET" action="" id="downloadPelaporan" name="downloadPelaporan" enctype="multipart/form-data">
+                    
+                    <input type="hidden" name="kategori_download" id="kategori_download" value="{{$setting['kategori']}}">
+                    <input type="hidden" name="header_pelaporan_download" id="header_pelaporan_download">
+                    <input type="hidden" name="list_pelaporan_download" id="list_pelaporan_download">
+                </form> 
 
                 @section('customjs')
                 <!-- BEGIN PAGE VENDOR JS-->
@@ -460,7 +484,6 @@
                       if(inputs.length == 0){
                         toastr.error("Silahkan Isi Minimal Satu daftar Pelaporan Anggaran Kegiatan. Terima kasih.", "Perhatian.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
                       }else{
-                        var stop = false;
 
                         $('#modal_pernyataan').modal({
                                   backdrop: 'static'
@@ -468,10 +491,69 @@
                       }
                     
                   }
+
+                  function check(type){
+                    var pernyataan = false;
+                    if(inputs.length == 0){
+                      toastr.error("Silahkan Isi Minimal Satu daftar Usulan Program Prioritas. Terima kasih.", "Perhatian.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
+                    }else{
+                      pernyataan =true;
+                    }
+
+
+                    if(pernyataan){
+
+                      if(statusTable!="null"){
+                        tampilan="";
+                        judul="";
+                        if(statusTable == "edit"){
+                          judul = "Terdapat Usulan Program Prioritas masih dalam perubahan";
+                          tampilan= "Silahkan Rubah dengan menekan tombol centang terlebih tahulu atau Batalkan dengan menekan tombol silang. Terima kasih.";
+                        }
+
+                        toastr.error(tampilan, judul, { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
+                      }else{
+                        document.getElementById("kondisi").value = type;
+                        var title_modal="";
+                        var pernyataan_modal="";
+                        if(type=="Simpan"){
+                          title_modal="Pernyimpanan {{$title=='Form Master'?$title." ".$sub_title:$title}}";
+                          pernyataan_modal = "<p>Apakah anda yakin Akan Menyimpan {{$title=='Form Master'?$title." ".$sub_title:$title}} ini?</p>";
+                        }else if(type=="Kirim"){
+                          title_modal="Pengajuan {{$title=='Form Master'?$title." ".$sub_title:$title}}";
+                          pernyataan_modal = "<p>Apakah anda yakin Akan Mengajukan {{$title=='Form Master'?$title." ".$sub_title:$title}}?</p>";
+                        }
+
+                        // alert(document.getElementById("teks_pernyataan").innerHTML);
+                        document.getElementById("title_modal_pernyataan").innerHTML = title_modal;
+                        document.getElementById("teks_pernyataan").innerHTML = pernyataan_modal;
+                        document.getElementById("button_peryataan").innerHTML = "Ya, "+type;
+
+                        $('#modal_pernyataan').modal({
+                              backdrop: 'static'
+                          });
+                        
+                      } 
+                    }
+                  }
                   function sumbit_post(){
                     $('input[name="item_form_master"]').val(JSON.stringify(inputs));
                     // alert(JSON.stringify(inputs));
                     $('form[id="insertLaporanAnggaran"]').submit();
+                  }
+
+                  function download_post(){
+                    header={};
+                    header['tanggal'] = $('#tanggal').val();
+                    header['tw_dari'] = $('#tw_dari').val();
+                    header['tw_ke'] = $('#tw_ke').val();
+
+                    array = new Array();
+                    array.push(header);
+                    $('input[name="header_pelaporan_download"]').val(JSON.stringify(array));
+                    $('input[name="list_pelaporan_download"]').val(JSON.stringify(inputs));
+                    //alert(JSON.stringify(header));
+                    $('form[id="downloadPelaporan"]').submit();
                   }
 
                   window.setDetailFormMaster();

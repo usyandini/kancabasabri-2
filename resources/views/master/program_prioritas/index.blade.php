@@ -236,14 +236,15 @@
 								  "next": "Selanjutnya"
 								},
 
-    							"emptyTable":  "Tidak Ada Program Prioritas Tersimpan",
-    							"info":  "Data Program _START_-_END_ dari _TOTAL_ Program",
-    							"infoEmpty":  "Data Program 0-0 dari _TOTAL_ Program ",
+    							"emptyTable":  "Tidak Ada Data Tersimpan",
+    							"info":  "Menampilkan _START_-_END_ dari _TOTAL_ Data",
+    							"infoEmpty":  "Menampilkan 0-0 dari _TOTAL_ Data ",
     							"search": "Pencarian:",
     							"lengthMenu": "Perlihatkan _MENU_ masukan",
     							"infoFiltered": "(telah di filter dari _MAX_ total masukan)",
     							"zeroRecords": "Tidak ada data ditemukan"
-							},
+    						},
+    						
 						    initComplete: function () {
 						        this.api().columns('#filterable').every( function () {
 						            var column = this;

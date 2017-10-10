@@ -680,7 +680,7 @@
                                                    						<h4><center>Anda yakin ingin menghapus tindak lanjut <br><span class=text-danger>{{ $b->tindaklanjut }}</span> ?</center></h4>
                                                 					</div>
                                                 				<div class="modal-footer">
-                                                   					<a href="{{ URL('tindaklanjut/delete_tindaklanjut/'. $b->id4) }}"" class="btn btn-success btn-sm"><i class="fa fa-check"></i> Ya</a>
+                                                   					<a href="{{ URL('tindaklanjut/delete_tindaklanjut/'. $b->id4) }}" class="btn btn-success btn-sm"><i class="fa fa-check"></i> Ya</a>
                                                     				<button type="button" class="btn btn-danger btn-sm" data-dismiss="modal"><i class="fa fa-times"></i> Tidak</button>
                                                 				</div>
                                             				</div>
