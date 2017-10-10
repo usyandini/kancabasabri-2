@@ -19,7 +19,7 @@
                         <div class="row breadcrumbs-top">
                             <div class="breadcrumb-wrapper col-xs-12">
                                 <ol class="breadcrumb">
-                                    <li class="breadcrumb-item"><a href="{{ url('/') }}">Dashboard</a>
+                                    <li class="breadcrumb-item"><a href="{{ url('/') }}">Dropping</a>
                                     </li>
                                     <li class="breadcrumb-item active">Verifikasi Penyesuaian Dropping
                                     </li>
