@@ -17,6 +17,7 @@ use App\Models\BerkasFormItemMaster;
 use App\Models\ProgramPrioritas;
 use App\Models\ArahanRups;
 use App\Services\NotificationSystem;
+use PDF;
 
 
 class PelaporanController extends Controller
@@ -208,29 +209,39 @@ class PelaporanController extends Controller
             );
 
         $sub_title = "";
+        $title = "Form Master";
         if($kategori == "laporan_anggaran"){
             if($type=='item'){
                 $setting['insert']=false;
                 $setting['jenis_berkas']="0";
+                $title = "Pelaporan Anggaran dan Kegiatan";
             }
-            $setting['table'] = true;
-            $sub_title = "Pelaporan Anggaran dan Kegiatan";
+
+            if($type == "master"){
+                $sub_title = "Pelaporan Anggaran dan Kegiatan";
+            }
         }else if($kategori == "arahan_rups"){
-            $setting['table'] = true;
             if($type=='item'){
                 $setting['insert']=false;
                 $setting['jenis_berkas']="0";
+                $title = "Arahan RUPS";
             }
             if($type == "master"){
                 $setting['berkas'] = false;
+                $sub_title = "Arahan RUPS";
             }
-            $sub_title = "Arahan RUPS";
         }else if($kategori == "usulan_program"){
+            if($type == 'item'){
+                $title = "Usulan Program Prioritas";
+            }
             $setting['table'] = false;
-            $sub_title = "Usulan Program Prioritas";
+
+            if($type == "master"){
+                $sub_title = "Usulan Program Prioritas";
+            }
         }
         return view('pelaporan.edit', [
-            'title' => 'Form Master',
+            'title' => $title,
             'sub_title' => $sub_title,
             'setting' => $setting , 
             'type' => $type,
@@ -373,41 +384,52 @@ class PelaporanController extends Controller
 
 
         $sub_title = "";
+        $title = "Form Master";
         if($kategori == "laporan_anggaran"){
             if($type=='item'){
                 $setting['insert']=false;
                 $setting['jenis_berkas']="0";
+                $title = "Pelaporan Anggaran dan Kegiatan";
             }
             $setting['table'] = true;
-            $sub_title = "Pelaporan Anggaran dan Kegiatan";
+
+            if($type == "master"){
+                $sub_title = "Pelaporan Anggaran dan Kegiatan";
+            }
         }else if($kategori == "arahan_rups"){
             $setting['table'] = true;
             if($type=='item'){
                 $setting['insert']=false;
                 $setting['jenis_berkas']="0";
+                $title = "Arahan RUPS";
             }
             if($type == "master"){
                 $setting['berkas'] = false;
+                $sub_title = "Arahan RUPS";
             }
-            $sub_title = "Arahan RUPS";
         }else if($kategori == "usulan_program"){
+            if($type=="item"){
+                $title = "Usulan Program Prioritas";
+            }
             $setting['table'] = false;
-            $sub_title = "Usulan Program Prioritas";
+
+            if($type == "master"){
+                $sub_title = "Usulan Program Prioritas";
+            }
         }
 
         $beda =  true;
         if($type == 'item'){
-            // echo count($this->check_tambah($kategori,0));
             if(count($this->check_tambah($id,0))>0){
-                session()->flash('back', 'Unit Kerja Anda Telah mengisi '.$sub_title.'. Silahkan Melakukan pencarian jika ingin merubah sebelum waktu pengajuan berakhir');
-                session()->flash('title', $sub_title." telah tersedia");
+                session()->flash('back', 'Unit Kerja Anda Telah mengisi '.$title.'. Silahkan Melakukan pencarian jika ingin merubah sebelum waktu pengajuan berakhir');
+                session()->flash('title', $title." telah tersedia");
                 return redirect('pelaporan/informasi/item/'.$kategori);
             }  
 
 
             if(count($this->check_tambah($id,1))==0){
-                session()->flash('back', 'Unit Kerja Renbang belum membuat Form Master '.$sub_title.'. Silahkan Hubungi Unit Kerja Renbang.');
-                session()->flash('title', "Form Master ".$sub_title." belum tersedia");
+                session()->flash('back', 'Unit Kerja Renbang belum membuat Form Master '.$title.'. Silahkan Hubungi Unit Kerja Renbang.');
+                session()->flash('title', "Form Master ".$title." belum tersedia");
                 return redirect('pelaporan/informasi/item/'.$kategori);
             } 
 
@@ -439,7 +461,7 @@ class PelaporanController extends Controller
         }
 
         return view('pelaporan.input', [
-            'title' => 'Form Master',
+            'title' => $title,
             'sub_title' => $sub_title,
             'setting' => $setting , 
             'type' => $type,
@@ -698,21 +720,26 @@ class PelaporanController extends Controller
         $type = "master";
         if($request->jenis_berkas == '0'){
             $type = 'item';
-            if($kategori == "laporan_anggaran"){
-                NotificationSystem::send($id_form_master, 33);
-            }else if($kategori == "arahan_rups"){
-                NotificationSystem::send($id_form_master, 35);
-            }else if($kategori == "usulan_program"){
-                NotificationSystem::send($id_form_master, 37);
+            if($request->kondisi == 'Kirim'){
+                if($kategori == "laporan_anggaran"){
+                    NotificationSystem::send($id_form_master, 33);
+                }else if($kategori == "arahan_rups"){
+                    NotificationSystem::send($id_form_master, 35);
+                }else if($kategori == "usulan_program"){
+                    NotificationSystem::send($id_form_master, 37);
+                }
             }
             
         }else{
-            if($kategori == "laporan_anggaran"){
-                NotificationSystem::send($id_form_master, 32);
-            }else if($kategori == "arahan_rups"){
-                NotificationSystem::send($id_form_master, 34);
-            }else if($kategori == "usulan_program"){
-                NotificationSystem::send($id_form_master, 36);
+
+            if($request->kondisi == 'Kirim'){
+                if($kategori == "laporan_anggaran"){
+                    NotificationSystem::send($id_form_master, 32);
+                }else if($kategori == "arahan_rups"){
+                    NotificationSystem::send($id_form_master, 34);
+                }else if($kategori == "usulan_program"){
+                    NotificationSystem::send($id_form_master, 36);
+                }
             }
         }
 
@@ -1248,18 +1275,28 @@ class PelaporanController extends Controller
         }else{
             $FormMaster = $this->FormMasterPelaporanModel->where('id_master',$id)->get();
             foreach ($FormMaster as $row) {
-                $ItemLA = MasterItemPelaporanAnggaran::where('id_form_master',$row->id)->get();
-                $ItemAR = MasterItemArahanRUPS::where('id_form_master',$row->id)->get();
-                $ItemUP = ItemUsulanProgram::where('id_form_master',$row->id)->get();
-                if(count($ItemLA)==0){
+
+                // echo "ada";
+                $item;
+                if($row->kategori == "laporan_anggaran")
+                    $item = MasterItemPelaporanAnggaran::where('id_form_master',$row->id)->get();
+                else if($row->kategori == "arahan_rups")
+                    $item = MasterItemArahanRUPS::where('id_form_master',$row->id)->get();
+                else if($row->kategori == "usulan_program")
+                    $item = ItemUsulanProgram::where('id_form_master',$row->id)->get();
+
+                if(count($item)==0){
                     $FormMaster = null;
                 }
-                if(count($ItemAR)==0){
-                    $FormMaster = null;
-                }
-                if(count($ItemUP)==0){
-                    $FormMaster = null;
-                }
+                // if(count($ItemLA)==0){
+                //     $FormMaster = null;
+                // }
+                // if(count($ItemAR)==0){
+                //     $FormMaster = null;
+                // }
+                // if(count($ItemUP)==0){
+                //     $FormMaster = null;
+                // }
             }   
         }
 
@@ -1282,4 +1319,92 @@ class PelaporanController extends Controller
                 \DB::table('berkas_form_item_master')->delete();
     }
 
+    public function export_pelaporan(Request $request)
+    {
+        $header_list = []; 
+        $pelaporan_list = [];
+        $type = $request->kategori_download;
+        switch($type){
+            case "laporan_anggaran": 
+                foreach(json_decode($request->header_pelaporan_download) as $header){
+                    $header_list[] = [
+                        'tanggal'       => $header->tanggal,
+                        'tw_dari'       => $header->tw_dari,
+                        'tw_ke'         => $header->tw_ke
+                    ];
+                }
+
+                foreach(json_decode($request->list_pelaporan_download) as $value){
+                    $pelaporan_list[] = [
+                        'unit_kerja'        => $value->unit_kerja,
+                        'program_prioritas' => $value->program_prioritas,
+                        'sasaran_dicapai'   => $value->sasaran_dicapai,
+                        'uraian_progress'   => $value->uraian_progress
+                    ];
+                }
+
+                $data = [
+                    'list'      => $pelaporan_list,
+                    'header'    => $header_list
+                ];
+                
+                $pdf = PDF::loadView('pelaporan.reports.export-pelaporan', $data);
+                return $pdf->setPaper('a4', 'landscape')->setWarnings(false)->download('Pelaporan-'.date("dmY").'.pdf');
+                break;
+
+            case "arahan_rups": 
+                foreach(json_decode($request->header_pelaporan_download) as $header){
+                    $header_list[] = [
+                        'tanggal'       => $header->tanggal,
+                        'tw_dari'       => $header->tw_dari,
+                        'tw_ke'         => $header->tw_ke
+                    ];
+                }
+
+                foreach(json_decode($request->list_pelaporan_download) as $value){
+                    $pelaporan_list[] = [
+                        'unit_kerja'        => $value->unit_kerja,
+                        'jenis_arahan'      => $value->jenis_arahan,
+                        'arahan'            => $value->arahan,
+                        'progress_tindak_lanjut'   => $value->progress_tindak_lanjut
+                    ];
+                }
+
+                $data = [
+                    'list'      => $pelaporan_list,
+                    'header'    => $header_list
+                ];
+                
+                $pdf = PDF::loadView('pelaporan.reports.export-arahanrups', $data);
+                return $pdf->setPaper('a4', 'landscape')->setWarnings(false)->download('Arahan RUPS-'.date("dmY").'.pdf');
+                break;    
+
+            case "usulan_program": 
+                foreach(json_decode($request->header_pelaporan_download) as $header){
+                    $header_list[] = [
+                        'tanggal'       => $header->tanggal,
+                        'tw_dari'       => $header->tw_dari,
+                        'tw_ke'         => $header->tw_ke
+                    ];
+                }
+
+                foreach(json_decode($request->list_pelaporan_download) as $value){
+                    $pelaporan_list[] = [
+                        'nama_program'     => $value->nama_program,
+                        'latar_belakang'   => $value->latar_belakang,
+                        'dampak_positif'   => $value->dampak_positif,
+                        'dampak_negatif'   => $value->dampak_negatif
+                    ];
+                }
+
+                $data = [
+                    'list'      => $pelaporan_list,
+                    'header'    => $header_list
+                ];
+                
+                $pdf = PDF::loadView('pelaporan.reports.export-usulan', $data);
+                return $pdf->setPaper('a4', 'landscape')->setWarnings(false)->download('Usulan Program Prioritas-'.date("dmY").'.pdf');
+                break;
+        }
+    }
 }

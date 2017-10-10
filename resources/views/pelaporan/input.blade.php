@@ -150,6 +150,7 @@
                                     <input type="hidden" name="item_form_master" id="item_form_master">
                                     <input type="hidden" name="kategori" id="kategori" value="{{$setting['kategori']}}">
                                     <input type="hidden" name="status" id="status" value="{{$setting['status']}}">
+                                    <input type="hidden" name="kondisi" id="kondisi" value="">
                                     <input type="hidden" name="id_form_master" id="id_form_master" value="{{$setting['id_form_master']}}">
                                     <input type="hidden" name="jenis_berkas" id="jenis_berkas" value="{{$setting['jenis_berkas']}}">
                                     @if($setting['table'])
@@ -161,16 +162,24 @@
                                     @endif
                                   </div>
 
-                                  @if($setting['edit']&&$beda)
-                                  <div class="row col-xs-12" style="display:block">
-                                    <br />
-                                    <div class="pull-right">
-                                      <div class="form-group">
-                                        <div class="btn btn-success" onclick="check()"><i class="fa fa-send"></i> Kirim</div>
+                                  <div class="row col-xs-12">
+                                    <div class="col-xs-12" style="display:block">
+                                      <br />
+                                      
+                                      @if($setting['edit']&&$beda)
+                                      <div class="col-xs-1 pull-right">
+                                        <div class="form-group">
+                                          <div class="btn btn-success" onclick="check('Kirim')"><i class="fa fa-send"></i> Kirim</div>
+                                        </div>
                                       </div>
+                                      <div class="col-xs-2 pull-right">
+                                        <div class="form-group">
+                                          <div class="btn btn-info" onclick="check('Simpan')"><i class="fa fa-save"></i> Simpan</div>
+                                        </div>
+                                      </div>
+                                      @endif
                                     </div>
                                   </div>
-                                  @endif
                                 </div>
                                 
                                 </form>
@@ -235,7 +244,7 @@
                       </div>
                       <div class="modal-footer">
                         <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">Tidak, kembali</button>
-                        <button type="button" id="button_peryataan" onclick="sumbit_post()" class="btn btn-outline-primary">Ya, kirim</button>
+                        <div  id="button_peryataan" onclick="sumbit_post()" class="btn btn-outline-primary">Ya, kirim</div>
                       </div>
                     </div>
                   </div>
@@ -271,7 +280,6 @@
                   var simpan_file = false;
                   $(document).ready(function() {
 
-
                     $("#basicScenario").jsGrid( {
                       width: "100%",
                
@@ -283,6 +291,8 @@
                       editing: editable == 1 ? true : false,
                       pageSize: 5,
                       pageButtonCount: 10,
+                      noDataContent: "Data Belum Tersedia",
+                      loadMessage: "Mohon, ditunggu...",
                       deleteConfirm: "Apakah anda yakin akan menghapus anggaran baris ini?",
 
                       controller: {
@@ -320,9 +330,12 @@
                         updateItem: function(item) {
                           item["delete"]="none";
                           // alert(item["tempId"]);
+
                           if(item["isNew"]){
                             inputs.splice(item["tempId"], 1, item); 
                           }else{
+
+                          // alert(item['progress_tindak_lanjut']);
                             if(inputs.length>0){
                               for(i=0;i<inputs.length;i++){
                                 if(inputs[i]["id"]==item.id){
@@ -331,8 +344,9 @@
                                     for(j=0;j<inputs[i]["file"].length;j++){
                                       item["file"][j]["delete"]=inputs[i]["file"][j]["delete"];
                                     }
-                                    inputs[i] = item; 
                                   }
+                                  inputs[i] = item; 
+                                  
                                 }
                               }
                             }
@@ -605,9 +619,11 @@
 
                           }
                       ]
-                    })
+                    })        
                     
                   });
+
+
 
                   function getData(type) {
                     var returned = function () {
@@ -649,6 +665,7 @@
 
                   function setDetailFormMaster(){
                     // alert('{{ url('pelaporan/get/filtered/'.$filters['id'].'/form_master') }}');
+
                     $.ajax({
                         'async': false, 'type': "GET", 'dataType': 'JSON', 'url': "{{ ($type == 'item' ? url('pelaporan/get/filteredMaster/'.$setting['kategori'].'/0/'.$setting['id_form_master']) : url('pelaporan/get/filtered/'.$filters['id'].'/form_master')) }}",
                         'success': function (data) {
@@ -680,7 +697,7 @@
                           tw_dari.value = tw_dari_val;
                           tw_ke.value = tw_ke_val;
 
-                          // alert(tw_dari.value);
+                          
 
                           @if($type=="master")
                           tanggal_mulai = document.getElementById('tanggal_mulai');
@@ -753,7 +770,7 @@
                                 inputs[i]['uraian_progress']="";
                                 @endif
                                 @if($setting['kategori'] == "arahan_rups")
-                                inputs[i]['progres_tindak_lanjut']="";
+                                inputs[i]['progress_tindak_lanjut']="";
                                 @endif
                                 for(j=0;j<inputs[i]["file"].length;j++){
                                   inputs[i]["file"][j]["delete"]="none";
@@ -767,45 +784,66 @@
                           
                       });
                   }
-                  function check(){
+                  function check(type){
+                    var pernyataan = false;
                     if({{$type == "master"?1:0}}){
                       if(document.getElementById("tanggal_mulai").value == ""){
-                        toastr.error("Silahkan Isi Tanggal Mulai Untuk memulai Pelaporan Anggaran Kegiatan. Terima kasih.", "Perhatian.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
+                        toastr.error("Silahkan Isi Tanggal Mulai Untuk memulai {{$title=='Form Master'?$title." ".$sub_title:$title}}. Terima kasih.", "Perhatian.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
                       }else if(document.getElementById("tanggal_selesai").value == ""){
-                        toastr.error("Silahkan Isi Tanggal Selesai sebagai acuan berakhirnya Pelaporan Anggaran Kegiatan. Terima kasih.", "Perhatian.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
+                        toastr.error("Silahkan Isi Tanggal Selesai sebagai acuan berakhirnya {{$title=='Form Master'?$title." ".$sub_title:$title}}. Terima kasih.", "Perhatian.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
                       }else if(document.getElementById("tw_dari").value == "0"){
-                        toastr.error("Pilih TW Pelaporan Anggaran Kegiatan. Terima kasih.", "Perhatian.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
+                        toastr.error("Pilih TW {{$title=='Form Master'?$title." ".$sub_title:$title}}. Terima kasih.", "Perhatian.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
                       }else if(inputs.length == 0&&{{$setting['kategori']!="usulan_program"?1:0}}){
-                        toastr.error("Silahkan Isi Minimal Satu daftar Pelaporan Anggaran Kegiatan. Terima kasih.", "Perhatian.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
+                        toastr.error("Silahkan Isi Minimal Satu daftar {{$title=='Form Master'?$title." ".$sub_title:$title}}. Terima kasih.", "Perhatian.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
                       }else{
-                        var stop = false;
-
-                        for(i=0;i<inputs.length;i++){
-                          nameClass = $('.file_'+i);
-                          if(nameClass.length!=0){
-                            var countFile = $('<input/>',{type:'hidden',id:('count_file_'+i),
-                            name:('count_file_'+i),value:nameClass.length});
-                            countFile.appendTo("#file_grid");
-                          }
-                        }
-                        $('#modal_pernyataan').modal({
-                                  backdrop: 'static'
-                              });
+                        pernyataan =true;
                       }
                     }else{
-                      var stop = false;
+                      pernyataan =true;
+                    }
 
-                        for(i=0;i<inputs.length;i++){
-                          nameClass = $('.file_'+i);
-                          if(nameClass.length!=0){
-                            var countFile = $('<input/>',{type:'hidden',id:('count_file_'+i),
-                            name:('count_file_'+i),value:nameClass.length});
-                            countFile.appendTo("#file_grid");
-                          }
+
+                    if(pernyataan){
+                      for(i=0;i<inputs.length;i++){
+                        nameClass = $('.file_'+i);
+                        if(nameClass.length!=0){
+                          var countFile = $('<input/>',{type:'hidden',id:('count_file_'+i),
+                          name:('count_file_'+i),value:nameClass.length});
+                          countFile.appendTo("#file_grid");
                         }
+                      }
+
+                      if(statusTable!="null"){
+                        tampilan="";
+                        judul="";
+                        if(statusTable == "edit"){
+                          judul = "Terdapat {{$title=='Form Master'?$title." ".$sub_title:$title}} masih dalam perubahan";
+                          tampilan= "Silahkan Rubah dengan menekan tombol centang terlebih tahulu atau Batalkan dengan menekan tombol silang. Terima kasih.";
+                        }
+
+                        toastr.error(tampilan, judul, { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
+                      }else{
+                        document.getElementById("kondisi").value = type;
+                        var title_modal="";
+                        var pernyataan_modal="";
+                        if(type=="Simpan"){
+                          title_modal="Pernyimpanan {{$title=='Form Master'?$title." ".$sub_title:$title}}";
+                          pernyataan_modal = "<p>Apakah anda yakin Akan Menyimpan {{$title=='Form Master'?$title." ".$sub_title:$title}} ini?</p>";
+                        }else if(type=="Kirim"){
+                          title_modal="Pengajuan {{$title=='Form Master'?$title." ".$sub_title:$title}}";
+                          pernyataan_modal = "<p>Apakah anda yakin Akan Mengajukan {{$title=='Form Master'?$title." ".$sub_title:$title}}?</p>";
+                        }
+
+                        // alert(document.getElementById("teks_pernyataan").innerHTML);
+                        document.getElementById("title_modal_pernyataan").innerHTML = title_modal;
+                        document.getElementById("teks_pernyataan").innerHTML = pernyataan_modal;
+                        document.getElementById("button_peryataan").innerHTML = "Ya, "+type;
+
                         $('#modal_pernyataan').modal({
-                                  backdrop: 'static'
-                              });
+                              backdrop: 'static'
+                          });
+                        
+                      } 
                     }
                   }
 
@@ -1032,6 +1070,7 @@
                   }
 
                   function setTWFirst(){
+                    // $('input[type="date"]').datepicker();
                     var status = '{{$setting['status']}}';
                     var type = '{{$type}}';
 

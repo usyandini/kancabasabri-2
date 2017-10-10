@@ -216,15 +216,12 @@
                             title: "Anggaran Tersedia (Awal)",
                             readOnly: true,
                             itemTemplate: function(value) {
-                              return "<b>IDR " + parseInt(value).toLocaleString() + ",00</b>";
+                              var nilai = validDigits(value);
+                              value = addCommas(nilai);
+                              return "<b>IDR " + value + ",00</b>";
                             },
                             insertTemplate: function(value) {
                               anggaran_field = jsGrid.fields.text.prototype.insertTemplate.call(this)
-                              anggaran_field.on("keyup", function() {
-                                var nilai = validDigits($(this).val());
-                                var val = addCommas(nilai);
-                                $(anggaran_field).val(val)
-                              })
                               return anggaran_field
                             },
                             valdiate: {
@@ -240,7 +237,9 @@
                             title: "Anggaran Tersedia (Aktual Estimasi)",
                             readOnly: true,
                             itemTemplate: function(value) {
-                              return "<b>IDR " + parseInt(value).toLocaleString() + ",00</b>";
+                              var nilai = validDigits(value);
+                              value = addCommas(nilai);
+                              return "<b>IDR " + value + ",00</b>";
                             },
                             insertTemplate: function(value) {
                               actual_anggaran = jsGrid.fields.text.prototype.insertTemplate.call(this)
@@ -428,7 +427,7 @@
                     var rx=  /(\d+)(\d{3})/;
                     return String(n).replace(/^\d+/, function(w){
                       while(rx.test(w)){
-                        w= w.replace(rx, '$1,$2');
+                        w= w.replace(rx, '$1.$2');
                       }
                       return w;
                     });
@@ -436,10 +435,10 @@
 
                   function validDigits(n, dec){
                     n= n.replace(/[^\d]+/g, '');
-                    var ax1= n.indexOf(','), ax2= -1;
+                    var ax1= n.indexOf('.'), ax2= -1;
                     if(ax1!= -1){
                       ++ax1;
-                      ax2= n.indexOf(',', ax1);
+                      ax2= n.indexOf('.', ax1);
                       if(ax2> ax1) n= n.substring(0, ax2);
                       if(typeof dec=== 'number') n= n.substring(0, ax1+dec);
                     }
@@ -453,7 +452,14 @@
                     $(m_anggaran).val(data.SEGMEN_6)
 
                     $(anggaran_field).val(data.ax_anggaran.PIL_AMOUNTAVAILABLE)
+                    var nilai = validDigits($(anggaran_field).val());
+                    var val = addCommas(nilai);
+                    $(anggaran_field).val(val)
+
                     $(actual_anggaran).val(data.actual_anggaran)
+                    nilai = validDigits($(actual_anggaran).val());
+                    val = addCommas(nilai);
+                    $(actual_anggaran).val(val)
                   }
                   
                   function pad(n) {

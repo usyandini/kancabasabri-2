@@ -19,6 +19,7 @@ use App\Models\KantorCabang;
 use App\Services\FileUpload;
 use App\Services\NotificationSystem;
 use Validator;
+use PDF;
 /**
 *
 *-------Status Data :----------
@@ -562,6 +563,7 @@ class AnggaranController extends Controller
         }
     
         $index = 0;
+        //list_anggaran_download
         foreach (json_decode($request->list_anggaran_values) as $value) {
             $idBefore = '0';
             $anggaranId = $request->id_anggaran;
@@ -1082,4 +1084,90 @@ class AnggaranController extends Controller
         }
     }
 
+    public function export_list_anggaran(Request $request)
+    {
+        $header_list = [];
+        
+        foreach(json_decode($request->header_anggaran_download) as $header){
+
+            $header_list[] = [
+                'tanggal'       => $header->tanggal,
+                'nd_surat'      => $header->nd_surat,
+                'unit_kerja'    => $header->unit_kerja,
+                'tipe_anggaran' => $header->tipe_anggaran,
+                'stat_anggaran' => $header->stat_anggaran,
+                'persetujuan'   => $header->persetujuan
+            ];
+        }
+
+        $anggaran_view_list = [];
+        foreach (json_decode($request->list_anggaran_download) as $value) {
+            $idBefore = '0';
+            $anggaranId = $request->id_anggaran;
+
+            $anggaran_view_list[] = [
+                'jenis'             => $value->jenis,
+                'kelompok'          => $value->kelompok,
+                'pos_anggaran'      => $value->pos_anggaran,
+                'sub_pos'           => $value->sub_pos,
+                'mata_anggaran'     => $value->mata_anggaran,
+                'item'              => $value->item,
+                'kuantitas'         => (int)$value->kuantitas,
+                'satuan'            => $value->satuan,
+                'nilai_persatuan'   => (double)$value->nilai_persatuan,
+                'terpusat'          => $value->terpusat,
+                'unit_kerja'        => $value->unit_kerja,
+                'TWI'               => (double)$value->tw_i,
+                'TWII'              => (double)$value->tw_ii,
+                'TWIII'             => (double)$value->tw_iii,
+                'TWIV'              => (double)$value->tw_iv,
+                'anggaran_setahun'  => (double)$value->anggarana_setahun
+            ];
+        }
+
+        $data = [
+            'list'      => $anggaran_view_list,
+            'header'    => $header_list
+        ];
+
+        $pdf = PDF::loadView('anggaran.report.export-anggaran', $data);
+        return $pdf->setPaper('a4', 'landscape')->setWarnings(false)->download('Anggaran dan Kegiatan-'.date("dmY").'.pdf');
+    }
+
+    public function export_riwayat(Request $request)
+    {
+        $header_list = [];  
+        foreach(json_decode($request->header_riwayat_values) as $header){
+            $header_list[] = [
+                'tahun'       => $header->tahun,
+                'unit_kerja'  => $header->unit_kerja
+            ];
+        }
+
+        $riwayat_list = [];
+        foreach(json_decode($request->list_riwayat_values) as $value){
+            $riwayat_list[] = [
+                'jenis'             => $value->jenis,
+                'kelompok'          => $value->kelompok,
+                'pos_anggaran'      => $value->pos_anggaran,
+                'sub_pos'           => $value->sub_pos,
+                'mata_anggaran'     => $value->mata_anggaran,
+                'input_anggaran'    => $value->input_anggaran,
+                'clearing_house'    => $value->clearing_house,
+                'naskah_rkap'       => $value->naskah_rkap,
+                'dewan_komisaris'   => $value->dewan_komisaris,
+                'rapat_teknis'      => $value->rapat_teknis,
+                'rups'              => $value->rups,
+                'finalisasi_rups'   => $value->finalisasi_rups,
+                'risalah_rups'      => $value->risalah_rups
+            ];
+        }
+
+        $data = [
+            'list'      => $riwayat_list,
+            'header'    => $header_list
+        ];
+        $pdf = PDF::loadView('anggaran.report.export-history', $data);
+        return $pdf->setPaper('a4', 'landscape')->setWarnings(false)->download('Riwayat Anggaran-'.date("dmY").'.pdf');
+    }
 }

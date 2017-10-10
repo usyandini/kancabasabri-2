@@ -154,7 +154,7 @@
                     </li>
                     @endif
                     @if (Gate::check('pelaporan_anggaran') || Gate::check('pelaporan_a_RUPS')|| Gate::check('pelaporan_usulan_p_p') || Gate::check('pelaporan_tindak_lanjut')|| Gate::check('form_master'))
-                    <li class="nav-item has-sub {{ checkOpenedMenu('pelaporan/informasi/laporan_anggaran') }}"><a href=""><i class="ft-edit"></i><span data-i18n="" class="menu-title">Pelaporan</span></a>
+                    <li class="nav-item has-sub {{ checkOpenedMenu('pelaporan/informasi/laporan_anggaran') }}"><a href=""><i class="ft-inbox"></i><span data-i18n="" class="menu-title">Pelaporan</span></a>
                         <ul class="menu-content">
                             @can('pelaporan_anggaran')
                             <li class="is-shown {{ checkActiveMenu('pelaporan/informasi/item/laporan_anggaran') }}"><a href="{{ url('/pelaporan/informasi/item/laporan_anggaran', $parameters = [], $secure = null) }}" class="menu-item">Pelaporan Anggaran Kegiatan</a></li>
@@ -198,19 +198,19 @@
                     </li>
                     @endif
                     @if (Gate::check('info_u') || Gate::check('tambah_u') || Gate::check('tambah_jenis') || Gate::check('jenis_u'))
-                    <li class="nav-item has-sub {{ checkOpenedMenu('user') }} {{ checkOpenedMenu('jenis_user') }}"><a href=""><i class="ft-user"></i><span data-i18n="" class="menu-title">Manajemen User</span></a>
+                    <li class="nav-item has-sub {{ checkOpenedMenu('user') }} {{ checkOpenedMenu('jenis_user') }}"><a href=""><i class="ft-user"></i><span data-i18n="" class="menu-title">Manajemen Pengguna</span></a>
                     <ul class="menu-content">
                         @can('info_u')
-                            <li class="is-shown {{ checkActiveMenu('user') }}"><a href="{{ url('/user', $parameters = [], $secure = null) }}" class="menu-item">Informasi User</a>
+                            <li class="is-shown {{ checkActiveMenu('user') }}"><a href="{{ url('/user', $parameters = [], $secure = null) }}" class="menu-item">Informasi Pengguna</a>
                         @endcan
                         @can('tambah_u')
-                            <li class="is-shown {{ checkActiveMenu('user/create') }}"><a href="{{ url('/user/create', $parameters = [], $secure = null) }}" class="menu-item">Tambah User</a>
+                            <li class="is-shown {{ checkActiveMenu('user/create') }}"><a href="{{ url('/user/create', $parameters = [], $secure = null) }}" class="menu-item">Tambah Pengguna</a>
                         @endcan
                         @can('jenis_u')
-                            <li class="is-shown {{ checkActiveMenu('jenis_user') }}"><a href="{{ url('/jenis_user', $parameters = [], $secure = null) }}" class="menu-item">Perizinan Jenis User</a>
+                            <li class="is-shown {{ checkActiveMenu('jenis_user') }}"><a href="{{ url('/jenis_user', $parameters = [], $secure = null) }}" class="menu-item">Perizinan Jenis Pengguna</a>
                         @endcan
                         @can('tambah_jenis')
-                            <li class="is-shown {{ checkActiveMenu('jenis_user/create') }}"><a href="{{ url('/jenis_user/create', $parameters = [], $secure = null) }}" class="menu-item">Tambah Jenis User</a>
+                            <li class="is-shown {{ checkActiveMenu('jenis_user/create') }}"><a href="{{ url('/jenis_user/create', $parameters = [], $secure = null) }}" class="menu-item">Tambah Jenis Pengguna</a>
                         @endcan
                     </ul>
                     @endif
