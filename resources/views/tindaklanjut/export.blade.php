@@ -1,20 +1,19 @@
 <html>
-<link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/tables/jsgrid/jsgrid-theme.min.css') }}">
-<link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/tables/jsgrid/jsgrid.min.css') }}">
-<link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/tables/datatable/dataTables.bootstrap4.min.css') }}">
-<link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/tables/extensions/responsive.dataTables.min.css') }}">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
 
 @if(count($a))
-@foreach($a as $bb)
-
-			@if ($bb->internal=='1')
-			<?php 
-			header("Content-type: application/vnd-ms-excel");
-			header("Content-Disposition: attachment; filename=tindak-lanjut-internal.xls"); ?>
-			@else
-			<?php 
-			header("Content-type: application/vnd-ms-excel");
-			header("Content-Disposition: attachment; filename=tindak-lanjut-eksternal.xls"); ?>
+@foreach($a as $bb)		
+			@if($excel)
+				@if ($bb->internal=='1')
+				<?php 
+				header("Content-type: application/vnd-ms-excel");
+				header("Content-Disposition: attachment; filename=tindak-lanjut-internal.xls"); ?>
+				@else
+				<?php 
+				header("Content-type: application/vnd-ms-excel");
+				header("Content-Disposition: attachment; filename=tindak-lanjut-eksternal.xls"); ?>
+				@endif
 			@endif
 
 			<?php 							
@@ -103,7 +102,14 @@
 				?>
 				@endforeach
 			    @endif
-			                  <h2><center><img src="{{ asset('app-assets/images/asabri-logo.png', $secure = null) }}" width="6%" align="middle" hspace="1%">
+			                  <h2><center>
+
+			                  @if($excel)
+			                  <img src="{{ asset('app-assets/images/asabri-logo.png', $secure = null) }}" width="6%" align="middle" hspace="1%">
+			                  @else
+			                  <img src='<?php echo $_SERVER["DOCUMENT_ROOT"].'/app-assets/images/asabri-logo.png'; ?>' align="left" width="6%">		
+			                  @endif
+
 			                  @if ($bb->internal=='1')
 			                  Form Laporan Tindak Lanjut Pengawasan Internal
 			                  @else
@@ -111,16 +117,23 @@
 			                  @endif
 			                  </center></h2>
 			                  <br><br><br>
+
 			                  <table>
-			                  <tr>
-			                  <td><b> Unit Kerja </b></td><td><b> : </b></td><td><b>{{ $bb->unitkerja}}</b></td>
-			                  </tr>
-			                  <tr>
-                              <td><b> Tanggal Mulai </b></td><td><b> : </b></td><td><b>{{ $tgls }} {{ $bulans }} {{ $tahuns }} </b></td>
-                              </tr>
-                              <tr>
-                              <td><b> Durasi </b></td><td><b> : </b></td><td><b>{{ $bb->durasi }} Hari </b></td>
-                              </tr>
+				                  <tr>
+					                  <td><b> Unit Kerja </b></td>
+					                  <td><b> : </b></td>
+					                  <td align="left"><b>{{ $bb->unitkerja}}</b></td>
+					              </tr>
+					              <tr>
+		                              <td><b> Tanggal Mulai </b></td>
+		                              <td><b> : </b></td>
+		                              <td align="left"><b>{{ $tgls }} {{ $bulans }} {{ $tahuns }} </b></td>
+		                          </tr>
+		                          <tr>
+		                              <td><b> Durasi </b></td>
+		                              <td><b> : </b></td>
+		                              <td align="left"><b>{{ $bb->durasi }} Hari </b></td>
+	                              </tr>
                                 <?php 
                                 $id1=$bb->id1;
                                 $ab1= DB::table('tl_temuan')
@@ -147,18 +160,26 @@
 						        	 }
                                 ?>
                                 	<tr>
-                                	<td><b>Total Temuan </b></td><td><b> : </b></td><td><b>{{$ab1}}</b></td>
+                                		<td><b>Total Temuan </b></td>
+                                		<td><b> : </b></td>
+                                		<td align="left"><b>{{$ab1}}</b></td>
                                 	</tr>
                                 	<tr>
-                                	<td><b>Total Rekomendasi </b></td><td><b> : </b></td><td><b>{{$ab2}}</b></td>
+                                		<td><b>Total Rekomendasi </b></td>
+                                		<td><b> : </b></td>
+                                		<td align="left"><b>{{$ab2}}</b></td>
                                 	</tr>
                                 	<tr>
-                                	<td><b>Dalam Proses </b></td><td><b> : </b></td><td><b>{{$ab3}}</b></td>
+                                		<td><b>Dalam Proses </b></td>
+                                		<td><b> : </b></td>
+                                		<td align="left"><b>{{$ab3}}</b></td>
                                 	</tr>
                                 	<tr>
-                                	<td><b>Selesai </b></td><td><b> : </b></td><td><b>{{$ab4}}</b></td>
+                                		<td><b>Selesai </b></td>
+                                		<td><b> : </b></td>
+                                		<td align="left"><b>{{$ab4}}</b></td>
                                 	</tr>
-                                	</table>
+                                </table>
                                 	
 							<br>
 							<style>
@@ -167,6 +188,9 @@
 							        }
 							        .classtable {
 							            border-collapse: collapse;
+							            width:100%;
+							           	margin-left:auto;
+							           	margin-right:auto;
 							        }
 							        .classth {
 							            background-color: #cccccc;
@@ -186,7 +210,6 @@
 			                            <th class="classth"><center>Temuan</center></th>
 			                            <th class="classth"><center>Rekomendasi</center></th>
 			                            <th class="classth"><center>Tindak Lanjut</center></th>
-			                            <th class="classth"><center>Berkas</center></th>
 			                            <th class="classth"><center>Status</center></th>
 			                            <th class="classth"><center>Keterangan</center></th>
 			                          </tr>
@@ -224,16 +247,12 @@
 			                        			{{ $b->tindaklanjut }}
 					                           	@endif
 				                           		</td>
-				                           		<td class="classtd"><center>@if ($b->tindaklanjut!="")
-				                           			@if ($b->name=="") Tidak Ada
-				                           				@else 
-				                           					{{ $b->name }}</a>
-				                           				@endif
-				                           			@endif</center></td>
-			                        			<td class="classtd"><center>@if ($b->status=='1') Dalam Proses @endif
-			                        				@if ($b->status=='2') Selesai @endif</center></td>
-			                        			<td class="classtd"><center>{{ $b->keterangan }}</center></td>
-			                        			</tr>
+				                           		<td class="classtd"><center>@if ($b->status=='1') Dalam Proses @endif
+			                        				@if ($b->status=='2') Selesai @endif</center>
+			                        			</td>
+			                        			<td class="classtd"><center>{{ $b->keterangan }}</center>
+			                        			</td>
+			                        </tr>
 			                        				
 				                	<?php $longkap = $b->unitkerja;
 				                		  $longkap2 = $b->temuan;

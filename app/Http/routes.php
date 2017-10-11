@@ -218,7 +218,7 @@ Route::group(['middleware' => 'auth'], function() {
 		Route::get('/download/{id4}', 'TindaklanjutController@downloadberkas');
 		Route::get('/lihat/{id4}', 'TindaklanjutController@lihatberkas');
 		Route::get('/tindaklanjut/{id1}', 'TindaklanjutController@tindaklanjut');
-		Route::get('/export/{id1}', 'TindaklanjutController@export_tindaklanjut');
+		Route::get('/export/{id1}/{type}', 'TindaklanjutController@export_tindaklanjut');
 		Route::get('/print/{id1}', 'TindaklanjutController@print_tindaklanjut');
 		Route::get('/kirim/{id1}', 'TindaklanjutController@kirim_tindaklanjut');
 		Route::get('/myform/{unitkerja}', 'TindaklanjutController@myformAjaxunitkerja');

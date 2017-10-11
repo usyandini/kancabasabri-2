@@ -8,6 +8,7 @@ use App\Http\Requests;
 use App\User;
 use App\Services\FileUpload;
 use App\Services\NotificationSystem;
+use PDF;
 
 // table -> tl_tanggal :
 // status = 1 -> dalam proses
@@ -676,17 +677,27 @@ class TindaklanjutController extends Controller
         return view('tindaklanjut.cetak', compact('a'));
 	}
 
-	public function export_tindaklanjut(Request $request, $id1)
+	public function export_tindaklanjut(Request $request, $id1, $type)
     {
-        
         $a = DB::table('tl_tanggal')
         	 ->leftjoin('tl_temuan', 'tl_tanggal.id1','=','tl_temuan.id_unitkerja')
         	 ->leftjoin('tl_rekomendasi', 'tl_temuan.id2','=','tl_rekomendasi.id_temuan')
         	 ->leftjoin('tl_tindaklanjut', 'tl_rekomendasi.id3','=','tl_tindaklanjut.id_rekomendasi')
         	 ->where('id1', $id1)
         	 ->orderBy('id2','DESC')->get();
-       
-        return view('tindaklanjut.export', compact('a'));
+        $excel = false;
+        $data = ['a' => $a, 'excel' => $excel];
+        //export ke pdf
+        switch($type){
+            case 'pdf':
+                $pdf = PDF::loadView('tindaklanjut.export', $data);
+                return $pdf->setPaper('a4', 'landscape')->setWarnings(false)->download('tindak-lanjut-temuan-'.date("dmY").'.pdf');
+                break;
+            case 'excel':
+                $excel = true;
+                return view('tindaklanjut.export', compact('a', 'excel'));
+                break;
+        }
 	}
 
 	public function myformAjax($unitkerja)
