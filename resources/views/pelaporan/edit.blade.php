@@ -166,11 +166,13 @@
                                   <div class="row col-xs-12">
                                     <div class="col-xs-12" style="display:block">
                                       <br />
+                                      @if($type=="item")
                                       <div class="col-xs-3">
                                         <div class="form-group">
                                           <div onclick="download_post()" class="btn btn-secondary" target="_blank"><i class="fa fa-download"></i> Unduh</div>
                                         </div>
                                       </div>
+                                      @endif
 
                                       <div class="col-xs-7">
                                       </div>
@@ -448,14 +450,15 @@
                             items: getUnitKerja(),
                             insertTemplate: function() {
                               unit = this._grid.fields[3];
-                              var $insertControl = jsGrid.fields.select.prototype.insertTemplate.call(this);
-                              return $insertControl;
+                              var insertControl = jsGrid.fields.select.prototype.insertTemplate.call(this);
+                              return insertControl;
 
                             },
                             editTemplate: function(value) {
                               unit = this._grid.fields[3];
-                              var $editControl = jsGrid.fields.select.prototype.editTemplate.call(this);
-                              return $editControl;
+                              var editControl = jsGrid.fields.select.prototype.editTemplate.call(this);
+                              $(editControl).val(value);
+                              return editControl;
                             },
                             validate: {
                               message : "Pilih Unit Kerja Terlebih Dahulu." ,
@@ -714,7 +717,7 @@
                           case "IV" : tw_ke = "4";break;
                         }
                         var tmp = null;
-                        // alert(tanggal[0]);
+                        alert("{{ url('pelaporan/get/unit_kerja_form')}}/"+tanggal[2]+"/"+tw_dari+"/"+tw_ke+"/"+"{{$setting['kategori'].'/'.$filters['id']}}");
                         $.ajax({
                             'async': false, 'type': "GET", 'dataType': 'JSON', 
                             'url': "{{ url('pelaporan/get/unit_kerja_form')}}/"+tanggal[2]+"/"+tw_dari+"/"+tw_ke+"/"+"{{$setting['kategori'].'/'.$filters['id']}}",

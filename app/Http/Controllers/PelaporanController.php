@@ -1224,38 +1224,39 @@ class PelaporanController extends Controller
                                 where(function ($query) use ($tw1,$id,$kategori,$thn){
                                     $query->where('tw_dari','<=', $tw1)
                                           ->where('tw_ke','>=', $tw1)
-                                          ->where('id',"<>",$id)
                                           ->where('kategori',$kategori)
-                                          ->where('is_template','1')
-                                          ->whereYear('created_at', '=', $thn);
+                                          ->whereYear('created_at', '=', $thn)
+                                          ->where('id',"<>",$id);
                                 })->
                                 orWhere(function ($query) use ($tw2,$id,$kategori,$thn){
                                     $query->where('tw_dari','<=', $tw2)
                                           ->where('tw_ke','>=', $tw2)
-                                          ->where('id',"<>",$id)
                                           ->where('kategori',$kategori)
-                                          ->where('is_template','1')
-                                          ->whereYear('created_at', '=', $thn);
+                                          ->whereYear('created_at', '=', $thn)
+                                          ->where('id',"<>",$id);
                                 })->get();
+        $form = $this->FormMasterPelaporanModel->where('id',$id)->first();
         foreach ($FormMaster as $row) {
-            // echo $row->id;
-            switch ($kategori) {
-                case 'laporan_anggaran':
-                    $item = MasterItemPelaporanAnggaran::where('id_form_master',$row->id)->get();
-                    foreach ($item as $val) {
-                        if (!in_array($val->unit_kerja, $unit)) {
-                            array_push($unit,$val->unit_kerja);
+            
+            if($row->id != $form->id_master && $form->id_master != "0"){
+                switch ($kategori) {
+                    case 'laporan_anggaran':
+                        $item = MasterItemPelaporanAnggaran::where('id_form_master',$row->id)->get();
+                        foreach ($item as $val) {
+                            if (!in_array($val->unit_kerja, $unit)) {
+                                array_push($unit,$val->unit_kerja);
+                            }
                         }
-                    }
-                    break;
-                case 'arahan_rups':
-                    $item = MasterItemArahanRUPS::where('id_form_master',$row->id)->get();
-                    foreach ($item as $val) {
-                        if (!in_array($val->unit_kerja, $unit)) {
-                            array_push($unit,$val->unit_kerja);
+                        break;
+                    case 'arahan_rups':
+                        $item = MasterItemArahanRUPS::where('id_form_master',$row->id)->get();
+                        foreach ($item as $val) {
+                            if (!in_array($val->unit_kerja, $unit)) {
+                                array_push($unit,$val->unit_kerja);
+                            }
                         }
-                    }
-                    break;
+                        break;
+                }
             }
         }
 

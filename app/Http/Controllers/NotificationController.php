@@ -179,10 +179,10 @@ class NotificationController extends Controller
             case 31:
                 return redirect('anggaran/persetujuan/'.$anggaran->nd_surat."/1");
             case 32:
-                if(Gate::check('master_pelaporan_anggaran'))
-                    return redirect('pelaporan/edit/master/laporan_anggaran/'.$form_master->id);
+                if(Gate::check('tambah_pelaporan_anggaran'))
+                    return redirect('pelaporan/tambah/master/laporan_anggaran/'.$form_master->id);
                 else
-                    return redirect('pelaporan/informasi/item/laporan_anggaran');
+                    return redirect('pelaporan/edit/master/laporan_anggaran/'.$form_master->id);
             case 33:
                 return redirect('pelaporan/edit/item/laporan_anggaran/'.$form_master->id);
             case 34:
