@@ -525,6 +525,7 @@
                     header['tanggal'] = $('#tanggal').val();
                     header['tw_dari'] = $('#tw_dari').val();
                     header['tw_ke'] = $('#tw_ke').val();
+                    header['unit_kerja'] = $('#unit_kerja').val();
 
                     array = new Array();
                     array.push(header);

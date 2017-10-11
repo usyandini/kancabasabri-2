@@ -420,7 +420,7 @@ class PelaporanController extends Controller
         }
 
         $pelaporan = FormMasterPelaporan::where('id', $id)->where('is_template','0')->get();
-        
+
         $beda = true;
         $date_now = date("Y-m-d");
         $date_selesai;
@@ -1287,13 +1287,13 @@ class PelaporanController extends Controller
                     $header_list[] = [
                         'tanggal'       => $header->tanggal,
                         'tw_dari'       => $header->tw_dari,
-                        'tw_ke'         => $header->tw_ke
+                        'tw_ke'         => $header->tw_ke,
+                        'unit_kerja'    => $header->unit_kerja
                     ];
                 }
 
                 foreach(json_decode($request->list_pelaporan_download) as $value){
                     $pelaporan_list[] = [
-                        'unit_kerja'        => $value->unit_kerja,
                         'program_prioritas' => $value->program_prioritas,
                         'sasaran_dicapai'   => $value->sasaran_dicapai,
                         'uraian_progress'   => $value->uraian_progress
@@ -1314,13 +1314,13 @@ class PelaporanController extends Controller
                     $header_list[] = [
                         'tanggal'       => $header->tanggal,
                         'tw_dari'       => $header->tw_dari,
-                        'tw_ke'         => $header->tw_ke
+                        'tw_ke'         => $header->tw_ke,
+                        'unit_kerja'    => $header->unit_kerja
                     ];
                 }
 
                 foreach(json_decode($request->list_pelaporan_download) as $value){
                     $pelaporan_list[] = [
-                        'unit_kerja'        => $value->unit_kerja,
                         'jenis_arahan'      => $value->jenis_arahan,
                         'arahan'            => $value->arahan,
                         'progress_tindak_lanjut'   => $value->progress_tindak_lanjut
@@ -1341,7 +1341,8 @@ class PelaporanController extends Controller
                     $header_list[] = [
                         'tanggal'       => $header->tanggal,
                         'tw_dari'       => $header->tw_dari,
-                        'tw_ke'         => $header->tw_ke
+                        'tw_ke'         => $header->tw_ke,
+                        'unit_kerja'    => $header->unit_kerja
                     ];
                 }
 

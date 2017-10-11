@@ -65,7 +65,6 @@
 			<table class='body'>
 				<thead>
 					<tr>
-						<th>Unit Kerja</th>
 						<th>Jenis Arahan</th>
 						<th>Arahan</th>
 						<th>Progres Tindak Lanjut</th>
@@ -74,7 +73,6 @@
 				<tbody>
 					@foreach($list as $val)
 					<tr class='body'>
-						<td class='body' width='20%'>{{$val['unit_kerja']}}</td>
 						<td class='body' width='20%'>{{$val['jenis_arahan']}}</td>
 						<td class='body' width='30%'>{{$val['arahan']}}</td>
 						<td class='body' width='30%'>{{$val['progress_tindak_lanjut']}}</td>
