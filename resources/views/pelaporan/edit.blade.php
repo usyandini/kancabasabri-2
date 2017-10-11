@@ -291,7 +291,7 @@
                   var editable = {{($setting['edit']&&$beda)?1:0}};
                   var unit = null;
                   var click_berkas = true;
-                  var statusTable = "";
+                  var statusTable = "null";
                   var simpan_file = false;
                   $(document).ready(function() {
 
@@ -444,7 +444,8 @@
                             readOnly:insertable == 1 ? false : true,
                             valueField: "DESCRIPTION", 
                             textField: "DESCRIPTION", 
-                            items: getData('unitkerja'),
+                            // items: getData('unitkerja'),
+                            items: getUnitKerja(),
                             insertTemplate: function() {
                               unit = this._grid.fields[3];
                               var $insertControl = jsGrid.fields.select.prototype.insertTemplate.call(this);
@@ -693,34 +694,36 @@
                   }
 
                   function getUnitKerja() {
-                    var tanggal = $('#tanggal').val().split("/");
-                    var tw_dari = $('#tw_dari').val();
-                    var tw_ke = $('#tw_ke').val();
-
-                    switch(tw_dari){
-                      case "I" : tw_dari = "1";break;
-                      case "II" : tw_dari = "2";break;
-                      case "III" : tw_dari = "3";break;
-                      case "IV" : tw_dari = "4";break;
-                    }
-
-                    switch(tw_ke){
-                      case "I" : tw_ke = "1";break;
-                      case "II" : tw_ke = "2";break;
-                      case "III" : tw_ke = "3";break;
-                      case "IV" : tw_ke = "4";break;
-                    }
+                    
                     var returned = function () {
+                        var tanggal = $('#tanggal').val().split("/");
+                        var tw_dari = $('#tw_dari').val();
+                        var tw_ke = $('#tw_ke').val();
+
+                        switch(tw_dari){
+                          case "I" : tw_dari = "1";break;
+                          case "II" : tw_dari = "2";break;
+                          case "III" : tw_dari = "3";break;
+                          case "IV" : tw_dari = "4";break;
+                        }
+
+                        switch(tw_ke){
+                          case "I" : tw_ke = "1";break;
+                          case "II" : tw_ke = "2";break;
+                          case "III" : tw_ke = "3";break;
+                          case "IV" : tw_ke = "4";break;
+                        }
                         var tmp = null;
+                        // alert(tanggal[0]);
                         $.ajax({
                             'async': false, 'type': "GET", 'dataType': 'JSON', 
-                            'url': "{{ url('pelaporan/get/unit_kerja_form')}}/"+tanggal[2]+"/"+tw_dari+"/"+tw_ke+"/"+"{{$setting['kategori']}}"+"/-1",
+                            'url': "{{ url('pelaporan/get/unit_kerja_form')}}/"+tanggal[2]+"/"+tw_dari+"/"+tw_ke+"/"+"{{$setting['kategori'].'/'.$filters['id']}}",
                             'success': function (data) {
                                 tmp = data;
 
                                 // alert(JSON.stringify(data));
                                 unit.items = data;
-                                $(".unitkerja").empty().append(unit.insertTemplate());
+                                $(".unitkerja").empty().append(unit.editTemplate());
                             }
                         });
                         return tmp;
@@ -760,8 +763,9 @@
                           if({{($type=='item'&&$status='Tambah')?1:0}}){
                             document.getElementById('id_form_master').value = data[0].id;
                           }
-                          now = data[0]['created_at']['date'].split(' ')
-                          tanggal.value = now[0];
+                          now = data[0]['created_at']['date'].split(' ');
+                          date = now[0].split('-');
+                          tanggal.value = date[2]+"/"+date[1]+"/"+date[0];
                           tw_dari_val="";
                           tw_ke_val="";
                           // alert(data[0].tw_dari+data[0].tw_ke)
@@ -867,15 +871,21 @@
                   function check(type){
                     var pernyataan = false;
                     if({{$type == "master"?1:0}}){
+                       // alert("master");
                       if(document.getElementById("tanggal_mulai").value == ""){
+                         // alert("salah1");
                         toastr.error("Silahkan Isi Tanggal Mulai Untuk memulai {{$title=='Form Master'?$title." ".$sub_title:$title}}. Terima kasih.", "Perhatian.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
                       }else if(document.getElementById("tanggal_selesai").value == ""){
+                         // alert("salah2");
                         toastr.error("Silahkan Isi Tanggal Selesai sebagai acuan berakhirnya {{$title=='Form Master'?$title." ".$sub_title:$title}}. Terima kasih.", "Perhatian.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
                       }else if(document.getElementById("tw_dari").value == "0"){
+                         // alert("salah3");
                         toastr.error("Pilih TW {{$title=='Form Master'?$title." ".$sub_title:$title}}. Terima kasih.", "Perhatian.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
                       }else if(inputs.length == 0&&{{$setting['kategori']!="usulan_program"?1:0}}){
+                        // alert("salah4");
                         toastr.error("Silahkan Isi Minimal Satu daftar {{$title=='Form Master'?$title." ".$sub_title:$title}}. Terima kasih.", "Perhatian.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
                       }else{
+                         // alert("benar");
                         pernyataan = true;
                       }
                     }else{
@@ -895,12 +905,13 @@
                       if(statusTable!="null"){
                         tampilan="";
                         judul="";
+                        // alert(statusTable);
                         if(statusTable == "edit"){
+                           alert("salahEdit");
                           judul = "Terdapat {{$title=='Form Master'?$title." ".$sub_title:$title}} masih dalam perubahan";
                           tampilan= "Silahkan Rubah dengan menekan tombol centang terlebih tahulu atau Batalkan dengan menekan tombol silang. Terima kasih.";
+                          toastr.error(tampilan, judul, { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
                         }
-
-                        toastr.error(tampilan, judul, { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
                       }else{
                         document.getElementById("kondisi").value = type;
                         var title_modal="";
@@ -1199,7 +1210,7 @@
                   window.setTWFirst();
                   @endif
                   window.getListData();
-                  window.getUnitKerja();
+                  // window.getUnitKerja();
 
 
                 </script>

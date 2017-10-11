@@ -757,18 +757,24 @@ class PelaporanController extends Controller
             $query = $query->whereYear('created_at', '=', $tahun);
             
         }
-        // $query = $query->where('tw_dari','<=',$tw_dari)->orWhere('tw_ke','<=',$tw_ke);
         $is_template = 1;
         if($type == "item"){
             $is_template = 0;
         }
-
-        $query = $query-> where(function ($query) use ($tw_dari,$tw_ke){
-                                $query->where('tw_dari','<=',$tw_dari)
-                                      ->orWhere('tw_ke','<=',$tw_ke);
-                            })->where('kategori',$kategori)->where('is_template',$is_template)->orderBy('updated_at','DESC');
-         
-        if($decode_unit !="0"){
+        $FormMaster = $this->FormMasterPelaporanModel->
+                                where(function ($query) use ($tw_dari,$kategori,$is_template){
+                                    $query->where('tw_dari','<=', $tw_dari)
+                                          ->where('tw_ke','>=', $tw_dari)
+                                          ->where('kategori',$kategori)
+                                          ->where('is_template',$is_template);
+                                })->
+                                orWhere(function ($query) use ($tw_ke,$kategori,$is_template){
+                                    $query->where('tw_dari','<=', $tw_ke)
+                                          ->where('tw_ke','>=', $tw_ke)
+                                          ->where('kategori',$kategori)
+                                          ->where('is_template',$is_template);
+                                })->orderBy('updated_at','DESC');
+       if($decode_unit !="0"){
             foreach ($query->get() as $row) {
                 $hasil;
                 if($kategori == 'laporan_anggaran'){
@@ -903,33 +909,21 @@ class PelaporanController extends Controller
                 $FormMaster = $this->FormMasterPelaporanModel->where('id',$id);
             }else {
                 $FormMaster = $this->FormMasterPelaporanModel->
-                                where(function ($query) use ($tw){
-                                    $query->where('tw_dari', $tw)
-                                          ->orWhere('tw_ke', $tw);
-                                })->where('kategori',$kategori)->where('is_template','1');
+                                where(function ($query) use ($tw,$kategori){
+                                    $query->where('tw_dari','<=', $tw)
+                                          ->where('tw_ke','>=', $tw)
+                                          ->where('kategori',$kategori)
+                                          ->where('is_template','1');
+                                })->
+                                orWhere(function ($query) use ($tw2,$kategori){
+                                    $query->where('tw_dari','<=', $tw)
+                                          ->where('tw_ke','>=', $tw)
+                                          ->where('kategori',$kategori)
+                                          ->where('is_template','1');
+                                });
             }
 
-            // $ItemMaster;
-            // foreach ($FormMaster->get() as $form_master) {
-            //     if($kategori == "arahan_rups"){
-            //         $Item = $this->MasterItemPelaporanAnggaranModel
-            //             ->where('id_form_master', $form_master->id)->where('unit_kerja', $userUnit);
-            //         if(count($Item)>0){
-            //             $ItemMaster = $Item;
-            //         }
-            //     }else if($kategori == "arahan_rups"){
-            //         $Item = $this->MasterItemArahanRUPSModel
-            //             ->where('id_form_master', $form_master->id)->where('unit_kerja', $userUnit);
-            //         if(count($Item)>0){
-            //             $ItemMaster = $Item;
-            //         }
-            //     }
-
-            // }
-            // $result = null;
-            // if(count($ItemMaster)>0||$kategori == 'usulan_program'){
                 $result = $FormMaster->get();
-            // }
 
         }else if($kategori == "laporan_anggaran"&&$type=="1"){
             $FormMaster = $this->FormMasterPelaporanModel->where('id',$id);
@@ -1223,17 +1217,22 @@ class PelaporanController extends Controller
         $unit = [];
         // echo $tw1."-".$tw2;
         $FormMaster = $this->FormMasterPelaporanModel->
-                                where(function ($query) use ($tw1){
+                                where(function ($query) use ($tw1,$id,$kategori,$thn){
                                     $query->where('tw_dari','<=', $tw1)
-                                          ->where('tw_ke','>=', $tw1);
+                                          ->where('tw_ke','>=', $tw1)
+                                          ->where('id',"<>",$id)
+                                          ->where('kategori',$kategori)
+                                          ->where('is_template','1')
+                                          ->whereYear('created_at', '=', $thn);
                                 })->
-                                orWhere(function ($query) use ($tw2){
+                                orWhere(function ($query) use ($tw2,$id,$kategori,$thn){
                                     $query->where('tw_dari','<=', $tw2)
-                                          ->where('tw_ke','>=', $tw2);
-                                })->where('kategori',$kategori)
-                                  ->where('is_template','1')
-                                  ->where('id',"<>",$id)
-                                  ->whereYear('created_at', '=', $thn)->get();
+                                          ->where('tw_ke','>=', $tw2)
+                                          ->where('id',"<>",$id)
+                                          ->where('kategori',$kategori)
+                                          ->where('is_template','1')
+                                          ->whereYear('created_at', '=', $thn);
+                                })->get();
         foreach ($FormMaster as $row) {
             // echo $row->id;
             switch ($kategori) {
@@ -1412,6 +1411,7 @@ class PelaporanController extends Controller
                 \DB::table('form_master_pelaporan')->delete();
                 \DB::table('master_item_arahan_rups')->delete();
                 \DB::table('master_item_pelaporan_anggaran')->delete();
+                \DB::table('item_usulan_program')->delete();
                 \DB::table('berkas_form_item_master')->delete();
     }
 

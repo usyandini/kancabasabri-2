@@ -412,7 +412,7 @@
                             readOnly:insertable == 1 ? false : true,
                             valueField: "DESCRIPTION", 
                             textField: "DESCRIPTION", 
-                            items: getData('unitkerja'),
+                            items: getUnitKerja(),
                             insertTemplate: function() {
                               unit = this._grid.fields[3];
                               var $insertControl = jsGrid.fields.select.prototype.insertTemplate.call(this);
@@ -670,11 +670,12 @@
                       case "III" : tw_ke = "3";break;
                       case "IV" : tw_ke = "4";break;
                     }
+                    // alert("{{$setting['id_form_master']}}");
                     var returned = function () {
                         var tmp = null;
                         $.ajax({
                             'async': false, 'type': "GET", 'dataType': 'JSON', 
-                            'url': "{{ url('pelaporan/get/unit_kerja_form')}}/"+tanggal[2]+"/"+tw_dari+"/"+tw_ke+"/"+"{{$setting['kategori']}}"+"/-1",
+                            'url': "{{ url('pelaporan/get/unit_kerja_form')}}/"+tanggal[2]+"/"+tw_dari+"/"+tw_ke+"/"+"{{$setting['kategori'].'/'.$setting['id_form_master']}}",
                             'success': function (data) {
                                 tmp = data;
 
@@ -720,7 +721,8 @@
                             document.getElementById('id_form_master').value = data[0].id;
                           }
                           now = data[0].created_at.split(' ')
-                          tanggal.value = now[0];
+                          date = now[0].split('-');
+                          tanggal.value = date[2]+"/"+date[1]+"/"+date[0];
                           tw_dari_val="";
                           tw_ke_val="";
                           // alert(data[0].tw_dari+data[0].tw_ke)
@@ -1149,7 +1151,7 @@
                   window.setTWFirst();
                   @endif
                   window.getListData();
-                  window.getUnitKerja();
+                  // window.getUnitKerja();
                   // window.startDate();
 
 
