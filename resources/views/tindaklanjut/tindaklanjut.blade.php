@@ -328,7 +328,7 @@
 		                                            	<center><h4>Anda yakin ingin mengirim temuan dan rekomendasi <br>ke unit kerja <span class=text-info>{{ $bb->unitkerja }}</span> ?</h4></center>
 		                                        	</div>
 		                                        	<div class="modal-footer">
-		                                           	 	<a href="{{ URL('tindaklanjut/kirim/'. $bb->id1) }}"" class="btn btn-success btn-sm"><i class="fa fa-check"></i> Ya</a>
+		                                           	 	<a href="{{ URL('tindaklanjut/kirim/'. $bb->id1) }}" class="btn btn-success btn-sm"><i class="fa fa-check"></i> Ya</a>
 		                                        		<button type="button" class="btn btn-danger btn-sm" data-dismiss="modal"><i class="fa fa-times"></i> Tidak</button>
 		                                        	</div>
 		                                    	</div>
@@ -339,7 +339,8 @@
 			                      		@endif
 									@endif
 									@if ($ab5)	
-										<td><span><a href="{{ URL('tindaklanjut/export/'. $bb->id1) }}" class="btn btn-success pull-right" target="_blank"><i class="fa fa-file-excel-o"></i> <b> Export to Excel </b></a></span></td><td> </td><td> </td>
+										<td><span><a href="{{ URL('tindaklanjut/export/'. $bb->id1.'/excel') }}" class="btn btn-success pull-right" target="_blank"><i class="fa fa-file-excel-o"></i> <b> Export to Excel </b></a></span></td><td> </td><td> </td>
+										<td><span><a href="{{ URL('tindaklanjut/export/'. $bb->id1.'/pdf') }}" class="btn btn-success pull-right" target="_blank"><i class="fa fa-file-pdf-o"></i> <b> Export to PDF </b></a></span></td><td> </td><td> </td>
 										<td><span><a href="{{ URL('tindaklanjut/print/'. $bb->id1) }}" class="btn btn-success pull-right" target="_blank"><i class="fa fa-print"></i> <b> Print </b></a></span></td>
 			                		@endif
 			                		
