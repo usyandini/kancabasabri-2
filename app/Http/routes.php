@@ -126,6 +126,7 @@ Route::group(['middleware' => 'auth'], function() {
 		Route::get('/get/filteredMaster/{kategori}/{type}/{id}', 'PelaporanController@getDataFormMaster');
 		Route::get('/get/filteredPelaporan/{type}/{kategori}/{tahun}/{tw_dari}/{tw_ke}/{unit_kerja}', 'PelaporanController@getFilteredPelaporan');
 		Route::get('/get/download/{id}', 'PelaporanController@unduh_file');
+		Route::get('/get/unit_kerja_form/{thn}/{tw1}/{tw2}/{kategori}/{id}', 'PelaporanController@getUnitKerjaFormMaster');
 		Route::get('/reports/export', 'PelaporanController@export_pelaporan');
    	});
 

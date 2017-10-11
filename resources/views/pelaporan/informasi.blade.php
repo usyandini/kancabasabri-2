@@ -394,15 +394,16 @@
                     }else if(now >=9 && now <=11){
                       tw = 4;
                     }
-                    $("#type").val("Tambah")
-                    $('select[name="cari_tahun"] option[value=0]').attr("selected","selected");
-                    $('select[name="cari_unit_kerja"] option[value="{{$units}}"]').attr("selected","selected");
-                    $('select[name="cari_tw_dari"] option[value='+tw+']').attr("selected","selected");
-                    $('select[name="cari_tw_ke"] option[value='+tw+']').attr("selected","selected");
-                    $('form[id="filterPelaporan"]').submit();
-                    
+                    tahun = new Date().getFullYear();
+                    $.ajax({
+                        'async': false, 'type': "GET", 'dataType': 'JSON', 'url': "{{url('pelaporan/get/filteredPelaporan/'.$tp.'/'.$kategori)}}"+'/'+tahun+'/'+tw+'/'+tw+'/'+encodeURI("{{$units}}"),
+                        'success': function (data) {
+                          var url = "{{url('pelaporan/tambah/'.$type.'/'.$kategori).'/'}}"+data[0].id;
+                          window.location.href = url;
+                        }
+                    });
                     @else
-                    url = "{{url('pelaporan/tambah/'.$type.'/'.$kategori.'/-1') }}";
+                    var url = "{{url('pelaporan/tambah/'.$type.'/'.$kategori.'/-1') }}";
                     window.location.href = url;
                     @endif
                     
