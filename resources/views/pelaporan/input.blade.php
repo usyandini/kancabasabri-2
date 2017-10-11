@@ -276,7 +276,7 @@
                   var editable = {{($setting['edit']&&$beda)?1:0}};
                   var unit = null;
                   var click_berkas = true;
-                  var statusTable = "";
+                  var statusTable = "null";
                   var simpan_file = false;
                   $(document).ready(function() {
 

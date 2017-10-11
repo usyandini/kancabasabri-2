@@ -73,7 +73,7 @@
                             <div class="card-block">
                               <div class="form-group skin skin-square">
                                 <div class="col-md-8">
-                                  <label >Penggaturan Perizinan <code>Unit Kerja</code></label>
+                                  <label >Pengaturan Perizinan <code>Unit Kerja</code></label>
                                 </div>
                                 <div class="col-md-4">
                                   <div class="btn btn-sm btn-primary" id="toogle_unit"><i class="fa fa-edit"></i></div>
@@ -82,7 +82,7 @@
                               <br />
                               <div class="form-group skin skin-square">
                                 <div class="col-md-8">
-                                  <label>Penggaturan Menu <code>Dropping</code></label>
+                                  <label>Pengaturan Menu <code>Dropping</code></label>
                                 </div>
                                 <div class="col-md-4">
                                   <div class="btn btn-sm btn-primary"  onclick="open_menu('dropping')"><i class="fa fa-edit"></i></div>
@@ -91,7 +91,16 @@
                               <br />
                               <div class="form-group skin skin-square">
                                 <div class="col-md-8">
-                                  <label>Penggaturan Menu <code>Transaksi</code></label>
+                                  <label>Pengaturan Menu <code>Pengajuan Dropping</code></label>
+                                </div>
+                                <div class="col-md-4">
+                                  <div class="btn btn-sm btn-primary"  onclick="open_menu('aju_dropping')"><i class="fa fa-edit"></i></div>
+                                </div>
+                              </div>
+                              <br />
+                              <div class="form-group skin skin-square">
+                                <div class="col-md-8">
+                                  <label>Pengaturan Menu <code>Transaksi</code></label>
                                 </div>
                                 <div class="col-md-4">
                                   <div class="btn btn-sm btn-primary" onclick="open_menu('transaksi')"><i class="fa fa-edit"></i></div>
@@ -100,7 +109,7 @@
                               <br />
                               <div class="form-group skin skin-square">
                                 <div class="col-md-8">
-                                  <label>Penggaturan Menu <code>Anggaran</code></label>
+                                  <label>Pengaturan Menu <code>Anggaran</code></label>
                                 </div>
                                 <div class="col-md-4">
                                   <div class="btn btn-sm btn-primary"  onclick="open_menu('anggaran')"><i class="fa fa-edit"></i></div>
@@ -109,7 +118,7 @@
                               <br />
                               <div class="form-group skin skin-square">
                                 <div class="col-md-8">
-                                  <label>Penggaturan Menu <code>Pelaporan</code></label>
+                                  <label>Pengaturan Menu <code>Pelaporan</code></label>
                                 </div>
                                 <div class="col-md-4">
                                   <div class="btn btn-sm btn-primary"  onclick="open_menu('pelaporan')"><i class="fa fa-edit"></i></div>
@@ -118,7 +127,7 @@
                               <br />
                               <div class="form-group skin skin-square">
                                 <div class="col-md-8">
-                                  <label>Penggaturan Menu <code>Manajemen User</code></label>
+                                  <label>Pengaturan Menu <code>Manajemen User</code></label>
                                 </div>
                                 <div class="col-md-4">
                                   <div class="btn btn-sm btn-primary"  onclick="open_menu('user')"><i class="fa fa-edit"></i></div>
@@ -127,7 +136,7 @@
                               <br />
                               <div class="form-group skin skin-square">
                                 <div class="col-md-8">
-                                  <label>Penggaturan Menu <code>Manajemen Item</code></label>
+                                  <label>Pengaturan Menu <code>Manajemen Item</code></label>
                                 </div>
                                 <div class="col-md-4">
                                   <div class="btn btn-sm btn-primary"  onclick="open_menu('item')"><i class="fa fa-edit"></i></div>
@@ -259,6 +268,25 @@
                           </div>
                           <div class="modal-body" id="body-menu">
                              @include('user.input-menu-dropping')
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">kembali</button>
+                            <!-- <button type="button" id="button_peryataan" onclick="sumbit_post()" class="btn btn-outline-primary">Ya, kirim</button> -->
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="modal fade text-xs-left" id="modal_menu_aju_dropping" tabindex="-1" role="dialog" aria-labelledby="myModalLabel20">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                            <h4 class="modal-title col-md-12 col-sm-12" id="title_modal_pernyataan" >Pengaturan Perizinan <code>Pengajuan Dropping</code></h4>
+                          </div>
+                          <div class="modal-body" id="body-menu">
+                             @include('user.input-menu-pengajuan-dropping')
                           </div>
                           <div class="modal-footer">
                             <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">kembali</button>
