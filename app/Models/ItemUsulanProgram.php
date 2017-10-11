@@ -13,8 +13,7 @@ class ItemUsulanProgram extends Model
     protected $table = 'item_usulan_program';
 
     protected $fillable = 
-    		  ['unit_kerja',
-              'id_form_master',
+    		  ['id_form_master',
               'nama_program',
               'latar_belakang',
               'dampak_positif',

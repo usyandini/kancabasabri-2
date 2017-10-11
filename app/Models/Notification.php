@@ -191,17 +191,17 @@ class Notification extends Model
                 return 'Risalah RUPS Anggaran dengan Nomer Dinas/Surat '.$this->idAnggaran['nd_surat'].' diajukan oleh '.$this->idAnggaran['unit_kerja'].' pada tanggal '.date('d F Y', strtotime($this->idAnggaran['updated_at'])).
                 ' telah disetujui dan ditandatangani';
             case 32:
-                return 'Form Master untuk Pelaporan Anggaran dan kegiatan untuk '.$TW.' telah dibuat dan dapat di isi mulai dari '.$this->formMaster['tanggal_mulai'].' sampai '.$this->formMaster['tanggal_selesai'];
+                return 'Form Master untuk Pelaporan Anggaran dan kegiatan untuk '.$TW.'  unit kerja '.$this->formMaster['unit_kerja'].' telah dibuat dan dapat di isi mulai dari '.$this->formMaster['tanggal_mulai'].' sampai '.$this->formMaster['tanggal_selesai'];
             case 33:
-                return 'Pelaporan Anggaran dan kegiatan telah diisi oleh '.$this->formMaster->unit_kerja()[0].' untuk '.$TW.'.';
+                return 'Pelaporan Anggaran dan kegiatan telah diisi oleh '.$this->formMaster['unit_kerja'].' untuk '.$TW.'.';
             case 34:
-                return 'Form Master untuk Arahan RUPS untuk '.$TW.' telah dibuat dan dapat di isi mulai dari '.$this->formMaster['tanggal_mulai'].' sampai '.$this->formMaster['tanggal_selesai'];
+                return 'Form Master untuk Arahan RUPS untuk '.$TW.' unit kerja '.$this->formMaster['unit_kerja'].' telah dibuat dan dapat di isi mulai dari '.$this->formMaster['tanggal_mulai'].' sampai '.$this->formMaster['tanggal_selesai'];
             case 35:
-                return 'Arahan RUPS telah diisi oleh '.$this->formMaster->unit_kerja()[0].' untuk '.$TW.'.';
+                return 'Arahan RUPS telah diisi oleh '.$this->formMaster['unit_kerja'].' untuk '.$TW.'.';
             case 36:
-                return 'Form Master untuk Usulan Program Prioritas untuk '.$TW.' telah dibuat dan dapat di isi mulai dari '.$this->formMaster['tanggal_mulai'].' sampai '.$this->formMaster['tanggal_selesai'];
+                return 'Form Master untuk Usulan Program Prioritas untuk '.$TW.'  unit kerja '.$this->formMaster['unit_kerja'].' telah dibuat dan dapat di isi mulai dari '.$this->formMaster['tanggal_mulai'].' sampai '.$this->formMaster['tanggal_selesai'];
             case 37:
-                return 'Usulan Program Prioritas telah diisi oleh '.$this->formMaster->unit_kerja()[0].' untuk '.$TW.'.';
+                return 'Usulan Program Prioritas telah diisi oleh '.$this->formMaster['unit_kerja'].' untuk '.$TW.'.';
             case 38:
                 return 'Temuan dan Rekomendasi telah dibuat dan akan dikirim ke unit kerja '.$this->tindakLanjut['unitkerja'].'.';
             case 39:

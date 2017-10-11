@@ -399,10 +399,19 @@
                         'async': false, 'type': "GET", 'dataType': 'JSON', 'url': "{{url('pelaporan/get/filteredPelaporan/master/'.$kategori)}}"+'/'+tahun+'/'+tw+'/'+tw+'/'+encodeURI("{{$units}}"),
                         'success': function (data) {
                           // alert("{{url('pelaporan/get/filteredPelaporan/'.$tp.'/'.$kategori)}}"+'/'+tahun+'/'+tw+'/'+tw+'/'+encodeURI('{{$units}}'));
+                          alrt = false;
                           if(data.length > 0){
-                            var url = "{{url('pelaporan/tambah/'.$type.'/'.$kategori).'/'}}"+data[0].id;
-                            window.location.href = url;
+                            if(data[0].status == "Kirim"){
+                              var url = "{{url('pelaporan/tambah/'.$type.'/'.$kategori).'/'}}"+data[0].id;
+                              window.location.href = url;
+                            }else{
+                              alrt = true;
+                            }
                           }else{
+                            alrt = true;
+                          }
+
+                          if(alrt == true){
                             toastr.error("Unit Kerja Renbang belum membuat Form Master {{$title}}. Silahkan Hubungi Unit Kerja Renbang.", "Form Master {{$title}} belum tersedia", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:5000});
                           }
                         }

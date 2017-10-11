@@ -22,7 +22,8 @@ class FormMasterPelaporan extends Model
     		'tw_dari', 
     		'tw_ke',
     		'kategori',
-            'active',
+            'status',
+            'unit_kerja',
             'is_template',
     		'id_master',
     		'created_at', 
@@ -30,32 +31,4 @@ class FormMasterPelaporan extends Model
 
 
 
-    public function unit_kerja(){
-        
-        $kategori = $this->kategori;
-        $unit = array();
-        if($kategori == "laporan_anggaran"){
-            $item = MasterItemPelaporanAnggaran::where('id_form_master',$this->id)->get();
-            foreach ($item as $row) {
-                array_push($unit,$row->unit_kerja);
-            }
-        }else if($kategori == "arahan_rups"){
-            $item = MasterItemArahanRUPS::where('id_form_master',$this->id)->get();
-            foreach ($item as $row) {
-                array_push($unit,$row->unit_kerja);
-            }
-        }else if($kategori == "usulan_program"){
-            $item = ItemUsulanProgram::where('id_form_master',$this->id)->get();
-            foreach ($item as $row) {
-                array_push($unit,$row->unit_kerja);
-            }
-        }
-
-        // if($this->is_template == 1){
-            // $unit_kerja = "master";
-            // array_push($unit,"master");
-        // }
-        
-        return $unit;
-    }
 }
