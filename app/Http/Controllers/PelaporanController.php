@@ -1235,27 +1235,36 @@ class PelaporanController extends Controller
                                           ->whereYear('created_at', '=', $thn)
                                           ->where('id',"<>",$id);
                                 })->get();
-        $form = $this->FormMasterPelaporanModel->where('id',$id)->first();
+        if($id != -1)
+            $form = $this->FormMasterPelaporanModel->where('id',$id)->first();
         foreach ($FormMaster as $row) {
-            
-            if($row->id != $form->id_master && $form->id_master != "0"){
+            $switch = false;
+            // else 
+            if($id == -1){
+                $switch = true;
+            }else{
+                if($row->id != $form->id_master && $form->id_master != "0"){
+                    $switch = true;
+                }
+            }
+            if($switch){
                 switch ($kategori) {
-                    case 'laporan_anggaran':
-                        $item = MasterItemPelaporanAnggaran::where('id_form_master',$row->id)->get();
-                        foreach ($item as $val) {
-                            if (!in_array($val->unit_kerja, $unit)) {
-                                array_push($unit,$val->unit_kerja);
+                        case 'laporan_anggaran':
+                            $item = MasterItemPelaporanAnggaran::where('id_form_master',$row->id)->get();
+                            foreach ($item as $val) {
+                                if (!in_array($val->unit_kerja, $unit)) {
+                                    array_push($unit,$val->unit_kerja);
+                                }
                             }
-                        }
-                        break;
-                    case 'arahan_rups':
-                        $item = MasterItemArahanRUPS::where('id_form_master',$row->id)->get();
-                        foreach ($item as $val) {
-                            if (!in_array($val->unit_kerja, $unit)) {
-                                array_push($unit,$val->unit_kerja);
+                            break;
+                        case 'arahan_rups':
+                            $item = MasterItemArahanRUPS::where('id_form_master',$row->id)->get();
+                            foreach ($item as $val) {
+                                if (!in_array($val->unit_kerja, $unit)) {
+                                    array_push($unit,$val->unit_kerja);
+                                }
                             }
-                        }
-                        break;
+                            break;
                 }
             }
         }

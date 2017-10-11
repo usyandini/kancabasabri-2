@@ -670,7 +670,7 @@
                       case "III" : tw_ke = "3";break;
                       case "IV" : tw_ke = "4";break;
                     }
-                    // alert("{{$setting['id_form_master']}}");
+                    // alert("{{ url('pelaporan/get/unit_kerja_form')}}/"+tanggal[2]+"/"+tw_dari+"/"+tw_ke+"/"+"{{$setting['kategori'].'/'.$setting['id_form_master']}}");
                     var returned = function () {
                         var tmp = null;
                         $.ajax({
