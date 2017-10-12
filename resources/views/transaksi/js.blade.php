@@ -218,7 +218,7 @@
                             itemTemplate: function(value) {
                               //var nilai = validDigits(value);
                               value = addCommas(value);
-                              return "<b>IDR " + value + ",00</b>";
+                              return "<b>Rp. " + value + ",00</b>";
                             },
                             insertTemplate: function(value) {
                               anggaran_field = jsGrid.fields.text.prototype.insertTemplate.call(this)
@@ -239,7 +239,7 @@
                             itemTemplate: function(value) {
                               //var nilai = validDigits(value);
                               value = addCommas(value);
-                              return "<b>IDR " + value + ",00</b>";
+                              return "<b>Rp. " + value + ",00</b>";
                             },
                             insertTemplate: function(value) {
                               actual_anggaran = jsGrid.fields.text.prototype.insertTemplate.call(this)
@@ -302,7 +302,7 @@
                             align: "left",
                             width: 200, 
                             type: "text", 
-                            title: "Jumlah Diajukan (IDR)",
+                            title: "Jumlah Diajukan (Rupiah)",
                             insertTemplate: function() {
                               var result = jsGrid.fields.text.prototype.insertTemplate.call(this)
                               result.on("keyup", function() {
@@ -315,7 +315,7 @@
                             itemTemplate: function(value) {
                               //var nilai = validDigits(value);
                               value = addCommas(value);
-                              return "<b>IDR " + value + ",00</b>";
+                              return "<b>Rp. " + value + ",00</b>";
                             },
                             editTemplate: function(value) {
                               var nilai = validDigits(value);

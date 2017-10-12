@@ -103,11 +103,11 @@ class DroppingController extends Controller
                 'bank'          => $dropping->BANK_DROPPING, 
                 'journalnum'    => $dropping->JOURNALNUM, 
                 'transdate'     => date("d-m-Y", strtotime($dropping->TRANSDATE)), 
-                'debit'         => 'IDR '. number_format($dropping->DEBIT),
-                'credit'        => 'IDR '. number_format($dropping->KREDIT),
+                'debit'         => 'Rp. '. number_format($dropping->DEBIT),
+                'credit'        => 'Rp. '. number_format($dropping->KREDIT),
                 'banknum'       => $dropping->REKENING_DROPPING,
                 'company'       => $dropping->CABANG_DROPPING,
-                'sisa'          => 'IDR '. number_format($dropping->tarikTunai['sisa_dropping'])
+                'sisa'          => 'Rp. '. number_format($dropping->tarikTunai['sisa_dropping'])
             ];
         }
         return response()->json($result);
@@ -165,11 +165,11 @@ class DroppingController extends Controller
                 'bank'          => $dropping->BANK_DROPPING, 
                 'journalnum'    => $dropping->JOURNALNUM, 
                 'transdate'     => date("d-m-Y", strtotime($dropping->TRANSDATE)), 
-                'debit'         => 'IDR '. number_format($dropping->DEBIT, 0, '','.'),
-                'credit'        => 'IDR '. number_format($dropping->KREDIT),
+                'debit'         => 'Rp. '. number_format($dropping->DEBIT, 0, '','.'),
+                'credit'        => 'Rp. '. number_format($dropping->KREDIT),
                 'banknum'       => $dropping->REKENING_DROPPING,
                 'company'       => $dropping->CABANG_DROPPING,
-                'sisa'          => 'IDR '. number_format($dropping->tarikTunai['sisa_dropping'])
+                'sisa'          => 'Rp. '. number_format($dropping->tarikTunai['sisa_dropping'])
             ];
         }
         return response()->json($result);
