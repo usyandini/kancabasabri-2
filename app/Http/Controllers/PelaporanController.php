@@ -1321,9 +1321,9 @@ class PelaporanController extends Controller
 
                 foreach(json_decode($request->list_pelaporan_download) as $value){
                     $pelaporan_list[] = [
-                        'jenis_arahan'      => $value->jenis_arahan,
-                        'arahan'            => $value->arahan,
-                        'progress_tindak_lanjut'   => $value->progress_tindak_lanjut
+                        'jenis_arahan'              => $value->jenis_arahan,
+                        'arahan'                    => $value->arahan,
+                        'progress_tindak_lanjut'    => $value->progress_tindak_lanjut
                     ];
                 }
 
@@ -1361,7 +1361,7 @@ class PelaporanController extends Controller
                 ];
                 
                 $pdf = PDF::loadView('pelaporan.reports.export-usulan', $data);
-                return $pdf->setPaper('a4', 'landscape')->setWarnings(false)->download('Usulan Program Prioritas-'.date("dmY").'.pdf');
+                return $pdf->setPaper('a4', 'landscape')->setWarnings(false)->stream('Usulan Program Prioritas-'.date("dmY").'.pdf');
                 break;
         }
     }

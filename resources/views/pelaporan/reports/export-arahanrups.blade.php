@@ -53,6 +53,11 @@
 					<td width='30%' align='left' colspan='3'>{{date('Y', strtotime($head['tanggal']))}}</td>
 				</tr>
 				<tr class='header'>
+					<td width='13%'>Unit Kerja</td>
+					<td width='3%'>:</td>
+					<td width='30%' align='left' colspan='3'>{{ $head['unit_kerja'] }}</td>
+				</tr>
+				<tr class='header'>
 					<td>TW</td>
 					<td>:</td>
 					<td><center>{{$head['tw_dari']}}</center></td>					
