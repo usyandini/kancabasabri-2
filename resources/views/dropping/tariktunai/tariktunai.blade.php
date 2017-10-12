@@ -104,7 +104,7 @@
                                     </div>
                                     <div class="col-md-6">
                                       <div class="form-group">
-                                        <label for="nominal">Nominal Dropping (Dalam IDR)</label>
+                                        <label for="nominal">Nominal Dropping (Dalam Rupiah)</label>
 
                                           <input type="text" readonly="" class="form-control" placeholder="{{ $dropping->DEBIT }}" name="nominal_dropping" value="{{ number_format($dropping->DEBIT, 0, '','.') }}">
 
@@ -141,7 +141,7 @@
                                     </div>
                                     <div class="col-md-6">
                                       <div class="form-group">
-                                        <label for="nominal_tarik">Nominal Tarik Tunai(Dalam IDR)</label>
+                                        <label for="nominal_tarik">Nominal Tarik Tunai(Dalam Rupiah)</label>
                                         <span class="required"> *</span>
                                         <div class="controls">
                                           <input type="text" id="nominal_tarik" name="nominal_tarik" class="form-control" value="{{ old('nominal_tarik') }}" required>
@@ -200,9 +200,9 @@
                                             <tr>
                                               <th>{{ date('d-m-Y H:i:s', strtotime($history->created_at)) }}</th>
 
-                                              <td>IDR {{ number_format($history->nominal, 0, '','.') }}</td>
-                                              <td>IDR {{ number_format($history->nominal_tarik, 0, '','.') }}</td>
-                                              <td>IDR {{ number_format($history->sisa_dropping, 0, '','.') }}</td>
+                                              <td>Rp. {{ number_format($history->nominal, 0, '','.') }}</td>
+                                              <td>Rp. {{ number_format($history->nominal_tarik, 0, '','.') }}</td>
+                                              <td>Rp. {{ number_format($history->sisa_dropping, 0, '','.') }}</td>
                                               <td>
                                                 @foreach($berkas->where('id_tariktunai', $history->id)->get() as $value)
                                                   <li><a href="{{ url('dropping/tariktunai/berkas/download').'/'.$value['id'] }}" target="_blank">{{ $value['name'] }}</a></li>
@@ -305,7 +305,7 @@
                       var mod = val%100
 
                       if(mod != 0 || val < 100){
-                        alert("Nominal tidak valid! Silahkan input nominal kembali.\nMinimal input nominal IDR 100 dengan kelipatan 100.");
+                        alert("Nominal tidak valid! Silahkan input nominal kembali.\nMinimal input nominal Rp. 100 dengan kelipatan 100.");
                       }else{
                         document.getElementById("tariktunai-form").submit();
                       }

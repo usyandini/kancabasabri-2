@@ -216,9 +216,9 @@
                             title: "Anggaran Tersedia (Awal)",
                             readOnly: true,
                             itemTemplate: function(value) {
-                              var nilai = validDigits(value);
-                              value = addCommas(nilai);
-                              return "<b>IDR " + value + ",00</b>";
+                              //var nilai = validDigits(value);
+                              value = addCommas(value);
+                              return "<b>Rp. " + value + ",00</b>";
                             },
                             insertTemplate: function(value) {
                               anggaran_field = jsGrid.fields.text.prototype.insertTemplate.call(this)
@@ -237,9 +237,9 @@
                             title: "Anggaran Tersedia (Aktual Estimasi)",
                             readOnly: true,
                             itemTemplate: function(value) {
-                              var nilai = validDigits(value);
-                              value = addCommas(nilai);
-                              return "<b>IDR " + value + ",00</b>";
+                              //var nilai = validDigits(value);
+                              value = addCommas(value);
+                              return "<b>Rp. " + value + ",00</b>";
                             },
                             insertTemplate: function(value) {
                               actual_anggaran = jsGrid.fields.text.prototype.insertTemplate.call(this)
@@ -302,7 +302,7 @@
                             align: "left",
                             width: 200, 
                             type: "text", 
-                            title: "Jumlah Diajukan (IDR)",
+                            title: "Jumlah Diajukan (Rupiah)",
                             insertTemplate: function() {
                               var result = jsGrid.fields.text.prototype.insertTemplate.call(this)
                               result.on("keyup", function() {
@@ -313,9 +313,9 @@
                               return result
                             },
                             itemTemplate: function(value) {
-                              var nilai = validDigits(value);
-                              value = addCommas(nilai);
-                              return "<b>IDR " + value + ",00</b>";
+                              //var nilai = validDigits(value);
+                              value = addCommas(value);
+                              return "<b>Rp. " + value + ",00</b>";
                             },
                             editTemplate: function(value) {
                               var nilai = validDigits(value);
