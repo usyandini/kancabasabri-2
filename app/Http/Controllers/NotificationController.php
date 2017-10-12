@@ -207,7 +207,7 @@ class NotificationController extends Controller
                 return redirect('acc_pengajuan_dropping');
             case 41:
                 return redirect('pengajuan_dropping');
-            case 41:
+            case 42:
                 return redirect('pengajuan_dropping');
 			default:
 				return redirect('transaksi/');
