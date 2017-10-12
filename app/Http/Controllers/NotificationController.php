@@ -288,9 +288,6 @@ class NotificationController extends Controller
         }else{  
             $val_unit = DIVISI::where('DESCRIPTION',$unit_kerja)->first();
             $val_unit = "00".$val_unit['VALUE'];
-            if($unit_kerja == 'transaksi'){
-                $val_unit = $unit_kerja;
-            }
         }
         return $val_unit;
     } 
