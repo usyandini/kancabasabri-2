@@ -116,7 +116,7 @@
 												    $bulan="Desember";
 												  }
 												  $tahun= date('Y', strtotime($dmy));
-
+												  $angka = number_format($bb->jumlah_diajukan,0,"",".");
 												
 				?>
 				
@@ -137,9 +137,14 @@
 			                  	<tr><td></td></tr>
 			                  	<tr><td><b> Tanggal </b></td><td><b> : </b></td><td><input class="form-control" type="text" style="width:400px" value="{{$tgl}} {{$bulan}} {{$tahun}}" disabled="disabled"></td></tr>
 			                  	<tr><td></td></tr>
-			                  	<tr><td><b> Jumlah Diajukan </b></td><td><b> : </b></td><td><input class="form-control" type="text" style="width:400px" value="{{$bb->jumlah_diajukan}}" disabled="disabled"></td></tr>
+			                  	<tr><td><b> Jumlah Diajukan </b></td><td><b> : </b></td><td><input class="form-control" type="text" style="width:400px" value="Rp {{$angka}},-" disabled="disabled"></td></tr>
 			                  	<tr><td></td></tr>
-			                  	<tr><td><b> Periode Realisasi &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b></td><td><b> : &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b></td><td><input class="form-control" type="text" style="width:400px" value="{{$bb->periode_realisasi}}" disabled="disabled"></td></tr>
+			                  	<tr><td><b> Periode Realisasi &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b></td><td><b> : &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b></td><td><input class="form-control" type="text" style="width:400px" value="<?php 
+																																																																					  if($bb->periode_realisasi=='1'){ echo "TW I";}
+																																																																					  if($bb->periode_realisasi=='2'){ echo "TW II";}
+																																																																					  if($bb->periode_realisasi=='3'){ echo "TW III";}
+																																																																					  if($bb->periode_realisasi=='4'){ echo "TW IV";}
+																																																																				      ?>" disabled="disabled"></td></tr>
 			                  	<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr><tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>
 			                  	<tr><td><b> Lampiran </b></td><td><b> : </b></td><td><a href="{{ URL('pengajuan_dropping/download/'. $bb->id) }}" target="_blank">{{ $bb->name }}</a></td></tr>
 			                  	<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr><tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>
@@ -147,6 +152,7 @@
                                 {{ csrf_field() }}
                                 <input type="hidden" name="id" value="{{$bb->id}}" />
 			                  	<tr><td><b> Verifikasi </b></td><td><b> : </b></td><td><select class="select form-control" name="verifikasi" required="required" value="{{$bb->verifikasi}}" @if ($bb->kirim==3) disabled="disabled" @endif>
+													                                   <option value="">- Pilih Verifikasi -</option>
 													                                   <option value="1" @if ($bb->verifikasi=='1')Selected @endif>Diterima</option>
 																					   <option value="2" @if ($bb->verifikasi=='2')Selected @endif>Ditolak</option>                                                 
 													                                   </select></td></tr>
