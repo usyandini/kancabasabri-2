@@ -21,7 +21,7 @@
                                 <ol class="breadcrumb">
                                     <li class="breadcrumb-item"><a href="{{ url('/') }}">Manajemen Item</a>
                                     </li>
-                                    <li class="breadcrumb-item active"><a href="{{ url('/item') }}">Manajemen Kombinasi Item</a>
+                                    <li class="breadcrumb-item active"><a href="{{ url('/item') }}">Manajemen Item Transaksi</a>
                                     </li>
                                 </ol>
                             </div>
@@ -52,18 +52,18 @@
 				                @endif
 			                  	<name="data" id="data">
 			                  	<div class="table-responsive">
-			                      <table class="table table-striped table-bordered datatable-select-inputs wrap" cellspacing="0" width="120%">
+			                      <table class="table table-striped table-bordered datatable-select-inputs wrap" cellspacing="0" width="100%">
 			                        <thead>
 			                          <tr>
 			                          	<th width="5%"><center>No</center></th>
 			                          	<th id="filterable" width="5%"><center>Kode Item</center></th>
 			                            <th id="filterable" width="20%">Item</th>
-			                            <th id="filterable" width="10%">Jenis Anggaran</th>
+			                            {{--<th id="filterable" width="10%">Jenis Anggaran</th>
 			                            <th id="filterable" width="10%">Kelompok Anggaran</th>
-			                            <th id="filterable" width="10%">Pos Anggaran</th>
-			                            <th id="filterable" width="10%">Sub Pos</th>
-			                            <th id="filterable" width="10%">Mata Anggaran</th>
-			                            <th width="40%"><center>Aksi</center></th>
+			                            <th id="filterable" width="10%">Pos Anggaran</th>--}}
+			                            <th id="filterable" width="20%">Sub Pos</th>
+			                            <th id="filterable" width="20%">Mata Anggaran</th>
+			                            <th width="30%"><center>Aksi</center></th>
 			                          </tr>
 			                        </thead>
 			                        <tbody>
@@ -71,13 +71,13 @@
 		                        		<tr>
 		                        			<td width="5%"><center>{{ $no++ }}</center></td>
 		                        			<td width="5%">{{ $item->kode_item }}</td>
-		                        			<td width="20%">{{ $item->nama_item }}</td>
-		                        			<td width="10%">{{ $jenis->where('kode', $item->jenis_anggaran)->first()['name'] }}</td>
+		                        			<td width="30%">{{ $item->nama_item }}</td>
+		                        			{{--<td width="10%">{{ $jenis->where('kode', $item->jenis_anggaran)->first()['name'] }}</td>
 		                        			<td width="10%">{{ $kelompok->where('kode', $item->kelompok_anggaran)->first()['name'] }}</td>
-		                        			<td width="10%">{{ $pos->where('kode', $item->pos_anggaran)->first()['name'] }}</td>
-		                        			<td width="10%">{{ $item->sub_pos }}</td>
-		                        			<td width="10%">{{ $item->mata_anggaran }}</td>
-	                        				<td width="40%"><center>
+		                        			<td width="10%">{{ $pos->where('kode', $item->pos_anggaran)->first()['name'] }}</td>--}}
+		                        			<td width="20%">{{ $item->sub_pos }}</td>
+		                        			<td width="20%">{{ $item->mata_anggaran }}</td>
+	                        				<td width="20%"><center>
 	                        					<a href="{{ url('item/edit').'/'.$item->id }}" class="btn btn-info btn-sm">
 	                        					<i class="fa fa-edit"></i> Edit</a>
 
