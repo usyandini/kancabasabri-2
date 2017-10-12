@@ -216,8 +216,8 @@
                             title: "Anggaran Tersedia (Awal)",
                             readOnly: true,
                             itemTemplate: function(value) {
-                              var nilai = validDigits(value);
-                              value = addCommas(nilai);
+                              //var nilai = validDigits(value);
+                              value = addCommas(value);
                               return "<b>IDR " + value + ",00</b>";
                             },
                             insertTemplate: function(value) {
@@ -237,8 +237,8 @@
                             title: "Anggaran Tersedia (Aktual Estimasi)",
                             readOnly: true,
                             itemTemplate: function(value) {
-                              var nilai = validDigits(value);
-                              value = addCommas(nilai);
+                              //var nilai = validDigits(value);
+                              value = addCommas(value);
                               return "<b>IDR " + value + ",00</b>";
                             },
                             insertTemplate: function(value) {
@@ -313,8 +313,8 @@
                               return result
                             },
                             itemTemplate: function(value) {
-                              var nilai = validDigits(value);
-                              value = addCommas(nilai);
+                              //var nilai = validDigits(value);
+                              value = addCommas(value);
                               return "<b>IDR " + value + ",00</b>";
                             },
                             editTemplate: function(value) {

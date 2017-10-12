@@ -186,9 +186,9 @@ class TransaksiController extends Controller
                 'mata_anggaran' => $value->mata_anggaran,
                 'bank'          => $value->akun_bank,
                 'account'       => $value->account,
-                'anggaran'      => $value->anggaran,
-                'actual_anggaran' => $value->actual_anggaran,
-                'total'         => $value->total,
+                'anggaran'      => (int)$value->anggaran,
+                'actual_anggaran' => (int)$value->actual_anggaran,
+                'total'         => (int)$value->total,
                 'is_anggaran_safe' => $value->is_anggaran_safe
             ]);
         }
@@ -211,9 +211,9 @@ class TransaksiController extends Controller
                 'mata_anggaran' => $value->mata_anggaran,
                 'bank'          => $value->akun_bank,
                 'account'       => $value->account,
-                'anggaran'      => $value->anggaran,
-                'actual_anggaran' => $value->actual_anggaran,
-                'total'         => $value->total,
+                'anggaran'      => (int)$value->anggaran,
+                'actual_anggaran' => (int)$value->actual_anggaran,
+                'total'         => (int)$value->total,
                 'is_anggaran_safe' => $value->is_anggaran_safe
             ]);
         }
