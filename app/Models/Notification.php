@@ -81,6 +81,11 @@ class Notification extends Model
         return $this->belongsTo('App\Models\TlTanggal', 'batch_id', 'id1');
     }
 
+    public function pengajuanDropping()
+    {
+        return $this->belongsTo('App\Models\PengajuanDropping', 'batch_id', 'id');
+    }
+
     public function wording()
     {
         $batchNo = $this->batch ? $this->batch->batchNo() : '';
@@ -108,6 +113,14 @@ class Notification extends Model
                 $TW = "TW ".$tw_dari." Sampai TW ".$tw_ke;
             }
 
+        }else if($this->type >= 40&& $this->type <= 42){
+            $periode = $this->pengajuanDropping['periode_realisasi'];
+            switch ($periode) {
+                case '1': $TW = "I";break;
+                case '2': $TW = "II";break;
+                case '3': $TW = "III";break;
+                case '4': $TW = "IV";break;  
+            }
         }
         
 
@@ -206,7 +219,11 @@ class Notification extends Model
                 return 'Temuan dan Rekomendasi telah dibuat dan akan dikirim ke unit kerja '.$this->tindakLanjut['unitkerja'].'.';
             case 39:
                 return 'Tindak Lanjut telah diisi oleh unit kerja '.$this->tindakLanjut['unitkerja'].' dan akan dikirim ke SPI.';
-        
-        }
+            case 40:
+                return 'Pengajuan Dropping telah di buat oleh '.$this->pengajuanDropping['kantor_cabang'].' untuk periode TW '.$TW.' dengan Nomor '.$this->pengajuanDropping['nomor'].'.';
+            case 41:
+                return 'Pengajuan Dropping '.$this->pengajuanDropping['kantor_cabang'].' periode TW '.$TW.' dengan Nomor '.$this->pengajuanDropping['nomor'].' telah ditolak oleh ????. Silahkan Kirim Pengajuan Kembali.';
+            case 42:
+                return 'Pengajuan Dropping '.$this->pengajuanDropping['kantor_cabang'].' periode TW '.$TW.' dengan Nomor '.$this->pengajuanDropping['nomor'].' telah diterima oleh ????.';
     }
 }
