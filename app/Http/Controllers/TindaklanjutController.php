@@ -34,7 +34,7 @@ class TindaklanjutController extends Controller
 	public function unitkerjainternal($id) 
     {
 
-    	// $a =DB::table('tl_tanggal')
+     // $a =DB::table('tl_tanggal')
      //    ->orderBy('id1','DESC')
      //    ->where('internal','1')
      //    ->where('id1',$id)
@@ -578,13 +578,7 @@ class TindaklanjutController extends Controller
         }
     }
 
-    public function lihatberkas(Request $request, $id4)
-    {
-        $berkas = DB::table('tl_tindaklanjut')
-        	 ->where('id4', $id4)
-        	 ->first();
-        return view('tindaklanjut.lihatberkas', compact('berkas'));
-    }
+   
 
     public function tindaklanjut(Request $request, $id1)
     {

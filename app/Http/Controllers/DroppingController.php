@@ -180,17 +180,17 @@ class DroppingController extends Controller
         $dropping = $this->jDroppingModel->where([['RECID', $id_drop], ['DEBIT', '>', 0]])->firstOrFail();
         //----- input view dropping axapta to table dropping dbcabang ketika klik lanjut -----//
         $inputDropping = [
-                'RECID'         => $dropping->RECID,
-                'JOURNALNAME'   => $dropping->JOURNALNAME,
-                'JOURNALNUM'    => $dropping->JOURNALNUM,
-                'TRANSDATE'     => $dropping->TRANSDATE,
-                'DEBIT'         => $dropping->DEBIT,
-                'BANK_DROPPING' => $dropping->BANK_DROPPING,
-            'REKENING_DROPPING' => $dropping->REKENING_DROPPING,
-            'CABANG_DROPPING'   => $dropping->CABANG_DROPPING,
-            'AKUN_DROPPING'     => $dropping->AKUN_DROPPING,
-                'TXT'           => $dropping->TXT,
-                'KREDIT'        => $dropping->KREDIT];
+                'RECID'             => $dropping->RECID,
+                'JOURNALNAME'       => $dropping->JOURNALNAME,
+                'JOURNALNUM'        => $dropping->JOURNALNUM,
+                'TRANSDATE'         => $dropping->TRANSDATE,
+                'DEBIT'             => $dropping->DEBIT,
+                'BANK_DROPPING'     => $dropping->BANK_DROPPING,
+                'REKENING_DROPPING' => $dropping->REKENING_DROPPING,
+                'CABANG_DROPPING'   => $dropping->CABANG_DROPPING,
+                'AKUN_DROPPING'     => $dropping->AKUN_DROPPING,
+                'TXT'               => $dropping->TXT,
+                'KREDIT'            => $dropping->KREDIT];
         
         //----- update droping where recid = id_drop ------//
         $findDrop = Dropping::where([['RECID', $id_drop], ['DEBIT', '>', 0]])->first();
@@ -246,16 +246,16 @@ class DroppingController extends Controller
 
         $validatorTT = Validator::make($inputsTT,
             [
-                'berkas.*' => 'required|max:100000|mimes:jpg,jpeg,png,doc,docx,xls,xlsx,pdf',
+                'berkas.*'      => 'required|max:100000|mimes:jpg,jpeg,png,doc,docx,xls,xlsx,pdf',
                 'nominal_tarik' => 'not_in:0|required|regex:/^\d+([\.]\d+)*([\,]\d+)?$/' //titik separator
             ], 
             [
-                'nominal_tarik.not_in'  => 'Nominal tarik tunai tidak boleh dikosongkan !',
+                'nominal_tarik.not_in'    => 'Nominal tarik tunai tidak boleh dikosongkan !',
                 'nominal_tarik.required'  => 'Nominal tarik tunai harus diisi !',
-                'nominal_tarik.regex'  => 'Nominal tarik tunai hanya bisa diisi oleh angka !',
-                'berkas.*.required'  => 'Attachment bukti tarik tunai tidak boleh dikosongkan !',
-                'berkas.*.max'  => 'Attachment bukti tarik tunai tidak boleh lebih dari 100 Mb !',
-                'berkas.*.mimes'  => 'Attachment bukti tarik tunai yang diperbolehkan hanya .doc, .docx, .xls, .xlsx, .jpg, .jpeg, .png, .pdf'
+                'nominal_tarik.regex'     => 'Nominal tarik tunai hanya bisa diisi oleh angka !',
+                'berkas.*.required'       => 'Attachment bukti tarik tunai tidak boleh dikosongkan !',
+                'berkas.*.max'            => 'Attachment bukti tarik tunai tidak boleh lebih dari 100 Mb !',
+                'berkas.*.mimes'          => 'Attachment bukti tarik tunai yang diperbolehkan hanya .doc, .docx, .xls, .xlsx, .jpg, .jpeg, .png, .pdf'
             ]);
 
         //----- Fungsi tarik tunai, jika tidak ada record maka tariktunai berasal dari nominal awal - nominal tarik -----//
@@ -504,12 +504,12 @@ class DroppingController extends Controller
         $berkas = [] ;
 
         if($dataTT){
-            $berkas= BerkasTarikTunai::where('id_tariktunai', $id)->get();
-            $bank = AkunBank::where('ACCOUNT', $dataTT->SEGMEN_1)->first();
-            $program = Program::where('VALUE', $dataTT->SEGMEN_2)->first();
-            $kpkc = KantorCabang::where('VALUE', $dataTT->SEGMEN_3)->first();
-            $divisi = Divisi::where('VALUE', $dataTT->SEGMEN_4)->first();
-            $subpos = SubPos::where('VALUE', $dataTT->SEGMEN_5)->first();
+            $berkas   = BerkasTarikTunai::where('id_tariktunai', $id)->get();
+            $bank     = AkunBank::where('ACCOUNT', $dataTT->SEGMEN_1)->first();
+            $program  = Program::where('VALUE', $dataTT->SEGMEN_2)->first();
+            $kpkc     = KantorCabang::where('VALUE', $dataTT->SEGMEN_3)->first();
+            $divisi   = Divisi::where('VALUE', $dataTT->SEGMEN_4)->first();
+            $subpos   = SubPos::where('VALUE', $dataTT->SEGMEN_5)->first();
             $kegiatan = Kegiatan::where('VALUE', $dataTT->SEGMEN_6)->first();
         }
 
@@ -521,14 +521,14 @@ class DroppingController extends Controller
         }
 
         return view('dropping.tariktunai.verifikasi', [
-            'tariktunai' => $dataTT,
-            'berkas' => $berkas,
-            'bank' => $bank,
-            'program' => $program,
-            'kpkc' => $kpkc,
-            'divisi' => $divisi,
-            'subpos' => $subpos,
-            'kegiatan' => $kegiatan,
+            'tariktunai'     => $dataTT,
+            'berkas'         => $berkas,
+            'bank'           => $bank,
+            'program'        => $program,
+            'kpkc'           => $kpkc,
+            'divisi'         => $divisi,
+            'subpos'         => $subpos,
+            'kegiatan'       => $kegiatan,
             'reject_reasons' => RejectReason::where('type', 3)->get()
             ]);
     }

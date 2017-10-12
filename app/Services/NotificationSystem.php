@@ -188,6 +188,13 @@ class NotificationSystem
             array_push($array_type,39);
         }
 
+        if(isset($user->perizinan['notif_setuju_a_d'])){
+            array_push($array_type,40);
+        }
+        if(isset($user->perizinan['notif_ubah_a_d'])){
+            array_push($array_type,41,42);
+        }
+
         return $array_type;
     }
 
