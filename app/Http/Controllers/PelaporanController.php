@@ -292,9 +292,6 @@ class PelaporanController extends Controller
             if($row->unit_kerja != $userUnit){
                 $beda =false;
             }
-            if($row->status == 'Kirim'){
-                $beda =false;
-            }
         }
 
        
