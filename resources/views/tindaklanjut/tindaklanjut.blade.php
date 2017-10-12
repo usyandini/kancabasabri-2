@@ -105,7 +105,7 @@
 			                  			</tr>
 			                  			<tr>
 			                  				<td><b>Tanggal Mulai</b></td><td>  </td><td><b> : </b></td><td>  </td>
-			                  				<td><select name="tgl_mulai" class="form-control" required="required"></select></td>
+			                  				<td><select class="select2 form-control block" name="tgl_mulai" required="required"></select></td>
 			                  				<script type="text/javascript">
 											    function changeUnit(){
 										    		var unitkerja = $('#unitkerja').val();
@@ -439,7 +439,7 @@
 				                           			@if ($b->tindaklanjut!="")
 				                           				@if ($b->name=="") Tidak Ada
 				                           				@else 
-				                           					<a href="{{ URL('tindaklanjut/download/'. $b->id4) }}">{{ $b->name }}</a>
+				                           					<a href="{{ URL('tindaklanjut/download/'. $b->id4) }}" target="_blank">{{ $b->name }}</a>
 				                           				@endif
 				                           			@endif</center></td>
 			                        			<td><center>

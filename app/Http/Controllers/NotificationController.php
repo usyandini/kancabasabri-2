@@ -203,6 +203,12 @@ class NotificationController extends Controller
                 return redirect('tindaklanjutinternal/'.$notifDetail->batch_id);
             case 39:
                 return redirect('unitkerja/tindaklanjut/'.$notifDetail->batch_id);
+            case 40:
+                return redirect('acc_pengajuan_dropping');
+            case 41:
+                return redirect('pengajuan_dropping');
+            case 42:
+                return redirect('pengajuan_dropping');
 			default:
 				return redirect('transaksi/');
     	}

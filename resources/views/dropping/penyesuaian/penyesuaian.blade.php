@@ -123,7 +123,7 @@
                                     </div>
                                     <div class="col-md-6">
                                       <div class="form-group">
-                                        <label for="nominal">Nominal Dropping (Dalam IDR)</label>
+                                        <label for="nominal">Nominal Dropping (Dalam Rupiah)</label>
                                           <input type="text" readonly="" id="nominal_dropping" class="form-control" placeholder="{{ $dropping->DEBIT }}" name="nominal_dropping" value="{{ number_format($dropping->DEBIT, 0, '', '.') }}">
                                       </div>
                                     </div>
@@ -205,7 +205,7 @@
                                     </div>
                                     <div class="col-md-6">
                                       <div class="form-group">
-                                        <label for="projectinput2">Nominal Transaksi (Dalam IDR)</label>
+                                        <label for="projectinput2">Nominal Transaksi (Dalam Rupiah)</label>
                                         <span class="required"> *</span>
                                         <div class="controls">
                                           <input type="text" id="p_nominal" name="p_nominal" class="form-control" value="{{ old('p_nominal') }}" required>
@@ -307,7 +307,7 @@
                                             <tr>
                                                 <td><b>{{ date('d-m-Y H:i:s', strtotime($kesesuaian->created_at)) }}</b></td>
                                                 <td>{{ $kesesuaian->cabang }}</td>
-                                                <td>IDR {{ number_format($kesesuaian->nominal, 0, '', '.') }}</td>
+                                                <td>Rp. {{ number_format($kesesuaian->nominal, 0, '', '.') }}</td>
                                                 @if($kesesuaian->is_pengembalian == 1)
                                                 <td>Pengembalian</td>
                                                 @else
@@ -424,7 +424,7 @@
                       var mod = val%100
 
                       if(mod != 0 || val < 100){
-                        alert("Nominal tidak valid! Silahkan input nominal kembali.\nMinimal input nominal IDR 100 dengan kelipatan 100.");
+                        alert("Nominal tidak valid! Silahkan input nominal kembali.\nMinimal input nominal Rp. 100 dengan kelipatan 100.");
                       }else{
                         document.getElementById("kesesuaian-form").submit();
                       }

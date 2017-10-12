@@ -105,7 +105,7 @@
 			                  			</tr>
 			                  			<tr>
 			                  				<td><b>Tanggal Mulai</b></td><td>  </td><td><b> : </b></td><td>  </td>
-			                  				<td><select name="tgl_mulai" class="form-control" style="width:300px" required="required"></select></td>
+			                  				<td><select name="tgl_mulai" class="select2 form-control block" style="width:300px" required="required"></select></td>
 			                  				<script type="text/javascript">
 											    function changeUnit(){
 										    		var unitkerja = $('#unitkerja').val();
@@ -412,8 +412,7 @@
 				                           				@if ($b->name=="") Tidak Ada
 				                           				@else 
 				                           					{{ $b->name }}<br>
-				                           					<span data-toggle='tooltip' title='Lihat Dokumen'><a href="{{ URL('tindaklanjut/lihat/'. $b->id4) }}" class="btn btn-success btn-sm" target="_blank"><i class="fa fa-eye"></i> </a></span>
-				                           					<span data-toggle='tooltip' title='Download Dokumen'><a href="{{ URL('tindaklanjut/download/'. $b->id4) }}" class="btn btn-info btn-sm" target="_blank"><i class="fa fa-download"></i> </a></span>
+				                           					<a href="{{ URL('tindaklanjut/download/'. $b->id4) }}" target="_blank">{{ $b->name }}</a>
 				                           				@endif
 				                           			@endif</center></td>
 			                        			<td><center>

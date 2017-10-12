@@ -186,9 +186,9 @@ class TransaksiController extends Controller
                 'mata_anggaran' => $value->mata_anggaran,
                 'bank'          => $value->akun_bank,
                 'account'       => $value->account,
-                'anggaran'      => $value->anggaran,
-                'actual_anggaran' => $value->actual_anggaran,
-                'total'         => $value->total,
+                'anggaran'      => (int)$value->anggaran,
+                'actual_anggaran' => (int)$value->actual_anggaran,
+                'total'         => (int)$value->total,
                 'is_anggaran_safe' => $value->is_anggaran_safe
             ]);
         }
@@ -211,9 +211,9 @@ class TransaksiController extends Controller
                 'mata_anggaran' => $value->mata_anggaran,
                 'bank'          => $value->akun_bank,
                 'account'       => $value->account,
-                'anggaran'      => $value->anggaran,
-                'actual_anggaran' => $value->actual_anggaran,
-                'total'         => $value->total,
+                'anggaran'      => (int)$value->anggaran,
+                'actual_anggaran' => (int)$value->actual_anggaran,
+                'total'         => (int)$value->total,
                 'is_anggaran_safe' => $value->is_anggaran_safe
             ]);
         }
@@ -550,8 +550,11 @@ class TransaksiController extends Controller
         FROM [dbcabang].[dbo].[transaksi] as transaksi
         JOIN [dbcabang].[dbo].[batches] as batches on batches.id = transaksi.batch_id 
         JOIN [dbcabang].[dbo].[batches_status] as batches_status on batches_status.batch_id = batches.id 
-        WHERE batches.cabang = ".$cabang." and batches_status.stat = '6' and DATEPART(MONTH, transaksi.tgl) >= ".$awal." 
-        and DATEPART(MONTH, transaksi.tgl) <= ".$akhir." and DATEPART(YEAR, transaksi.tgl) = ".$transyear."
+        JOIN [AX_DEV].[dbo].[PIL_KCTRANSAKSI] as PIL_KCTRANSAKSI on PIL_KCTRANSAKSI.BATCH_ID = batches.id
+        WHERE batches.cabang = ".$cabang." and batches_status.stat = '6' and PIL_KCTRANSAKSI.PIL_POSTED = '1'
+        and DATEPART(MONTH, transaksi.tgl) >= ".$awal." 
+        and DATEPART(MONTH, transaksi.tgl) <= ".$akhir." 
+        and DATEPART(YEAR, transaksi.tgl) = ".$transyear."
         GROUP BY transaksi.item, transaksi.anggaran";
         
         $transaksi = \DB::select($query);
@@ -621,7 +624,9 @@ class TransaksiController extends Controller
         FROM [dbcabang].[dbo].[transaksi] as transaksi
         JOIN [dbcabang].[dbo].[batches] as batches on batches.id = transaksi.batch_id 
         JOIN [dbcabang].[dbo].[batches_status] as batches_status on batches_status.batch_id = batches.id 
-        WHERE batches.cabang = ".$cabang." and batches_status.stat = '6' and DATEPART(MONTH, transaksi.tgl) >= ".$awal." 
+        JOIN [AX_DEV].[dbo].[PIL_KCTRANSAKSI] as PIL_KCTRANSAKSI on PIL_KCTRANSAKSI.BATCH_ID = batches.id
+        WHERE batches.cabang = ".$cabang." and batches_status.stat = '6' and PIL_KCTRANSAKSI.PIL_POSTED = '1'
+        and DATEPART(MONTH, transaksi.tgl) >= ".$awal." 
         and DATEPART(MONTH, transaksi.tgl) <= ".$akhir." and DATEPART(YEAR, transaksi.tgl) = ".$transyear."
         GROUP BY transaksi.item, transaksi.anggaran";
         

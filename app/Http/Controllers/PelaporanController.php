@@ -263,7 +263,51 @@ class PelaporanController extends Controller
 
     public function tambah_usulan_program_prioritas($id) 
     {
+        $userUnit = "";
 
+        if($this->userCabang != "00"){
+            $cabang = KantorCabang::where('VALUE',$this->userCabang)->get();
+            foreach ($cabang as $cab ) {
+                $userUnit =  $cab->DESCRIPTION;
+            } 
+        }else if($this->userDivisi != "00"){
+            $divisi = Divisi::where('VALUE',$this->userDivisi)->get();
+            foreach ($divisi as $div ) {
+                $userUnit = $div->DESCRIPTION;
+            } 
+        }
+
+        $beda = true;
+
+        $pelaporan = FormMasterPelaporan::where('id', $id)->get();
+        
+        $item;
+
+        $date_now = date("Y-m-d");
+        $date_selesai;
+        $date_mulai;
+        foreach ($pelaporan as $row) {
+            $date_mulai = $row->tanggal_mulai;
+            $date_selesai = $row->tanggal_selesai;
+            if($row->unit_kerja != $userUnit){
+                $beda =false;
+            }
+        }
+
+       
+
+        $diff1 = strtotime($date_now) - strtotime($date_mulai);
+        $diff2 = strtotime($date_selesai) - strtotime($date_now);
+
+
+        if($diff2 <= 0){
+            $beda = false;
+        }
+
+        if($diff1 < 0){
+            $beda = false;
+        }
+        
         $filter = null;
         $setting = array('editable' => false,
                     'edit'          =>true,
@@ -284,13 +328,14 @@ class PelaporanController extends Controller
         $sub_title = "Usulan Program Prioritas";
         
         return view('pelaporan.usulan_program_prioritas', [
-            'title' => $sub_title,
-            'sub_title' => '',
-            'setting' => $setting ,
-            'type' => 'item',
-            'userCabang' =>$this->userCabang,
-            'userDivisi' =>$this->userDivisi,
-            'filters' => $filter]);
+            'title'         => $sub_title,
+            'sub_title'     => '',
+            'setting'       => $setting ,
+            'type'          => 'item',
+            'beda'          => $beda,
+            'userCabang'    =>$this->userCabang,
+            'userDivisi'    =>$this->userDivisi,
+            'filters'       => $filter]);
     }
 
     public function edit($type,$kategori,$id) 
@@ -1321,9 +1366,9 @@ class PelaporanController extends Controller
 
                 foreach(json_decode($request->list_pelaporan_download) as $value){
                     $pelaporan_list[] = [
-                        'jenis_arahan'      => $value->jenis_arahan,
-                        'arahan'            => $value->arahan,
-                        'progress_tindak_lanjut'   => $value->progress_tindak_lanjut
+                        'jenis_arahan'              => $value->jenis_arahan,
+                        'arahan'                    => $value->arahan,
+                        'progress_tindak_lanjut'    => $value->progress_tindak_lanjut
                     ];
                 }
 
