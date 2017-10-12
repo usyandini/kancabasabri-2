@@ -30,6 +30,14 @@ class PengajuanDroppingController extends Controller
         return view('pengajuan_dropping.approval', compact('a'));
 	}
 
+    public function verifikasi($id) 
+    {
+        $a =DB::table('pengajuan_dropping_cabang')
+        ->where('id',$id)
+        ->get();
+        return view('pengajuan_dropping.verifikasi', compact('a'));
+    }
+
 	public function store_pengajuandropping(Request $request)
     {   
     	$angka= $request->jumlah_diajukan;

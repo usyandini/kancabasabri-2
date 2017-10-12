@@ -349,7 +349,7 @@
 																	    <br>
 																	    <label class="control-label"><b> Lampiran </b></label>
 										                                <label class="control-label"><b> : </b></label>
-																		<input class="form-control" type="file" name="inputs" required="required"/>
+																		<input class="form-control" type="file" name="inputs"/>
 																	        @if ($b->name!="")
 																	        <p class="help-block">*Kosongkan jika tidak ingin mengganti lampiran.</br> Lampiran Lama = {{ $b->name }}.</p>
 																	        @endif  
