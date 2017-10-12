@@ -93,13 +93,14 @@
 				?>
 				@endforeach
 			    @endif
-			                  <h2><center><img src="{{ asset('app-assets/images/asabri-logo.png', $secure = null) }}" width="6%" align="middle" hspace="1%">
+			                  <h2><center><img src="{{ asset('app-assets/images/asabri-logo.png', $secure = null) }}" width="6%" align="left" hspace="1%">
 			                  @if ($bb->internal=='1')
 			                  Form Laporan Tindak Lanjut Pengawasan Internal
 			                  @else
 			                  Form Laporan Tindak Lanjut Pengawasan Eksternal
 			                  @endif
-			                  </center></h2></br>
+			                  </center></h2>
+			                  <br><br><br>
 			                  <table>
 			                  <tr>
 			                  <td><b> Unit Kerja </b></td><td><b> : </b></td><td><b>{{ $bb->unitkerja}}</b></td>

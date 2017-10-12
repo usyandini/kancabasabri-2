@@ -191,8 +191,11 @@ class PengajuanDroppingController extends Controller
              'verifikasi' => $verifikasi,
              'keterangan' => $keterangan
          ];
+
  
          $update = DB::table('pengajuan_dropping_cabang')->where('id', $id)->update($data);
+        
+         NotificationSystem::send($id, 40);
          return redirect()->back()->with('after_update', $after_update);
      }
 
@@ -207,7 +210,14 @@ class PengajuanDroppingController extends Controller
              'kirim' => $a
          ];
  
-         $update = DB::table('pengajuan_dropping_cabang')->where('id', $id)->update($data);
+         $update = DB::table('pengajuan_dropping_cabang')->where('id', $id);
+
+         $status = $update->first()['verifikasi'];
+         if($status == 1)
+            NotificationSystem::send($id, 42);
+         else if($status == 2)
+            NotificationSystem::send($id, 41);
+         $update->update($data);
          return redirect()->back()->with('after_update', $after_update);
      }
 

@@ -14,7 +14,6 @@ class MasterItemPelaporanAnggaran extends Model
 
     protected $fillable = 
     		['id_form_master', 
-            'unit_kerja', 
     		'program_prioritas',
     		'sasaran_dicapai', 
             'active',

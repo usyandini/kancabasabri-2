@@ -135,6 +135,8 @@
                             <h4 class="card-title">Hasil Pencarian Realisasi</h4><br>
                             
                             <table align="right"><tr>
+                              <td><span><a href="{{ URL('transaksi/print/realisasi/'.$filters['cabang'].'/'.$filters['awal'].'/'.$filters['akhir'].'/'.$filters['transyear'].'/excel') }}" class="btn btn-success" target="_blank"><i class="fa fa-file-excel-o"></i> <b> Ekspor ke Excel </b></a></span></td>
+
                               <td><span><a href="{{ URL('transaksi/print/realisasi/'.$filters['cabang'].'/'.$filters['awal'].'/'.$filters['akhir'].'/'.$filters['transyear'].'/export') }}" class="btn btn-success" target="_blank"><i class="fa fa-file-pdf-o"></i> <b> Ekspor ke PDF </b></a></span></td>
 
                               <td><span><a href="{{ URL('transaksi/print/realisasi/'.$filters['cabang'].'/'.$filters['awal'].'/'.$filters['akhir'].'/'.$filters['transyear'].'/print') }}" class="btn btn-success" target="_blank"><i class="fa fa-print"></i> <b> Cetak Realisasi </b></a></span></td> 

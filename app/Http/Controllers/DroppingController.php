@@ -93,7 +93,7 @@ class DroppingController extends Controller
         return view('dropping.index', ['kcabangs' => $this->kantorCabangs, 'filters' => null]);
     }
 
-    public function getAll()
+    public function getAll() //ambil view PIL_DROPPING_vIE dari AX_DEV
     {
         $droppings = $this->jDroppingModel->where('DEBIT', '>', 0)->get();
         $result = [];
@@ -128,6 +128,7 @@ class DroppingController extends Controller
         $cabang = $this->kantorCabangs;
         $unit = array();
 
+        //role perizinan unit kerja
         foreach($cabang as $cab){
             if(Gate::check('unit_'.$cab->VALUE."00")){
                 array_push($unit, $cab->DESCRIPTION);
@@ -606,6 +607,7 @@ class DroppingController extends Controller
             $kegiatan = Kegiatan::where('VALUE', $dataPD->SEGMEN_6)->first();
         }
 
+        //integrasi dari axapta
         $integrated = StagingPengembalian::where([['RECID', $id], ['PIL_POSTED', 1]])->first();
         if($integrated){
             session()->flash('integrated', true);
@@ -702,6 +704,7 @@ class DroppingController extends Controller
         StagingTariktunai::insert($inputStagingTT);   
     }
 
+    //insert staging axapta
     public function insertStagingPengembalian($id_pengembalian)
     {
         $pengembalian = PenyesuaianDropping::where([['id', $id_pengembalian], ['is_pengembalian', 1], ['stat', 8]])->first();

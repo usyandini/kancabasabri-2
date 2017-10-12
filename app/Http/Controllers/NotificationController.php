@@ -179,30 +179,36 @@ class NotificationController extends Controller
             case 31:
                 return redirect('anggaran/persetujuan/'.$anggaran->nd_surat."/1");
             case 32:
-                if(Gate::check('master_pelaporan_anggaran'))
-                    return redirect('pelaporan/edit/master/laporan_anggaran/'.$form_master->id);
+                if(Gate::check('tambah_pelaporan_anggaran'))
+                    return redirect('pelaporan/tambah/item/laporan_anggaran/'.$form_master->id);
                 else
-                    return redirect('pelaporan/informasi/item/laporan_anggaran');
+                    return redirect('pelaporan/edit/master/laporan_anggaran/'.$form_master->id);
             case 33:
                 return redirect('pelaporan/edit/item/laporan_anggaran/'.$form_master->id);
             case 34:
-                if(Gate::check('master_arahan_a_RUPS'))
-                    return redirect('pelaporan/edit/master/arahan_rups/'.$form_master->id);
+                if(Gate::check('tambah_pelaporan_a_RUPS'))
+                    return redirect('pelaporan/tambah/item/arahan_rups/'.$form_master->id);
                 else
-                    return redirect('pelaporan/informasi/item/arahan_rups');
+                    return redirect('pelaporan/edit/master/arahan_rups/'.$form_master->id);
             case 35:
                 return redirect('pelaporan/edit/item/arahan_rups/'.$form_master->id);
             case 36:
-                if(Gate::check('master_usulan_p_p'))
-                    return redirect('pelaporan/edit/master/usulan_program/'.$form_master->id);
+                if(Gate::check('tambah_pelaporan_usulan_p_p'))
+                    return redirect('pelaporan/tambah_usulan_program/'.$form_master->id);
                 else
-                    return redirect('pelaporan/informasi/item/usulan_program');
+                    return redirect('pelaporan/edit/master/usulan_program/'.$form_master->id);
             case 37:
                 return redirect('pelaporan/edit_usulan_program/'.$form_master->id);
             case 38:
                 return redirect('tindaklanjutinternal/'.$notifDetail->batch_id);
             case 39:
                 return redirect('unitkerja/tindaklanjut/'.$notifDetail->batch_id);
+            case 40:
+                return redirect('acc_pengajuan_dropping');
+            case 41:
+                return redirect('pengajuan_dropping');
+            case 41:
+                return redirect('pengajuan_dropping');
 			default:
 				return redirect('transaksi/');
     	}

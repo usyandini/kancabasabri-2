@@ -116,7 +116,7 @@ Route::group(['middleware' => 'auth'], function() {
 		Route::get('/informasi/{type}/{kategori}', 'PelaporanController@pelaporan');
 		Route::post('/cari/{kategori}/{type}', 'PelaporanController@cari');
 		Route::get('/usulan_program_prioritas', 'PelaporanController@usulan_program_prioritas');
-		Route::get('/tambah_usulan_program', 'PelaporanController@tambah_usulan_program_prioritas');
+		Route::get('/tambah_usulan_program/{id}', 'PelaporanController@tambah_usulan_program_prioritas');
 		Route::get('/edit_usulan_program/{id}', 'PelaporanController@edit_usulan_program_prioritas');
 		Route::get('/tambah/{type}/{kategori}/{id}', 'PelaporanController@tambah');
 		Route::get('/removeFormMaster', 'PelaporanController@removeFormMasterAll');
@@ -126,6 +126,7 @@ Route::group(['middleware' => 'auth'], function() {
 		Route::get('/get/filteredMaster/{kategori}/{type}/{id}', 'PelaporanController@getDataFormMaster');
 		Route::get('/get/filteredPelaporan/{type}/{kategori}/{tahun}/{tw_dari}/{tw_ke}/{unit_kerja}', 'PelaporanController@getFilteredPelaporan');
 		Route::get('/get/download/{id}', 'PelaporanController@unduh_file');
+		Route::get('/get/unit_kerja_form/{thn}/{tw1}/{tw2}/{kategori}/{id}', 'PelaporanController@getUnitKerjaFormMaster');
 		Route::get('/reports/export', 'PelaporanController@export_pelaporan');
    	});
 
@@ -217,7 +218,7 @@ Route::group(['middleware' => 'auth'], function() {
 		Route::get('/download/{id4}', 'TindaklanjutController@downloadberkas');
 		Route::get('/lihat/{id4}', 'TindaklanjutController@lihatberkas');
 		Route::get('/tindaklanjut/{id1}', 'TindaklanjutController@tindaklanjut');
-		Route::get('/export/{id1}', 'TindaklanjutController@export_tindaklanjut');
+		Route::get('/export/{id1}/{type}', 'TindaklanjutController@export_tindaklanjut');
 		Route::get('/print/{id1}', 'TindaklanjutController@print_tindaklanjut');
 		Route::get('/kirim/{id1}', 'TindaklanjutController@kirim_tindaklanjut');
 		Route::get('/myform/{unitkerja}', 'TindaklanjutController@myformAjaxunitkerja');

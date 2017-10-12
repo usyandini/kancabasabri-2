@@ -314,7 +314,8 @@
 								<table align="right">
 									<tr>	
 			                      	@if ($ab5)	
-										<td><span><a href="{{ URL('tindaklanjut/export/'. $bb->id1) }}" class="btn btn-success pull-right" target="_blank"><i class="fa fa-file-excel-o"></i> <b> Export to Excel </b></a></span></td><td> </td><td> </td>
+										<td><span><a href="{{ URL('tindaklanjut/export/'. $bb->id1.'/excel') }}" class="btn btn-success pull-right" target="_blank"><i class="fa fa-file-excel-o"></i> <b> Export to Excel </b></a></span></td><td> </td><td> </td>
+										<td><span><a href="{{ URL('tindaklanjut/export/'. $bb->id1.'/pdf') }}" class="btn btn-success pull-right" target="_blank"><i class="fa fa-file-pdf-o"></i> <b> Export to PDF </b></a></span></td><td> </td><td> </td>
 										<td><span><a href="{{ URL('tindaklanjut/print/'. $bb->id1) }}" class="btn btn-success pull-right" target="_blank"><i class="fa fa-print"></i> <b> Print </b></a></span></td>
 			                		@endif
 			                		

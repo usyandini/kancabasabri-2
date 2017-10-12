@@ -39,7 +39,7 @@
                                 <div class="card-block">
                                   <form method="POST" action="{{url('pelaporan/submit/tambah') }}" id="insertLaporanAnggaran" name="insertLaporanAnggaran" enctype="multipart/form-data">
                                   <div class="row">
-                                  <div class="col-xs-10">
+                                  <div class="col-xs-12">
                                     {{ csrf_field() }}
                                     <div class="col-xs-3">
                                         <div class="form-group">
@@ -91,11 +91,23 @@
                                         @endif
                                       </div>
                                     </div>
-                                    
+
                                   </div>
 
                                   
-                                  <div class="col-xs-10">
+                                  <div class="col-xs-12">
+                                    <div class="col-xs-3">
+                                      <div class="form-group">
+                                        <label>Unit Kerja</label>
+                                         @if($setting['status']=="Tambah"&& $type == "master")
+                                        <select class="select2 form-control" name="unit_kerja" id="unit_kerja">
+                                          <option value="0">None</option>
+                                        </select>
+                                        @else
+                                        <input id="unit_kerja" name="unit_kerja" class="form-control" readOnly>
+                                        @endif
+                                      </div>
+                                    </div>
                                     @if($type=="master")
                                     <div class="col-xs-3">
                                         <div class="form-group">
@@ -125,19 +137,19 @@
                                         <input id="bts_hari" name="bts_hari" class="form-control" value="---" readonly>
                                       </div>
                                     </div>
-                                    <div class="col-xs-3">
+                                    <div class="col-xs-2">
                                       <div class="form-group">
                                         <label>&nbsp;</label>
                                         <input id="bts_jam" name="bts_jam" class="form-control" value="---" readonly>
                                       </div>
                                     </div>
-                                    <div class="col-xs-3">
+                                    <div class="col-xs-2">
                                       <div class="form-group">
                                         <label>&nbsp;</label>
                                         <input id="bts_menit" name="bts_menit" class="form-control" value="---" readonly>
                                       </div>
                                     </div>
-                                    <div class="col-xs-3">
+                                    <div class="col-xs-2">
                                       <div class="form-group">
                                         <label>&nbsp;</label>
                                         <input id="bts_detik" name="bts_detik" class="form-control" value="---" readonly>
@@ -274,9 +286,8 @@
                   var tempIdCounter = 0;
                   var insertable = {{$setting['insert']?1:0}};
                   var editable = {{($setting['edit']&&$beda)?1:0}};
-                  var unit_field_insert,unit_field_edit = null;
                   var click_berkas = true;
-                  var statusTable = "";
+                  var statusTable = "null";
                   var simpan_file = false;
                   $(document).ready(function() {
 
@@ -402,22 +413,6 @@
                               deleteButton: false,
                             @endif
 
-                          },
-                          { name: "unit_kerja", 
-                            type: "select",
-                            title: "Unit Kerja", 
-                            width: 130,
-                            align: "left",
-                            readOnly:insertable == 1 ? false : true,
-                            valueField: "DESCRIPTION", 
-                            textField: "DESCRIPTION", 
-                            items: getData('unitkerja'),
-                            validate: {
-                              message : "Pilih Unit Kerja Terlebih Dahulu." ,
-                              validator :function(value, item) {
-                                  return value != "None" ;
-                              } 
-                            }
                           },
                           @if($setting['kategori'] == "arahan_rups")
                           { name: "jenis_arahan", 
@@ -623,8 +618,6 @@
                     
                   });
 
-
-
                   function getData(type) {
                     var returned = function () {
                         var tmp = null;
@@ -640,10 +633,49 @@
                     return returned;
                   }
 
-                  function changeUnitKerja(){
-                    unit_kerja = document.getElementById('unit_kerja').value;
-                    $(unit_field_edit).val(unit_kerja);
-                    $(unit_field_insert).val(unit_kerja);
+
+                  function getUnitKerja() {
+                    var tanggal = $('#tanggal').val().split("/");
+                    var tw_dari = $('#tw_dari').val();
+                    var tw_ke = $('#tw_ke').val();
+
+                    switch(tw_dari){
+                      case "I" : tw_dari = "1";break;
+                      case "II" : tw_dari = "2";break;
+                      case "III" : tw_dari = "3";break;
+                      case "IV" : tw_dari = "4";break;
+                    }
+
+                    switch(tw_ke){
+                      case "I" : tw_ke = "1";break;
+                      case "II" : tw_ke = "2";break;
+                      case "III" : tw_ke = "3";break;
+                      case "IV" : tw_ke = "4";break;
+                    }
+                    // alert("{{ url('pelaporan/get/unit_kerja_form')}}/"+tanggal[2]+"/"+tw_dari+"/"+tw_ke+"/"+"{{$setting['kategori'].'/'.$setting['id_form_master']}}");
+                    var returned = function () {
+                        var tmp = null;
+                        $.ajax({
+                            'async': false, 'type': "GET", 'dataType': 'JSON', 
+                            'url': "{{ url('pelaporan/get/unit_kerja_form')}}/"+tanggal[2]+"/"+tw_dari+"/"+tw_ke+"/"+"{{$setting['kategori'].'/'.$setting['id_form_master']}}",
+                            'success': function (data) {
+                                tmp = data;
+
+                                // alert(JSON.stringify(data));
+                                unit_kerja = $('#unit_kerja')
+                                              .find('option')
+                                              .remove()
+                                              .end()
+                                              .append('<option value="0">None</option>');
+                                option = "";
+                                for(i=0;i<data.length;i++){
+                                  unit_kerja.append('<option value="'+data[i].DESCRIPTION+'">'+data[i].DESCRIPTION+'</option>');
+                                }
+                            }
+                        });
+                        return tmp;
+                    }();
+                    return returned;
                   }
 
                   function setUnitKerja(){
@@ -677,8 +709,11 @@
                           if({{($type=='item'&&$status='Tambah')?1:0}}){
                             document.getElementById('id_form_master').value = data[0].id;
                           }
+                          
+                          document.getElementById('unit_kerja').value = data[0].unit_kerja;
                           now = data[0].created_at.split(' ')
-                          tanggal.value = now[0];
+                          date = now[0].split('-');
+                          tanggal.value = date[2]+"/"+date[1]+"/"+date[0];
                           tw_dari_val="";
                           tw_ke_val="";
                           // alert(data[0].tw_dari+data[0].tw_ke)
@@ -787,7 +822,9 @@
                   function check(type){
                     var pernyataan = false;
                     if({{$type == "master"?1:0}}){
-                      if(document.getElementById("tanggal_mulai").value == ""){
+                      if(document.getElementById("unit_kerja").value == "0"){
+                        toastr.error("Silahkan Pilih Salah satu Unit Kerja. Terima kasih.", "Perhatian.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
+                      }else if(document.getElementById("tanggal_mulai").value == ""){
                         toastr.error("Silahkan Isi Tanggal Mulai Untuk memulai {{$title=='Form Master'?$title." ".$sub_title:$title}}. Terima kasih.", "Perhatian.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
                       }else if(document.getElementById("tanggal_selesai").value == ""){
                         toastr.error("Silahkan Isi Tanggal Selesai sebagai acuan berakhirnya {{$title=='Form Master'?$title." ".$sub_title:$title}}. Terima kasih.", "Perhatian.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
@@ -1067,6 +1104,7 @@
                       tanggal_selesai.setAttribute("max",max_ke);
                       tanggal_selesai.setAttribute("min",min_dari);
                     }
+                    getUnitKerja();
                   }
 
                   function setTWFirst(){
@@ -1106,6 +1144,7 @@
                   window.setTWFirst();
                   @endif
                   window.getListData();
+                  window.getUnitKerja();
                   // window.startDate();
 
 

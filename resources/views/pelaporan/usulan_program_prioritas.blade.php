@@ -39,7 +39,7 @@
                                   <form method="POST" action="{{url('pelaporan/submit/tambah') }}" id="insertLaporanAnggaran" name="insertLaporanAnggaran" enctype="multipart/form-data">
                                   <div class="row">
                                     {{ csrf_field() }}
-                                  <div class="col-xs-10">
+                                  <div class="col-xs-12">
                                     <div class="col-xs-3">
                                         <div class="form-group">
                                           <label>Tanggal</label>
@@ -72,27 +72,33 @@
                                   </div>
 
                                   
-                                  <div class="col-xs-10">
+                                  <div class="col-xs-12">
                                     
+                                    <div class="col-xs-3">
+                                      <div class="form-group">
+                                        <label>Unit Kerja</label>
+                                        <input id="unit_kerja" name="unit_kerja" class="form-control" readOnly>
+                                      </div>
+                                    </div>
                                     <div class="col-xs-3">
                                       <div class="form-group">
                                         <label >Batas Waktu Pengisian &nbsp; :</label>
                                         <input id="bts_hari" name="bts_hari" class="form-control" value="---" readonly>
                                       </div>
                                     </div>
-                                    <div class="col-xs-3">
+                                    <div class="col-xs-2">
                                       <div class="form-group">
                                         <label>&nbsp;</label>
                                         <input id="bts_jam" name="bts_jam" class="form-control" value="---" readonly>
                                       </div>
                                     </div>
-                                    <div class="col-xs-3">
+                                    <div class="col-xs-2">
                                       <div class="form-group">
                                         <label>&nbsp;</label>
                                         <input id="bts_menit" name="bts_menit" class="form-control" value="---" readonly>
                                       </div>
                                     </div>
-                                    <div class="col-xs-3">
+                                    <div class="col-xs-2">
                                       <div class="form-group">
                                         <label>&nbsp;</label>
                                         <input id="bts_detik" name="bts_detik" class="form-control" value="---" readonly>
@@ -104,7 +110,6 @@
                                     <input type="hidden" name="item_form_master" id="item_form_master">
                                     <input type="hidden" name="kategori" id="kategori" value="{{$setting['kategori']}}">
                                     <input type="hidden" name="status" id="status" value="{{$setting['status']}}">
-                                    <input type="hidden" name="unit_kerja" id="unit_kerja" value="">
                                     <input type="hidden" name="kondisi" id="kondisi" value="">
                                     <input type="hidden" name="id_form_master" id="id_form_master" value="{{$setting['id_form_master']}}">
                                     <input type="hidden" name="jenis_berkas" id="jenis_berkas" value="{{$setting['jenis_berkas']}}">
@@ -127,7 +132,7 @@
 
                                       <div class="col-xs-7">
                                       </div>
-                                      @if($setting['edit'])
+                                      @if($setting['edit']&&$beda))
                                       <div class="col-xs-1 pull-right">
                                         <div class="form-group">
                                           <div class="btn btn-success" onclick="check('Kirim')"><i class="fa fa-send"></i> Kirim</div>
@@ -203,10 +208,10 @@
                 <script type="text/javascript">
                   var inputs = [];
                   var tempIdCounter = 0;
-                  var insertable = {{$setting['insert']?1:0}};
-                  var editable = {{$setting['edit']?1:0}};
+                  var insertable = {{($setting['insert']&&$beda)?1:0}};
+                  var editable = {{($setting['edit']&&$beda)?1:0}};
                   var unit_field_insert,unit_field_edit = null;
-                  var statusTable = "";
+                  var statusTable = "null";
                   $(document).ready(function() {
 
                     $("#basicScenario").jsGrid( {
@@ -367,14 +372,15 @@
                   });
 
                   function setDetailFormMaster(){
-                    // alert('{{ url('pelaporan/get/filtered/'.$filters['id'].'/form_master') }}');
+                    // alert("{{ url('pelaporan/get/filteredMaster/usulan_program/0/'.$setting['id_form_master']) }}");
                     $.ajax({
-                        'async': false, 'type': "GET", 'dataType': 'JSON', 'url': "{{ url('pelaporan/get/filteredMaster/usulan_program/0/1') }}",
+                        'async': false, 'type': "GET", 'dataType': 'JSON', 'url': "{{ url('pelaporan/get/filteredMaster/usulan_program/0/'.$setting['id_form_master']) }}",
                         'success': function (data) {
 
                           tanggal = document.getElementById('tanggal');
                           tw_dari = document.getElementById('tw_dari');
                           tw_ke = document.getElementById('tw_ke');
+                          unit_kerja = document.getElementById('unit_kerja');
                           // alert(JSON.stringify(data));
                           if({{($type=='item'&&$setting['status']=='Tambah')?1:0}}){
                             document.getElementById('id_form_master').value = data[0].id;
@@ -382,6 +388,7 @@
                           }
                           now = data[0].created_at.split(' ')
                           tanggal.value = now[0];
+                          unit_kerja.value = data[0].unit_kerja;
                           tw_dari_val="";
                           tw_ke_val="";
                           // alert(data[0].tw_dari+data[0].tw_ke);
@@ -462,35 +469,6 @@
                           
                       });
                   }
-                  function setUnitKerja(id_type,id_unit){
-                    var type = "";
-                    var unit = "";
-                    if(id_type == "00"){
-                      type = "divisi";
-                      unit = id_unit;
-                    }else{
-                      type = "cabang";
-                      unit = id_type;
-                    }
-
-                    $.ajax({
-                        'async': false, 'type': "GET", 'dataType': 'JSON', 'url': "{{ url('anggaran/get/attributes') }}/"+type+"/"+unit,
-                        'success': function (data) {
-                            document.getElementById("unit_kerja").value = data[0].DESCRIPTION;
-                        }
-                    });
-                  }
-                  function check(){
-                      if(inputs.length == 0){
-                        toastr.error("Silahkan Isi Minimal Satu daftar Pelaporan Anggaran Kegiatan. Terima kasih.", "Perhatian.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
-                      }else{
-
-                        $('#modal_pernyataan').modal({
-                                  backdrop: 'static'
-                              });
-                      }
-                    
-                  }
 
                   function check(type){
                     var pernyataan = false;
@@ -547,6 +525,7 @@
                     header['tanggal'] = $('#tanggal').val();
                     header['tw_dari'] = $('#tw_dari').val();
                     header['tw_ke'] = $('#tw_ke').val();
+                    header['unit_kerja'] = $('#unit_kerja').val();
 
                     array = new Array();
                     array.push(header);
@@ -558,6 +537,5 @@
 
                   window.setDetailFormMaster();
                   window.getListData();
-                  window.setUnitKerja("{{$userCabang}}","{{$userDivisi}}");
                 </script>
                 @endsection

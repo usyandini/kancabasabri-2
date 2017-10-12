@@ -394,15 +394,30 @@
                     }else if(now >=9 && now <=11){
                       tw = 4;
                     }
-                    $("#type").val("Tambah")
-                    $('select[name="cari_tahun"] option[value=0]').attr("selected","selected");
-                    $('select[name="cari_unit_kerja"] option[value="{{$units}}"]').attr("selected","selected");
-                    $('select[name="cari_tw_dari"] option[value='+tw+']').attr("selected","selected");
-                    $('select[name="cari_tw_ke"] option[value='+tw+']').attr("selected","selected");
-                    $('form[id="filterPelaporan"]').submit();
-                    
+                    tahun = new Date().getFullYear();
+                    $.ajax({
+                        'async': false, 'type': "GET", 'dataType': 'JSON', 'url': "{{url('pelaporan/get/filteredPelaporan/master/'.$kategori)}}"+'/'+tahun+'/'+tw+'/'+tw+'/'+encodeURI("{{$units}}"),
+                        'success': function (data) {
+                          // alert("{{url('pelaporan/get/filteredPelaporan/'.$tp.'/'.$kategori)}}"+'/'+tahun+'/'+tw+'/'+tw+'/'+encodeURI('{{$units}}'));
+                          alrt = false;
+                          if(data.length > 0){
+                            if(data[0].status == "Kirim"){
+                              var url = "{{url('pelaporan/tambah/'.$type.'/'.$kategori).'/'}}"+data[0].id;
+                              window.location.href = url;
+                            }else{
+                              alrt = true;
+                            }
+                          }else{
+                            alrt = true;
+                          }
+
+                          if(alrt == true){
+                            toastr.error("Unit Kerja Renbang belum membuat Form Master {{$title}}. Silahkan Hubungi Unit Kerja Renbang.", "Form Master {{$title}} belum tersedia", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:5000});
+                          }
+                        }
+                    });
                     @else
-                    url = "{{url('pelaporan/tambah/'.$type.'/'.$kategori.'/-1') }}";
+                    var url = "{{url('pelaporan/tambah/'.$type.'/'.$kategori.'/-1') }}";
                     window.location.href = url;
                     @endif
                     

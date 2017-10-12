@@ -81,6 +81,11 @@ class Notification extends Model
         return $this->belongsTo('App\Models\TlTanggal', 'batch_id', 'id1');
     }
 
+    public function pengajuanDropping()
+    {
+        return $this->belongsTo('App\Models\PengajuanDropping', 'batch_id', 'id');
+    }
+
     public function wording()
     {
         $batchNo = $this->batch ? $this->batch->batchNo() : '';
@@ -106,6 +111,15 @@ class Notification extends Model
                 $TW = "TW ".$tw_dari;
             }else{
                 $TW = "TW ".$tw_dari." Sampai TW ".$tw_ke;
+            }
+
+        }else if($this->type >= 40&& $this->type <= 42){
+            $periode = $this->pengajuanDropping['periode_realisasi'];
+            switch ($periode) {
+                case '1': $TW = "I";break;
+                case '2': $TW = "II";break;
+                case '3': $TW = "III";break;
+                case '4': $TW = "IV";break;  
             }
         }
         
@@ -190,22 +204,26 @@ class Notification extends Model
                 return 'Risalah RUPS Anggaran dengan Nomer Dinas/Surat '.$this->idAnggaran['nd_surat'].' diajukan oleh '.$this->idAnggaran['unit_kerja'].' pada tanggal '.date('d F Y', strtotime($this->idAnggaran['updated_at'])).
                 ' telah disetujui dan ditandatangani';
             case 32:
-                return 'Form Master untuk Pelaporan Anggaran dan kegiatan untuk '.$TW.' telah dibuat dan dapat di isi mulai dari '.$this->formMaster['tanggal_mulai'].' sampai '.$this->formMaster['tanggal_selesai'];
+                return 'Form Master untuk Pelaporan Anggaran dan kegiatan untuk '.$TW.'  unit kerja '.$this->formMaster['unit_kerja'].' telah dibuat dan dapat di isi mulai dari '.$this->formMaster['tanggal_mulai'].' sampai '.$this->formMaster['tanggal_selesai'];
             case 33:
-                return 'Pelaporan Anggaran dan kegiatan telah diisi oleh '.$this->formMaster->unit_kerja()[0].' untuk '.$TW.'.';
+                return 'Pelaporan Anggaran dan kegiatan telah diisi oleh '.$this->formMaster['unit_kerja'].' untuk '.$TW.'.';
             case 34:
-                return 'Form Master untuk Arahan RUPS untuk '.$TW.' telah dibuat dan dapat di isi mulai dari '.$this->formMaster['tanggal_mulai'].' sampai '.$this->formMaster['tanggal_selesai'];
+                return 'Form Master untuk Arahan RUPS untuk '.$TW.' unit kerja '.$this->formMaster['unit_kerja'].' telah dibuat dan dapat di isi mulai dari '.$this->formMaster['tanggal_mulai'].' sampai '.$this->formMaster['tanggal_selesai'];
             case 35:
-                return 'Arahan RUPS telah diisi oleh '.$this->formMaster->unit_kerja()[0].' untuk '.$TW.'.';
+                return 'Arahan RUPS telah diisi oleh '.$this->formMaster['unit_kerja'].' untuk '.$TW.'.';
             case 36:
-                return 'Form Master untuk Usulan Program Prioritas untuk '.$TW.' telah dibuat dan dapat di isi mulai dari '.$this->formMaster['tanggal_mulai'].' sampai '.$this->formMaster['tanggal_selesai'];
+                return 'Form Master untuk Usulan Program Prioritas untuk '.$TW.'  unit kerja '.$this->formMaster['unit_kerja'].' telah dibuat dan dapat di isi mulai dari '.$this->formMaster['tanggal_mulai'].' sampai '.$this->formMaster['tanggal_selesai'];
             case 37:
-                return 'Usulan Program Prioritas telah diisi oleh '.$this->formMaster->unit_kerja()[0].' untuk '.$TW.'.';
+                return 'Usulan Program Prioritas telah diisi oleh '.$this->formMaster['unit_kerja'].' untuk '.$TW.'.';
             case 38:
                 return 'Temuan dan Rekomendasi telah dibuat dan akan dikirim ke unit kerja '.$this->tindakLanjut['unitkerja'].'.';
             case 39:
                 return 'Tindak Lanjut telah diisi oleh unit kerja '.$this->tindakLanjut['unitkerja'].' dan akan dikirim ke SPI.';
-        
-        }
+            case 40:
+                return 'Pengajuan Dropping telah di buat oleh '.$this->pengajuanDropping['kantor_cabang'].' untuk periode TW '.$TW.' dengan Nomor '.$this->pengajuanDropping['nomor'].'.';
+            case 41:
+                return 'Pengajuan Dropping '.$this->pengajuanDropping['kantor_cabang'].' periode TW '.$TW.' dengan Nomor '.$this->pengajuanDropping['nomor'].' telah ditolak oleh ????. Silahkan Kirim Pengajuan Kembali.';
+            case 42:
+                return 'Pengajuan Dropping '.$this->pengajuanDropping['kantor_cabang'].' periode TW '.$TW.' dengan Nomor '.$this->pengajuanDropping['nomor'].' telah diterima oleh ????.';
     }
 }

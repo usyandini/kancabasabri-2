@@ -43,6 +43,7 @@
     $('input[name="profile_edit"]').val('true');
 
     $('label#dropping').html('')
+    $('label#pengajuan').html('')
     $('label#transaksi').html('')
     $('label#anggaran').html('')
     $('label#notifikasi').html('')
@@ -104,6 +105,12 @@
       $('label#dropping').html('Hilangkan centang')
     } else {
       $('label#dropping').html('Centang semua')
+    }
+
+    if ($('#pengajuan input').filter(':checked').length > $('#pengajuan input').length/2) {
+      $('label#pengajuan').html('Hilangkan centang')
+    } else {
+      $('label#pengajuan').html('Centang semua')
     }
 
     if ($('#transaksi input').filter(':checked').length > $('#transaksi input').length/2) {
@@ -180,6 +187,8 @@
   function open_menu(menu){
     if(menu == 'dropping'){
       $( "#modal_menu_dropping" ).modal()
+    }else if(menu == 'aju_dropping'){
+      $( "#modal_menu_aju_dropping" ).modal()
     }else if(menu == 'transaksi'){
       $( "#modal_menu_transaksi" ).modal()
     }else if(menu == 'anggaran'){

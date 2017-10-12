@@ -39,7 +39,7 @@
                                 <div class="card-block">
                                   <form method="POST" action="{{url('pelaporan/submit/tambah') }}" id="insertLaporanAnggaran" name="insertLaporanAnggaran" enctype="multipart/form-data">
                                   <div class="row">
-                                  <div class="col-xs-10">
+                                  <div class="col-xs-12">
                                     {{ csrf_field() }}
                                     <div class="col-xs-3">
                                         <div class="form-group">
@@ -95,7 +95,19 @@
                                   </div>
 
                                   
-                                  <div class="col-xs-10">
+                                  <div class="col-xs-12">
+                                    <div class="col-xs-3">
+                                      <div class="form-group">
+                                        <label>Unit Kerja</label>
+                                         @if($setting['status']=="Tambah"&& $type == "master")
+                                        <select class="select2 form-control" name="unit_kerja" id="unit_kerja">
+                                          <option value="0">None</option>
+                                        </select>
+                                        @else
+                                        <input id="unit_kerja" name="unit_kerja" class="form-control" readOnly>
+                                        @endif
+                                      </div>
+                                    </div>
                                     @if($type=="master")
                                     <div class="col-xs-3">
                                         <div class="form-group">
@@ -125,19 +137,19 @@
                                         <input id="bts_hari" name="bts_hari" class="form-control" value="---" readonly>
                                       </div>
                                     </div>
-                                    <div class="col-xs-3">
+                                    <div class="col-xs-2">
                                       <div class="form-group">
                                         <label>&nbsp;</label>
                                         <input id="bts_jam" name="bts_jam" class="form-control" value="---" readonly>
                                       </div>
                                     </div>
-                                    <div class="col-xs-3">
+                                    <div class="col-xs-2">
                                       <div class="form-group">
                                         <label>&nbsp;</label>
                                         <input id="bts_menit" name="bts_menit" class="form-control" value="---" readonly>
                                       </div>
                                     </div>
-                                    <div class="col-xs-3">
+                                    <div class="col-xs-2">
                                       <div class="form-group">
                                         <label>&nbsp;</label>
                                         <input id="bts_detik" name="bts_detik" class="form-control" value="---" readonly>
@@ -166,11 +178,13 @@
                                   <div class="row col-xs-12">
                                     <div class="col-xs-12" style="display:block">
                                       <br />
+                                      @if($type=="item")
                                       <div class="col-xs-3">
                                         <div class="form-group">
                                           <div onclick="download_post()" class="btn btn-secondary" target="_blank"><i class="fa fa-download"></i> Unduh</div>
                                         </div>
                                       </div>
+                                      @endif
 
                                       <div class="col-xs-7">
                                       </div>
@@ -289,9 +303,8 @@
                   var tempIdCounter = 0;
                   var insertable = {{($setting['insert']&&$beda)?1:0}};
                   var editable = {{($setting['edit']&&$beda)?1:0}};
-                  var unit_field_insert,unit_field_edit = null;
                   var click_berkas = true;
-                  var statusTable = "";
+                  var statusTable = "null";
                   var simpan_file = false;
                   $(document).ready(function() {
 
@@ -434,22 +447,6 @@
                               deleteButton: false,
                             @endif
 
-                          },
-                          { name: "unit_kerja", 
-                            type: "select",
-                            title: "Unit Kerja", 
-                            width: 130,
-                            align: "left",
-                            readOnly:insertable == 1 ? false : true,
-                            valueField: "DESCRIPTION", 
-                            textField: "DESCRIPTION", 
-                            items: getData('unitkerja'),
-                            validate: {
-                              message : "Pilih Unit Kerja Terlebih Dahulu." ,
-                              validator :function(value, item) {
-                                  return value != "None" ;
-                              } 
-                            }
                           },
                           @if($setting['kategori'] == "arahan_rups")
                           { name: "jenis_arahan", 
@@ -680,12 +677,6 @@
                     return returned;
                   }
 
-                  function changeUnitKerja(){
-                    unit_kerja = document.getElementById('unit_kerja').value;
-                    $(unit_field_edit).val(unit_kerja);
-                    $(unit_field_insert).val(unit_kerja);
-                  }
-
                   function setUnitKerja(){
                     $.ajax({
                         'async': false, 'type': "GET", 'dataType': 'JSON', 'url': "{{ url('anggaran/get/attributes/unitkerja/1') }}",
@@ -714,12 +705,15 @@
                           tanggal = document.getElementById('tanggal');
                           tw_dari = document.getElementById('tw_dari');
                           tw_ke = document.getElementById('tw_ke');
+                          unit_kerja = document.getElementById('unit_kerja');
                           // alert(JSON.stringify(data));
-                          if({{($type=='item'&&$status='Tambah')?1:0}}){
+                          // if({{($type=='item'&&$status='Tambah')?1:0}}){
                             document.getElementById('id_form_master').value = data[0].id;
-                          }
-                          now = data[0]['created_at']['date'].split(' ')
-                          tanggal.value = now[0];
+                          // }
+                          now = data[0]['created_at']['date'].split(' ');
+                          date = now[0].split('-');
+                          tanggal.value = date[2]+"/"+date[1]+"/"+date[0];
+                          unit_kerja.value = data[0].unit_kerja;
                           tw_dari_val="";
                           tw_ke_val="";
                           // alert(data[0].tw_dari+data[0].tw_ke)
@@ -825,15 +819,21 @@
                   function check(type){
                     var pernyataan = false;
                     if({{$type == "master"?1:0}}){
+                       // alert("master");
                       if(document.getElementById("tanggal_mulai").value == ""){
+                         // alert("salah1");
                         toastr.error("Silahkan Isi Tanggal Mulai Untuk memulai {{$title=='Form Master'?$title." ".$sub_title:$title}}. Terima kasih.", "Perhatian.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
                       }else if(document.getElementById("tanggal_selesai").value == ""){
+                         // alert("salah2");
                         toastr.error("Silahkan Isi Tanggal Selesai sebagai acuan berakhirnya {{$title=='Form Master'?$title." ".$sub_title:$title}}. Terima kasih.", "Perhatian.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
                       }else if(document.getElementById("tw_dari").value == "0"){
+                         // alert("salah3");
                         toastr.error("Pilih TW {{$title=='Form Master'?$title." ".$sub_title:$title}}. Terima kasih.", "Perhatian.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
                       }else if(inputs.length == 0&&{{$setting['kategori']!="usulan_program"?1:0}}){
+                        // alert("salah4");
                         toastr.error("Silahkan Isi Minimal Satu daftar {{$title=='Form Master'?$title." ".$sub_title:$title}}. Terima kasih.", "Perhatian.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
                       }else{
+                         // alert("benar");
                         pernyataan = true;
                       }
                     }else{
@@ -853,12 +853,13 @@
                       if(statusTable!="null"){
                         tampilan="";
                         judul="";
+                        // alert(statusTable);
                         if(statusTable == "edit"){
+                           alert("salahEdit");
                           judul = "Terdapat {{$title=='Form Master'?$title." ".$sub_title:$title}} masih dalam perubahan";
                           tampilan= "Silahkan Rubah dengan menekan tombol centang terlebih tahulu atau Batalkan dengan menekan tombol silang. Terima kasih.";
+                          toastr.error(tampilan, judul, { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
                         }
-
-                        toastr.error(tampilan, judul, { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
                       }else{
                         document.getElementById("kondisi").value = type;
                         var title_modal="";
@@ -1058,6 +1059,7 @@
                     header['tanggal'] = $('#tanggal').val();
                     header['tw_dari'] = $('#tw_dari').val();
                     header['tw_ke'] = $('#tw_ke').val();
+                    header['unit_kerja'] = $('#unit_kerja').val();
 
                     array = new Array();
                     array.push(header);
@@ -1117,6 +1119,8 @@
                       tanggal_selesai.setAttribute("max",max_ke);
                       tanggal_selesai.setAttribute("min",min_dari);
                     }
+
+                    getUnitKerja();
                   }
 
                   function setTWFirst(){
@@ -1155,7 +1159,7 @@
                   window.setTWFirst();
                   @endif
                   window.getListData();
-                  // window.startDate();
+                  // window.getUnitKerja();
 
 
                 </script>
