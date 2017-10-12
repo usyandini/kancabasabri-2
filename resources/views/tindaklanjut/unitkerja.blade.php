@@ -106,7 +106,7 @@
 			                  			</tr>
 			                  			<tr>
 			                  				<td><b>Tanggal Mulai</b></td><td>  </td><td><b> : </b></td><td>  </td>
-			                  				<td><select name="tgl_mulai" class="form-control" style="width:300px" required="required"></select></td>
+			                  				<td><select class="select2 form-control block" name="tgl_mulai" style="width:300px" required="required"></select></td>
 			                  				<script type="text/javascript">
 											    function changeUnit(){
 										    		var unitkerja = $('#unitkerja').val();
@@ -179,7 +179,7 @@
                                                 <div class="modal-body">
                                                 <label class="control-label"><b> Unit Kerja </b></label>
                                                 <label class="control-label"><b> : </b></label><br>
-												<select class="select2 form-control block" name="unitkerja" style="width:300px">
+                                                <select class="select2 form-control" name="unitkerja" required="required" style="width:300px">
                                                     <option value="0"> - Pilih Unit Kerja - </option>
                                                     <?php
                                                     $second="SELECT * FROM (SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_DIVISI] WHERE VALUE!='00') AS A UNION ALL SELECT * FROM (SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_KPKC]  WHERE VALUE!='00') AS B";
@@ -188,7 +188,7 @@
                                                     @foreach($return as $b)
                                                       <option value="{{ $b->DESCRIPTION }}" >{{ $b->DESCRIPTION }}</option>
                                                     @endforeach
-                                                  </select><br><br>
+                                                </select><br><br>
                                                 <label class="control-label"><b> Tanggal Mulai </b></label>
                                                 <label class="control-label"><b> : </b></label>
 											        <input class="form-control" type="date" name="tgl_mulai" min=<?php echo date('Y-m-d')?> required="required"/>

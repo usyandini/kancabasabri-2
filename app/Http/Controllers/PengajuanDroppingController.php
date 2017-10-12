@@ -185,9 +185,11 @@ class PengajuanDroppingController extends Controller
          ];
          $a = '2';
          $verifikasi = '';
+         $keterangan = '';
          $data = [
              'kirim' => $a,
-             'verifikasi' => $verifikasi
+             'verifikasi' => $verifikasi,
+             'keterangan' => $keterangan
          ];
 
  

@@ -231,7 +231,7 @@
 												<td><center>
 				                           			@if ($b->name=="") Tidak Ada
 				                           			@else 
-				                           			<a href="{{ URL('pengajuan_dropping/download/'. $b->id) }}">{{ $b->name }}</a>
+				                           			<a href="{{ URL('pengajuan_dropping/download/'. $b->id) }}" target="_blank">{{ $b->name }}</a>
 				                           			@endif
 				                           		</center></td>
 												<td><center><?php
