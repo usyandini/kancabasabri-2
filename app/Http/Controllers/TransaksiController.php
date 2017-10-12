@@ -121,6 +121,10 @@ class TransaksiController extends Controller
             'empty_batch'   => $empty_batch,
             'berkas'        => $berkas,
             'batch_history' => $history,
+            'item'          => $this->getAttributes('item'),
+            'bank'          => $this->getAttributes('bank'),
+            'kegiatan'      => $this->getAttributes('kegiatan'),
+            'subpos'      => $this->getAttributes('subpos'),
             'jsGrid_url'    => $jsGrid_url]);
     }
 
@@ -167,6 +171,10 @@ class TransaksiController extends Controller
             'empty_batch'   => $empty_batch,
             'berkas'        => $berkas,
             'batch_history' => $history,
+            'item'          => $this->getAttributes('item'),
+            'bank'          => $this->getAttributes('bank'),
+            'kegiatan'      => $this->getAttributes('kegiatan'),
+            'subpos'      => $this->getAttributes('subpos'),
             'jsGrid_url'    => $jsGrid_url]);   
     }
 
@@ -251,7 +259,7 @@ class TransaksiController extends Controller
                 $return->prepend($header);
                 break;
         }
-        return response()->json($return);
+        return $return;
     }
 
     public function store(Request $request)
