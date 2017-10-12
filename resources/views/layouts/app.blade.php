@@ -123,6 +123,18 @@
                     @if ($open_dropping)
                     <li class="nav-item {{ checkActiveMenu('dropping') }}"><a href="{{ url('/dropping', $parameters = [], $secure = null) }}"><i class="ft-box"></i><span data-i18n="" class="menu-title">Dropping</span></a></li>
                     @endif
+
+                    @if (Gate::check('informasi_a_d') ||Gate::check('setuju_a_d'))
+                    <li class="nav-item has-sub {{ checkOpenedMenu('pengajuan_dropping') }}"><a href=""><i class="ft-file"></i><span data-i18n="" class="menu-title">Pengajuan Dropping</span></a>
+                    <ul class="menu-content">
+                        @can('informasi_a_d')
+                        <li class="is-shown {{ checkActiveMenu('pengajuan_dropping') }}"><a href="{{ url('/pengajuan_dropping', $parameters = [], $secure = null) }}" class="menu-item">Pengajuan Dropping</a>
+                        @endcan
+                        @can('setuju_a_d')
+                        <li class="is-shown {{ checkActiveMenu('acc_pengajuan_dropping') }}"><a href="{{ url('/acc_pengajuan_dropping', $parameters = [], $secure = null) }}" class="menu-item">Approval Pengajuan</a>
+                        @endcan
+                    </ul>
+                    @endif
                     @if (Gate::check('info_t'))
                     <li class="nav-item has-sub {{ checkOpenedMenu('transaksi') }}"><a href=""><i class="ft-layout"></i><span data-i18n="" class="menu-title">Transaksi</span></a>
                         <ul class="menu-content">
@@ -235,13 +247,6 @@
                         
                     </ul>
 
-                    @endif
-                    @if (Gate::check('manajemen_k_i') ||Gate::check('manajemen_i_a') ||  Gate::check('manajemen_a_m'))
-                    <li class="nav-item has-sub {{ checkOpenedMenu('pengajuan_dropping') }}"><a href=""><i class="ft-file"></i><span data-i18n="" class="menu-title">Pengajuan Dropping</span></a>
-                    <ul class="menu-content">
-                        <li class="is-shown {{ checkActiveMenu('pengajuan_dropping') }}"><a href="{{ url('/pengajuan_dropping', $parameters = [], $secure = null) }}" class="menu-item">Pengajuan Dropping</a>
-                        <li class="is-shown {{ checkActiveMenu('acc_pengajuan_dropping') }}"><a href="{{ url('/acc_pengajuan_dropping', $parameters = [], $secure = null) }}" class="menu-item">Approval Pengajuan</a>
-                    </ul>
                     @endif
                 </ul>
             </div>

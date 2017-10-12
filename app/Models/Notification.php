@@ -225,5 +225,6 @@ class Notification extends Model
                 return 'Pengajuan Dropping '.$this->pengajuanDropping['kantor_cabang'].' periode TW '.$TW.' dengan Nomor '.$this->pengajuanDropping['nomor'].' telah ditolak oleh ????. Silahkan Kirim Pengajuan Kembali.';
             case 42:
                 return 'Pengajuan Dropping '.$this->pengajuanDropping['kantor_cabang'].' periode TW '.$TW.' dengan Nomor '.$this->pengajuanDropping['nomor'].' telah diterima oleh ????.';
+        }
     }
 }
