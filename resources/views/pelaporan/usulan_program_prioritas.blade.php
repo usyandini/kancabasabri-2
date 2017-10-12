@@ -132,7 +132,7 @@
 
                                       <div class="col-xs-7">
                                       </div>
-                                      @if($setting['edit']&&$beda))
+                                      @if($setting['edit']&&$beda)
                                       <div class="col-xs-1 pull-right">
                                         <div class="form-group">
                                           <div class="btn btn-success" onclick="check('Kirim')"><i class="fa fa-send"></i> Kirim</div>
