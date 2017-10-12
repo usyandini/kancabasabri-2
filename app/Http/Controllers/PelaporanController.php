@@ -1361,7 +1361,7 @@ class PelaporanController extends Controller
                 ];
                 
                 $pdf = PDF::loadView('pelaporan.reports.export-usulan', $data);
-                return $pdf->setPaper('a4', 'landscape')->setWarnings(false)->stream('Usulan Program Prioritas-'.date("dmY").'.pdf');
+                return $pdf->setPaper('a4', 'landscape')->setWarnings(false)->download('Usulan Program Prioritas-'.date("dmY").'.pdf');
                 break;
         }
     }
