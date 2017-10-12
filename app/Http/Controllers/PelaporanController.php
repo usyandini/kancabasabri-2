@@ -1366,9 +1366,9 @@ class PelaporanController extends Controller
 
                 foreach(json_decode($request->list_pelaporan_download) as $value){
                     $pelaporan_list[] = [
-                        'jenis_arahan'      => $value->jenis_arahan,
-                        'arahan'            => $value->arahan,
-                        'progress_tindak_lanjut'   => $value->progress_tindak_lanjut
+                        'jenis_arahan'              => $value->jenis_arahan,
+                        'arahan'                    => $value->arahan,
+                        'progress_tindak_lanjut'    => $value->progress_tindak_lanjut
                     ];
                 }
 
