@@ -48,9 +48,14 @@
 			<table class='header'>
 				@foreach($header as $head)
 				<tr class='header'>
-					<td width='8%'>Tahun</td>
+					<td width='13%'>Tahun</td>
 					<td width='3%'>:</td>
 					<td width='30%' align='left' colspan='3'>{{ date('Y',strtotime($head['tanggal'])) }}</td>
+				</tr>
+				<tr class='header'>
+					<td width='13%'>Unit Kerja</td>
+					<td width='3%'>:</td>
+					<td width='30%' align='left' colspan='3'>{{ $head['unit_kerja'] }}</td>
 				</tr>
 				<tr class='header'>
 					<td>TW</td>
