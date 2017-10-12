@@ -201,6 +201,8 @@ class PengajuanDroppingController extends Controller
 
      public function kirim_pengajuandropping2(Request $request, $id)
      {
+         $cek = DB::table('pengajuan_dropping_cabang')->where('id', $id)->first();
+         $verifikasi=$cek->verifikasi;
          $after_update = [
              'alert' => 'success',
              'title' => 'Data berhasil dikirim.'
@@ -209,15 +211,14 @@ class PengajuanDroppingController extends Controller
          $data = [
              'kirim' => $a
          ];
- 
-         $update = DB::table('pengajuan_dropping_cabang')->where('id', $id);
 
-         $status = $update->first()['verifikasi'];
-         if($status == 1)
+         $update = DB::table('pengajuan_dropping_cabang')->where('id', $id)->update($data);
+         if ($verifikasi == 1){
             NotificationSystem::send($id, 42);
-         else if($status == 2)
+         }
+         if ($verifikasi == 2){
             NotificationSystem::send($id, 41);
-         $update->update($data);
+         }
          return redirect()->back()->with('after_update', $after_update);
      }
 
