@@ -40,11 +40,11 @@ use App\Services\NotificationSystem;
 class NotificationController extends Controller
 {
     public function get()
-    {
+    {   $count_unread = 0;
         $notifications = NotificationSystem::getUnreads();
     	$result = [
     		'total'	=> $notifications->count(),
-    		'totalUnread' => NotificationSystem::getUnreads()->count(),
+    		'totalUnread' => $count_unread,
     		'notifications' => []];
         $count_unread = 0 ;
     	foreach (NotificationSystem::getUnreads() as $value) {
@@ -102,7 +102,7 @@ class NotificationController extends Controller
         			'time_dif' 	=> \Carbon\Carbon::createFromTimeStamp(strtotime($value->created_at))->diffForHumans(),
         			'time'		=> date('d F Y, H:m', strtotime($value->created_at))
         		];
-                // $count_unread++;
+                $result['totalUnread'] = $count_unread++;
             }
     	}
         // $result['totalUnread'] = $count_unread;

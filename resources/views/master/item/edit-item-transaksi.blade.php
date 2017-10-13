@@ -41,7 +41,7 @@
                       </div>
                     </div>
                     @endif                    
-                    <form class="form" action="{{ url('item/update').'/'.$items->id }}" method="POST">
+                    <form class="form" action="{{ url('item/update/transaksi').'/'.$items->id }}" method="POST">
                       <div class="col-md-6">
                         {{ csrf_field() }}
                         <div class="card">

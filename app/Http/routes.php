@@ -141,14 +141,19 @@ Route::group(['middleware' => 'auth'], function() {
 
 	Route::group(['prefix' => 'item'], function(){
 		Route::resource('/', 'ItemController');
+		Route::resource('/list/anggaran', 'ItemController@listAnggaran');
 		Route::get('/get/combination/{id}/{cabang}/{divisi}/{tanggal}', 'ItemController@getCombination');
 		Route::get('/create', 'ItemController@create');
-		Route::post('/add', 'ItemController@addItem');
-		Route::post('/submit/{type}', 'ItemController@submitAnggaranItem');
-		Route::get('/edit/{id}', 'ItemController@editItem');
-		Route::post('/update/{id}', 'ItemController@updateItem');
-		Route::get('/anggaran', 'ItemController@editItemAnggaran');
+		Route::get('/add/anggaran', 'ItemController@addItemAnggaran');
+		Route::post('/insert', 'ItemController@insertItemTransaksi');
+		Route::post('/insert/anggaran', 'ItemController@insertItemAnggaran');
+		Route::post('/submit/{type}', 'ItemController@submitItemMaster');
+		Route::get('/edit/{id}', 'ItemController@editItemTransaksi');
+		Route::get('/edit/anggaran/{id}', 'ItemController@editItemAnggaran');
+		Route::post('/update/transaksi/{id}', 'ItemController@updateItemTransaksi');
 		Route::post('/update/anggaran/{id}', 'ItemController@updateItemAnggaran');
+		Route::get('/master', 'ItemController@editItemMaster');
+		Route::post('/update/master/{id}', 'ItemController@updateItemMaster');
 		Route::get('/delete/{jenis}/{id}', 'ItemController@destroy');
 	});
 

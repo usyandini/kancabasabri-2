@@ -38,7 +38,7 @@
 			                  <h4 class="card-title">Daftar Item</h4>
 			                  <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
 			                  <div class="col-md-12" >
-	                              <a href="{{ url('item/create') }}" class="btn btn-success pull-right"><i class="fa fa-plus"></i> Tambah</a>
+	                              <a href="{{ url('item/add/anggaran') }}" class="btn btn-success pull-right"><i class="fa fa-plus"></i> Tambah</a>
 	                          </div>
 			                </div>
 			                <div class="card-body collapse in">			                
@@ -56,32 +56,28 @@
 			                        <thead>
 			                          <tr>
 			                          	<th width="5%"><center>No</center></th>
-			                          	<th id="filterable" width="5%"><center>Kode Item</center></th>
-			                            <th id="filterable" width="20%">Item</th>
-			                            {{--<th id="filterable" width="10%">Jenis Anggaran</th>
-			                            <th id="filterable" width="10%">Kelompok Anggaran</th>
-			                            <th id="filterable" width="10%">Pos Anggaran</th>--}}
+			                            <th id="filterable" width="10%">Jenis</th>
+			                            <th id="filterable" width="10%">Kelompok</th>
+			                            <th id="filterable" width="10%">Pos Anggaran</th>
 			                            <th id="filterable" width="20%">Sub Pos</th>
 			                            <th id="filterable" width="20%">Mata Anggaran</th>
-			                            <th width="30%"><center>Aksi</center></th>
+			                            <th width="25%"><center>Aksi</center></th>
 			                          </tr>
 			                        </thead>
 			                        <tbody>
 			                        @foreach($items as $item)
 		                        		<tr>
 		                        			<td width="5%"><center>{{ $no++ }}</center></td>
-		                        			<td width="5%">{{ $item->kode_item }}</td>
-		                        			<td width="30%">{{ $item->nama_item }}</td>
-		                        			{{--<td width="10%">{{ $jenis->where('kode', $item->jenis_anggaran)->first()['name'] }}</td>
-		                        			<td width="10%">{{ $kelompok->where('kode', $item->kelompok_anggaran)->first()['name'] }}</td>
-		                        			<td width="10%">{{ $pos->where('kode', $item->pos_anggaran)->first()['name'] }}</td>--}}
-		                        			<td width="20%">{{ $item->sub_pos }}</td>
-		                        			<td width="20%">{{ $item->mata_anggaran }}</td>
-	                        				<td width="20%"><center>
-	                        					<a href="{{ url('item/edit').'/'.$item->id }}" class="btn btn-info btn-sm">
+		                        			<td width="10%">{{ $jenis->where('kode', $item->jenis)->first()['name'] }}</td>
+		                        			<td width="10%">{{ $kelompok->where('kode', $item->kelompok)->first()['name'] }}</td>
+		                        			<td width="10%">{{ $pos->where('kode', $item->pos_anggaran)->first()['name'] }}</td>
+		                        			<td width="20%">{{ $subpos->where('VALUE', $item->sub_pos)->first()['DESCRIPTION'] }}</td>
+		                        			<td width="20%">{{ $kegiatan->where('VALUE', $item->mata_anggaran)->first()['DESCRIPTION'] }}</td>
+	                        				<td width="25%"><center>
+	                        					<a href="{{ url('item/edit/anggaran').'/'.$item->id }}" style="width:80px" class="btn btn-info btn-sm">
 	                        					<i class="fa fa-edit"></i> Edit</a>
-
-	                        					<a href="#" class="btn btn-danger btn-sm" onclick="deleteUser({{ $item->id }})">
+	                        					<br /><br />
+	                        					<a href="#" style="width:80px" class="btn btn-danger btn-sm" onclick="deleteUser({{ $item->id }})">
 	                        					<i class="fa fa-trash"></i> Hapus</a>
 	                        				</center></td>
 		                        		</tr>
@@ -156,7 +152,7 @@
 						});
 
 					function deleteUser(id) {
-						$('form[id="deleteU"').attr('action', '{{ url('item') }}' + '/delete/transaksi/' + id);
+						$('form[id="deleteU"').attr('action', '{{ url('item') }}' + '/delete/anggaran/' + id);
 						var con = confirm("Apakah anda yakin untuk menghapus item ini?");
 						if (con) {
 							$('form[id="deleteU"').submit();	
