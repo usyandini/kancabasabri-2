@@ -256,5 +256,12 @@ Route::group(['middleware' => 'auth'], function() {
 		Route::post('/update_accpengajuandropping/{id}', 'PengajuanDroppingController@update_verifikasi');
 		Route::get('/kirim/{id}', 'PengajuanDroppingController@kirim_pengajuandropping2');
 	});
+
+	Route::group(['prefix' => 'acc_pengajuan_dropping2'], function(){
+		Route::resource('/', 'PengajuanDroppingController@acc2');
+		Route::get('/verifikasi/{id}', 'PengajuanDroppingController@verifikasi2');
+		Route::get('/kirim/{id}', 'PengajuanDroppingController@kirim_pengajuandropping2lv2');
+	});
+
 });
 

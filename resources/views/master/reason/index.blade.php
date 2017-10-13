@@ -223,7 +223,6 @@
 										@endforeach
 			                        </tbody>
 			                    </table>
-			                    {{ $reject_reasons->links() }}
 			                  </div>
 			                </div>
 			              </div>
