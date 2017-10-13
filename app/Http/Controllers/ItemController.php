@@ -427,7 +427,7 @@ class ItemController extends Controller
     {
         switch($jenis){
             case 'transaksi':
-                $item = ItemMaster::withTrashed()->where('id', $id)->first()->nama_item ? ItemMaster::withTrashed()->where('id', $id)->first()->nama_item : ItemMaster::withTrashed()->where('id', $id)->first()->kode_item;
+                $item = ItemMaster::where('id', $id)->first()->nama_item ? ItemMaster::where('id', $id)->first()->nama_item : ItemMaster::where('id', $id)->first()->kode_item;
 
                 ItemMaster::where('id', $id)->delete(); break;
             case 'anggaran':
