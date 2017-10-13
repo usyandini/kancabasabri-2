@@ -24,7 +24,7 @@
                 <div class="content-body"><!-- Basic scenario start -->
                     <section id="basic">
                         <div class="row">
-                            <div class="col-xs-7">
+                            <div class="col-lg-12 col-md-12 col-xs-12">
                                 <div class="card">
                                     <div class="card-header">
                                       <h4 class="card-title">Pencarian Dropping</h4>
@@ -35,10 +35,9 @@
                                         <form method="POST" action="{{ url('dropping/filter') }}">
                                           <div class="row">
                                             {{ csrf_field() }}
-                                            <div class="col-xs-4">
-                                                <div class="form-group">
-                                                  <label>Tahun</label>
+                                            <div class="col-lg-6 col-xl-3 mb-1">
                                                   <select class="select2 form-control" name="transyear">
+                                                    <option disabled="">Berdsasar Tahun</option>
                                                     <option value="0">Semua Tahun</option>
                                                     <?php
                                                       $thn_skr = date('Y');
@@ -47,24 +46,20 @@
                                                       <option {{ ($filters['transyear'] == $x) ? 'selected=""' : '' }} value="<?php echo $x;?>" {{ ($x == $filters['transyear'] ? 'selected=""' : '') }}><?php echo $x;?></option>
                                                       <?php }?>
                                                   </select>
-                                                </div>
                                             </div>
-                                            <div class="col-xs-4">
-                                                <div class="form-grpup">
-                                                  <label>Periode</label>
+                                            <div class="col-lg-6 col-xl-3 mb-1">
                                                   <select class="select2 form-control" name="periode">
+                                                    <option disabled="">Berdasar Periode</option>
                                                     <option value="0">Semua Periode</option>
-                                                    <option {{ $filters['periode'] == '1' ? 'selected=""' : '' }} value="1">I</option>
-                                                    <option {{ $filters['periode'] == '2' ? 'selected=""' : '' }} value="2">II</option>
-                                                    <option {{ $filters['periode'] == '3' ? 'selected=""' : '' }} value="3">III</option>
-                                                    <option {{ $filters['periode'] == '4' ? 'selected=""' : '' }} value="4">IV</option>
+                                                    <option {{ $filters['periode'] == '1' ? 'selected=""' : '' }} value="1">Periode I</option>
+                                                    <option {{ $filters['periode'] == '2' ? 'selected=""' : '' }} value="2">Periode II</option>
+                                                    <option {{ $filters['periode'] == '3' ? 'selected=""' : '' }} value="3">Periode III</option>
+                                                    <option {{ $filters['periode'] == '4' ? 'selected=""' : '' }} value="4">Periode IV</option>
                                                   </select>
-                                                </div>
                                             </div>
-                                            <div class="col-xs-4">
-                                                <div class="form-grpup">
-                                                  <label>Kantor Cabang</label>
+                                            <div class="col-lg-6 col-xl-3 mb-1">
                                                   <select class="select2 form-control" name="kcabang">
+                                                    <option disabled="">Berdasar Kantor Cabang</option>
                                                     <option value="0" selected>Semua Cabang</option>
                                                     @foreach($kcabangs as $cabang)
                                                       {{ $id = $cabang->VALUE."00" }}
@@ -73,10 +68,15 @@
                                                       @endif
                                                     @endforeach
                                                   </select>
-                                                </div>
+                                            </div>
+                                            <div class="col-lg-3 col-xl-3 mb-1">
+                                              <button type="submit" class="btn btn-outline-primary"><i class="fa fa-search"></i> Cari</button>
+                                              @if (checkActiveMenu('dropping') != 'active')
+                                              <a href="{{ url('dropping') }}" class="btn btn-danger"><i class="fa fa-times"></i></a>
+                                              @endif
                                             </div>
                                           </div>
-                                          <div class="row">
+                                          {{-- <div class="row">
                                               <div class="col-xs-2 pull-right">
                                                 <div class="form-group">
                                                   <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i> Cari</button>
@@ -89,7 +89,7 @@
                                                 </div>
                                               </div>
                                             @endif
-                                          </div>
+                                          </div> --}}
                                         </form>
                                       </div>
                                     </div>
@@ -142,7 +142,7 @@
                
                       pageSize: 5,
                       pageButtonCount: 10,
-                      noDataContent: "Data Belum Tersedia",
+                      noDataContent: "Data Belum Tersedia atau silahkan lakukan pencarian",
                       loadMessage: "Mohon, ditunggu...",
                       
                       controller: {
@@ -156,12 +156,12 @@
                         }
                       }, 
                       fields: [
-                          { name: "journalnum", type: "text", title: "Nomor Jurnal", width: 90 },
-                          { name: "bank", type: "text", title: "Nama Bank", width: 80 },
-                          { name: "banknum", type: "text", title: "No. Rekening", width: 100 },
-                          { name: "transdate", type: "text", title: "Tanggal Dropping", width: 100 },
-                          { name: "debit", type: "text", title: "Nominal", width: 100 },
-                          { name: "company", type: "text", title: "Kantor Cabang", width: 100 },
+                          { name: "journalnum", type: "text", title: "Nomor Jurnal", width: 120 },
+                          { name: "bank", type: "text", title: "Nama Bank", width: 120 },
+                          { name: "banknum", type: "text", title: "No. Rekening", width: 120 },
+                          { name: "transdate", type: "text", title: "Tanggal Dropping", width: 160 },
+                          { name: "debit", type: "text", title: "Nominal", width: 120 },
+                          { name: "company", type: "text", title: "Kantor Cabang", width: 120 },
                           /*{ name: "stat", type: "text", title: "Status Posting", 
                             itemTemplate:function(e) {
                               var content = e == '1' ? "Sesuai" : (e == '0' ? "Tidak sesuai" : 'Belum posting');
@@ -170,14 +170,14 @@
                             } 
                           },*/
                           @if(Gate::check('lihat_p_d'))
-                          { name: "id_dropping", type: "text", align:"center", title: "Penyesuaian",  
+                          { name: "id_dropping", type: "text", align:"center", title: "Penyesuaian", width: 120,
                             itemTemplate:function(l) {
                               return "<a href='{{ url('/dropping/penyesuaian') }}/"+ l +"' class='btn btn-warning btn-sm'>Pilih</a>"
                             }
                           },
                           @endif
                           @if(Gate::check('lihat_tt_d'))
-                          { name: "id_dropping", type: "text", align:"center", title: "Penarikan",  
+                          { name: "id_dropping", type: "text", align:"center", title: "Penarikan", width: 120,
                             itemTemplate:function(e) {
                               return "<a href='{{ url('/dropping/tariktunai') }}/"+ e +"' class='btn btn-success btn-sm'>Lanjut</a>"
                             }

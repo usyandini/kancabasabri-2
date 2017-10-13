@@ -121,6 +121,10 @@ class TransaksiController extends Controller
             'empty_batch'   => $empty_batch,
             'berkas'        => $berkas,
             'batch_history' => $history,
+            'item'          => $this->getAttributes('item'),
+            'bank'          => $this->getAttributes('bank'),
+            'kegiatan'      => $this->getAttributes('kegiatan'),
+            'subpos'      => $this->getAttributes('subpos'),
             'jsGrid_url'    => $jsGrid_url]);
     }
 
@@ -167,6 +171,10 @@ class TransaksiController extends Controller
             'empty_batch'   => $empty_batch,
             'berkas'        => $berkas,
             'batch_history' => $history,
+            'item'          => $this->getAttributes('item'),
+            'bank'          => $this->getAttributes('bank'),
+            'kegiatan'      => $this->getAttributes('kegiatan'),
+            'subpos'      => $this->getAttributes('subpos'),
             'jsGrid_url'    => $jsGrid_url]);   
     }
 
@@ -186,9 +194,9 @@ class TransaksiController extends Controller
                 'mata_anggaran' => $value->mata_anggaran,
                 'bank'          => $value->akun_bank,
                 'account'       => $value->account,
-                'anggaran'      => $value->anggaran,
-                'actual_anggaran' => $value->actual_anggaran,
-                'total'         => $value->total,
+                'anggaran'      => (int)$value->anggaran,
+                'actual_anggaran' => (int)$value->actual_anggaran,
+                'total'         => (int)$value->total,
                 'is_anggaran_safe' => $value->is_anggaran_safe
             ]);
         }
@@ -211,9 +219,9 @@ class TransaksiController extends Controller
                 'mata_anggaran' => $value->mata_anggaran,
                 'bank'          => $value->akun_bank,
                 'account'       => $value->account,
-                'anggaran'      => $value->anggaran,
-                'actual_anggaran' => $value->actual_anggaran,
-                'total'         => $value->total,
+                'anggaran'      => (int)$value->anggaran,
+                'actual_anggaran' => (int)$value->actual_anggaran,
+                'total'         => (int)$value->total,
                 'is_anggaran_safe' => $value->is_anggaran_safe
             ]);
         }
@@ -251,7 +259,7 @@ class TransaksiController extends Controller
                 $return->prepend($header);
                 break;
         }
-        return response()->json($return);
+        return $return;
     }
 
     public function store(Request $request)

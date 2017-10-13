@@ -10,6 +10,7 @@ use App\Models\Anggaran;
 use App\Models\ListAnggaran;
 use App\Models\FileListAnggaran;
 use App\Models\Kegiatan;
+use App\Models\SubPos;
 use App\Models\ItemMaster;
 use App\Models\ItemAnggaranMaster;
 use App\Models\BatasAnggaran;
@@ -588,24 +589,24 @@ class AnggaranController extends Controller
                 // echo "baru";
                 $anggaran_insert_list = [
                 // 'id'            => $value->id,
-                'jenis'           => $value->jenis,
+                'jenis'             => $value->jenis,
                 'kelompok'          => $value->kelompok,
                 'pos_anggaran'      => $value->pos_anggaran,
-                'sub_pos'       => $value->sub_pos,
-                'mata_anggaran' => $value->mata_anggaran,
-                'item'          => $value->item,
-                'kuantitas'     => (int)$value->kuantitas,
-                'satuan'     => $value->satuan,
-                'nilai_persatuan'       => (double)$value->nilai_persatuan,
-                'terpusat'      => $value->terpusat,
-                'unit_kerja'         => $value->unit_kerja,
-                'TWI'    => (double)$value->tw_i,
-                'TWII'    => (double)$value->tw_ii,
-                'TWIII'    => (double)$value->tw_iii,
-                'TWIV'    => (double)$value->tw_iv,
-                'anggaran_setahun'      => (double)$value->anggarana_setahun,
-                'id_first'      => $idBefore,
-                'id_list_anggaran'            => $anggaranId,
+                'sub_pos'           => $value->sub_pos,
+                'mata_anggaran'     => $value->mata_anggaran,
+                'item'              => "",
+                'kuantitas'         => (int)$value->kuantitas,
+                'satuan'            => $value->satuan,
+                'nilai_persatuan'   => (double)$value->nilai_persatuan,
+                'terpusat'          => $value->terpusat,
+                'unit_kerja'        => $value->unit_kerja,
+                'TWI'               => (double)$value->tw_i,
+                'TWII'              => (double)$value->tw_ii,
+                'TWIII'             => (double)$value->tw_iii,
+                'TWIV'              => (double)$value->tw_iv,
+                'anggaran_setahun'  => (double)$value->anggarana_setahun,
+                'id_first'          => $idBefore,
+                'id_list_anggaran'  => $anggaranId,
                 'active'            => '1'
                 ];
             }
@@ -616,22 +617,22 @@ class AnggaranController extends Controller
             }
 
             $anggaran_update_list = [
-                'jenis'           => $value->jenis,
+                'jenis'             => $value->jenis,
                 'kelompok'          => $value->kelompok,
                 'pos_anggaran'      => $value->pos_anggaran,
-                'sub_pos'       => $value->sub_pos,
-                'mata_anggaran' => $value->mata_anggaran,
-                'item' => $value->item,
-                'kuantitas'     => (int)$value->kuantitas,
-                'satuan'     => $value->satuan,
-                'nilai_persatuan'       => (double)$value->nilai_persatuan,
-                'terpusat'      => $value->terpusat,
-                'unit_kerja'         => $value->unit_kerja,
-                'TWI'    => (double)$value->tw_i,
-                'TWII'    => (double)$value->tw_ii,
-                'TWIII'    => (double)$value->tw_iii,
-                'TWIV'    => (double)$value->tw_iv,
-                'anggaran_setahun'      => (double)$value->anggarana_setahun,
+                'sub_pos'           => $value->sub_pos,
+                'mata_anggaran'     => $value->mata_anggaran,
+                'item'              => "",
+                'kuantitas'         => (int)$value->kuantitas,
+                'satuan'            => $value->satuan,
+                'nilai_persatuan'   => (double)$value->nilai_persatuan,
+                'terpusat'          => $value->terpusat,
+                'unit_kerja'        => $value->unit_kerja,
+                'TWI'               => (double)$value->tw_i,
+                'TWII'              => (double)$value->tw_ii,
+                'TWIII'             => (double)$value->tw_iii,
+                'TWIV'              => (double)$value->tw_iv,
+                'anggaran_setahun'  => (double)$value->anggarana_setahun,
                 'active'            => $active_list,
                 'updated_at'        => \Carbon\Carbon::now()
                 ];
@@ -876,8 +877,8 @@ class AnggaranController extends Controller
                                             ->orWhere('kelompok','LIKE' ,'%'.$decode_keyword.'%')
                                             ->orWhere('pos_anggaran','LIKE' ,'%'.$decode_keyword.'%')
                                             ->orWhere('sub_pos','LIKE' ,'%'.$decode_keyword.'%')
-                                            ->orWhere('mata_anggaran','LIKE' ,'%'.$decode_keyword.'%')
-                                            ->orWhere('item','LIKE' ,'%'.$decode_keyword.'%');
+                                            ->orWhere('mata_anggaran','LIKE' ,'%'.$decode_keyword.'%');
+                                            // ->orWhere('item','LIKE' ,'%'.$decode_keyword.'%');
                                     })->where('active', '1');
                 }else{
                     $listAnggaran = $this->listAnggaranModel->where('id_list_anggaran', $anggaran->id)
@@ -1030,28 +1031,43 @@ class AnggaranController extends Controller
             case 'cabang':
                 $return = $this->kanCabModel->select('DESCRIPTION', 'VALUE')->where("VALUE",$id)->get();
                 break;
-            case 'mataanggaran':
-                // $return = $this->kegiatanModel->orderBy('DESCRIPTION','ASC')->get();
-                $return = [];
-                $mataanggaran;
-                if($id == "-1"){
-                    $mataanggaran = ItemMaster::orderBy('nama_item','ASC')->get(); 
-                }else{
-                    $mataanggaran = ItemMaster::where('nama_item',urldecode($id))->orderBy('nama_item','ASC')->get();  
-                }
+            // case 'mataanggaran':
+            //     // $return = $this->kegiatanModel->orderBy('DESCRIPTION','ASC')->get();
+            //     $return = [];
+            //     $mataanggaran;
+            //     if($id == "-1"){
+            //         $mataanggaran = ItemMaster::orderBy('nama_item','ASC')->get(); 
+            //     }else{
+            //         $mataanggaran = ItemMaster::where('nama_item',urldecode($id))->orderBy('nama_item','ASC')->get();  
+            //     }
 
 
-                foreach ($mataanggaran as $mata) {
-                    $return[] = [
-                        'item'             => $mata->nama_item,
-                        'jenis'             => ItemAnggaranMaster::where('kode',$mata->jenis_anggaran)->where('type',1)->first()->name,
-                        'kelompok'          => ItemAnggaranMaster::where('kode',$mata->kelompok_anggaran)->where('type',2)->first()->name,
-                        'pos_anggaran'      => ItemAnggaranMaster::where('kode',$mata->pos_anggaran)->where('type',3)->first()->name,
-                        'sub_pos'           => $mata->sub_pos,
-                        'mata_anggaran'     => $mata->mata_anggaran,
-                    ];
-                }
+            //     foreach ($mataanggaran as $mata) {
+            //         $return[] = [
+            //             'item'             => $mata->nama_item,
+            //             'jenis'             => ItemAnggaranMaster::where('kode',$mata->jenis_anggaran)->where('type',1)->first()->name,
+            //             'kelompok'          => ItemAnggaranMaster::where('kode',$mata->kelompok_anggaran)->where('type',2)->first()->name,
+            //             'pos_anggaran'      => ItemAnggaranMaster::where('kode',$mata->pos_anggaran)->where('type',3)->first()->name,
+            //             'sub_pos'           => $mata->sub_pos,
+            //             'mata_anggaran'     => $mata->mata_anggaran,
+            //         ];
+            //     }
                 
+            //     break;
+            case 'mataanggaran':
+                $return = Kegiatan::where('DESCRIPTION','<>','None')->orderBy('DESCRIPTION','ASC')->get();
+                break;
+            case 'subpos':
+                $return = SubPos::where('DESCRIPTION','<>','None')->orderBy('DESCRIPTION','ASC')->get(); 
+                break;
+            case 'posanggaran':
+                $return = ItemAnggaranMaster::where('type',3)->orderBy('name','ASC')->get(); 
+                break;
+            case 'kelompok':
+                $return = ItemAnggaranMaster::where('type',2)->orderBy('name','ASC')->get(); 
+                break;
+            case 'jenis':
+                $return = ItemAnggaranMaster::where('type',1)->orderBy('name','ASC')->get(); 
                 break;
             case 'nd_surat':
                 $return = $this->anggaranModel->select('nd_surat')->where('unit_kerja','LIKE',"%".urldecode($id)."%")->where('active','1')->orderBy('nd_surat','ASC')->get();
