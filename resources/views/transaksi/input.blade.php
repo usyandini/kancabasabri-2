@@ -47,38 +47,37 @@
                             <form method="POST" action="{{ url('transaksi/filter/process') }}">
                               <div class="row">
                                 {{ csrf_field() }}
-                                <div class="col-xs-6">
-                                  <div class="form-group">
-                                    <label>Nomor Batch Lokal</label>
+                                <div class="col-xs-12 col-xl-6 col-lg-12 mb-1">
+                                  {{-- <div class="form-group mb-1 mr-1"> --}}
                                     <select class="select2 form-control" name="batch">
-                                      <option value="0">Pilih nomor</option>
+                                      <option value="0" disabled="">Pilih Nomor Batch</option>
                                       @foreach($batch_nos as $batch)
                                       <option value="{{ $batch->id }}" {{ $filters[0] == $batch->id ? 'selected=""' : '' }}>{{ $batch->batchNo() }}</option>
                                       @endforeach
                                     </select>
-                                  </div>
+                                  {{-- </div> --}}
                                 </div>
-                                {{-- <div class="col-xs-6">
-                                  <div class="form-group">
-                                    <label>No. Batch</label>
-                                    <input class="form-control" type="text" id="batch" name="batch_no"></input>
-                                  </div>
-                                </div> --}}
+                                <div class="col-xs-12 col-xl-6 col-lg-12">
+                                  <button type="submit" class="btn btn-outline-primary"><i class="fa fa-search"></i> Cari</button>
+                                  @if ($filters)
+                                  <a href="{{ url('transaksi') }}" class="btn btn-danger"><i class="fa fa-times"></i></a>
+                                  @endif
+                                </div>
                               </div>
-                              <div class="row">
+                              {{-- <div class="row">
                                 <div class="col-xs-2">
                                   <div class="form-group">
-                                    <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i> Cari</a>
+                                    <button type="submit" class="btn btn-outline-primary"><i class="fa fa-search"></i> Cari</a>
                                     </div>
                                   </div>
                                   @if($filters)
                                   <div class="col-xs-2">
                                     <div class="form-group">
-                                      <a href="{{ url('transaksi') }}" class="btn btn-danger"><i class="fa fa-times"></i> Reset pencarian</a>
+                                      <a href="{{ url('transaksi') }}" class="btn btn-outline-danger"><i class="fa fa-times"></i> Reset pencarian</a>
                                     </div>
                                   </div>
                                   @endif
-                                </div>
+                                </div> --}}
                               </form>
                             </div>
                           </div>
@@ -113,15 +112,6 @@
                               <span>KPKC: <code>{{ $active_batch->kantorCabang()->DESCRIPTION }}</code> <span>Divisi:</span> <code>{{ $active_batch->divisi == '00' ? 'Non-Divisi' : $active_batch->divisi()->DESCRIPTION  }}</code></span>
                               @endif
                             </div>
-                            {{-- <div class="row">
-                              <div class="col-sm-12 col-lg-3 col-xl-2 pull-right">
-                                @if (Gate::check('tambah_t'))
-                                <div class="form-group">
-                                  <button class="btn btn-pink pull-right" onclick="location.href='{{ url('transaksi/create') }}'"><i class="fa fa-plus"></i> Buat Batch baru</button>
-                                </div>
-                                @endif
-                              </div>
-                            </div> --}}
                           </div>
                           <div class="card-body collapse in ">
                             <div class="card-block card-dashboard ">
@@ -151,20 +141,14 @@
                                     <button class="btn btn-info pull-right" id="keep_anggaran" value="Simpan"><i class="fa fa-money"></i> Perbarui Status Anggaran</button>
                                   </div>
                                 </div> --}}
-                                @if (Gate::check('tambah_item_t') || Gate::check('ubah_item_t') || Gate::check('hapus_item_t'))
-                                <div class="col-sm-12 col-lg-3 col-xl-2 pull-right">
-                                  <div class="form-group">
-                                    <button onclick="populateBatchInput()" class="btn btn-primary pull-right" id="simpan" value="Simpan"><i class="fa fa-check"></i> Simpan perubahan batch</button>
-                                  </div>
+                                <div class="col-sm-12 col-lg-10 col-xl-6 pull-right">
+                                    @if (Gate::check('tambah_item_t') || Gate::check('ubah_item_t') || Gate::check('hapus_item_t'))
+                                    <button onclick="populateBatchInput()" class="btn btn-outline-danger btn-md pull-right mb-1 ml-1" id="simpan" value="Simpan"><i class="fa fa-check"></i> Simpan perubahan batch</button>
+                                    @endif
+                                    @if (Gate::check('ajukan_t'))
+                                    <button onclick="checkBatchSubmit()" class="btn btn-secondary btn-md pull-right mb-1" id="button_status"><i class="fa fa-check-circle"></i> Submit batch untuk Verifikasi</button>
+                                    @endif
                                 </div>
-                                @endif
-                                @if (Gate::check('ajukan_t'))
-                                <div class="col-sm-12 col-lg-3 col-xl-2 pull-right">
-                                  <div class="form-group">
-                                    <button onclick="checkBatchSubmit()" class="btn btn-danger pull-right" id="button_status"><i class="fa fa-check-circle"></i> Submit batch untuk Verifikasi</button>
-                                  </div>
-                                </div>
-                                @endif
                                 @endif 
                               </div>
                             </div>

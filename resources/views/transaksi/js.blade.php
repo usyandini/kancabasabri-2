@@ -166,11 +166,17 @@
                             width: 300, 
                             align: "left",
                             type: "select", 
-                            items: getData('item'), 
+                            items: {!! $item !!}, 
                             valueField: "MAINACCOUNTID", 
                             textField: "NAME", 
                             title: "Jenis Barang/Jasa", 
                             selectedindex: 0,
+                            validate: {
+                              validator: function(value, item) {
+                                return value != "-1"
+                              },
+                              message: "Kolom Jenis Barang/Jasa tidak boleh tidak dipilih."
+                            },
                             insertTemplate: function() {
                                 var result = jsGrid.fields.select.prototype.insertTemplate.call(this);
                                 result.on("change", function() {
@@ -223,12 +229,7 @@
                             insertTemplate: function(value) {
                               anggaran_field = jsGrid.fields.text.prototype.insertTemplate.call(this)
                               return anggaran_field
-                            },
-                            valdiate: {
-                              validator: "min",
-                              message: "Kolom anggaran tidak boleh kosong.",
-                              param: [1]
-                             } },
+                            } },
                           { 
                             name: "actual_anggaran", 
                             width: 300, 
@@ -244,18 +245,13 @@
                             insertTemplate: function(value) {
                               actual_anggaran = jsGrid.fields.text.prototype.insertTemplate.call(this)
                               return actual_anggaran
-                            },
-                            valdiate: {
-                              validator: "min",
-                              message: "Kolom aktual anggaran tidak boleh kosong.",
-                              param: [1]
-                             } },
+                            } },
                           { 
                             name: "sub_pos", 
                             width: 250, 
                             align: "left",
                             type: "select", 
-                            items: getData('subpos'), 
+                            items: {!! $subpos !!}, 
                             valueField: "VALUE", 
                             textField: "DESCRIPTION", 
                             readOnly: true,
@@ -273,7 +269,7 @@
                             width: 250, 
                             align: "left",
                             type: "select", 
-                            items: getData('kegiatan'), 
+                            items: {!! $kegiatan !!}, 
                             valueField: "VALUE", 
                             textField: "DESCRIPTION", 
                             readOnly: true,
@@ -293,9 +289,10 @@
                             type: "number", 
                             title: "Jumlah Diajukan (Kuantitas)",
                             validate: {
-                              validator: "min",
-                              message: "Kolom jumlah item tidak boleh 0.",
-                              param: [0]
+                              validator: function(value, item) {
+                                return value != ''
+                              },
+                              message: "Kolom jumlah item tidak boleh kosong."
                             }  },
                           { 
                             name: "total", 
@@ -303,6 +300,12 @@
                             width: 200, 
                             type: "text", 
                             title: "Jumlah Diajukan (Rupiah)",
+                            validate: {
+                              validator: function(value, item) {
+                                return value != ''
+                              },
+                              message: "Kolom jumlah dalam Rupiah tidak boleh kosong."
+                            },
                             insertTemplate: function() {
                               var result = jsGrid.fields.text.prototype.insertTemplate.call(this)
                               result.on("keyup", function() {
@@ -329,25 +332,21 @@
                                 $(result).val(val)
                               })
                               return result 
-                            },
-                            valdiate: {
-                              validator: "min",
-                              message: "Kolom total tidak boleh kosong.",
-                              param: [1]
-                             } },
+                            } },
                           { 
                             name: "bank", 
                             width: 250,
                             align: "left", 
                             type: "select", 
-                            items: getData('bank'), 
+                            items: {!! $bank !!}, 
                             valueField: "BANK", 
                             textField: "BANK_NAME", 
                             title: "Bank/Kas", 
-                            valdiate: {
-                              validator: "min",
-                              message: "Kolom bank tidak boleh tidak dipilih.",
-                              param: [1]
+                            validate: {
+                              validator: function(value, item) {
+                                return value != "-1"
+                              },
+                              message: "Kolom Bank/Kas tidak boleh tidak dipilih."
                              } },
                           { 
                             name: "desc", 
@@ -358,7 +357,7 @@
                             validate: {
                               validator: "required",
                               message: "Kolom uraian tidak boleh kosong."  
-                            }  },
+                            } },
                           { 
                             type: "control", 
                             width: 60,
