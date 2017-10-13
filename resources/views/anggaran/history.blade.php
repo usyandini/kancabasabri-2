@@ -287,7 +287,7 @@
                             title: "Input Anggaran dan kegiatan",
                             width: 220,
                             itemTemplate: function(value) {
-                              var display ="<span><b>Rp " + addCommas(validDigits(value)) + "</b></span>";
+                              var display ="<span><b>Rp " + addCommas(parseInt(value)) + "</b></span>";
                               
                               if(parseInt(value).toLocaleString() < 1||value == ""){
                                 display = "<span >---</span>";
@@ -301,7 +301,7 @@
                             title: "Clearing House",
                             width: 130,
                             itemTemplate: function(value) {
-                              var display ="<span><b>Rp " + addCommas(validDigits(value)) + "</b></span>";
+                              var display ="<span><b>Rp " + addCommas(parseInt(value)) + "</b></span>";
                               
                               if(parseInt(value).toLocaleString() < 1||value == ""){
                                 display = "<span >---</span>";
@@ -315,7 +315,7 @@
                             title: "Naskah RKAP",
                             width: 130,
                             itemTemplate: function(value) {
-                              var display ="<span><b>Rp " + addCommas(validDigits(value)) + "</b></span>";
+                              var display ="<span><b>Rp " + addCommas(parseInt(value)) + "</b></span>";
                               
                               if(parseInt(value).toLocaleString() < 1||value == ""){
                                 display = "<span >---</span>";
@@ -329,7 +329,7 @@
                             title: "Persetujuan Dewan Komisaris",
                             width: 220,
                             itemTemplate: function(value) {
-                              var display ="<span><b>Rp " + addCommas(validDigits(value)) + "</b></span>";
+                              var display ="<span><b>Rp " + addCommas(parseInt(value)) + "</b></span>";
                               
                               if(parseInt(value).toLocaleString() < 1||value == ""){
                                 display = "<span >---</span>";
@@ -343,7 +343,7 @@
                             title: "Rapat Teknis",
                             width: 130,
                             itemTemplate: function(value) {
-                              var display ="<span><b>Rp " + addCommas(validDigits(value)) + "</b></span>";
+                              var display ="<span><b>Rp " + addCommas(parseInt(value)) + "</b></span>";
                               
                               if(parseInt(value).toLocaleString() < 1||value == ""){
                                 display = "<span >---</span>";
@@ -357,7 +357,7 @@
                             title: "RUPS",
                             width: 130,
                             itemTemplate: function(value) {
-                              var display ="<span><b>Rp " + addCommas(validDigits(value)) + "</b></span>";
+                              var display ="<span><b>Rp " + addCommas(parseInt(value)) + "</b></span>";
                               
                               if(parseInt(value).toLocaleString() < 1||value == ""){
                                 display = "<span >---</span>";
@@ -371,7 +371,7 @@
                             title: "Finalisasi RUPS",
                             width: 130,
                             itemTemplate: function(value) {
-                              var display ="<span><b>Rp " + addCommas(validDigits(value)) + "</b></span>";
+                              var display ="<span><b>Rp " + addCommas(parseInt(value)) + "</b></span>";
                               
                               if(parseInt(value).toLocaleString() < 1||value == ""){
                                 display = "<span >---</span>";
@@ -385,7 +385,7 @@
                             title: "Risalah RUPS",
                             width: 130,
                             itemTemplate: function(value) {
-                              var display ="<span><b>Rp " + addCommas(validDigits(value)) + "</b></span>";
+                              var display ="<span><b>Rp " + addCommas(parseInt(value)) + "</b></span>";
                               
                               if(parseInt(value).toLocaleString() < 1||value == ""){
                                 display = "<span >---</span>";
