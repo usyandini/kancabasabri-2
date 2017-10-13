@@ -27,7 +27,7 @@ class TindaklanjutController extends Controller
     	$a =DB::table('tl_tanggal')
         ->orderBy('id1','DESC')
         ->where('internal','1')
-        ->paginate(10);
+        ->paginate(100);
         return view('tindaklanjut.unitkerja', compact('a'));
 	}
 
@@ -73,7 +73,7 @@ class TindaklanjutController extends Controller
     	$a =DB::table('tl_tanggal')
         ->orderBy('id1','DESC')
         ->where('internal','2')
-        ->paginate(10);
+        ->paginate(100);
         return view('tindaklanjut.unitkerjaex', compact('a'));
 	}
 

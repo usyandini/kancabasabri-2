@@ -241,26 +241,19 @@
 														}
 													?></center></td>
 												<td><center>
-												@if ($b->kirim==3)
+												@if ($b->kirim!=2)
 												{{ $b->keterangan }}
 												@endif
 												</center></td>
 												<td><center>
 													@if ($b->kirim==1)
-														
 														<span data-toggle='tooltip' title='Kirim'><a class="btn btn-success btn-sm" data-target="#kirim{{$b->id}}" data-toggle="modal"><i class="fa fa-send"></i> </a></span>
 														<span data-toggle='tooltip' title='Ubah'><a class="btn btn-info btn-sm" data-target="#ubah{{$b->id}}" data-toggle="modal"><i class="fa fa-edit"></i> </a></span>
 														<span data-toggle='tooltip' title='Hapus'><a class="btn btn-danger btn-sm" data-target="#hapus{{$b->id}}" data-toggle="modal"><i class="fa fa-trash"></i> </a></span>
-													@elseif ($b->kirim==3)
-													  @if ($b->verifikasi==2)
-														
-														<span data-toggle='tooltip' title='Kirim'><a class="btn btn-success btn-sm" data-target="#kirim{{$b->id}}" data-toggle="modal"><i class="fa fa-send"></i> </a></span>
-														<span data-toggle='tooltip' title='Ubah'><a class="btn btn-info btn-sm" data-target="#ubah{{$b->id}}" data-toggle="modal"><i class="fa fa-edit"></i> </a></span>
-														<span data-toggle='tooltip' title='Hapus'><a class="btn btn-danger btn-sm" data-target="#hapus{{$b->id}}" data-toggle="modal"><i class="fa fa-trash"></i> </a></span>
-													  @endif
-													@else
-													
+													@elseif ($b->kirim==2)
 													<div class="btn btn-success btn-sm"><span><b>Telah Dikirim</b></span></div>
+													@elseif ($b->kirim==4)
+													<div class="btn btn-success btn-sm"><span><b>Telah Diterima</b></span></div>
 													@endif
 													<div class="modal fade" data-backdrop="static" id="kirim{{$b->id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 					                                    <div class="modal-dialog">

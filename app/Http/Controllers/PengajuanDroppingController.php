@@ -16,7 +16,7 @@ class PengajuanDroppingController extends Controller
     public function index() 
     {
     	$a =DB::table('pengajuan_dropping_cabang')
-        ->orderBy('id','DESC')
+        ->orderBy('id','DESC')->where('kirim','<>','3')
         ->get();
         return view('pengajuan_dropping.pengajuan', compact('a'));
 	}
@@ -24,11 +24,20 @@ class PengajuanDroppingController extends Controller
 	public function acc() 
     {
     	$a =DB::table('pengajuan_dropping_cabang')
-    	->where('kirim','<>','1')
+    	->where('kirim','<>','1')->where('kirim','<>','4')
         ->orderBy('id','DESC')
         ->get();
         return view('pengajuan_dropping.approval', compact('a'));
 	}
+
+    public function acc2() 
+    {
+        $a =DB::table('pengajuan_dropping_cabang')
+        ->where('kirim','<>','1')->where('kirim','<>','2')
+        ->orderBy('id','DESC')
+        ->get();
+        return view('pengajuan_dropping.approval2', compact('a'));
+    }
 
     public function verifikasi($id) 
     {
@@ -38,14 +47,23 @@ class PengajuanDroppingController extends Controller
         return view('pengajuan_dropping.verifikasi', compact('a'));
     }
 
+    public function verifikasi2($id) 
+    {
+        $a =DB::table('pengajuan_dropping_cabang')
+        ->where('id',$id)
+        ->get();
+        return view('pengajuan_dropping.verifikasi2', compact('a'));
+    }
+
 	public function store_pengajuandropping(Request $request)
     {   
     	$angka= $request->jumlah_diajukan;
 		$nilai= str_replace('.', '', $angka);
         $a=$request->kantor_cabang;
         $b=$request->periode_realisasi;
+        $c=$request->tanggal;
         $kirim='1';
-        $db = DB::table('pengajuan_dropping_cabang')->where('kantor_cabang', $a)->where('periode_realisasi', $b)->get();
+        $db = DB::table('pengajuan_dropping_cabang')->where('kantor_cabang', $a)->where('periode_realisasi', $b)->where('tanggal', $c)->get();
         
         if($db){
             $after_save = [
@@ -65,7 +83,7 @@ class PengajuanDroppingController extends Controller
 
 	        $value['kantor_cabang'] = $a;
 	        $value['nomor'] = $request->nomor;
-	        $value['tanggal'] = $request->tanggal;
+	        $value['tanggal'] = $c;
 	        $value['jumlah_diajukan'] = $nilai;
 	        $value['periode_realisasi'] = $b;
 			$value['name'] = $berkas->getClientOriginalName();
@@ -83,7 +101,7 @@ class PengajuanDroppingController extends Controller
 	         $data = [
 	         	'kantor_cabang' => $a,
 		        'nomor' => $request->nomor,
-		        'tanggal' => $request->tanggal,
+		        'tanggal' => $c,
 		        'jumlah_diajukan' => $nilai,
 		        'periode_realisasi' => $b,
 		        'kirim' => $kirim
@@ -100,7 +118,8 @@ class PengajuanDroppingController extends Controller
 		$nilai= str_replace('.', '', $angka); 
         $a=$request->kantor_cabang;
         $b=$request->periode_realisasi;
-        $db = DB::table('pengajuan_dropping_cabang')->where('kantor_cabang', $a)->where('periode_realisasi', $b)
+        $c=$request->tanggal;
+        $db = DB::table('pengajuan_dropping_cabang')->where('kantor_cabang', $a)->where('periode_realisasi', $b)->where('tanggal', $c)
          ->where('id','<>', $id)->get();
          if($db){
             $after_update = [
@@ -119,7 +138,7 @@ class PengajuanDroppingController extends Controller
             
 	        $value['kantor_cabang'] = $a;
 	        $value['nomor'] = $request->nomor;
-	        $value['tanggal'] = $request->tanggal;
+	        $value['tanggal'] = $c;
 	        $value['jumlah_diajukan'] = $nilai;
 	        $value['periode_realisasi'] = $b;
 			$value['name'] = $berkas->getClientOriginalName();
@@ -137,9 +156,9 @@ class PengajuanDroppingController extends Controller
 	         $data = [
 	         	'kantor_cabang' => $a,
 		        'nomor' => $request->nomor,
-		        'tanggal' => $request->tanggal,
+		        'tanggal' => $c,
 		        'jumlah_diajukan' => $nilai,
-		        'periode_realisasi' => $request->periode_realisasi
+		        'periode_realisasi' => $b
 	         ];
  
          $update = DB::table('pengajuan_dropping_cabang')->where('id', $id)->update($data);
@@ -173,8 +192,6 @@ class PengajuanDroppingController extends Controller
 
       public function delete_pengajuandropping(Request $request, $id)
      {
-         
- 
          $after_delete = [
              'alert' => 'success',
              'title' => 'Data berhasil dihapus.'
@@ -215,18 +232,47 @@ class PengajuanDroppingController extends Controller
              'alert' => 'success',
              'title' => 'Data berhasil dikirim.'
          ];
-         $a = '3';
+         if ($verifikasi == 1){
+            $a = '3';
+            $b = "";
+            $data = [
+             'kirim' => $a,
+             'verifikasi' => $b,
+             'keterangan' => $b
+            ];
+            NotificationSystem::send($id, 42);
+         }
+         if ($verifikasi == 2){
+            $a = '1';
+            $data = [
+             'kirim' => $a
+            ];
+            NotificationSystem::send($id, 41);
+         }
+        $update = DB::table('pengajuan_dropping_cabang')->where('id', $id)->update($data);
+        return redirect()->back()->with('after_update', $after_update);
+     }
+
+     public function kirim_pengajuandropping2lv2(Request $request, $id)
+     {
+         $cek = DB::table('pengajuan_dropping_cabang')->where('id', $id)->first();
+         $verifikasi=$cek->verifikasi;
+         $after_update = [
+             'alert' => 'success',
+             'title' => 'Data berhasil dikirim.'
+         ];
+         if ($verifikasi == 1){
+            $a = '4';
+         }
+         if ($verifikasi == 2){
+            $a = '1';
+         }
+         
          $data = [
              'kirim' => $a
          ];
 
          $update = DB::table('pengajuan_dropping_cabang')->where('id', $id)->update($data);
-         if ($verifikasi == 1){
-            NotificationSystem::send($id, 42);
-         }
-         if ($verifikasi == 2){
-            NotificationSystem::send($id, 41);
-         }
          return redirect()->back()->with('after_update', $after_update);
      }
 

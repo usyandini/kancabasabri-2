@@ -182,17 +182,15 @@
 													?></center></td>
 												<td><center>{{ $b->keterangan }}</center></td>
 												<td><center>
-												@if ($b->kirim==2)
-												  @if ($b->verifikasi==1)
-													<span data-toggle='tooltip' title='Kirim ke level 2'><a class="btn btn-success btn-sm" data-target="#kirim{{$b->id}}" data-toggle="modal"><i class="fa fa-send"></i> </a></span>
-												  @elseif ($b->verifikasi==2)
+												@if ($b->kirim==3)
+												  @if ($b->verifikasi!="")
 													<span data-toggle='tooltip' title='Kirim ke {{$b->kantor_cabang}}'><a class="btn btn-success btn-sm" data-target="#kirim{{$b->id}}" data-toggle="modal"><i class="fa fa-send"></i> </a></span>
 												  @endif
 												  	<span data-toggle='tooltip' title='Print'><a href="{{ URL('pengajuan_dropping/print/'. $b->id) }}" target="_blank" class="btn btn-warning btn-sm" ><i class="fa fa-print"></i> </a></span>
 													<span data-toggle='tooltip' title='Verifikasi'><a class="btn btn-info btn-sm" data-target="#ubah{{$b->id}}" data-toggle="modal"><i class="fa fa-check"></i> </a></span>
-												@elseif ($b->kirim==3)
+												@else
 													<span data-toggle='tooltip' title='Print'><a href="{{ URL('pengajuan_dropping/print/'. $b->id) }}" target="_blank" class="btn btn-warning btn-sm" ><i class="fa fa-print"></i> </a></span>
-													<div class="btn btn-success btn-sm"><span><b>Telah Dikirim ke level 2</b></span></div>
+													<div class="btn btn-success btn-sm"><span><b>Telah Dikirim ke {{$b->kantor_cabang}}</b></span></div>
 												@endif		
 													<div class="modal fade" data-backdrop="static" id="kirim{{$b->id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 					                                    <div class="modal-dialog">
@@ -202,14 +200,10 @@
 					                                                <center><h4 class="modal-title text-primary" id="myModalLabel" ><i class="fa fa-send"></i> Dialog Konfirmasi</h4></center>
 					                                            </div>
 					                                        	<div class="modal-body">
-					                                        	@if ($b->verifikasi==1)
-					                                            	<center><h4>Anda yakin ingin mengirim hasil verifikasi<br>ke verifikasi level 2 ?</h4></center>
-					                                        	@elseif ($b->verifikasi==2)
-					                                        		<center><h4>Anda yakin ingin mengirim hasil verifikasi<br>ke {{$b->kantor_cabang}} ?</h4></center>
-					                                        	@endif
+					                                            	<center><h4>Anda yakin ingin mengirim hasil verifikasi<br>ke {{$b->kantor_cabang}} ?</h4></center>
 					                                        	</div>
 					                                        	<div class="modal-footer">
-					                                           	 	<a href="{{ URL('acc_pengajuan_dropping/kirim/'. $b->id) }}"" class="btn btn-success btn-sm"><i class="fa fa-check"></i> Ya</a>
+					                                           	 	<a href="{{ URL('acc_pengajuan_dropping2/kirim/'. $b->id) }}"" class="btn btn-success btn-sm"><i class="fa fa-check"></i> Ya</a>
 					                                        		<button type="button" class="btn btn-danger btn-sm" data-dismiss="modal"><i class="fa fa-times"></i> Tidak</button>
 					                                        	</div>
 					                                    	</div>
