@@ -156,7 +156,7 @@
 						});
 
 					function deleteUser(id) {
-						$('form[id="deleteU"').attr('action', '{{ url('item') }}' + '/delete/transaksi/' + id);
+						$('form[id="deleteU"').attr('action', '{{ url('item') }}' + '/delete/master/' + id);
 						var con = confirm("Apakah anda yakin untuk menghapus item ini?");
 						if (con) {
 							$('form[id="deleteU"').submit();	

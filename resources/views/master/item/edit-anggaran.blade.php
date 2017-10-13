@@ -159,7 +159,7 @@
 					                            </button>
 					                            <h4 class="modal-title" id="myModalLabel">Edit Item Anggaran</h4>
 					                          </div>
-					                          <form class="form" id="edit-jenis-form" action="{{ URL('item/update/master/'.$item->id) }}" method="POST">
+					                          <form class="form" id="edit-jenis-form" action="{{ URL('item/update/anggaran/'.$item->id) }}" method="POST">
 					                          {{ csrf_field() }}
 					                            <div class="modal-body" id="confirmation-msg">
 					                                <div class="form-group">
@@ -252,7 +252,7 @@
 						});
 
 					function deleteUser(id) {
-						$('form[id="deleteU"').attr('action', '{{ url('item') }}' + '/delete/master/' + id);
+						$('form[id="deleteU"').attr('action', '{{ url('item') }}' + '/delete/anggaran/' + id);
 						var con = confirm("Apakah anda yakin untuk menghapus item ini?");
 						if (con) {
 							$('form[id="deleteU"').submit();	

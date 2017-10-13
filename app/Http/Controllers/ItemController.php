@@ -19,7 +19,6 @@ use App\Models\SubPos;
 use App\Models\Kegiatan;
 
 use App\Models\ItemMaster;
-use App\Models\ItemMasterAnggaran;
 use App\Models\ItemAnggaranMaster;
 use App\Models\RejectReason;
 
@@ -99,27 +98,6 @@ class ItemController extends Controller
         ]);
     }
 
-    public function listAnggaran()
-    {
-        $master_item = ItemMasterAnggaran::withTrashed()->where('deleted_at',Null)->get();
-        $jenis = ItemAnggaranMaster::withTrashed()->where('type', 1)->get();
-        $kelompok = ItemAnggaranMaster::withTrashed()->where('type', 2)->get();
-        $pos = ItemAnggaranMaster::withTrashed()->where('type', 3)->get();
-        $subpos = SubPos::get();
-        $kegiatan = Kegiatan::get();
-        return view('master.item.list-item-anggaran', [
-            'items'     => $master_item, 
-            'no'        => 1, 
-            'jenis'     => $jenis,
-            'kelompok'  => $kelompok,
-            'pos'       => $pos,
-            'subpos'    => $subpos,
-            'kegiatan'  => $kegiatan,
-        ]);
-    }
-
-    
-
     public function getCombination($mainaccount, $cabang, $divisi, $tanggal)
     {
         $tanggal = date("Y-m-d", strtotime($tanggal));
@@ -147,7 +125,7 @@ class ItemController extends Controller
         $jenis = ItemAnggaranMaster::where('type', 1)->get();
         $kelompok = ItemAnggaranMaster::where('type', 2)->get();
         $pos = ItemAnggaranMaster::where('type', 3)->get();
-    	return view('master.item.tambah-item-transaksi',
+    	return view('master.item.tambah',
             [   'item' => $this->itemModel->get(),
                 'program' => $this->programModel->where("VALUE", "THT")->get(),
                 'kpkc' => $this->kpkcModel->get(),
@@ -160,42 +138,7 @@ class ItemController extends Controller
             ]);
     }
 
-    public function addItemAnggaran()
-    {
-        $jenis = ItemAnggaranMaster::where('type', 1)->get();
-        $kelompok = ItemAnggaranMaster::where('type', 2)->get();
-        $pos = ItemAnggaranMaster::where('type', 3)->get();
-        return view('master.item.tambah-item-anggaran',
-            [   
-                'subpos' => $this->subPosModel->get(),
-                'm_anggaran' => $this->mAnggaranModel->get(),
-                'jenis' => $jenis,
-                'kelompok' => $kelompok,
-                'pos' => $pos
-            ]);
-    }
-
-    public function insertItemAnggaran(Request $request)
-    {
-        //$inputItem = $request->except('_method', '_token');
-        
-        $inputItem = array(
-            'jenis'             => $request->jenis,
-            'kelompok'          => $request->kelompok,
-            'pos_anggaran'      => $request->pos,
-            'sub_pos'           => $request->subpos,
-            'mata_anggaran'     => $request->kegiatan,
-            'created_by'        => \Auth::user()->id,
-            'updated_by'        => \Auth::user()->id
-        );
-        
-        ItemMasterAnggaran::create($inputItem);
-        
-        session()->flash('success', true);
-        return redirect('/item/add/anggaran');
-    }
-
-    public function insertItemTransaksi(Request $request)
+    public function addItem(Request $request)
     {
         //$inputItem = $request->except('_method', '_token');
         $name_subpos = $this->subPosModel->where('VALUE', $request->subpos)->first();
@@ -233,7 +176,7 @@ class ItemController extends Controller
         return redirect('/item/create');
     }
 
-    public function submitItemMaster($type, Request $request)
+    public function submitAnggaranItem($type, Request $request)
     {
         $arraykode = array($request->kode, $request->kode_jenis, $request->kode_kelompok, $request->kode_pos);
         $findkode = ItemAnggaranMaster::whereIn('kode', $arraykode)->first();
@@ -286,14 +229,14 @@ class ItemController extends Controller
         return redirect()->back()->withInput();
     }
 
-    public function editItemTransaksi($id)
+    public function editItem($id)
     {
         $item = ItemMaster::where('id', $id)->first();
 
         $jenis = ItemAnggaranMaster::where('type', 1)->get();
         $kelompok = ItemAnggaranMaster::where('type', 2)->get();
         $pos = ItemAnggaranMaster::where('type', 3)->get();
-        return view('master.item.edit-item-transaksi', [
+        return view('master.item.edit-item', [
             'item' => $this->itemModel->get(),
             'program' => $this->programModel->where("VALUE", "THT")->get(),
             'kpkc' => $this->kpkcModel->get(),
@@ -307,7 +250,7 @@ class ItemController extends Controller
         ]);
     }
 
-    public function updateItemTransaksi($id, Request $request)
+    public function updateItem($id, Request $request)
     {
         $name_subpos = $this->subPosModel->where('VALUE', $request->subpos)->first();
         $name_kegiatan = $this->mAnggaranModel->where('VALUE', $request->kegiatan)->first();
@@ -345,51 +288,16 @@ class ItemController extends Controller
         return redirect('/item/edit/'.$id);
     }
 
-    public function editItemAnggaran($id)
-    {
-        $item = ItemMasterAnggaran::where('id', $id)->first();
-
-        $jenis = ItemAnggaranMaster::where('type', 1)->get();
-        $kelompok = ItemAnggaranMaster::where('type', 2)->get();
-        $pos = ItemAnggaranMaster::where('type', 3)->get();
-        return view('master.item.edit-item-anggaran', [
-            'subpos'        => $this->subPosModel->get(),
-            'm_anggaran'    => $this->mAnggaranModel->get(),
-            'jenis'         => $jenis,
-            'kelompok'      => $kelompok,
-            'pos'           => $pos,
-            'items'         => $item
-        ]);
-    }
-
-    public function updateItemAnggaran($id, Request $request)
-    {
-       
-        $update = array(
-            'jenis'             => $request->jenis,
-            'kelompok'          => $request->kelompok,
-            'pos_anggaran'      => $request->pos,
-            'sub_pos'           => $request->subpos,
-            'mata_anggaran'     => $request->kegiatan,
-            'updated_by'        => \Auth::user()->id
-        );
-        
-        ItemMasterAnggaran::where('id', $id)->update($update);
-
-        session()->flash('success', true);
-        return redirect('/item/edit/anggaran/'.$id);
-    }
-
-    public function editItemMaster()
+    public function editItemAnggaran()
     {
         $itemAngg = ItemAnggaranMaster::orderby('type')->orderby('kode')->get();
-        return view('master.item.edit-item-master', [
+        return view('master.item.edit-anggaran', [
             'items' => $itemAngg, 
             'no' => 1
         ]);
     }
 
-    public function updateItemMaster($id, Request $request)
+    public function updateItemAnggaran($id, Request $request)
     {
         $trashed = ItemAnggaranMaster::onlyTrashed()->where('kode', $request->edit_kode)->forceDelete();
 
@@ -426,15 +334,11 @@ class ItemController extends Controller
     public function destroy($jenis, $id, Request $request)
     {
         switch($jenis){
-            case 'transaksi':
-                $item = ItemMaster::where('id', $id)->first()->nama_item ? ItemMaster::where('id', $id)->first()->nama_item : ItemMaster::where('id', $id)->first()->kode_item;
+            case 'master':
+                $item = ItemMaster::withTrashed()->where('id', $id)->first()->nama_item ? ItemMaster::withTrashed()->where('id', $id)->first()->nama_item : ItemMaster::withTrashed()->where('id', $id)->first()->kode_item;
 
                 ItemMaster::where('id', $id)->delete(); break;
             case 'anggaran':
-                $item = "Master Anggaran dan Kegiatan";
-
-                ItemMasterAnggaran::where('id', $id)->delete(); break;
-            case 'master':
                 $item = ItemAnggaranMaster::withTrashed()->where('id', $id)->first()->name ? ItemAnggaranMaster::withTrashed()->where('id', $id)->first()->name : ItemAnggaranMaster::withTrashed()->where('id', $id)->first()->kode;
 
                 ItemAnggaranMaster::where('id', $id)->delete(); break;
@@ -448,7 +352,7 @@ class ItemController extends Controller
     public function reason()
     {
 
-    	$reject_reasons = RejectReason::orderBy('id','DESC')->get();
+    	$reject_reasons = RejectReason::orderBy('id','DESC')->paginate(10);
 
     	return view('master.reason.index', compact('reject_reasons'));
     }
@@ -569,6 +473,8 @@ class ItemController extends Controller
          return redirect()->back()->with('after_save', $after_save);
         }
     }
+
+    
 
      public function update(Request $request, $id)
      {
