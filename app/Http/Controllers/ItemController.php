@@ -101,7 +101,7 @@ class ItemController extends Controller
 
     public function listAnggaran()
     {
-        $master_item = ItemMasterAnggaran::withTrashed()->get();
+        $master_item = ItemMasterAnggaran::withTrashed()->where('deleted_at',Null)->get();
         $jenis = ItemAnggaranMaster::withTrashed()->where('type', 1)->get();
         $kelompok = ItemAnggaranMaster::withTrashed()->where('type', 2)->get();
         $pos = ItemAnggaranMaster::withTrashed()->where('type', 3)->get();
@@ -430,6 +430,10 @@ class ItemController extends Controller
                 $item = ItemMaster::withTrashed()->where('id', $id)->first()->nama_item ? ItemMaster::withTrashed()->where('id', $id)->first()->nama_item : ItemMaster::withTrashed()->where('id', $id)->first()->kode_item;
 
                 ItemMaster::where('id', $id)->delete(); break;
+            case 'anggaran':
+                $item = "Master Anggaran dan Kegiatan";
+
+                ItemMasterAnggaran::where('id', $id)->delete(); break;
             case 'master':
                 $item = ItemAnggaranMaster::withTrashed()->where('id', $id)->first()->name ? ItemAnggaranMaster::withTrashed()->where('id', $id)->first()->name : ItemAnggaranMaster::withTrashed()->where('id', $id)->first()->kode;
 
