@@ -61,11 +61,11 @@
 
                	<div class="content-header row">
                     <div class="content-header-left col-md-6 col-xs-12 mb-2">
-                        <h3 class="content-header-title mb-0">Pengajuan Dropping Kantor Cabang</h3>
+                        <h3 class="content-header-title mb-0">Approval Pengajuan Dropping Level 1</h3>
                         <div class="row breadcrumbs-top">
                             <div class="breadcrumb-wrapper col-xs-12">
                                 <ol class="breadcrumb">
-                                    <li class="breadcrumb-item"><a href="#">Pengajuan Dropping</a>
+                                    <li class="breadcrumb-item"><a href="#">Approval Pengajuan Dropping Level 1</a>
                                     </li>
                                 </ol>
                             </div>
@@ -73,7 +73,84 @@
                     </div>
                 </div>
                 
+                <div class="row">
+                    <section id="select-inputs">
+			          <div class="row">
+			          	<div class="col-xs-12">
+			              <div class="card">
+			                <div class="card-header">
+			                  
+			                  <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
+			                  	<div class="card-body collapse in">
+			                  	
+			                  		<table>
+			                  		<form enctype="multipart/form-data" role="form" action="{{ URL('acc_pengajuan_dropping/carimyform') }}" method="GET" >
+				                    {{ csrf_field() }}
+			                  			<tr>
+			                  				<td><b>Kantor Cabang</b></td><td>  </td><td><b> : </b></td><td>  </td>
+			                  				<td><select class="select2 form-control block" name="cabang" id="cabang" onchange="changeUnit()" required="required">
+                                                    <option value=""> - Pilih Kantor Cabang- </option>
+                                                    <?php
+                                                    $second="SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_KPKC]  WHERE VALUE!='00'";
+									                $return = DB::select($second);
+									                ?>
+                                                    @foreach($return as $bb)
+                                                      <option value="{{ $bb->DESCRIPTION }}" >{{ $bb->DESCRIPTION }}</option>
+                                                    @endforeach
+                                                  </select></td>
+			                  			</tr>
+			                  			<tr>
+			                  				<td>  </td>
+			                  			</tr>
+			                  			<tr>
+			                  				<td><b>Tanggal</b></td><td>  </td><td><b> : </b></td><td>  </td>
+			                  				<td><select class="select2 form-control block" name="tanggal" style="width:300px" required="required"></select></td>
+			                  				<script type="text/javascript">
+											    function changeUnit(){
+										    		var cabang = $('#cabang').val();
+									                var uri = "{{ url('acc_pengajuan_dropping/myform').'/'}}"+ encodeURI(cabang);
 
+									                $.ajax({
+								                        'async': false, 
+								                        'type': "GET", 
+								                        'dataType': 'JSON', 
+								                        'url': uri,
+								                        'success': function (data) {
+
+								                          $('select[name="tanggal"]').empty();
+											                        $.each(data, function(key, value) {
+											                        	var tanggal = new Date(value).getDate();
+											                        	var bulan = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+											                        	var _bulan = new Date(value).getMonth();
+											                        	var bulana = bulan[_bulan];
+											                        	var tahun = new Date(value).getFullYear();
+											                        	$('select[name="tanggal"]').append('<option value="'+ value +'">'+ tanggal +' '+ bulana +' '+ tahun +'</option>');
+											                        });
+								                        }
+								                    });
+										    	}
+											</script>
+											
+			                  			</tr>
+			                  			<tr>
+			                  				<td>  </td>
+			                  			</tr>
+			                  			<tr>
+			                  				<td>  </td>
+			                  			</tr>
+			                  			<tr>										 
+			                  			<td></td><td></td><td></td><td></td><td><button type="submit" class="btn btn-primary pull-right"><i class="fa fa-search "></i> Cari</button></td>
+
+			                  			</tr>
+			                  			</form>
+			                  		</table>
+			                  	
+			                	</div>
+			              	</div>
+			              </div>
+			            </div>
+			          </div>
+			        </div>
 
 
                   	<div class="row">
@@ -192,7 +269,7 @@
 													<span data-toggle='tooltip' title='Verifikasi'><a class="btn btn-info btn-sm" data-target="#ubah{{$b->id}}" data-toggle="modal"><i class="fa fa-check"></i> </a></span>
 												@elseif ($b->kirim==3)
 													<span data-toggle='tooltip' title='Print'><a href="{{ URL('pengajuan_dropping/print/'. $b->id) }}" target="_blank" class="btn btn-warning btn-sm" ><i class="fa fa-print"></i> </a></span>
-													<div class="btn btn-success btn-sm"><span><b>Telah Dikirim ke level 2</b></span></div>
+													<div class="btn btn-info btn-sm"><span><b>Telah Dikirim ke level 2</b></span></div>
 												@endif		
 													<div class="modal fade" data-backdrop="static" id="kirim{{$b->id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 					                                    <div class="modal-dialog">

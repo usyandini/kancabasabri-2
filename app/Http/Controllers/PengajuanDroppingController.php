@@ -21,6 +21,29 @@ class PengajuanDroppingController extends Controller
         return view('pengajuan_dropping.pengajuan', compact('a'));
 	}
 
+    public function myformAjax($cabang)
+    {
+        $dec_cabang=urldecode($cabang);
+        $a =DB::table('pengajuan_dropping_cabang')
+        ->where('kantor_cabang',$dec_cabang)
+        ->where('kirim','<>','3')
+        ->lists('tanggal');
+        return json_encode($a);
+    }
+
+    public function carimyformAjax(Request $request)
+    {
+        $kantor_cabang = $request->get('cabang');
+        $tanggal = $request->get('tanggal');
+        $a = DB::table('pengajuan_dropping_cabang')
+             ->where('kantor_cabang', $kantor_cabang)
+             ->where('tanggal', $tanggal)
+             ->get();
+        
+        return view('pengajuan_dropping.pengajuan', compact('kantor_cabang', 'tanggal', 'a'));
+         
+    }
+
 	public function acc() 
     {
     	$a =DB::table('pengajuan_dropping_cabang')
@@ -30,6 +53,28 @@ class PengajuanDroppingController extends Controller
         return view('pengajuan_dropping.approval', compact('a'));
 	}
 
+    public function myformAjax1($cabang)
+    {
+        $dec_cabang=urldecode($cabang);
+        $a =DB::table('pengajuan_dropping_cabang')
+        ->where('kirim','<>','1')->where('kirim','<>','4')
+        ->where('kantor_cabang',$dec_cabang)
+        ->lists('tanggal');
+        return json_encode($a);
+    }
+
+    public function carimyformAjax1(Request $request)
+    {
+        $kantor_cabang = $request->get('cabang');
+        $tanggal = $request->get('tanggal');
+        $a = DB::table('pengajuan_dropping_cabang')
+             ->where('kantor_cabang', $kantor_cabang)
+             ->where('tanggal', $tanggal)
+             ->get();
+        
+        return view('pengajuan_dropping.approval', compact('kantor_cabang', 'tanggal', 'a'));
+    }
+
     public function acc2() 
     {
         $a =DB::table('pengajuan_dropping_cabang')
@@ -37,6 +82,28 @@ class PengajuanDroppingController extends Controller
         ->orderBy('id','DESC')
         ->get();
         return view('pengajuan_dropping.approval2', compact('a'));
+    }
+
+    public function myformAjax2($cabang)
+    {
+        $dec_cabang=urldecode($cabang);
+        $a =DB::table('pengajuan_dropping_cabang')
+        ->where('kirim','<>','1')->where('kirim','<>','2')
+        ->where('kantor_cabang',$dec_cabang)
+        ->lists('tanggal');
+        return json_encode($a);
+    }
+
+    public function carimyformAjax2(Request $request)
+    {
+        $kantor_cabang = $request->get('cabang');
+        $tanggal = $request->get('tanggal');
+        $a = DB::table('pengajuan_dropping_cabang')
+             ->where('kantor_cabang', $kantor_cabang)
+             ->where('tanggal', $tanggal)
+             ->get();
+        
+        return view('pengajuan_dropping.approval2', compact('kantor_cabang', 'tanggal', 'a'));
     }
 
     public function verifikasi($id) 

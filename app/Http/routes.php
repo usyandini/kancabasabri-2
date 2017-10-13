@@ -243,6 +243,8 @@ Route::group(['middleware' => 'auth'], function() {
 		Route::get('/kirim/{id}', 'PengajuanDroppingController@kirim_pengajuandropping');
 		Route::get('/download/{id}', 'PengajuanDroppingController@downloadberkas');
 		Route::get('/print/{id}', 'PengajuanDroppingController@print_pengajuandropping');
+		Route::get('/myform/{cabang}', 'PengajuanDroppingController@myformAjax');
+		Route::get('/carimyform', 'PengajuanDroppingController@carimyformAjax');
 	});
 
 	Route::group(['prefix' => 'acc_pengajuan_dropping'], function(){
@@ -250,13 +252,18 @@ Route::group(['middleware' => 'auth'], function() {
 		Route::get('/verifikasi/{id}', 'PengajuanDroppingController@verifikasi');
 		Route::post('/update_accpengajuandropping/{id}', 'PengajuanDroppingController@update_verifikasi');
 		Route::get('/kirim/{id}', 'PengajuanDroppingController@kirim_pengajuandropping2');
+		Route::get('/myform/{cabang}', 'PengajuanDroppingController@myformAjax1');
+		Route::get('/carimyform', 'PengajuanDroppingController@carimyformAjax1');
 	});
 
 	Route::group(['prefix' => 'acc_pengajuan_dropping2'], function(){
 		Route::resource('/', 'PengajuanDroppingController@acc2');
 		Route::get('/verifikasi/{id}', 'PengajuanDroppingController@verifikasi2');
 		Route::get('/kirim/{id}', 'PengajuanDroppingController@kirim_pengajuandropping2lv2');
+		Route::get('/myform/{cabang}', 'PengajuanDroppingController@myformAjax2');
+		Route::get('/carimyform', 'PengajuanDroppingController@carimyformAjax2');
 	});
+
 
 });
 

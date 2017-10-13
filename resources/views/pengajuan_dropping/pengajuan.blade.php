@@ -74,7 +74,84 @@
                 </div>
                 
 
+                <div class="row">
+                    <section id="select-inputs">
+			          <div class="row">
+			          	<div class="col-xs-12">
+			              <div class="card">
+			                <div class="card-header">
+			                  
+			                  <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
+			                  	<div class="card-body collapse in">
+			                  	
+			                  		<table>
+			                  		<form enctype="multipart/form-data" role="form" action="{{ URL('pengajuan_dropping/carimyform') }}" method="GET" >
+				                    {{ csrf_field() }}
+			                  			<tr>
+			                  				<td><b>Kantor Cabang</b></td><td>  </td><td><b> : </b></td><td>  </td>
+			                  				<td><select class="select2 form-control block" name="cabang" id="cabang" onchange="changeUnit()" required="required">
+                                                    <option value=""> - Pilih Kantor Cabang- </option>
+                                                    <?php
+                                                    $second="SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_KPKC]  WHERE VALUE!='00'";
+									                $return = DB::select($second);
+									                ?>
+                                                    @foreach($return as $bb)
+                                                      <option value="{{ $bb->DESCRIPTION }}" >{{ $bb->DESCRIPTION }}</option>
+                                                    @endforeach
+                                                  </select></td>
+			                  			</tr>
+			                  			<tr>
+			                  				<td>  </td>
+			                  			</tr>
+			                  			<tr>
+			                  				<td><b>Tanggal</b></td><td>  </td><td><b> : </b></td><td>  </td>
+			                  				<td><select class="select2 form-control block" name="tanggal" style="width:300px" required="required"></select></td>
+			                  				<script type="text/javascript">
+											    function changeUnit(){
+										    		var cabang = $('#cabang').val();
+									                var uri = "{{ url('pengajuan_dropping/myform').'/'}}"+ encodeURI(cabang);
 
+									                $.ajax({
+								                        'async': false, 
+								                        'type': "GET", 
+								                        'dataType': 'JSON', 
+								                        'url': uri,
+								                        'success': function (data) {
+
+								                          $('select[name="tanggal"]').empty();
+											                        $.each(data, function(key, value) {
+											                        	var tanggal = new Date(value).getDate();
+											                        	var bulan = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+											                        	var _bulan = new Date(value).getMonth();
+											                        	var bulana = bulan[_bulan];
+											                        	var tahun = new Date(value).getFullYear();
+											                        	$('select[name="tanggal"]').append('<option value="'+ value +'">'+ tanggal +' '+ bulana +' '+ tahun +'</option>');
+											                        });
+								                        }
+								                    });
+										    	}
+											</script>
+											
+			                  			</tr>
+			                  			<tr>
+			                  				<td>  </td>
+			                  			</tr>
+			                  			<tr>
+			                  				<td>  </td>
+			                  			</tr>
+			                  			<tr>										 
+			                  			<td></td><td></td><td></td><td></td><td><button type="submit" class="btn btn-primary pull-right"><i class="fa fa-search "></i> Cari</button></td>
+
+			                  			</tr>
+			                  			</form>
+			                  		</table>
+			                  	
+			                	</div>
+			              	</div>
+			              </div>
+			            </div>
+			          </div>
+			        </div>
 
                   	<div class="row">
                     <section id="select-inputs">
@@ -251,7 +328,7 @@
 														<span data-toggle='tooltip' title='Ubah'><a class="btn btn-info btn-sm" data-target="#ubah{{$b->id}}" data-toggle="modal"><i class="fa fa-edit"></i> </a></span>
 														<span data-toggle='tooltip' title='Hapus'><a class="btn btn-danger btn-sm" data-target="#hapus{{$b->id}}" data-toggle="modal"><i class="fa fa-trash"></i> </a></span>
 													@elseif ($b->kirim==2)
-													<div class="btn btn-success btn-sm"><span><b>Telah Dikirim</b></span></div>
+													<div class="btn btn-info btn-sm"><span><b>Telah Dikirim</b></span></div>
 													@elseif ($b->kirim==4)
 													<div class="btn btn-success btn-sm"><span><b>Telah Diterima</b></span></div>
 													@endif

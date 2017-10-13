@@ -61,11 +61,11 @@
 
                	<div class="content-header row">
                     <div class="content-header-left col-md-12 col-xs-12 mb-2">
-                        <h3 class="content-header-title mb-0">Approval Pengajuan Dropping</h3>
+                        <h3 class="content-header-title mb-0">Approval Pengajuan Dropping Level 1</h3>
                         <div class="row breadcrumbs-top">
                             <div class="breadcrumb-wrapper col-xs-12">
                                 <ol class="breadcrumb">
-                                    <li class="breadcrumb-item active"><a href="{{ url('/acc_pengajuan_dropping') }}">Approval Pengajuan Dropping</a>
+                                    <li class="breadcrumb-item active"><a href="{{ url('/acc_pengajuan_dropping') }}">Approval Pengajuan Dropping Level 1</a>
                                     </li>
                                 </ol>
                             </div>
@@ -146,7 +146,8 @@
 																																																																					  if($bb->periode_realisasi=='4'){ echo "TW IV";}
 																																																																				      ?>" disabled="disabled"></td></tr>
 			                  	<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr><tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>
-			                  	<tr><td><b> Lampiran </b></td><td><b> : </b></td><td><a href="{{ URL('pengajuan_dropping/download/'. $bb->id) }}" target="_blank">{{ $bb->name }}</a></td></tr>
+			                  	<tr><td><b> Lampiran </b></td><td><b> : </b></td><td><a href="{{ URL('pengajuan_dropping/download/'. $bb->id) }}" target="_blank">{{ $bb->name }}</a>&nbsp;&nbsp;
+			                  														 <span><a href="{{ URL('pengajuan_dropping/print/'. $bb->id) }}" target="_blank" class="btn btn-warning btn-sm" ><i class="fa fa-print"></i> Formulir Pengajuan</a></span></td></tr>
 			                  	<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr><tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>
 			                  	<form enctype="multipart/form-data" role="form" action="{{ URL('acc_pengajuan_dropping/update_accpengajuandropping/'. $bb->id) }}" method="POST" >
                                 {{ csrf_field() }}
