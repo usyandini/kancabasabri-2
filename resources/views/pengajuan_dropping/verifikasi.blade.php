@@ -171,7 +171,7 @@
 					                                                <center><h4 class="modal-title text-primary" id="myModalLabel" ><i class="fa fa-send"></i> Dialog Konfirmasi</h4></center>
 					                                            </div>
 					                                        	<div class="modal-body">
-					                                            	<center><h4>Anda yakin ingin mengirim pengajuan dropping ke {{$bb->kantor_cabang}} ?</h4></center>
+					                                            	<center><h4>Anda yakin ingin mengirim pengajuan dropping<br>ke {{$bb->kantor_cabang}} ?</h4></center>
 					                                        	</div>
 					                                        	<div class="modal-footer">
 					                                           	 	<a href="{{ URL('acc_pengajuan_dropping/kirim/'. $bb->id) }}"" class="btn btn-success btn-sm"><i class="fa fa-check"></i> Ya</a>
