@@ -456,7 +456,7 @@
                     $(anggaran_field).val(val)
 
                     $(actual_anggaran).val(data.actual_anggaran)
-                    nilai = validDigits($(actual_anggaran).val());
+                    nilai = parseInt($(actual_anggaran).val());
                     val = addCommas(nilai);
                     $(actual_anggaran).val(val)
                   }

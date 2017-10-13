@@ -1055,19 +1055,19 @@ class AnggaranController extends Controller
                 
             //     break;
             case 'mataanggaran':
-                $return = Kegiatan::where('DESCRIPTION','<>','None')->orderBy('DESCRIPTION','ASC')->get();
+                $return = Kegiatan::select('DESCRIPTION')->where('DESCRIPTION','<>','None')->orderBy('DESCRIPTION','ASC')->get();
                 break;
             case 'subpos':
-                $return = SubPos::where('DESCRIPTION','<>','None')->orderBy('DESCRIPTION','ASC')->get(); 
+                $return = SubPos::select('DESCRIPTION')->where('DESCRIPTION','<>','None')->orderBy('DESCRIPTION','ASC')->get(); 
                 break;
             case 'posanggaran':
-                $return = ItemAnggaranMaster::where('type',3)->orderBy('name','ASC')->get(); 
+                $return = ItemAnggaranMaster::select('name')->where('type',3)->orderBy('name','ASC')->get(); 
                 break;
             case 'kelompok':
-                $return = ItemAnggaranMaster::where('type',2)->orderBy('name','ASC')->get(); 
+                $return = ItemAnggaranMaster::select('name')->where('type',2)->orderBy('name','ASC')->get(); 
                 break;
             case 'jenis':
-                $return = ItemAnggaranMaster::where('type',1)->orderBy('name','ASC')->get(); 
+                $return = ItemAnggaranMaster::select('name')->where('type',1)->orderBy('name','ASC')->get(); 
                 break;
             case 'nd_surat':
                 $return = $this->anggaranModel->select('nd_surat')->where('unit_kerja','LIKE',"%".urldecode($id)."%")->where('active','1')->orderBy('nd_surat','ASC')->get();
