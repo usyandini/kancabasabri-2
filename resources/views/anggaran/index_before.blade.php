@@ -609,122 +609,111 @@
                             }
                           },
                           { name: "jenis", 
-                            type: "select", 
+                            type: "text", 
                             title: "Jenis", 
                             width: 130,
                             align: "left",
-                            valueField: "name", 
-                            textField: "name", 
-                            items: getData('jenis'),
                             insertTemplate: function() {
-                              var result = jsGrid.fields.select.prototype.insertTemplate.call(this);
-                              return result;
+                              jenis_field_insert = jsGrid.fields.text.prototype.insertTemplate.call(this);
+                              return jenis_field_insert; 
                             },
                             editTemplate: function(value) {
-                              var result = jsGrid.fields.select.prototype.editTemplate.call(this);
-                              $(result).val(value);
-                              return result; 
-                            },
-                            validate: {
-                              message : "Pilih Item Terlebih dahulu." ,
-                              validator :function(value, item) {
-                                  return value !== "None" ;
-                              } 
-                            }
+                              jenis_field_edit = jsGrid.fields.text.prototype.editTemplate.call(this);
+                              $(jenis_field_edit).val(value);
+                              return jenis_field_edit; 
+                            } 
                           },
                           { name: "kelompok", 
-                            type: "select", 
+                            type: "text", 
                             title: "Kelompok", 
                             width: 130,
                             align: "left",
-                            valueField: "name", 
-                            textField: "name", 
-                            items: getData('kelompok'),
+                            readOnly:true,
                             insertTemplate: function() {
-                              var result = jsGrid.fields.select.prototype.insertTemplate.call(this);
-                              return result;
+                              kelompok_field_insert = jsGrid.fields.text.prototype.insertTemplate.call(this);
+                              return kelompok_field_insert; 
                             },
                             editTemplate: function(value) {
-                              var result = jsGrid.fields.select.prototype.editTemplate.call(this);
-                              $(result).val(value);
-                              return result; 
-                            },
-                            validate: {
-                              message : "Pilih Item Terlebih dahulu." ,
-                              validator :function(value, item) {
-                                  return value !== "None" ;
-                              } 
-                            }
+                              kelompok_field_edit = jsGrid.fields.text.prototype.editTemplate.call(this);
+                              $(kelompok_field_edit).val(value);
+                              return kelompok_field_edit; 
+                            } 
                           },
                           { name: "pos_anggaran", 
-                            type: "select", 
+                            type: "text", 
                             title: "Pos Anggaran", 
                             width: 130,
                             align: "left",
-                            valueField: "name", 
-                            textField: "name", 
-                            items: getData('posanggaran'),
+                            readOnly:true,
                             insertTemplate: function() {
-                              var result = jsGrid.fields.select.prototype.insertTemplate.call(this);
-                              return result;
+                              pos_field_insert = jsGrid.fields.text.prototype.insertTemplate.call(this);
+                              return pos_field_insert; 
                             },
                             editTemplate: function(value) {
-                              var result = jsGrid.fields.select.prototype.editTemplate.call(this);
-                              $(result).val(value);
-                              return result; 
-                            },
-                            validate: {
-                              message : "Pilih Item Terlebih dahulu." ,
-                              validator :function(value, item) {
-                                  return value !== "None" ;
-                              } 
-                            }
+                              pos_field_edit = jsGrid.fields.text.prototype.editTemplate.call(this);
+                              $(pos_field_edit).val(value);
+                              return pos_field_edit; 
+                            } 
                           },
                           { name: "sub_pos", 
-                            type: "select", 
+                            type: "text", 
                             title: "Sub Pos", 
-                            width: 130,
+                            width: 70,
                             align: "left",
-                            valueField: "DESCRIPTION", 
-                            textField: "DESCRIPTION", 
-                            items: getData('subpos'),
+                            readOnly:true,
                             insertTemplate: function() {
-                              var result = jsGrid.fields.select.prototype.insertTemplate.call(this);
-                              return result;
+                              sub_field_insert = jsGrid.fields.text.prototype.insertTemplate.call(this);
+                              return sub_field_insert; 
                             },
                             editTemplate: function(value) {
-                              var result = jsGrid.fields.select.prototype.editTemplate.call(this);
-                              $(result).val(value);
-                              return result; 
-                            },
-                            validate: {
-                              message : "Pilih Item Terlebih dahulu." ,
-                              validator :function(value, item) {
-                                  return value !== "None" ;
-                              } 
-                            }
+                              sub_field_edit= jsGrid.fields.text.prototype.editTemplate.call(this);
+                              $(sub_field_edit).val(value);
+                              return sub_field_edit; 
+                            } 
                           },
                           { name: "mata_anggaran", 
-                            type: "select", 
+                            type: "text", 
                             title: "Mata Anggaran", 
                             width: 130,
                             align: "left",
-                            valueField: "DESCRIPTION", 
-                            textField: "DESCRIPTION", 
+                            readOnly:true,
+                            insertTemplate: function() {
+                              mata_anggaran_insert = jsGrid.fields.text.prototype.insertTemplate.call(this);
+                              return mata_anggaran_insert; 
+                            },
+                            editTemplate: function(value) {
+                              mata_anggaran_edit= jsGrid.fields.text.prototype.editTemplate.call(this);
+                              $(mata_anggaran_edit).val(value);
+                              return mata_anggaran_edit; 
+                            } 
+                          },
+                          { name: "item", 
+                            type: "select", 
+                            title: "Item",
+                            width: 130,
+                            align: "left",
+                            valueField: "item", 
+                            textField: "item", 
                             items: getData('mataanggaran'),
                             insertTemplate: function() {
                               var result = jsGrid.fields.select.prototype.insertTemplate.call(this);
-                              return result;
+                              result.on("change", function() {
+                                  changeData($(this).val(),"insert");
+                              });
+                              return result; 
                             },
                             editTemplate: function(value) {
                               var result = jsGrid.fields.select.prototype.editTemplate.call(this);
                               $(result).val(value);
+                              result.on("change", function() {
+                                  changeData($(this).val(),"edit");
+                              });
                               return result; 
                             },
                             validate: {
                               message : "Pilih Item Terlebih dahulu." ,
                               validator :function(value, item) {
-                                  return value !== "None" ;
+                                  return value !== "00" ;
                               } 
                             }
                           },
@@ -1246,28 +1235,7 @@
                             'async': false, 'type': "GET", 'dataType': 'JSON', 
                             'url': "{{ url('anggaran/get/attributes') }}/" +type+"/-1",
                             'success': function (data) {
-                                // tmp = data;
-                                tmp = []
-                                for(i=0;i<=data.length;i++){
-                                  tmp[i]={};
-                                  if(type == 'jenis'||type == 'kelompok'||type == 'posanggaran'){
-                                    if(i == 0){
-                                      tmp[0]["name"] = "None";
-                                    }else{
-                                      tmp[i]["name"] = data[i-1]["name"];
-                                    }
-                                  }else{
-                                    if(i == 0){
-                                      tmp[0]["DESCRIPTION"] = "None";
-                                    }else{
-                                      tmp[i]["DESCRIPTION"] = data[i-1]["DESCRIPTION"];
-                                    }
-                                  }
-                                  
-                                }
-
-                                // alert(JSON.stringify(data));
-                                
+                                tmp = data;
                             }
                         });
                         return tmp;
