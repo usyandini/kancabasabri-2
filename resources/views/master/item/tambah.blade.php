@@ -73,7 +73,7 @@
                                   <label for="eventRegInput1">Item</label>
                                   <input type="text" required="" class="form-control" placeholder="Item" id="nama_item" name="nama_item" value="{{ old('nama_item') }}">
                                 </div>
-                                <div class="form-group">
+                                {{--<div class="form-group">
                                 <label for="jenis">Jenis Anggaran</label>
                                   <div = "row">
                                     <div class = "col-md-10">
@@ -126,7 +126,7 @@
                                       </button>
                                     </div>
                                   </div>
-                                </div>
+                                </div>--}}
                                 <div class="form-group">
                                   <div class="row">
                                     <div class="col-md-12 col-sm-12">

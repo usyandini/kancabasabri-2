@@ -67,7 +67,7 @@
                                   <label for="eventRegInput1">Item</label>
                                   <input type="text" required="" class="form-control" placeholder="Item" id="nama_item" name="nama_item" value="{{ $items->nama_item }}">
                                 </div>
-                                <div class="form-group">
+                                {{--<div class="form-group">
                                 <label for="jenis">Jenis Anggaran</label>
                                   <div = "row">
                                     <div class = "col-md-10">
@@ -85,13 +85,13 @@
                                         </button>
                                       </span>
                                     </div>
-                                    {{-- <div class = "col-md-1">
+                                    <div class = "col-md-1">
                                       <span data-toggle='tooltip' title='Ubah'>
                                         <button type="button" class="btn btn-warning" data-target="#editJenis" data-toggle="modal">
                                         <i class="fa fa-edit"></i>
                                         </button>
                                       </span>
-	                                  </div> --}}
+	                                  </div>
                                   </div>
                              	  </div>
                                 <div class="form-group">
@@ -133,7 +133,7 @@
                                       </span>
                                     </div>
                                   </div>
-                                </div>
+                                </div>--}}
                                 <div class="form-group">
                                   <div class="row">
                                     <div class="col-md-12 col-sm-12">

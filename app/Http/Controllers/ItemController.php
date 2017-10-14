@@ -86,15 +86,15 @@ class ItemController extends Controller
     public function index()
     {
         $master_item = ItemMaster::orderby('kode_item')->get();
-        $jenis = ItemAnggaranMaster::withTrashed()->where('type', 1)->get();
-        $kelompok = ItemAnggaranMaster::withTrashed()->where('type', 2)->get();
-        $pos = ItemAnggaranMaster::withTrashed()->where('type', 3)->get();
+        // $jenis = ItemAnggaranMaster::withTrashed()->where('type', 1)->get();
+        // $kelompok = ItemAnggaranMaster::withTrashed()->where('type', 2)->get();
+        // $pos = ItemAnggaranMaster::withTrashed()->where('type', 3)->get();
     	return view('master.item.index', [
             'items' => $master_item, 
             'no' => 1, 
-            'jenis' => $jenis,
-            'kelompok' => $kelompok,
-            'pos' => $pos
+            // 'jenis' => $jenis,
+            // 'kelompok' => $kelompok,
+            // 'pos' => $pos
         ]);
     }
 
@@ -122,19 +122,19 @@ class ItemController extends Controller
 
     public function create()
     {
-        $jenis = ItemAnggaranMaster::where('type', 1)->get();
-        $kelompok = ItemAnggaranMaster::where('type', 2)->get();
-        $pos = ItemAnggaranMaster::where('type', 3)->get();
+        // $jenis = ItemAnggaranMaster::where('type', 1)->get();
+        // $kelompok = ItemAnggaranMaster::where('type', 2)->get();
+        // $pos = ItemAnggaranMaster::where('type', 3)->get();
     	return view('master.item.tambah',
             [   'item' => $this->itemModel->get(),
                 'program' => $this->programModel->where("VALUE", "THT")->get(),
                 'kpkc' => $this->kpkcModel->get(),
                 'divisi' => $this->divisiModel->get(),
                 'subpos' => $this->subPosModel->get(),
-                'm_anggaran' => $this->mAnggaranModel->get(),
-                'jenis' => $jenis,
-                'kelompok' => $kelompok,
-                'pos' => $pos
+                'm_anggaran' => $this->mAnggaranModel->get()
+                // 'jenis' => $jenis,
+                // 'kelompok' => $kelompok,
+                // 'pos' => $pos
             ]);
     }
 
@@ -154,9 +154,9 @@ class ItemController extends Controller
             $inputItem = array(
                 'kode_item'         => $request->kode_item,
                 'nama_item'         => $request->nama_item,
-                'jenis_anggaran'    => $request->jenis,
-                'kelompok_anggaran' => $request->kelompok,
-                'pos_anggaran'      => $request->pos,
+                // 'jenis_anggaran'    => $request->jenis,
+                // 'kelompok_anggaran' => $request->kelompok,
+                // 'pos_anggaran'      => $request->pos,
                 'sub_pos'           => $name_subpos->DESCRIPTION,
                 'mata_anggaran'     => $name_kegiatan->DESCRIPTION,
 
@@ -176,6 +176,7 @@ class ItemController extends Controller
         return redirect('/item/create');
     }
 
+    //item anggaran master
     public function submitAnggaranItem($type, Request $request)
     {
         $arraykode = array($request->kode, $request->kode_jenis, $request->kode_kelompok, $request->kode_pos);
@@ -233,9 +234,9 @@ class ItemController extends Controller
     {
         $item = ItemMaster::where('id', $id)->first();
 
-        $jenis = ItemAnggaranMaster::where('type', 1)->get();
-        $kelompok = ItemAnggaranMaster::where('type', 2)->get();
-        $pos = ItemAnggaranMaster::where('type', 3)->get();
+        // $jenis = ItemAnggaranMaster::where('type', 1)->get();
+        // $kelompok = ItemAnggaranMaster::where('type', 2)->get();
+        // $pos = ItemAnggaranMaster::where('type', 3)->get();
         return view('master.item.edit-item', [
             'item' => $this->itemModel->get(),
             'program' => $this->programModel->where("VALUE", "THT")->get(),
@@ -243,9 +244,9 @@ class ItemController extends Controller
             'divisi' => $this->divisiModel->get(),
             'subpos' => $this->subPosModel->get(),
             'm_anggaran' => $this->mAnggaranModel->get(),
-            'jenis' => $jenis,
-            'kelompok' => $kelompok,
-            'pos' => $pos,
+            // 'jenis' => $jenis,
+            // 'kelompok' => $kelompok,
+            // 'pos' => $pos,
             'items' => $item
         ]);
     }
@@ -265,9 +266,9 @@ class ItemController extends Controller
             $update = array(
                 'kode_item'         => $request->kode_item,
                 'nama_item'         => $request->nama_item,
-                'jenis_anggaran'    => $request->jenis,
-                'kelompok_anggaran' => $request->kelompok,
-                'pos_anggaran'      => $request->pos,
+                // 'jenis_anggaran'    => $request->jenis,
+                // 'kelompok_anggaran' => $request->kelompok,
+                // 'pos_anggaran'      => $request->pos,
                 'sub_pos'           => $name_subpos->DESCRIPTION,
                 'mata_anggaran'     => $name_kegiatan->DESCRIPTION,
 

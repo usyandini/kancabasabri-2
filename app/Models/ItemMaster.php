@@ -16,9 +16,9 @@ class ItemMaster extends Model
     protected $fillable = [
     	'kode_item',
     	'nama_item',
-    	'jenis_anggaran',
-    	'kelompok_anggaran',
-    	'pos_anggaran',
+    	// 'jenis_anggaran',
+    	// 'kelompok_anggaran',
+    	// 'pos_anggaran',
     	'sub_pos',
     	'mata_anggaran',
 
