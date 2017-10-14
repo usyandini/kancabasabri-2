@@ -410,13 +410,14 @@
                   function getCombination() {
                     var combination = null
                     $.ajax({
-                      'async': false, 'type': "GET", 'dataType': "JSON", 'url': "{{ url('item/get/combination').'/' }}" + mainaccount + "{{ '/'.\Auth::user()->cabang.'/'.\Auth::user()->divisi.'/' }}" + date_field,
+                      'async': false, 'type': "GET", 'dataType': "JSON", 'url': "{{ url('item/get/combination').'/' }}" + mainaccount + "/" + date_field,
                       'success': function(data) {
                         combination = data
                       }
                     })
                     if (combination == null) {
                       toastr.error("Anggaran pada <b>tanggal transaksi dan jenis barang/jasa</b> yang diinputkan tidak ditemukan.", "Anggaran tidak ditemukan.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:10e3});
+                      resetAccountEtc()
                     } else {
                       populateAccountEtc(combination)
                     }
