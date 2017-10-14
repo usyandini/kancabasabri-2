@@ -80,7 +80,7 @@
                             inputs.splice(item["tempId"]-1, 1, item);  
                           } else {
                             inputs.push(item);
-                          }  
+                          } 
                         },
                         deleteItem: function(item) {
                           if (item["isNew"]) {
@@ -93,9 +93,7 @@
                         }
                       }, 
                       onRefreshed: function(args) {
-                        $(account_field).val('Auto generate dari Account')
-                        $(anggaran_field).val('Auto generate dari Account')
-                        $(actual_anggaran).val('Auto generate dari Account')
+                        resetAccountEtc()
                         date_field = mainaccount = null;
                         var items = args.grid.option("data");
                         items.forEach(function(item) {
@@ -167,10 +165,9 @@
                             align: "left",
                             type: "select", 
                             items: {!! $item !!}, 
-                            valueField: "MAINACCOUNTID", 
-                            textField: "NAME", 
+                            valueField: "VALUE", 
+                            textField: "nama_item", 
                             title: "Jenis Barang/Jasa", 
-                            selectedindex: 0,
                             validate: {
                               validator: function(value, item) {
                                 return value != "-1"
@@ -196,14 +193,21 @@
                                     mainaccount = $(this).val()
                                     getCombination()
                                 });
-                                return result; } },
+                                return result; } 
+                              },
                           { 
                             name: "account", 
                             width: 250, 
                             align: "left",
                             type: "text", 
                             title: "Account", 
-                            readOnly: true, 
+                            readOnly: true,
+                            validate: {
+                              validator: function(value, item) {
+                                return value != "Auto generate dari Account"
+                              },
+                              message: "Kolom Account tidak boleh kosong."
+                            },
                             itemTemplate: function(value) {
                               return "<span class='tag tag-default'>"+value+"</span>";
                             },
@@ -221,10 +225,22 @@
                             type: "text", 
                             title: "Anggaran Tersedia (Awal)",
                             readOnly: true,
+                            validate: {
+                              validator: function(value, item) {
+                                return value != "Auto generate dari Account"
+                              },
+                              message: "Kolom Anggaran Tersedia (Awal) tidak boleh kosong."
+                            },
                             itemTemplate: function(value) {
                               //var nilai = validDigits(value);
                               value = addCommas(value);
                               return "<b>Rp. " + value + ",00</b>";
+                            },
+                            editTemplate: function(value) {
+                              var val = addCommas(value);
+                              var result = jsGrid.fields.text.prototype.editTemplate.call(this)
+                              $(result).val(val)
+                              return result
                             },
                             insertTemplate: function(value) {
                               anggaran_field = jsGrid.fields.text.prototype.insertTemplate.call(this)
@@ -237,10 +253,22 @@
                             type: "text", 
                             title: "Anggaran Tersedia (Aktual Estimasi)",
                             readOnly: true,
+                            validate: {
+                              validator: function(value, item) {
+                                return value != "Auto generate dari Account"
+                              },
+                              message: "Kolom Anggaran Tersedia (Aktual Estimasi) tidak boleh kosong."
+                            },
                             itemTemplate: function(value) {
                               //var nilai = validDigits(value);
                               value = addCommas(value);
                               return "<b>Rp. " + value + ",00</b>";
+                            },
+                            editTemplate: function(value) {
+                              var val = addCommas(value);
+                              var result = jsGrid.fields.text.prototype.editTemplate.call(this)
+                              $(result).val(val)
+                              return result
                             },
                             insertTemplate: function(value) {
                               actual_anggaran = jsGrid.fields.text.prototype.insertTemplate.call(this)
@@ -255,7 +283,13 @@
                             valueField: "VALUE", 
                             textField: "DESCRIPTION", 
                             readOnly: true,
-                            title: "Subpos", 
+                            title: "Subpos",
+                            validate: {
+                              validator: function(value, item) {
+                                return value != "-1"
+                              },
+                              message: "Kolom Subpos tidak boleh kosong."
+                            }, 
                             insertTemplate: function() {
                                 subpos = jsGrid.fields.select.prototype.insertTemplate.call(this);
                                 return subpos; },
@@ -274,6 +308,12 @@
                             textField: "DESCRIPTION", 
                             readOnly: true,
                             title: "Mata Anggaran", 
+                            validate: {
+                              validator: function(value, item) {
+                                return value != "-1"
+                              },
+                              message: "Kolom Mata Anggaran tidak boleh kosong."
+                            },
                             insertTemplate: function() {
                                 m_anggaran = jsGrid.fields.select.prototype.insertTemplate.call(this);
                                 return m_anggaran; },
@@ -321,8 +361,7 @@
                               return "<b>Rp. " + value + ",00</b>";
                             },
                             editTemplate: function(value) {
-                              var nilai = validDigits(value);
-                              var val = addCommas(nilai);
+                              var val = addCommas(value);
                               var result = jsGrid.fields.text.prototype.editTemplate.call(this)
                               $(result).val(val)
 
@@ -443,6 +482,15 @@
                       if(typeof dec=== 'number') n= n.substring(0, ax1+dec);
                     }
                     return n;
+                  }
+
+                  function resetAccountEtc() {
+                    $(account_field).val('Auto generate dari Account')
+                    $(anggaran_field).val('Auto generate dari Account')
+                    $(actual_anggaran).val('Auto generate dari Account')
+
+                    $(subpos).val("-1")
+                    $(m_anggaran).val("-1")
                   }
 
                   function populateAccountEtc(data) {
