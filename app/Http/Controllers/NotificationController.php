@@ -14,6 +14,8 @@ use App\Models\Notification;
 use App\Models\KantorCabang;
 use App\Models\Divisi;
 use App\Models\FormMasterPelaporan;
+use App\Models\TlTanggal;
+use App\Models\PengajuanDropping;
 
 use App\Services\NotificationSystem;
 
@@ -119,27 +121,49 @@ class NotificationController extends Controller
         $value_divisi = \Auth::user()->divisi;
 
         $form_master = FormMasterPelaporan::where('id', $notifDetail->batch_id)->first();
+        $tindakLanjut = TlTanggal::where('id1', $notifDetail->batch_id)->first();
+        $pengajuan = PengajuanDropping::where('id', $notifDetail->batch_id)->first();
         $unit_kerja = "";
         if($value_cabang == "00"){
-            $unit_kerja = \Auth::user()->kantorCabang['DESCRIPTION'];
+            $unit_kerja = \Auth::user()->kantorCabang()['DESCRIPTION'];
         }else{
-            $unit_kerja = \Auth::user()->divisi['DESCRIPTION'];
+            $unit_kerja = \Auth::user()->divisi()['DESCRIPTION'];
         }
 
-        if($notifDetail->type >=32 && $notifDetail->type<=36){
-            $form_unit = $form_master->unit_kerja;
+        if($notifDetail->type >=32 && $notifDetail->type<=42){
+            $unit = "";
+            if($notifDetail->type <= 36){
+                $unit = $form_master->unit_kerja;
+            }else if($notifDetail->type <= 38){
+                $unit = $tindakLanjut->unitkerja;
+            }else if($notifDetail->type <= 42){
+                $unit = $pengajuan->kantor_cabang;
+            }
+
             if($notifDetail->type == 32){
-                if(!Gate::check('tambah_pelaporan_anggaran')&&$unit_kerja!=$form_unit){
+                if(!Gate::check('tambah_pelaporan_anggaran')&&$unit_kerja!=$unit){
                     $read = false;
                 }
             }
             if($notifDetail->type == 34){
-                if(!Gate::check('tambah_pelaporan_a_RUPS')&&$unit_kerja!=$form_unit){
+                if(!Gate::check('tambah_pelaporan_a_RUPS')&&$unit_kerja!=$unit){
                     $read = false;
                 }
             }
             if($notifDetail->type == 36){
-                if(!Gate::check('tambah_pelaporan_usulan_p_p')&&$unit_kerja!=$form_unit){
+                if(!Gate::check('tambah_pelaporan_usulan_p_p')&&$unit_kerja!=$unit){
+                    $read = false;
+                }
+            }
+
+            if($notifDetail->type == 38){
+                if(!Gate::check('t_l_internal')&&$unit_kerja!=$unit){
+                    $read = false;
+                }
+            }
+
+            if($notifDetail->type == 41||$notifDetail->type == 42){
+                if(!Gate::check('informasi_a_d')&&$unit_kerja!=$unit){
                     $read = false;
                 }
             }

@@ -1397,15 +1397,18 @@
                         data[0]["name"] = "Silahkan Pilih Jenis";
                         kelompok.items = data;
                         $(".kelompok_select").empty().append(kelompok.insertTemplate());
-                      }else if(type == "posanggaran"){
+                      }
+                      if(type == "kelompok"||type == "posanggaran"){
                         data[0]["name"] = "Silahkan Pilih Kelompok";
                         pos.items = data;
                         $(".pos_select").empty().append(pos.insertTemplate());
-                      }else if(type == "subpos"){
+                      }
+                      if(type == "kelompok"||type == "posanggaran"||type == "subpos"){
                         data[0]["DESCRIPTION"] = "Silahkan Pilih Pos Anggaran";
                         sub.items = data;
                         $(".sub_select").empty().append(sub.insertTemplate());
-                      }else if(type == "mataanggaran"){
+                      }
+                      if(type == "kelompok"||type == "posanggaran"||type == "subpos"||type == "mataanggaran"){
                         data[0]["DESCRIPTION"] = "Silahkan Pilih Sub Pos";
                         mata_anggaran.items = data;
                         $(".mata_select").empty().append(mata_anggaran.insertTemplate());
