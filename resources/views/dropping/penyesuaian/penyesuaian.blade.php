@@ -97,7 +97,7 @@
                       @endif
                         <div class="card" style="height: 100px;">
                           <div class="card-header">
-                            <h4 class="card-title" id="basic-layout-form">Detail Dropping <b><br>{{ $dropping->CABANG_DROPPING }}</b></h4>
+                            <h4 class="card-title" id="basic-layout-form">CABANG: {{ $dropping->CABANG_DROPPING }}</h4>
                             <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
                             <div class="heading-elements">
                               <ul class="list-inline mb-0">
@@ -111,35 +111,34 @@
                               </div>
                               <form class="form" id="informasi-form" method="POST" action="{{ url('dropping/penyesuaian/'.$dropping->RECID) }}" >
                               {{ csrf_field() }}
-
                                 <div class="form-body">
                                   <h4 class="form-section"> Informasi Dropping</h4>
                                   <div class="row">
-                                    <div class="col-md-6">
+                                    <div class="col-md-12 col-lg-12 col-xl-6">
                                       <div class="form-group">
                                         <label for="tgl_dropping">Tanggal Dropping</label>
                                         <input type="date" readonly="" id="tgl_dropping" class="form-control" placeholder="Tanggal Transaksi" name="tgl_dropping" value="{{ date("Y-m-d",strtotime($dropping->TRANSDATE)) }}">
                                       </div>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-12 col-lg-12 col-xl-6">
                                       <div class="form-group">
                                         <label for="nominal">Nominal Dropping (Dalam Rupiah)</label>
                                           <input type="text" readonly="" id="nominal_dropping" class="form-control" placeholder="{{ $dropping->DEBIT }}" name="nominal_dropping" value="{{ number_format($dropping->DEBIT, 0, '', '.') }}">
                                       </div>
                                     </div>
-                                    <div class="col-md-6 pull-right">
+                                    <div class="col-md-12 col-lg-12 col-xl-6 pull-right">
                                       <div class="form-group">
                                         <label for="rek_bank">Nomor Rekening</label>
                                         <input type="text" readonly="" id="rek_bank" class="form-control" placeholder="Rekening Bank" name="rek_bank" value="{{ $dropping->REKENING_DROPPING }}">
                                       </div>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-12 col-lg-12 col-xl-6">
                                       <div class="form-group">
                                         <label for="akun_bank">Nama Bank</label>
                                         <input type="text" readonly="" id="akun_bank" class="form-control" placeholder="Nama Bank" name="akun_bank" value="{{ $dropping->BANK_DROPPING }}">
                                       </div>
                                     </div>
-                                    <div class="col-md-12">
+                                    <div class="col-md-12 col-lg-12 col-xl-10">
                                       <div class="form-group">
                                         <label for="cabang">Kantor Cabang</label>
                                         <input type="text" readonly="" id="cabang" class="form-control" placeholder="Kantor Cabang" name="cabang" value="{{ $dropping->CABANG_DROPPING }}">
@@ -197,13 +196,13 @@
                                     </div>
                                   </div>
                                   <div class="row">
-                                    <div class="col-md-6">
+                                    <div class="col-md-12 col-lg-12 col-xl-6">
                                       <div class="form-group">
                                         <label for="projectinput1">Tanggal Transaksi</label>
                                         <input readonly="" type="date" id="p_tgl_dropping" class="form-control" placeholder="{{ date('d/m/Y') }}" name="p_tgl_dropping" value="{{ date('Y-m-d') }}">
                                       </div>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-12 col-lg-12 col-xl-6">
                                       <div class="form-group">
                                         <label for="projectinput2">Nominal Transaksi (Dalam Rupiah)</label>
                                         <span class="required"> *</span>
@@ -215,7 +214,7 @@
                                   </div>
                                   <h4 class="form-section"> Informasi Bank</h4>
                                   <div class="row">
-                                    <div class="col-md-12">
+                                    <div class="col-md-12 col-lg-12 col-xl-12">
                                       <div class="form-group">
                                         <label for="p_cabang">Kantor Cabang</label>
                                         <span class="required"> *</span>
@@ -232,7 +231,7 @@
                                         </div>
                                       </div>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-12 col-lg-12 col-xl-6">
                                       <div class="form-group">
                                         <label for="p_akun_bank">Nama Bank</label>
                                         <span class="required"> *</span>
@@ -243,7 +242,7 @@
                                         </div>
                                       </div>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-12 col-lg-12 col-xl-6">
                                       <div class="form-group">
                                         <label for="p_rek_bank">Nomor Rekening</label>
                                         <span class="required"> *</span>
@@ -346,11 +345,11 @@
                         {{-- <div class="card-header"></div> --}}
                           <div class="card-body collapse in">
                             <div class="card-block">
-                              <div class="form-actions">
-                                <a href="{{ url('dropping') }}" class="btn btn-warning mr-1">
-                                  <i class="ft-x"></i> Keluar
+                              <div class="form-actions pull-right">
+                                <a href="{{ url('dropping') }}" class="btn btn-warning">
+                                  <i class="ft-x"></i> Batalkan
                                 </a>
-                                <button type="submit" data-toggle="modal" data-target="#xSmall" class="btn btn-primary">
+                                <button type="submit" data-toggle="modal" data-target="#xSmall" class="btn btn-secondary">
                                   <i class="fa fa-check-square-o"></i> Submit
                                 </button>
                               </div>  

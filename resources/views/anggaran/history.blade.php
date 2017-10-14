@@ -287,8 +287,9 @@
                             title: "Input Anggaran dan kegiatan",
                             width: 220,
                             itemTemplate: function(value) {
-                              var display ="<span class='tag tag-info'>IDR " + parseInt(value).toLocaleString() + ",00</span>";
-                              if(parseInt(value).toLocaleString() < 1){
+                              var display ="<span><b>Rp " + addCommas(parseInt(value)) + "</b></span>";
+                              
+                              if(parseInt(value).toLocaleString() < 1||value == ""){
                                 display = "<span >---</span>";
                               }
                               return display;
@@ -300,8 +301,9 @@
                             title: "Clearing House",
                             width: 130,
                             itemTemplate: function(value) {
-                              var display ="<span class='tag tag-info'>IDR " + parseInt(value).toLocaleString() + ",00</span>";
-                              if(parseInt(value).toLocaleString() < 1){
+                              var display ="<span><b>Rp " + addCommas(parseInt(value)) + "</b></span>";
+                              
+                              if(parseInt(value).toLocaleString() < 1||value == ""){
                                 display = "<span >---</span>";
                               }
                               return display;
@@ -313,8 +315,9 @@
                             title: "Naskah RKAP",
                             width: 130,
                             itemTemplate: function(value) {
-                              var display ="<span class='tag tag-info'>IDR " + parseInt(value).toLocaleString() + ",00</span>";
-                              if(parseInt(value).toLocaleString() < 1){
+                              var display ="<span><b>Rp " + addCommas(parseInt(value)) + "</b></span>";
+                              
+                              if(parseInt(value).toLocaleString() < 1||value == ""){
                                 display = "<span >---</span>";
                               }
                               return display;
@@ -326,8 +329,9 @@
                             title: "Persetujuan Dewan Komisaris",
                             width: 220,
                             itemTemplate: function(value) {
-                              var display ="<span class='tag tag-info'>IDR " + parseInt(value).toLocaleString() + ",00</span>";
-                              if(parseInt(value).toLocaleString() < 1){
+                              var display ="<span><b>Rp " + addCommas(parseInt(value)) + "</b></span>";
+                              
+                              if(parseInt(value).toLocaleString() < 1||value == ""){
                                 display = "<span >---</span>";
                               }
                               return display;
@@ -339,8 +343,9 @@
                             title: "Rapat Teknis",
                             width: 130,
                             itemTemplate: function(value) {
-                              var display ="<span class='tag tag-info'>IDR " + parseInt(value).toLocaleString() + ",00</span>";
-                              if(parseInt(value).toLocaleString() < 1){
+                              var display ="<span><b>Rp " + addCommas(parseInt(value)) + "</b></span>";
+                              
+                              if(parseInt(value).toLocaleString() < 1||value == ""){
                                 display = "<span >---</span>";
                               }
                               return display;
@@ -352,8 +357,9 @@
                             title: "RUPS",
                             width: 130,
                             itemTemplate: function(value) {
-                              var display ="<span class='tag tag-info'>IDR " + parseInt(value).toLocaleString() + ",00</span>";
-                              if(parseInt(value).toLocaleString() < 1){
+                              var display ="<span><b>Rp " + addCommas(parseInt(value)) + "</b></span>";
+                              
+                              if(parseInt(value).toLocaleString() < 1||value == ""){
                                 display = "<span >---</span>";
                               }
                               return display;
@@ -365,8 +371,9 @@
                             title: "Finalisasi RUPS",
                             width: 130,
                             itemTemplate: function(value) {
-                              var display ="<span class='tag tag-info'>IDR " + parseInt(value).toLocaleString() + ",00</span>";
-                              if(parseInt(value).toLocaleString() < 1){
+                              var display ="<span><b>Rp " + addCommas(parseInt(value)) + "</b></span>";
+                              
+                              if(parseInt(value).toLocaleString() < 1||value == ""){
                                 display = "<span >---</span>";
                               }
                               return display;
@@ -378,8 +385,9 @@
                             title: "Risalah RUPS",
                             width: 130,
                             itemTemplate: function(value) {
-                              var display ="<span class='tag tag-info'>IDR " + parseInt(value).toLocaleString() + ",00</span>";
-                              if(parseInt(value).toLocaleString() < 1){
+                              var display ="<span><b>Rp " + addCommas(parseInt(value)) + "</b></span>";
+                              
+                              if(parseInt(value).toLocaleString() < 1||value == ""){
                                 display = "<span >---</span>";
                               }
                               return display;
@@ -423,7 +431,29 @@
                     }();
                     return returned;
                   }
+
+                  function addCommas(n){
+                    var rx=  /(\d+)(\d{3})/;
+                    return String(n).replace(/^\d+/, function(w){
+                      while(rx.test(w)){
+                        w= w.replace(rx, '$1.$2');
+                      }
+                      return w;
+                    });
+                  }
                   
+                  function validDigits(n, dec){
+                    n= n.replace(/[^\d]+/g, '');
+                    var ax1= n.indexOf('.'), ax2= -1;
+                    if(ax1!= -1){
+                      ++ax1;
+                      ax2= n.indexOf('.', ax1);
+                      if(ax2> ax1) n= n.substring(0, ax2);
+                      if(typeof dec=== 'number') n= n.substring(0, ax1+dec);
+                    }
+                    return n;
+                  }
+
                   function setUnitKerja(){
 
                     var tahun = '{{$filters["tahun"]}}';
@@ -507,6 +537,7 @@
 
                   window.setUnitKerja();
                   window.getListData();
+
 
 
                 </script>

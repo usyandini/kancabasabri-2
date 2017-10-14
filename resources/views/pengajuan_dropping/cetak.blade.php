@@ -83,7 +83,7 @@
 							  <img src="{{ asset('app-assets/images/asabri-logo.png', $secure = null) }}" width="8%" align="middle" hspace="1%">
 			   				  <h3><center>
 			                  <p class="uppercase">{{$b->kantor_cabang}}<br>
-			                  FORMLIR PENGAJUAN DROPPING<br>
+			                  FORMULIR PENGAJUAN DROPPING<br>
 			                  TAHUN ANGGARAN {{$tahun}}
 			                  </center></h3></br>
 			                  <table>

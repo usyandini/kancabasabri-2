@@ -61,11 +61,11 @@
 
                	<div class="content-header row">
                     <div class="content-header-left col-md-6 col-xs-12 mb-2">
-                        <h3 class="content-header-title mb-0">Pengajuan Dropping Kantor Cabang</h3>
+                        <h3 class="content-header-title mb-0">Approval Pengajuan Dropping Level 2</h3>
                         <div class="row breadcrumbs-top">
                             <div class="breadcrumb-wrapper col-xs-12">
                                 <ol class="breadcrumb">
-                                    <li class="breadcrumb-item"><a href="#">Pengajuan Dropping</a>
+                                    <li class="breadcrumb-item"><a href="#">Approval Pengajuan Dropping Level 2</a>
                                     </li>
                                 </ol>
                             </div>
@@ -73,7 +73,6 @@
                     </div>
                 </div>
                 
-
                 <div class="row">
                     <section id="select-inputs">
 			          <div class="row">
@@ -85,7 +84,7 @@
 			                  	<div class="card-body collapse in">
 			                  	
 			                  		<table>
-			                  		<form enctype="multipart/form-data" role="form" action="{{ URL('pengajuan_dropping/carimyform') }}" method="GET" >
+			                  		<form enctype="multipart/form-data" role="form" action="{{ URL('acc_pengajuan_dropping2/carimyform') }}" method="GET" >
 				                    {{ csrf_field() }}
 			                  			<tr>
 			                  				<td><b>Kantor Cabang</b></td><td>  </td><td><b> : </b></td><td>  </td>
@@ -109,7 +108,7 @@
 			                  				<script type="text/javascript">
 											    function changeUnit(){
 										    		var cabang = $('#cabang').val();
-									                var uri = "{{ url('pengajuan_dropping/myform').'/'}}"+ encodeURI(cabang);
+									                var uri = "{{ url('acc_pengajuan_dropping2/myform').'/'}}"+ encodeURI(cabang);
 
 									                $.ajax({
 								                        'async': false, 
@@ -153,6 +152,7 @@
 			          </div>
 			        </div>
 
+
                   	<div class="row">
                     <section id="select-inputs">
 			          <div class="row">
@@ -162,65 +162,7 @@
 			                  <h4 class="card-title">Daftar Pengajuan Dropping</h4></br>
 			                  <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
 			                  <div class="card-body collapse in">			                
-			                  	<div class="card-block">
-			                  	<span><a class="btn btn-success" data-target="#tambah" data-toggle="modal"><i class="fa fa-plus"></i> <b>Tambah Pengajuan</b></a></span>
-                           			<div class="modal fade" data-backdrop="static" id="tambah" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><center>
-                                                    <center><h4 class="modal-title text-success" id="myModalLabel" ><i class="fa fa-plus"></i> Tambah Pengajuan Dropping</h4></center>
-                                                </div>
-                                                <form enctype="multipart/form-data" role="form" action="{{ URL('pengajuan_dropping/store_pengajuandropping') }}" method="POST" >
-                                                 {{ csrf_field() }}
-                                                <div class="modal-body">
-                                                <label class="control-label"><b> Kantor Cabang </b></label>
-                                                <label class="control-label"> : </label><br>
-											        <select class="select2 form-control block" name="kantor_cabang" style="width:300px" required="required">
-                                                    <option value=""> - Pilih Kantor Cabang - </option>
-                                                    <?php
-                                                    $second="SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_KPKC]  WHERE VALUE!='00'";
-									                $return = DB::select($second);
-									                ?>
-                                                    @foreach($return as $b)
-                                                      <option value="{{ $b->DESCRIPTION }}" >{{ $b->DESCRIPTION }}</option>
-                                                    @endforeach
-                                                    </select><br><br>
-                                                <label class="control-label"><b> Nomor </b></label>
-                                                <label class="control-label"> : </label>
-											        <input class="form-control" type="text" name="nomor" placeholder="masukkan nomor" required="required">
-                                                <br>
-                                                <label class="control-label"><b> Tanggal </b></label>
-                                                <label class="control-label"> : </label>
-											        <input class="form-control" type="date" name="tanggal" required="required">  
-											    <br> 
-											    <label class="control-label"><b> Jumlah Diajukan </b></label>
-                                                <label class="control-label"> : </label>
-											        <input class="form-control" type="text" name="jumlah_diajukan" onkeydown="return numbersonly(this, event);" onkeyup="javascript:tandaPemisahTitik(this);" placeholder="masukkan jumlah diajukan" required="required">   
-											    <br>
-											    <label class="control-label"><b> Periode Realiasi </b></label>
-                                                <label class="control-label"> : </label>
-											        <select class="select form-control" name="periode_realisasi" required="required" >
-				                                    <option value="">Pilih Periode Realisasi</option>
-				                                    <option value="1">TW I</option>
-													<option value="2">TW II</option>  
-													<option value="3">TW III</option>
-													<option value="4">TW IV</option>                                                 
-				                                    </select> 
-											    <br>
-											    <label class="control-label"><b> Lampiran </b></label>
-				                                <label class="control-label"><b> : </b></label>
-												<input class="form-control" type="file" name="inputs" required="required" />  
-                                            	</div>
-                                            	<div class="modal-footer">
-                                                <button type="submit" name="save" class="btn btn-sm btn-primary"><i class="fa fa-check "></i> Tambah</button>
-                                                <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal"><i class="fa fa-times"></i> Batal</button>
-                                            	</div>
-                                            	</form>
-                						</div>
-                					</div>
-                				</div>
-                			</div>
+			                  	
 						</div>
 			                <div class="card-body collapse in">			                
 			                  <div class="card-block">
@@ -311,27 +253,22 @@
 				                           			<a href="{{ URL('pengajuan_dropping/download/'. $b->id) }}" target="_blank">{{ $b->name }}</a>
 				                           			@endif
 				                           		</center></td>
-												<td><center><?php
-														if($b->kirim<>'2'){ 
+												<td><center><?php 
 														  if($b->verifikasi=='1'){ echo "<div class=\"tag tag-success label-square\"><span><b>Diterima</b></span></div>";}
 														  if($b->verifikasi=='2'){ echo "<div class=\"tag tag-danger label-square\"><span><b>Ditolak</b></span></div>";}
-														}
 													?></center></td>
+												<td><center>{{ $b->keterangan }}</center></td>
 												<td><center>
-												@if ($b->kirim!=2)
-												{{ $b->keterangan }}
-												@endif
-												</center></td>
-												<td><center>
-													@if ($b->kirim==1)
-														<span data-toggle='tooltip' title='Kirim'><a class="btn btn-success btn-sm" data-target="#kirim{{$b->id}}" data-toggle="modal"><i class="fa fa-send"></i> </a></span>
-														<span data-toggle='tooltip' title='Ubah'><a class="btn btn-info btn-sm" data-target="#ubah{{$b->id}}" data-toggle="modal"><i class="fa fa-edit"></i> </a></span>
-														<span data-toggle='tooltip' title='Hapus'><a class="btn btn-danger btn-sm" data-target="#hapus{{$b->id}}" data-toggle="modal"><i class="fa fa-trash"></i> </a></span>
-													@elseif ($b->kirim==2)
-													<div class="btn btn-info btn-sm"><span><b>Telah Dikirim</b></span></div>
-													@elseif ($b->kirim==4)
-													<div class="btn btn-success btn-sm"><span><b>Telah Diterima</b></span></div>
-													@endif
+												@if ($b->kirim==3)
+												  @if ($b->verifikasi!="")
+													<span data-toggle='tooltip' title='Kirim ke {{$b->kantor_cabang}}'><a class="btn btn-success btn-sm" data-target="#kirim{{$b->id}}" data-toggle="modal"><i class="fa fa-send"></i> </a></span>
+												  @endif
+												  	<span data-toggle='tooltip' title='Print'><a href="{{ URL('pengajuan_dropping/print/'. $b->id) }}" target="_blank" class="btn btn-warning btn-sm" ><i class="fa fa-print"></i> </a></span>
+													<span data-toggle='tooltip' title='Verifikasi'><a class="btn btn-info btn-sm" data-target="#ubah{{$b->id}}" data-toggle="modal"><i class="fa fa-check"></i> </a></span>
+												@else
+													<span data-toggle='tooltip' title='Print'><a href="{{ URL('pengajuan_dropping/print/'. $b->id) }}" target="_blank" class="btn btn-warning btn-sm" ><i class="fa fa-print"></i> </a></span>
+													<div class="btn btn-info btn-sm"><span><b>Telah Dikirim ke {{$b->kantor_cabang}}</b></span></div>
+												@endif		
 													<div class="modal fade" data-backdrop="static" id="kirim{{$b->id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 					                                    <div class="modal-dialog">
 					                                        <div class="modal-content">
@@ -340,92 +277,44 @@
 					                                                <center><h4 class="modal-title text-primary" id="myModalLabel" ><i class="fa fa-send"></i> Dialog Konfirmasi</h4></center>
 					                                            </div>
 					                                        	<div class="modal-body">
-					                                            	<center><h4>Anda yakin ingin mengirim pengajuan dropping ?</h4></center>
+					                                            	<center><h4>Anda yakin ingin mengirim hasil verifikasi<br>ke {{$b->kantor_cabang}} ?</h4></center>
 					                                        	</div>
 					                                        	<div class="modal-footer">
-					                                           	 	<a href="{{ URL('pengajuan_dropping/kirim/'. $b->id) }}"" class="btn btn-success btn-sm"><i class="fa fa-check"></i> Ya</a>
+					                                           	 	<a href="{{ URL('acc_pengajuan_dropping2/kirim/'. $b->id) }}"" class="btn btn-success btn-sm"><i class="fa fa-check"></i> Ya</a>
 					                                        		<button type="button" class="btn btn-danger btn-sm" data-dismiss="modal"><i class="fa fa-times"></i> Tidak</button>
 					                                        	</div>
 					                                    	</div>
 					                                	</div>
 					                                </div>
-													<div class="modal fade" data-backdrop="static" id="hapus{{$b->id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                                        				<div class="modal-dialog">
-                                            				<div class="modal-content">
-                                                				<div class="modal-header">
-                                                    				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                                    				<h4 class="modal-title text-warning" id="myModalLabel" ><i class="fa fa-warning"></i> Peringatan !</h4>
-                                                				</div>
-                                                					<div class="modal-body">
-                                                   						<h4>Anda yakin ingin menghapus Pengajuan Dropping <br><span class=text-danger>{{ $b->kantor_cabang }}</span> ?</h4>
-                                                					</div>
-                                                						<div class="modal-footer">
-                                                   							<a href="{{ URL('pengajuan_dropping/delete_pengajuandropping/'. $b->id) }}"" class="btn btn-success btn-sm"><i class="fa fa-check"></i> Ya</a>
-                                                    						<button type="button" class="btn btn-danger btn-sm" data-dismiss="modal"><i class="fa fa-times"></i> Tidak</button>
-                                                						</div>
-                                            				</div>
-                                            			</div>
-                                        			</div>
-
 												</center></td>
 								     		</tr>
-								     		<div class="modal fade" data-backdrop="static" id="ubah{{$b->id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+								     				<div class="modal fade" data-backdrop="static" id="ubah{{$b->id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                                         				<div class="modal-dialog">
                                             				<div class="modal-content">
                                                 				<div class="modal-header">
                                                     				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                                    				<center><h4 class="modal-title text-info" id="myModalLabel" ><i class="fa fa-edit"></i> Ubah Pengajuan Dropping</h4></center>
+                                                    				<center><h4 class="modal-title text-info" id="myModalLabel" ><i class="fa fa-check"></i> Verifikasi Pengajuan Dropping</h4></center>
                                                 				</div>
                                                 					<div class="modal-body">
-                                                					<form enctype="multipart/form-data" role="form" action="{{ URL('pengajuan_dropping/update_pengajuandropping/'. $b->id) }}" method="POST" >
+                                                					<form enctype="multipart/form-data" role="form" action="{{ URL('acc_pengajuan_dropping/update_accpengajuandropping/'. $b->id) }}" method="POST" >
                                                  						{{ csrf_field() }}
-                                                 						<input type="hidden" name="id"  value="{{$b->id}}" />
-                                                 						<label class="control-label"><b> Kantor Cabang </b></label>
-						                                                <label class="control-label"> : </label><br>
-																	        <select class="select2 form-control block" name="kantor_cabang" style="width:300px" required="required" value="{{$b->kantor_cabang}}">
-						                                                    <option value="0"> - Pilih Kantor Cabang - </option>
-						                                                    <?php
-						                                                    $second="SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_KPKC]  WHERE VALUE!='00'";
-															                $return = DB::select($second);
-															                ?>
-						                                                    @foreach($return as $bq)
-						                                                    <option value="{{ $bq->DESCRIPTION }}"
-								                                            @if($bq->DESCRIPTION == $b->kantor_cabang) Selected>{{ $bq->DESCRIPTION}} @endif
-								                                            @if($bq->DESCRIPTION <> $b->kantor_cabang)>{{ $bq->DESCRIPTION}} @endif
-								                                            </option> 
-								                                            @endforeach
-						                                                    </select><br><br>
-						                                                <label class="control-label"><b> Nomor </b></label>
+                                                 						<input type="hidden" name="id" value="{{$b->id}}" />
+                                                 						
+																	    <label class="control-label"><b> Verifikasi </b></label>
 						                                                <label class="control-label"> : </label>
-																	        <input class="form-control" type="text" name="nomor" placeholder="masukkan nomor" required="required" value="{{$b->nomor}}">
-						                                                <br>
-						                                                <label class="control-label"><b> Tanggal </b></label>
-						                                                <label class="control-label"> : </label>
-																	        <input class="form-control" type="date" name="tanggal" required="required" value="{{$b->tanggal}}">  
-																	    <br> 
-																	    <label class="control-label"><b> Jumlah Diajukan </b></label>
-						                                                <label class="control-label"> : </label>
-																	        <input class="form-control" type="text" name="jumlah_diajukan" onkeydown="return numbersonly(this, event);" onkeyup="javascript:tandaPemisahTitik(this);" placeholder="masukkan jumlah diajukan" required="required" value="{{$angka}}">  
-																	    <br>
-																	    <label class="control-label"><b> Periode Realiasi </b></label>
-						                                                <label class="control-label"> : </label>
-																	        <select class="select form-control" name="periode_realisasi" required="required" >
-										                                    <option value="">Pilih Periode Realisasi</option>
-										                                    <option value="1" @if ($b->periode_realisasi=="1")Selected @endif>TW I</option>
-																			<option value="2" @if ($b->periode_realisasi=="2")Selected @endif>TW II</option>  
-																			<option value="3" @if ($b->periode_realisasi=="3")Selected @endif>TW III</option>
-																			<option value="4" @if ($b->periode_realisasi=="4")Selected @endif>TW IV</option>                                                 
+																	        <select class="select form-control" name="verifikasi" required="required" value="{{$b->verifikasi}}" >
+										                                    
+										                                    <option value="1" @if ($b->verifikasi=='1')Selected @endif>Diterima</option>
+																			<option value="2" @if ($b->verifikasi=='2')Selected @endif>Ditolak</option>                                                 
 										                                    </select>   
-																	    <br>
-																	    <label class="control-label"><b> Lampiran </b></label>
-										                                <label class="control-label"><b> : </b></label>
-																		<input class="form-control" type="file" name="inputs"/>
-																	        @if ($b->name!="")
-																	        <p class="help-block">*Kosongkan jika tidak ingin mengganti lampiran.</br> Lampiran Lama = {{ $b->name }}.</p>
-																	        @endif  
-						                                            	</div>
+																		<br>
+																	    <label class="control-label"><b> Keterangan </b></label>
+						                                                <label class="control-label"><b> : </b></label>
+																	        <textarea class="form-control" name="keterangan" rows="3" placeholder="masukkan keterangan">{{ $b->keterangan }}</textarea>
+																	        
+						                                            </div>
                                                 					<div class="modal-footer">
-                                                						<button type="submit" name="save" class="btn btn-sm btn-primary"><i class="fa fa-check "></i> Ubah</button>
+                                                						<button type="submit" name="save" class="btn btn-sm btn-primary"><i class="fa fa-check"></i> Verifikasi</button>
                                                 						<button type="button" class="btn btn-danger btn-sm" data-dismiss="modal"><i class="fa fa-times"></i> Batal</button>
                                             						</div>
                                             					</form>
@@ -503,91 +392,6 @@
 						        } );
 						    }
 						} );
-
-
-						function tandaPemisahTitik(b){
-						var _minus = false;
-						if (b<0) _minus = true;
-						b = b.toString();
-						b=b.replace(".","");
-						b=b.replace("-","");
-						c = "";
-						panjang = b.length;
-						j = 0;
-						for (i = panjang; i > 0; i--){
-						j = j + 1;
-						if (((j % 3) == 1) && (j != 1)){
-						c = b.substr(i-1,1) + "." + c;
-						} else {
-						c = b.substr(i-1,1) + c;
-						}
-						}
-						if (_minus) c = "-" + c ;
-						return c;
-						}
-
-						function numbersonly(ini, e){
-						if (e.keyCode>=49){
-						if(e.keyCode<=57){
-						a = ini.value.toString().replace(".","");
-						b = a.replace(/[^\d]/g,"");
-						b = (b=="0")?String.fromCharCode(e.keyCode):b + String.fromCharCode(e.keyCode);
-						ini.value = tandaPemisahTitik(b);
-						return false;
-						}
-						else if(e.keyCode<=105){
-						if(e.keyCode>=96){
-						//e.keycode = e.keycode - 47;
-						a = ini.value.toString().replace(".","");
-						b = a.replace(/[^\d]/g,"");
-						b = (b=="0")?String.fromCharCode(e.keyCode-48):b + String.fromCharCode(e.keyCode-48);
-						ini.value = tandaPemisahTitik(b);
-						//alert(e.keycode);
-						return false;
-						}
-						else {return false;}
-						}
-						else {
-						return false; }
-						}else if (e.keyCode==48){
-						a = ini.value.replace(".","") + String.fromCharCode(e.keyCode);
-						b = a.replace(/[^\d]/g,"");
-						if (parseFloat(b)!=0){
-						ini.value = tandaPemisahTitik(b);
-						return false;
-						} else {
-						return false;
-						}
-						}else if (e.keyCode==95){
-						a = ini.value.replace(".","") + String.fromCharCode(e.keyCode-48);
-						b = a.replace(/[^\d]/g,"");
-						if (parseFloat(b)!=0){
-						ini.value = tandaPemisahTitik(b);
-						return false;
-						} else {
-						return false;
-						}
-						}else if (e.keyCode==8 || e.keycode==46){
-						a = ini.value.replace(".","");
-						b = a.replace(/[^\d]/g,"");
-						b = b.substr(0,b.length -1);
-						if (tandaPemisahTitik(b)!=""){
-						ini.value = tandaPemisahTitik(b);
-						} else {
-						ini.value = "";
-						}
-
-						return false;
-						} else if (e.keyCode==9){
-						return true;
-						} else if (e.keyCode==17){
-						return true;
-						} else {
-						//alert (e.keyCode);
-						return false;
-						}
-
-						}
 				</script>
 				
                 @endsection

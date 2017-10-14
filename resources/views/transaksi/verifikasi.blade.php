@@ -146,7 +146,7 @@
                             <div class="row">
                               <div class="col-md-12">
                                 <div class="form-group">
-                                  <label for="companyName">Apakah batch ini dapat dilanjutkan ke <b>verifikasi level 2</b>?</label><br>
+                                  <label for="companyName">Apakah batch ini dapat dilanjutkan <b>untuk staging</b>?</label><br>
                                   <input type="checkbox" onchange="approveOrNot(this)" class="form-control switch" id="switch1" checked="checked" name="is_approved" value="1" data-on-label="Approve untuk verifikasi akhir" data-off-label="Reject dengan alasan, kembali ke tahap awal"/>
                                 </div>
                               </div>
