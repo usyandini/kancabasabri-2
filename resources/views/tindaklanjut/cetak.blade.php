@@ -4,6 +4,9 @@
 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/tables/datatable/dataTables.bootstrap4.min.css') }}">
 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/tables/extensions/responsive.dataTables.min.css') }}">
 <body onload="window.print()">
+  <style type="text/css" media="print">
+    @page { size: landscape; }
+  </style>
 
 @if(count($a))
 @foreach($a as $bb)
@@ -157,6 +160,9 @@
 							        }
 							        .classtable {
 							            border-collapse: collapse;
+							            margin-left:auto;
+							            margin-right:auto;
+							            width:100%;
 							        }
 							        .classth {
 							            background-color: #cccccc;

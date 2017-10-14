@@ -3,8 +3,10 @@
 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/tables/jsgrid/jsgrid.min.css') }}">
 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/tables/datatable/dataTables.bootstrap4.min.css') }}">
 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/tables/extensions/responsive.dataTables.min.css') }}">
-
   <body onload="window.print()">
+  <style type="text/css" media="print">
+    @page { size: portrait; }
+  </style>
 	<style>
         body {
             font-family: Arial;
