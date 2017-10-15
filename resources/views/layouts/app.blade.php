@@ -128,7 +128,10 @@
                         <li class="is-shown {{ checkActiveMenu('pengajuan_dropping') }}"><a href="{{ url('/pengajuan_dropping', $parameters = [], $secure = null) }}" class="menu-item">Pengajuan Dropping</a>
                         @endcan
                         @can('setuju_a_d')
-                        <li class="is-shown {{ checkActiveMenu('acc_pengajuan_dropping') }}"><a href="{{ url('/acc_pengajuan_dropping', $parameters = [], $secure = null) }}" class="menu-item">Approval Pengajuan</a>
+                        <li class="is-shown {{ checkActiveMenu('acc_pengajuan_dropping') }}"><a href="{{ url('/acc_pengajuan_dropping', $parameters = [], $secure = null) }}" class="menu-item">Verifikasi Level 1</a>
+                        @endcan
+                        @can('setuju_a_d')
+                        <li class="is-shown {{ checkActiveMenu('acc_pengajuan_dropping2') }}"><a href="{{ url('/acc_pengajuan_dropping2', $parameters = [], $secure = null) }}" class="menu-item">Verifikasi Level 2</a>
                         @endcan
                     </ul>
                     @endif
