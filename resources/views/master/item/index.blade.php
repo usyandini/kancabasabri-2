@@ -15,13 +15,11 @@
                 @section('content')
                	<div class="content-header row">
                     <div class="content-header-left col-md-6 col-xs-12 mb-2">
-                        <h3 class="content-header-title mb-0">Master Item</h3>
+                        <h3 class="content-header-title mb-0">Manajemen Item Transaksi</h3>
                         <div class="row breadcrumbs-top">
                             <div class="breadcrumb-wrapper col-xs-12">
                                 <ol class="breadcrumb">
-                                    <li class="breadcrumb-item"><a href="{{ url('/') }}">Manajemen Item</a>
-                                    </li>
-                                    <li class="breadcrumb-item active"><a href="{{ url('/item') }}">Manajemen Item Transaksi</a>
+                                    <li class="breadcrumb-item active">Manajemen Item
                                     </li>
                                 </ol>
                             </div>
@@ -35,11 +33,8 @@
 			            <div class="col-xs-12">
 			              <div class="card">
 			                <div class="card-header">
-			                  <h4 class="card-title">Daftar Item</h4>
+			                  <h4 class="card-title">Daftar Item Transaksi</h4>
 			                  <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
-			                  <div class="col-md-12" >
-	                              <a href="{{ url('item/create') }}" class="btn btn-success pull-right"><i class="fa fa-plus"></i> Tambah</a>
-	                          </div>
 			                </div>
 			                <div class="card-body collapse in">			                
 			                  <div class="card-block">
@@ -55,34 +50,26 @@
 			                      <table class="table table-striped table-bordered datatable-select-inputs wrap" cellspacing="0" width="100%">
 			                        <thead>
 			                          <tr>
-			                          	<th width="5%"><center>No</center></th>
-			                          	<th id="filterable" width="5%"><center>Kode Item</center></th>
-			                            <th id="filterable" width="20%">Item</th>
-			                            {{--<th id="filterable" width="10%">Jenis Anggaran</th>
-			                            <th id="filterable" width="10%">Kelompok Anggaran</th>
-			                            <th id="filterable" width="10%">Pos Anggaran</th>--}}
-			                            <th id="filterable" width="20%">Sub Pos</th>
-			                            <th id="filterable" width="20%">Mata Anggaran</th>
+			                          	<th id="filterable"><center>Kode Item</center></th>
+			                            <th width="300px" id="filterable">Item</th>
+			                            <th width="300px">Account</th>
+			                            <th width="200px">Display</th>
 			                            <th width="30%"><center>Aksi</center></th>
 			                          </tr>
 			                        </thead>
 			                        <tbody>
 			                        @foreach($items as $item)
 		                        		<tr>
-		                        			<td width="5%"><center>{{ $no++ }}</center></td>
-		                        			<td width="5%">{{ $item->kode_item }}</td>
-		                        			<td width="30%">{{ $item->nama_item }}</td>
-		                        			{{--<td width="10%">{{ $jenis->where('kode', $item->jenis_anggaran)->first()['name'] }}</td>
-		                        			<td width="10%">{{ $kelompok->where('kode', $item->kelompok_anggaran)->first()['name'] }}</td>
-		                        			<td width="10%">{{ $pos->where('kode', $item->pos_anggaran)->first()['name'] }}</td>--}}
-		                        			<td width="20%">{{ $item->sub_pos }}</td>
-		                        			<td width="20%">{{ $item->mata_anggaran }}</td>
-	                        				<td width="20%"><center>
-	                        					<a href="{{ url('item/edit').'/'.$item->id }}" class="btn btn-info btn-sm">
+		                        			<td>{{ $item->kode_item }}</td>
+		                        			<td>{{ $item->nama_item }}</td>
+		                        			<td>{{ $item->SEGMEN_1.'-'.$item->SEGMEN_2.'-'.$item->SEGMEN_3.'-'.$item->SEGMEN_4.'-'.$item->SEGMEN_5.'-'.$item->SEGMEN_6 }}</td>
+	                        				{!! $item->is_displayed ? '<td class="blue">Semua Cabang</td>' : '<td class="red">Cabang Bersangkutan</td>' !!}
+	                        				<td><center>
+	                        					<a href="{{ url('item/edit').'/'.$item->id }}" class="btn btn-outline-info btn-sm">
 	                        					<i class="fa fa-edit"></i> Edit</a>
 
 	                        					<a href="#" class="btn btn-danger btn-sm" onclick="deleteUser({{ $item->id }})">
-	                        					<i class="fa fa-trash"></i> Hapus</a>
+	                        					<i class="fa fa-times"></i> Hapus</a>
 	                        				</center></td>
 		                        		</tr>
 		                        	@endforeach
