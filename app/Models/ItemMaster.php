@@ -7,9 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 class ItemMaster extends Model
 {
     protected $connection = 'sqlsrv';
-    protected $table = 'item_master';
+    protected $table = 'item_master_transaksi';
 
-    // protected $dateFormat = 'Y-m-d H:i:s';
+    protected $dateFormat = 'Y-m-d H:i:s';
 
     protected $dates = ['dob'];
     
