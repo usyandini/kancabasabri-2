@@ -1,366 +1,267 @@
-				        @extends('layouts.app')
+                @extends('layouts.app')
 
                 @section('additional-vendorcss')
                 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/tables/jsgrid/jsgrid-theme.min.css') }}">
                 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/tables/jsgrid/jsgrid.min.css') }}">
-                <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/forms/selects/select2.min.css') }}">
-                <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/forms/toggle/switchery.min.css') }}">
-                <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/plugins/forms/switch.min.css') }}">
                 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/extensions/toastr.css') }}">
                 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/plugins/extensions/toastr.min.css') }}">
-                <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/plugins/forms/validation/form-validation.css') }}">
-                <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/forms/icheck/icheck.css') }}">
-                <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/forms/icheck/custom.css') }}">
                 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/tables/datatable/dataTables.bootstrap4.min.css') }}">
-                @endsection
+                <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/tables/extensions/responsive.dataTables.min.css') }}">               
+                <style type="text/css">
+                .hide {
+                	display: block;
+                }
+            </style>
+            @endsection
 
-                @section('content')
-               	<div class="content-header row">
-                    <div class="content-header-left col-md-6 col-xs-12 mb-2">
-                        <h3 class="content-header-title mb-0">Edit Item Transaksi</h3>
-                        <div class="row breadcrumbs-top">
-                            <div class="breadcrumb-wrapper col-xs-12">
-                                <ol class="breadcrumb">
-                                    <li class="breadcrumb-item"><a href="{{ url('/item') }}">Manajemen Item Transaksi</a>
-                                    </li>
-                                    <li class="breadcrumb-item active">Edit Item Transaksi
-                                    </li>
-                                </ol>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="content-body">
-                  <div class="row">
-                    @if(session('success'))
-                    <div class="col-xs-7">
-                      <div class="alert alert-success">
-                        <b>Data item berhasil diubah.</b>
-                      </div>
-                    </div>
-                    @endif                    
-                    <form class="form" action="{{ url('item/update').'/'.$items->id }}" method="POST">
-                      <div class="col-md-6">
-                        {{ csrf_field() }}
-                        <div class="card">
-                          <div class="card-header">
-                            <h4 class="card-title" id="basic-layout-card-center">Data Item</h4>
-                            <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
-                          </div>
-                          <div class="card-body collapse in">
-                            <div class="card-block">
-                              @if(count($errors->all()) > 0)
-                              <div class="alert alert-danger alert-dismissable">
-                                @foreach ($errors->all() as $error)
-                                {!! $error !!}<br>
-                                @endforeach
-                              </div>
-                              @endif
-                              <div class="form-body">
-                                <div class="row">
-                                  <div class="form-group col-md-4">
-                                    <label for="eventRegInput1">Kode Item</label>
-                                    <input type="text" required="Kode item harap diisi" class="form-control" placeholder="Kode Item" name="kode_item" value="{{ $items->kode_item }}">
-                                  </div>
-                                  <div class="form-group col-md-8">
-                                    <label for="eventRegInput1">Item</label>
-                                    <input type="text" required="" class="form-control" placeholder="Item" id="nama_item" name="nama_item" value="{{ $items->nama_item }}">
-                                  </div>
-                                </div>
-                                <div class="form-group">
-                                  <div class="row">
-                                    <div class="col-md-12 col-sm-12">
-                                      <div class="form-group skin skin-square">
-                                        <label>Display item untuk seluruh cabang</label>
-                                        <fieldset>
-                                          <input type="radio" id='item_display_on' name="item_display" value="1" {{ $items->is_displayed == "1" ? 'checked=""' : '' }}>
-                                          <label class="mr-2">Iya</label>
-                                          <input type="radio" id='item_display_off' name="item_display" value="0" {{ $items->is_displayed == "0" ? 'checked=""' : '' }}>
-                                          <label>Tidak</label>
-                                        </fieldset>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="col-md-6">
-                        <div class="card">
-                          <div class="card-header">
-                            <h4 class="card-title" id="basic-layout-card-center">Financial Dimension</h4>
-                            <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
-                          </div>
-                          <div class="card-body">
-                            <div class="card-block">
-                              <div class="form form-horizontal striped-rows">
-                              	<div class="form-group row">
-    		                          <label class="col-md-2 label-control" for="segmen1">Account</label>
-    		                          <div class="col-md-7">
-                                    <select class = "select2 form-control account" name="account" id="account" onchange="getVal('account', 'segmen1');" required>
-                                      <option value="" disabled selected>Main Account</option>
-                                      @foreach($item as $coa)
-                                      <option {{ $items->SEGMEN_1 == $coa->MAINACCOUNTID ? 'selected=""' : '' }} value="{{ $coa->MAINACCOUNTID }}">{{ $coa->NAME }}</option>
-                                      @endforeach
-                                    </select>
-                                  </div>
-                                  <div class="col-md-3">
-                                    <input id="segmen1" class="form-control" name="segmen1" value="{{ $items->SEGMEN_1 }}" readonly="">
-    		                          </div>
-    				                    </div>
-    		                        <div class="form-group row">
-    		                          <label class="col-md-2 label-control" for="segmen2">Program</label>
-    		                          <div class="col-md-7">
-                                    <select class = "select2 form-control" id="program" name="program" onchange="getVal('program', 'segmen2');" required>
-                                      <option value="" disabled selected>Program</option>
-                                      @foreach($program as $prog)
-                                      <option {{ $items->SEGMEN_2 == $prog->VALUE ? 'selected=""' : '' }} value="{{ $prog->VALUE }}">{{ $prog->DESCRIPTION }}</option>
-                                      @endforeach
-                                    </select>
-    		                          </div>
-    		                          <div class="col-md-3">
-    		                          	<input id="segmen2" class="form-control" name="segmen2" value="{{ $items->SEGMEN_2 }}" readonly="">
-      				                    </div>
-    		                        </div>
-    		                        <div class="form-group row">
-    		                          <label class="col-md-2 label-control" for="segmen3">KPKC</label>
-    	                        	  <div class="col-md-7">
-                                    <select class = "select2 form-control" id="kpkc" name="kpkc" onchange="getVal('kpkc', 'segmen3');" required>
-                                      <option value="" disabled selected>KPKC</option>
-                                      @foreach($kpkc as $unit)
-                                      <option {{ $items->SEGMEN_3 == $unit->VALUE ? 'selected=""' : '' }} value="{{ $unit->VALUE }}">{{ $unit->DESCRIPTION }}</option>
-                                      @endforeach
-                                    </select>
-    	                        	  </div>
-    		                          <div class="col-md-3">
-    	                          		<input id="segmen3" class="form-control" name="segmen3" value="{{ $items->SEGMEN_3 }}" readonly="">
-    			                        </div>
-    		                        </div>
-    		                        <div class="form-group row">
-    		                          <label class="col-md-2 label-control" for="segmen4">Divisi</label>
-    		                          <div class="col-md-7">
-                                    <select class = "select2 form-control" id="divisi" name="divisi" onchange="getVal('divisi', 'segmen4');" required>
-                                      <option value="" disabled selected>Divisi</option>
-                                      @foreach($divisi as $div)      
-                                      @if($div->VALUE == '00') 
-                                        <option {{$items->SEGMEN_4 == '00' ? 'selected=""' : '' }} value="00">None</option>
-                                      @else
-                                        <option {{ $items->SEGMEN_4 == $div->VALUE ? 'selected=""' : '' }} value="{{ $div->VALUE }}">{{ $div->DESCRIPTION }}</option>
-                                      @endif
-                                      @endforeach
-                                    </select>
-    		                          </div>
-    		                          <div class="col-md-3">
-    		                          	<input id="segmen4" class="form-control" name="segmen4" value="{{ $items->SEGMEN_4 }}" readonly="">
-    				                      </div>
-    		                        </div>
-    		                        <div class="form-group row">
-    		                          <label class="col-md-2 label-control" for="segmen5">Sub Pos</label>
-    		                          <div class="col-md-7">
-    		                          	<select class = "select2 form-control" id="subpos" name="subpos" onchange="getVal('subpos', 'segmen5');" required>
-                                      <option value="" disabled selected>Sub Pos</option>
-                                      @foreach($subpos as $subp)
-                                      <option {{ $items->SEGMEN_5 == $subp->VALUE ? 'selected=""' : '' }} value="{{ $subp->VALUE }}">{{ $subp->DESCRIPTION }}</option>
-                                      @endforeach
-                                    </select>
-    		                          </div>
-    		                          <div class="col-md-3">
-    		                          	<input id="segmen5" class="form-control" name="segmen5" value="{{ $items->SEGMEN_5 }}" readonly="">
-    				                      </div>
-    		                        </div>
-                              	<div class="form-group row">
-    		                          <label class="col-md-2 label-control" for="segmen6">Mata Anggaran</label>
-    		                          <div class="col-md-7">
-    		                            <select class = "select2 form-control" id="kegiatan" name="kegiatan" onchange="getVal('kegiatan', 'segmen6');" required>
-                                      <option value="" disabled selected>Mata Anggaran</option>
-                                      @foreach($m_anggaran as $ma)
-                                        <option {{ $items->SEGMEN_6 == $ma->VALUE ? 'selected=""' : '' }} value="{{ $ma->VALUE }}">{{ $ma->DESCRIPTION }}</option>
-                                      @endforeach
-                                    </select>
-    		                          </div>
-    		                          <div class="col-md-3">
-    		                        	  <input id="segmen6" class="form-control" name="segmen6" value="{{ $items->SEGMEN_6 }}" readonly="">
-        				                  </div>
-        				              	</div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="col-md-12">
-                        <div class="card">
-                          <div class="card-body">
-                            <div class="card-block">
-                              <div class="pull-right">
-                                <a href="{{ url('item') }}" class="btn btn-danger mr-1">
-                                  <i class="ft-x"></i> Kembali
-                                </a>    
-                                <button type="submit" class="btn btn-outline-primary">
-                                  <i class="fa fa-check-square-o"></i> Simpan
-                                </button>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </form>
-                    <div class="modal fade text-xs-left" id="tambahJenis" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                      <div class="modal-dialog">
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                              <span aria-hidden="true">&times;</span>
-                            </button>
-                            <h4 class="modal-title" id="myModalLabel">Tambah Jenis Anggaran</h4>
-                          </div>
-                          <form class="form" id="jenis-form" action="{{ URL('item/submit/jenis') }}" method="POST">
-                          {{ csrf_field() }}
-                            <div class="modal-body" id="confirmation-msg">
-                                <div class="form-group">
-                                  <label for="kode_jenis">Kode</label>
-                                    <input class="form-control" type="text" name="kode_jenis" placeholder="Kode Jenis Anggaran" value="">
-                                </div>
-                                <div class="form-group">
-                                  <label for="nama_jenis">Jenis Anggaran</label>
-                                    <input class="form-control" type="text" name="nama_jenis" placeholder="Nama Jenis Anggaran" value="">
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                              <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">Kembali</button>
-                              <button type="submit" id="simpan" class="btn btn-outline-primary">Simpan</button>
-                            </div>
-                          </form>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="modal fade text-xs-left" id="tambahKelompok" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                      <div class="modal-dialog">
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                              <span aria-hidden="true">&times;</span>
-                            </button>
-                            <h4 class="modal-title" id="myModalLabel">Kelompok Anggaran</h4>
-                          </div>
-                          <form class="form" id="jenis-form" action="{{ URL('item/submit/kelompok') }}" method="POST">
-                            {{ csrf_field() }}
-                            <div class="modal-body" id="confirmation-msg">
-                              <div class="form-group">
-                                <label for="kode_kelompok">Kode</label>
-                                  <input class="form-control" type="text" name="kode_kelompok" placeholder="Kode Kelompok Anggaran" value="">
-                              </div>
-                              <div class="form-group">
-                                <label for="nama_jenis">Kelompok Anggaran</label>
-                                  <input class="form-control" type="text" name="nama_kelompok" placeholder="Nama Kelompok Anggaran" value="">
-                              </div>
-                            </div>
-                            <div class="modal-footer">
-                              <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">Kembali</button>
-                              <button type="submit" id="simpan" class="btn btn-outline-primary">Simpan</button>
-                            </div>
-                          </form>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="modal fade text-xs-left" id="tambahPos" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                      <div class="modal-dialog">
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                              <span aria-hidden="true">&times;</span>
-                            </button>
-                            <h4 class="modal-title" id="myModalLabel">Pos Anggaran</h4>
-                          </div>
-                          <form class="form" id="pos-form" action="{{ URL('item/submit/pos') }}" method="POST">
-                            {{ csrf_field() }}
-                            <div class="modal-body" id="confirmation-msg">
-                              <div class="form-group">
-                                <label for="kode_kelompok">Kode</label>
-                                  <input class="form-control" type="text" name="kode_pos" placeholder="Kode Pos Anggaran" value="">
-                              </div>
-                              <div class="form-group">
-                                <label for="nama_jenis">Pos Anggaran</label>
-                                  <input class="form-control" type="text" name="nama_pos" placeholder="Nama Pos Anggaran" value="">
-                              </div>
-                            </div>
-                            <div class="modal-footer">
-                              <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">Kembali</button>
-                              <button type="submit" id="simpan" class="btn btn-outline-primary">Simpan</button>
-                            </div>
-                          </form>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                @endsection
-                
-                @section('customjs')
-                <!-- BEGIN PAGE VENDOR JS-->
-                <script type="text/javascript" src="{{ asset('app-assets/vendors/js/ui/jquery.sticky.js') }}"></script>
-                <script type="text/javascript" src="{{ asset('app-assets/vendors/js/charts/jquery.sparkline.min.js') }}"></script>
-                <script type="text/javascript" src="{{ asset('app-assets/vendors/js/tables/jsgrid/jquery.validate.min.js') }}"></script>
-                <!-- END PAGE VENDOR JS-->
-                <!-- BEGIN PAGE LEVEL JS-->
-                <script type="text/javascript" src="{{ asset('app-assets/js/scripts/ui/breadcrumbs-with-stats.min.js') }}"></script> 
-        			 	<script type="text/javascript" src="{{ asset('app-assets/vendors/js/tables/jquery.dataTables.min.js') }}"></script>
-        				<script type="text/javascript" src="{{ asset('app-assets/vendors/js/tables/datatable/dataTables.bootstrap4.min.js') }}"></script>
-        				<script type="text/javascript" src="{{ asset('app-assets/vendors/js/tables/datatable/dataTables.responsive.min.js') }}"></script>
-                <script src="{{ asset('app-assets/vendors/js/forms/icheck/icheck.min.js') }}" type="text/javascript"></script> 
-                <script type="text/javascript" src="{{ asset('app-assets/js/scripts/modal/components-modal.min.js') }}"></script>
-                <script type="text/javascript">
-                  function getVal(s, v){
-                    var inv_nrs;
-                    inv_nrs = document.getElementById(s);
-                    /* Ketika nama item diambil dari nama mata anggaran */
-                    // if(s = 'kegiatan'){
-                    //   document.getElementById('nama_item').value = inv_nrs.options[inv_nrs.selectedIndex].text;
-                    // }
-                    return document.getElementById(v).value = inv_nrs.options[inv_nrs.selectedIndex].value;
-                  }
+            @section('content')
+            <div class="content-header row">
+            	<div class="content-header-left col-md-6 col-xs-12 mb-2">
+            		<h3 class="content-header-title mb-0">Manajemen Item Anggaran</h3>
+            		<div class="row breadcrumbs-top">
+            			<div class="breadcrumb-wrapper col-xs-12">
+            				<ol class="breadcrumb">
+            					<li class="breadcrumb-item active">Manajemen Item</li>
+            				</ol>
+            			</div>
+            		</div>
+            	</div>
+            </div>
+            <div class="content-body">
+            	<div class="row">
+            		<section id="select-inputs">
+            			<div class="row">
+            				@if(session('add'))
+            				<div class="col-xs-7">
+            					<div class="alert alert-success">
+            						<b>Data item berhasil ditambah.</b>
+            					</div>
+            				</div>
+            				@elseif(session('unique'))
+            				<div class="col-xs-7">
+            					<div class="alert alert-warning">
+            						<b>Kode item harus unik.</b>
+            					</div>
+            				</div>
+            				@endif
+            				<div class="col-xs-12">
+            					<div class="card">
+            						<div class="card-header">
+            							<h4 class="card-title">Daftar Item Anggaran</h4>
+            							<a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
+            							<div class="row mt-1">
+            								<div class="col-md-12 col-xl-3">
+            									<button type="button" data-target="#tambahPos" data-toggle="modal" class="btn btn-success btn-sm pull-left"><i class="fa fa-plus"></i> Tambah Item Baru</button>
+            								</div>
+            							</div>
+            							<div class="modal fade text-xs-left" id="tambahPos" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            								<div class="modal-dialog">
+            									<div class="modal-content">
+            										<div class="modal-header">
+            											<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            												<span aria-hidden="true">&times;</span>
+            											</button>
+            											<h4 class="modal-title" id="myModalLabel">Tambah Item Anggaran</h4>
+            										</div>
+            										<form class="form" id="item-anggaran-form" action="{{ URL('item/submit/all') }}" method="POST">
+            											{{ csrf_field() }}
+            											<div class="modal-body" id="confirmation-msg">
+            												<div class="row">
+            													<div class="form-group col-md-12 col-xl-4">
+            														<label for="kode_kelompok">Kode</label>
+            														<input class="form-control" type="text" name="kode" placeholder="Kode Item Anggaran" value="" required>
+            													</div>
+            													<div class="form-group col-md-12 col-xl-8">
+            														<label for="nama_jenis">Tipe Item Anggaran</label>
+            														<select class="form-control" type="text" name="type" placeholder="Tipe Item Anggaran" required>
+            															<option value="1" selected>Jenis Anggaran</option>
+            															<option value="2">Pos Anggaran</option>
+            															<option value="3">Kelompok Anggaran</option>
+            														</select>
+            													</div>
+            													<div class="form-group col-md-12 col-xl-12">
+            														<label for="nama_jenis">Nama Item Anggaran</label>
+            														<input class="form-control" type="text" name="name" placeholder="Nama Item Anggaran" value="" required>
+            													</div>
+            												</div>
+            											</div>
+            											<div class="modal-footer">
+            												<button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">Kembali</button>
+            												<button type="submit" id="simpan" class="btn btn-outline-primary">Simpan</button>
+            											</div>
+            										</form>
+            									</div>
+            								</div>
+            							</div>
+            						</div>
+            						<div class="card-body collapse in">			                
+            							<div class="card-block">
+            								@if(session('success'))
+            								<div class="col-xs-6">
+            									<div class="alert alert-success">
+            										<b>Data item berhasil diubah.</b>
+            									</div>
+            								</div>
+            								@elseif(session('deleted'))
+            								<div class="col-xs-6">
+            									<div class="alert alert-success">
+            										<b>{!! session('deleted') !!}</b>
+            									</div>
+            								</div>
+            								@endif
+            								@if(count($errors->all()) > 0)
+            								<div class="alert alert-danger alert-dismissable">
+            									@foreach ($errors->all() as $error)
+            									{!! $error !!}<br>
+            									@endforeach
+            								</div>
+            								@endif
+            								<name="data" id="data">
+            								<div class="table-responsive">
+            									<table class="table table-striped table-bordered datatable-select-inputs wrap" cellspacing="0" width="100%">
+            										<thead>
+            											<tr>
+            												<th><center>No</center></th>
+            												<th id="filterable">Kode Item Anggaran</th>
+            												<th id="filterable">Nama Item Anggaran</th>
+            												<th id="filterable">Tipe Item Anggaran</th>
+            												<th><center>Aksi</center></th>
+            											</tr>
+            										</thead>
+            										<tbody>
+            											@foreach($items as $item)
+            											@if(!$item->deleted_at)
+            											<tr>
+            												<td><center>{{ $no++ }}</center></td>
+            												<td>{{ $item->kode }}</td>
+            												<td>{{ $item->name }}</td>
+            												<td>
+            													@if($item->type == 1) Jenis Anggaran
+            													@elseif($item->type == 2) Kelompok Anggaran
+            													@elseif($item->type == 3) Pos Anggaran
+            													@endif
+            												</td>
+            												<td><center>
+            													<button type="button" class="btn btn-outline-info btn-sm" onclick="showModal({{$item->id}})" data-toogle="modal">
+            														<i class="fa fa-edit"></i> Edit</button>
+            														<a href="#" class="btn btn-danger btn-sm" onclick="deleteUser({{ $item->id }})">
+            															<i class="fa fa-trash"></i> Hapus</a>
+            														</center></td>
+            													</tr>
+            													<div class="modal fade text-xs-left" id="editAnggaran{{$item->id}}"tabindex="-1" role="dialog" 
+            														aria-labelledby="myModalLabel" aria-hidden="true">
+            														<div class="modal-dialog">
+            															<div class="modal-content">
+            																<div class="modal-header">
+            																	<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            																		<span aria-hidden="true">&times;</span>
+            																	</button>
+            																	<h4 class="modal-title" id="myModalLabel">Edit Item Anggaran</h4>
+            																</div>
+            																<form class="form" id="edit-jenis-form" action="{{ URL('item/update/item/'.$item->id) }}" method="POST">
+            																	{{ csrf_field() }}
+            																	<div class="modal-body" id="confirmation-msg">
+            																		<div class="row">
+            																			<div class="form-group col-md-12 col-xl-4">
+            																				<label for="edit_kode">Kode Item</label>
+            																				<input class="form-control" type="text" name="edit_kode" id="edit_kode" placeholder="Kode Item Anggaran" value="{{ $item->kode }}">
+            																			</div> 
+            																			<div class="form-group col-md-12 col-xl-8">
+            																				<label for="edit_nama">Nama Item</label>
+            																				<input class="form-control" type="text" name="edit_nama" id="edit_nama" placeholder="Nama Item Anggaran" value="{{ $item->name }}">
+            																			</div>
+            																		</div>
+            																	</div>
+            																	<div class="modal-footer">
+            																		<button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal"><i class="fa fa-times"></i> Kembali</button>
+            																		<button type="submit" id="simpan" class="btn btn-outline-primary"><i class="fa fa-check"></i> Simpan</button>
+            																	</div>
+            																</form>
+            															</div>
+            														</div>
+            													</div>
+            													@endif
+            													@endforeach
+            												</tbody>
+            											</table>
+            											<form method="GET" action="#" id="deleteU">
+            												{{ csrf_field() }}
+            												{{ method_field('DELETE') }}
+            											</form>
+            										</div>
+            									</div>
+            								</div>
+            							</div>
+            						</div>
+            					</div>
+            				</section>
+            			</div>
+            		</div>
+            		@endsection
 
-                  document.addEventListener("DOMContentLoaded", function() {
-                      var elements = document.getElementsByTagName("INPUT");
-                      for (var i = 0; i < elements.length; i++) {
-                          elements[i].oninvalid = function(e) {
-                              e.target.setCustomValidity("");
-                              if (!e.target.validity.valid) {
-                                  e.target.setCustomValidity("Kolom harap diisi");
-                              }
-                          };
-                          elements[i].oninput = function(e) {
-                              e.target.setCustomValidity("");
-                          };
-                      }
+            		@section('customjs')
+            		<!-- BEGIN PAGE VENDOR JS-->
+            		<script type="text/javascript" src="{{ asset('app-assets/vendors/js/ui/jquery.sticky.js') }}"></script>
+            		<script type="text/javascript" src="{{ asset('app-assets/vendors/js/charts/jquery.sparkline.min.js') }}"></script>
+            		<script src="{{ asset('app-assets/vendors/js/tables/jsgrid/jquery.validate.min.js') }}" type="text/javascript"></script>
+            		<!-- END PAGE VENDOR JS-->
+            		<!-- BEGIN PAGE LEVEL JS-->
+            		<script type="text/javascript" src="{{ asset('app-assets/js/scripts/ui/breadcrumbs-with-stats.min.js') }}"></script> 
+            		<script src="{{ asset('app-assets/vendors/js/tables/jquery.dataTables.min.js') }}" type="text/javascript"></script>
+            		<script src="{{ asset('app-assets/vendors/js/tables/datatable/dataTables.bootstrap4.min.js') }}"
+            		type="text/javascript"></script>
+            		<script src="{{ asset('app-assets/vendors/js/tables/datatable/dataTables.responsive.min.js') }}"
+            		type="text/javascript"></script>
+            		<script type="text/javascript" src="{{ asset('app-assets/js/scripts/modal/components-modal.min.js') }}"></script>
+            		<script type="text/javascript">
+            			$('.datatable-select-inputs').DataTable( {
+            				scrollX: true,
+            				"language": {
+            					"paginate": {
+            						"previous": "Sebelumnya",
+            						"next": "Selanjutnya"
+            					},
 
-                      var select = document.getElementsByTagName("SELECT");
-                      for (var i = 0; i < select.length; i++) {
-                          select[i].oninvalid = function(e) {
-                              e.target.setCustomValidity("");
-                              if (!e.target.validity.valid) {
-                                  e.target.setCustomValidity("Harap memilih pada kolom ini");
-                              }
-                          };
-                          select[i].oninput = function(e) {
-                              e.target.setCustomValidity("");
-                          };
-                      }
-                  });
+            					"emptyTable":  "Tidak Ada Item Tersimpan",
+            					"info":  "Data Item _START_-_END_ dari _TOTAL_ Item",
+            					"infoEmpty":  "Data Item 0-0 dari _TOTAL_ Item ",
+            					"search": "Pencarian:",
+            					"lengthMenu": "Perlihatkan _MENU_ masukan",
+            					"infoFiltered": "(telah di filter dari _MAX_ total masukan)",
+            					"zeroRecords": "Tidak ada data ditemukan"
+            				},
+            				initComplete: function () {
+            					this.api().columns('#filterable').every( function () {
+            						var column = this;
+            						var select = $('<select><option value="">Filter kolom</option></select>')
+            						.appendTo( $(column.footer()).empty() )
+            						.on( 'change', function () {
+            							var val = $.fn.dataTable.util.escapeRegex(
+            								$(this).val()
+            								);
 
-                  $('input[type="radio"]').iCheck('enable')
-                  $('input').iCheck({
-                    checkboxClass: 'icheckbox_square-red',
-                    radioClass: 'iradio_square-red',
-                    increaseArea: '20%' // optional
-                  });
+            							column
+            							.search( val ? '^'+val+'$' : '', true, false )
+            							.draw();
+            						} );
 
-                  function selected(a)
-                  {
-                    document.getElementById("edit_kode_jenis").value = a.options[a.selectedIndex].value;
-                    document.getElementById("edit_nama_jenis").value = a.options[a.selectedIndex].text;
-                  }
-                  
-                </script>
-                @endsection		
+            						column.data().unique().sort().each( function ( d, j ) {
+            							select.append( '<option value="'+d+'">'+d+'</option>' );
+            						} );
+            					} );
+            				}
+            			});
+
+            			function deleteUser(id) {
+            				$('form[id="deleteU"').attr('action', '{{ url('item') }}' + '/delete/item/' + id);
+            				var con = confirm("Apakah anda yakin untuk menghapus item ini?");
+            				if (con) {
+            					$('form[id="deleteU"').submit();	
+            				}
+            			}
+
+            			function showModal(a){
+            				$('#editAnggaran'+a).modal('show');
+            			}
+            		</script>
+            		@endsection

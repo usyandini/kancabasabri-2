@@ -141,14 +141,15 @@ Route::group(['middleware' => 'auth'], function() {
 
 	Route::group(['prefix' => 'item'], function(){
 		Route::resource('/', 'ItemController');
+		Route::get('/transaksi', 'ItemController@listTransaksi');
+		Route::get('/anggaran', 'ItemController@listAnggaran');
 		Route::get('/get/combination/{id}/{tanggal}', 'ItemController@getCombination');
-		Route::get('/create', 'ItemController@create');
-		Route::post('/add', 'ItemController@addItem');
+		Route::get('/create/transaksi', 'ItemController@createItemTransaksi');
+		Route::post('/add/transaksi', 'ItemController@addItemTransaksi');
 		Route::post('/submit/{type}', 'ItemController@submitAnggaranItem');
-		Route::get('/edit/{id}', 'ItemController@editItem');
-		Route::post('/update/{id}', 'ItemController@updateItem');
-		Route::get('/anggaran', 'ItemController@editItemAnggaran');
-		Route::post('/update/anggaran/{id}', 'ItemController@updateItemAnggaran');
+		Route::get('/edit/transaksi/{id}', 'ItemController@editItemTransaksi');
+		Route::post('/update/transaksi/{id}', 'ItemController@updateItemTransaksi');
+		Route::post('/update/item/{id}', 'ItemController@updateItem');
 		Route::get('/delete/{jenis}/{id}', 'ItemController@destroy');
 	});
 

@@ -21,7 +21,7 @@
                         <div class="row breadcrumbs-top">
                             <div class="breadcrumb-wrapper col-xs-12">
                                 <ol class="breadcrumb">
-                                    <li class="breadcrumb-item"><a href="{{ url('/item') }}">Manajemen Item Transaksi</a>
+                                    <li class="breadcrumb-item"><a href="{{ url('/item/transaksi') }}">Manajemen Item Transaksi</a>
                                     </li>
                                     <li class="breadcrumb-item active">Tambah Item Transaksi
                                     </li>
@@ -45,7 +45,7 @@
                         </div>
                     </div>
                     @endif
-                    <form class="form" action="{{ url('item/add') }}" method="POST">
+                    <form class="form" action="{{ url('item/add/transaksi') }}" method="POST">
                       <div class="col-md-6">
                         {{ csrf_field() }}
                         <div class="card">
@@ -200,7 +200,7 @@
                           <div class="card-body">
                             <div class="card-block">
                               <div class="pull-right">
-                                <a href="{{ url('item') }}" class="btn btn-danger mr-1">
+                                <a href="{{ url('item/transaksi') }}" class="btn btn-danger mr-1">
                                   <i class="ft-x"></i> Kembali
                                 </a>    
                                 <button type="submit" class="btn btn-outline-primary">

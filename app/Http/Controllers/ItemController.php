@@ -86,11 +86,34 @@ class ItemController extends Controller
 
     public function index()
     {
+        $itemAngg = ItemAnggaranMaster::orderby('type')->orderby('kode')->get();
+        return view('master.item.edit-item', [
+            'items' => $itemAngg, 
+            'no' => 1
+        ]);
+    }
+
+    public function listTransaksi()
+    {
         $master_item = ItemMaster::orderby('kode_item')->get();
         // $jenis = ItemAnggaranMaster::withTrashed()->where('type', 1)->get();
         // $kelompok = ItemAnggaranMaster::withTrashed()->where('type', 2)->get();
         // $pos = ItemAnggaranMaster::withTrashed()->where('type', 3)->get();
-    	return view('master.item.index', [
+        return view('master.item.index', [
+            'items' => $master_item, 
+            'no' => 1, 
+            // 'jenis' => $jenis,
+            // 'kelompok' => $kelompok,
+            // 'pos' => $pos
+        ]);
+    }
+    public function listAnggaran()
+    {
+        $master_item = ItemMaster::orderby('kode_item')->get();
+        // $jenis = ItemAnggaranMaster::withTrashed()->where('type', 1)->get();
+        // $kelompok = ItemAnggaranMaster::withTrashed()->where('type', 2)->get();
+        // $pos = ItemAnggaranMaster::withTrashed()->where('type', 3)->get();
+        return view('master.item.index', [
             'items' => $master_item, 
             'no' => 1, 
             // 'jenis' => $jenis,
@@ -117,12 +140,12 @@ class ItemController extends Controller
         return null;
     }
 
-    public function create()
+    public function createItemTransaksi()
     {
         // $jenis = ItemAnggaranMaster::where('type', 1)->get();
         // $kelompok = ItemAnggaranMaster::where('type', 2)->get();
         // $pos = ItemAnggaranMaster::where('type', 3)->get();
-    	return view('master.item.tambah',
+    	return view('master.item.tambah-transaksi',
             [   'item' => $this->itemModel->get(),
                 'program' => $this->programModel->where("VALUE", "THT")->get(),
                 'kpkc' => $this->kpkcModel->get(),
@@ -135,7 +158,7 @@ class ItemController extends Controller
             ]);
     }
 
-    public function addItem(Request $request)
+    public function addItemTransaksi(Request $request)
     {
         //$inputItem = $request->except('_method', '_token');
         $name_subpos = $this->subPosModel->where('VALUE', $request->subpos)->first();
@@ -227,14 +250,14 @@ class ItemController extends Controller
         return redirect()->back()->withInput();
     }
 
-    public function editItem($id)
+    public function editItemTransaksi($id)
     {
         $item = ItemMaster::where('id', $id)->first();
 
         // $jenis = ItemAnggaranMaster::where('type', 1)->get();
         // $kelompok = ItemAnggaranMaster::where('type', 2)->get();
         // $pos = ItemAnggaranMaster::where('type', 3)->get();
-        return view('master.item.edit-item', [
+        return view('master.item.edit-transaksi', [
             'item' => $this->itemModel->get(),
             'program' => $this->programModel->where("VALUE", "THT")->get(),
             'kpkc' => $this->kpkcModel->get(),
@@ -248,7 +271,7 @@ class ItemController extends Controller
         ]);
     }
 
-    public function updateItem($id, Request $request)
+    public function updateItemTransaksi($id, Request $request)
     {
         $name_subpos = $this->subPosModel->where('VALUE', $request->subpos)->first();
         $name_kegiatan = $this->mAnggaranModel->where('VALUE', $request->kegiatan)->first();
@@ -286,16 +309,7 @@ class ItemController extends Controller
         return redirect('/item/edit/'.$id);
     }
 
-    public function editItemAnggaran()
-    {
-        $itemAngg = ItemAnggaranMaster::orderby('type')->orderby('kode')->get();
-        return view('master.item.edit-anggaran', [
-            'items' => $itemAngg, 
-            'no' => 1
-        ]);
-    }
-
-    public function updateItemAnggaran($id, Request $request)
+    public function updateItem($id, Request $request)
     {
         $trashed = ItemAnggaranMaster::onlyTrashed()->where('kode', $request->edit_kode)->forceDelete();
 
@@ -332,11 +346,11 @@ class ItemController extends Controller
     public function destroy($jenis, $id, Request $request)
     {
         switch($jenis){
-            case 'master':
+            case 'transaksi':
                 $item = ItemMaster::withTrashed()->where('id', $id)->first()->nama_item ? ItemMaster::withTrashed()->where('id', $id)->first()->nama_item : ItemMaster::withTrashed()->where('id', $id)->first()->kode_item;
 
                 ItemMaster::where('id', $id)->delete(); break;
-            case 'anggaran':
+            case 'item':
                 $item = ItemAnggaranMaster::withTrashed()->where('id', $id)->first()->name ? ItemAnggaranMaster::withTrashed()->where('id', $id)->first()->name : ItemAnggaranMaster::withTrashed()->where('id', $id)->first()->kode;
 
                 ItemAnggaranMaster::where('id', $id)->delete(); break;
@@ -436,8 +450,7 @@ class ItemController extends Controller
     }
 
     public function store_arahan_rups(Request $request)
-    {
-               
+    {   
         $a=$request->arahan_rups;
         $db = \App\Models\ArahanRups::where('arahan_rups', $a)->get();
         $db = $db->toArray(); 
@@ -472,11 +485,8 @@ class ItemController extends Controller
         }
     }
 
-    
-
      public function update(Request $request, $id)
      {
-         
          $a=$request->alasan;
          $b=$request->keterangan;
          $db = \App\Models\RejectReason::where('content', $a)->where('type', $b)->where('id','<>', $id)->get();
@@ -489,7 +499,7 @@ class ItemController extends Controller
              ];
              return redirect()->back()->with('after_update', $after_update);
          }else{
-             $after_update = [
+            $after_update = [
                  'alert' => 'success',
                  'title' => 'Data berhasil diubah.'
              ];
@@ -502,7 +512,7 @@ class ItemController extends Controller
              $update = \App\Models\RejectReason::where('id', $id)->update($data);
 
              return redirect()->back()->with('after_update', $after_update);
-        }
+         }   
      }
 
      public function update_program_prioritas(Request $request, $id)
@@ -579,12 +589,10 @@ class ItemController extends Controller
              'alert' => 'success',
              'title' => 'Data berhasil dihapus.'
          ];
- 
-        $update = \App\Models\RejectReason::where('id', $id)->delete();
+         $update = \App\Models\RejectReason::where('id', $id)->delete();
 
          return redirect()->back()->with('after_delete', $after_delete);
-
-      }
+     }
 
     public function delete_program_prioritas(Request $request, $id)
      {
@@ -619,7 +627,5 @@ class ItemController extends Controller
 
          return redirect()->back()->with('after_delete', $after_delete);
     }
-
-  
 
 }
