@@ -10,7 +10,7 @@ class ItemAnggaranMaster extends Model
 	use SoftDeletes;
 
     protected $connection = 'sqlsrv';
-    protected $table = 'item_anggaran_master';
+    protected $table = 'item_master_anggaran';
 
     protected $fillable = [
     	'kode',
