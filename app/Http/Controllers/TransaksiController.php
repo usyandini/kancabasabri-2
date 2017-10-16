@@ -544,7 +544,7 @@ class TransaksiController extends Controller
                 'PIL_DIVISI'    => $trans['batch']['divisi'],
                 'PIL_KPKC'      => $trans['batch']['cabang'],
                 'PIL_MATAANGGARAN'  => $trans->mata_anggaran,
-                'BATCH_ID'    => $batch_id,
+                'PIL_JOURNALNUM'    => $batch_id,
                 'PIL_PROGRAM'   => 'THT',
                 'PIL_SUBPOS'    => $trans->sub_pos,
                 'PIL_TRANSDATE' => new Carbon(str_replace(':AM', ' AM', $trans->tgl)),
