@@ -88,7 +88,7 @@ class NotificationController extends Controller
                 if(Gate::check('unit_'.$this->check($unit_kerja))){
                     $notif = true;
                 }
-            }else if($value->type <43){
+            }else if($value->type <45){
                 $unit_kerja = $value->pengajuanDropping['kantor_cabang'];
                 if(Gate::check('unit_'.$this->check($unit_kerja))){
                     $notif = true;
