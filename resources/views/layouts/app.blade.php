@@ -144,6 +144,7 @@
                                 <li class="is-shown {{ checkActiveMenu('transaksi/create') }}"><a href="{{ url('/transaksi/create', $parameters = [], $secure = null) }}" class="menu-item">Tambah Batch Baru</a>
                             
                                 <li class="is-shown {{ checkActiveMenu('transaksi/realisasi') }}"><a href="{{ url('/transaksi/report/realisasi', $parameters = [], $secure = null) }}" class="menu-item">Report Realisasi</a>
+                                <li class="is-shown {{ checkActiveMenu('transaksi/kasbank') }}"><a href="{{ url('/transaksi/report/kasbank', $parameters = [], $secure = null) }}" class="menu-item">Report Kas/Bank</a>
                            
                                 <!-- <li class="is-shown {{ checkActiveMenu('transaksi/verifikasi') }}"><a href="{{ url('/transaksi/verifikasi', $parameters = [], $secure = null) }}" class="menu-item">Verifikasi Transaksi</a> -->
                             

@@ -573,7 +573,7 @@ class TransaksiController extends Controller
         FROM [dbcabang].[dbo].[transaksi] as transaksi
         JOIN [dbcabang].[dbo].[batches] as batches on batches.id = transaksi.batch_id 
         JOIN [dbcabang].[dbo].[batches_status] as batches_status on batches_status.batch_id = batches.id 
-        JOIN [AX_DEV].[dbo].[PIL_KCTRANSAKSI] as PIL_KCTRANSAKSI on PIL_KCTRANSAKSI.BATCH_ID = batches.id
+        JOIN [AX_DEV].[dbo].[PIL_KCTRANSAKSI] as PIL_KCTRANSAKSI on PIL_KCTRANSAKSI.PIL_KCJOURNALNUM = batches.id
         WHERE batches.cabang = ".$cabang." and batches_status.stat = '6' and PIL_KCTRANSAKSI.PIL_POSTED = '1'
         and DATEPART(MONTH, transaksi.tgl) >= ".$awal." 
         and DATEPART(MONTH, transaksi.tgl) <= ".$akhir." 
@@ -608,6 +608,7 @@ class TransaksiController extends Controller
                 case 'export' :
                     $pdf = PDF::loadView('transaksi.export-realisasi', $data);
                     return $pdf->download('Realisasi Anggaran-'.date("dmY").'.pdf');
+                    // return $pdf->stream('Realisasi Anggaran-'.date("dmY").'.pdf'); // hanya untuk view pdf
                     break;
                 case 'excel' :
                     return view('transaksi.export-realisasi', $data);
@@ -647,7 +648,7 @@ class TransaksiController extends Controller
         FROM [dbcabang].[dbo].[transaksi] as transaksi
         JOIN [dbcabang].[dbo].[batches] as batches on batches.id = transaksi.batch_id 
         JOIN [dbcabang].[dbo].[batches_status] as batches_status on batches_status.batch_id = batches.id 
-        JOIN [AX_DEV].[dbo].[PIL_KCTRANSAKSI] as PIL_KCTRANSAKSI on PIL_KCTRANSAKSI.BATCH_ID = batches.id
+        JOIN [AX_DEV].[dbo].[PIL_KCTRANSAKSI] as PIL_KCTRANSAKSI on PIL_KCTRANSAKSI.PIL_KCJOURNALNUM = batches.id
         WHERE batches.cabang = ".$cabang." and batches_status.stat = '6' and PIL_KCTRANSAKSI.PIL_POSTED = '1'
         and DATEPART(MONTH, transaksi.tgl) >= ".$awal." 
         and DATEPART(MONTH, transaksi.tgl) <= ".$akhir." and DATEPART(YEAR, transaksi.tgl) = ".$transyear."
@@ -665,4 +666,115 @@ class TransaksiController extends Controller
             'months'    => $this->months,
             'items'     => ItemMaster::get()]);
     }
+
+    //Report kas/bank cabang
+    public function kasbank()
+    {
+        $cabang = KantorCabang::where('VALUE','<>','00')->get();
+
+        return view('transaksi.kasbank', [
+            'cabang'    => $cabang,
+            'months'    => $this->months,
+            'filters'   => null]);
+    }
+
+    public function filter_handle_kasbank(Request $request)
+      {
+        $validatorRK = Validator::make($request->all(),
+            [
+                'cabang'    => 'required',
+                'awal'      => 'required',
+                'akhir'     => 'required',
+                'transyear' => 'required'
+            ], 
+            [
+                'cabang.required'  => 'Kantor cabang harus dipilih.',
+                'awal.required'  => 'Periode awal harus dipilih.',
+                'akhir.required'  => 'Periode akhir harus dipilih.',
+                'transyear.required'  => 'Tahun periode harus dipilih.'
+            ]);
+
+        if($validatorRK->passes()){
+            return redirect('transaksi/filter/kasbank/'.$request->cabang.'/'.$request->awal.'/'.$request->akhir.'/'.$request->transyear);    
+        }else{
+            return redirect()->back()->withErrors($validatorRK)->withInput();
+        }
+    }
+
+    public function filter_result_kasbank($cabang, $awal, $akhir, $transyear)
+    {
+        $cabangs = KantorCabang::get();
+
+        // $query = "SELECT item, anggaran, SUM(total) as total 
+        // FROM [dbcabang].[dbo].[transaksi] as transaksi
+        // JOIN [dbcabang].[dbo].[batches] as batches on batches.id = transaksi.batch_id 
+        // JOIN [dbcabang].[dbo].[batches_status] as batches_status on batches_status.batch_id = batches.id 
+        // JOIN [AX_DEV].[dbo].[PIL_KCTRANSAKSI] as PIL_KCTRANSAKSI on PIL_KCTRANSAKSI.PIL_KCJOURNALNUM = batches.id
+        // WHERE batches.cabang = ".$cabang." and batches_status.stat = '6' and PIL_KCTRANSAKSI.PIL_POSTED = '1'
+        // and DATEPART(MONTH, transaksi.tgl) >= ".$awal." 
+        // and DATEPART(MONTH, transaksi.tgl) <= ".$akhir." 
+        // and DATEPART(YEAR, transaksi.tgl) = ".$transyear."
+        // GROUP BY transaksi.item, transaksi.anggaran";
+        
+        // $transaksi = \DB::select($query);
+
+        $start = array_search($awal, $this->months);
+        $end = array_search($akhir, $this->months);
+        return view('transaksi.kasbank', [
+            'cabang'    => $cabangs,
+            'months'    => $this->months,
+            // 'transaksi' => $transaksi,
+            'filters'   => array('cabang'=>$cabang, 'awal'=>$awal, 'akhir'=>$akhir, 'transyear' => $transyear)]
+        );
+    }
+
+    public function cetakKasBank($cabang, $awal, $akhir, $transyear, $type)
+    {   
+        // $query = "SELECT item, anggaran, SUM(total) as total 
+        // FROM [dbcabang].[dbo].[transaksi] as transaksi
+        // JOIN [dbcabang].[dbo].[batches] as batches on batches.id = transaksi.batch_id 
+        // JOIN [dbcabang].[dbo].[batches_status] as batches_status on batches_status.batch_id = batches.id 
+        // JOIN [AX_DEV].[dbo].[PIL_KCTRANSAKSI] as PIL_KCTRANSAKSI on PIL_KCTRANSAKSI.PIL_KCJOURNALNUM = batches.id
+        // WHERE batches.cabang = ".$cabang." and batches_status.stat = '6' and PIL_KCTRANSAKSI.PIL_POSTED = '1'
+        // and DATEPART(MONTH, transaksi.tgl) >= ".$awal." 
+        // and DATEPART(MONTH, transaksi.tgl) <= ".$akhir." 
+        // and DATEPART(YEAR, transaksi.tgl) = ".$transyear."
+        // GROUP BY transaksi.item, transaksi.anggaran";
+        
+        // $transaksi = \DB::select($query);
+
+        $start = $this->months[$awal];
+        $end = $this->months[$akhir];
+        $excel = false;
+
+        if($type == 'excel'){
+            $excel = true;
+        }
+
+        $data = [
+            'cabangs'   => KantorCabang::get(),
+            'filters'   => array('cabang' => $cabang, 'awal'=>$awal, 'akhir'=>$akhir,  'transyear' => $transyear),
+            //'transaksi' => $transaksi,
+            'items'     => ItemMaster::get(),
+            'start'     => $start,
+            'end'       => $end,
+            'months'    => $this->months,
+            'year'      => $transyear,
+            'excel'     => $excel];
+
+            switch($type){
+                case 'print' :
+                    return view('transaksi.cetak-kasbank', $data);
+                    break;
+                // case 'export' :
+                //     $pdf = PDF::loadView('transaksi.export-realisasi', $data);
+                //     return $pdf->download('Realisasi Anggaran-'.date("dmY").'.pdf');
+                //     // return $pdf->stream('Realisasi Anggaran-'.date("dmY").'.pdf'); // hanya untuk view pdf
+                //     break;
+                // case 'excel' :
+                //     return view('transaksi.export-realisasi', $data);
+                //     break;
+            }
+
+      }
 }
