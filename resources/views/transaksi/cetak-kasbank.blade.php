@@ -6,7 +6,7 @@
         }
 		table{
 			border-collapse:collapse;
-			
+			width:100%;
 			margin-left:auto;
 			margin-right:auto;
 		}
@@ -22,13 +22,20 @@
             font-size: 75%;
         }
 	</style>
-<body>
+	<style type="text/css" media="print">
+      @page { size: landscape; }
+    </style>
+<body onload="window.print()">
 	<div id="header">
-		<img src='<?php echo $_SERVER["DOCUMENT_ROOT"].'/app-assets/images/asabri-logo.png'; ?>' align="left" style="max-width: 132px;">
+		<img src="{{ asset('app-assets/images/asabri-logo-kecil.png', $secure = null) }}" align="left">
         <div="title">
 	        <h3><center>LAPORAN KAS & BANK PT  ASABRI (PERSERO)</center></h3>
-	        <h3><center>KANTOR CABANG BENGKULU</center></h3>
-	        <h3><center>BULAN AGUSTUS TAHUN 2017</center></h3>
+	        <h3><center>{{ $cabangs->where('VALUE', $filters['cabang'])->first()['DESCRIPTION']}}</center></h3>
+	        @if($start == $end)
+	        <h4><center>Periode {{$start}} Th. {{$year}}</center></h4>
+	        @else
+	        <h4><center>Periode {{$start}} s.d. {{$end}} Th. {{$year}}</center></h4>
+	        @endif
 	    </div>
     </div>
     <br><br>
