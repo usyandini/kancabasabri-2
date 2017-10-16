@@ -230,12 +230,7 @@
                     <li class="nav-item has-sub {{ checkOpenedMenu('item') }}"><a href=""><i class="ft-file"></i><span data-i18n="" class="menu-title">Manajemen Item</span></a>
                     <ul class="menu-content">
                         @can('manajemen_k_i')
-                        <li class="nav-item has-sub {{ checkOpenedMenu('item') }}"><a href=""><span data-i18n="" class="menu-title">Item Transaksi</span></a>
-                            <ul class="menu-content">
-                                <li class="is-shown {{ checkActiveMenu('item') }}"><a href="{{ url('/item', $parameters = [], $secure = null) }}" class="menu-item">List Item</a></li>
-                                <li class="is-shown {{ checkActiveMenu('item/create') }}"><a href="{{ url('/item/create', $parameters = [], $secure = null) }}" class="menu-item">Tambah Baru</a></li>
-                            </ul>
-                        </li>
+                        <li class="is-shown {{ checkActiveMenu('item') }}"><a href="{{ url('/item', $parameters = [], $secure = null) }}" class="menu-item">Item Transaksi</a></li>
                         @endcan
                         @can('manajemen_i_a')
                         <li class="is-shown {{ checkActiveMenu('item/anggaran') }}"><a href="{{ url('/item/anggaran', $parameters = [], $secure = null) }}" class="menu-item">Item Anggaran</a>
