@@ -1040,13 +1040,34 @@ class AnggaranController extends Controller
             case 'cabang':
                 $return = $this->kanCabModel->select('DESCRIPTION', 'VALUE')->where("VALUE",$id)->get();
                 break;
+            case 'satuan':
+                $value = explode("->",$id);
+                $decode = urldecode($id);
+                if(count($value)>1){
+                    $val = $value[0];
+                    for($i = 1;$i<count($val);$i++){
+                        $val .= "/".$value[$i];
+                    }
+                    $decode = urldecode($val);
+                }
+                // echo $decode;
+                $kode= Kegiatan::where('DESCRIPTION',$decode)->first()->VALUE;
+                
+                $item = ItemMasterAnggaran::where('mata_anggaran',$kode)->get();
+                $array = [];
+                foreach ($item as $row) {
+                    array_push($array,$row->satuan);
+                }
+                $return = ItemAnggaranMaster::select('name')->where('type',4)->whereIn('kode',$array)->orderBy('name','ASC')->get(); 
+                // $return = ItemAnggaranMaster::select('name')->where('type',4)->orderBy('name','ASC')->get(); 
+                break;
             case 'mataanggaran':
                 $value = explode("->",$id);
                 $decode = urldecode($id);
                 if(count($value)>1){
                     $val = $value[0];
                     for($i = 1;$i<count($val);$i++){
-                        $val .= $value[$i];
+                        $val .= "/".$value[$i];
                     }
                     $decode = urldecode($val);
                 }

@@ -20,6 +20,7 @@ class CreateTableItemMasterAnggaran extends Migration
             $table->string('pos_anggaran');
             $table->string('sub_pos');
             $table->string('mata_anggaran');
+            $table->string('satuan');
             $table->string('created_by')->nullable();
             $table->string('updated_by')->nullable();
             $table->datetime('deleted_at')->nullable();

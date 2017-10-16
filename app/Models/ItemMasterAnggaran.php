@@ -14,7 +14,8 @@ class ItemMasterAnggaran extends Model
     	'kelompok',
     	'pos_anggaran',
     	'sub_pos',
-    	'mata_anggaran',
+        'mata_anggaran',
+    	'satuan',
         'created_by',
     	'updated_by',
         'deleted_at'
