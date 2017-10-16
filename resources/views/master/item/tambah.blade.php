@@ -17,15 +17,13 @@
                 @section('content')
                	<div class="content-header row">
                     <div class="content-header-left col-md-6 col-xs-12 mb-2">
-                        <h3 class="content-header-title mb-0">Tambah Item</h3>
+                        <h3 class="content-header-title mb-0">Tambah Item Transaksi</h3>
                         <div class="row breadcrumbs-top">
                             <div class="breadcrumb-wrapper col-xs-12">
                                 <ol class="breadcrumb">
-                                    <li class="breadcrumb-item"><a href="{{ url('/') }}">Manajemen Item</a>
+                                    <li class="breadcrumb-item"><a href="{{ url('/item') }}">Manajemen Item Transaksi</a>
                                     </li>
-                                    <li class="breadcrumb-item"><a href="{{ url('/') }}">Master Item</a>
-                                    </li>
-                                    <li class="breadcrumb-item active"><a href="{{ url('/item/create') }}">Tambah Item</a>
+                                    <li class="breadcrumb-item active">Tambah Item Transaksi
                                     </li>
                                 </ol>
                             </div>
@@ -52,7 +50,7 @@
                         {{ csrf_field() }}
                         <div class="card">
                           <div class="card-header">
-                            <h4 class="card-title" id="basic-layout-card-center">Data Item</h4>
+                            <h4 class="card-title" id="basic-layout-card-center">Data Item </h4>
                             <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
                           </div>
                           <div class="card-body collapse in">
@@ -65,68 +63,16 @@
                               </div>
                               @endif
                               <div class="form-body">
-                                <div class="form-group">
-                                  <label for="eventRegInput1">Kode Item</label>
-                                  <input type="text" required="Kode item harap diisi" class="form-control" placeholder="Kode Item" name="kode_item" value="{{ old('kode_item') }}">
-                                </div>
-                                <div class="form-group">
-                                  <label for="eventRegInput1">Item</label>
-                                  <input type="text" required="" class="form-control" placeholder="Item" id="nama_item" name="nama_item" value="{{ old('nama_item') }}">
-                                </div>
-                                {{--<div class="form-group">
-                                <label for="jenis">Jenis Anggaran</label>
-                                  <div = "row">
-                                    <div class = "col-md-10">
-                                      <select class="select2 form-control" name="jenis" id="jenis" required>
-                                        <option value="" disabled selected>Jenis Anggaran</option>
-                                        @foreach($jenis as $ja)
-                                        <option {{ old('jenis') == $ja->id ? 'selected=""' : '' }} value="{{ $ja->id }}">{{ $ja->kode }} - {{ $ja->name }}</option>
-                                        @endforeach
-                                      </select>
-                                    </div>
-	                                  <div class = "col-md-2">
-                                      <button type="button" class="btn btn-success" data-target="#tambahJenis" data-toggle="modal">
-                                        <i class="fa fa-plus"></i>
-                                      </button>
-	                                  </div>
+                                <div class="row">
+                                    <div class="form-group col-md-4">
+                                    <label for="eventRegInput1">Kode Item</label>
+                                    <input type="text" required="Kode item harap diisi" class="form-control" placeholder="Kode Item" name="kode_item" value="{{ old('kode_item') }}">
                                   </div>
-                             	  </div>
-                                <div class="form-group">
-                                  <label for="eventRegInput3">Kelompok Anggaran</label>
-                                  <div = "row">
-                                    <div class = "col-md-10">
-                                      <select class="select2 form-control" id="kelompok" name="kelompok" required>
-                                        <option value="" disabled selected>Kelompok Anggaran</option>
-                                        @foreach($kelompok as $ka)
-                                        <option {{ old('kelompok') == $ka->id ? 'selected=""' : '' }} value="{{ $ka->id }}">{{ $ka->kode }} - {{ $ka->name }}</option>
-                                        @endforeach
-                                      </select>
-                                    </div>
-                                    <div class = "col-md-2">
-                                      <button type="button" class="btn btn-success" data-target="#tambahKelompok" data-toggle="modal">
-                                        <i class="fa fa-plus"></i>
-                                      </button>
-                                    </div>
+                                  <div class="form-group col-md-8">
+                                    <label for="eventRegInput1">Nama Item</label>
+                                    <input type="text" required="" class="form-control" placeholder="Nama Item" id="nama_item" name="nama_item" value="{{ old('nama_item') }}">
                                   </div>
                                 </div>
-                                <div class="form-group">
-                                  <label for="eventRegInput4">Pos Anggaran</label>
-                                  <div = "row">
-                                    <div class = "col-md-10">
-                                      <select class="select2 form-control" id="pos" name="pos" required>
-                                        <option value="" disabled selected>Pos Anggaran</option>
-                                        @foreach($pos as $pa)
-                                        <option {{ old('pos') == $pa->id ? 'selected=""' : '' }} value="{{ $pa->id }}">{{ $pa->kode }} - {{ $pa->name }}</option>
-                                        @endforeach
-                                      </select>
-                                    </div>
-                                    <div class = "col-md-2">
-                                      <button type="button" class="btn btn-success" data-target="#tambahPos" data-toggle="modal">
-                                        <i class="fa fa-plus"></i>
-                                      </button>
-                                    </div>
-                                  </div>
-                                </div>--}}
                                 <div class="form-group">
                                   <div class="row">
                                     <div class="col-md-12 col-sm-12">
@@ -134,7 +80,7 @@
                                         <label>Display item untuk seluruh cabang</label>
                                         <fieldset>
                                           <input type="radio" id='item_display_on' name="item_display" value="1">
-                                          <label>Iya</label>
+                                          <label class="mr-1">Iya</label>
                                           <input type="radio" id='item_display_off' name="item_display" value="0" checked>
                                           <label>Tidak</label>
                                         </fieldset>
@@ -253,11 +199,11 @@
                         <div class="card">
                           <div class="card-body">
                             <div class="card-block">
-                              <div class="form-actions right">
-                                <a href="{{ url('item') }}" class="btn btn-warning mr-1">
+                              <div class="pull-right">
+                                <a href="{{ url('item') }}" class="btn btn-danger mr-1">
                                   <i class="ft-x"></i> Kembali
                                 </a>    
-                                <button type="submit" class="btn btn-primary">
+                                <button type="submit" class="btn btn-outline-primary">
                                   <i class="fa fa-check-square-o"></i> Simpan
                                 </button>
                               </div>

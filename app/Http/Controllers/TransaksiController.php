@@ -121,7 +121,7 @@ class TransaksiController extends Controller
             'empty_batch'   => $empty_batch,
             'berkas'        => $berkas,
             'batch_history' => $history,
-            'item'          => $this->getAttributes('item'),
+            'item'          => $this->getAttributes('item', $this->current_batch),
             'bank'          => $this->getAttributes('bank'),
             'kegiatan'      => $this->getAttributes('kegiatan'),
             'subpos'      => $this->getAttributes('subpos'),
@@ -171,7 +171,7 @@ class TransaksiController extends Controller
             'empty_batch'   => $empty_batch,
             'berkas'        => $berkas,
             'batch_history' => $history,
-            'item'          => $this->getAttributes('item'),
+            'item'          => $this->getAttributes('item', $active_batch),
             'bank'          => $this->getAttributes('bank'),
             'kegiatan'      => $this->getAttributes('kegiatan'),
             'subpos'      => $this->getAttributes('subpos'),
@@ -187,7 +187,7 @@ class TransaksiController extends Controller
             array_push($result, [
                 'id'            => $value->id,
                 'tgl'           => $value->tgl,
-                'item'          => $value->item,
+                'item'          => $this->getItemValue($value),
                 'qty_item'      => $value->qty_item,
                 'desc'          => $value->desc,
                 'sub_pos'       => $value->sub_pos,
@@ -212,7 +212,7 @@ class TransaksiController extends Controller
             array_push($result, [
                 'id'            => $value->id,
                 'tgl'           => $value->tgl,
-                'item'          => $value->item,
+                'item'          => $this->getItemValue($value),
                 'qty_item'      => $value->qty_item,
                 'desc'          => $value->desc,
                 'sub_pos'       => $value->sub_pos,
@@ -228,15 +228,27 @@ class TransaksiController extends Controller
         return response()->json($result);
     }
 
-    public function getAttributes($type)
+    public function getItemValue($transaksi)
+    {
+        $splitted_account = explode("-", $transaksi->account);
+        $SEGMEN_3 = $splitted_account[2];
+        $SEGMEN_4 = $splitted_account[3];
+
+        return (String) ItemMaster::where([['SEGMEN_1', $transaksi->item], ['SEGMEN_3', $SEGMEN_3], ['SEGMEN_4', $SEGMEN_4]])->first()['id'];
+    }
+
+    public function getAttributes($type, $batch = null)
     {
         $return = null;
         switch ($type) {
             case 'item':
-                $header = ['MAINACCOUNTID' => '-1', 'NAME' => 'Silahkan Pilih Barang/Jasa'];
-                $return = $this->itemModel->get(['MAINACCOUNTID', 'NAME'])->filter(function($item) {
-                    return $item->kombinasiAvailable(\Auth::user()->cabang, \Auth::user()->divisi);
+                $header = ['VALUE' => '-1', 'nama_item' => 'Silahkan Pilih Barang/Jasa'];
+                $return = ItemMaster::get(['id', 'SEGMEN_1', 'nama_item', 'SEGMEN_3', 'is_displayed'])->filter(function($item) use($batch) {
+                    return $item->isDisplayed($batch['cabang']);
                 });
+                foreach ($return as $key => $value) {
+                    $value->VALUE = (String) $return[$key]->id;
+                }
                 $return->prepend($header);
                 break;
             case 'bank':
@@ -278,6 +290,8 @@ class TransaksiController extends Controller
             $value->anggaran = str_replace('.', '', $value->anggaran);
             $value->actual_anggaran = str_replace('.', '', $value->actual_anggaran);
             $value->total = str_replace('.', '', $value->total);
+            $value->item = ItemMaster::where('id', $value->item)->first()['SEGMEN_1'];
+
             if (!isset($value->toBeDeleted)) {
                 $calibrate = $this->calibrateAnggaran($value, true);
             }
@@ -425,6 +439,7 @@ class TransaksiController extends Controller
         $mime_type = explode('/', finfo_buffer(finfo_open(), $decoded, FILEINFO_MIME_TYPE)) ;
         $file = $berkas->file_name.'.'.$mime_type[1];
         file_put_contents($file, $decoded);
+        $data = bin2hex($decoded);
 
         if (file_exists($file)) {
             header('Content-Description: File Transfer');
@@ -435,7 +450,7 @@ class TransaksiController extends Controller
         // header('Pragma: public');
             header('Content-Length: ' . filesize($file));
             readfile($file);
-            exit;
+            exit($data);
         }
     }
 

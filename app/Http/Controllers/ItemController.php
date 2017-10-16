@@ -98,15 +98,11 @@ class ItemController extends Controller
         ]);
     }
 
-    public function getCombination($mainaccount, $cabang, $divisi, $tanggal)
+    public function getCombination($mainaccount, $tanggal)
     {
         $tanggal = date("Y-m-d", strtotime($tanggal));
         $result = ItemMaster::where([
-            ['SEGMEN_1', $mainaccount], 
-            ['SEGMEN_2', 'THT'],
-            ['SEGMEN_3', $cabang],
-            ['SEGMEN_4', $divisi]])->first();
-        
+            ['id', $mainaccount]])->first();
         if (isset($result) && $result->isAxAnggaranAvailable($tanggal)) {
             $result['ax_anggaran'] = $result->axAnggaran($tanggal);
             $result['ax_anggaran']['PIL_AMOUNTAVAILABLE'] = $result['actual_anggaran'] = (int)$result['ax_anggaran']['PIL_AMOUNTAVAILABLE'];

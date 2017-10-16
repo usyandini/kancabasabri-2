@@ -268,7 +268,6 @@
                                                         $count = 0;
                                                         ?>
                                                         @foreach($cabang as $cab)
-                                                        @if($cab->VALUE != "00")
                                                         <?php
                                                         $value =$cab->VALUE. "00";
                                                         ?>
@@ -276,7 +275,6 @@
                                                           <input type="checkbox" name="perizinan[unit_{{$value}}]" {{ isset($user->perizinan['unit_'.$value]) ? 'checked=""' : '' }}>
                                                           <label>{{$cab->DESCRIPTION}}</label>
                                                         </fieldset>
-                                                        @endif
                                                         <?php
                                                         $count++;
                                                         if($count > $countCAB/2){
@@ -310,15 +308,15 @@
                                                     <div class="col-md-4 col-sm-4">
                                                       <div class="form-group skin skin-square">
                                                         @foreach($divisi as $div)
-                                                        {{-- @if($div->VALUE!="00") --}}
+                                                        @if($div->VALUE!="00")
                                                         <?php
                                                         $value = "00".$div->VALUE;
                                                         ?>
                                                         <fieldset>
                                                           <input type="checkbox" name="perizinan[unit_{{$value}}]"{{ isset($user->perizinan['unit_'.$value]) ? 'checked=""' : '' }} >
-                                                          <label>{{$div->VALUE != "00" ? $div->DESCRIPTION : "Non Divisi"}}</label>
+                                                          <label>{{ $div->DESCRIPTION }}</label>
                                                         </fieldset>
-                                                        {{-- @endif --}}
+                                                        @endif
                                                         @endforeach
                                                       </div>
                                                     </div>

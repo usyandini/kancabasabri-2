@@ -17,15 +17,13 @@
                 @section('content')
                	<div class="content-header row">
                     <div class="content-header-left col-md-6 col-xs-12 mb-2">
-                        <h3 class="content-header-title mb-0">Edit Item</h3>
+                        <h3 class="content-header-title mb-0">Edit Item Transaksi</h3>
                         <div class="row breadcrumbs-top">
                             <div class="breadcrumb-wrapper col-xs-12">
                                 <ol class="breadcrumb">
-                                    <li class="breadcrumb-item"><a href="{{ url('/') }}">Manajemen Item</a>
+                                    <li class="breadcrumb-item"><a href="{{ url('/item') }}">Manajemen Item Transaksi</a>
                                     </li>
-                                    <li class="breadcrumb-item"><a href="{{ url('/') }}">Master Item</a>
-                                    </li>
-                                    <li class="breadcrumb-item active"><a href="{{ url('/item/create') }}">Edit Item</a>
+                                    <li class="breadcrumb-item active">Edit Item Transaksi
                                     </li>
                                 </ol>
                             </div>
@@ -59,81 +57,16 @@
                               </div>
                               @endif
                               <div class="form-body">
-                                <div class="form-group">
-                                  <label for="eventRegInput1">Kode Item</label>
-                                  <input type="text" required="Kode item harap diisi" class="form-control" placeholder="Kode Item" name="kode_item" value="{{ $items->kode_item }}">
-                                </div>
-                                <div class="form-group">
-                                  <label for="eventRegInput1">Item</label>
-                                  <input type="text" required="" class="form-control" placeholder="Item" id="nama_item" name="nama_item" value="{{ $items->nama_item }}">
-                                </div>
-                                {{--<div class="form-group">
-                                <label for="jenis">Jenis Anggaran</label>
-                                  <div = "row">
-                                    <div class = "col-md-10">
-                                      <select class="select2 form-control" name="jenis" id="jenis" required>
-                                        <option value="" disabled selected>Jenis Anggaran</option>
-                                        @foreach($jenis as $ja)
-                                        <option {{ $items->jenis_anggaran == $ja->id || $items->jenis_anggaran == $ja->kode || $items->jenis_anggaran == $ja->name ? 'selected=""' : '' }} value="{{ $ja->kode }}">{{ $ja->kode }} - {{ $ja->name }}</option>
-                                        @endforeach
-                                        </select>
-                                    </div>
-	                                  <div class = "col-md-2">
-                                      <span data-toggle='tooltip' title='Tambah'>
-                                        <button type="button" class="btn btn-success" data-target="#tambahJenis" data-toggle="modal">
-                                        <i class="fa fa-plus"></i>              
-                                        </button>
-                                      </span>
-                                    </div>
-                                    <div class = "col-md-1">
-                                      <span data-toggle='tooltip' title='Ubah'>
-                                        <button type="button" class="btn btn-warning" data-target="#editJenis" data-toggle="modal">
-                                        <i class="fa fa-edit"></i>
-                                        </button>
-                                      </span>
-	                                  </div>
+                                <div class="row">
+                                  <div class="form-group col-md-4">
+                                    <label for="eventRegInput1">Kode Item</label>
+                                    <input type="text" required="Kode item harap diisi" class="form-control" placeholder="Kode Item" name="kode_item" value="{{ $items->kode_item }}">
                                   </div>
-                             	  </div>
-                                <div class="form-group">
-                                  <label for="eventRegInput3">Kelompok Anggaran</label>
-                                  <div = "row">
-                                    <div class = "col-md-10">
-                                      <select class="select2 form-control" id="kelompok" name="kelompok" required>
-                                        <option value="" disabled selected>Kelompok Anggaran</option>
-                                        @foreach($kelompok as $ka)
-                                        <option {{ $items->kelompok_anggaran == $ka->id || $items->kelompok_anggaran == $ka->kode || $items->kelompok_anggaran == $ka->name ? 'selected=""' : '' }} value="{{ $ka->kode }}">{{ $ka->kode }} - {{ $ka->name }}</option>
-                                        @endforeach
-                                      </select>
-                                    </div>
-                                    <div class = "col-md-2">
-                                      <span data-toggle='tooltip' title='Tambah'>
-                                        <button type="button" class="btn btn-success" data-target="#tambahKelompok" data-toggle="modal">
-                                          <i class="fa fa-plus"></i>
-                                        </button>
-                                      </span>
-                                    </div>
+                                  <div class="form-group col-md-8">
+                                    <label for="eventRegInput1">Item</label>
+                                    <input type="text" required="" class="form-control" placeholder="Item" id="nama_item" name="nama_item" value="{{ $items->nama_item }}">
                                   </div>
                                 </div>
-                                <div class="form-group">
-                                  <label for="eventRegInput4">Pos Anggaran</label>
-                                  <div = "row">
-                                    <div class = "col-md-10">
-                                      <select class="select2 form-control" id="pos" name="pos" required>
-                                        <option value="" disabled selected>Pos Anggaran</option>
-                                        @foreach($pos as $pa)
-                                        <option {{ $items->pos_anggaran == $pa->id || $items->pos_anggaran == $pa->kode || $items->pos_anggaran == $pa->name ? 'selected=""' : '' }} value="{{ $pa->kode }}">{{ $pa->kode }} - {{ $pa->name }}</option>
-                                        @endforeach
-                                      </select>
-                                    </div>
-                                    <div class = "col-md-2">
-                                      <span data-toggle='tooltip' title='Tambah'>
-                                        <button type="button" class="btn btn-success" data-target="#tambahPos" data-toggle="modal">
-                                          <i class="fa fa-plus"></i>
-                                        </button>
-                                      </span>
-                                    </div>
-                                  </div>
-                                </div>--}}
                                 <div class="form-group">
                                   <div class="row">
                                     <div class="col-md-12 col-sm-12">
@@ -141,7 +74,7 @@
                                         <label>Display item untuk seluruh cabang</label>
                                         <fieldset>
                                           <input type="radio" id='item_display_on' name="item_display" value="1" {{ $items->is_displayed == "1" ? 'checked=""' : '' }}>
-                                          <label>Iya</label>
+                                          <label class="mr-2">Iya</label>
                                           <input type="radio" id='item_display_off' name="item_display" value="0" {{ $items->is_displayed == "0" ? 'checked=""' : '' }}>
                                           <label>Tidak</label>
                                         </fieldset>
@@ -260,11 +193,11 @@
                         <div class="card">
                           <div class="card-body">
                             <div class="card-block">
-                              <div class="form-actions right">
-                                <a href="{{ url('item') }}" class="btn btn-warning mr-1">
+                              <div class="pull-right">
+                                <a href="{{ url('item') }}" class="btn btn-danger mr-1">
                                   <i class="ft-x"></i> Kembali
                                 </a>    
-                                <button type="submit" class="btn btn-primary">
+                                <button type="submit" class="btn btn-outline-primary">
                                   <i class="fa fa-check-square-o"></i> Simpan
                                 </button>
                               </div>

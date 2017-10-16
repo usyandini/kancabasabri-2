@@ -252,7 +252,7 @@
                         <div class="card-body">
                           <div class="card-block">
                             <div class="pull-right">
-                              <a href="{{ url('user') }}" class="btn btn-warning">
+                              <a href="{{ url('user') }}" class="btn btn-danger">
                                 <i class="ft-x"></i> Kembali
                               </a>    
                               <button type="submit" class="btn btn-outline-secondary">
@@ -295,12 +295,10 @@
                                         $count = 0;
                                         ?>
                                         @foreach($cabang as $cab)
-                                        @if($cab->VALUE != "00")
                                         <fieldset>
                                           <input type="checkbox" name="perizinan[{{'unit_'.$cab->VALUE.'00'}}]" {{ isset(old('perizinan')['unit_'.$cab->VALUE.'00']) ? 'checked=""' : '' }}>
                                           <label>{{$cab->DESCRIPTION}}</label>
                                         </fieldset>
-                                        @endif
                                         <?php
                                         $count++;
                                         if($count > $countCAB/2){
@@ -331,12 +329,12 @@
                                     <div class="col-md-4 col-sm-4">
                                       <div class="form-group">
                                         @foreach($divisi as $div)
-                                        {{-- @if($div->VALUE!="00") --}}
+                                        @if($div->VALUE!="00")
                                         <fieldset>
                                           <input type="checkbox" name="perizinan[unit_{{'00'.$div->VALUE}}]" {{ isset(old('perizinan')['unit_00'.$div->VALUE]) ? 'checked=""' : '' }}>
-                                          <label>{{$div->VALUE != "00" ? $div->DESCRIPTION : "Non Divisi"}}</label>
+                                          <label>{{ $div->DESCRIPTION }}</label>
                                         </fieldset>
-                                        {{-- @endif --}}
+                                        @endif
                                         @endforeach
                                       </div>
                                     </div>
