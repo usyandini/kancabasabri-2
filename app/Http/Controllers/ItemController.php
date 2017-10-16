@@ -110,7 +110,7 @@ class ItemController extends Controller
     public function listAnggaran()
     {
        
-        $master_item = ItemMasterAnggaran::where('deleted_at',Null)->get();
+        $master_item = ItemMasterAnggaran::where('deleted_at',NULL)->get();
         $jenis = ItemAnggaranMaster::withTrashed()->where('type', 1)->get();
         $kelompok = ItemAnggaranMaster::withTrashed()->where('type', 2)->get();
         $pos = ItemAnggaranMaster::withTrashed()->where('type', 3)->get();
@@ -125,6 +125,7 @@ class ItemController extends Controller
             'subpos'    => $subpos,
             'kegiatan'  => $kegiatan,
         ]);
+        // return response()->json($master_item);
     }
 
     public function getCombination($mainaccount, $tanggal)
@@ -165,19 +166,24 @@ class ItemController extends Controller
 
     public function createItemAnggaran()
     {
-        // $jenis = ItemAnggaranMaster::where('type', 1)->get();
-        // $kelompok = ItemAnggaranMaster::where('type', 2)->get();
-        // $pos = ItemAnggaranMaster::where('type', 3)->get();
+        $jenis = ItemAnggaranMaster::where('type', 1)->get();
+        $kelompok = ItemAnggaranMaster::where('type', 2)->get();
+        $pos = ItemAnggaranMaster::where('type', 3)->get();
         return view('master.item.tambah-anggaran',
-            [   'item' => $this->itemModel->get(),
-                'program' => $this->programModel->where("VALUE", "THT")->get(),
-                'kpkc' => $this->kpkcModel->get(),
-                'divisi' => $this->divisiModel->get(),
-                'subpos' => $this->subPosModel->get(),
-                'm_anggaran' => $this->mAnggaranModel->get()
-                // 'jenis' => $jenis,
-                // 'kelompok' => $kelompok,
-                // 'pos' => $pos
+            [   
+                // 'item' => $this->itemModel->get(),
+                // 'program' => $this->programModel->where("VALUE", "THT")->get(),
+                // 'kpkc' => $this->kpkcModel->get(),
+                // 'divisi' => $this->divisiModel->get(),
+                'item'          => [],
+                'program'       => [],
+                'kpkc'          => [],
+                'divisi'        => [],
+                'subpos'        => $this->subPosModel->get(),
+                'm_anggaran'    => $this->mAnggaranModel->get(),
+                'jenis'         => $jenis,
+                'kelompok'      => $kelompok,
+                'pos'           => $pos
             ]);
     }
 
@@ -216,7 +222,27 @@ class ItemController extends Controller
             ItemMaster::create($inputItem);
         }
         session()->flash('success', true);
-        return redirect('/item/create');
+        return redirect('/item/create/transaksi');
+    }
+
+    public function addItemAnggaran(Request $request)
+    {
+        
+        $inputItem = array(
+            'jenis'    => $request->jenis,
+            'kelompok' => $request->kelompok,
+            'pos_anggaran'      => $request->pos,
+            'sub_pos'           => $request->subpos,
+            'mata_anggaran'     => $request->kegiatan,
+            'created_by'        => \Auth::id(),
+            'updated_by'        => \Auth::id(),
+            'deleted_at'        => null
+        );
+        
+        ItemMasterAnggaran::create($inputItem);
+        
+        session()->flash('success', true);
+        return redirect('/item/create/anggaran');
     }
 
     //item anggaran master
@@ -293,6 +319,26 @@ class ItemController extends Controller
             'items' => $item
         ]);
     }
+    public function editItemAnggaran($id)
+    {
+        $item = ItemMasterAnggaran::where('id', $id)->first();
+
+        $jenis = ItemAnggaranMaster::where('type', 1)->get();
+        $kelompok = ItemAnggaranMaster::where('type', 2)->get();
+        $pos = ItemAnggaranMaster::where('type', 3)->get();
+        return view('master.item.edit-anggaran', [
+            'item'          => [],
+            'program'       => [],
+            'kpkc'          => [],
+            'divisi'        => [],
+            'subpos' => $this->subPosModel->get(),
+            'm_anggaran' => $this->mAnggaranModel->get(),
+            'jenis' => $jenis,
+            'kelompok' => $kelompok,
+            'pos' => $pos,
+            'items' => $item
+        ]);
+    }
 
     public function updateItemTransaksi($id, Request $request)
     {
@@ -329,7 +375,24 @@ class ItemController extends Controller
             return redirect()->back()->withErrors($validatorItem)->withInput();
         }
         session()->flash('success', true);
-        return redirect('/item/edit/'.$id);
+        return redirect('/item/edit/transaksi/'.$id);
+    }
+
+    public function updateItemAnggaran($id, Request $request)
+    {
+        
+        $update = array(
+            'jenis'    => $request->jenis,
+            'kelompok' => $request->kelompok,
+            'pos_anggaran'      => $request->pos,
+            'sub_pos'           => $request->subpos,
+            'mata_anggaran'     => $request->kegiatan,
+            'updated_by'        => \Auth::id()
+        );
+        ItemMasterAnggaran::where('id', $id)->update($update);   
+        
+        session()->flash('success', true);
+        return redirect('/item/edit/anggaran/'.$id);
     }
 
     public function updateItem($id, Request $request)

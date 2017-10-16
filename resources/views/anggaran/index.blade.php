@@ -618,17 +618,17 @@
                             items: getData('jenis'),
                             insertTemplate: function() {
                               var result = jsGrid.fields.select.prototype.insertTemplate.call(this);
-                              // result.on("change", function() {
-                              //     changeDataSelect('kelompok',$(this).val());
-                              // });
+                              result.on("change", function() {
+                                  changeDataSelect('kelompok',$(this).val());
+                              });
                               return result;
                             },
                             editTemplate: function(value) {
                               var result = jsGrid.fields.select.prototype.editTemplate.call(this);
                               $(result).val(value);
-                              // result.on("change", function() {
-                              //     changeDataSelect('kelompok',$(this).val());
-                              // });
+                              result.on("change", function() {
+                                  changeDataSelect('kelompok',$(this).val());
+                              });
                               return result; 
                             },
                             validate: {
@@ -646,26 +646,26 @@
                             valueField: "name", 
                             textField: "name", 
                             insertcss: "kelompok_select",
-                            items: getData('kelompok'),
-                            // items:[
-                            //     { name: "Silahkan Pilih Jenis" }
-                            // ],
+                            // items: getData('kelompok'),
+                            items:[
+                                { name: "Silahkan Pilih Jenis" }
+                            ],
                             insertTemplate: function() {
                               kelompok = this._grid.fields[4];
                               var result = jsGrid.fields.select.prototype.insertTemplate.call(this);
-                              // result.on("change", function() {
-                              //     changeDataSelect('posanggaran',$(this).val());
-                              // });
+                              result.on("change", function() {
+                                  changeDataSelect('posanggaran',$(this).val());
+                              });
                               return result;
                             },
                             editTemplate: function(value) {
                               kelompok = this._grid.fields[4];
                               var result = jsGrid.fields.select.prototype.editTemplate.call(this);
                               $(result).val(value);
-                              // changeDataSelect('posanggaran',$(this).val());
-                              // result.on("change", function() {
-                              //     changeDataSelect('posanggaran',$(this).val());
-                              // });
+                              changeDataSelect('posanggaran',$(this).val());
+                              result.on("change", function() {
+                                  changeDataSelect('posanggaran',$(this).val());
+                              });
                               return result; 
                             },
                             validate: {
@@ -683,26 +683,26 @@
                             valueField: "name", 
                             textField: "name", 
                             insertcss: "pos_select",
-                            items: getData('posanggaran'),
-                            // items:[
-                            //     { name: "Silahkan Pilih Kelompok" },
-                            // ],
+                            // items: getData('posanggaran'),
+                            items:[
+                                { name: "Silahkan Pilih Kelompok" },
+                            ],
                             insertTemplate: function() {
                               pos = this._grid.fields[5];
                               var result = jsGrid.fields.select.prototype.insertTemplate.call(this);
-                              // result.on("change", function() {
-                              //     changeDataSelect('subpos',$(this).val());
-                              // });
+                              result.on("change", function() {
+                                  changeDataSelect('subpos',$(this).val());
+                              });
                               return result;
                             },
                             editTemplate: function(value) {
                               pos = this._grid.fields[5];
                               var result = jsGrid.fields.select.prototype.editTemplate.call(this);
                               $(result).val(value);
-                              // changeDataSelect('subpos',$(this).val());
-                              // result.on("change", function() {
-                              //     changeDataSelect('subpos',$(this).val());
-                              // });
+                              changeDataSelect('subpos',$(this).val());
+                              result.on("change", function() {
+                                  changeDataSelect('subpos',$(this).val());
+                              });
                               return result; 
                             },
                             validate: {
@@ -720,26 +720,26 @@
                             valueField: "DESCRIPTION", 
                             textField: "DESCRIPTION", 
                             insertcss: "sub_select",
-                            items: getData('subpos'),
-                            // items:[
-                            //     { DESCRIPTION: "Silahkan Pilih Pos Anggaran" },
-                            // ],
+                            // items: getData('subpos'),
+                            items:[
+                                { DESCRIPTION: "Silahkan Pilih Pos Anggaran" },
+                            ],
                             insertTemplate: function() {
                               sub = this._grid.fields[6];
                               var result = jsGrid.fields.select.prototype.insertTemplate.call(this);
-                              // result.on("change", function() {
-                              //     changeDataSelect('mataanggaran',$(this).val());
-                              // });
+                              result.on("change", function() {
+                                  changeDataSelect('mataanggaran',$(this).val());
+                              });
                               return result;
                             },
                             editTemplate: function(value) {
                               sub = this._grid.fields[6];
                               var result = jsGrid.fields.select.prototype.editTemplate.call(this);
                               $(result).val(value);
-                              // changeDataSelect('mataanggaran',$(this).val());
-                              // result.on("change", function() {
-                              //     changeDataSelect('mataanggaran',$(this).val());
-                              // });
+                              changeDataSelect('mataanggaran',$(this).val());
+                              result.on("change", function() {
+                                  changeDataSelect('mataanggaran',$(this).val());
+                              });
                               return result; 
                             },
                             validate: {
@@ -757,11 +757,11 @@
                             valueField: "DESCRIPTION", 
                             textField: "DESCRIPTION", 
                             insertcss: "mata_select",
-                            items: getData('mataanggaran'),
+                            // items: getData('mataanggaran'),
 
-                            // items:[
-                            //     { DESCRIPTION: "Silahkan Pilih Sup Pos" },
-                            // ],
+                            items:[
+                                { DESCRIPTION: "Silahkan Pilih Sup Pos" },
+                            ],
                             insertTemplate: function() {
                               mata_anggaran = this._grid.fields[7];
                               var result = jsGrid.fields.select.prototype.insertTemplate.call(this);

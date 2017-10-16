@@ -38,7 +38,7 @@
                                     <h4 class="card-title">Daftar Item</h4>
                                     <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
                                     <div class="col-md-12" >
-                                    <a href="{{ url('item/add/anggaran') }}" class="btn btn-success pull-right"><i class="fa fa-plus"></i> Tambah</a>
+                                    <a href="{{ url('item/create/anggaran') }}" class="btn btn-success pull-right"><i class="fa fa-plus"></i> Tambah</a>
                                 </div>
                                   </div>
                                   <div class="card-body collapse in">                               
