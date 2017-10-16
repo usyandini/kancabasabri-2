@@ -12,7 +12,7 @@ class RenameTableItemanggaranmaster extends Migration
      */
     public function up()
     {
-        Schema::rename('item_anggaran_master', 'item_master_anggaran');
+        Schema::rename('item_anggaran_master', 'item_anggaran');
     }
 
     /**
@@ -22,6 +22,6 @@ class RenameTableItemanggaranmaster extends Migration
      */
     public function down()
     {
-        Schema::rename('item_master_anggaran', 'item_anggaran_master');
+        Schema::rename('item_anggaran', 'item_anggaran_master');
     }
 }
