@@ -59,7 +59,7 @@
                                       </label>
                                       <label class="display-inline-block custom-radio" style="margin: 0;">
                                         <input type="radio" id='activ_dir_on' name="as_ldap" value="1" {{ old('as_ldap') == "1" ? 'checked=""' : '' }}>
-                                        Daftar dengan Active Dirctory
+                                        Daftar dengan Active Directory
                                       </label>
                                     </fieldset>
                                   </div>
@@ -255,7 +255,7 @@
                               <a href="{{ url('user') }}" class="btn btn-danger">
                                 <i class="ft-x"></i> Kembali
                               </a>    
-                              <button type="submit" class="btn btn-outline-secondary">
+                              <button type="submit" class="btn btn-outline-primary">
                                 <i class="fa fa-check-square-o"></i> Simpan
                               </button>
                             </div>
