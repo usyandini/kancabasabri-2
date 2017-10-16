@@ -253,7 +253,8 @@ class AnggaranController extends Controller
 
         $diff1 = strtotime($date_now) - strtotime($date_mulai);
         $diff2 = strtotime($date_selesai) - strtotime($date_now);
-
+        $mulai=false;
+        $batas=$date_selesai;
         if($diff2 <= 0){
             $beda = false;
         }else{
@@ -261,6 +262,8 @@ class AnggaranController extends Controller
         }
 
         if($diff1 < 0){
+            $mulai=true;
+            $batas= $date_mulai;
             $beda = false;
         }else{
             $beda = true;
@@ -274,7 +277,8 @@ class AnggaranController extends Controller
             'userDivisi' =>$this->userDivisi,
             'nd_surat' => '',
             'beda' => $beda ,
-            'batas' =>$date_selesai,
+            'batas' =>$batas,
+            'mulai' =>$mulai,
             'status' => 'tambah',
             'reject' => false,
             'filters' =>null,
@@ -327,7 +331,8 @@ class AnggaranController extends Controller
         $diff1 = strtotime($date_now) - strtotime($date_mulai);
         $diff2 = strtotime($date_selesai) - strtotime($date_now);
         $beda = false;
-
+        $mulai= false;
+        $batas=$date_selesai;
         if($userUnit == $unit){
             $beda = true;
             if($diff2 <= 0){
@@ -335,6 +340,8 @@ class AnggaranController extends Controller
             }
 
             if($diff1 < 0){
+                $mulai=true;
+                $batas= $date_mulai;
                 $beda = false;
             }
         }
@@ -358,7 +365,8 @@ class AnggaranController extends Controller
             'userDivisi' =>$this->userDivisi,
             'nd_surat' => $nd_surat,
             'beda' => $beda , 
-            'batas' =>$date_selesai,
+            'batas' =>$batas,
+            'mulai' =>$mulai,
             'status' => 'edit',
             'reject' => false,
             'filters' => array('nd_surat' => $nd_surat),
@@ -1032,29 +1040,6 @@ class AnggaranController extends Controller
             case 'cabang':
                 $return = $this->kanCabModel->select('DESCRIPTION', 'VALUE')->where("VALUE",$id)->get();
                 break;
-            // case 'mataanggaran':
-            //     // $return = $this->kegiatanModel->orderBy('DESCRIPTION','ASC')->get();
-            //     $return = [];
-            //     $mataanggaran;
-            //     if($id == "-1"){
-            //         $mataanggaran = ItemMaster::orderBy('nama_item','ASC')->get(); 
-            //     }else{
-            //         $mataanggaran = ItemMaster::where('nama_item',urldecode($id))->orderBy('nama_item','ASC')->get();  
-            //     }
-
-
-            //     foreach ($mataanggaran as $mata) {
-            //         $return[] = [
-            //             'item'             => $mata->nama_item,
-            //             'jenis'             => ItemAnggaranMaster::where('kode',$mata->jenis_anggaran)->where('type',1)->first()->name,
-            //             'kelompok'          => ItemAnggaranMaster::where('kode',$mata->kelompok_anggaran)->where('type',2)->first()->name,
-            //             'pos_anggaran'      => ItemAnggaranMaster::where('kode',$mata->pos_anggaran)->where('type',3)->first()->name,
-            //             'sub_pos'           => $mata->sub_pos,
-            //             'mata_anggaran'     => $mata->mata_anggaran,
-            //         ];
-            //     }
-                
-            //     break;
             case 'mataanggaran':
                 $value = explode("->",$id);
                 $decode = urldecode($id);
