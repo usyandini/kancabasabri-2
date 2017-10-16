@@ -18,6 +18,7 @@ use App\Models\Divisi;
 use App\Models\SubPos;
 use App\Models\Kegiatan;
 
+use App\Models\ItemMasterAnggaran;
 use App\Models\ItemMaster;
 use App\Models\ItemAnggaranMaster;
 use App\Models\RejectReason;
@@ -66,8 +67,8 @@ class ItemController extends Controller
             $this->subPosModel = $subpos;
             $this->mAnggaranModel = $m_anggaran;
 
-            $this->middleware('can:manajemen_k_i', ['only' => 'index']);
-            $this->middleware('can:manajemen_i_a', ['only' => 'editItemAnggaran']);
+            $this->middleware('can:manajemen_i_t', ['only' => 'index']);
+            $this->middleware('can:manajemen_i', ['only' => 'editItemAnggaran']);
             $this->middleware('can:manajemen_a_m', ['only' => 'reason']);
             $this->middleware('can:manajemen_p_p', ['only' => 'program_prioritas',
                                                         'store_program_prioritas',

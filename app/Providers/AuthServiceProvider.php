@@ -103,7 +103,7 @@ class AuthServiceProvider extends ServiceProvider
              $permissions[] = $pelaporan[$i];
         }
 
-        $manajemen_item = ["manajemen_k_i","manajemen_i_a","manajemen_a_m","manajemen_p_p","manajemen_a_RUPS"];
+        $manajemen_item = ["manajemen_i_t","manajemen_i_a","manajemen_i","manajemen_a_m","manajemen_p_p","manajemen_a_RUPS"];
 
         for($i=0;$i<count($manajemen_item);$i++){
              $permissions[] = $manajemen_item[$i];

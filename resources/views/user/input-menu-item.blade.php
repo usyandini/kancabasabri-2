@@ -11,12 +11,16 @@
         <h5>Aksi</h5>
         <div class="form-group skin skin-square" id="item">
           <fieldset >
-            <input id="info_transaksi" type="checkbox"  name="perizinan[manajemen_k_i]" {{ isset(old('perizinan')['manajemen_k_i']) ? 'checked=""' : '' }} >
-            <label>Manajemen Kombinasi Item</label>
+            <input id="info_transaksi" type="checkbox"  name="perizinan[manajemen_i_t]" {{ isset(old('perizinan')['manajemen_i_t']) ? 'checked=""' : '' }} >
+            <label>Manajemen Item Transaksi</label>
+          </fieldset>
+          <fieldset >
+            <input id="info_transaksi" type="checkbox"  name="perizinan[manajemen_i_a]" {{ isset(old('perizinan')'manajemen_i_a']) ? 'checked=""' : '' }} >
+            <label>Manajemen Item Anggaran dan Kegiatan</label>
           </fieldset>
           <fieldset>
-            <input type="checkbox" name="perizinan[manajemen_i_a]" {{ isset(old("perizinan")['manajemen_i_a']) ? 'checked=""' : '' }}>
-            <label>Manajemen Item Anggaran</label>
+            <input type="checkbox" name="perizinan[manajemen_i]" {{ isset(old('perizinan')['manajemen_i']) ? 'checked=""' : '' }}>
+            <label>Manajemen Item</label>
           </fieldset>
           <fieldset>
             <input type="checkbox" name="perizinan[manajemen_a_m]" {{ isset(old('perizinan')['manajemen_a_m']) ? 'checked=""' : '' }}>
