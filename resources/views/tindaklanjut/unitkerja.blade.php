@@ -326,9 +326,13 @@
 			                        			<td>{{ $reason->unitkerja }}</td>
 			                        			<td><center>{{ $tgl }} {{ $bulan }} {{ $tahun }}</center></td>
 			                        			<td align="right">{{ $reason->durasi }} Hari</td>
-			                        			<td align="right">@if ($tanggal2>$tanggal3)<p class="info"> {{ $selisih }} Hari </p>@endif
-			                        							  @if ($tanggal3>$tanggal2)<p class="danger"> -{{ $selisih }} Hari </p>@endif
-			                        							  @if ($selisih=="")<p class="warning"> 0 Hari </p>@endif</td>
+			                        			<td align="right">
+			                        							@if ($reason->kirim!=3)
+			                        							  @if ($tanggal2>$tanggal3)<p class="info"> {{ $selisih }} Hari </p>
+			                        							  @elseif ($tanggal3>$tanggal2)<p class="danger"> -{{ $selisih }} Hari </p>
+			                        							  @elseif ($selisih=="")<p class="warning"> 0 Hari </p>@endif
+			                        							@endif
+			                        							</td>
 			                        			<td><center>{{ $tgls }} {{ $bulans }} {{ $tahuns }}</center></td>
 												<td><center>
 													<span data-toggle='tooltip' title='Proses'><a href="{{ URL('unitkerja/tindaklanjut/'. $reason->id1) }}" class="btn btn-success btn-sm"><i class="fa fa-share-square-o"></i> </a></span>											
@@ -437,8 +441,23 @@
 				<script type="text/javascript">
 
 					
-					$('.datatable-select-inputs').DataTable( {
+					
+						$('.datatable-select-inputs').DataTable( {
 							scrollX: true,
+							"language": {
+								"paginate": {
+								  "previous": "Sebelumnya",
+								  "next": "Selanjutnya"
+								},
+
+    							"emptyTable":  "Tidak Ada Data Tersimpan",
+    							"info":  "Menampilkan _START_-_END_ dari _TOTAL_ Data",
+    							"infoEmpty":  "Menampilkan 0-0 dari _TOTAL_ Data ",
+    							"search": "Pencarian:",
+    							"lengthMenu": "Perlihatkan _MENU_ masukan",
+    							"infoFiltered": "(telah di filter dari _MAX_ total masukan)",
+    							"zeroRecords": "Tidak ada data ditemukan"
+    						},
 						    initComplete: function () {
 						        this.api().columns('#filterable').every( function () {
 						            var column = this;
@@ -460,7 +479,6 @@
 						        } );
 						    }
 						} );
-
 				</script>
 				
                 @endsection
