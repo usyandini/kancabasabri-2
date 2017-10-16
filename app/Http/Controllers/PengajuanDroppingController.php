@@ -330,9 +330,11 @@ class PengajuanDroppingController extends Controller
          ];
          if ($verifikasi == 1){
             $a = '4';
+            NotificationSystem::send($id, 44);
          }
          if ($verifikasi == 2){
             $a = '1';
+            NotificationSystem::send($id, 43);
          }
          
          $data = [
