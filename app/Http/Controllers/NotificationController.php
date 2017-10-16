@@ -162,8 +162,14 @@ class NotificationController extends Controller
                 }
             }
 
-            if($notifDetail->type == 41||$notifDetail->type == 42){
+            if($notifDetail->type == 41||$notifDetail->type == 43||$notifDetail->type == 44){
                 if(!Gate::check('informasi_a_d')&&$unit_kerja!=$unit){
+                    $read = false;
+                }
+            }
+
+            if($notifDetail->type == 42){
+                if(!Gate::check('setuju_a_d_2')){
                     $read = false;
                 }
             }
@@ -251,10 +257,14 @@ class NotificationController extends Controller
             case 39:
                 return redirect('unitkerja/tindaklanjut/'.$notifDetail->batch_id);
             case 40:
-                return redirect('acc_pengajuan_dropping/verivikasi/'.$notifDetail->batch_id);
+                return redirect('acc_pengajuan_dropping/verifikasi/'.$notifDetail->batch_id);
             case 41:
                 return redirect('pengajuan_dropping');
             case 42:
+                return redirect('acc_pengajuan_dropping2/verifikasi/'.$notifDetail->batch_id);
+            case 43:
+                return redirect('pengajuan_dropping');
+            case 44:
                 return redirect('pengajuan_dropping');
 			default:
 				return redirect('transaksi/');
