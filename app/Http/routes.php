@@ -145,6 +145,7 @@ Route::group(['middleware' => 'auth'], function() {
 		Route::get('/anggaran', 'ItemController@listAnggaran');
 		Route::get('/get/combination/{id}/{tanggal}', 'ItemController@getCombination');
 		Route::get('/create/transaksi', 'ItemController@createItemTransaksi');
+		Route::get('/create/anggaran', 'ItemController@createItemAnggaran');
 		Route::post('/add/transaksi', 'ItemController@addItemTransaksi');
 		Route::post('/submit/{type}', 'ItemController@submitAnggaranItem');
 		Route::get('/edit/transaksi/{id}', 'ItemController@editItemTransaksi');

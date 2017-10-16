@@ -109,16 +109,21 @@ class ItemController extends Controller
     }
     public function listAnggaran()
     {
-        $master_item = ItemMaster::orderby('kode_item')->get();
-        // $jenis = ItemAnggaranMaster::withTrashed()->where('type', 1)->get();
-        // $kelompok = ItemAnggaranMaster::withTrashed()->where('type', 2)->get();
-        // $pos = ItemAnggaranMaster::withTrashed()->where('type', 3)->get();
-        return view('master.item.index', [
-            'items' => $master_item, 
-            'no' => 1, 
-            // 'jenis' => $jenis,
-            // 'kelompok' => $kelompok,
-            // 'pos' => $pos
+       
+        $master_item = ItemMasterAnggaran::where('deleted_at',Null)->get();
+        $jenis = ItemAnggaranMaster::withTrashed()->where('type', 1)->get();
+        $kelompok = ItemAnggaranMaster::withTrashed()->where('type', 2)->get();
+        $pos = ItemAnggaranMaster::withTrashed()->where('type', 3)->get();
+        $subpos = SubPos::get();
+        $kegiatan = Kegiatan::get();
+        return view('master.item.list-anggaran', [
+            'items'     => $master_item, 
+            'no'        => 1, 
+            'jenis'     => $jenis,
+            'kelompok'  => $kelompok,
+            'pos'       => $pos,
+            'subpos'    => $subpos,
+            'kegiatan'  => $kegiatan,
         ]);
     }
 
@@ -146,6 +151,24 @@ class ItemController extends Controller
         // $kelompok = ItemAnggaranMaster::where('type', 2)->get();
         // $pos = ItemAnggaranMaster::where('type', 3)->get();
     	return view('master.item.tambah-transaksi',
+            [   'item' => $this->itemModel->get(),
+                'program' => $this->programModel->where("VALUE", "THT")->get(),
+                'kpkc' => $this->kpkcModel->get(),
+                'divisi' => $this->divisiModel->get(),
+                'subpos' => $this->subPosModel->get(),
+                'm_anggaran' => $this->mAnggaranModel->get()
+                // 'jenis' => $jenis,
+                // 'kelompok' => $kelompok,
+                // 'pos' => $pos
+            ]);
+    }
+
+    public function createItemAnggaran()
+    {
+        // $jenis = ItemAnggaranMaster::where('type', 1)->get();
+        // $kelompok = ItemAnggaranMaster::where('type', 2)->get();
+        // $pos = ItemAnggaranMaster::where('type', 3)->get();
+        return view('master.item.tambah-anggaran',
             [   'item' => $this->itemModel->get(),
                 'program' => $this->programModel->where("VALUE", "THT")->get(),
                 'kpkc' => $this->kpkcModel->get(),
