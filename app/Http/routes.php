@@ -141,7 +141,7 @@ Route::group(['middleware' => 'auth'], function() {
 
 	Route::group(['prefix' => 'item'], function(){
 		Route::resource('/', 'ItemController');
-		Route::get('/get/combination/{id}/{cabang}/{divisi}/{tanggal}', 'ItemController@getCombination');
+		Route::get('/get/combination/{id}/{tanggal}', 'ItemController@getCombination');
 		Route::get('/create', 'ItemController@create');
 		Route::post('/add', 'ItemController@addItem');
 		Route::post('/submit/{type}', 'ItemController@submitAnggaranItem');

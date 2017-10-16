@@ -78,8 +78,12 @@ class Batch extends Model
     {
         $divisi = 'unit_00'.$this->divisi;
         $cabang = 'unit_'.$this->cabang.'00';
-        
-        return \Auth::user()->hasAccess($divisi) && \Auth::user()->hasAccess($cabang);
+
+        if ($this->cabang == '00') {
+            return \Auth::user()->hasAccess($cabang) && \Auth::user()->hasAccess($divisi);    
+        }
+
+        return \Auth::user()->hasAccess($cabang);
     }
 
     public function canReported()

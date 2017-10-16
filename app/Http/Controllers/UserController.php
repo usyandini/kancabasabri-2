@@ -23,8 +23,6 @@ class UserController extends Controller
         $this->middleware('can:restore_u', ['only' => 'restore']);
     }
 
-
-
     public function index()
     {
     	return view('user.index', ['users' => User::withTrashed()->get()]);

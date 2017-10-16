@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class ItemMaster extends Model
 {
     protected $connection = 'sqlsrv';
-    protected $table = 'item_master';
+    protected $table = 'item_master_transaksi';
 
     // protected $dateFormat = 'Y-m-d H:i:s';
 
@@ -16,9 +16,9 @@ class ItemMaster extends Model
     protected $fillable = [
     	'kode_item',
     	'nama_item',
-    	'jenis_anggaran',
-    	'kelompok_anggaran',
-    	'pos_anggaran',
+    	// 'jenis_anggaran',
+    	// 'kelompok_anggaran',
+    	// 'pos_anggaran',
     	'sub_pos',
     	'mata_anggaran',
 
@@ -44,6 +44,15 @@ class ItemMaster extends Model
     public function isAxAnggaranAvailable($transaksi_date)
     {
         return $this->axAnggaran($transaksi_date) ? true : false;   
+    }
+
+    public function isDisplayed($cabang)
+    {
+        if ($this->is_displayed == "0") {
+            return $this->SEGMEN_3 == $cabang;
+        }  
+
+        return true;
     }
 
     public function budgetHistory($transaksi_date)

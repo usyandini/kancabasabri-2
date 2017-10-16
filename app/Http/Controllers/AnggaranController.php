@@ -1055,15 +1055,79 @@ class AnggaranController extends Controller
                 
             //     break;
             case 'mataanggaran':
+                // $value = explode("->",$id);
+                // $decode = urldecode($id);
+                // if(count($value)>1){
+                //     $val = $value[0];
+                //     for($i = 1;$i<count($val);$i++){
+                //         $val .= $value[$i];
+                //     }
+                //     $decode = urldecode($val);
+                // }
+                // $item = ItemMaster::where('sub_pos',$decode)->get();
+                // $array = [];
+                // foreach ($item as $row) {
+                //     array_push($array,$row->mata_anggaran);
+                // }
+                // $return = Kegiatan::select('DESCRIPTION')->where('DESCRIPTION','<>','None')->whereIn('DESCRIPTION',$array)->orderBy('DESCRIPTION','ASC')->get();
                 $return = Kegiatan::select('DESCRIPTION')->where('DESCRIPTION','<>','None')->orderBy('DESCRIPTION','ASC')->get();
                 break;
             case 'subpos':
+                // $value = explode("->",$id);
+                // $decode = urldecode($id);
+                // if(count($value)>1){
+                //     $val = $value[0];
+                //     for($i = 1;$i<count($value);$i++){
+                //         $val .=  "/".$value[$i];
+                //     }
+                //     $decode = urldecode($val);
+                // }
+
+                // $kode= ItemAnggaranMaster::where('name',$decode)->first()->kode;
+                // $item = ItemMaster::where('pos_anggaran',$kode)->get();
+                // $array = [];
+                // foreach ($item as $row) {
+                //     array_push($array,$row->sub_pos);
+                // }
+                // $return = SubPos::select('DESCRIPTION')->where('DESCRIPTION','<>','None')->whereIn('DESCRIPTION',$array)->orderBy('DESCRIPTION','ASC')->get(); 
                 $return = SubPos::select('DESCRIPTION')->where('DESCRIPTION','<>','None')->orderBy('DESCRIPTION','ASC')->get(); 
                 break;
             case 'posanggaran':
+                // $value = explode("->",$id);
+                // $decode = urldecode($id);
+                // if(count($value)>1){
+                //     $val = $value[0];
+                //     for($i = 1;$i<count($val);$i++){
+                //         $val .= $value[$i];
+                //     }
+                //     $decode = urldecode($val);
+                // }
+                // $kode= ItemAnggaranMaster::where('name',$decode)->first()->kode;
+                // $item = ItemMaster::where('kelompok_anggaran',$kode)->get();
+                // $array = [];
+                // foreach ($item as $row) {
+                //     array_push($array,$row->pos_anggaran);
+                // }
+                // $return = ItemAnggaranMaster::select('name')->where('type',3)->whereIn('kode',$array)->ordderBy('name','ASC')->get(); 
                 $return = ItemAnggaranMaster::select('name')->where('type',3)->orderBy('name','ASC')->get(); 
                 break;
             case 'kelompok':
+                // $value = explode("->",$id);
+                // $decode = urldecode($id);
+                // if(count($value)>1){
+                //     $val = $value[0];
+                //     for($i = 1;$i<count($val);$i++){
+                //         $val .= $value[$i];
+                //     }
+                //     $decode = urldecode($val);
+                // }
+                // $kode= ItemAnggaranMaster::where('name',$decode)->first()->kode;
+                // $item = ItemMaster::where('jenis_anggaran',$kode)->get();
+                // $array = [];
+                // foreach ($item as $row) {
+                //     array_push($array,$row->kelompok_anggaran);
+                // }
+                // $return = ItemAnggaranMaster::select('name')->where('type',2)->whereIn('kode',$array)->orderBy('name','ASC')->get(); 
                 $return = ItemAnggaranMaster::select('name')->where('type',2)->orderBy('name','ASC')->get(); 
                 break;
             case 'jenis':

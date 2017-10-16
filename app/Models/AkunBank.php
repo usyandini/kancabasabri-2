@@ -17,6 +17,6 @@ class AkunBank extends Model
 
 	public function isAccessibleByCabang()
 	{
-		return \Auth::user()->hasAccess('unit_'.$this->ID_CABANG.'00') ? true : false;
+		return \Auth::user()->hasAccess('unit_'.$this->ID_CABANG.'00') && $this->ID_CABANG != '00' ? true : false;
 	}    
 }

@@ -18,6 +18,7 @@ use App\Models\Divisi;
 use App\Models\SubPos;
 use App\Models\Kegiatan;
 
+use App\Models\ItemMasterAnggaran;
 use App\Models\ItemMaster;
 use App\Models\ItemAnggaranMaster;
 use App\Models\RejectReason;
@@ -66,8 +67,8 @@ class ItemController extends Controller
             $this->subPosModel = $subpos;
             $this->mAnggaranModel = $m_anggaran;
 
-            $this->middleware('can:manajemen_k_i', ['only' => 'index']);
-            $this->middleware('can:manajemen_i_a', ['only' => 'editItemAnggaran']);
+            $this->middleware('can:manajemen_i_t', ['only' => 'index']);
+            $this->middleware('can:manajemen_i', ['only' => 'editItemAnggaran']);
             $this->middleware('can:manajemen_a_m', ['only' => 'reason']);
             $this->middleware('can:manajemen_p_p', ['only' => 'program_prioritas',
                                                         'store_program_prioritas',
@@ -86,27 +87,23 @@ class ItemController extends Controller
     public function index()
     {
         $master_item = ItemMaster::orderby('kode_item')->get();
-        $jenis = ItemAnggaranMaster::withTrashed()->where('type', 1)->get();
-        $kelompok = ItemAnggaranMaster::withTrashed()->where('type', 2)->get();
-        $pos = ItemAnggaranMaster::withTrashed()->where('type', 3)->get();
+        // $jenis = ItemAnggaranMaster::withTrashed()->where('type', 1)->get();
+        // $kelompok = ItemAnggaranMaster::withTrashed()->where('type', 2)->get();
+        // $pos = ItemAnggaranMaster::withTrashed()->where('type', 3)->get();
     	return view('master.item.index', [
             'items' => $master_item, 
             'no' => 1, 
-            'jenis' => $jenis,
-            'kelompok' => $kelompok,
-            'pos' => $pos
+            // 'jenis' => $jenis,
+            // 'kelompok' => $kelompok,
+            // 'pos' => $pos
         ]);
     }
 
-    public function getCombination($mainaccount, $cabang, $divisi, $tanggal)
+    public function getCombination($mainaccount, $tanggal)
     {
         $tanggal = date("Y-m-d", strtotime($tanggal));
         $result = ItemMaster::where([
-            ['SEGMEN_1', $mainaccount], 
-            ['SEGMEN_2', 'THT'],
-            ['SEGMEN_3', $cabang],
-            ['SEGMEN_4', $divisi]])->first();
-        
+            ['id', $mainaccount]])->first();
         if (isset($result) && $result->isAxAnggaranAvailable($tanggal)) {
             $result['ax_anggaran'] = $result->axAnggaran($tanggal);
             $result['ax_anggaran']['PIL_AMOUNTAVAILABLE'] = $result['actual_anggaran'] = (int)$result['ax_anggaran']['PIL_AMOUNTAVAILABLE'];
@@ -122,19 +119,19 @@ class ItemController extends Controller
 
     public function create()
     {
-        $jenis = ItemAnggaranMaster::where('type', 1)->get();
-        $kelompok = ItemAnggaranMaster::where('type', 2)->get();
-        $pos = ItemAnggaranMaster::where('type', 3)->get();
+        // $jenis = ItemAnggaranMaster::where('type', 1)->get();
+        // $kelompok = ItemAnggaranMaster::where('type', 2)->get();
+        // $pos = ItemAnggaranMaster::where('type', 3)->get();
     	return view('master.item.tambah',
             [   'item' => $this->itemModel->get(),
                 'program' => $this->programModel->where("VALUE", "THT")->get(),
                 'kpkc' => $this->kpkcModel->get(),
                 'divisi' => $this->divisiModel->get(),
                 'subpos' => $this->subPosModel->get(),
-                'm_anggaran' => $this->mAnggaranModel->get(),
-                'jenis' => $jenis,
-                'kelompok' => $kelompok,
-                'pos' => $pos
+                'm_anggaran' => $this->mAnggaranModel->get()
+                // 'jenis' => $jenis,
+                // 'kelompok' => $kelompok,
+                // 'pos' => $pos
             ]);
     }
 
@@ -154,9 +151,9 @@ class ItemController extends Controller
             $inputItem = array(
                 'kode_item'         => $request->kode_item,
                 'nama_item'         => $request->nama_item,
-                'jenis_anggaran'    => $request->jenis,
-                'kelompok_anggaran' => $request->kelompok,
-                'pos_anggaran'      => $request->pos,
+                // 'jenis_anggaran'    => $request->jenis,
+                // 'kelompok_anggaran' => $request->kelompok,
+                // 'pos_anggaran'      => $request->pos,
                 'sub_pos'           => $name_subpos->DESCRIPTION,
                 'mata_anggaran'     => $name_kegiatan->DESCRIPTION,
 
@@ -176,6 +173,7 @@ class ItemController extends Controller
         return redirect('/item/create');
     }
 
+    //item anggaran master
     public function submitAnggaranItem($type, Request $request)
     {
         $arraykode = array($request->kode, $request->kode_jenis, $request->kode_kelompok, $request->kode_pos);
@@ -233,9 +231,9 @@ class ItemController extends Controller
     {
         $item = ItemMaster::where('id', $id)->first();
 
-        $jenis = ItemAnggaranMaster::where('type', 1)->get();
-        $kelompok = ItemAnggaranMaster::where('type', 2)->get();
-        $pos = ItemAnggaranMaster::where('type', 3)->get();
+        // $jenis = ItemAnggaranMaster::where('type', 1)->get();
+        // $kelompok = ItemAnggaranMaster::where('type', 2)->get();
+        // $pos = ItemAnggaranMaster::where('type', 3)->get();
         return view('master.item.edit-item', [
             'item' => $this->itemModel->get(),
             'program' => $this->programModel->where("VALUE", "THT")->get(),
@@ -243,9 +241,9 @@ class ItemController extends Controller
             'divisi' => $this->divisiModel->get(),
             'subpos' => $this->subPosModel->get(),
             'm_anggaran' => $this->mAnggaranModel->get(),
-            'jenis' => $jenis,
-            'kelompok' => $kelompok,
-            'pos' => $pos,
+            // 'jenis' => $jenis,
+            // 'kelompok' => $kelompok,
+            // 'pos' => $pos,
             'items' => $item
         ]);
     }
@@ -265,9 +263,9 @@ class ItemController extends Controller
             $update = array(
                 'kode_item'         => $request->kode_item,
                 'nama_item'         => $request->nama_item,
-                'jenis_anggaran'    => $request->jenis,
-                'kelompok_anggaran' => $request->kelompok,
-                'pos_anggaran'      => $request->pos,
+                // 'jenis_anggaran'    => $request->jenis,
+                // 'kelompok_anggaran' => $request->kelompok,
+                // 'pos_anggaran'      => $request->pos,
                 'sub_pos'           => $name_subpos->DESCRIPTION,
                 'mata_anggaran'     => $name_kegiatan->DESCRIPTION,
 

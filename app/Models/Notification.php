@@ -113,9 +113,9 @@ class Notification extends Model
                 $TW = "TW ".$tw_dari." Sampai TW ".$tw_ke;
             }
 
-        }else if($this->type >= 40&& $this->type <= 42){
-            $periode = $this->pengajuanDropping['periode_realisasi'];
-            switch ($periode) {
+        }else if($this->type >= 40&& $this->type <= 44){
+            $TW = $this->pengajuanDropping['periode_realisasi'];
+            switch ($TW) {
                 case '1': $TW = "I";break;
                 case '2': $TW = "II";break;
                 case '3': $TW = "III";break;
@@ -224,7 +224,11 @@ class Notification extends Model
             case 41:
                 return 'Pengajuan Dropping '.$this->pengajuanDropping['kantor_cabang'].' periode TW '.$TW.' dengan Nomor '.$this->pengajuanDropping['nomor'].' telah ditolak oleh ????. Silahkan Kirim Pengajuan Kembali.';
             case 42:
-                return 'Pengajuan Dropping '.$this->pengajuanDropping['kantor_cabang'].' periode TW '.$TW.' dengan Nomor '.$this->pengajuanDropping['nomor'].' telah diterima oleh ????.';
+                return 'Pengajuan Dropping '.$this->pengajuanDropping['kantor_cabang'].' periode TW '.$TW.' dengan Nomor '.$this->pengajuanDropping['nomor'].' telah diterima oleh ???? dan sedang diverifikasi oleh ????2.';
+            case 43:
+                return 'Pengajuan Dropping '.$this->pengajuanDropping['kantor_cabang'].' periode TW '.$TW.' dengan Nomor '.$this->pengajuanDropping['nomor'].' telah ditolak oleh ????2. Silahkan Kirim Pengajuan Kembali.';
+            case 44:
+                return 'Pengajuan Dropping '.$this->pengajuanDropping['kantor_cabang'].' periode TW '.$TW.' dengan Nomor '.$this->pengajuanDropping['nomor'].' telah diterima oleh ????2.';
         }
     }
 }

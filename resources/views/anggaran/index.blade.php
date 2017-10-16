@@ -392,9 +392,8 @@
                   var temp_file = [];
                   var list_berkas=[];
                   var insertableStat = {{ $status=='edit' ? 1 : 0 }};
-                  var id_field_item = id_field_edit = jenis_field_insert = jenis_field_edit = null;
-                  var kelompok_field_insert = kelompok_field_edit = pos_field_insert = pos_field_edit = null;
-                  var sub_field_insert = sub_field_edit = mata_anggaran_insert = mata_anggaran_edit = null;
+                  var id_field_item = id_field_edit = null;
+                  var jenis = kelompok = pos = sub = mata_anggaran = null;
                   var satuan_field_insert = satuan_field_edit = null;
                   var unitk_field_insert = kuantitas_field_insert = nilai_field_insert = null;
                   var unitk_field_edit = kuantitas_field_edit = nilai_field_edit= null;
@@ -615,14 +614,21 @@
                             align: "left",
                             valueField: "name", 
                             textField: "name", 
+                            insertcss: "jenis_select",
                             items: getData('jenis'),
                             insertTemplate: function() {
                               var result = jsGrid.fields.select.prototype.insertTemplate.call(this);
+                              // result.on("change", function() {
+                              //     changeDataSelect('kelompok',$(this).val());
+                              // });
                               return result;
                             },
                             editTemplate: function(value) {
                               var result = jsGrid.fields.select.prototype.editTemplate.call(this);
                               $(result).val(value);
+                              // result.on("change", function() {
+                              //     changeDataSelect('kelompok',$(this).val());
+                              // });
                               return result; 
                             },
                             validate: {
@@ -639,20 +645,33 @@
                             align: "left",
                             valueField: "name", 
                             textField: "name", 
+                            insertcss: "kelompok_select",
                             items: getData('kelompok'),
+                            // items:[
+                            //     { name: "Silahkan Pilih Jenis" }
+                            // ],
                             insertTemplate: function() {
+                              kelompok = this._grid.fields[4];
                               var result = jsGrid.fields.select.prototype.insertTemplate.call(this);
+                              // result.on("change", function() {
+                              //     changeDataSelect('posanggaran',$(this).val());
+                              // });
                               return result;
                             },
                             editTemplate: function(value) {
+                              kelompok = this._grid.fields[4];
                               var result = jsGrid.fields.select.prototype.editTemplate.call(this);
                               $(result).val(value);
+                              // changeDataSelect('posanggaran',$(this).val());
+                              // result.on("change", function() {
+                              //     changeDataSelect('posanggaran',$(this).val());
+                              // });
                               return result; 
                             },
                             validate: {
                               message : "Pilih Item Terlebih dahulu." ,
                               validator :function(value, item) {
-                                  return value !== "None" ;
+                                  return value !== "None" && value !== "Silahkan Pilih Jenis";
                               } 
                             }
                           },
@@ -663,20 +682,33 @@
                             align: "left",
                             valueField: "name", 
                             textField: "name", 
+                            insertcss: "pos_select",
                             items: getData('posanggaran'),
+                            // items:[
+                            //     { name: "Silahkan Pilih Kelompok" },
+                            // ],
                             insertTemplate: function() {
+                              pos = this._grid.fields[5];
                               var result = jsGrid.fields.select.prototype.insertTemplate.call(this);
+                              // result.on("change", function() {
+                              //     changeDataSelect('subpos',$(this).val());
+                              // });
                               return result;
                             },
                             editTemplate: function(value) {
+                              pos = this._grid.fields[5];
                               var result = jsGrid.fields.select.prototype.editTemplate.call(this);
                               $(result).val(value);
+                              // changeDataSelect('subpos',$(this).val());
+                              // result.on("change", function() {
+                              //     changeDataSelect('subpos',$(this).val());
+                              // });
                               return result; 
                             },
                             validate: {
                               message : "Pilih Item Terlebih dahulu." ,
                               validator :function(value, item) {
-                                  return value !== "None" ;
+                                  return value !== "None" && value !== "Silahkan Pilih Kelompok";
                               } 
                             }
                           },
@@ -687,20 +719,33 @@
                             align: "left",
                             valueField: "DESCRIPTION", 
                             textField: "DESCRIPTION", 
+                            insertcss: "sub_select",
                             items: getData('subpos'),
+                            // items:[
+                            //     { DESCRIPTION: "Silahkan Pilih Pos Anggaran" },
+                            // ],
                             insertTemplate: function() {
+                              sub = this._grid.fields[6];
                               var result = jsGrid.fields.select.prototype.insertTemplate.call(this);
+                              // result.on("change", function() {
+                              //     changeDataSelect('mataanggaran',$(this).val());
+                              // });
                               return result;
                             },
                             editTemplate: function(value) {
+                              sub = this._grid.fields[6];
                               var result = jsGrid.fields.select.prototype.editTemplate.call(this);
                               $(result).val(value);
+                              // changeDataSelect('mataanggaran',$(this).val());
+                              // result.on("change", function() {
+                              //     changeDataSelect('mataanggaran',$(this).val());
+                              // });
                               return result; 
                             },
                             validate: {
                               message : "Pilih Item Terlebih dahulu." ,
                               validator :function(value, item) {
-                                  return value !== "None" ;
+                                  return value !== "None" && value !== "Silahkan Pilih Pos Anggaran";
                               } 
                             }
                           },
@@ -711,12 +756,19 @@
                             align: "left",
                             valueField: "DESCRIPTION", 
                             textField: "DESCRIPTION", 
+                            insertcss: "mata_select",
                             items: getData('mataanggaran'),
+
+                            // items:[
+                            //     { DESCRIPTION: "Silahkan Pilih Sup Pos" },
+                            // ],
                             insertTemplate: function() {
+                              mata_anggaran = this._grid.fields[7];
                               var result = jsGrid.fields.select.prototype.insertTemplate.call(this);
                               return result;
                             },
                             editTemplate: function(value) {
+                              mata_anggaran = this._grid.fields[7];
                               var result = jsGrid.fields.select.prototype.editTemplate.call(this);
                               $(result).val(value);
                               return result; 
@@ -724,7 +776,7 @@
                             validate: {
                               message : "Pilih Item Terlebih dahulu." ,
                               validator :function(value, item) {
-                                  return value !== "None" ;
+                                  return value !== "None" && value !== "Silahkan Pilih Sup Pos";
                               } 
                             }
                           },
@@ -1265,14 +1317,102 @@
                                   }
                                   
                                 }
-
                                 // alert(JSON.stringify(data));
-                                
                             }
                         });
                         return tmp;
                     }();
                     return returned;
+                  }
+                  function changeDataSelect(type,value){
+
+
+                    decode = encodeURI(value);
+                    split = decode.split("/");
+                    if(split.length>1){
+                      decode = split[0]+"->"+split[1];
+                    }
+                    // alert("{{ url('anggaran/get/attributes') }}/" +type+"/"+decode);
+                    if(value!="None"){
+                      $.ajax({
+                          'async': false, 'type': "GET", 'dataType': 'JSON', 
+                          'url': "{{ url('anggaran/get/attributes') }}/" +type+"/"+decode,
+                          'success': function (data) {
+                             tmp = []
+                              for(i=0;i<=data.length;i++){
+                                tmp[i]={};
+                                if(type == 'jenis'||type == 'kelompok'||type == 'posanggaran'){
+                                  if(i == 0){
+                                    tmp[0]["name"] = "None";
+                                  }else{
+                                    tmp[i]["name"] = data[i-1]["name"];
+                                  }
+                                }else{
+                                  if(i == 0){
+                                    tmp[0]["DESCRIPTION"] = "None";
+                                  }else{
+                                    tmp[i]["DESCRIPTION"] = data[i-1]["DESCRIPTION"];
+                                  }
+                                }
+                              }
+
+                              // alert(JSON.stringify(tmp));
+                              if(type == "kelompok"){
+                                kelompok.items = tmp;
+                                $(".kelompok_select").empty().append(kelompok.insertTemplate());
+                              }else if(type == "posanggaran"){
+                                pos.items = tmp;
+                                $(".pos_select").empty().append(pos.insertTemplate());
+                              }else if(type == "subpos"){
+                                sub.items = tmp;
+                                $(".sub_select").empty().append(sub.insertTemplate());
+                              }else if(type == "mataanggaran"){
+                                mata_anggaran.items = tmp;
+                                $(".mata_select").empty().append(mata_anggaran.insertTemplate());
+                              }
+
+                              if(type == "kelompok"){
+                                data[0]["name"] = "Silahkan Pilih Kelompok";
+                                pos.items = data;
+                                $(".pos_select").empty().append(pos.insertTemplate());
+                              }
+                              if(type == "kelompok"||type == "posanggaran"){
+                                data[0]["DESCRIPTION"] = "Silahkan Pilih Pos Anggaran";
+                                sub.items = data;
+                                $(".sub_select").empty().append(sub.insertTemplate());
+                              }
+                              if(type == "kelompok"||type == "posanggaran"||type == "subpos"){
+                                data[0]["DESCRIPTION"] = "Silahkan Pilih Sub Pos";
+                                mata_anggaran.items = data;
+                                $(".mata_select").empty().append(mata_anggaran.insertTemplate());
+                              }
+                              // alert(JSON.stringify(data));
+                          }
+                      });
+                    }else{
+                      data = [];
+                      data[0] = {};     
+                      if(type == "kelompok"){
+                        data[0]["name"] = "Silahkan Pilih Jenis";
+                        kelompok.items = data;
+                        $(".kelompok_select").empty().append(kelompok.insertTemplate());
+                      }
+                      if(type == "kelompok"||type == "posanggaran"){
+                        data[0]["name"] = "Silahkan Pilih Kelompok";
+                        pos.items = data;
+                        $(".pos_select").empty().append(pos.insertTemplate());
+                      }
+                      if(type == "kelompok"||type == "posanggaran"||type == "subpos"){
+                        data[0]["DESCRIPTION"] = "Silahkan Pilih Pos Anggaran";
+                        sub.items = data;
+                        $(".sub_select").empty().append(sub.insertTemplate());
+                      }
+                      if(type == "kelompok"||type == "posanggaran"||type == "subpos"||type == "mataanggaran"){
+                        data[0]["DESCRIPTION"] = "Silahkan Pilih Sub Pos";
+                        mata_anggaran.items = data;
+                        $(".mata_select").empty().append(mata_anggaran.insertTemplate());
+                      }
+                    }
                   }
                   function setUnitKerja(id_type,id_unit){
                     var type = "";
