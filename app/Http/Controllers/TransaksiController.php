@@ -593,6 +593,7 @@ class TransaksiController extends Controller
                 case 'export' :
                     $pdf = PDF::loadView('transaksi.export-realisasi', $data);
                     return $pdf->download('Realisasi Anggaran-'.date("dmY").'.pdf');
+                    // return $pdf->stream('Realisasi Anggaran-'.date("dmY").'.pdf'); // hanya untuk view pdf
                     break;
                 case 'excel' :
                     return view('transaksi.export-realisasi', $data);
