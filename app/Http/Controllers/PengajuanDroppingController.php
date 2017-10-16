@@ -17,7 +17,7 @@ class PengajuanDroppingController extends Controller
     {
     	$a =DB::table('pengajuan_dropping_cabang')
         ->orderBy('id','DESC')->where('kirim','<>','3')
-        ->get();
+        ->paginate(100);
         return view('pengajuan_dropping.pengajuan', compact('a'));
 	}
 
@@ -49,7 +49,7 @@ class PengajuanDroppingController extends Controller
     	$a =DB::table('pengajuan_dropping_cabang')
     	->where('kirim','<>','1')->where('kirim','<>','4')
         ->orderBy('id','DESC')
-        ->get();
+        ->paginate(100);
         return view('pengajuan_dropping.approval', compact('a'));
 	}
 
@@ -80,7 +80,7 @@ class PengajuanDroppingController extends Controller
         $a =DB::table('pengajuan_dropping_cabang')
         ->where('kirim','<>','1')->where('kirim','<>','2')
         ->orderBy('id','DESC')
-        ->get();
+        ->paginate(100);
         return view('pengajuan_dropping.approval2', compact('a'));
     }
 
