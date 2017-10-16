@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class RenameTableItemanggaranmaster extends Migration
+class RenameTableItemAnggaran extends Migration
 {
     /**
      * Run the migrations.
