@@ -37,7 +37,7 @@
             							<a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
             							<div class="row mt-1">
             								<div class="col-md-12 col-xl-3">
-            									<a href="{{ url('item/create') }}" class="btn btn-success btn-sm pull-left"><i class="fa fa-plus"></i> Tambah Item Baru</a>
+            									<a href="{{ url('item/create/transaksi') }}" class="btn btn-success btn-sm pull-left"><i class="fa fa-plus"></i> Tambah Item Baru</a>
             								</div>
             							</div>
             						</div>
@@ -70,7 +70,7 @@
             												<td>{{ $item->SEGMEN_1.'-'.$item->SEGMEN_2.'-'.$item->SEGMEN_3.'-'.$item->SEGMEN_4.'-'.$item->SEGMEN_5.'-'.$item->SEGMEN_6 }}</td>
             												{!! $item->is_displayed ? '<td class="blue">Semua Cabang</td>' : '<td class="red">Cabang Bersangkutan</td>' !!}
             												<td><center>
-            													<a href="{{ url('item/edit').'/'.$item->id }}" class="btn btn-outline-info btn-sm">
+            													<a href="{{ url('item/edit/transaksi').'/'.$item->id }}" class="btn btn-outline-info btn-sm">
             														<i class="fa fa-edit"></i> Edit</a>
 
             														<a href="#" class="btn btn-danger btn-sm" onclick="deleteUser({{ $item->id }})">
@@ -148,7 +148,7 @@
             			});
 
             			function deleteUser(id) {
-            				$('form[id="deleteU"').attr('action', '{{ url('item') }}' + '/delete/master/' + id);
+            				$('form[id="deleteU"').attr('action', '{{ url('item') }}' + '/delete/transaksi/' + id);
             				var con = confirm("Apakah anda yakin untuk menghapus item ini?");
             				if (con) {
             					$('form[id="deleteU"').submit();	

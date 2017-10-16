@@ -172,7 +172,11 @@
 					                                                <center><h4 class="modal-title text-primary" id="myModalLabel" ><i class="fa fa-send"></i> Dialog Konfirmasi</h4></center>
 					                                            </div>
 					                                        	<div class="modal-body">
-					                                            	<center><h4>Anda yakin ingin mengirim hasil verifikasi<br>ke Verifikasi level 2 ?</h4></center>
+					                                            @if ($bb->verifikasi==1)
+					                                            	<center><h4>Anda yakin ingin mengirim hasil verifikasi<br>ke verifikasi level 2 ?</h4></center>
+					                                        	@elseif ($bb->verifikasi==2)
+					                                        		<center><h4>Anda yakin ingin mengirim hasil verifikasi<br>ke {{$bb->kantor_cabang}} ?</h4></center>
+					                                        	@endif
 					                                        	</div>
 					                                        	<div class="modal-footer">
 					                                           	 	<a href="{{ URL('acc_pengajuan_dropping/kirim/'. $bb->id) }}"" class="btn btn-success btn-sm"><i class="fa fa-check"></i> Ya</a>
@@ -184,7 +188,7 @@
 			                  		@endif
 			                  	<button type="submit" name="save" class="btn btn-primary pull-right"><i class="fa fa-check"></i> Verifikasi</button>
 			                  	@elseif ($bb->kirim==3)
-			                  	<div class="btn btn-success pull-right"><span><b>Telah Dikirim  ke {{$bb->kantor_cabang}}</b></span></div>
+			                  	<div class="btn btn-success pull-right"><span><b>Telah dikirim ke verifikasi level 2</b></span></div>
 			                  	@endif
 			                  	</td></tr>
 			                  	</form>

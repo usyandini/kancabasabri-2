@@ -17,13 +17,13 @@
                 @section('content')
                	<div class="content-header row">
                     <div class="content-header-left col-md-6 col-xs-12 mb-2">
-                        <h3 class="content-header-title mb-0">Tambah Item Anggaran</h3>
+                        <h3 class="content-header-title mb-0">Tambah Item Transaksi</h3>
                         <div class="row breadcrumbs-top">
                             <div class="breadcrumb-wrapper col-xs-12">
                                 <ol class="breadcrumb">
-                                    <li class="breadcrumb-item"><a href="{{ url('/item/anggaran') }}">Manajemen Item Anggaran</a>
+                                    <li class="breadcrumb-item"><a href="{{ url('/item/transaksi') }}">Manajemen Item Transaksi</a>
                                     </li>
-                                    <li class="breadcrumb-item active">Tambah Item Anggaran
+                                    <li class="breadcrumb-item active">Tambah Item Transaksi
                                     </li>
                                 </ol>
                             </div>
@@ -45,7 +45,7 @@
                         </div>
                     </div>
                     @endif
-                    <form class="form" action="{{ url('item/update/anggaran').'/'.$items->id  }}" method="POST">
+                    <form class="form" action="{{ url('item/add/transaksi') }}" method="POST">
                       <div class="col-md-6">
                         {{ csrf_field() }}
                         <div class="card">
@@ -63,57 +63,28 @@
                               </div>
                               @endif
                               <div class="form-body">
-                                <div class="form-group">
-                                  <label for="jenis">Jenis Anggaran</label>
-                                  <div = "row">
-                                    <div class = "col-md-10">
-                                      <select class="select2 form-control" name="jenis" id="jenis" required>
-                                        <option value="" disabled selected>Jenis Anggaran</option>
-                                        @foreach($jenis as $ja)
-                                        <option {{  $items->jenis == $ja->kode ? 'selected=""' : '' }} value="{{ $ja->kode }}">{{ $ja->kode }} - {{ $ja->name }}</option>
-                                        @endforeach
-                                      </select>
-                                    </div>
-                                    <div class = "col-md-2">
-                                      <button type="button" class="btn btn-success" data-target="#tambahJenis" data-toggle="modal">
-                                        <i class="fa fa-plus"></i>
-                                      </button>
-                                    </div>
+                                <div class="row">
+                                    <div class="form-group col-md-4">
+                                    <label for="eventRegInput1">Kode Item</label>
+                                    <input type="text" required="Kode item harap diisi" class="form-control" placeholder="Kode Item" name="kode_item" value="{{ old('kode_item') }}">
+                                  </div>
+                                  <div class="form-group col-md-8">
+                                    <label for="eventRegInput1">Nama Item</label>
+                                    <input type="text" required="" class="form-control" placeholder="Nama Item" id="nama_item" name="nama_item" value="{{ old('nama_item') }}">
                                   </div>
                                 </div>
                                 <div class="form-group">
-                                  <label for="eventRegInput3">Kelompok Anggaran</label>
-                                  <div = "row">
-                                    <div class = "col-md-10">
-                                      <select class="select2 form-control" id="kelompok" name="kelompok" required>
-                                        <option value="" disabled selected>Kelompok Anggaran</option>
-                                        @foreach($kelompok as $ka)
-                                        <option {{  $items->kelompok == $ka->kode ? 'selected=""' : '' }} value="{{ $ka->kode }}">{{ $ka->kode }} - {{ $ka->name }}</option>
-                                        @endforeach
-                                      </select>
-                                    </div>
-                                    <div class = "col-md-2">
-                                      <button type="button" class="btn btn-success" data-target="#tambahKelompok" data-toggle="modal">
-                                        <i class="fa fa-plus"></i>
-                                      </button>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div class="form-group">
-                                  <label for="eventRegInput4">Pos Anggaran</label>
-                                  <div = "row">
-                                    <div class = "col-md-10">
-                                      <select class="select2 form-control" id="pos" name="pos" required>
-                                        <option value="" disabled selected>Pos Anggaran</option>
-                                        @foreach($pos as $pa)
-                                        <option {{  $items->pos_anggaran == $pa->kode ? 'selected=""' : '' }} value="{{ $pa->kode }}">{{ $pa->kode }} - {{ $pa->name }}</option>
-                                        @endforeach
-                                      </select>
-                                    </div>
-                                    <div class = "col-md-2">
-                                      <button type="button" class="btn btn-success" data-target="#tambahPos" data-toggle="modal">
-                                        <i class="fa fa-plus"></i>
-                                      </button>
+                                  <div class="row">
+                                    <div class="col-md-12 col-sm-12">
+                                      <div class="form-group skin skin-square">
+                                        <label>Display item untuk seluruh cabang</label>
+                                        <fieldset>
+                                          <input type="radio" id='item_display_on' name="item_display" value="1">
+                                          <label class="mr-1">Iya</label>
+                                          <input type="radio" id='item_display_off' name="item_display" value="0" checked>
+                                          <label>Tidak</label>
+                                        </fieldset>
+                                      </div>
                                     </div>
                                   </div>
                                 </div>
@@ -131,7 +102,7 @@
                           <div class="card-body">
                             <div class="card-block">
                               <div class="form form-horizontal striped-rows">
-                              	<!--<div class="form-group row">
+                              	<div class="form-group row">
     		                          <label class="col-md-2 label-control" for="segmen1">Account</label>
     		                          <div class="col-md-7">
                                     <select class = "select2 form-control account" name="account" id="account" onchange="getVal('account', 'segmen1');" required>
@@ -190,14 +161,14 @@
     		                          <div class="col-md-3">
     		                          	<input id="segmen4" class="form-control" name="segmen4" value="" readonly="">
     				                      </div>
-    		                        </div>-->
+    		                        </div>
     		                        <div class="form-group row">
     		                          <label class="col-md-2 label-control" for="segmen5">Sub Pos</label>
     		                          <div class="col-md-7">
     		                          	<select class = "select2 form-control" id="subpos" name="subpos" onchange="getVal('subpos', 'segmen5');" required>
                                       <option value="" disabled selected>Sub Pos</option>
                                       @foreach($subpos as $subp)
-                                      <option {{  $items->sub_pos == $subp->VALUE ? 'selected=""' : '' }} value="{{ $subp->VALUE }}">{{ $subp->DESCRIPTION }}</option>
+                                      <option {{ old('subpos') == $subp->VALUE ? 'selected=""' : '' }} value="{{ $subp->VALUE }}">{{ $subp->DESCRIPTION }}</option>
                                       @endforeach
                                     </select>
     		                          </div>
@@ -211,7 +182,7 @@
     		                            <select class = "select2 form-control" id="kegiatan" name="kegiatan" onchange="getVal('kegiatan', 'segmen6');" required>
                                       <option value="" disabled selected>Mata Anggaran</option>
                                       @foreach($m_anggaran as $ma)
-                                        <option {{  $items->mata_anggaran == $ma->VALUE ? 'selected=""' : '' }} value="{{ $ma->VALUE }}">{{ $ma->DESCRIPTION }}</option>
+                                        <option {{ old('kegiatan') == $ma->VALUE ? 'selected=""' : '' }} value="{{ $ma->VALUE }}">{{ $ma->DESCRIPTION }}</option>
                                       @endforeach
                                     </select>
     		                          </div>
@@ -229,7 +200,7 @@
                           <div class="card-body">
                             <div class="card-block">
                               <div class="pull-right">
-                                <a href="{{ url('item/anggaran') }}" class="btn btn-danger mr-1">
+                                <a href="{{ url('item/transaksi') }}" class="btn btn-danger mr-1">
                                   <i class="ft-x"></i> Kembali
                                 </a>    
                                 <button type="submit" class="btn btn-outline-primary">

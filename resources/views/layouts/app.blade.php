@@ -121,7 +121,7 @@
                     <li class="nav-item {{ checkActiveMenu('dropping') }}"><a href="{{ url('/dropping', $parameters = [], $secure = null) }}"><i class="ft-box"></i><span data-i18n="" class="menu-title">Dropping</span></a></li>
                     @endif
 
-                    @if (Gate::check('informasi_a_d') ||Gate::check('setuju_a_d'))
+                    @if (Gate::check('informasi_a_d') ||Gate::check('setuju_a_d')||Gate::check('setuju_a_d_2'))
                     <li class="nav-item has-sub {{ checkOpenedMenu('pengajuan_dropping') }}"><a href=""><i class="ft-file"></i><span data-i18n="" class="menu-title">Pengajuan Dropping</span></a>
                     <ul class="menu-content">
                         @can('informasi_a_d')
@@ -130,7 +130,7 @@
                         @can('setuju_a_d')
                         <li class="is-shown {{ checkActiveMenu('acc_pengajuan_dropping') }}"><a href="{{ url('/acc_pengajuan_dropping', $parameters = [], $secure = null) }}" class="menu-item">Verifikasi Level 1</a>
                         @endcan
-                        @can('setuju_a_d')
+                        @can('setuju_a_d_2')
                         <li class="is-shown {{ checkActiveMenu('acc_pengajuan_dropping2') }}"><a href="{{ url('/acc_pengajuan_dropping2', $parameters = [], $secure = null) }}" class="menu-item">Verifikasi Level 2</a>
                         @endcan
                     </ul>
@@ -230,11 +230,14 @@
                     @if (Gate::check('manajemen_k_i') ||Gate::check('manajemen_i_a') ||  Gate::check('manajemen_a_m'))
                     <li class="nav-item has-sub {{ checkOpenedMenu('item') }}"><a href=""><i class="ft-file"></i><span data-i18n="" class="menu-title">Manajemen Item</span></a>
                     <ul class="menu-content">
-                        @can('manajemen_k_i')
-                        <li class="is-shown {{ checkActiveMenu('item') }}"><a href="{{ url('/item', $parameters = [], $secure = null) }}" class="menu-item">Item Transaksi</a></li>
+                        @can('manajemen_i_t')
+                        <li class="is-shown {{ checkActiveMenu('item/transaksi') }}"><a href="{{ url('/item/transaksi', $parameters = [], $secure = null) }}" class="menu-item">Manajemen Item Transaksi</a></li>
                         @endcan
                         @can('manajemen_i_a')
-                        <li class="is-shown {{ checkActiveMenu('item/anggaran') }}"><a href="{{ url('/item/anggaran', $parameters = [], $secure = null) }}" class="menu-item">Item Anggaran</a>
+                        <li class="is-shown {{ checkActiveMenu('item/anggaran') }}"><a href="{{ url('/item/anggaran', $parameters = [], $secure = null) }}" class="menu-item">Manajemen Item Anggaran</a></li>
+                        @endcan
+                        @can('manajemen_i')
+                        <li class="is-shown {{ checkActiveMenu('item') }}"><a href="{{ url('/item', $parameters = [], $secure = null) }}" class="menu-item">Manajemen Item</a>
                         @endcan
                         @can('manajemen_a_m')
                         <li class="is-shown {{ checkActiveMenu('reason') }}"><a href="{{ url('/reason', $parameters = [], $secure = null) }}" class="menu-item">Alasan Menolak</a>
