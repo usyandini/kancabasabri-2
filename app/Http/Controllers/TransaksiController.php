@@ -541,13 +541,14 @@ class TransaksiController extends Controller
         $transaksi = Transaksi::where('batch_id', $batch_id)->get();
         foreach ($transaksi as $trans) {
             $input = [
+                'DATAAREAID'   => 'asbr',
                 'PIL_ACCOUNT'   => $trans->item,
                 'PIL_AMOUNT'    => $trans->total,
                 'PIL_BANK'      => $trans->akun_bank,
                 'PIL_DIVISI'    => $trans['batch']['divisi'],
                 'PIL_KPKC'      => $trans['batch']['cabang'],
                 'PIL_MATAANGGARAN'  => $trans->mata_anggaran,
-                'PIL_JOURNALNUM'    => $batch_id,
+                'PIL_KCJOURNALNUM'  => $batch_id,
                 'PIL_PROGRAM'   => 'THT',
                 'PIL_SUBPOS'    => $trans->sub_pos,
                 'PIL_TRANSDATE' => new Carbon(str_replace(':AM', ' AM', $trans->tgl)),
