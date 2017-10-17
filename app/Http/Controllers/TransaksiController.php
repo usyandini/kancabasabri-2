@@ -246,17 +246,20 @@ class TransaksiController extends Controller
                 $return = ItemMaster::get(['id', 'SEGMEN_1', 'nama_item', 'SEGMEN_3', 'is_displayed'])->filter(function($item) use($batch) {
                     return $item->isDisplayed($batch['cabang']);
                 });
+                
                 foreach ($return as $key => $value) {
                     $value->VALUE = (String) $return[$key]->id;
                 }
                 $return->prepend($header);
                 break;
             case 'bank':
-                $header = ['BANK' => '-1', 'BANK_NAME' => 'Silahkan Pilih Bank'];
-                $KAS = ['BANK' => 'KAS KC/KCP', 'BANK_NAME' => 'KAS KC/KCP'];
-                $return = $this->bankModel->get(['BANK','BANK_NAME','ID_CABANG'])->filter(function($bank) {
-                    return $bank->isAccessibleByCabang();
-                });
+                $header = ['BANK' => '-1', 'BANK_NAME' => 'Silahkan Pilih Bank', 'accessible' => true];
+                $KAS = ['BANK' => 'KAS KC/KCP', 'BANK_NAME' => 'KAS KC/KCP', 'accessible' => true];
+                $return = $this->bankModel->get(['BANK','BANK_NAME','ID_CABANG']);
+                
+                foreach ($return as $key => $value) {
+                    $value->accessible = $value->isAccessibleByCabang();
+                }
                 $return->prepend($KAS);
                 $return->prepend($header);
                 break;       

@@ -380,7 +380,16 @@
                             items: {!! $bank !!}, 
                             valueField: "BANK", 
                             textField: "BANK_NAME", 
-                            title: "Bank/Kas", 
+                            title: "Bank/Kas",
+                            insertTemplate: function() {
+                              var result = jsGrid.fields.select.prototype.insertTemplate.call(this)
+                              var i = 0
+                              @foreach ($bank as $b)
+                                {{ !$b['accessible'] ? 'result[0][i].disabled = true' : '' }}
+                                i++
+                              @endforeach
+                              return result
+                            },
                             validate: {
                               validator: function(value, item) {
                                 return value != "-1"
