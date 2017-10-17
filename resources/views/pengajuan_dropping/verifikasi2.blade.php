@@ -152,13 +152,13 @@
 			                  	<form enctype="multipart/form-data" role="form" action="{{ URL('acc_pengajuan_dropping/update_accpengajuandropping/'. $bb->id) }}" method="POST" >
                                 {{ csrf_field() }}
                                 <input type="hidden" name="id" value="{{$bb->id}}" />
-			                  	<tr><td><b> Verifikasi </b></td><td><b> : </b></td><td><select class="select form-control" name="verifikasi" required="required" value="{{$bb->verifikasi}}" @if ($bb->kirim==4) disabled="disabled" @endif>
+			                  	<tr><td><b> Verifikasi </b></td><td><b> : </b></td><td><select class="select form-control" name="verifikasi" required="required" style="width:400px" value="{{$bb->verifikasi}}" @if ($bb->kirim==4) disabled="disabled" @endif>
 													                                   <option value="">- Pilih Verifikasi -</option>
 													                                   <option value="1" @if ($bb->verifikasi=='1')Selected @endif>Diterima</option>
 																					   <option value="2" @if ($bb->verifikasi=='2')Selected @endif>Ditolak</option>                                                 
 													                                   </select></td></tr>
 			                  	<tr><td></td></tr>
-			                  	<tr><td><b> keterangan </b></td><td><b> : </b></td><td><textarea class="form-control" name="keterangan" rows="3" placeholder="masukkan keterangan" @if ($bb->kirim==4) disabled="disabled" @endif>{{ $bb->keterangan }}</textarea></td></tr>
+			                  	<tr><td><b> keterangan </b></td><td><b> : </b></td><td><textarea class="form-control" name="keterangan" rows="3" style="width:400px" placeholder="masukkan keterangan" @if ($bb->kirim==4) disabled="disabled" @endif>{{ $bb->keterangan }}</textarea></td></tr>
 			                  	<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>
 			                  	<tr><td></td><td></td><td>
 			                  	@if ($bb->kirim==3)
