@@ -227,14 +227,14 @@
                         @endcan
                     </ul>
                     @endif
-                    @if (Gate::check('manajemen_k_i') ||Gate::check('manajemen_i_a') ||  Gate::check('manajemen_a_m'))
+                    @if (Gate::check('manajemen_k_i') || Gate::check('manajemen_i_a') ||  Gate::check('manajemen_a_m'))
                     <li class="nav-item has-sub {{ checkOpenedMenu('item') }}"><a href=""><i class="ft-file"></i><span data-i18n="" class="menu-title">Manajemen Item</span></a>
                     <ul class="menu-content">
                         @can('manajemen_i_t')
-                        <li class="is-shown {{ checkActiveMenu('item/transaksi') }}"><a href="{{ url('/item/transaksi', $parameters = [], $secure = null) }}" class="menu-item">Manajemen Item Transaksi</a></li>
+                        <li class="is-shown {{ checkActiveMenu('item/transaksi') }}"><a href="{{ url('/item/transaksi', $parameters = [], $secure = null) }}" class="menu-item">Item Transaksi</a></li>
                         @endcan
                         @can('manajemen_i_a')
-                        <li class="is-shown {{ checkActiveMenu('item/anggaran') }}"><a href="{{ url('/item/anggaran', $parameters = [], $secure = null) }}" class="menu-item">Manajemen Item Anggaran</a></li>
+                        <li class="is-shown {{ checkActiveMenu('item/anggaran') }}"><a href="{{ url('/item/anggaran', $parameters = [], $secure = null) }}" class="menu-item">Item Anggaran</a></li>
                         @endcan
                         @can('manajemen_i')
                         <li class="is-shown {{ checkActiveMenu('item') }}"><a href="{{ url('/item', $parameters = [], $secure = null) }}" class="menu-item">Manajemen Item</a>

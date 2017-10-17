@@ -16,7 +16,7 @@
                               @section('content')
                               <div class="content-header row">
                                 <div class="content-header-left col-md-6 col-xs-12 mb-2">
-                                  <h3 class="content-header-title mb-0">Manajemen Pengguna</h3>
+                                  <h3 class="content-header-title mb-0">Edit Pengguna</h3>
                                   <div class="row breadcrumbs-top">
                                     <div class="breadcrumb-wrapper col-xs-12">
                                       <ol class="breadcrumb">
@@ -53,67 +53,66 @@
                                             <div class="form-body">
                                               <div class="row">
                                                 <div class="col-md-12 col-sm-12">
-                                                  <div class="form-group  skin skin-square">
+                                                  <div class="form-group skin skin-square">
                                                     <fieldset>
-                                                      <label class="display-inline-block custom-control custom-radio">
+                                                      <label class="display-inline-block custom-radio mr-2">
                                                         <input type="radio" id='activ_dir_off' name="as_ldap" value="0" disabled {{ $user->as_ldap  != "1" ? 'checked=""' : '' }}>
                                                         Daftar dengan aplikasi
                                                       </label>
-                                                      <label class="display-inline-block custom-control custom-radio">
+                                                      <label class="display-inline-block custom-radio">
                                                         <input type="radio" id='activ_dir_on' name="as_ldap" value="1"  disabled {{ $user->as_ldap == "1" ? 'checked=""' : '' }}>
-                                                        Daftar dengan Active Dirctory
+                                                        Daftar dengan Active Directory
                                                       </label>
                                                     </fieldset>
                                                   </div>
                                                 </div>
+                                                <div class="col-md-12 col-lg-12 col-xl-5">
+                                                  <div class="form-group">
+                                                    <label>Username</label>
+                                                    <input type="text" required="" class="form-control" placeholder="Username" name="username" value="{{ old('username') == '' ? $user->username : old('username') }}" readOnly>
+                                                  </div>
+                                                </div>
+                                                <div class="col-md-12 col-lg-12 col-xl-7">
+                                                  <div class="form-group">
+                                                    <label>Nama Lengkap</label>
+                                                    <input type="text" required="" class="form-control" placeholder="Nama" name="name" value="{{ old('name') == '' ? $user->name : old('name') }}" readOnly>
+                                                  </div>
+                                                </div>
+                                                <div class="col-md-12 col-lg-12 col-xl-12">
+                                                  <div class="form-group">
+                                                    <label>Email</label>
+                                                    <input type="email" required="" class="form-control" placeholder="Email" name="email" id="email" value="{{ old('email') == '' ? $user->email : old('email') }}">
+                                                  </div>
+                                                </div>
                                               </div>
-                                              <div class="form-group">
-                                                <label>Username</label>
-                                                <input type="text" required="" class="form-control" placeholder="Username" name="username" value="{{ old('username') == '' ? $user->username : old('username') }}" readOnly>
+                                              <div class="row">
+                                                <div class="col-md-12 col-lg-12 col-xl-6">
+                                                  <div class="form-group">
+                                                    <label>Cabang</label>
+                                                    <select class="select2 form-control" name="cabang">
+                                                      <option selected disabled="">Cabang</option>
+                                                      @foreach($cabang as $cab)
+                                                      <option {{ $user->cabang == $cab->VALUE ? 'selected=""' : '' }} value="{{ $cab->VALUE }}">{{ $cab->DESCRIPTION }}</option>
+                                                      @endforeach
+                                                    </select>
+                                                  </div>
+                                                </div>
+                                                <div class="col-md-12 col-lg-12 col-xl-6">
+                                                  <div class="form-group">
+                                                    <label>Divisi</label><br>
+                                                    <select class="select2 form-control" name="divisi" id="divisi">
+                                                      <option selected disabled="">Divisi</option>
+                                                      @foreach($divisi as $div)
+                                                      <option {{ $user->divisi == $div->VALUE ? 'selected=""' : '' }} value="{{ $div->VALUE }}">{{ $div->DESCRIPTION }}</option>
+                                                      @endforeach
+                                                    </select>
+                                                  </div>
+                                                </div>
                                               </div>
-                                              <div class="form-group">
-                                                <label>Nama Lengkap</label>
-                                                <input type="text" required="" class="form-control" placeholder="Nama" name="name" value="{{ old('name') == '' ? $user->name : old('name') }}" readOnly>
-                                              </div>
-                                              <div class="form-group">
-                                                <label>Email</label>
-                                                <input type="email" required="" class="form-control" placeholder="Email" name="email" id="email" value="{{ old('email') == '' ? $user->email : old('email') }}">
-                                              </div>
-                                              <div class="form-group">
-                                                <label>Cabang</label>
-                                                <select class="select2 form-control" name="cabang">
-                                                  <option selected disabled="">Cabang</option>
-                                                  @foreach($cabang as $cab)
-                                                  <option {{ $user->cabang == $cab->VALUE ? 'selected=""' : '' }} value="{{ $cab->VALUE }}">{{ $cab->DESCRIPTION }}</option>
-                                                  @endforeach
-                                                </select>
-                                              </div>
-                                              <div class="form-group">
-                                                <label>Divisi</label><br>
-                                                <select class="select2 form-control" name="divisi" id="divisi">
-                                                  <option selected disabled="">Divisi</option>
-                                                  @foreach($divisi as $div)
-                                                  <option {{ $user->divisi == $div->VALUE ? 'selected=""' : '' }} value="{{ $div->VALUE }}">{{ $div->DESCRIPTION }}</option>
-                                                  @endforeach
-                                                </select>
-                                              </div>
-                                              @if (isset($jenis_user))
-                                              <div class="form-group">
-                                                <label>Jenis User (preset)</label><br>
-                                                <select class="select2 form-control" name="jenis_user" style="width: 100%;">
-                                                  <option selected disabled="" value="">Jenis User</option>
-                                                  @foreach($jenis_user as $jenis)
-                                                  <option value="{{ $jenis->id }}" {{ $jenis->id == $user->jenis_user ? 'selected=""' : '' }}>{{ $jenis->nama }}</option>
-                                                  @endforeach
-                                                </select>
-                                              </div>
-                                              @endif
                                             </div>
                                           </div>
                                         </div>
                                       </div>
-                                    </div>
-                                    <div class="col-md-6">
                                       <div class="card" style='display:{{ $user->as_ldap  != "1" ? "block":"none"}}'>
                                         <div class="card-header">
                                           <h4 class="card-title" id="basic-layout-card-center">Password</h4>
@@ -122,15 +121,43 @@
                                         <div class="card-body collapse in">
                                           <div class="card-block">
                                             <div class="row skin skin-square">
-                                              <div class="col-md-12 col-sm-12">
+                                              <div class="col-md-12 col-lg-12 col-xl-6">
                                                 <div class="form-group">
                                                   <label>Password</label>
-                                                  <input type="password" class="form-control" id="input-11" name="password">
+                                                  <input type="password" class="form-control" id="input-11" name="password" placeholder="Password">
                                                 </div>
+                                              </div>
+                                              <div class="col-md-12 col-lg-12 col-xl-6">
                                                 <div class="form-group">
                                                   <label>Konfirmasi Password</label>
-                                                  <input type="password" class="form-control" name="password_confirmation">
+                                                  <input type="password" class="form-control" name="password_confirmation" placeholder="Konfirmasi Password">
                                                 </div>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                      <div class="card">
+                                        <div class="card-header">
+                                          <h4 class="card-title" id="basic-layout-card-center">Jenis User</h4>
+                                          <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
+                                        </div>
+                                        <div class="card-body collapse in">
+                                          <div class="card-block">
+                                            <div class="row skin skin-square">
+                                              <div class="col-md-12 col-lg-12 col-xl-12">
+                                                @if (isset($jenis_user))
+                                                <div class="form-group">
+                                                  <select class="select2 form-control" name="jenis_user" style="width: 100%;">
+                                                    <option selected disabled="" value="">Jenis User</option>
+                                                    @foreach($jenis_user as $jenis)
+                                                    <option value="{{ $jenis->id }}" {{ $jenis->id == $user->jenis_user ? 'selected=""' : '' }}>{{ $jenis->nama }}</option>
+                                                    @endforeach
+                                                  </select>
+                                                </div>
+                                                @endif
                                               </div>
                                             </div>
                                           </div>
@@ -147,7 +174,7 @@
                                                 <label >Pengaturan Perizinan <code>Unit Kerja</code></label>
                                               </div>
                                               <div class="col-md-4">
-                                                <div class="btn btn-sm btn-primary" id="toogle_unit"><i class="fa fa-edit"></i></div>
+                                                <div class="btn btn-sm btn-outline-primary" id="toogle_unit"><i class="fa fa-edit"></i> Konfigurasi</div>
                                               </div>
                                             </div>
                                             <br />
@@ -156,7 +183,7 @@
                                                 <label>Pengaturan Menu <code>Dropping</code></label>
                                               </div>
                                               <div class="col-md-4">
-                                                <div class="btn btn-sm btn-primary"  onclick="open_menu('dropping')"><i class="fa fa-edit"></i></div>
+                                                <div class="btn btn-sm btn-outline-primary"  onclick="open_menu('dropping')"><i class="fa fa-edit"></i> Konfigurasi</div>
                                               </div>
                                             </div>
                                             <br />
@@ -165,7 +192,7 @@
                                                 <label>Pengaturan Menu <code>Pengajuan Dropping</code></label>
                                               </div>
                                               <div class="col-md-4">
-                                                <div class="btn btn-sm btn-primary"  onclick="open_menu('aju_dropping')"><i class="fa fa-edit"></i></div>
+                                                <div class="btn btn-sm btn-outline-primary"  onclick="open_menu('aju_dropping')"><i class="fa fa-edit"></i> Konfigurasi</div>
                                               </div>
                                             </div>
                                             <br />
@@ -174,7 +201,7 @@
                                                 <label>Pengaturan Menu <code>Transaksi</code></label>
                                               </div>
                                               <div class="col-md-4">
-                                                <div class="btn btn-sm btn-primary" onclick="open_menu('transaksi')"><i class="fa fa-edit"></i></div>
+                                                <div class="btn btn-sm btn-outline-primary" onclick="open_menu('transaksi')"><i class="fa fa-edit"></i> Konfigurasi</div>
                                               </div>
                                             </div>
                                             <br />
@@ -183,7 +210,7 @@
                                                 <label>Pengaturan Menu <code>Anggaran</code></label>
                                               </div>
                                               <div class="col-md-4">
-                                                <div class="btn btn-sm btn-primary"  onclick="open_menu('anggaran')"><i class="fa fa-edit"></i></div>
+                                                <div class="btn btn-sm btn-outline-primary"  onclick="open_menu('anggaran')"><i class="fa fa-edit"></i> Konfigurasi</div>
                                               </div>
                                             </div>
                                             <br />
@@ -192,7 +219,7 @@
                                                 <label>Pengaturan Menu <code>Pelaporan</code></label>
                                               </div>
                                               <div class="col-md-4">
-                                                <div class="btn btn-sm btn-primary"  onclick="open_menu('pelaporan')"><i class="fa fa-edit"></i></div>
+                                                <div class="btn btn-sm btn-outline-primary"  onclick="open_menu('pelaporan')"><i class="fa fa-edit"></i> Konfigurasi</div>
                                               </div>
                                             </div>
                                             <br />
@@ -201,7 +228,7 @@
                                                 <label>Pengaturan Menu <code>Manajemen User</code></label>
                                               </div>
                                               <div class="col-md-4">
-                                                <div class="btn btn-sm btn-primary"  onclick="open_menu('user')"><i class="fa fa-edit"></i></div>
+                                                <div class="btn btn-sm btn-outline-primary"  onclick="open_menu('user')"><i class="fa fa-edit"></i> Konfigurasi</div>
                                               </div>
                                             </div>
                                             <br />
@@ -210,7 +237,7 @@
                                                 <label>Pengaturan Menu <code>Manajemen Item</code></label>
                                               </div>
                                               <div class="col-md-4">
-                                                <div class="btn btn-sm btn-primary"  onclick="open_menu('item')"><i class="fa fa-edit"></i></div>
+                                                <div class="btn btn-sm btn-outline-primary"  onclick="open_menu('item')"><i class="fa fa-edit"></i> Konfigurasi</div>
                                               </div>
                                             </div>
                                           </div>
@@ -224,11 +251,11 @@
                                       <div class="card">
                                         <div class="card-body">
                                           <div class="card-block">
-                                            <div class="form-actions right">
-                                              <a href="{{ url('user') }}" class="btn btn-warning mr-1">
+                                            <div class="pull-right">
+                                              <a href="{{ url('user') }}" class="btn btn-danger">
                                                 <i class="ft-x"></i> Kembali
                                               </a>    
-                                              <button type="submit" class="btn btn-primary">
+                                              <button type="submit" class="btn btn-outline-primary">
                                                 <i class="fa fa-check-square-o"></i> Simpan
                                               </button>
                                             </div>
@@ -363,26 +390,7 @@
                                       <h4 class="modal-title col-md-12 col-sm-12" id="title_modal_pernyataan" >Pengaturan Perizinan <code>Pengajuan Dropping</code></h4>
                                     </div>
                                     <div class="modal-body" id="body-menu">
-                                       @include('user.edit-menu-pengajuan-dropping')
-                                    </div>
-                                    <div class="modal-footer">
-                                      <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">kembali</button>
-                                      <!-- <button type="button" id="button_peryataan" onclick="sumbit_post()" class="btn btn-outline-primary">Ya, kirim</button> -->
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                              <div class="modal fade text-xs-left" id="modal_menu_transaksi" tabindex="-1" role="dialog" aria-labelledby="myModalLabel20">
-                                <div class="modal-dialog">
-                                  <div class="modal-content">
-                                    <div class="modal-header">
-                                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                      </button>
-                                      <h4 class="modal-title col-md-12 col-sm-12" id="title_modal_pernyataan" >Pengaturan Perizinan <code>Transaksi</code></h4>
-                                    </div>
-                                    <div class="modal-body" id="body-menu">
-                                     @include('user.edit-menu-transaksi')
+                                     @include('user.edit-menu-pengajuan-dropping')
                                    </div>
                                    <div class="modal-footer">
                                     <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">kembali</button>
@@ -391,17 +399,17 @@
                                 </div>
                               </div>
                             </div>
-                            <div class="modal fade text-xs-left" id="modal_menu_anggaran" tabindex="-1" role="dialog" aria-labelledby="myModalLabel20">
+                            <div class="modal fade text-xs-left" id="modal_menu_transaksi" tabindex="-1" role="dialog" aria-labelledby="myModalLabel20">
                               <div class="modal-dialog">
                                 <div class="modal-content">
                                   <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                       <span aria-hidden="true">&times;</span>
                                     </button>
-                                    <h4 class="modal-title col-md-12 col-sm-12" id="title_modal_pernyataan" >Pengaturan Perizinan <code>Anggaran</code></h4>
+                                    <h4 class="modal-title col-md-12 col-sm-12" id="title_modal_pernyataan" >Pengaturan Perizinan <code>Transaksi</code></h4>
                                   </div>
                                   <div class="modal-body" id="body-menu">
-                                   @include('user.edit-menu-anggaran')
+                                   @include('user.edit-menu-transaksi')
                                  </div>
                                  <div class="modal-footer">
                                   <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">kembali</button>
@@ -410,17 +418,17 @@
                               </div>
                             </div>
                           </div>
-                          <div class="modal fade text-xs-left" id="modal_menu_pelaporan" tabindex="-1" role="dialog" aria-labelledby="myModalLabel20">
+                          <div class="modal fade text-xs-left" id="modal_menu_anggaran" tabindex="-1" role="dialog" aria-labelledby="myModalLabel20">
                             <div class="modal-dialog">
                               <div class="modal-content">
                                 <div class="modal-header">
                                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                   </button>
-                                  <h4 class="modal-title col-md-12 col-sm-12" id="title_modal_pernyataan" >Pengaturan Perizinan <code>Pelaporan</code></h4>
+                                  <h4 class="modal-title col-md-12 col-sm-12" id="title_modal_pernyataan" >Pengaturan Perizinan <code>Anggaran</code></h4>
                                 </div>
                                 <div class="modal-body" id="body-menu">
-                                 @include('user.edit-menu-pelaporan')
+                                 @include('user.edit-menu-anggaran')
                                </div>
                                <div class="modal-footer">
                                 <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">kembali</button>
@@ -429,17 +437,17 @@
                             </div>
                           </div>
                         </div>
-                        <div class="modal fade text-xs-left" id="modal_menu_user" tabindex="-1" role="dialog" aria-labelledby="myModalLabel20">
+                        <div class="modal fade text-xs-left" id="modal_menu_pelaporan" tabindex="-1" role="dialog" aria-labelledby="myModalLabel20">
                           <div class="modal-dialog">
                             <div class="modal-content">
                               <div class="modal-header">
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                   <span aria-hidden="true">&times;</span>
                                 </button>
-                                <h4 class="modal-title col-md-12 col-sm-12" id="title_modal_pernyataan" >Pengaturan Perizinan <code>Manajemen User</code></h4>
+                                <h4 class="modal-title col-md-12 col-sm-12" id="title_modal_pernyataan" >Pengaturan Perizinan <code>Pelaporan</code></h4>
                               </div>
                               <div class="modal-body" id="body-menu">
-                               @include('user.edit-menu-user')
+                               @include('user.edit-menu-pelaporan')
                              </div>
                              <div class="modal-footer">
                               <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">kembali</button>
@@ -448,17 +456,17 @@
                           </div>
                         </div>
                       </div>
-                      <div class="modal fade text-xs-left" id="modal_menu_item" tabindex="-1" role="dialog" aria-labelledby="myModalLabel20">
+                      <div class="modal fade text-xs-left" id="modal_menu_user" tabindex="-1" role="dialog" aria-labelledby="myModalLabel20">
                         <div class="modal-dialog">
                           <div class="modal-content">
                             <div class="modal-header">
                               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                               </button>
-                              <h4 class="modal-title col-md-12 col-sm-12" id="title_modal_pernyataan" >Pengaturan Perizinan <code>Manajemen Item</code></h4>
+                              <h4 class="modal-title col-md-12 col-sm-12" id="title_modal_pernyataan" >Pengaturan Perizinan <code>Manajemen User</code></h4>
                             </div>
                             <div class="modal-body" id="body-menu">
-                             @include('user.edit-menu-item')
+                             @include('user.edit-menu-user')
                            </div>
                            <div class="modal-footer">
                             <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">kembali</button>
@@ -467,23 +475,42 @@
                         </div>
                       </div>
                     </div>
+                    <div class="modal fade text-xs-left" id="modal_menu_item" tabindex="-1" role="dialog" aria-labelledby="myModalLabel20">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                            <h4 class="modal-title col-md-12 col-sm-12" id="title_modal_pernyataan" >Pengaturan Perizinan <code>Manajemen Item</code></h4>
+                          </div>
+                          <div class="modal-body" id="body-menu">
+                           @include('user.edit-menu-item')
+                         </div>
+                         <div class="modal-footer">
+                          <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">kembali</button>
+                          <!-- <button type="button" id="button_peryataan" onclick="sumbit_post()" class="btn btn-outline-primary">Ya, kirim</button> -->
+                        </div>
+                      </div>
+                    </div>
+                  </div>
 
-                  </form>
-                </div> 
-                @endsection
+                </form>
+              </div> 
+              @endsection
 
-                @section('customjs')
-                <!-- BEGIN PAGE VENDOR JS-->
-                <script type="text/javascript" src="{{ asset('app-assets/vendors/js/ui/jquery.sticky.js') }}"></script>
-                <script type="text/javascript" src="{{ asset('app-assets/vendors/js/charts/jquery.sparkline.min.js') }}"></script>
-                <script src="{{ asset('app-assets/vendors/js/tables/jsgrid/jsgrid.min.js') }}" type="text/javascript"></script>
-                <script src="{{ asset('app-assets/vendors/js/tables/jsgrid/griddata.js') }}" type="text/javascript"></script>
-                <script src="{{ asset('app-assets/vendors/js/tables/jsgrid/jquery.validate.min.js') }}" type="text/javascript"></script>
-                <!-- END PAGE VENDOR JS-->
-                <!-- BEGIN PAGE LEVEL JS-->
-                <script type="text/javascript" src="{{ asset('app-assets/js/scripts/ui/breadcrumbs-with-stats.min.js') }}"></script>
-                <script src="{{ asset('app-assets/vendors/js/forms/icheck/icheck.min.js') }}" type="text/javascript"></script>
-                <script src="{{ asset('app-assets/js/scripts/forms/checkbox-radio.min.js') }}" type="text/javascript"></script>
-                <!-- END PAGE LEVEL JS-->
-                @include('user.js-perizinan')
-                @endsection
+              @section('customjs')
+              <!-- BEGIN PAGE VENDOR JS-->
+              <script type="text/javascript" src="{{ asset('app-assets/vendors/js/ui/jquery.sticky.js') }}"></script>
+              <script type="text/javascript" src="{{ asset('app-assets/vendors/js/charts/jquery.sparkline.min.js') }}"></script>
+              <script src="{{ asset('app-assets/vendors/js/tables/jsgrid/jsgrid.min.js') }}" type="text/javascript"></script>
+              <script src="{{ asset('app-assets/vendors/js/tables/jsgrid/griddata.js') }}" type="text/javascript"></script>
+              <script src="{{ asset('app-assets/vendors/js/tables/jsgrid/jquery.validate.min.js') }}" type="text/javascript"></script>
+              <!-- END PAGE VENDOR JS-->
+              <!-- BEGIN PAGE LEVEL JS-->
+              <script type="text/javascript" src="{{ asset('app-assets/js/scripts/ui/breadcrumbs-with-stats.min.js') }}"></script>
+              <script src="{{ asset('app-assets/vendors/js/forms/icheck/icheck.min.js') }}" type="text/javascript"></script>
+              <script src="{{ asset('app-assets/js/scripts/forms/checkbox-radio.min.js') }}" type="text/javascript"></script>
+              <!-- END PAGE LEVEL JS-->
+              @include('user.js-perizinan')
+              @endsection

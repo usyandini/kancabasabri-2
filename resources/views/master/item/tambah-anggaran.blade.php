@@ -117,6 +117,24 @@
                                     </div>
                                   </div>
                                 </div>
+                                <div class="form-group">
+                                  <label for="jenis">Satuan</label>
+                                  <div = "row">
+                                    <div class = "col-md-10">
+                                      <select class="select2 form-control" name="satuan" id="satuan" required>
+                                        <option value="" disabled selected>Satuan</option>
+                                        @foreach($satuan as $satu)
+                                        <option {{ old('satuan')== $satu->kode ? 'selected=""' : '' }} value="{{ $satu->kode }}">{{ $satu->kode }} - {{ $satu->name }}</option>
+                                        @endforeach
+                                      </select>
+                                    </div>
+                                    <div class = "col-md-2">
+                                      <button type="button" class="btn btn-success" data-target="#tambahSatuan" data-toggle="modal">
+                                        <i class="fa fa-plus"></i>
+                                      </button>
+                                    </div>
+                                  </div>
+                                </div>
                               </div>
                             </div>
                           </div>
@@ -318,6 +336,35 @@
                               <div class="form-group">
                                 <label for="nama_jenis">Pos Anggaran</label>
                                   <input class="form-control" type="text" name="nama_pos" placeholder="Nama Pos Anggaran" value="">
+                              </div>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">Kembali</button>
+                              <button type="submit" id="simpan" class="btn btn-outline-primary">Simpan</button>
+                            </div>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="modal fade text-xs-left" id="tambahSatuan" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                            <h4 class="modal-title" id="myModalLabel">Satuan</h4>
+                          </div>
+                          <form class="form" id="pos-form" action="{{ URL('item/submit/satuan') }}" method="POST">
+                            {{ csrf_field() }}
+                            <div class="modal-body" id="confirmation-msg">
+                              <div class="form-group">
+                                <label for="kode_kelompok">Kode</label>
+                                  <input class="form-control" type="text" name="kode_satuan" placeholder="Kode Satuan" value="">
+                              </div>
+                              <div class="form-group">
+                                <label for="nama_jenis">Satuan</label>
+                                  <input class="form-control" type="text" name="nama_satuan" placeholder="Nama Satuan" value="">
                               </div>
                             </div>
                             <div class="modal-footer">

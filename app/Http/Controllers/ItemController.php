@@ -114,6 +114,7 @@ class ItemController extends Controller
         $jenis = ItemAnggaranMaster::withTrashed()->where('type', 1)->get();
         $kelompok = ItemAnggaranMaster::withTrashed()->where('type', 2)->get();
         $pos = ItemAnggaranMaster::withTrashed()->where('type', 3)->get();
+        $satuan = ItemAnggaranMaster::withTrashed()->where('type', 4)->get();
         $subpos = SubPos::get();
         $kegiatan = Kegiatan::get();
         return view('master.item.list-anggaran', [
@@ -124,6 +125,7 @@ class ItemController extends Controller
             'pos'       => $pos,
             'subpos'    => $subpos,
             'kegiatan'  => $kegiatan,
+            'satuan'    => $satuan
         ]);
         // return response()->json($master_item);
     }
@@ -169,6 +171,7 @@ class ItemController extends Controller
         $jenis = ItemAnggaranMaster::where('type', 1)->get();
         $kelompok = ItemAnggaranMaster::where('type', 2)->get();
         $pos = ItemAnggaranMaster::where('type', 3)->get();
+        $satuan = ItemAnggaranMaster::where('type', 4)->get();
         return view('master.item.tambah-anggaran',
             [   
                 // 'item' => $this->itemModel->get(),
@@ -183,7 +186,8 @@ class ItemController extends Controller
                 'm_anggaran'    => $this->mAnggaranModel->get(),
                 'jenis'         => $jenis,
                 'kelompok'      => $kelompok,
-                'pos'           => $pos
+                'pos'           => $pos,
+                'satuan'        => $satuan
             ]);
     }
 
@@ -229,11 +233,12 @@ class ItemController extends Controller
     {
         
         $inputItem = array(
-            'jenis'    => $request->jenis,
-            'kelompok' => $request->kelompok,
+            'jenis'             => $request->jenis,
+            'kelompok'          => $request->kelompok,
             'pos_anggaran'      => $request->pos,
             'sub_pos'           => $request->subpos,
             'mata_anggaran'     => $request->kegiatan,
+            'satuan'            => $request->satuan,
             'created_by'        => \Auth::id(),
             'updated_by'        => \Auth::id(),
             'deleted_at'        => null
@@ -284,6 +289,15 @@ class ItemController extends Controller
                     );
                     ItemAnggaranMaster::create($inputPos); //Pos Anggaran
                     break;
+                case 'satuan':
+                    $inputPos = array(
+                        'kode'  => $request->kode_satuan,
+                        'name'  => $request->nama_satuan,
+                        'type'  => 4,
+                        'created_by' => \Auth::id()
+                    );
+                    ItemAnggaranMaster::create($inputPos); //Pos Anggaran
+                    break;
                 case 'all':
                     $inputAll = array(
                         'kode'  => $request->kode,
@@ -326,6 +340,7 @@ class ItemController extends Controller
         $jenis = ItemAnggaranMaster::where('type', 1)->get();
         $kelompok = ItemAnggaranMaster::where('type', 2)->get();
         $pos = ItemAnggaranMaster::where('type', 3)->get();
+        $satuan = ItemAnggaranMaster::where('type', 4)->get();
         return view('master.item.edit-anggaran', [
             'item'          => [],
             'program'       => [],
@@ -336,6 +351,7 @@ class ItemController extends Controller
             'jenis' => $jenis,
             'kelompok' => $kelompok,
             'pos' => $pos,
+            'satuan' => $satuan,
             'items' => $item
         ]);
     }
@@ -382,11 +398,12 @@ class ItemController extends Controller
     {
         
         $update = array(
-            'jenis'    => $request->jenis,
-            'kelompok' => $request->kelompok,
+            'jenis'             => $request->jenis,
+            'kelompok'          => $request->kelompok,
             'pos_anggaran'      => $request->pos,
             'sub_pos'           => $request->subpos,
             'mata_anggaran'     => $request->kegiatan,
+            'satuan'            => $request->satuan,
             'updated_by'        => \Auth::id()
         );
         ItemMasterAnggaran::where('id', $id)->update($update);   
@@ -432,6 +449,9 @@ class ItemController extends Controller
     public function destroy($jenis, $id, Request $request)
     {
         switch($jenis){
+            case 'anggaran':
+                $item = "";
+                ItemMasterAnggaran::where('id', $id)->delete(); break;
             case 'transaksi':
                 $item = ItemMaster::withTrashed()->where('id', $id)->first()->nama_item ? ItemMaster::withTrashed()->where('id', $id)->first()->nama_item : ItemMaster::withTrashed()->where('id', $id)->first()->kode_item;
 

@@ -243,9 +243,11 @@ class PelaporanController extends Controller
             if($diff2 <= 0){
                 $beda = false;
             }
+            $mulai = false;
 
             if($diff1 < 0){
                 $beda = false;
+                $mulai = true;
             }
 
         }
@@ -256,6 +258,7 @@ class PelaporanController extends Controller
             'setting' => $setting , 
             'type' => $type,
             'beda' => $beda,
+            'mulai' => $mulai,
             'userCabang' =>$this->userCabang,
             'userDivisi' =>$this->userDivisi,
             'filters' => $filter]);
@@ -304,8 +307,10 @@ class PelaporanController extends Controller
             $beda = false;
         }
 
+        $mulai = false;
         if($diff1 < 0){
             $beda = false;
+            $mulai = true;
         }
         
         $filter = null;
@@ -333,6 +338,7 @@ class PelaporanController extends Controller
             'setting'       => $setting ,
             'type'          => 'item',
             'beda'          => $beda,
+            'mulai'         => $mulai,
             'userCabang'    =>$this->userCabang,
             'userDivisi'    =>$this->userDivisi,
             'filters'       => $filter]);
@@ -385,8 +391,10 @@ class PelaporanController extends Controller
                 $beda = false;
             }
 
+            $mulai = false;
             if($diff1 < 0){
                 $beda = false;
+                $mulai = true;
             }
         }
         
@@ -444,6 +452,7 @@ class PelaporanController extends Controller
             'setting' => $setting , 
             'type' => $type,
             'beda' => $beda,
+            'mulai' => $mulai,
             'userCabang' =>$this->userCabang,
             'userDivisi' =>$this->userDivisi,
             'filters' => $filter]);
@@ -488,7 +497,10 @@ class PelaporanController extends Controller
             $beda = false;
         }
 
+        $mulai = false;
         if($diff1 < 0){
+
+            $mulai = true;
             $beda = false;
         }
         
@@ -511,6 +523,7 @@ class PelaporanController extends Controller
             'setting' => $setting ,
             'type' => 'item',
             'beda' => $beda,
+            'mulai' => $mulai,
             'userCabang' =>$this->userCabang,
             'userDivisi' =>$this->userDivisi,
             'filters' => $filter]);
