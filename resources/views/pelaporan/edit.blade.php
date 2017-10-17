@@ -133,7 +133,11 @@
                                     @if($type=="item")
                                     <div class="col-xs-3">
                                       <div class="form-group">
+                                        @if($mulai)
+                                        <label >Batas Waktu Mulai Pengisian &nbsp; :</label>
+                                        @else
                                         <label >Batas Waktu Pengisian &nbsp; :</label>
+                                        @endif
                                         <input id="bts_hari" name="bts_hari" class="form-control" value="---" readonly>
                                       </div>
                                     </div>
@@ -747,9 +751,13 @@
                           // alert(data[0].tanggal_selesai);
 
                           @if($type=="item")
-                          tw_dari.value = tw_dari_val;
-                          tw_ke.value = tw_ke_val;
-                          var countDownDate = new Date(data[0].tanggal_selesai).getTime();
+                            tw_dari.value = tw_dari_val;
+                            tw_ke.value = tw_ke_val;
+                            @if($mulai)
+                            var countDownDate = new Date(data[0].tanggal_mulai).getTime();
+                            @else
+                            var countDownDate = new Date(data[0].tanggal_selesai).getTime();
+                            @endif
 
                           var disableCountDown = true;
                           if(disableCountDown){
@@ -758,8 +766,14 @@
                                 // Get todays date and time
                                 var now = new Date().getTime();
                                 
+                                var now = new Date().getTime();
+                                @if($mulai)
+                                // Find the distance between now an the count down date
+                                var distance = now - countDownDate;
+                                @else
                                 // Find the distance between now an the count down date
                                 var distance = countDownDate - now;
+                                @endif
                                 
                                 // Time calculations for days, hours, minutes and seconds
                                 var days = Math.floor(distance / (1000 * 60 * 60 * 24));
