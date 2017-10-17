@@ -417,7 +417,7 @@
                             @else
                             var countDownDate = new Date(data[0].tanggal_selesai).getTime();
                             @endif
-                          var disableCountDown = true;
+                          var disableCountDown = "{{$beda?1:0}}" == "1"?true:false;
                           if(disableCountDown){
                             var x = setInterval(function() {
 
@@ -449,7 +449,11 @@
                                 
                                 // If the count down is over, write some text 
                                 if (distance < 0) {
+                                    @if($mulai)
+                                    alert ("Waktu Memasukkan data anggaran dan kegiatan telah dimulai");
+                                    @else
                                     alert ("Waktu Memasukkan data anggaran dan kegiatan telah usai");
+                                    @endif
                                     clearInterval(x);
                                     document.getElementById("bts_hari").value= "---";
                                     document.getElementById("bts_jam").value= "---";
