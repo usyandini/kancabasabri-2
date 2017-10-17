@@ -77,8 +77,12 @@ Route::group(['middleware' => 'auth'], function() {
 		Route::get('/report/realisasi', 'TransaksiController@realisasi');
 		Route::post('/filter/reports', 'TransaksiController@filter_handle_realisasi');
 		Route::get('/filter/realisasi/{cabang}/{awal}/{akhir}/{transyear}', 'TransaksiController@filter_result_realisasi');
+		Route::get('/realisasi/{cabang}/{awal}/{akhir}/{transyear}/{type}', 'TransaksiController@cetakRealisasi');
 
-		Route::get('/print/realisasi/{cabang}/{awal}/{akhir}/{transyear}/{type}', 'TransaksiController@cetakRealisasi');
+		Route::get('/report/kasbank', 'TransaksiController@kasbank');
+		Route::post('/filter/kasbank', 'TransaksiController@filter_handle_kasbank');
+		Route::get('/filter/kasbank/{cabang}/{awal}/{akhir}/{transyear}', 'TransaksiController@filter_result_kasbank');
+		Route::get('/kasbank/{cabang}/{awal}/{akhir}/{transyear}/{type}', 'TransaksiController@cetakKasBank');
 	});
 
 
@@ -145,10 +149,14 @@ Route::group(['middleware' => 'auth'], function() {
 		Route::get('/anggaran', 'ItemController@listAnggaran');
 		Route::get('/get/combination/{id}/{tanggal}', 'ItemController@getCombination');
 		Route::get('/create/transaksi', 'ItemController@createItemTransaksi');
+		Route::get('/create/anggaran', 'ItemController@createItemAnggaran');
 		Route::post('/add/transaksi', 'ItemController@addItemTransaksi');
+		Route::post('/add/anggaran', 'ItemController@addItemAnggaran');
 		Route::post('/submit/{type}', 'ItemController@submitAnggaranItem');
 		Route::get('/edit/transaksi/{id}', 'ItemController@editItemTransaksi');
+		Route::get('/edit/anggaran/{id}', 'ItemController@editItemAnggaran');
 		Route::post('/update/transaksi/{id}', 'ItemController@updateItemTransaksi');
+		Route::post('/update/anggaran/{id}', 'ItemController@updateItemAnggaran');
 		Route::post('/update/item/{id}', 'ItemController@updateItem');
 		Route::get('/delete/{jenis}/{id}', 'ItemController@destroy');
 	});

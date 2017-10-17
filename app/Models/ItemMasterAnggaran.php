@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ItemMaster extends Model
+class ItemMasterAnggaran extends Model
 {
     protected $connection = 'sqlsrv';
     protected $table = 'item_master_anggaran';
@@ -14,7 +14,8 @@ class ItemMaster extends Model
     	'kelompok',
     	'pos_anggaran',
     	'sub_pos',
-    	'mata_anggaran',
+        'mata_anggaran',
+    	'satuan',
         'created_by',
     	'updated_by',
         'deleted_at'

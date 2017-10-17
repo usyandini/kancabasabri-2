@@ -13,19 +13,23 @@
                 .contoh {
                   background: rgb(247, 137, 136);
                 }
+                thead
+                {
+                	vertical-align:middle;
+                }
               </style>
               @endsection
 
               @section('content')
               <div class="content-header row">
                 <div class="content-header-left col-md-6 col-xs-12 mb-2">
-                  <h3 class="content-header-title mb-0">Report Realisasi</h3>
+                  <h3 class="content-header-title mb-0">Report Kas / Bank</h3>
                   <div class="row breadcrumbs-top">
                     <div class="breadcrumb-wrapper col-xs-12">
                       <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="/transaksi">Transaksi</a>
                         </li>
-                        <li class="breadcrumb-item active">Report Realisasi
+                        <li class="breadcrumb-item active">Report Kas/Bank
                         </li>
                       </ol>
                     </div>
@@ -52,7 +56,7 @@
                         </div>
                         <div class="card-body collapse in">
                           <div class="card-block">
-                            <form method="POST" action="{{ url('transaksi/filter/reports') }}">
+                            <form method="POST" action="{{ url('transaksi/filter/kasbank') }}">
                               <div class="row">
                                 {{ csrf_field() }}
                                 <div class="col-xs-3">
@@ -116,7 +120,7 @@
                                   @if($filters)
                                   <div class="col-xs-2">
                                     <div class="form-group">
-                                      <a href="{{ url('transaksi/report/realisasi') }}" class="btn btn-danger"><i class="fa fa-times"></i> Reset pencarian</a>
+                                      <a href="{{ url('transaksi/report/kasbank') }}" class="btn btn-danger"><i class="fa fa-times"></i> Reset pencarian</a>
                                     </div>
                                   </div>
                                   @endif
@@ -132,20 +136,19 @@
                         <div class="card">
                           <div class="card-header">
                             @if ($filters)
-                            <h4 class="card-title">Hasil Pencarian Realisasi</h4><br>
+                            <h4 class="card-title">Hasil Pencarian Report Kas/Bank</h4><br>
                             
                             <table align="right"><tr>
-                              <td><span><a href="{{ URL('transaksi/realisasi/'.$filters['cabang'].'/'.$filters['awal'].'/'.$filters['akhir'].'/'.$filters['transyear'].'/excel') }}" class="btn btn-success" target="_blank"><i class="fa fa-file-excel-o"></i> <b> Ekspor ke Excel </b></a></span></td>
+                              <td style="display:none;"><span><a href="{{ URL('transaksi/kasbank/'.$filters['cabang'].'/'.$filters['awal'].'/'.$filters['akhir'].'/'.$filters['transyear'].'/excel') }}" class="btn btn-success" target="_blank"><i class="fa fa-file-excel-o"></i> <b> Ekspor ke Excel </b></a></span></td>
 
-                              <td><span><a href="{{ URL('transaksi/realisasi/'.$filters['cabang'].'/'.$filters['awal'].'/'.$filters['akhir'].'/'.$filters['transyear'].'/export') }}" class="btn btn-success" target="_blank"><i class="fa fa-file-pdf-o"></i> <b> Ekspor ke PDF </b></a></span></td>
+                              <td style="display:none;"><span><a href="{{ URL('transaksi/kasbank/'.$filters['cabang'].'/'.$filters['awal'].'/'.$filters['akhir'].'/'.$filters['transyear'].'/export') }}" class="btn btn-success" target="_blank"><i class="fa fa-file-pdf-o"></i> <b> Ekspor ke PDF </b></a></span></td>
 
-                              <td><span><a href="{{ URL('transaksi/realisasi/'.$filters['cabang'].'/'.$filters['awal'].'/'.$filters['akhir'].'/'.$filters['transyear'].'/print') }}" class="btn btn-success" target="_blank"><i class="fa fa-print"></i> <b> Cetak Realisasi </b></a></span></td> 
+                              <td><span><a href="{{ URL('transaksi/kasbank/'.$filters['cabang'].'/'.$filters['awal'].'/'.$filters['akhir'].'/'.$filters['transyear'].'/print') }}" class="btn btn-success" target="_blank"><i class="fa fa-print"></i> <b> Cetak Report</b></a></span></td> 
                             </tr></table>
                             @else
-                            <h4 class="card-title">Daftar Realisasi</h4><br>
+                            <h4 class="card-title">Daftar Report</h4><br>
                             @endif
-                            <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
-                            
+                            <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>                         
                           </div>
                           <div class="card-body collapse in ">
                             <div class="card-block card-dashboard ">
@@ -153,30 +156,33 @@
 			                  	<div class="table-responsive">
 			                      <table class="table table-striped table-bordered datatable-select-inputs wrap" cellspacing="0" width="120%">
 			                        <thead>
-			                          <tr align="middle">
-			                          	<th width="5%"><center>No</center></th>
-			                          	<th id="filterable"><center>Deskripsi Anggaran</center></th>
-			                            <th id="filterable">Anggaran</th>
-			                            <th id="filterable">Realisasi Periode</th>
-			                            <th id="filterable">Sisa Anggaran</th>
-			                          </tr>
+			                          <tr>
+						                <th rowspan="2" width="60px" style="vertical-align:middle;"><center>TGL</center></th>
+						                <th rowspan="2" width="50px" style="vertical-align:middle;"><center>NO.BK</center></th>
+						                <th rowspan="2" colspan="2" style="vertical-align:middle;"><center>URAIAN TRANSAKSI</center></th>
+						                <th colspan="2" width="100px"><center>KAS</center></th>
+						                <th colspan="2" width="100px"><center>BANK</center></th>
+						                <th rowspan="2" width="80px" style="vertical-align:middle;"><center>SALDO</center></th>
+						              </tr>
+						              <tr>
+						                <th><center>DEBET</center></th>
+						                <th><center>KREDIT</center></th>
+						                <th><center>DEBET</center></th>
+						                <th><center>KREDIT</center></th>
+						              </tr>
 			                        </thead>
+			                        @if($filters)
 			                        <tbody>
-                                @if($filters)
-                                  <?php $no=1; ?>
-                                  @foreach($transaksi as $trans)
-  		                        		<tr>
-  		                        			<td><center>{{ $no++ }}</center></td>
-  		                        			<td>{{$items->where('SEGMEN_1',$trans->item)->first()['nama_item']}}</td>
-  		                        			<td>Rp. {{ number_format($trans->anggaran, 2, ',','.') }}</td>
-                                    <?php $total_real = $trans->total;//$transaksi->where('item', $trans->item)->sum('total'); ?>
-  		                        			<td>Rp. {{ number_format($total_real, 2, ',','.') }}</td>
-                                    <?php $sisa_angg = ($trans->anggaran - $total_real);?>
-  		                        			<td>Rp. {{ number_format($sisa_angg, 2, ',','.') }}</td>
-  		                        		</tr>
-                                  @endforeach
-                                @endif
+	                                	<td></td>
+						                <td></td>
+						                <td width="150px" colspan="2"></td>
+	                                  	<td align="right"><?php $debitkas = 1912862; echo number_format($debitkas,'2',',','.'); ?></td>
+						                <td align="right"></td>
+						                <td align="right"><?php $debitbank = 37910743.8; echo number_format($debitbank,'2',',','.'); ?></td>
+						                <td align="right"></td>
+						                <td align="right"><?php $saldo = $debitkas+$debitbank; echo number_format($saldo,'2',',','.'); ?></td>
 			                        </tbody>
+			                        @endif
 			                      </table>
 			                    </div>
                             </div>

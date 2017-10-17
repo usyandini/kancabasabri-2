@@ -109,17 +109,25 @@ class ItemController extends Controller
     }
     public function listAnggaran()
     {
-        $master_item = ItemMaster::orderby('kode_item')->get();
-        // $jenis = ItemAnggaranMaster::withTrashed()->where('type', 1)->get();
-        // $kelompok = ItemAnggaranMaster::withTrashed()->where('type', 2)->get();
-        // $pos = ItemAnggaranMaster::withTrashed()->where('type', 3)->get();
-        return view('master.item.index', [
-            'items' => $master_item, 
-            'no' => 1, 
-            // 'jenis' => $jenis,
-            // 'kelompok' => $kelompok,
-            // 'pos' => $pos
+       
+        $master_item = ItemMasterAnggaran::where('deleted_at',NULL)->get();
+        $jenis = ItemAnggaranMaster::withTrashed()->where('type', 1)->get();
+        $kelompok = ItemAnggaranMaster::withTrashed()->where('type', 2)->get();
+        $pos = ItemAnggaranMaster::withTrashed()->where('type', 3)->get();
+        $satuan = ItemAnggaranMaster::withTrashed()->where('type', 4)->get();
+        $subpos = SubPos::get();
+        $kegiatan = Kegiatan::get();
+        return view('master.item.list-anggaran', [
+            'items'     => $master_item, 
+            'no'        => 1, 
+            'jenis'     => $jenis,
+            'kelompok'  => $kelompok,
+            'pos'       => $pos,
+            'subpos'    => $subpos,
+            'kegiatan'  => $kegiatan,
+            'satuan'    => $satuan
         ]);
+        // return response()->json($master_item);
     }
 
     public function getCombination($mainaccount, $tanggal)
@@ -158,6 +166,31 @@ class ItemController extends Controller
             ]);
     }
 
+    public function createItemAnggaran()
+    {
+        $jenis = ItemAnggaranMaster::where('type', 1)->get();
+        $kelompok = ItemAnggaranMaster::where('type', 2)->get();
+        $pos = ItemAnggaranMaster::where('type', 3)->get();
+        $satuan = ItemAnggaranMaster::where('type', 4)->get();
+        return view('master.item.tambah-anggaran',
+            [   
+                // 'item' => $this->itemModel->get(),
+                // 'program' => $this->programModel->where("VALUE", "THT")->get(),
+                // 'kpkc' => $this->kpkcModel->get(),
+                // 'divisi' => $this->divisiModel->get(),
+                'item'          => [],
+                'program'       => [],
+                'kpkc'          => [],
+                'divisi'        => [],
+                'subpos'        => $this->subPosModel->get(),
+                'm_anggaran'    => $this->mAnggaranModel->get(),
+                'jenis'         => $jenis,
+                'kelompok'      => $kelompok,
+                'pos'           => $pos,
+                'satuan'        => $satuan
+            ]);
+    }
+
     public function addItemTransaksi(Request $request)
     {
         //$inputItem = $request->except('_method', '_token');
@@ -193,7 +226,28 @@ class ItemController extends Controller
             ItemMaster::create($inputItem);
         }
         session()->flash('success', true);
-        return redirect('/item/create');
+        return redirect('/item/create/transaksi');
+    }
+
+    public function addItemAnggaran(Request $request)
+    {
+        
+        $inputItem = array(
+            'jenis'             => $request->jenis,
+            'kelompok'          => $request->kelompok,
+            'pos_anggaran'      => $request->pos,
+            'sub_pos'           => $request->subpos,
+            'mata_anggaran'     => $request->kegiatan,
+            'satuan'            => $request->satuan,
+            'created_by'        => \Auth::id(),
+            'updated_by'        => \Auth::id(),
+            'deleted_at'        => null
+        );
+        
+        ItemMasterAnggaran::create($inputItem);
+        
+        session()->flash('success', true);
+        return redirect('/item/create/anggaran');
     }
 
     //item anggaran master
@@ -235,6 +289,15 @@ class ItemController extends Controller
                     );
                     ItemAnggaranMaster::create($inputPos); //Pos Anggaran
                     break;
+                case 'satuan':
+                    $inputPos = array(
+                        'kode'  => $request->kode_satuan,
+                        'name'  => $request->nama_satuan,
+                        'type'  => 4,
+                        'created_by' => \Auth::id()
+                    );
+                    ItemAnggaranMaster::create($inputPos); //Pos Anggaran
+                    break;
                 case 'all':
                     $inputAll = array(
                         'kode'  => $request->kode,
@@ -267,6 +330,28 @@ class ItemController extends Controller
             // 'jenis' => $jenis,
             // 'kelompok' => $kelompok,
             // 'pos' => $pos,
+            'items' => $item
+        ]);
+    }
+    public function editItemAnggaran($id)
+    {
+        $item = ItemMasterAnggaran::where('id', $id)->first();
+
+        $jenis = ItemAnggaranMaster::where('type', 1)->get();
+        $kelompok = ItemAnggaranMaster::where('type', 2)->get();
+        $pos = ItemAnggaranMaster::where('type', 3)->get();
+        $satuan = ItemAnggaranMaster::where('type', 4)->get();
+        return view('master.item.edit-anggaran', [
+            'item'          => [],
+            'program'       => [],
+            'kpkc'          => [],
+            'divisi'        => [],
+            'subpos' => $this->subPosModel->get(),
+            'm_anggaran' => $this->mAnggaranModel->get(),
+            'jenis' => $jenis,
+            'kelompok' => $kelompok,
+            'pos' => $pos,
+            'satuan' => $satuan,
             'items' => $item
         ]);
     }
@@ -306,7 +391,25 @@ class ItemController extends Controller
             return redirect()->back()->withErrors($validatorItem)->withInput();
         }
         session()->flash('success', true);
-        return redirect('/item/edit/'.$id);
+        return redirect('/item/edit/transaksi/'.$id);
+    }
+
+    public function updateItemAnggaran($id, Request $request)
+    {
+        
+        $update = array(
+            'jenis'             => $request->jenis,
+            'kelompok'          => $request->kelompok,
+            'pos_anggaran'      => $request->pos,
+            'sub_pos'           => $request->subpos,
+            'mata_anggaran'     => $request->kegiatan,
+            'satuan'            => $request->satuan,
+            'updated_by'        => \Auth::id()
+        );
+        ItemMasterAnggaran::where('id', $id)->update($update);   
+        
+        session()->flash('success', true);
+        return redirect('/item/edit/anggaran/'.$id);
     }
 
     public function updateItem($id, Request $request)
@@ -346,6 +449,9 @@ class ItemController extends Controller
     public function destroy($jenis, $id, Request $request)
     {
         switch($jenis){
+            case 'anggaran':
+                $item = "";
+                ItemMasterAnggaran::where('id', $id)->delete(); break;
             case 'transaksi':
                 $item = ItemMaster::withTrashed()->where('id', $id)->first()->nama_item ? ItemMaster::withTrashed()->where('id', $id)->first()->nama_item : ItemMaster::withTrashed()->where('id', $id)->first()->kode_item;
 

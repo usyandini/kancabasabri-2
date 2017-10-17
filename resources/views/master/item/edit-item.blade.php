@@ -76,7 +76,8 @@
             														<select class="form-control" type="text" name="type" placeholder="Tipe Item Anggaran" required>
             															<option value="1" selected>Jenis Anggaran</option>
             															<option value="2">Pos Anggaran</option>
-            															<option value="3">Kelompok Anggaran</option>
+                                                                                                      <option value="3">Kelompok Anggaran</option>
+            															<option value="4">Satuan</option>
             														</select>
             													</div>
             													<div class="form-group col-md-12 col-xl-12">
@@ -139,6 +140,7 @@
             													@if($item->type == 1) Jenis Anggaran
             													@elseif($item->type == 2) Kelompok Anggaran
             													@elseif($item->type == 3) Pos Anggaran
+                                                                                          @elseif($item->type == 4) Satuan
             													@endif
             												</td>
             												<td><center>
