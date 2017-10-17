@@ -715,7 +715,6 @@ class TransaksiController extends Controller
         // and DATEPART(MONTH, transaksi.tgl) <= ".$akhir." 
         // and DATEPART(YEAR, transaksi.tgl) = ".$transyear."
         // GROUP BY transaksi.item, transaksi.anggaran";
-        
         // $transaksi = \DB::select($query);
 
         $start = array_search($awal, $this->months);
@@ -769,7 +768,8 @@ class TransaksiController extends Controller
                 // case 'export' :
                 //     $pdf = PDF::loadView('transaksi.export-realisasi', $data);
                 //     return $pdf->download('Realisasi Anggaran-'.date("dmY").'.pdf');
-                //     // return $pdf->stream('Realisasi Anggaran-'.date("dmY").'.pdf'); // hanya untuk view pdf
+                //     return $pdf->stream('Realisasi Anggaran-'.date("dmY").'.pdf'); 
+                // hanya untuk view pdf
                 //     break;
                 // case 'excel' :
                 //     return view('transaksi.export-realisasi', $data);

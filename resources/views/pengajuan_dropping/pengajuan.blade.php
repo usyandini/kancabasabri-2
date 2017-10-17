@@ -90,15 +90,20 @@
 			                  			<tr>
 			                  				<td><b>Kantor Cabang</b></td><td>  </td><td><b> : </b></td><td>  </td>
 			                  				<td><select class="select2 form-control block" name="cabang" id="cabang" onchange="changeUnit()" required="required">
-                                                    <option value=""> - Pilih Kantor Cabang- </option>
+                                                    <option value=""> - Pilih Kantor Cabang - </option>
                                                     <?php
                                                     $second="SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_KPKC]  WHERE VALUE!='00'";
 									                $return = DB::select($second);
 									                ?>
-                                                    @foreach($return as $bb)
-                                                      <option value="{{ $bb->DESCRIPTION }}" >{{ $bb->DESCRIPTION }}</option>
+
+
+                                                    @foreach($return as $b)
+                                                    <?php $id = $b->VALUE."00"; ?>
+                                                    @if(Gate::check("unit_".$id) )
+                                                      <option value="{{ $b->DESCRIPTION }}" >{{ $b->DESCRIPTION }}</option>
+                                                    @endif
                                                     @endforeach
-                                                  </select></td>
+                                                    </select></td>
 			                  			</tr>
 			                  			<tr>
 			                  				<td>  </td>
@@ -178,14 +183,12 @@
                                                 <label class="control-label"> : </label><br>
 											        <select class="select2 form-control block" name="kantor_cabang" style="width:300px" required="required">
                                                     <option value=""> - Pilih Kantor Cabang - </option>
-                                                    <?php
-                                                    $second="SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_KPKC]  WHERE VALUE!='00'";
-									                $return = DB::select($second);
-									                ?>
-                                                    @foreach($return as $b)
-                                                      <option value="{{ $b->DESCRIPTION }}" >{{ $b->DESCRIPTION }}</option>
-                                                    @endforeach
-                                                    </select><br><br>
+                                                    <option value="{{$userCab}}" > {{$userCab}} </option>
+                                                    </select>
+													
+													<!--<input class="form-control" type="text" name="kantor_cabang" disabled="disabled" required="required" value="{{$userCab}}">
+                                                -->
+                                                    <br><br>
                                                 <label class="control-label"><b> Nomor </b></label>
                                                 <label class="control-label"> : </label>
 											        <input class="form-control" type="text" name="nomor" placeholder="masukkan nomor" required="required">
@@ -324,9 +327,11 @@
 												</center></td>
 												<td><center>
 													@if ($b->kirim==1)
+														@if ($userCab)
 														<span data-toggle='tooltip' title='Kirim'><a class="btn btn-success btn-sm" data-target="#kirim{{$b->id}}" data-toggle="modal"><i class="fa fa-send"></i> </a></span>
 														<span data-toggle='tooltip' title='Ubah'><a class="btn btn-info btn-sm" data-target="#ubah{{$b->id}}" data-toggle="modal"><i class="fa fa-edit"></i> </a></span>
 														<span data-toggle='tooltip' title='Hapus'><a class="btn btn-danger btn-sm" data-target="#hapus{{$b->id}}" data-toggle="modal"><i class="fa fa-trash"></i> </a></span>
+														@endif
 													@elseif ($b->kirim==2)
 													<div class="btn btn-info btn-sm"><span><b>Telah Dikirim</b></span></div>
 													@elseif ($b->kirim==4)
@@ -474,7 +479,7 @@
 								  "next": "Selanjutnya"
 								},
 
-    							"emptyTable":  "Tidak Ada Data Tersimpan",
+    							"emptyTable":  "Silahkan pilih kantor cabang dan tanggal",
     							"info":  "Menampilkan _START_-_END_ dari _TOTAL_ Data",
     							"infoEmpty":  "Menampilkan 0-0 dari _TOTAL_ Data ",
     							"search": "Pencarian:",
