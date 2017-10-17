@@ -780,7 +780,7 @@
 								  "next": "Selanjutnya"
 								},
 
-    							"emptyTable":  "Tidak Ada Data Tersimpan",
+    							"emptyTable":  "Silahkan pilih unit kerja dan tanggal mulai",
     							"info":  "Menampilkan _START_-_END_ dari _TOTAL_ Data",
     							"infoEmpty":  "Menampilkan 0-0 dari _TOTAL_ Data ",
     							"search": "Pencarian:",

@@ -13,12 +13,17 @@ use App\Services\NotificationSystem;
 class PengajuanDroppingController extends Controller
 {
 
-    public function index() 
-    {
+    public function index(Request $request)
+    {   
+        $kantor_cabang = $request->get('cabang');
+        $tanggal = $request->get('tanggal');
     	$a =DB::table('pengajuan_dropping_cabang')
         ->orderBy('id','DESC')->where('kirim','<>','3')
+        ->where('kantor_cabang', $kantor_cabang)
+        ->where('tanggal', $tanggal)
         ->paginate(100);
-        return view('pengajuan_dropping.pengajuan', compact('a'));
+        $userCab =\Auth::user()->kantorCabang()['DESCRIPTION']; 
+        return view('pengajuan_dropping.pengajuan', compact('kantor_cabang', 'tanggal', 'a','userCab'));
 	}
 
     public function myformAjax($cabang)
@@ -39,8 +44,8 @@ class PengajuanDroppingController extends Controller
              ->where('kantor_cabang', $kantor_cabang)
              ->where('tanggal', $tanggal)
              ->get();
-        
-        return view('pengajuan_dropping.pengajuan', compact('kantor_cabang', 'tanggal', 'a'));
+        $userCab =\Auth::user()->kantorCabang()['DESCRIPTION'];
+        return view('pengajuan_dropping.pengajuan', compact('kantor_cabang', 'tanggal', 'a','userCab'));
          
     }
 

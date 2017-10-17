@@ -377,9 +377,9 @@
                         // If the count down is over, write some text 
                         if (distance < 0) {
                             @if($mulai)
-                            alert ("Waktu Memasukkan data anggaran dan kegiatan telah usai");
-                            @else
                             alert ("Waktu Memasukkan data anggaran dan kegiatan telah dimulai");
+                            @else
+                            alert ("Waktu Memasukkan data anggaran dan kegiatan telah usai");
                             @endif
                             clearInterval(x);
                             document.getElementById("bts_hari").value= "---";

@@ -82,7 +82,11 @@
                                     </div>
                                     <div class="col-xs-3">
                                       <div class="form-group">
+                                        @if($mulai)
+                                        <label >Batas Waktu Mulai Pengisian &nbsp; :</label>
+                                        @else
                                         <label >Batas Waktu Pengisian &nbsp; :</label>
+                                        @endif
                                         <input id="bts_hari" name="bts_hari" class="form-control" value="---" readonly>
                                       </div>
                                     </div>
@@ -408,8 +412,12 @@
                           tw_ke.value = tw_ke_val;
 
                           @if($type=="item")
-                          var countDownDate = new Date(data[0].tanggal_selesai).getTime();
-
+                            @if($mulai)
+                            var countDownDate = new Date(data[0].tanggal_mulai).getTime();
+                            @else
+                            var countDownDate = new Date(data[0].tanggal_selesai).getTime();
+                            @endif
+                            
                           var disableCountDown = true;
                           if(disableCountDown){
                             var x = setInterval(function() {
@@ -418,7 +426,13 @@
                                 var now = new Date().getTime();
                                 
                                 // Find the distance between now an the count down date
+                                @if($mulai)
+                                // Find the distance between now an the count down date
+                                var distance = now - countDownDate;
+                                @else
+                                // Find the distance between now an the count down date
                                 var distance = countDownDate - now;
+                                @endif
                                 
                                 // Time calculations for days, hours, minutes and seconds
                                 var days = Math.floor(distance / (1000 * 60 * 60 * 24));
@@ -436,7 +450,11 @@
                                 
                                 // If the count down is over, write some text 
                                 if (distance < 0) {
+                                    @if($mulai)
+                                    alert ("Waktu Memasukkan data anggaran dan kegiatan telah dimulai");
+                                    @else
                                     alert ("Waktu Memasukkan data anggaran dan kegiatan telah usai");
+                                    @endif
                                     clearInterval(x);
                                     document.getElementById("bts_hari").value= "---";
                                     document.getElementById("bts_jam").value= "---";
