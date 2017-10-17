@@ -417,6 +417,7 @@
                             @else
                             var countDownDate = new Date(data[0].tanggal_selesai).getTime();
                             @endif
+                            
                           var disableCountDown = true;
                           if(disableCountDown){
                             var x = setInterval(function() {
