@@ -198,7 +198,7 @@ class AnggaranController extends Controller
     {
 
         $filter = null;
-        if(isset($request->cari_stat_anggaran)){
+        if(isset($request->cari_nd_surat)){
             $filter = array('nd_surat' => $request->cari_nd_surat,
                     'status_anggaran' =>$request->cari_stat_anggaran,
                     'unit_kerja' =>$request->cari_unit_kerja
@@ -216,6 +216,8 @@ class AnggaranController extends Controller
             'unit_kerja' =>$unit_kerja,
             'nd_surat' => '',
             'filters' =>$filter]);
+
+        // echo $request->cari_stat_anggaran;
     }
 
     public function tambah_anggaran() 
@@ -241,6 +243,11 @@ class AnggaranController extends Controller
         $date_now = date("Y-m-d");
         $date_selesai;
         $date_mulai;
+
+        if(count ($batasAnggaran)==0){
+            session()->flash('batas', 'Batas Pengajuan Anggaran dan Kegiatan Belum diisi oleh Renbang');
+            return redirect()->back();
+        }
         foreach ($batasAnggaran as $batas) {
             
             if($batas->unit_kerja == "Semua Unit Kerja"||$userUnit == $batas->unit_kerja){
@@ -250,6 +257,7 @@ class AnggaranController extends Controller
 
 
         }
+
 
         $diff1 = strtotime($date_now) - strtotime($date_mulai);
         $diff2 = strtotime($date_selesai) - strtotime($date_now);
