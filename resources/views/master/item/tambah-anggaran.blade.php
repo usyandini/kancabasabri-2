@@ -46,7 +46,7 @@
                     </div>
                     @endif
                     <form class="form" action="{{ url('item/add/anggaran') }}" method="POST">
-                      <div class="col-md-6">
+                      <div class="col-md-5">
                         {{ csrf_field() }}
                         <div class="card">
                           <div class="card-header">
@@ -140,7 +140,7 @@
                           </div>
                         </div>
                       </div>
-                      <div class="col-md-6">
+                      <div class="col-md-7">
                         <div class="card">
                           <div class="card-header">
                             <h4 class="card-title" id="basic-layout-card-center">Financial Dimension</h4>
@@ -149,7 +149,7 @@
                           <div class="card-body">
                             <div class="card-block">
                               <div class="form form-horizontal striped-rows">
-                              	<!--<div class="form-group row">
+                              	<div class="form-group row">
     		                          <label class="col-md-2 label-control" for="segmen1">Account</label>
     		                          <div class="col-md-7">
                                     <select class = "select2 form-control account" name="account" id="account" onchange="getVal('account', 'segmen1');" required>
@@ -177,7 +177,7 @@
     		                          	<input id="segmen2" class="form-control" name="segmen2" value="" readonly="">
       				                    </div>
     		                        </div>
-    		                        <div class="form-group row">
+    		                        <!--<div class="form-group row">
     		                          <label class="col-md-2 label-control" for="segmen3">KPKC</label>
     	                        	  <div class="col-md-7">
                                     <select class = "select2 form-control" id="kpkc" name="kpkc" onchange="getVal('kpkc', 'segmen3');" required>

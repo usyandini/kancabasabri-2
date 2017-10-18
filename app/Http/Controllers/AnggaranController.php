@@ -1061,7 +1061,7 @@ class AnggaranController extends Controller
                 // echo $decode;
                 $kode= Kegiatan::where('DESCRIPTION',$decode)->first()->VALUE;
                 
-                $item = ItemMasterAnggaran::where('mata_anggaran',$kode)->get();
+                $item = ItemMasterAnggaran::where('SEGMEN_6',$kode)->get();
                 $array = [];
                 foreach ($item as $row) {
                     array_push($array,$row->satuan);
@@ -1082,10 +1082,10 @@ class AnggaranController extends Controller
                 // echo $decode;
                 $kode= SubPos::where('DESCRIPTION',$decode)->first()->VALUE;
                 
-                $item = ItemMasterAnggaran::where('sub_pos',$kode)->get();
+                $item = ItemMasterAnggaran::where('SEGMEN_5',$kode)->get();
                 $array = [];
                 foreach ($item as $row) {
-                    array_push($array,$row->mata_anggaran);
+                    array_push($array,$row->SEGMEN_6);
                 }
                 $return = Kegiatan::select('DESCRIPTION')->where('DESCRIPTION','<>','None')->whereIn('VALUE',$array)->orderBy('DESCRIPTION','ASC')->get();
                 // $return = Kegiatan::select('DESCRIPTION')->where('DESCRIPTION','<>','None')->orderBy('DESCRIPTION','ASC')->get();
@@ -1107,7 +1107,7 @@ class AnggaranController extends Controller
                 $array = [];
                 foreach ($item as $row) {
                     // echo $row->sub_pos;
-                    array_push($array,$row->sub_pos);
+                    array_push($array,$row->SEGMEN_5);
                 }
                 $return = SubPos::select('DESCRIPTION')->where('DESCRIPTION','<>','None')->whereIn('VALUE',$array)->orderBy('DESCRIPTION','ASC')->get(); 
                 // $return = SubPos::select('DESCRIPTION')->where('DESCRIPTION','<>','None')->orderBy('DESCRIPTION','ASC')->get(); 
