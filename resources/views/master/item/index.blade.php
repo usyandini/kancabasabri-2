@@ -55,21 +55,27 @@
             									<table class="table table-striped table-bordered datatable-select-inputs wrap" cellspacing="0" width="100%">
             										<thead>
             											<tr>
+                                                                                    {{-- <th width="20p">No</th> --}}
             												<th id="filterable"><center>Kode Item</center></th>
-            												<th width="300px" id="filterable">Item</th>
-            												<th width="300px">Account</th>
-            												<th width="200px">Display</th>
-            												<th width="30%"><center>Aksi</center></th>
+            												<th id="filterable">Item</th>
+            												<th>Account</th>
+            												<th>Display</th>
+                                                                                    <th>Tanggal Dibuat</th>
+            												<th>Aksi</th>
             											</tr>
             										</thead>
             										<tbody>
+                                                                              <?php $no='1';?>
             											@foreach($items as $item)
             											<tr>
+                                                                                    {{-- <td>{{ $no }}</td> --}}
             												<td>{{ $item->kode_item }}</td>
             												<td>{{ $item->nama_item }}</td>
             												<td>{{ $item->SEGMEN_1.'-'.$item->SEGMEN_2.'-'.$item->SEGMEN_3.'-'.$item->SEGMEN_4.'-'.$item->SEGMEN_5.'-'.$item->SEGMEN_6 }}</td>
             												{!! $item->is_displayed ? '<td class="blue">Semua Cabang</td>' : '<td class="red">Cabang Bersangkutan</td>' !!}
-            												<td><center>
+            												<td>{{ $item->created_at }}</td>
+                                                                                    <td>
+                                                                                          <center>
             													<a href="{{ url('item/edit/transaksi').'/'.$item->id }}" class="btn btn-outline-info btn-sm">
             														<i class="fa fa-edit"></i> Edit</a>
 
@@ -77,6 +83,7 @@
             															<i class="fa fa-times"></i> Hapus</a>
             														</center></td>
             													</tr>
+                                                                                          <?php $no++; ?>
             													@endforeach
             												</tbody>
             											</table>

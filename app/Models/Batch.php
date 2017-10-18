@@ -37,12 +37,12 @@ class Batch extends Model
 
     public function staged()
     {
-        return $this->hasMany('App\Models\StagingTransaksi', 'BATCH_ID', 'id')->where('PIL_POSTED', 0)->count();
+        return $this->hasMany('App\Models\StagingTransaksi', 'PIL_KCJOURNALNUM', 'id')->count();
     }
 
     public function posted()
     {
-        return $this->hasMany('App\Models\StagingTransaksi', 'BATCH_ID', 'id')->where('PIL_POSTED', 1)->count();
+        return $this->hasMany('App\Models\StagingTransaksi', 'PIL_KCJOURNALNUM', 'id')->where('PIL_POSTED', 1)->count();
     }
 
     public function isPosted() {

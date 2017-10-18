@@ -26,11 +26,11 @@ class StagingTransaksi extends Model
     	'PIL_TRANSDATE',
     	'PIL_TXT',
     	'PIL_VOUCHER',
-    	'DATAAREADID',
+        'PIL_TRANSACTIONID',
+        'PIL_KCJOURNALNUM',
+    	'DATAAREAID',
     	'RECVERSION',
     	'PARTITION',
-    	'RECID',
-    	'PIL_TRANSACTIONID',
-        'BATCH_ID'
+    	'RECID'
     ];
 }
