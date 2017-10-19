@@ -32,6 +32,7 @@ class PengajuanDroppingController extends Controller
         $a =DB::table('pengajuan_dropping_cabang')
         ->where('kantor_cabang',$dec_cabang)
         ->where('kirim','<>','3')
+        ->orderBy('tanggal','DESC')
         ->lists('tanggal');
         return json_encode($a);
     }
@@ -63,7 +64,7 @@ class PengajuanDroppingController extends Controller
         $dec_cabang=urldecode($cabang);
         $a =DB::table('pengajuan_dropping_cabang')
         ->where('kirim','<>','1')->where('kirim','<>','4')
-        ->where('kantor_cabang',$dec_cabang)
+        ->where('kantor_cabang',$dec_cabang)->orderBy('tanggal','DESC')
         ->lists('tanggal');
         return json_encode($a);
     }
@@ -94,7 +95,7 @@ class PengajuanDroppingController extends Controller
         $dec_cabang=urldecode($cabang);
         $a =DB::table('pengajuan_dropping_cabang')
         ->where('kirim','<>','1')->where('kirim','<>','2')
-        ->where('kantor_cabang',$dec_cabang)
+        ->where('kantor_cabang',$dec_cabang)->orderBy('tanggal','DESC')
         ->lists('tanggal');
         return json_encode($a);
     }
@@ -134,8 +135,9 @@ class PengajuanDroppingController extends Controller
         $a=$request->kantor_cabang;
         $b=$request->periode_realisasi;
         $c=$request->tanggal;
+        $tgl= date('Y', strtotime($c));
         $kirim='1';
-        $db = DB::table('pengajuan_dropping_cabang')->where('kantor_cabang', $a)->where('periode_realisasi', $b)->where('tanggal', $c)->get();
+        $db = DB::table('pengajuan_dropping_cabang')->where('kantor_cabang', $a)->where('periode_realisasi', $b)->where(DB::raw('YEAR(tanggal)'), '=', $tgl)->get();
         
         if($db){
             $after_save = [
@@ -191,7 +193,8 @@ class PengajuanDroppingController extends Controller
         $a=$request->kantor_cabang;
         $b=$request->periode_realisasi;
         $c=$request->tanggal;
-        $db = DB::table('pengajuan_dropping_cabang')->where('kantor_cabang', $a)->where('periode_realisasi', $b)->where('tanggal', $c)
+        $tgl= date('Y', strtotime($c));
+        $db = DB::table('pengajuan_dropping_cabang')->where('kantor_cabang', $a)->where('periode_realisasi', $b)->where(DB::raw('YEAR(tanggal)'), '=', $tgl)
          ->where('id','<>', $id)->get();
          if($db){
             $after_update = [
