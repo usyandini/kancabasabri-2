@@ -95,9 +95,7 @@
                                                     $second="SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_KPKC]  WHERE VALUE!='00'";
 									                $return = DB::select($second);
 									                ?>
-
-
-                                                    @foreach($return as $b)
+													@foreach($return as $b)
                                                     <?php $id = $b->VALUE."00"; ?>
                                                     @if(Gate::check("unit_".$id) )
                                                       <option value="{{ $b->DESCRIPTION }}" >{{ $b->DESCRIPTION }}</option>
@@ -111,6 +109,7 @@
 			                  			<tr>
 			                  				<td><b>Tanggal</b></td><td>  </td><td><b> : </b></td><td>  </td>
 			                  				<td><select class="select2 form-control block" name="tanggal" style="width:300px" required="required"></select></td>
+			                  				
 			                  				<script type="text/javascript">
 											    function changeUnit(){
 										    		var cabang = $('#cabang').val();
