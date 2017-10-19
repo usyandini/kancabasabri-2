@@ -178,8 +178,8 @@ class ItemController extends Controller
                 // 'program' => $this->programModel->where("VALUE", "THT")->get(),
                 // 'kpkc' => $this->kpkcModel->get(),
                 // 'divisi' => $this->divisiModel->get(),
-                'item'          => [],
-                'program'       => [],
+                'item'          => $this->itemModel->get(),
+                'program'       => $this->programModel->where("VALUE", "THT")->get(),
                 'kpkc'          => [],
                 'divisi'        => [],
                 'subpos'        => $this->subPosModel->get(),
@@ -236,8 +236,10 @@ class ItemController extends Controller
             'jenis'             => $request->jenis,
             'kelompok'          => $request->kelompok,
             'pos_anggaran'      => $request->pos,
-            'sub_pos'           => $request->subpos,
-            'mata_anggaran'     => $request->kegiatan,
+            'SEGMEN_1'          => $request->account,
+            'SEGMEN_2'          => $request->program,
+            'SEGMEN_5'          => $request->subpos,
+            'SEGMEN_6'          => $request->kegiatan,
             'satuan'            => $request->satuan,
             'created_by'        => \Auth::id(),
             'updated_by'        => \Auth::id(),
@@ -342,8 +344,8 @@ class ItemController extends Controller
         $pos = ItemAnggaranMaster::where('type', 3)->get();
         $satuan = ItemAnggaranMaster::where('type', 4)->get();
         return view('master.item.edit-anggaran', [
-            'item'          => [],
-            'program'       => [],
+            'item'          => $this->itemModel->get(),
+            'program'       => $this->programModel->where("VALUE", "THT")->get(),
             'kpkc'          => [],
             'divisi'        => [],
             'subpos' => $this->subPosModel->get(),
@@ -401,8 +403,10 @@ class ItemController extends Controller
             'jenis'             => $request->jenis,
             'kelompok'          => $request->kelompok,
             'pos_anggaran'      => $request->pos,
-            'sub_pos'           => $request->subpos,
-            'mata_anggaran'     => $request->kegiatan,
+            'SEGMEN_1'          => $request->account,
+            'SEGMEN_2'          => $request->program,
+            'SEGMEN_5'          => $request->subpos,
+            'SEGMEN_6'          => $request->kegiatan,
             'satuan'            => $request->satuan,
             'updated_by'        => \Auth::id()
         );

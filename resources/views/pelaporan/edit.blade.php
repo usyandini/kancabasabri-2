@@ -177,7 +177,6 @@
                                     </div>
                                     @endif
                                   </div>
-                                  {{$beda?1:0}}
 
                                   <div class="row col-xs-12">
                                     <div class="col-xs-12" style="display:block">
@@ -758,9 +757,8 @@
                             @else
                             var countDownDate = new Date(data[0].tanggal_selesai).getTime();
                             @endif
-
-                          
-                          var disableCountDown = "{{$beda?1:0}}" == "1"?true:false;
+                            
+                          var disableCountDown = true;
                           if(disableCountDown){
                             var x = setInterval(function() {
 

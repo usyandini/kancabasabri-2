@@ -216,6 +216,7 @@ class PelaporanController extends Controller
         }
 
         $beda =  true;
+        $mulai = false;
         if($type == 'item'){
             if(count($this->check_tambah($id,0))>0){
                 session()->flash('back', 'Unit Kerja Anda Telah mengisi '.$title.'. Silahkan Melakukan pencarian jika ingin merubah sebelum waktu pengajuan berakhir');
@@ -243,7 +244,6 @@ class PelaporanController extends Controller
             if($diff2 <= 0){
                 $beda = false;
             }
-            $mulai = false;
 
             if($diff1 < 0){
                 $beda = false;
@@ -380,7 +380,7 @@ class PelaporanController extends Controller
                 $beda =false;
             }
         }
-
+        $mulai = false;
         if($type == "item"){
 
             $diff1 = strtotime($date_now) - strtotime($date_mulai);
@@ -391,7 +391,7 @@ class PelaporanController extends Controller
                 $beda = false;
             }
 
-            $mulai = false;
+            
             if($diff1 < 0){
                 $beda = false;
                 $mulai = true;

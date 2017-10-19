@@ -62,6 +62,7 @@
                                               <th id="filterable" width="20%">Sub Pos</th>
                                               <th id="filterable" width="20%">Mata Anggaran</th>
                                               <th id="filterable" width="20%">Satuan</th>
+                                              <th>Tanggal Dibuat</th>
                                               <th width="25%"><center>Aksi</center></th>
                                             </tr>
                                           </thead>
@@ -75,6 +76,7 @@
                                                       <td width="20%">{{ $subpos->where('VALUE', $item->sub_pos)->first()['DESCRIPTION'] }}</td>
                                                       <td width="20%">{{ $kegiatan->where('VALUE', $item->mata_anggaran)->first()['DESCRIPTION'] }}</td>
                                                       <td width="20%">{{ $satuan->where('kode', $item->satuan)->first()['name'] }}</td>
+                                                      <td>{{ $item->created_at }}</td>
                                                       <td width="25%"><center>
                                                             <a href="{{ url('item/edit/anggaran').'/'.$item->id }}" style="width:80px" class="btn btn-info btn-sm">
                                                             <i class="fa fa-edit"></i> Edit</a>

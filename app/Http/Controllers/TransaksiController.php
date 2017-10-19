@@ -124,7 +124,7 @@ class TransaksiController extends Controller
             'item'          => $this->getAttributes('item', $this->current_batch),
             'bank'          => $this->getAttributes('bank'),
             'kegiatan'      => $this->getAttributes('kegiatan'),
-            'subpos'      => $this->getAttributes('subpos'),
+            'subpos'        => $this->getAttributes('subpos'),
             'jsGrid_url'    => $jsGrid_url]);
     }
 
@@ -246,17 +246,20 @@ class TransaksiController extends Controller
                 $return = ItemMaster::get(['id', 'SEGMEN_1', 'nama_item', 'SEGMEN_3', 'is_displayed'])->filter(function($item) use($batch) {
                     return $item->isDisplayed($batch['cabang']);
                 });
+                
                 foreach ($return as $key => $value) {
                     $value->VALUE = (String) $return[$key]->id;
                 }
                 $return->prepend($header);
                 break;
             case 'bank':
-                $header = ['BANK' => '-1', 'BANK_NAME' => 'Silahkan Pilih Bank'];
-                $KAS = ['BANK' => 'KAS KC/KCP', 'BANK_NAME' => 'KAS KC/KCP'];
-                $return = $this->bankModel->get(['BANK','BANK_NAME','ID_CABANG'])->filter(function($bank) {
-                    return $bank->isAccessibleByCabang();
-                });
+                $header = ['BANK' => '-1', 'BANK_NAME' => 'Silahkan Pilih Bank', 'accessible' => true];
+                $KAS = ['BANK' => 'KAS KC/KCP', 'BANK_NAME' => 'KAS KC/KCP', 'accessible' => true];
+                $return = $this->bankModel->get(['BANK','BANK_NAME','ID_CABANG']);
+                
+                foreach ($return as $key => $value) {
+                    $value->accessible = $value->isAccessibleByCabang();
+                }
                 $return->prepend($KAS);
                 $return->prepend($header);
                 break;       
@@ -484,6 +487,10 @@ class TransaksiController extends Controller
             'empty_batch'   => $empty_batch,
             'berkas'        => $berkas,
             'batch_history' => $history,
+            'item'          => $this->getAttributes('item', $this->current_batch),
+            'bank'          => $this->getAttributes('bank'),
+            'kegiatan'      => $this->getAttributes('kegiatan'),
+            'subpos'        => $this->getAttributes('subpos'),
             'jsGrid_url'    => $jsGrid_url,
             'reject_reasons'    => RejectReason::where('type', 1)->get()]);
     }   
@@ -510,6 +517,10 @@ class TransaksiController extends Controller
             'empty_batch'   => $empty_batch,
             'berkas'        => $berkas,
             'batch_history' => $history,
+            'item'          => $this->getAttributes('item', $this->current_batch),
+            'bank'          => $this->getAttributes('bank'),
+            'kegiatan'      => $this->getAttributes('kegiatan'),
+            'subpos'        => $this->getAttributes('subpos'),
             'jsGrid_url'    => $jsGrid_url,
             'reject_reasons'    => RejectReason::where('type', 2)->get()]);
     }
@@ -538,13 +549,14 @@ class TransaksiController extends Controller
         $transaksi = Transaksi::where('batch_id', $batch_id)->get();
         foreach ($transaksi as $trans) {
             $input = [
+                'DATAAREAID'   => 'asbr',
                 'PIL_ACCOUNT'   => $trans->item,
                 'PIL_AMOUNT'    => $trans->total,
                 'PIL_BANK'      => $trans->akun_bank,
                 'PIL_DIVISI'    => $trans['batch']['divisi'],
                 'PIL_KPKC'      => $trans['batch']['cabang'],
                 'PIL_MATAANGGARAN'  => $trans->mata_anggaran,
-                'PIL_JOURNALNUM'    => $batch_id,
+                'PIL_KCJOURNALNUM'  => $batch_id,
                 'PIL_PROGRAM'   => 'THT',
                 'PIL_SUBPOS'    => $trans->sub_pos,
                 'PIL_TRANSDATE' => new Carbon(str_replace(':AM', ' AM', $trans->tgl)),

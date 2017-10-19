@@ -104,10 +104,9 @@ class NotificationController extends Controller
         			'time_dif' 	=> \Carbon\Carbon::createFromTimeStamp(strtotime($value->created_at))->diffForHumans(),
         			'time'		=> date('d F Y, H:m', strtotime($value->created_at))
         		];
-                $result['totalUnread'] = $count_unread++;
+                $result['totalUnread'] = ++$count_unread;
             }
     	}
-        // $result['totalUnread'] = $count_unread;
 
     	return response()->json($result);
     }
