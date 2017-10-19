@@ -322,7 +322,6 @@
                     <input type="hidden" name="list_anggaran_download" id="list_anggaran_download">
                 </form>                  
                 @endsection
-
                 @section('customjs')
                 <!-- BEGIN PAGE VENDOR JS-->
                 <script type="text/javascript" src="{{ asset('app-assets/vendors/js/ui/jquery.sticky.js') }}"></script>
@@ -399,6 +398,7 @@
                   }
                 </script>
                 <script type="text/javascript">
+                
                   var inputs = [];
                   var hasil=[];
                   var upload_file = [];
@@ -629,6 +629,10 @@
                             textField: "name", 
                             insertcss: "jenis_select",
                             items: getData('jenis'),
+                            itemTemplate:function(value){
+                              changeDataSelect('kelompok',value,"");
+                              return value;
+                            },
                             insertTemplate: function() {
                               var result = jsGrid.fields.select.prototype.insertTemplate.call(this);
                               result.on("change", function() {
@@ -664,6 +668,10 @@
                             items:[
                                 { name: "Silahkan Pilih Jenis" }
                             ],
+                            itemTemplate:function(value){
+                              changeDataSelect('posanggaran',value,"");
+                              return value;
+                            },
                             insertTemplate: function() {
                               kelompok = this._grid.fields[4];
                               var result = jsGrid.fields.select.prototype.insertTemplate.call(this);
@@ -701,6 +709,10 @@
                             items:[
                                 { name: "Silahkan Pilih Kelompok" },
                             ],
+                            itemTemplate:function(value){
+                              changeDataSelect('subpos',value,"");
+                              return value;
+                            },
                             insertTemplate: function() {
                               pos = this._grid.fields[5];
                               var result = jsGrid.fields.select.prototype.insertTemplate.call(this);
@@ -738,6 +750,10 @@
                             items:[
                                 { DESCRIPTION: "Silahkan Pilih Pos Anggaran" },
                             ],
+                            itemTemplate:function(value){
+                              changeDataSelect('mataanggaran',value,"");
+                              return value;
+                            },
                             insertTemplate: function() {
                               sub = this._grid.fields[6];
                               var result = jsGrid.fields.select.prototype.insertTemplate.call(this);

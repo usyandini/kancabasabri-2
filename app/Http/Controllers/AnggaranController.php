@@ -367,6 +367,8 @@ class AnggaranController extends Controller
             $displayEdit = 'none';
             $displaySend = 'block';
         }
+
+        // echo $mulai?1:0;
         return view('anggaran.index', [
             'title' => 'Ubah Kegiatan dan Anggaran',
             'userCabang' =>$this->userCabang,
@@ -453,6 +455,7 @@ class AnggaranController extends Controller
             'nd_surat' => $nd_surat,
             'beda' => $beda , 
             'batas' =>null,
+            'mulai' =>false,
             'status' => 'setuju',
             'reject' => $reject,
             'filters' => array('nd_surat' => $nd_surat),
@@ -790,7 +793,7 @@ class AnggaranController extends Controller
 
         }
         
-        if($request->persetujuan != "Kirim"){
+        if($request->persetujuan != "Kirim"&&$request->setuju){
             $status_view = redirect('anggaran/persetujuan/'.$request->nd_surat.'/1');
         }
         return $status_view;
@@ -1107,7 +1110,7 @@ class AnggaranController extends Controller
                 $array = [];
                 foreach ($item as $row) {
                     // echo $row->sub_pos;
-                    array_push($array,$row->SEGMEN_5);
+                    array_push($array,$row->SEGMEN_5);  
                 }
                 $return = SubPos::select('DESCRIPTION')->where('DESCRIPTION','<>','None')->whereIn('VALUE',$array)->orderBy('DESCRIPTION','ASC')->get(); 
                 // $return = SubPos::select('DESCRIPTION')->where('DESCRIPTION','<>','None')->orderBy('DESCRIPTION','ASC')->get(); 
@@ -1158,6 +1161,23 @@ class AnggaranController extends Controller
                 $return = $this->anggaranModel->select('nd_surat')->where('unit_kerja','LIKE',"%".urldecode($id)."%")->where('active','1')->orderBy('nd_surat','ASC')->get();
                 break;
         }
+        return response()->json($return);
+    }
+
+    public function getNDSurat($unit,$stat)
+    {
+            
+        $de_unit = urldecode($unit);
+        $de_stat = urldecode($stat);
+        $return = $this->anggaranModel->select('nd_surat')->where('active','1')
+                        ->where('unit_kerja','LIKE',"%".urldecode($de_unit)."%");
+        if($de_stat != "0"){
+            $return = $return->where('status_anggaran',urldecode($de_stat));
+        }
+
+        $return = $return->orderBy('nd_surat','ASC')->get();
+                
+        
         return response()->json($return);
     }
 
