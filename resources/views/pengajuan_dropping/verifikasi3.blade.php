@@ -184,16 +184,16 @@
 			                  	<form enctype="multipart/form-data" role="form" action="{{ URL('acc_pengajuan_dropping/update_accpengajuandropping/'. $bb->id) }}" method="POST" >
                                 {{ csrf_field() }}
                                 <input type="hidden" name="id" value="{{$bb->id}}" />
-			                  	<tr><td><b> Verifikasi </b></td><td><b> : </b></td><td><select class="select form-control" name="verifikasi" required="required" style="width:400px" value="{{$bb->verifikasi}}" @if ($bb->kirim<>3) disabled="disabled" @endif>
+			                  	<tr><td><b> Verifikasi </b></td><td><b> : </b></td><td><select class="select form-control" name="verifikasi" required="required" style="width:400px" value="{{$bb->verifikasi}}" @if ($bb->kirim<>4) disabled="disabled" @endif>
 													                                   <option value="">- Pilih Verifikasi -</option>
 													                                   <option value="1" @if ($bb->verifikasi=='1')Selected @endif>Diterima</option>
 																					   <option value="2" @if ($bb->verifikasi=='2')Selected @endif>Ditolak</option>                                                 
 													                                   </select></td></tr>
 			                  	<tr><td></td></tr>
-			                  	<tr><td><b> keterangan </b></td><td><b> : </b></td><td><select class="select form-control" name="keterangan" style="width:400px" value="{{$bb->keterangan}}" @if ($bb->kirim<>3) disabled="disabled" @endif>
+			                  	<tr><td><b> keterangan </b></td><td><b> : </b></td><td><select class="select form-control" name="keterangan" style="width:400px" value="{{$bb->keterangan}}" @if ($bb->kirim<>4) disabled="disabled" @endif>
 													                                    <option value=""> - Pilih Keterangan - </option>
 									                                                    <?php
-									                                                    $second="SELECT * FROM reject_reasons where type=7";
+									                                                    $second="SELECT * FROM reject_reasons where type=8";
 																		                $return = DB::select($second);
 																		                ?>
 																						@foreach($return as $b)
@@ -205,7 +205,7 @@
 													                                   </select></td></tr>
 			                  	<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>
 			                  	<tr><td></td><td></td><td>
-			                  	@if ($bb->kirim==3)
+			                  	@if ($bb->kirim==4)
 									@if ($bb->verifikasi!="")
 			                  		<span data-toggle='tooltip' title='Kirim'><a class="btn btn-success" data-target="#kirim{{$bb->id}}" data-toggle="modal"><i class="fa fa-send"></i> Kirim</a></span>
 			                  						<div class="modal fade" data-backdrop="static" id="kirim{{$bb->id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -216,14 +216,10 @@
 					                                                <center><h4 class="modal-title text-primary" id="myModalLabel" ><i class="fa fa-send"></i> Dialog Konfirmasi</h4></center>
 					                                            </div>
 					                                        	<div class="modal-body">
-					                                            	@if ($bb->verifikasi==1)
-						                                            	<center><h4>Anda yakin ingin mengirim hasil verifikasi<br>ke verifikasi level 3 ?</h4></center>
-						                                        	@elseif ($bb->verifikasi==2)
-						                                        		<center><h4>Anda yakin ingin mengirim hasil verifikasi<br>ke {{$bb->kantor_cabang}} ?</h4></center>
-						                                        	@endif
+					                                            	<center><h4>Anda yakin ingin mengirim hasil verifikasi<br>ke {{$bb->kantor_cabang}} ?</h4></center>
 					                                        	</div>
 					                                        	<div class="modal-footer">
-					                                           	 	<a href="{{ URL('acc_pengajuan_dropping2/kirim/'. $bb->id) }}"" class="btn btn-success btn-sm"><i class="fa fa-check"></i> Ya</a>
+					                                           	 	<a href="{{ URL('acc_pengajuan_dropping3/kirim/'. $bb->id) }}"" class="btn btn-success btn-sm"><i class="fa fa-check"></i> Ya</a>
 					                                        		<button type="button" class="btn btn-danger btn-sm" data-dismiss="modal"><i class="fa fa-times"></i> Tidak</button>
 					                                        	</div>
 					                                    	</div>
@@ -231,8 +227,8 @@
 					                                </div>
 			                  		@endif
 			                  	<button type="submit" name="save" class="btn btn-primary pull-right"><i class="fa fa-check"></i> Verifikasi</button>
-			                  	@elseif ($bb->kirim==4)
-			                  	<div class="btn btn-success pull-right"><span><b>Telah dikirim ke verifikasi level 3</b></span></div>
+			                  	@elseif ($bb->kirim==5)
+			                  	<div class="btn btn-success pull-right"><span><b>Telah Dikirim ke {{$bb->kantor_cabang}}</b></span></div>
 			                  	@endif
 			                  	</td></tr>
 			                  	</form>

@@ -191,10 +191,10 @@
 																					   <option value="2" @if ($bb->verifikasi=='2')Selected @endif>Ditolak</option>                                                 
 													                                   </select></td></tr>
 			                  	<tr><td></td></tr>
-			                  	<tr><td><b> keterangan </b></td><td><b> : </b></td><td><select class="select form-control" name="keterangan" style="width:400px" required="required" value="{{$bb->keterangan}}" @if ($bb->kirim<>2) disabled="disabled" @endif>
+			                  	<tr><td><b> keterangan </b></td><td><b> : </b></td><td><select class="select form-control" name="keterangan" style="width:400px" value="{{$bb->keterangan}}" @if ($bb->kirim<>2) disabled="disabled" @endif>
 													                                    <option value=""> - Pilih Keterangan - </option>
 									                                                    <?php
-									                                                    $second="SELECT * FROM reject_reasons where type=1";
+									                                                    $second="SELECT * FROM reject_reasons where type=6";
 																		                $return = DB::select($second);
 																		                ?>
 																						@foreach($return as $b)

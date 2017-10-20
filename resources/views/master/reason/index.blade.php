@@ -94,7 +94,10 @@
                                           <option value="2">Reject transaksi by akuntansi (lv2)</option>  
                                           <option value="3">Reject tarik tunai by akuntansi (lv1)</option>
                                           <option value="4">Reject penyesuaian dropping by bia (lv1)</option>
-                                          <option value="5">Reject penyesuaian dropping by akuntansi (lv2)</option>                                                  
+                                          <option value="5">Reject penyesuaian dropping by akuntansi (lv2)</option>
+                                          <option value="6">Reject pengajuan dropping oleh staff Akuntansi (lv1)</option>
+                                          <option value="7">Reject pengajuan dropping oleh kabid Akuntansi (lv2)</option>
+                                          <option value="8">Reject pengajuan dropping oleh kadiv Akuntansi (lv3)</option>                                                    
                                     </select>
                               </div>
                         </div>
@@ -149,6 +152,9 @@
                                                if($reason->type=='3'){ echo "Reject tarik tunai by akuntansi (lv1)";}
                                                if($reason->type=='4'){ echo "Reject penyesuaian dropping by bia (lv1)";}
                                                if($reason->type=='5'){ echo "Reject penyesuaian dropping by akuntansi (lv2)";}
+                                               if($reason->type=='6'){ echo "Reject pengajuan dropping oleh staff Akuntansi (lv1)";}
+                                               if($reason->type=='7'){ echo "Reject pengajuan dropping oleh kabid Akuntansi (lv2)";}
+                                               if($reason->type=='8'){ echo "Reject pengajuan dropping oleh kadiv Akuntansi (lv3)";}
                                                ?>
                                          </td>
                                          <td><center>

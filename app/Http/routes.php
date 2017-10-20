@@ -247,6 +247,8 @@ Route::group(['middleware' => 'auth'], function() {
 
 	Route::group(['prefix' => 'pengajuan_dropping'], function(){
 		Route::resource('/', 'PengajuanDroppingController');
+		Route::get('/carimyform', 'PengajuanDroppingController@carimyformAjax');
+		Route::get('/lihat/{id}', 'PengajuanDroppingController@aftercreate');
 		Route::post('/store_pengajuandropping', 'PengajuanDroppingController@store_pengajuandropping');
 		Route::post('/update_pengajuandropping/{id}', 'PengajuanDroppingController@update_pengajuandropping');
 		Route::get('/delete_pengajuandropping/{id}', 'PengajuanDroppingController@delete_pengajuandropping');
@@ -274,6 +276,12 @@ Route::group(['middleware' => 'auth'], function() {
 		Route::get('/carimyform', 'PengajuanDroppingController@carimyformAjax2');
 	});
 
-
+	Route::group(['prefix' => 'acc_pengajuan_dropping3'], function(){
+		Route::resource('/', 'PengajuanDroppingController@acc3');
+		Route::get('/verifikasi/{id}', 'PengajuanDroppingController@verifikasi3');
+		Route::get('/kirim/{id}', 'PengajuanDroppingController@kirim_pengajuandropping3lv3');
+		Route::get('/myform/{cabang}', 'PengajuanDroppingController@myformAjax3');
+		Route::get('/carimyform', 'PengajuanDroppingController@carimyformAjax3');
+	});
 });
 

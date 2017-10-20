@@ -121,7 +121,7 @@
                     <li class="nav-item {{ checkActiveMenu('dropping') }}"><a href="{{ url('/dropping', $parameters = [], $secure = null) }}"><i class="ft-box"></i><span data-i18n="" class="menu-title">Dropping</span></a></li>
                     @endif
 
-                    @if (Gate::check('informasi_a_d') ||Gate::check('setuju_a_d')||Gate::check('setuju_a_d_2'))
+                    @if (Gate::check('informasi_a_d') ||Gate::check('setuju_a_d') ||Gate::check('setuju_a_d_2') ||Gate::check('setuju_a_d_3'))
                     <li class="nav-item has-sub {{ checkOpenedMenu('pengajuan_dropping') }}"><a href=""><i class="ft-file"></i><span data-i18n="" class="menu-title">Pengajuan Dropping</span></a>
                     <ul class="menu-content">
                         @can('informasi_a_d')
@@ -132,6 +132,9 @@
                         @endcan
                         @can('setuju_a_d_2')
                         <li class="is-shown {{ checkActiveMenu('acc_pengajuan_dropping2') }}"><a href="{{ url('/acc_pengajuan_dropping2', $parameters = [], $secure = null) }}" class="menu-item">Verifikasi Level 2</a>
+                        @endcan
+                        @can('setuju_a_d_2')
+                        <li class="is-shown {{ checkActiveMenu('acc_pengajuan_dropping3') }}"><a href="{{ url('/acc_pengajuan_dropping3', $parameters = [], $secure = null) }}" class="menu-item">Verifikasi Level 3</a>
                         @endcan
                     </ul>
                     @endif

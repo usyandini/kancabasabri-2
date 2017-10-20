@@ -179,7 +179,7 @@
 			                            <th><center>No</center></th>
 			                            <th id="filterable"><center>Kantor Cabang</center></th>
 			                            <th id="filterable"><center>Nomor</center></th>
-			                            <th id="filterable"><center>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Tanggal&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</center></th>
+			                            <th id="filterable"><center>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Tanggal&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</center></th>
 			                            <th id="filterable"><center>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Jumlah Diajukan&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</center></th>
 			                            <th id="filterable"><center>Periode Realisasi</center></th>
 			                            <th id="filterable"><center>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Lampiran&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</center></th>
@@ -265,21 +265,15 @@
 																		                ?>
 																						@foreach($return as $bb)
 																						<?php
-																						  if($bb->type==1){
-																						  	$type="Reject transaksi by Kakancab (lv1)";
-																						  }
-																						  if($bb->type==2){
-																						  	$type="Reject transaksi by akuntansi (lv2)";
-																						  }
-																						  if($bb->type==3){
-																						  	$type="Reject tarik tunai by akuntansi (lv1)";
-																						  }
-																						  if($bb->type==4){
-																						  	$type="Reject penyesuaian dropping by bia (lv1)";
-																						  }
 																						  if($bb->type==6){
-																						  	$type="Reject penyesuaian dropping by akuntansi (lv2)";
-																						  }  
+																						  	$type="Reject pengajuan dropping oleh staff Akuntansi (lv1)";
+																						  }
+																						  if($bb->type==7){
+																						  	$type="Reject pengajuan dropping oleh kabid Akuntansi (lv2)";
+																						  }
+																						  if($bb->type==8){
+																						  	$type="Reject pengajuan dropping oleh kadiv Akuntansi (lv3)";
+																						  }
 																						?>
 												{{ $bb->content }} - {{ $type }}
 												@endforeach
@@ -295,7 +289,7 @@
 												  	<span data-toggle='tooltip' title='Print'><a href="{{ URL('pengajuan_dropping/print/'. $b->id) }}" target="_blank" class="btn btn-warning btn-sm" ><i class="fa fa-print"></i> </a></span>
 													<span data-toggle='tooltip' title='Verifikasi'><a class="btn btn-info btn-sm" data-target="#ubah{{$b->id}}" data-toggle="modal"><i class="fa fa-check"></i> </a></span>
 												@elseif ($b->kirim==3)
-													<span data-toggle='tooltip' title='Print'><a href="{{ URL('pengajuan_dropping/print/'. $b->id) }}" target="_blank" class="btn btn-warning btn-sm" ><i class="fa fa-print"></i> </a></span>
+													<span data-toggle='tooltip' title='Print'><a href="{{ URL('pengajuan_dropping/print/'. $b->id) }}" target="_blank" class="btn btn-warning btn-sm" ><i class="fa fa-print"></i> </a></span><br><br>
 													<div class="btn btn-info btn-sm"><span><b>Telah Dikirim ke level 2</b></span></div>
 												@endif		
 													<div class="modal fade" data-backdrop="static" id="kirim{{$b->id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -343,10 +337,10 @@
 																		<br>
 																	    <label class="control-label"><b> Keterangan </b></label>
 						                                                <label class="control-label"><b> : </b></label>
-																	        <select class="select form-control" name="keterangan" required="required" value="{{$b->keterangan}}">
+																	        <select class="select form-control" name="keterangan" value="{{$b->keterangan}}">
 													                                    <option value=""> - Pilih Keterangan - </option>
 									                                                    <?php
-									                                                    $second="SELECT * FROM reject_reasons where type=1";
+									                                                    $second="SELECT * FROM reject_reasons where type=6";
 																		                $return = DB::select($second);
 																		                ?>
 																						@foreach($return as $bb)

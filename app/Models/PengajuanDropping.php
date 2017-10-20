@@ -8,5 +8,17 @@ class PengajuanDropping extends Model
 {
     protected $connection = 'sqlsrv';
 
-	protected $table = 'pengajuan_dropping_cabang';
+    protected $table = 'pengajuan_dropping_cabang';
+
+	 protected $fillable = 
+    		['kantor_cabang', 
+    		'nomor',
+    		'tanggal', 
+    		'jumlah_diajukan', 
+    		'periode_realisasi', 
+    		'name',
+    		'size',
+    		'type',
+    		'data', 
+    		'kirim'];
 }
