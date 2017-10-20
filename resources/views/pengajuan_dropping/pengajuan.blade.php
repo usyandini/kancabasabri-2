@@ -233,19 +233,20 @@
 				                @endif
 				                
 			                    <div class="table-responsive">
-			                      <table class="table table-striped table-bordered datatable-select-inputs nowrap" cellspacing="0" width="100%">
+			                      <table class="table table-striped table-bordered datatable-select-inputs mb-0">
 			                        <thead>
 			                          <tr>
 			                            <th><center>No</center></th>
 			                            <th id="filterable"><center>Kantor Cabang</center></th>
 			                            <th id="filterable"><center>Nomor</center></th>
-			                            <th id="filterable"><center>Tanggal</center></th>
-			                            <th id="filterable"><center>Jumlah Diajukan</center></th>
+			                            <th id="filterable"><center>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Tanggal&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</center></th>
+			                            <th id="filterable"><center>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Jumlah Diajukan&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</center></th>
+			                            <th id="filterable"><center>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Terbilang&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</center></th>
 			                            <th id="filterable"><center>Periode Realisasi</center></th>
-			                            <th id="filterable"><center>Lampiran</center></th>
+			                            <th id="filterable"><center>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Lampiran&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</center></th>
 			                            <th id="filterable"><center>Verifikasi</center></th>
-			                            <th id="filterable"><center>Keterangan</center></th>
-			                            <th><center>Aksi</center></th>
+			                            <th id="filterable"><center>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Keterangan&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</center></th>
+			                            <th><center>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Aksi&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</center></th>
 			                          </tr>
 			                        </thead>
 			                        <tbody>
@@ -301,6 +302,35 @@
 												  ?>
 												<td><center>{{ $tgl }} {{ $bulans }} {{ $tahun }}</center></td>
 												<td><center>Rp {{ $angka }},-</center></td>
+												<td><center><?php
+    function Terbilang($x)
+    {
+        $ambil = array("", "satu", "dua", "tiga", "empat", "lima", "enam", "tujuh", "delapan", "sembilan", "sepuluh", "sebelas");
+        if ($x < 12)
+            return " " . $ambil[$x];
+        elseif ($x < 20)
+            return Terbilang($x - 10) . " belas";
+        elseif ($x < 100)
+            return Terbilang($x / 10) . " puluh" . Terbilang($x % 10);
+        elseif ($x < 200)
+            return " seratus" . Terbilang($x - 100);
+        elseif ($x < 1000)
+            return Terbilang($x / 100) . " ratus" . Terbilang($x % 100);
+        elseif ($x < 2000)
+            return " seribu" . Terbilang($x - 1000);
+        elseif ($x < 1000000)
+            return Terbilang($x / 1000) . " ribu" . Terbilang($x % 1000);
+        elseif ($x < 1000000000)
+            return Terbilang($x / 1000000) . " juta" . Terbilang($x % 1000000);
+        elseif ($x < 1000000000000)
+            return Terbilang($x / 1000000000) . " miliar" . Terbilang($x % 1000000000);
+    }
+    if ($b->jumlah_diajukan)
+    {
+        echo ucwords(Terbilang($b->jumlah_diajukan))." Rupiah";
+    }
+    
+    ?></center></td>
 												<td><center><?php 
 														  if($b->periode_realisasi=='1'){ echo "TW I";}
 														  if($b->periode_realisasi=='2'){ echo "TW II";}
@@ -321,7 +351,32 @@
 													?></center></td>
 												<td><center>
 												@if ($b->kirim!=2)
-												{{ $b->keterangan }}
+												@if ($b->keterangan!="")
+												<?php
+									                                                    $second="SELECT * FROM reject_reasons where id=$b->keterangan";
+																		                $return = DB::select($second);
+																		                ?>
+																						@foreach($return as $bb)
+																						<?php
+																						  if($bb->type==1){
+																						  	$type="Reject transaksi by Kakancab (lv1)";
+																						  }
+																						  if($bb->type==2){
+																						  	$type="Reject transaksi by akuntansi (lv2)";
+																						  }
+																						  if($bb->type==3){
+																						  	$type="Reject tarik tunai by akuntansi (lv1)";
+																						  }
+																						  if($bb->type==4){
+																						  	$type="Reject penyesuaian dropping by bia (lv1)";
+																						  }
+																						  if($bb->type==6){
+																						  	$type="Reject penyesuaian dropping by akuntansi (lv2)";
+																						  }  
+																						?>
+												{{ $bb->content }} - {{ $type }}
+												@endforeach
+												@endif
 												@endif
 												</center></td>
 												<td><center>

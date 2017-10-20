@@ -138,7 +138,39 @@
 			                  	<tr><td><b> Tanggal </b></td><td><b> : </b></td><td><input class="form-control" type="text" style="width:400px" value="{{$tgl}} {{$bulan}} {{$tahun}}" disabled="disabled"></td></tr>
 			                  	<tr><td></td></tr>
 			                  	<tr><td><b> Jumlah Diajukan </b></td><td><b> : </b></td><td><input class="form-control" type="text" style="width:400px" value="Rp {{$angka}},-" disabled="disabled"></td></tr>
-			                  	<tr><td></td></tr>
+			                  	<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>
+			                  	<tr><td><b> Terbilang </b></td><td><b> : </b></td><td>
+			                  	<?php
+    function Terbilang($x)
+    {
+        $ambil = array("", "satu", "dua", "tiga", "empat", "lima", "enam", "tujuh", "delapan", "sembilan", "sepuluh", "sebelas");
+        if ($x < 12)
+            return " " . $ambil[$x];
+        elseif ($x < 20)
+            return Terbilang($x - 10) . " belas";
+        elseif ($x < 100)
+            return Terbilang($x / 10) . " puluh" . Terbilang($x % 10);
+        elseif ($x < 200)
+            return " seratus" . Terbilang($x - 100);
+        elseif ($x < 1000)
+            return Terbilang($x / 100) . " ratus" . Terbilang($x % 100);
+        elseif ($x < 2000)
+            return " seribu" . Terbilang($x - 1000);
+        elseif ($x < 1000000)
+            return Terbilang($x / 1000) . " ribu" . Terbilang($x % 1000);
+        elseif ($x < 1000000000)
+            return Terbilang($x / 1000000) . " juta" . Terbilang($x % 1000000);
+        elseif ($x < 1000000000000)
+            return Terbilang($x / 1000000000) . " miliar" . Terbilang($x % 1000000000);
+    }
+    if ($bb->jumlah_diajukan)
+    {
+    	echo"<div style=width:400px>";
+        echo ucwords(Terbilang($bb->jumlah_diajukan))." Rupiah";
+        echo"</div>";
+    }
+    
+    ?></td></tr><tr><td></td></tr><tr><td></td></tr>
 			                  	<tr><td><b> Periode Realisasi &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b></td><td><b> : &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b></td><td><input class="form-control" type="text" style="width:400px" value="<?php 
 																																																																					  if($bb->periode_realisasi=='1'){ echo "TW I";}
 																																																																					  if($bb->periode_realisasi=='2'){ echo "TW II";}
@@ -152,13 +184,25 @@
 			                  	<form enctype="multipart/form-data" role="form" action="{{ URL('acc_pengajuan_dropping/update_accpengajuandropping/'. $bb->id) }}" method="POST" >
                                 {{ csrf_field() }}
                                 <input type="hidden" name="id" value="{{$bb->id}}" />
-			                  	<tr><td><b> Verifikasi </b></td><td><b> : </b></td><td><select class="select form-control" name="verifikasi" required="required" style="width:400px" value="{{$bb->verifikasi}}" @if ($bb->kirim==4) disabled="disabled" @endif>
+			                  	<tr><td><b> Verifikasi </b></td><td><b> : </b></td><td><select class="select form-control" name="verifikasi" required="required" style="width:400px" value="{{$bb->verifikasi}}" @if ($bb->kirim<>3) disabled="disabled" @endif>
 													                                   <option value="">- Pilih Verifikasi -</option>
 													                                   <option value="1" @if ($bb->verifikasi=='1')Selected @endif>Diterima</option>
 																					   <option value="2" @if ($bb->verifikasi=='2')Selected @endif>Ditolak</option>                                                 
 													                                   </select></td></tr>
 			                  	<tr><td></td></tr>
-			                  	<tr><td><b> keterangan </b></td><td><b> : </b></td><td><textarea class="form-control" name="keterangan" rows="3" style="width:400px" placeholder="masukkan keterangan" @if ($bb->kirim==4) disabled="disabled" @endif>{{ $bb->keterangan }}</textarea></td></tr>
+			                  	<tr><td><b> keterangan </b></td><td><b> : </b></td><td><select class="select form-control" name="keterangan" style="width:400px" required="required" value="{{$bb->keterangan}}" @if ($bb->kirim<>3) disabled="disabled" @endif>
+													                                    <option value=""> - Pilih Keterangan - </option>
+									                                                    <?php
+									                                                    $second="SELECT * FROM reject_reasons where type=1";
+																		                $return = DB::select($second);
+																		                ?>
+																						@foreach($return as $b)
+																						<option value="{{ $b->id }}"
+											                                              @if($b->id == $bb->keterangan) Selected>{{ $b->content }}@endif
+											                                              @if($b->id <> $bb->keterangan)>{{ $b->content }}@endif
+											                                              </option>
+									                                                    @endforeach                                               
+													                                   </select></td></tr>
 			                  	<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>
 			                  	<tr><td></td><td></td><td>
 			                  	@if ($bb->kirim==3)

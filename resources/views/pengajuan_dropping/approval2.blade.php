@@ -257,7 +257,34 @@
 														  if($b->verifikasi=='1'){ echo "<div class=\"tag tag-success label-square\"><span><b>Diterima</b></span></div>";}
 														  if($b->verifikasi=='2'){ echo "<div class=\"tag tag-danger label-square\"><span><b>Ditolak</b></span></div>";}
 													?></center></td>
-												<td><center>{{ $b->keterangan }}</center></td>
+												<td><center>
+												@if ($b->keterangan!="")
+												<?php
+									                                                    $second="SELECT * FROM reject_reasons where id=$b->keterangan";
+																		                $return = DB::select($second);
+																		                ?>
+																						@foreach($return as $bb)
+																						<?php
+																						  if($bb->type==1){
+																						  	$type="Reject transaksi by Kakancab (lv1)";
+																						  }
+																						  if($bb->type==2){
+																						  	$type="Reject transaksi by akuntansi (lv2)";
+																						  }
+																						  if($bb->type==3){
+																						  	$type="Reject tarik tunai by akuntansi (lv1)";
+																						  }
+																						  if($bb->type==4){
+																						  	$type="Reject penyesuaian dropping by bia (lv1)";
+																						  }
+																						  if($bb->type==5){
+																						  	$type="Reject penyesuaian dropping by akuntansi (lv2)";
+																						  }  
+																						?>
+												{{ $bb->content }} - {{ $type }}
+												@endforeach
+												@endif
+												</center></td>
 												<td><center>
 												@if ($b->kirim==3)
 												  @if ($b->verifikasi!="")
@@ -310,8 +337,19 @@
 																		<br>
 																	    <label class="control-label"><b> Keterangan </b></label>
 						                                                <label class="control-label"><b> : </b></label>
-																	        <textarea class="form-control" name="keterangan" rows="3" placeholder="masukkan keterangan">{{ $b->keterangan }}</textarea>
-																	        
+																	        <select class="select form-control" name="keterangan" style="width:400px" required="required" value="{{$b->keterangan}}">
+													                                    <option value=""> - Pilih Keterangan - </option>
+									                                                    <?php
+									                                                    $second="SELECT * FROM reject_reasons where type=1";
+																		                $return = DB::select($second);
+																		                ?>
+																						@foreach($return as $bb)
+									                                                      <option value="{{ $bb->id }}"
+											                                              @if($bb->id == $b->keterangan) Selected>{{ $bb->content }}@endif
+											                                              @if($bb->id <> $b->keterangan)>{{ $bb->content }}@endif
+											                                              </option>
+									                                                    @endforeach                                               
+													                                   </select>
 						                                            </div>
                                                 					<div class="modal-footer">
                                                 						<button type="submit" name="save" class="btn btn-sm btn-primary"><i class="fa fa-check"></i> Verifikasi</button>
