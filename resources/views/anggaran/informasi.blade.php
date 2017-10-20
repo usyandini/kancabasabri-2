@@ -48,7 +48,7 @@
                               </div>
                               <div class="col-lg-6 col-xl-3 mb-1">
                                 <div class="form-group">
-                                  <select class="select2 form-control" name="cari_stat_anggaran" id="cari_stat_anggaran">
+                                  <select class="select2 form-control" name="cari_stat_anggaran" id="cari_stat_anggaran" onchange="set_nd_surat()">
                                     <option disabled="" selected="">Status Anggaran</option>
                                     <option value="0">Semua</option>
                                     <option value="1">Draft</option>
@@ -61,7 +61,6 @@
                                 <div class="form-group">
                                   <select class="select2 form-control " name="cari_unit_kerja" id="cari_unit_kerja" onchange="set_nd_surat()">
                                     <option disabled="" selected="">Unit Kerja</option>
-                                    <option value="0">none</option>
                                     @foreach($unit_kerja as $unit)
                                     <?php
                                     $cabang = explode(" Cabang ", $unit->DESCRIPTION);
@@ -237,48 +236,34 @@
                   })
 
                 });
-                function setUnitKerja(id_type,id_unit){
-                  var type = "";
-                  if(id_type == "00 "){
-                    type = "divisi";
-                  }else{
-                    type = "cabang";
-                  }
-                  $.ajax({
-                    'async': false, 'type': "GET", 'dataType': 'JSON', 'url': "{{ url('anggaran/get/attributes/unitkerja/1') }}",
-                    'success': function (data) {
-
-                      cari_unit_kerja = document.getElementById('cari_unit_kerja');
-
-
-                      for(i =0 ;i<data.length;i++){
-                        var value = data[i].DESCRIPTION;
-                        var desc = data[i].DESCRIPTION;
-                        cari_unit_kerja.options[cari_unit_kerja.options.length] = new Option(desc, value);
-                      }
-
-                    }
-                  });
-
-
-                }
 
                 function set_nd_surat(){
                   cari_unit_kerja = document.getElementById('cari_unit_kerja').value;
-                  $.ajax({
-                    'async': false, 'type': "GET", 'dataType': 'JSON', 'url': "{{ url('anggaran/get/attributes/nd_surat').'/' }}"+encodeURI(cari_unit_kerja),
-                    'success': function (data) {
+                  cari_stat_anggaran = document.getElementById('cari_stat_anggaran').value;
+                  if(cari_stat_anggaran == "Status Anggaran"){
+                    cari_stat_anggaran = 0;
+                  }
+                  if(cari_unit_kerja != "Unit Kerja"||cari_stat_anggaran != "Status Anggaran"){
+                    $.ajax({
+                      'async': false, 'type': "GET", 'dataType': 'JSON', 'url': "{{ url('anggaran/get/nd_surat').'/' }}"+encodeURI(cari_unit_kerja)+"/"+encodeURI(cari_stat_anggaran),
+                      'success': function (data) {
 
-                      nd_surat_option = document.getElementById('cari_nd_surat');
+                        nd_surat_option = document.getElementById('cari_nd_surat');
+                        var length = nd_surat_option.options.length;
+                        // alert(length);
+                        for (i = 1; i < length; i++) {
+                          alert(nd_surat_option.options[1].innerHTML);
+                          nd_surat_option.options[1] = null;
+                        }
+                        for(i =0 ;i<data.length;i++){
+                          var value = data[i].nd_surat;
+                          var desc = data[i].nd_surat;
+                          nd_surat_option.options[nd_surat_option.options.length] = new Option(desc, value);
+                        }
 
-                      for(i =0 ;i<data.length;i++){
-                        var value = data[i].nd_surat;
-                        var desc = data[i].nd_surat;
-                        nd_surat_option.options[nd_surat_option.options.length] = new Option(desc, value);
                       }
-
-                    }
-                  });
+                    });
+                  }
                 }
                 function cariAnggaran(){
                   if(document.getElementById("cari_nd_surat").value=="ND/Surat"){
