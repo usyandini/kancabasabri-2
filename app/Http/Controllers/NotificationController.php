@@ -124,9 +124,9 @@ class NotificationController extends Controller
         $pengajuan = PengajuanDropping::where('id', $notifDetail->batch_id)->first();
         $unit_kerja = "";
         if($value_cabang == "00"){
-            $unit_kerja = \Auth::user()->kantorCabang()['DESCRIPTION'];
-        }else{
             $unit_kerja = \Auth::user()->divisi()['DESCRIPTION'];
+        }else{
+            $unit_kerja = \Auth::user()->kantorCabang()['DESCRIPTION'];
         }
 
         if($notifDetail->type >=32 && $notifDetail->type<=42){
@@ -182,6 +182,8 @@ class NotificationController extends Controller
                 }
             }
 
+
+
             if($notifDetail->type == 44){
                 if(!Gate::check('setuju_a_d_3')||Gate::check('notif_setuju_a_d_3')){
                     if($unit_kerja!="Akuntansi"){
@@ -189,6 +191,8 @@ class NotificationController extends Controller
                     }
                 }
             }
+
+            echo $unit_kerja;
         }
        
             
@@ -199,96 +203,96 @@ class NotificationController extends Controller
         $penyesuaian = PenyesuaianDropping::where('id', $notifDetail->batch_id)->first();
         $anggaran = Anggaran::where('id', $notifDetail->batch_id)->first();
     	
-    	switch ($notifDetail->type) {
-    		case 1:
-    			return redirect('transaksi/persetujuan/'.$notifDetail->batch_id);
-            case 2:
-            case 3:
-            case 5:
-            case 6:
-                return redirect('transaksi/'.$notifDetail->batch_id);
-            case 4:
-                return redirect('transaksi/verifikasi/'.$notifDetail->batch_id);
-            case 7:
-                return redirect('dropping/verifikasi/tariktunai/'.$notifDetail->batch_id);
-            case 8:
-                return redirect('dropping/tariktunai/'.$tariktunai->id_dropping);
-            case 9:
-                return redirect('dropping/tariktunai/'.$tariktunai->id_dropping);
-            case 10:
-                return redirect('dropping/verifikasi/penyesuaian/'.$notifDetail->batch_id);
-            case 11:
-                return redirect('dropping/penyesuaian/'.$penyesuaian->id_dropping);
-            case 12:
-                return redirect('dropping/verifikasi/penyesuaian/final/'.$notifDetail->batch_id);
-            case 13:
-                return redirect('dropping/penyesuaian/'.$penyesuaian->id_dropping);
-            case 14:
-                return redirect('dropping/penyesuaian/'.$penyesuaian->id_dropping);
-            case 15:
-                return redirect('anggaran/persetujuan/'.$anggaran->nd_surat."/1");
-            case 16:
-                return redirect('anggaran/edit/'.$anggaran->nd_surat);
-            case 17:
-                return redirect('anggaran/persetujuan/'.$anggaran->nd_surat."/1");
-            case 18:
-                return redirect('anggaran/edit/'.$anggaran->nd_surat);
-            case 19:
-            case 20:
-            case 21:
-            case 22:
-            case 23:
-            case 24:
-            case 25:
-            case 26:
-            case 27:
-            case 28:
-            case 29:
-            case 30:
-            case 31:
-                return redirect('anggaran/persetujuan/'.$anggaran->nd_surat."/1");
-            case 32:
-                if(Gate::check('tambah_pelaporan_anggaran'))
-                    return redirect('pelaporan/tambah/item/laporan_anggaran/'.$form_master->id);
-                else
-                    return redirect('pelaporan/edit/master/laporan_anggaran/'.$form_master->id);
-            case 33:
-                return redirect('pelaporan/edit/item/laporan_anggaran/'.$form_master->id);
-            case 34:
-                if(Gate::check('tambah_pelaporan_a_RUPS'))
-                    return redirect('pelaporan/tambah/item/arahan_rups/'.$form_master->id);
-                else
-                    return redirect('pelaporan/edit/master/arahan_rups/'.$form_master->id);
-            case 35:
-                return redirect('pelaporan/edit/item/arahan_rups/'.$form_master->id);
-            case 36:
-                if(Gate::check('tambah_pelaporan_usulan_p_p'))
-                    return redirect('pelaporan/tambah_usulan_program/'.$form_master->id);
-                else
-                    return redirect('pelaporan/edit/master/usulan_program/'.$form_master->id);
-            case 37:
-                return redirect('pelaporan/edit_usulan_program/'.$form_master->id);
-            case 38:
-                return redirect('tindaklanjutinternal/'.$notifDetail->batch_id);
-            case 39:
-                return redirect('unitkerja/tindaklanjut/'.$notifDetail->batch_id);
-            case 40:
-                return redirect('acc_pengajuan_dropping/verifikasi/'.$notifDetail->batch_id);
-            case 41:
-                return redirect('pengajuan_dropping/'.$notifDetail->batch_id);
-            case 42:
-                return redirect('acc_pengajuan_dropping2/verifikasi/'.$notifDetail->batch_id);
-            case 43:
-                return redirect('pengajuan_dropping/'.$notifDetail->batch_id);
-            case 44:
-                return redirect('acc_pengajuan_dropping3/verifikasi/'.$notifDetail->batch_id);
-            case 45:
-                return redirect('pengajuan_dropping/'.$notifDetail->batch_id);
-            case 46:
-                return redirect('pengajuan_dropping/'.$notifDetail->batch_id);
-			default:
-				return redirect('transaksi/');
-    	}
+   //  	switch ($notifDetail->type) {
+   //  		case 1:
+   //  			return redirect('transaksi/persetujuan/'.$notifDetail->batch_id);
+   //          case 2:
+   //          case 3:
+   //          case 5:
+   //          case 6:
+   //              return redirect('transaksi/'.$notifDetail->batch_id);
+   //          case 4:
+   //              return redirect('transaksi/verifikasi/'.$notifDetail->batch_id);
+   //          case 7:
+   //              return redirect('dropping/verifikasi/tariktunai/'.$notifDetail->batch_id);
+   //          case 8:
+   //              return redirect('dropping/tariktunai/'.$tariktunai->id_dropping);
+   //          case 9:
+   //              return redirect('dropping/tariktunai/'.$tariktunai->id_dropping);
+   //          case 10:
+   //              return redirect('dropping/verifikasi/penyesuaian/'.$notifDetail->batch_id);
+   //          case 11:
+   //              return redirect('dropping/penyesuaian/'.$penyesuaian->id_dropping);
+   //          case 12:
+   //              return redirect('dropping/verifikasi/penyesuaian/final/'.$notifDetail->batch_id);
+   //          case 13:
+   //              return redirect('dropping/penyesuaian/'.$penyesuaian->id_dropping);
+   //          case 14:
+   //              return redirect('dropping/penyesuaian/'.$penyesuaian->id_dropping);
+   //          case 15:
+   //              return redirect('anggaran/persetujuan/'.$anggaran->nd_surat."/1");
+   //          case 16:
+   //              return redirect('anggaran/edit/'.$anggaran->nd_surat);
+   //          case 17:
+   //              return redirect('anggaran/persetujuan/'.$anggaran->nd_surat."/1");
+   //          case 18:
+   //              return redirect('anggaran/edit/'.$anggaran->nd_surat);
+   //          case 19:
+   //          case 20:
+   //          case 21:
+   //          case 22:
+   //          case 23:
+   //          case 24:
+   //          case 25:
+   //          case 26:
+   //          case 27:
+   //          case 28:
+   //          case 29:
+   //          case 30:
+   //          case 31:
+   //              return redirect('anggaran/persetujuan/'.$anggaran->nd_surat."/1");
+   //          case 32:
+   //              if(Gate::check('tambah_pelaporan_anggaran'))
+   //                  return redirect('pelaporan/tambah/item/laporan_anggaran/'.$form_master->id);
+   //              else
+   //                  return redirect('pelaporan/edit/master/laporan_anggaran/'.$form_master->id);
+   //          case 33:
+   //              return redirect('pelaporan/edit/item/laporan_anggaran/'.$form_master->id);
+   //          case 34:
+   //              if(Gate::check('tambah_pelaporan_a_RUPS'))
+   //                  return redirect('pelaporan/tambah/item/arahan_rups/'.$form_master->id);
+   //              else
+   //                  return redirect('pelaporan/edit/master/arahan_rups/'.$form_master->id);
+   //          case 35:
+   //              return redirect('pelaporan/edit/item/arahan_rups/'.$form_master->id);
+   //          case 36:
+   //              if(Gate::check('tambah_pelaporan_usulan_p_p'))
+   //                  return redirect('pelaporan/tambah_usulan_program/'.$form_master->id);
+   //              else
+   //                  return redirect('pelaporan/edit/master/usulan_program/'.$form_master->id);
+   //          case 37:
+   //              return redirect('pelaporan/edit_usulan_program/'.$form_master->id);
+   //          case 38:
+   //              return redirect('tindaklanjutinternal/'.$notifDetail->batch_id);
+   //          case 39:
+   //              return redirect('unitkerja/tindaklanjut/'.$notifDetail->batch_id);
+   //          case 40:
+   //              return redirect('acc_pengajuan_dropping/verifikasi/'.$notifDetail->batch_id);
+   //          case 41:
+   //              return redirect('pengajuan_dropping/'.$notifDetail->batch_id);
+   //          case 42:
+   //              return redirect('acc_pengajuan_dropping2/verifikasi/'.$notifDetail->batch_id);
+   //          case 43:
+   //              return redirect('pengajuan_dropping/'.$notifDetail->batch_id);
+   //          case 44:
+   //              return redirect('acc_pengajuan_dropping3/verifikasi/'.$notifDetail->batch_id);
+   //          case 45:
+   //              return redirect('pengajuan_dropping/'.$notifDetail->batch_id);
+   //          case 46:
+   //              return redirect('pengajuan_dropping/'.$notifDetail->batch_id);
+			// default:
+			// 	return redirect('transaksi/');
+   //  	}
     }
 
     public function read_all(){
