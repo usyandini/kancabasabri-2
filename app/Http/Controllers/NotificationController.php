@@ -277,17 +277,17 @@ class NotificationController extends Controller
             case 40:
                 return redirect('acc_pengajuan_dropping/verifikasi/'.$notifDetail->batch_id);
             case 41:
-                return redirect('pengajuan_dropping/'.$notifDetail->batch_id);
+                return redirect('pengajuan_dropping/lihat/'.$notifDetail->batch_id);
             case 42:
                 return redirect('acc_pengajuan_dropping2/verifikasi/'.$notifDetail->batch_id);
             case 43:
-                return redirect('pengajuan_dropping/'.$notifDetail->batch_id);
+                return redirect('pengajuan_dropping/lihat/'.$notifDetail->batch_id);
             case 44:
                 return redirect('acc_pengajuan_dropping3/verifikasi/'.$notifDetail->batch_id);
             case 45:
-                return redirect('pengajuan_dropping/'.$notifDetail->batch_id);
+                return redirect('pengajuan_dropping/lihat/'.$notifDetail->batch_id);
             case 46:
-                return redirect('pengajuan_dropping/'.$notifDetail->batch_id);
+                return redirect('pengajuan_dropping/lihat/'.$notifDetail->batch_id);
 			default:
 				return redirect('transaksi/');
     	}
