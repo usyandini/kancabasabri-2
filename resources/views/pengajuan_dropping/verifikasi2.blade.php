@@ -65,7 +65,7 @@
                         <div class="row breadcrumbs-top">
                             <div class="breadcrumb-wrapper col-xs-12">
                                 <ol class="breadcrumb">
-                                    <li class="breadcrumb-item active"><a href="{{ url('/acc_pengajuan_dropping') }}">Approval Pengajuan Dropping Level 2</a>
+                                    <li class="breadcrumb-item active"><a href="#">Approval Pengajuan Dropping Level 2 KABID Akuntansi</a>
                                     </li>
                                 </ol>
                             </div>
