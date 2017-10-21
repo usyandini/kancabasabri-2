@@ -113,7 +113,7 @@ class Notification extends Model
                 $TW = "TW ".$tw_dari." Sampai TW ".$tw_ke;
             }
 
-        }else if($this->type >= 40&& $this->type <= 44){
+        }else if($this->type >= 40&& $this->type <= 46){
             $TW = $this->pengajuanDropping['periode_realisasi'];
             switch ($TW) {
                 case '1': $TW = "I";break;
@@ -222,13 +222,17 @@ class Notification extends Model
             case 40:
                 return 'Pengajuan Dropping telah di buat oleh '.$this->pengajuanDropping['kantor_cabang'].' untuk periode TW '.$TW.' dengan Nomor '.$this->pengajuanDropping['nomor'].'.';
             case 41:
-                return 'Pengajuan Dropping '.$this->pengajuanDropping['kantor_cabang'].' periode TW '.$TW.' dengan Nomor '.$this->pengajuanDropping['nomor'].' telah ditolak oleh ????. Silahkan Kirim Pengajuan Kembali.';
+                return 'Pengajuan Dropping '.$this->pengajuanDropping['kantor_cabang'].' periode TW '.$TW.' dengan Nomor '.$this->pengajuanDropping['nomor'].' telah ditolak oleh Staff Akuntansi Silahkan Kirim Pengajuan Kembali.';
             case 42:
-                return 'Pengajuan Dropping '.$this->pengajuanDropping['kantor_cabang'].' periode TW '.$TW.' dengan Nomor '.$this->pengajuanDropping['nomor'].' telah diterima oleh ???? dan sedang diverifikasi oleh ????2.';
+                return 'Pengajuan Dropping '.$this->pengajuanDropping['kantor_cabang'].' periode TW '.$TW.' dengan Nomor '.$this->pengajuanDropping['nomor'].' telah diterima oleh Staff Akuntansi dan sedang diverifikasi oleh Kabid Akuntansi.';
             case 43:
-                return 'Pengajuan Dropping '.$this->pengajuanDropping['kantor_cabang'].' periode TW '.$TW.' dengan Nomor '.$this->pengajuanDropping['nomor'].' telah ditolak oleh ????2. Silahkan Kirim Pengajuan Kembali.';
+                return 'Pengajuan Dropping '.$this->pengajuanDropping['kantor_cabang'].' periode TW '.$TW.' dengan Nomor '.$this->pengajuanDropping['nomor'].' telah ditolak oleh Kabid Akuntansi. Silahkan Kirim Pengajuan Kembali.';
             case 44:
-                return 'Pengajuan Dropping '.$this->pengajuanDropping['kantor_cabang'].' periode TW '.$TW.' dengan Nomor '.$this->pengajuanDropping['nomor'].' telah diterima oleh ????2.';
+                return 'Pengajuan Dropping '.$this->pengajuanDropping['kantor_cabang'].' periode TW '.$TW.' dengan Nomor '.$this->pengajuanDropping['nomor'].' telah diterima oleh Kabid Akuntansi dan sedang diverifikasi oleh Kadiv Akuntansi.';
+            case 45:
+                return 'Pengajuan Dropping '.$this->pengajuanDropping['kantor_cabang'].' periode TW '.$TW.' dengan Nomor '.$this->pengajuanDropping['nomor'].' telah ditolak oleh Kadiv Akuntansi. Silahkan Kirim Pengajuan Kembali.';
+            case 46:
+                return 'Pengajuan Dropping '.$this->pengajuanDropping['kantor_cabang'].' periode TW '.$TW.' dengan Nomor '.$this->pengajuanDropping['nomor'].' telah diterima oleh Kadiv Akuntansi.';
         }
     }
 }

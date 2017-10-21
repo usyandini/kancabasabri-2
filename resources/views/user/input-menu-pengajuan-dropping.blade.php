@@ -22,6 +22,10 @@
               <input type="checkbox" name="perizinan[setuju_a_d_2]" {{ isset(old("perizinan")['setuju_a_d_2']) ? 'checked=""' : '' }}>
               <label>Persetujuan Pengajuan Dropping 2</label>
             </fieldset>
+            <fieldset>
+              <input type="checkbox" name="perizinan[setuju_a_d_3]" {{ isset(old("perizinan")['setuju_a_d_2']) ? 'checked=""' : '' }}>
+              <label>Persetujuan Pengajuan Dropping 3</label>
+            </fieldset>
           </div>
         </div>
         <div class="card-block">
@@ -32,8 +36,12 @@
               <label>Permintaan Persetujuan Pengajuan Dropping</label>
             </fieldset>
             <fieldset>
-              <input type="checkbox" name="perizinan[notif_ubah_a_d]" {{ isset(old("perizinan")['notif_ubah_a_d']) ? 'checked=""' : '' }}>
-              <label>Perubahan Pengajuan Dropping</label>
+              <input type="checkbox" name="perizinan[notif_setuju_a_d_2]" {{ isset(old("perizinan")['notif_setuju_a_d_2']) ? 'checked=""' : '' }}>
+              <label>Permintaan Persetujuan Pengajuan Dropping 2</label>
+            </fieldset>
+            <fieldset>
+              <input type="checkbox" name="perizinan[notif_setuju_a_d_3]" {{ isset(old("perizinan")['notif_setuju_a_d_3']) ? 'checked=""' : '' }}>
+              <label>Permintaan Persetujuan Pengajuan Dropping 3</label>
             </fieldset>
             <fieldset>
               <input type="checkbox" name="perizinan[notif_ubah_a_d]" {{ isset(old("perizinan")['notif_ubah_a_d']) ? 'checked=""' : '' }}>
