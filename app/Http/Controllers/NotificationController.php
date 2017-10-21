@@ -191,8 +191,6 @@ class NotificationController extends Controller
                     }
                 }
             }
-
-            echo $unit_kerja;
         }
        
             
