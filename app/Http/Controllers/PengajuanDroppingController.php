@@ -397,7 +397,7 @@ class PengajuanDroppingController extends Controller
              'verifikasi' => $b,
              'keterangan' => $b
             ];
-            NotificationSystem::send($id, 42);
+            NotificationSystem::send($id, 44);
          }
          if ($verifikasi == 2){
             $a = '1';
@@ -422,11 +422,11 @@ class PengajuanDroppingController extends Controller
          ];
          if ($verifikasi == 1){
             $a = '5';
-            NotificationSystem::send($id, 44);
+            NotificationSystem::send($id, 46);
          }
          if ($verifikasi == 2){
             $a = '1';
-            NotificationSystem::send($id, 43);
+            NotificationSystem::send($id, 45);
          }
          
          $data = [
