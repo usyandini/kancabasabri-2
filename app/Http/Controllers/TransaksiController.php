@@ -197,7 +197,8 @@ class TransaksiController extends Controller
                 'anggaran'      => (int)$value->anggaran,
                 'actual_anggaran' => (int)$value->actual_anggaran,
                 'total'         => (int)$value->total,
-                'is_anggaran_safe' => $value->is_anggaran_safe
+                'is_anggaran_safe' => $value->is_anggaran_safe,
+                'is_rejected'   => $value->currently_rejected
             ]);
         }
         return response()->json($result);
@@ -222,7 +223,8 @@ class TransaksiController extends Controller
                 'anggaran'      => (int)$value->anggaran,
                 'actual_anggaran' => (int)$value->actual_anggaran,
                 'total'         => (int)$value->total,
-                'is_anggaran_safe' => $value->is_anggaran_safe
+                'is_anggaran_safe' => $value->is_anggaran_safe,
+                'is_rejected'   => $value->currently_rejected
             ]);
         }
         return response()->json($result);
@@ -315,6 +317,7 @@ class TransaksiController extends Controller
                 'batch_id'      => (int)$batch_id,
                 'is_anggaran_safe' => $calibrate['is_anggaran_safe'],
                 'created_at'    => \Carbon\Carbon::now(),
+                'currently_rejected' => 0,
                 'updated_at'    => \Carbon\Carbon::now()];
 
             if (isset($value->isNew)) {
@@ -326,11 +329,9 @@ class TransaksiController extends Controller
                 array_push($batch_update, $store_values);
             }
         }
+        // dd($batch_update);
         
-        $accounts = \DB::select("SELECT 
-            DATEPART(YEAR, tgl) as year, DATEPART(MONTH, tgl) as month, account FROM dbo.transaksi 
-            WHERE batch_id = ". $batch_id.
-            " GROUP BY DATEPART(YEAR, tgl), DATEPART(MONTH, tgl), account");
+        $accounts = $this->getAccountsPerBatch($batch_id);
 
         $this->doInsert($batch_insert);
         $this->doUpdate($batch_update);
@@ -354,6 +355,14 @@ class TransaksiController extends Controller
         return redirect('transaksi/'.$batch_id);
     }
 
+    public function getAccountsPerBatch($batch_id)
+    {
+        return \DB::select("SELECT 
+            DATEPART(YEAR, tgl) as year, DATEPART(MONTH, tgl) as month, account FROM dbo.transaksi 
+            WHERE batch_id = ". $batch_id.
+            " GROUP BY DATEPART(YEAR, tgl), DATEPART(MONTH, tgl), account");        
+    }
+
     public function isAllAnggaranSafe($batch_id)
     {
         return Transaksi::where([['batch_id', $batch_id], ['is_anggaran_safe', 0]])->first() ? false : true;
@@ -367,10 +376,7 @@ class TransaksiController extends Controller
 
     public function doRefreshAnggaran($batch_id)
     {
-        $accounts = \DB::select("SELECT 
-            DATEPART(YEAR, tgl) as year, DATEPART(MONTH, tgl) as month, account FROM dbo.transaksi 
-            WHERE batch_id = ". $batch_id.
-            " GROUP BY DATEPART(YEAR, tgl), DATEPART(MONTH, tgl), account");
+        $accounts = $this->getAccountsPerBatch($batch_id);
 
         foreach ($accounts as $account) {
             if($this->calibrateSavePointAndActual($account)) {
@@ -535,6 +541,11 @@ class TransaksiController extends Controller
 
         $input = $request->only('is_approved', 'reason');
         $this->approveOrReject($type, $batch_id, $input);
+
+        if (!$request->is_approved) {
+            $accounts = $this->getAccountsPerBatch($batch_id);
+            $this->resetCalibrateBecauseDeleteOrUpdate($accounts, true);            
+        }
 
         NotificationSystem::send($batch_id, $type == 1 ? ($request->is_approved ? 3 : 2) : ($request->is_approved ? 6 : 5));
 

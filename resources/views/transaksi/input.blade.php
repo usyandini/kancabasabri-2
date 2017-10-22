@@ -13,6 +13,9 @@
                 .contoh {
                   background: rgb(247, 137, 136);
                 }
+                .contohh {
+                  background: rgb(255, 204, 0);
+                }
               </style>
               @endsection
 
@@ -50,7 +53,7 @@
                                 <div class="col-xs-12 col-xl-6 col-lg-12 mb-1">
                                   {{-- <div class="form-group mb-1 mr-1"> --}}
                                     <select class="select2 form-control" name="batch">
-                                      <option value="0" disabled="">Pilih Nomor Batch</option>
+                                      <option value="0" disabled="" selected="">Pilih Nomor Batch</option>
                                       @foreach($batch_nos as $batch)
                                       <option value="{{ $batch->id }}" {{ $filters[0] == $batch->id ? 'selected=""' : '' }}>{{ $batch->batchNo() }}</option>
                                       @endforeach
@@ -176,7 +179,7 @@
                         <ul>
                           @if(!$empty_batch && $editable)
                           <li>Batch saat ini : <code>{{ date("d-m-Y", strtotime($active_batch->created_at)) }}</code></li>
-                          <li>Terakhir Update : <code>{{ $active_batch->updated_at }}</code> oleh <code>{{ $active_batch['submitter']['name'] }}</code></li>
+                          <li>Terakhir Update : <code>{{ $active_batch->updated_at }}</code> oleh <code>{{ $active_batch['creator']['name'] }}</code></li>
                           <li>Banyak item : <code id="totalRows"></code>, dengan <code>{{ count($berkas).' berkas lampiran' }}</code></li>
                           @endif
                         </ul>

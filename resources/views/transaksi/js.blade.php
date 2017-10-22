@@ -2,7 +2,7 @@
                   var inputs = [];
                   var item = m_anggaran = subpos = mainaccount = account_field = date_field = anggaran_field = actual_anggaran = null;
                   var tempIdCounter = totalRows = 0;
-                  var is_all_anggaran_safe = true;
+                  var is_all_anggaran_safe = is_all_rows_not_rejected = true;
                   var berkas = {{ count($berkas) }}
                   var empty_batch = {{ $empty_batch ? 'true' : 'false' }}
                   var editableStat = {{ $editable ? 1 : 0 }};
@@ -53,7 +53,7 @@
                       paging: true, 
                       autoload: true,
                       rowClass: function(item, itemIndex) {
-                        return item.is_anggaran_safe != true ? "contoh" : ""
+                        return item.is_anggaran_safe != true ? "contoh" : (item.is_rejected == true ? "contohh" : "")
                       }, 
                       @if(Gate::check('ubah_item_t') || Gate::check('hapus_item_t'))
                           editing: editableStat == 1 ? true : false, 
@@ -98,11 +98,14 @@
                         var items = args.grid.option("data");
                         items.forEach(function(item) {
                           if (item.is_anggaran_safe != true) {
-                            is_all_anggaran_safe = false;
+                            is_all_anggaran_safe = false
+                          }
+                          if (item.is_rejected == true) {
+                            is_all_rows_not_rejected = false
                           }
                           totalRows += 1;
                         });
-
+                        
                         $('code[id="totalRows"]').html(totalRows + " baris");
                       },
                       fields: [
@@ -578,12 +581,14 @@
                   };
 
                   function checkBatchSubmit() {
-                    if (totalRows > 0 && is_all_anggaran_safe && berkas > 0) {
+                    if (totalRows > 0 && is_all_anggaran_safe && is_all_rows_not_rejected && berkas > 0) {
                       $('#xSmall').modal()
                     } else if(!is_all_anggaran_safe) {
                       toastr.error("Anggaran yang bersangkutan tidak mencukupi untuk disubmit. Terima kasih.", "Peringatan Anggaran", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:10e3});                      
+                    } else if (!is_all_rows_not_rejected) {
+                      toastr.error("Untuk melakukan submit kembali, silahkan adakan perbaikan pada batch ini (row berwarna kuning). Terima kasih.", "Perbaikan Diperlukan", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:10e3});                      
                     } else {
-                      toastr.error("Silahkan input <b>data dan berkas</b> yang hendak disubmit. Terima kasih.", "Data tidak boleh kosong", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:10e3});                      
+                      toastr.error("Silahkan input <b>data dan berkas</b> yang hendak disubmit. Terima kasih.", "Data dan berkas tidak boleh kosong", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:10e3});                      
                     }
                   };
 

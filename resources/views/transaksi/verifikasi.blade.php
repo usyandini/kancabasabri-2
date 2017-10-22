@@ -11,6 +11,15 @@
                 .hide {
                   display: none;
                 }
+                .jsgrid-row .jsgrid-cell, .jsgrid-alt-row .jsgrid-cell {
+                  background: inherit;
+                }
+                .contoh {
+                  background: rgb(247, 137, 136);
+                }
+                .contohh {
+                  background: rgb(255, 204, 0);
+                }
               </style>
               @endsection
 
