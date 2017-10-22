@@ -88,7 +88,7 @@ class NotificationController extends Controller
                 if(Gate::check('unit_'.$this->check($unit_kerja))){
                     $notif = true;
                 }
-            }else if($value->type <45){
+            }else if($value->type <47){
                 $unit_kerja = $value->pengajuanDropping['kantor_cabang'];
                 if(Gate::check('unit_'.$this->check($unit_kerja))){
                     $notif = true;
@@ -104,10 +104,9 @@ class NotificationController extends Controller
         			'time_dif' 	=> \Carbon\Carbon::createFromTimeStamp(strtotime($value->created_at))->diffForHumans(),
         			'time'		=> date('d F Y, H:m', strtotime($value->created_at))
         		];
-                $result['totalUnread'] = $count_unread++;
+                $result['totalUnread'] = ++$count_unread;
             }
     	}
-        // $result['totalUnread'] = $count_unread;
 
     	return response()->json($result);
     }
@@ -125,9 +124,9 @@ class NotificationController extends Controller
         $pengajuan = PengajuanDropping::where('id', $notifDetail->batch_id)->first();
         $unit_kerja = "";
         if($value_cabang == "00"){
-            $unit_kerja = \Auth::user()->kantorCabang()['DESCRIPTION'];
-        }else{
             $unit_kerja = \Auth::user()->divisi()['DESCRIPTION'];
+        }else{
+            $unit_kerja = \Auth::user()->kantorCabang()['DESCRIPTION'];
         }
 
         if($notifDetail->type >=32 && $notifDetail->type<=42){
@@ -162,15 +161,34 @@ class NotificationController extends Controller
                 }
             }
 
-            if($notifDetail->type == 41||$notifDetail->type == 43||$notifDetail->type == 44){
+            if($notifDetail->type == 41||$notifDetail->type == 43||$notifDetail->type == 45||$notifDetail->type == 46){
                 if(!Gate::check('informasi_a_d')&&$unit_kerja!=$unit){
                     $read = false;
                 }
             }
+            if($notifDetail->type == 40){
+                if(!Gate::check('setuju_a_d')||Gate::check('notif_setuju_a_d')){
+                    if($unit_kerja!="Akuntansi"){
+                        $read = false;
+                    }
+                }
+            }
 
             if($notifDetail->type == 42){
-                if(!Gate::check('setuju_a_d_2')){
-                    $read = false;
+                if(!Gate::check('setuju_a_d_2')||Gate::check('notif_setuju_a_d_2')){
+                    if($unit_kerja!="Akuntansi"){
+                        $read = false;
+                    }
+                }
+            }
+
+
+
+            if($notifDetail->type == 44){
+                if(!Gate::check('setuju_a_d_3')||Gate::check('notif_setuju_a_d_3')){
+                    if($unit_kerja!="Akuntansi"){
+                        $read = false;
+                    }
                 }
             }
         }
@@ -259,13 +277,17 @@ class NotificationController extends Controller
             case 40:
                 return redirect('acc_pengajuan_dropping/verifikasi/'.$notifDetail->batch_id);
             case 41:
-                return redirect('pengajuan_dropping');
+                return redirect('pengajuan_dropping/lihat/'.$notifDetail->batch_id);
             case 42:
                 return redirect('acc_pengajuan_dropping2/verifikasi/'.$notifDetail->batch_id);
             case 43:
-                return redirect('pengajuan_dropping');
+                return redirect('pengajuan_dropping/lihat/'.$notifDetail->batch_id);
             case 44:
-                return redirect('pengajuan_dropping');
+                return redirect('acc_pengajuan_dropping3/verifikasi/'.$notifDetail->batch_id);
+            case 45:
+                return redirect('pengajuan_dropping/lihat/'.$notifDetail->batch_id);
+            case 46:
+                return redirect('pengajuan_dropping/lihat/'.$notifDetail->batch_id);
 			default:
 				return redirect('transaksi/');
     	}
@@ -314,7 +336,7 @@ class NotificationController extends Controller
                     if(Gate::check('unit_'.$this->check($unit_kerja))){
                         $notif = true;
                     }
-                }else if($value->type <45){
+                }else if($value->type <47){
                     $unit_kerja = $value->pengajuanDropping['kantor_cabang'];
                     if(Gate::check('unit_'.$this->check($unit_kerja))){
                         $notif = true;

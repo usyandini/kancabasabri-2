@@ -48,7 +48,7 @@
                               </div>
                               <div class="col-lg-6 col-xl-3 mb-1">
                                 <div class="form-group">
-                                  <select class="select2 form-control" name="cari_stat_anggaran" id="cari_stat_anggaran">
+                                  <select class="select2 form-control" name="cari_stat_anggaran" id="cari_stat_anggaran" onchange="set_nd_surat()">
                                     <option disabled="" selected="">Status Anggaran</option>
                                     <option value="0">Semua</option>
                                     <option value="1">Draft</option>
@@ -61,7 +61,6 @@
                                 <div class="form-group">
                                   <select class="select2 form-control " name="cari_unit_kerja" id="cari_unit_kerja" onchange="set_nd_surat()">
                                     <option disabled="" selected="">Unit Kerja</option>
-                                    <option value="0">none</option>
                                     @foreach($unit_kerja as $unit)
                                     <?php
                                     $cabang = explode(" Cabang ", $unit->DESCRIPTION);
@@ -122,10 +121,11 @@
               <script src="{{ asset('app-assets/js/scripts/forms/select/form-select2.min.js') }}" type="text/javascript"></script>
               <!-- END PAGE LEVEL JS-->
               <script type="text/javascript">
-
+                @if(session('batas'))
+                toastr.error("{{session('batas')}}", "Perhatian.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
+                @endif
 
                 $(document).ready(function() {
-
                   $("#basicScenario").jsGrid( {
                     width: "100%",
 
@@ -156,131 +156,121 @@
                         });
                     },
                     fields: [
-                    {
-                      name: "id",
-                      css: "hide",
-                      type: "number", 
-                      width: 0
-                    },
-                    { name: "tanggal", 
-                    type: "text", 
-                    align: "left",
-                    title: "Tanggal", 
-                    width: 90
-                  },
-                  { name: "nd_surat", 
-                  type: "text", 
-                  align: "left",
-                  title: "ND/Surat", 
-                  width: 90
-                },
-                { name: "unit_kerja", 
-                type: "text", 
-                align: "left",
-                title: "Unit Kerja", 
-                width: 100
-              },
-              { name: "tipe_anggaran", 
-              type: "text", 
-              align: "left",
-              title: "Tipe Anggaran", 
-              width: 100
-            },
-            { name: "status_anggaran", 
-            type: "text", 
-            align: "left",
-            title: "Status Anggaran", 
-            width: 100,
-            itemTemplate:function(value){
-              var status_anggaran = "";
-              switch(value){
-                case "1" : status_anggaran="Draft";break;
-                case "2" : status_anggaran="Transfer";break;
-                case "3" : status_anggaran="Complete";break;
-              }
-              return status_anggaran;
-            }
-          },
-          { name: "persetujuan", 
-          type: "text", 
-          align: "left",
-          title: "Persetujuan", 
-          width: 100,
-          itemTemplate:function(value){
-            var persetujuan = "";
-            switch(value){
-              case "-1" : persetujuan="";break;
-              case "0" : persetujuan="Kirim";break;
-              case "1" : persetujuan="Persetujuan Kanit Kerja";break;
-              case "2" : persetujuan="Persetujuan Renbang";break;
-              case "3" : persetujuan="Persetujuan Direksi";break;
-              case "4" : persetujuan="Persetujuan Dekom";break;
-              case "5" : persetujuan="Persetujuan Ratek";break;
-              case "6" : persetujuan="Persetujuan RUPS";break;
-              case "7" : persetujuan="Persetujuan FinRUPS";break;
-              case "8" : persetujuan="Persetujuan Risalah RUPS";break;
-              case "9" : persetujuan="Disetujuai dan Ditandatangani";break;
-            }
-            return persetujuan;
-          }
-        },
-        { name: "nd_surat", align:"center", title: "Detail",  width: 150 ,
+                      {
+                        name: "id",
+                        css: "hide",
+                        type: "number", 
+                        width: 0
+                      },
+                      { name: "tanggal", 
+                      type: "text", 
+                      align: "left",
+                      title: "Tanggal", 
+                      width: 90
+                      },
+                      { name: "nd_surat", 
+                      type: "text", 
+                      align: "left",
+                      title: "ND/Surat", 
+                      width: 90
+                      },
+                      { name: "unit_kerja", 
+                      type: "text", 
+                      align: "left",
+                      title: "Unit Kerja", 
+                      width: 100
+                      },
+                      { name: "tipe_anggaran", 
+                      type: "text", 
+                      align: "left",
+                      title: "Tipe Anggaran", 
+                      width: 100
+                      },
+                      { name: "status_anggaran", 
+                      type: "text", 
+                      align: "left",
+                      title: "Status Anggaran", 
+                      width: 100,
+                      itemTemplate:function(value){
+                        var status_anggaran = "";
+                        switch(value){
+                          case "1" : status_anggaran="Draft";break;
+                          case "2" : status_anggaran="Transfer";break;
+                          case "3" : status_anggaran="Complete";break;
+                        }
+                        return status_anggaran;
+                      }
+                      },
+                      { name: "persetujuan", 
+                      type: "text", 
+                      align: "left",
+                      title: "Persetujuan", 
+                      width: 100,
+                      itemTemplate:function(value){
+                        var persetujuan = "";
+                        switch(value){
+                          case "-1" : persetujuan="";break;
+                          case "0" : persetujuan="Kirim";break;
+                          case "1" : persetujuan="Persetujuan Kanit Kerja";break;
+                          case "2" : persetujuan="Persetujuan Renbang";break;
+                          case "3" : persetujuan="Persetujuan Direksi";break;
+                          case "4" : persetujuan="Persetujuan Dekom";break;
+                          case "5" : persetujuan="Persetujuan Ratek";break;
+                          case "6" : persetujuan="Persetujuan RUPS";break;
+                          case "7" : persetujuan="Persetujuan FinRUPS";break;
+                          case "8" : persetujuan="Persetujuan Risalah RUPS";break;
+                          case "9" : persetujuan="Disetujuai dan Ditandatangani";break;
+                        }
+                        return persetujuan;
+                      }
+                      },
+                      { name: "nd_surat", align:"center", title: "Detail",  width: 150 ,
 
-        itemTemplate: function(value) {
+                        itemTemplate: function(value) {
 
-          var button = "<a href='{{ url('anggaran/edit/')}}/"+value+"'   class='btn btn-sm btn-primary'> Detail</a>";
-          return button;
-        }
-      }
-      ]
-    })
+                          var button = "<a href='{{ url('anggaran/edit/')}}/"+value+"'   class='btn btn-sm btn-primary'> Detail</a>";
+                          return button;
+                        }
+                      }
+                    ]
+                  })
 
                 });
-                function setUnitKerja(id_type,id_unit){
-                  var type = "";
-                  if(id_type == "00 "){
-                    type = "divisi";
-                  }else{
-                    type = "cabang";
-                  }
-                  $.ajax({
-                    'async': false, 'type': "GET", 'dataType': 'JSON', 'url': "{{ url('anggaran/get/attributes/unitkerja/1') }}",
-                    'success': function (data) {
-
-                      cari_unit_kerja = document.getElementById('cari_unit_kerja');
-
-
-                      for(i =0 ;i<data.length;i++){
-                        var value = data[i].DESCRIPTION;
-                        var desc = data[i].DESCRIPTION;
-                        cari_unit_kerja.options[cari_unit_kerja.options.length] = new Option(desc, value);
-                      }
-
-                    }
-                  });
-
-
-                }
 
                 function set_nd_surat(){
                   cari_unit_kerja = document.getElementById('cari_unit_kerja').value;
-                  $.ajax({
-                    'async': false, 'type': "GET", 'dataType': 'JSON', 'url': "{{ url('anggaran/get/attributes/nd_surat').'/' }}"+encodeURI(cari_unit_kerja),
-                    'success': function (data) {
+                  cari_stat_anggaran = document.getElementById('cari_stat_anggaran').value;
+                  if(cari_stat_anggaran == "Status Anggaran"){
+                    cari_stat_anggaran = 0;
+                  }
+                  if(cari_unit_kerja != "Unit Kerja"||cari_stat_anggaran != "Status Anggaran"){
+                    $.ajax({
+                      'async': false, 'type': "GET", 'dataType': 'JSON', 'url': "{{ url('anggaran/get/nd_surat').'/' }}"+encodeURI(cari_unit_kerja)+"/"+encodeURI(cari_stat_anggaran),
+                      'success': function (data) {
 
-                      nd_surat_option = document.getElementById('cari_nd_surat');
+                        nd_surat_option = document.getElementById('cari_nd_surat');
+                        var length = nd_surat_option.options.length;
+                        // alert(length);
+                        for (i = 1; i < length; i++) {
+                          alert(nd_surat_option.options[1].innerHTML);
+                          nd_surat_option.options[1] = null;
+                        }
+                        for(i =0 ;i<data.length;i++){
+                          var value = data[i].nd_surat;
+                          var desc = data[i].nd_surat;
+                          nd_surat_option.options[nd_surat_option.options.length] = new Option(desc, value);
+                        }
 
-                      for(i =0 ;i<data.length;i++){
-                        var value = data[i].nd_surat;
-                        var desc = data[i].nd_surat;
-                        nd_surat_option.options[nd_surat_option.options.length] = new Option(desc, value);
                       }
-
-                    }
-                  });
+                    });
+                  }
                 }
                 function cariAnggaran(){
-                  if(document.getElementById("cari_unit_kerja").value=="0"){
+                  if(document.getElementById("cari_nd_surat").value=="ND/Surat"){
+                    toastr.error("Silahkan Pilih ND/Surat. Terima kasih.", "ND/Surat Belum Dipilih.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
+                  }else if(document.getElementById("cari_stat_anggaran").value=="Status Anggaran"){
+                    toastr.error("Silahkan Pilih Status Anggaran. Terima kasih.", "Status Anggaran Belum Dipilih.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
+                  }else if(document.getElementById("cari_unit_kerja").value=="0"||document.getElementById("cari_unit_kerja").value=="Unit Kerja"){
                     toastr.error("Silahkan Pilih Salah Satu Unit Kerja. Terima kasih.", "Unit Kerja Belum Dipilih.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
                   }else{
                     $('form[id="filterAnggaran"]').submit();

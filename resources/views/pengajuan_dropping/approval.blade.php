@@ -173,19 +173,19 @@
 				                @endif
 				                
 			                    <div class="table-responsive">
-			                      <table class="table table-striped table-bordered datatable-select-inputs nowrap" cellspacing="0" width="100%">
+			                      <table class="table table-striped table-bordered datatable-select-inputs mb-0">
 			                        <thead>
 			                          <tr>
 			                            <th><center>No</center></th>
 			                            <th id="filterable"><center>Kantor Cabang</center></th>
 			                            <th id="filterable"><center>Nomor</center></th>
-			                            <th id="filterable"><center>Tanggal</center></th>
-			                            <th id="filterable"><center>Jumlah Diajukan</center></th>
+			                            <th id="filterable"><center>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Tanggal&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</center></th>
+			                            <th id="filterable"><center>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Jumlah Diajukan&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</center></th>
 			                            <th id="filterable"><center>Periode Realisasi</center></th>
-			                            <th id="filterable"><center>Lampiran</center></th>
+			                            <th id="filterable"><center>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Lampiran&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</center></th>
 			                            <th id="filterable"><center>Verifikasi</center></th>
-			                            <th id="filterable"><center>Keterangan</center></th>
-			                            <th><center>Aksi</center></th>
+			                            <th id="filterable"><center>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Keterangan&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</center></th>
+			                            <th><center>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Aksi&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</center></th>
 			                          </tr>
 			                        </thead>
 			                        <tbody>
@@ -257,7 +257,28 @@
 														  if($b->verifikasi=='1'){ echo "<div class=\"tag tag-success label-square\"><span><b>Diterima</b></span></div>";}
 														  if($b->verifikasi=='2'){ echo "<div class=\"tag tag-danger label-square\"><span><b>Ditolak</b></span></div>";}
 													?></center></td>
-												<td><center>{{ $b->keterangan }}</center></td>
+												<td><center>
+												@if ($b->keterangan!="")
+												<?php
+									                                                    $second="SELECT * FROM reject_reasons where id=$b->keterangan";
+																		                $return = DB::select($second);
+																		                ?>
+																						@foreach($return as $bb)
+																						<?php
+																						  if($bb->type==6){
+																						  	$type="Reject pengajuan dropping oleh staff Akuntansi (lv1)";
+																						  }
+																						  if($bb->type==7){
+																						  	$type="Reject pengajuan dropping oleh kabid Akuntansi (lv2)";
+																						  }
+																						  if($bb->type==8){
+																						  	$type="Reject pengajuan dropping oleh kadiv Akuntansi (lv3)";
+																						  }
+																						?>
+												{{ $bb->content }} - {{ $type }}
+												@endforeach
+												@endif
+												</center></td>
 												<td><center>
 												@if ($b->kirim==2)
 												  @if ($b->verifikasi==1)
@@ -268,7 +289,7 @@
 												  	<span data-toggle='tooltip' title='Print'><a href="{{ URL('pengajuan_dropping/print/'. $b->id) }}" target="_blank" class="btn btn-warning btn-sm" ><i class="fa fa-print"></i> </a></span>
 													<span data-toggle='tooltip' title='Verifikasi'><a class="btn btn-info btn-sm" data-target="#ubah{{$b->id}}" data-toggle="modal"><i class="fa fa-check"></i> </a></span>
 												@elseif ($b->kirim==3)
-													<span data-toggle='tooltip' title='Print'><a href="{{ URL('pengajuan_dropping/print/'. $b->id) }}" target="_blank" class="btn btn-warning btn-sm" ><i class="fa fa-print"></i> </a></span>
+													<span data-toggle='tooltip' title='Print'><a href="{{ URL('pengajuan_dropping/print/'. $b->id) }}" target="_blank" class="btn btn-warning btn-sm" ><i class="fa fa-print"></i> </a></span><br><br>
 													<div class="btn btn-info btn-sm"><span><b>Telah Dikirim ke level 2</b></span></div>
 												@endif		
 													<div class="modal fade" data-backdrop="static" id="kirim{{$b->id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -316,7 +337,19 @@
 																		<br>
 																	    <label class="control-label"><b> Keterangan </b></label>
 						                                                <label class="control-label"><b> : </b></label>
-																	        <textarea class="form-control" name="keterangan" rows="3" placeholder="masukkan keterangan">{{ $b->keterangan }}</textarea>
+																	        <select class="select form-control" name="keterangan" value="{{$b->keterangan}}">
+													                                    <option value=""> - Pilih Keterangan - </option>
+									                                                    <?php
+									                                                    $second="SELECT * FROM reject_reasons where type=6";
+																		                $return = DB::select($second);
+																		                ?>
+																						@foreach($return as $bb)
+									                                                      <option value="{{ $bb->id }}"
+											                                              @if($bb->id == $b->keterangan) Selected>{{ $bb->content }}@endif
+											                                              @if($bb->id <> $b->keterangan)>{{ $bb->content }}@endif
+											                                              </option>
+									                                                    @endforeach                                               
+													                                   </select>
 																	        
 						                                            </div>
                                                 					<div class="modal-footer">

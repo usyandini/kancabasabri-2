@@ -194,10 +194,16 @@ class NotificationSystem
         if(isset($user->perizinan['notif_setuju_a_d_2'])){
             array_push($array_type,42);
         }
+        if(isset($user->perizinan['notif_setuju_a_d_3'])){
+            array_push($array_type,44);
+        }
         if(isset($user->perizinan['notif_ubah_a_d'])){
-            array_push($array_type,41,43,44);
+            array_push($array_type,41,43,45,46);
             if (!in_array(42, $array_type)) {
                 array_push($array_type,42);
+            }
+            if (!in_array(44, $array_type)) {
+                array_push($array_type,44);
             }
         }
 

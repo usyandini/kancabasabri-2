@@ -46,7 +46,7 @@
                     </div>
                     @endif
                     <form class="form" action="{{ url('item/update/anggaran').'/'.$items->id  }}" method="POST">
-                      <div class="col-md-6">
+                      <div class="col-md-5">
                         {{ csrf_field() }}
                         <div class="card">
                           <div class="card-header">
@@ -140,7 +140,7 @@
                           </div>
                         </div>
                       </div>
-                      <div class="col-md-6">
+                      <div class="col-md-7">
                         <div class="card">
                           <div class="card-header">
                             <h4 class="card-title" id="basic-layout-card-center">Financial Dimension</h4>
@@ -149,18 +149,18 @@
                           <div class="card-body">
                             <div class="card-block">
                               <div class="form form-horizontal striped-rows">
-                              	<!--<div class="form-group row">
+                              	<div class="form-group row">
     		                          <label class="col-md-2 label-control" for="segmen1">Account</label>
     		                          <div class="col-md-7">
                                     <select class = "select2 form-control account" name="account" id="account" onchange="getVal('account', 'segmen1');" required>
                                       <option value="" disabled selected>Main Account</option>
                                       @foreach($item as $coa)
-                                      <option {{ old('account') == $coa->MAINACCOUNTID ? 'selected=""' : '' }} value="{{ $coa->MAINACCOUNTID }}">{{ $coa->NAME }}</option>
+                                      <option {{ $items->SEGMEN_1 == $coa->MAINACCOUNTID ? 'selected=""' : '' }} value="{{ $coa->MAINACCOUNTID }}">{{ $coa->NAME }}</option>
                                       @endforeach
                                     </select>
                                   </div>
                                   <div class="col-md-3">
-                                    <input id="segmen1" class="form-control" name="segmen1" value="" readonly="">
+                                    <input id="segmen1" class="form-control" name="segmen1" value="{{ $items->SEGMEN_1}}" readonly="">
     		                          </div>
     				                    </div>
     		                        <div class="form-group row">
@@ -169,15 +169,15 @@
                                     <select class = "select2 form-control" id="program" name="program" onchange="getVal('program', 'segmen2');" required>
                                       <option value="" disabled selected>Program</option>
                                       @foreach($program as $prog)
-                                      <option {{ old('program') == $prog->VALUE ? 'selected=""' : '' }} value="{{ $prog->VALUE }}">{{ $prog->DESCRIPTION }}</option>
+                                      <option {{ $items->SEGMEN_2 == $prog->VALUE ? 'selected=""' : '' }} value="{{ $prog->VALUE }}">{{ $prog->DESCRIPTION }}</option>
                                       @endforeach
                                     </select>
     		                          </div>
     		                          <div class="col-md-3">
-    		                          	<input id="segmen2" class="form-control" name="segmen2" value="" readonly="">
+    		                          	<input id="segmen2" class="form-control" name="segmen2" value="{{ $items->SEGMEN_2}}" readonly="">
       				                    </div>
     		                        </div>
-    		                        <div class="form-group row">
+    		                        <!--<div class="form-group row">
     		                          <label class="col-md-2 label-control" for="segmen3">KPKC</label>
     	                        	  <div class="col-md-7">
                                     <select class = "select2 form-control" id="kpkc" name="kpkc" onchange="getVal('kpkc', 'segmen3');" required>
@@ -215,12 +215,12 @@
     		                          	<select class = "select2 form-control" id="subpos" name="subpos" onchange="getVal('subpos', 'segmen5');" required>
                                       <option value="" disabled selected>Sub Pos</option>
                                       @foreach($subpos as $subp)
-                                      <option {{  $items->sub_pos == $subp->VALUE ? 'selected=""' : '' }} value="{{ $subp->VALUE }}">{{ $subp->DESCRIPTION }}</option>
+                                      <option {{  $items->SEGMEN_5 == $subp->VALUE ? 'selected=""' : '' }} value="{{ $subp->VALUE }}">{{ $subp->DESCRIPTION }}</option>
                                       @endforeach
                                     </select>
     		                          </div>
     		                          <div class="col-md-3">
-    		                          	<input id="segmen5" class="form-control" name="segmen5" value="" readonly="">
+    		                          	<input id="segmen5" class="form-control" name="segmen5" value="{{ $items->SEGMEN_5}}" readonly="">
     				                      </div>
     		                        </div>
                               	<div class="form-group row">
@@ -229,12 +229,12 @@
     		                            <select class = "select2 form-control" id="kegiatan" name="kegiatan" onchange="getVal('kegiatan', 'segmen6');" required>
                                       <option value="" disabled selected>Mata Anggaran</option>
                                       @foreach($m_anggaran as $ma)
-                                        <option {{  $items->mata_anggaran == $ma->VALUE ? 'selected=""' : '' }} value="{{ $ma->VALUE }}">{{ $ma->DESCRIPTION }}</option>
+                                        <option {{  $items->SEGMEN_6 == $ma->VALUE ? 'selected=""' : '' }} value="{{ $ma->VALUE }}">{{ $ma->DESCRIPTION }}</option>
                                       @endforeach
                                     </select>
     		                          </div>
     		                          <div class="col-md-3">
-    		                        	  <input id="segmen6" class="form-control" name="segmen6" value="" readonly="">
+    		                        	  <input id="segmen6" class="form-control" name="segmen6" value="{{ $items->SEGMEN_6}}" readonly="">
         				                  </div>
         				              	</div>
                               </div>

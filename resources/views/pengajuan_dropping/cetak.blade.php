@@ -103,6 +103,41 @@
                               JUMLAH DIAJUKAN </b></td><td> </td><td><b> : </b></td><td> </td><td><b>Rp {{ $angka }},-</b></td>
                               </tr>
                               <tr>
+                              	<td><b> 
+                              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                              TERBILANG </b></td><td> </td><td><b> : </b></td><td> </td><td><b><?php
+    function Terbilang($x)
+    {
+        $ambil = array("", "satu", "dua", "tiga", "empat", "lima", "enam", "tujuh", "delapan", "sembilan", "sepuluh", "sebelas");
+        if ($x < 12)
+            return " " . $ambil[$x];
+        elseif ($x < 20)
+            return Terbilang($x - 10) . " belas";
+        elseif ($x < 100)
+            return Terbilang($x / 10) . " puluh" . Terbilang($x % 10);
+        elseif ($x < 200)
+            return " seratus" . Terbilang($x - 100);
+        elseif ($x < 1000)
+            return Terbilang($x / 100) . " ratus" . Terbilang($x % 100);
+        elseif ($x < 2000)
+            return " seribu" . Terbilang($x - 1000);
+        elseif ($x < 1000000)
+            return Terbilang($x / 1000) . " ribu" . Terbilang($x % 1000);
+        elseif ($x < 1000000000)
+            return Terbilang($x / 1000000) . " juta" . Terbilang($x % 1000000);
+        elseif ($x < 1000000000000)
+            return Terbilang($x / 1000000000) . " miliar" . Terbilang($x % 1000000000);
+    }
+    if ($b->jumlah_diajukan)
+    {
+    	echo"<div style=width:250px>";
+        echo ucwords(Terbilang($b->jumlah_diajukan))." Rupiah";
+        echo"</div>";
+    }
+    
+    ?></b></td>
+                              </tr>
+                              <tr>
                               <td><b> 
                               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                               PERIODE REALISASI </b></td><td> </td><td><b> : </b></td><td> </td><td><b>{{ $periode }}</b></td>
