@@ -467,9 +467,7 @@
                     var date = today.getDate()
                     var year = today.getFullYear()
                     
-                    if (date > 5 && 
-                        ((new Date(dateInput).getDate() < 5 && new Date(dateInput).getMonth() == month) || 
-                          new Date(dateInput).getMonth() < month)) {
+                    if (date > 5 && (new Date(dateInput).getMonth() < month)) {
                       return false
                     } 
 
