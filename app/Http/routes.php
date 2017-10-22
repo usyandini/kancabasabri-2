@@ -146,6 +146,8 @@ Route::group(['middleware' => 'auth'], function() {
 	Route::group(['prefix' => 'item'], function(){
 		Route::resource('/', 'ItemController');
 		Route::get('/transaksi', 'ItemController@listTransaksi');
+		Route::get('/import', 'ItemController@importXls');
+		Route::post('/import/process/', 'ItemController@importXlsProcess');
 		Route::get('/anggaran', 'ItemController@listAnggaran');
 		Route::get('/get/combination/{id}/{tanggal}', 'ItemController@getCombination');
 		Route::get('/create/transaksi', 'ItemController@createItemTransaksi');

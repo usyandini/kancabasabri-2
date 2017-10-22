@@ -160,6 +160,8 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         Barryvdh\DomPDF\ServiceProvider::class,
+        Maatwebsite\Excel\ExcelServiceProvider::class,
+
 
     ],
 
@@ -209,6 +211,7 @@ return [
         'Adldap' => Adldap\Laravel\Facades\Adldap::class,
         'Carbon' => 'Carbon\Carbon',
         'PDF' => 'Barryvdh\DomPDF\Facade',
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
 
 
     ],
