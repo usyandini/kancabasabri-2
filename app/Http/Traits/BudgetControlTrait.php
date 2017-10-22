@@ -29,10 +29,7 @@ trait BudgetControlTrait
 
 		if ($isInsert || $currentHistory->savepoint_amount != $trans->anggaran) {
 			if (!isset($trans->isNew) && $isInsert) {
-				$transaksi = Transaksi::where('id', $trans->id)->first();
-				if ($transaksi->currently_rejected == true) {	
-					$trans->total = $transaksi->total;
-				}
+				
 			} else if (!$isInsert) {
 				if ($trans->currently_rejected == true) {
 					$trans->total = 0;
