@@ -139,9 +139,15 @@
                               var result = this._insertPicker = $("<input>").datepicker({ defaultDate: new Date() })
                               result.on("change", function() {
                                 date_field = result.val()
-                                date_field = ("0" + new Date(date_field).getDate()).slice(-2) + '-' + ("0" + (new Date(date_field).getMonth() + 1)).slice(-2) + '-' + new Date(date_field).getFullYear()
-                                if (mainaccount != null) {
-                                  getCombination()
+                                console.log(new Date(date_field).getDate())
+                                if (validateTransaksiDate(date_field)) {
+                                  date_field = ("0" + new Date(date_field).getDate()).slice(-2) + '-' + ("0" + (new Date(date_field).getMonth() + 1)).slice(-2) + '-' + new Date(date_field).getFullYear()
+                                  if (mainaccount != null) {
+                                    getCombination()
+                                  }
+                                } else {
+                                  toastr.error("Mohon input <b>tanggal transaksi</b> yang valid. Terima kasih", "Tanggal transaksi tidak valid.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:10e3});
+                                  $(result).val(null)
                                 }
                               })
                               return result;
@@ -453,6 +459,21 @@
                         break;
                     }
                     generateAccount(item, m_anggaran, subpos);
+                  }
+
+                  function validateTransaksiDate(dateInput) {
+                    var today = new Date()
+                    var month = today.getMonth()
+                    var date = today.getDate()
+                    var year = today.getFullYear()
+                    
+                    if (date > 5 && 
+                        ((new Date(dateInput).getDate() < 5 && new Date(dateInput).getMonth() == month) || 
+                          new Date(dateInput).getMonth() < month)) {
+                      return false
+                    } 
+
+                    return true
                   }
 
                   function getCombination() {
