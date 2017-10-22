@@ -27,7 +27,8 @@ class Transaksi extends Model
     	'total',
     	'created_by',
         'batch_id',
-        'is_anggaran_safe'
+        'is_anggaran_safe',
+        'currently_rejected'
     ];
 
     public function stat()

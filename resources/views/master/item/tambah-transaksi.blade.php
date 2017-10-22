@@ -200,7 +200,7 @@
                           <div class="card-body">
                             <div class="card-block">
                               <div class="pull-right">
-                                <a href="{{ url('item/transaksi') }}" class="btn btn-danger mr-1">
+                                <a href="{{ url('item/transaksi') }}" class="btn btn-danger">
                                   <i class="ft-x"></i> Kembali
                                 </a>    
                                 <button type="submit" class="btn btn-outline-primary">
