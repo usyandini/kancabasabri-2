@@ -448,9 +448,9 @@ class TransaksiController extends Controller
         $berkas = BerkasTransaksi::where('id', $berkas_id)->first();
         $decoded = base64_decode($berkas->file);
         $mime_type = explode('/', finfo_buffer(finfo_open(), $decoded, FILEINFO_MIME_TYPE)) ;
-        $file = $berkas->file_name.'.'.$mime_type[1];
+        // $file = $berkas->file_name.'.'.$mime_type[1];
+        $file = $berkas->file_name;
         file_put_contents($file, $decoded);
-        $data = bin2hex($decoded);
 
         if (file_exists($file)) {
             header('Content-Description: File Transfer');
