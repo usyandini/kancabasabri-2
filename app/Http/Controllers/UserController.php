@@ -52,6 +52,7 @@ class UserController extends Controller
                 $input['password'] = "";
             }
             // if ($input['perizinan']['data-cabang'] == 'off') { unset($input['perizinan']['data-cabang']); }
+            if ($input['cabang'] != '00') { $input['divisi'] = '00'; }
             $input['created_by'] = \Auth::user()->id;
             User::create($input);
 

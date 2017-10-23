@@ -547,7 +547,7 @@
 
                   function generateAccount(item, m_anggaran, subpos) {
                     var kpkcId = {{ Auth::user()->cabang }};
-                    var divisiId = {{ Auth::user()->divisi }};
+                    var divisiId = {{ Auth::user()->divisi ? Auth::user()->divisi : '00' }};
                     var account = item + '-THT' + '-' + pad(kpkcId) + '-' + pad(divisiId) + '-' + subpos + '-' + m_anggaran;   
                     $(account_field).val(account);
                   };
