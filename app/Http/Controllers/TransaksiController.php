@@ -235,8 +235,10 @@ class TransaksiController extends Controller
         $splitted_account = explode("-", $transaksi->account);
         $SEGMEN_3 = $splitted_account[2];
         $SEGMEN_4 = $splitted_account[3];
+        $SEGMEN_5 = $splitted_account[4];
+        $SEGMEN_6 = $splitted_account[5];
 
-        return (String) ItemMaster::where([['SEGMEN_1', $transaksi->item], ['SEGMEN_3', $SEGMEN_3], ['SEGMEN_4', $SEGMEN_4]])->first()['id'];
+        return (String) ItemMaster::where([['SEGMEN_1', $transaksi->item], ['SEGMEN_3', $SEGMEN_3], ['SEGMEN_4', $SEGMEN_4], ['SEGMEN_5', $SEGMEN_5], ['SEGMEN_6', $SEGMEN_6]])->first()['id'];
     }
 
     public function getAttributes($type, $batch = null)
