@@ -142,7 +142,7 @@
                               var result = this._insertPicker = $("<input>").datepicker({ defaultDate: new Date() })
                               result.on("change", function() {
                                 date_field = result.val()
-                                console.log(new Date(date_field).getDate())
+                                
                                 if (validateTransaksiDate(date_field)) {
                                   date_field = ("0" + new Date(date_field).getDate()).slice(-2) + '-' + ("0" + (new Date(date_field).getMonth() + 1)).slice(-2) + '-' + new Date(date_field).getFullYear()
                                   if (mainaccount != null) {
@@ -160,9 +160,15 @@
                               date_field = ("0" + new Date(value).getDate()).slice(-2) + '-' + ("0" + (new Date(value).getMonth() + 1)).slice(-2) + '-' + new Date(value).getFullYear()
                               result.on("change", function() {
                                 date_field = result.val()
-                                date_field = ("0" + new Date(date_field).getDate()).slice(-2) + '-' + ("0" + (new Date(date_field).getMonth() + 1)).slice(-2) + '-' + new Date(date_field).getFullYear()
-                                if (mainaccount != null) {
-                                  getCombination()
+
+                                if (validateTransaksiDate(date_field)) {
+                                  date_field = ("0" + new Date(date_field).getDate()).slice(-2) + '-' + ("0" + (new Date(date_field).getMonth() + 1)).slice(-2) + '-' + new Date(date_field).getFullYear()
+                                  if (mainaccount != null) {
+                                    getCombination()
+                                  }
+                                } else {
+                                  toastr.error("Mohon input <b>tanggal transaksi</b> yang valid. Terima kasih", "Tanggal transaksi tidak valid.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:10e3});
+                                  $(result).val(null)
                                 }
                               })
                               return result;   
@@ -470,7 +476,7 @@
                     var date = today.getDate()
                     var year = today.getFullYear()
                     
-                    if (date > 5 && (new Date(dateInput).getMonth() < month)) {
+                    if ((date > 5 && (new Date(dateInput).getMonth() < month)) || (new Date(dateInput).getMonth() > month)) {
                       return false
                     } 
 
