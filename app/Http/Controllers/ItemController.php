@@ -10,6 +10,7 @@ use App\User;
 use App\Models\AkunBank;
 
 use Validator;
+use Excel;
 
 use App\Models\Item;
 use App\Models\KantorCabang;
@@ -96,16 +97,9 @@ class ItemController extends Controller
     public function listTransaksi()
     {
         $master_item = ItemMaster::orderby('kode_item')->get();
-        // $jenis = ItemAnggaranMaster::withTrashed()->where('type', 1)->get();
-        // $kelompok = ItemAnggaranMaster::withTrashed()->where('type', 2)->get();
-        // $pos = ItemAnggaranMaster::withTrashed()->where('type', 3)->get();
         return view('master.item.index', [
             'items' => $master_item, 
-            'no' => 1, 
-            // 'jenis' => $jenis,
-            // 'kelompok' => $kelompok,
-            // 'pos' => $pos
-        ]);
+            'no'    => 1]);
     }
     public function listAnggaran()
     {
@@ -364,7 +358,7 @@ class ItemController extends Controller
         $name_kegiatan = $this->mAnggaranModel->where('VALUE', $request->kegiatan)->first();
 
         $validatorItem = Validator::make($request->all(),
-            ['kode_item' => 'unique:item_master,kode_item,'.$id],
+            ['kode_item' => 'unique:item_master_transaksi,kode_item,'.$id],
             ['kode_item.unique' => 'Kode item sudah ada.']
         );
 
@@ -667,28 +661,20 @@ class ItemController extends Controller
          $db = $db->toArray(); 
 
          if($db){
-            $after_update = [
-             'alert' => 'danger',
-             'title' => 'Data gagal diubah, data sudah ada.'
-             ];
-             return redirect()->back()->with('after_update', $after_update);
+            $after_update = ['alert' => 'danger','title' => 'Data gagal diubah, data sudah ada.'];
+            return redirect()->back()->with('after_update', $after_update);
          }
          else{
- 
-         $after_update = [
-             'alert' => 'success',
-             'title' => 'Data berhasil diubah.'
-         ];
- 
-         $data = [
-             
-             'arahan_rups' => $request->arahan_rups
-         ];
- 
-         
-         $update = \App\Models\ArahanRups::where('id', $id)->update($data);
 
-         return redirect()->back()->with('after_update', $after_update);
+            $after_update = [
+                'alert' => 'success',
+                'title' => 'Data berhasil diubah.'
+            ];
+
+            $data = ['arahan_rups' => $request->arahan_rups];
+
+            $update = \App\Models\ArahanRups::where('id', $id)->update($data);
+            return redirect()->back()->with('after_update', $after_update);
          }
          
      }
@@ -699,43 +685,211 @@ class ItemController extends Controller
              'alert' => 'success',
              'title' => 'Data berhasil dihapus.'
          ];
-         $update = \App\Models\RejectReason::where('id', $id)->delete();
 
+         $update = \App\Models\RejectReason::where('id', $id)->delete();
          return redirect()->back()->with('after_delete', $after_delete);
      }
 
     public function delete_program_prioritas(Request $request, $id)
-     {
-         
- 
+    {
          $after_delete = [
              'alert' => 'success',
              'title' => 'Data berhasil dihapus.'
          ];
- 
-         
  
          $update = \App\Models\ProgramPrioritas::where('id', $id)->delete();
-
          return redirect()->back()->with('after_delete', $after_delete);
-      }
+    }
 
-    
-     
     public function delete_arahan_rups(Request $request, $id)
     {
-         
- 
          $after_delete = [
              'alert' => 'success',
              'title' => 'Data berhasil dihapus.'
          ];
- 
-         
- 
-         $update = \App\Models\ArahanRups::where('id', $id)->delete();
 
+         $update = \App\Models\ArahanRups::where('id', $id)->delete();
          return redirect()->back()->with('after_delete', $after_delete);
+    }
+
+    public function importXls()
+    {
+        return view('master.item.import-xls');
+    }
+
+    public function importXlsProcess(Request $request)
+    {
+        $input = array('type' => $request->type);
+        $input['ext'] = strtolower($request->file->getClientOriginalExtension());
+
+        $validator = Validator::make($input,
+            [
+                'type' => 'required|not_in:-1',
+                'ext' => 'in:xls,xlsx'],
+            [
+                'ext.in' => 'File yang diunggah untuk insert ke database harus berekstensi : <b>xls, xlsx, atau csv</b>.', 
+                'type.required' => 'Jenis item wajib dipilih.']);   
+
+        if ($validator->passes()) {
+            $data = Excel::selectSheetsByIndex(0)->load($request->file->getRealPath(), function($reader) {})->toArray();
+            // dd($data);
+            switch ($input['type']) {
+                case 'transaksi':
+                    $this->validateTransaksiXlsColumns($data[0]);
+                    $result = $this->insertTransaksiXlsData($data);
+                    if (count($result) > 0) {
+                        return redirect()->back()->withErrors($result);
+                    }
+                    redirect()->back();
+                    break;
+                default:
+                    $this->validateAnggaranXlsColumns($data[0]);
+                    break;
+            }
+        }
+
+        return redirect()->back()->withErrors($validator);
+    }
+
+    public function validateTransaksiXlsColumns($data)
+    {
+        $validator = Validator::make($data, 
+            [
+                "kode_item" => "present",
+                "item"      => "present",
+                "account"   => "present",
+                // "account_dec"   => "present",
+                "program"   => "present",
+                // "prog_dec"  => "present",
+                "kpkc"      => "present",
+                // "kpkc_dec"  => "present",
+                "divisi"    => "present",
+                // "div_dec"   => "present",
+                "sub_pos"   => "present",
+                // "suppos_dec" => "present",
+                "mata_anggaran" => "present",
+                // "mata_ang_dec"  => "present",
+                "display_item_semua_cabang" => "present"], 
+            [
+                "kode_item.present" => "<b>Kolom Kode Item</b> harus ada pada file Excel yang diupload.",
+                "item.present" => "<b>Kolom Item</b> harus ada pada file Excel yang diupload.",
+                "account.present" => "<b>Kolom Account</b> harus ada pada file Excel yang diupload.",
+                // "account_dec.present" => "<b>Kolom Deskripsi Account</b> harus ada pada file Excel yang diupload.",
+                "program.present" => "<b>Kolom Program</b> harus ada pada file Excel yang diupload.",
+                // "prog_dec.present" => "<b>Kolom </b> harus ada pada file Excel yang diupload.",
+                "kpkc.present" => "<b>Kolom KPKC</b> harus ada pada file Excel yang diupload.",
+                // "kpkc_dec.present" => "<b>Kolom Nama KPKC</b> harus ada pada file Excel yang diupload.",
+                "divisi.present" => "<b>Kolom Divisi</b> harus ada pada file Excel yang diupload.",
+                // "div_dec.present" => "<b>Kolom Nama Divisi</b> harus ada pada file Excel yang diupload.",
+                "sub_pos.present" => "<b>Kolom Subpos</b> harus ada pada file Excel yang diupload.",
+                // "suppos_dec.present" => "<b>Kolom Nama Subpos</b> harus ada pada file Excel yang diupload.",
+                "mata_anggaran.present" => "<b>Kolom Mata Anggaran</b> harus ada pada file Excel yang diupload.",
+                // "mata_ang_dec.present" => "<b>Kolom Nama Mata Anggaran</b> harus ada pada file Excel yang diupload.",
+                "display_item_semua_cabang.present" => "<b>Kolom Display Item untuk Semua Cabang</b> harus ada pada file Excel yang diupload."]);
+
+        if ($validator->passes()) {
+            return true;
+        }
+        return redirect()->back()->withErrors($validator);
+    }
+
+    public function insertTransaksiXlsData($data)
+    {
+        $insert_success = $errors = [];
+        if (isset($data) && !empty($data) && count($data) > 0) {
+            foreach ($data as $key => $value) {
+                $input = [
+                    'kode_item' => $value['kode_item'],
+                    'nama_item' => $value['item'],
+                    'SEGMEN_1'  => $this->isExistInDB($value['account'], 'account'),
+                    'SEGMEN_2'  => $this->isExistInDB($value['program'], 'program'),
+                    'SEGMEN_3'  => $this->isExistInDB($value['kpkc'], 'kpkc'),
+                    'SEGMEN_4'  => $this->isExistInDB($value['divisi'], 'divisi'),
+                    'SEGMEN_5'  => $this->isExistInDB($value['sub_pos'], 'sub_pos'),
+                    'SEGMEN_6'  => $this->isExistInDB($value['mata_anggaran'], 'mata_anggaran'),
+                    'is_displayed'  => $value['display_item_semua_cabang'] == 'Y' ? 1 : 0,
+                    'created_by'    => \Auth::user()->id];
+
+                $validate[$key] = Validator::make($input, 
+                    [
+                        'kode_item' => 'required',
+                        'nama_item' => 'required',
+                        'SEGMEN_1'  => 'not_in:-',
+                        'SEGMEN_2'  => 'not_in:-',
+                        'SEGMEN_3'  => 'not_in:-',
+                        'SEGMEN_4'  => 'not_in:-',
+                        'SEGMEN_5'  => 'not_in:-',
+                        'SEGMEN_6'  => 'not_in:-'], 
+                    [
+                        'kode_item.required'    => '<b>Nilai Kode Item ('.$value['kode_item'].')</b> pada <b>row '.($key+1).'</b> harus diisi. Row gagal diinput.',
+                        'nama_item.required'    => '<b>Nilai Nama Item ('.$value['item'].')</b> pada <b>row '.($key+1).'</b> harus diisi. Row gagal diinput.',
+                        'SEGMEN_1.not_in'       => '<b>Nilai (ID) Account ('.$value['account'].')</b> pada <b>row '.($key+1).'</b> tidak terdapat di basis data. Row gagal diinput.',
+                        'SEGMEN_2.not_in'       => '<b>Nilai (ID) Program ('.$value['program'].')</b> pada <b>row '.($key+1).'</b> tidak terdapat di basis data. Row gagal diinput.',
+                        'SEGMEN_3.not_in'       => '<b>Nilai (ID) KPKC ('.$value['kpkc'].')</b> pada <b>row '.($key+1).'</b> tidak terdapat di basis data. Row gagal diinput.',
+                        'SEGMEN_4.not_in'       => '<b>Nilai (ID) Divisi ('.$value['divisi'].')</b> pada <b>row '.($key+1).'</b> tidak terdapat di basis data. Row gagal diinput.',
+                        'SEGMEN_5.not_in'       => '<b>Nilai (ID) Subpos ('.$value['sub_pos'].')</b> pada <b>row '.($key+1).'</b> tidak terdapat di basis data. Row gagal diinput.',
+                        'SEGMEN_6.not_in'       => '<b>Nilai (ID) Mata Anggaran ('.$value['mata_anggaran'].')</b> pada <b>row '.($key+1).'</b> tidak terdapat di basis data. Row gagal diinput.']);
+                
+                if ($validate[$key]->passes()) {
+                    $kodeIsStored = ItemMaster::where('kode_item', $input['kode_item'])->first();
+                    if (!$kodeIsStored) {
+                        ItemMaster::create($input);
+                        $insert_success[$key] = 'Item dengan <b>Kode Item '.$input['kode_item'].'</b> berhasil diinput.';
+                    } else {
+                        ItemMaster::where('kode_item', $input['kode_item'])->update($input);
+                        $insert_success[$key] = 'Item dengan <b>Kode Item '.$input['kode_item'].'</b> berhasil diperbarui.';
+                    }
+                }
+
+                if (count($validate[$key]->failed()) == 8) {
+                    unset($validate[$key]);
+                }
+            }
+
+            foreach ($validate as $val) { 
+                foreach ($val->errors()->messages() as $value) {
+                    array_push($errors, $value);
+                }
+            }
+
+            if (count($insert_success) > 0) { session()->flash('insert_success', $insert_success); }
+        } else {
+            $errors = ['1' => 'Data Excel tidak boleh kosong.'];
+        }
+
+        return $errors;
+    }
+
+    public function isExistInDB($value, $type)
+    {
+        $return = null;
+        switch ($type) {
+            case 'account':
+                $return = Item::where('MAINACCOUNTID', $value)->first() ? $value : '-';
+                break;
+            case 'program':
+                $return = Program::where('VALUE', $value)->first() ? $value : '-';
+                break;
+            case 'kpkc':
+                $return = KantorCabang::where('VALUE', $value)->first() ? $value : '-';
+                break;
+            case 'divisi':
+                $return = Divisi::where('VALUE', $value)->first() ? $value : '-';
+                break;
+            case 'sub_pos':
+                $return = SubPos::where('VALUE', $value)->first() ? $value : '-';
+                break;
+            case 'mata_anggaran':
+                $return = Kegiatan::where('VALUE', $value)->first() ? $value : '-';
+                break;
+        }
+
+        return $return;
+    }
+
+    public function validateAnggaranXlsColumns($data)
+    {
+
     }
 
 }

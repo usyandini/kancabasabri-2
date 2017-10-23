@@ -28,6 +28,13 @@ trait BudgetControlTrait
 		}
 
 		if ($isInsert || $currentHistory->savepoint_amount != $trans->anggaran) {
+			if (!isset($trans->isNew) && $isInsert) {
+				
+			} else if (!$isInsert) {
+				if ($trans->currently_rejected == true) {
+					$trans->total = 0;
+				}
+			}
 			$input['actual_amount'] = $result['actual_anggaran'] = (int)$currentHistory->actual_amount - (int)$trans->total;
 			$result['anggaran'] = $currentHistory->savepoint_amount; 
 			
@@ -39,15 +46,19 @@ trait BudgetControlTrait
 		return $result;
 	}
 
-	public function resetCalibrateBecauseDeleteOrUpdate($accounts)
+	public function resetSavePoint($account)
+	{
+		$localBudgetControl = BudgetControlHistory::where([
+			['month_period', $account->month], 
+			['year_period', $account->year],
+			['account', $account->account]])->first();
+		$this->updateSavePoint((int)$localBudgetControl->savepoint_amount, $localBudgetControl->id);
+	}
+
+	public function resetCalibrateBecauseDeleteOrUpdate($accounts, $afterReject = null)
 	{
 		foreach ($accounts as $acc) {
-			$localBudgetControl = BudgetControlHistory::where([
-				['month_period', $acc->month], 
-				['year_period', $acc->year],
-				['account', $acc->account]])->first();
-			$this->updateSavePoint((int)$localBudgetControl->savepoint_amount, $localBudgetControl->id);
-
+			$this->resetSavePoint($acc);
 			$transaksis = Transaksi::where('account', $acc->account)
 							->whereYear('tgl', '=', $acc->year)
 							->whereMonth('tgl', '=', $acc->month)->get()->filter(function($transaksi) {
@@ -57,6 +68,14 @@ trait BudgetControlTrait
 			foreach ($transaksis as $transaksi) {
 				$transaksi_date = new Carbon(str_replace(':AM', ' AM', $transaksi->tgl));
 				$currentHistory = $this->getHistory($transaksi_date, $transaksi->account);
+				
+				if ($transaksi->batch->latestStat()->stat == 3 || $transaksi->batch->latestStat()->stat == 5 || $transaksi->currently_rejected == 1) {
+					$transaksi->total = 0;
+					$transaksiUpdate['currently_rejected'] = $afterReject ? 1 : $transaksi->currently_rejected;
+				} else {
+					$transaksiUpdate['currently_rejected'] = 0;
+				}
+
 				$budgetUpdate['actual_amount'] = $transaksiUpdate['actual_anggaran'] = (int)$currentHistory->actual_amount - (int)$transaksi->total;
 				$transaksiUpdate['is_anggaran_safe'] = ((int)$budgetUpdate['actual_amount'] < 0) ? false : true;
 

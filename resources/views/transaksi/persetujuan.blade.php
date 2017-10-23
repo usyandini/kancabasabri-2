@@ -17,6 +17,9 @@
                 .contoh {
                   background: rgb(247, 137, 136);
                 }
+                .contohh {
+                  background: rgb(255, 204, 0);
+                }
               </style>
               @endsection
 
