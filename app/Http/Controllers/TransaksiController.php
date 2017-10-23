@@ -666,7 +666,11 @@ class TransaksiController extends Controller
                 FROM dbcabang.dbo.transaksi T
                     LEFT JOIN dbcabang.dbo.batches B ON T.batch_id = B.id 
                     RIGHT JOIN AX_DEV.dbo.PIL_KCTRANSAKSI KC ON T.id = KC.RECID
-                WHERE KC.PIL_POSTED = 1 AND B.cabang = 24
+                WHERE
+                    KC.PIL_POSTED = 1 AND B.cabang = ".$cabang." AND
+                    DATEPART(MONTH, T.tgl) >= ".$awal." AND 
+                    DATEPART(MONTH, T.tgl) <= ".$akhir." AND 
+                    DATEPART(YEAR, T.tgl) = ".$transyear."
                 GROUP BY DATEPART(MONTH, T.tgl), DATEPART(YEAR, T.tgl), T.item, KC.PIL_KPKC, KC.PIL_DIVISI, KC.PIL_SUBPOS, KC.PIL_MATAANGGARAN) T2
                 LEFT JOIN dbcabang.dbo.item_master_transaksi MT ON 
                         T2.ITEM = MT.SEGMEN_1 AND 
