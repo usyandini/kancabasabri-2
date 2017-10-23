@@ -644,21 +644,32 @@ class TransaksiController extends Controller
     public function reportQuery($cabang, $awal, $akhir, $transyear)
     {
         return \DB::select("
-                SELECT T.ITEM AS ITEM, 
-                    MT.nama_item AS DESCRIPTION, 
-                    SUM(T.TOTAL) AS REALISASI_ANGGARAN, 
-                    MAX(T.anggaran) AS ANGGARAN_AWAL, 
-                    MIN(T.actual_anggaran) AS SISA_ANGGARAN 
-                FROM dbcabang.dbo.transaksi T
-                    LEFT JOIN dbcabang.dbo.item_master_transaksi MT ON T.item = MT.SEGMEN_1
-                    LEFT JOIN dbcabang.dbo.batches B ON T.batch_id = B.id
-                    RIGHT JOIN AX_DEV.dbo.PIL_KCTRANSAKSI KC ON T.id = KC.RECID
-                WHERE KC.PIL_POSTED = 1 AND 
-                        B.cabang = ".$cabang." AND 
-                        DATEPART(MONTH, T.tgl) >= ".$awal." AND 
-                        DATEPART(MONTH, T.tgl) <= ".$akhir." AND 
-                        DATEPART(YEAR, T.tgl) = ".$transyear."
-                GROUP BY T.ITEM, MT.nama_item");
+                SELECT 
+                    T2.ITEM AS ITEM, 
+                    MT.nama_item AS DESCRIPTION,
+                    SUM(T2.ANGGARAN_AWAL) AS ANGGARAN_AWAL,
+                    SUM(T2.REALISASI_ANGGARAN) AS REALISASI_ANGGARAN,
+                    SUM(T2.SISA_ANGGARAN) AS SISA_ANGGARAN 
+                FROM (SELECT 
+                            DATEPART(MONTH, T.tgl) AS MONTH, 
+                            DATEPART(YEAR, T.tgl) AS YEAR, 
+                            T.item AS ITEM, 
+                            B.cabang AS CABANG, 
+                            MAX(T.anggaran) AS ANGGARAN_AWAL,
+                            SUM(T.total) AS REALISASI_ANGGARAN,
+                            MIN(T.actual_anggaran) AS SISA_ANGGARAN 
+                        FROM dbcabang.dbo.transaksi T
+                        LEFT JOIN dbcabang.dbo.batches B ON T.batch_id = B.id
+                        RIGHT JOIN AX_DEV.dbo.PIL_KCTRANSAKSI KC ON T.id = KC.RECID
+                        WHERE
+                            KC.PIL_POSTED = 1 AND B.cabang = ".$cabang." AND
+                            DATEPART(MONTH, T.tgl) >= ".$awal." AND 
+                            DATEPART(MONTH, T.tgl) <= ".$akhir." AND 
+                            DATEPART(YEAR, T.tgl) = ".$transyear."
+                        GROUP BY DATEPART(MONTH, T.tgl), DATEPART(YEAR, T.tgl), T.item, B.cabang) T2
+                    LEFT JOIN dbcabang.dbo.item_master_transaksi MT ON T2.ITEM = MT.SEGMEN_1
+                WHERE MT.SEGMEN_3 = T2.CABANG
+                GROUP BY T2.ITEM, MT.nama_item");
     }
     
     public function filter_result_realisasi($cabang, $awal, $akhir, $transyear)
