@@ -10,7 +10,7 @@
     <table>
       @forelse($berkas as $value)
       <tr>
-        <td width="25%"><a href="data:{{ url('transaksi/berkas/download').'/'.$value->id }}" target="_blank">{{ $value->file_name }}</a></td>
+        <td width="25%"><a href="{{ url('transaksi/berkas/download').'/'.$value->id }}" target="_blank">{{ $value->file_name }}</a></td>
         <td width="25%"><b>{{ $value->created_at }}</b></td>
         <td width="5%">
           @if($editable && Gate::check('berkas_t'))
