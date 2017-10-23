@@ -55,7 +55,7 @@
                             <form method="POST" action="{{ url('transaksi/filter/reports') }}">
                               <div class="row">
                                 {{ csrf_field() }}
-                                <div class="col-xs-3">
+                                <div class="col-xs-3 col-xl-3">
                                   <div class="form-group">
                                     <label>Kantor Cabang</label>
                                     <select class="select2 form-control" name="cabang" required>
@@ -69,7 +69,7 @@
                                     </select>
                                   </div>
                                 </div>
-                                <div class="col-xs-2">
+                                <div class="col-xl-3 col-xs-3 col-md-3">
                                   <div class="form-grpup">
                                     <label>Periode Awal</label>
                                     <select class="select2 form-control" name="awal" required>
@@ -80,7 +80,7 @@
                                     </select>
                                   </div>
                                 </div>
-                                <div class="col-xs-2">
+                                <div class="col-xl-3 col-xs-3">
                                   <div class="form-grpup">
                                     <label>Periode Akhir</label>
                                     <select class="select2 form-control" name="akhir" required>
@@ -91,7 +91,7 @@
                                     </select>
                                   </div>
                                 </div>
-                                <div class="col-xs-2">
+                                <div class="col-xl-3 col-xs-3">
                                   <div class="form-group">
                                     <label>Tahun</label>
                                     <select class="select2 form-control" name="transyear" required>
