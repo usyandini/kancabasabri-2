@@ -160,7 +160,7 @@
                               date_field = ("0" + new Date(value).getDate()).slice(-2) + '-' + ("0" + (new Date(value).getMonth() + 1)).slice(-2) + '-' + new Date(value).getFullYear()
                               result.on("change", function() {
                                 date_field = result.val()
-
+                                
                                 if (validateTransaksiDate(date_field)) {
                                   date_field = ("0" + new Date(date_field).getDate()).slice(-2) + '-' + ("0" + (new Date(date_field).getMonth() + 1)).slice(-2) + '-' + new Date(date_field).getFullYear()
                                   if (mainaccount != null) {
@@ -253,9 +253,9 @@
                             },
                             editTemplate: function(value) {
                               var val = addCommas(value);
-                              var result = jsGrid.fields.text.prototype.editTemplate.call(this)
-                              $(result).val(val)
-                              return result
+                              anggaran_field = jsGrid.fields.text.prototype.editTemplate.call(this)
+                              $(anggaran_field).val(val)
+                              return anggaran_field
                             },
                             insertTemplate: function(value) {
                               anggaran_field = jsGrid.fields.text.prototype.insertTemplate.call(this)
@@ -281,9 +281,9 @@
                             },
                             editTemplate: function(value) {
                               var val = addCommas(value);
-                              var result = jsGrid.fields.text.prototype.editTemplate.call(this)
-                              $(result).val(val)
-                              return result
+                              actual_anggaran = jsGrid.fields.text.prototype.editTemplate.call(this)
+                              $(actual_anggaran).val(val)
+                              return actual_anggaran
                             },
                             insertTemplate: function(value) {
                               actual_anggaran = jsGrid.fields.text.prototype.insertTemplate.call(this)
