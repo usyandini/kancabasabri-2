@@ -236,9 +236,6 @@
                         @can('manajemen_i_t')
                         <li class="is-shown {{ checkActiveMenu('item/transaksi') }}"><a href="{{ url('/item/transaksi', $parameters = [], $secure = null) }}" class="menu-item">Item Transaksi</a></li>
                         @endcan
-                        @can('manajemen_i_a')
-                        <li class="is-shown {{ checkActiveMenu('item/anggaran') }}"><a href="{{ url('/item/anggaran', $parameters = [], $secure = null) }}" class="menu-item">Item Anggaran</a></li>
-                        @endcan
                         <li class="is-shown {{ checkActiveMenu('item/import') }}"><a href="{{ url('/item/import', $parameters = [], $secure = null) }}" class="menu-item">Import Item</a></li>
                         @can('manajemen_i')
                         <li class="is-shown {{ checkActiveMenu('item') }}"><a href="{{ url('/item', $parameters = [], $secure = null) }}" class="menu-item">Manajemen Item</a>

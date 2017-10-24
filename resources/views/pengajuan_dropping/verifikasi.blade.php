@@ -206,8 +206,6 @@
 	        // 'satu puluh' => SALAH
 	        // 'satu ratus' => SALAH
 	        // 'satu juta' => BENAR 
-	        // @#$%^ WT*
-	        
 	        // hasil bagi bisa satuan, belasan, ratusan jadi langsung kita gunakan rekursif
 	        $hasil_bagi = (int)($angka / 1000000);
 	        $hasil_mod = $angka % 1000000;
@@ -218,7 +216,7 @@
 	        // karena batas maksimum integer untuk 32bit sistem adalah 2147483647
 	        // maka kita gunakan fmod agar dapat menghandle angka yang lebih besar
 	        $hasil_mod = fmod($angka, 1000000000);
-	        return trim(sprintf('%s milyar %s', terbilang($hasil_bagi), terbilang($hasil_mod)));
+	        return trim(sprintf('%s miliar %s', terbilang($hasil_bagi), terbilang($hasil_mod)));
 	    } else if ($angka < 1000000000000000) {
 	        // bilangan 'triliun'
 	        $hasil_bagi = $angka / 1000000000000;

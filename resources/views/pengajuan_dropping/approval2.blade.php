@@ -329,7 +329,7 @@
 																	    <label class="control-label"><b> Verifikasi </b></label>
 						                                                <label class="control-label"> : </label>
 																	        <select class="select form-control" name="verifikasi" required="required" value="{{$b->verifikasi}}" >
-										                                    
+										                                    <option value="">- Pilih Verifikasi -</option>
 										                                    <option value="1" @if ($b->verifikasi=='1')Selected @endif>Diterima</option>
 																			<option value="2" @if ($b->verifikasi=='2')Selected @endif>Ditolak</option>                                                 
 										                                    </select>   
