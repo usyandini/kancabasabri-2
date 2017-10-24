@@ -79,7 +79,7 @@
                                 </div>
                               </div>
                               <div class="col-lg-3 col-xl-3 mb-1">
-                                <a class="btn btn-primary" onclick="cariAnggaran()"><i class="fa fa-search"></i> Cari</a>                                            
+                                <a href="#" class="btn btn-outline-primary" onclick="cariAnggaran()"><i class="fa fa-search"></i> Cari</a>                                            
                                 @if(Gate::check('tambah_a'))
                                 <a href="{{ url('anggaran/tambah') }}" class="btn btn-success"><i class="fa fa-plus"></i> Tambah</a>                                   
                                 @endif
