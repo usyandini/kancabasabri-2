@@ -77,7 +77,7 @@
                                   <label >Penggaturan Perizinan <code>Unit Kerja</code></label>
                                 </div>
                                 <div class="col-md-4">
-                                  <div class="btn btn-sm btn-primary" id="toogle_unit"><i class="fa fa-edit"></i></div>
+                                  <div class="btn btn-sm btn-outline-primary" id="toogle_unit"><i class="fa fa-edit"></i> Konfigurasi</div>
                                 </div>
                               </div>
                               <br />
@@ -86,7 +86,7 @@
                                   <label>Penggaturan Menu <code>Dropping</code></label>
                                 </div>
                                 <div class="col-md-4">
-                                  <div class="btn btn-sm btn-primary"  onclick="open_menu('dropping')"><i class="fa fa-edit"></i></div>
+                                  <div class="btn btn-sm btn-outline-primary"  onclick="open_menu('dropping')"><i class="fa fa-edit"></i> Konfigurasi</div>
                                 </div>
                               </div>
                               <br />
@@ -95,7 +95,7 @@
                                   <label>Penggaturan Menu <code>Pengajuan Dropping</code></label>
                                 </div>
                                 <div class="col-md-4">
-                                  <div class="btn btn-sm btn-primary"  onclick="open_menu('aju_dropping')"><i class="fa fa-edit"></i></div>
+                                  <div class="btn btn-sm btn-outline-primary"  onclick="open_menu('aju_dropping')"><i class="fa fa-edit"></i> Konfigurasi</div>
                                 </div>
                               </div>
                               <br />
@@ -104,7 +104,7 @@
                                   <label>Pengaturan Menu <code>Transaksi</code></label>
                                 </div>
                                 <div class="col-md-4">
-                                  <div class="btn btn-sm btn-primary" onclick="open_menu('transaksi')"><i class="fa fa-edit"></i></div>
+                                  <div class="btn btn-sm btn-outline-primary" onclick="open_menu('transaksi')"><i class="fa fa-edit"></i> Konfigurasi</div>
                                 </div>
                               </div>
                               <br />
@@ -113,7 +113,7 @@
                                   <label>Penggaturan Menu <code>Anggaran</code></label>
                                 </div>
                                 <div class="col-md-4">
-                                  <div class="btn btn-sm btn-primary"  onclick="open_menu('anggaran')"><i class="fa fa-edit"></i></div>
+                                  <div class="btn btn-sm btn-outline-primary"  onclick="open_menu('anggaran')"><i class="fa fa-edit"></i> Konfigurasi</div>
                                 </div>
                               </div>
                               <br />
@@ -122,7 +122,7 @@
                                   <label>Penggaturan Menu <code>Pelaporan</code></label>
                                 </div>
                                 <div class="col-md-4">
-                                  <div class="btn btn-sm btn-primary"  onclick="open_menu('pelaporan')"><i class="fa fa-edit"></i></div>
+                                  <div class="btn btn-sm btn-outline-primary"  onclick="open_menu('pelaporan')"><i class="fa fa-edit"></i> Konfigurasi</div>
                                 </div>
                               </div>
                               <br />
@@ -131,7 +131,7 @@
                                   <label>Penggaturan Menu <code>Manajemen User</code></label>
                                 </div>
                                 <div class="col-md-4">
-                                  <div class="btn btn-sm btn-primary"  onclick="open_menu('user')"><i class="fa fa-edit"></i></div>
+                                  <div class="btn btn-sm btn-outline-primary"  onclick="open_menu('user')"><i class="fa fa-edit"></i> Konfigurasi</div>
                                 </div>
                               </div>
                               <br />
@@ -140,7 +140,7 @@
                                   <label>Penggaturan Menu <code>Manajemen Item</code></label>
                                 </div>
                                 <div class="col-md-4">
-                                  <div class="btn btn-sm btn-primary"  onclick="open_menu('item')"><i class="fa fa-edit"></i></div>
+                                  <div class="btn btn-sm btn-outline-primary"  onclick="open_menu('item')"><i class="fa fa-edit"></i> Konfigurasi</div>
                                 </div>
                               </div>
                             </div>
@@ -154,10 +154,10 @@
                           <div class="card-body">
                             <div class="card-block">
                               <div class="form-actions right">
-                                <a href="{{ url('jenis_user') }}" class="btn btn-warning mr-1">
+                                <a href="{{ url('jenis_user') }}" class="btn btn-danger">
                                   <i class="ft-x"></i> Kembali
                                 </a>    
-                                <button type="submit" class="btn btn-primary">
+                                <button type="submit" class="btn btn-outline-primary">
                                   <i class="fa fa-check-square-o"></i> Simpan
                                 </button>
                               </div>
