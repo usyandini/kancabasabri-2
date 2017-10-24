@@ -113,7 +113,7 @@ class UserController extends Controller
             }
             User::where('id', $id)->update($input);
             $user = User::withTrashed()->where('id', $id)->first();
-
+            
             if ($profile_edit == 'true') {
                 session()->flash('success', 'Data profil anda berhasil diperbarui.');
                 return redirect()->back();    
