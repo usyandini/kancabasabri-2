@@ -719,33 +719,20 @@ class ItemController extends Controller
 
     public function importXlsProcess(Request $request)
     {
-        $input = array('type' => $request->type);
         $input['ext'] = strtolower($request->file->getClientOriginalExtension());
 
         $validator = Validator::make($input,
-            [
-                'type' => 'required|not_in:-1',
-                'ext' => 'in:xls,xlsx'],
-            [
-                'ext.in' => 'File yang diunggah untuk insert ke database harus berekstensi : <b>xls, xlsx, atau csv</b>.', 
-                'type.required' => 'Jenis item wajib dipilih.']);   
+            ['ext' => 'in:xls,xlsx'],
+            ['ext.in' => 'File yang diunggah untuk insert ke database harus berekstensi : <b>xls, xlsx, atau csv</b>.']);   
 
         if ($validator->passes()) {
             $data = Excel::selectSheetsByIndex(0)->load($request->file->getRealPath(), function($reader) {})->toArray();
-            // dd($data);
-            switch ($input['type']) {
-                case 'transaksi':
-                    $this->validateTransaksiXlsColumns($data[0]);
-                    $result = $this->insertTransaksiXlsData($data);
-                    if (count($result) > 0) {
-                        return redirect()->back()->withErrors($result);
-                    }
-                    redirect()->back();
-                    break;
-                default:
-                    $this->validateAnggaranXlsColumns($data[0]);
-                    break;
+            $this->validateTransaksiXlsColumns($data[0]);
+            $result = $this->insertTransaksiXlsData($data);
+            if (count($result) > 0) {
+                return redirect()->back()->withErrors($result);
             }
+            redirect()->back();
         }
 
         return redirect()->back()->withErrors($validator);
@@ -885,11 +872,6 @@ class ItemController extends Controller
         }
 
         return $return;
-    }
-
-    public function validateAnggaranXlsColumns($data)
-    {
-
     }
 
 }
