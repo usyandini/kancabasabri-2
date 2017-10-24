@@ -23,10 +23,8 @@
                   <div class="row breadcrumbs-top">
                     <div class="breadcrumb-wrapper col-xs-12">
                       <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="">Dashboard</a>
-                        </li>
-                        <li class="breadcrumb-item active">Buat Batch Transaksi Baru
-                        </li>
+                        <li class="breadcrumb-item"><a href="{{ url('transaksi') }}">Transaksi</a></li>
+                        <li class="breadcrumb-item active">Buat Batch Transaksi Baru</li>
                       </ol>
                     </div>
                   </div>
@@ -49,8 +47,8 @@
                                 <div class="form-group pull-right">
                                   <form method="POST" action="{{ url('transaksi/create/process') }}">
                                     {{ csrf_field() }}
-                                    <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i> Ya, Buatkan</button>
                                     <a href='{{ url('transaksi') }}' class="btn btn-danger"><i class="fa fa-times"></i> Batal</a>
+                                    <button type="submit" class="btn btn-outline-primary"><i class="fa fa-check"></i> Ya, Buatkan</button>
                                     </form>
                                   </div>
                                 </div>
