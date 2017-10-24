@@ -1107,7 +1107,7 @@ class AnggaranController extends Controller
                     $decode = urldecode($val);
                 }
                 $kode= ItemAnggaranMaster::where('name',$decode)->where('type',2)->first()->kode;
-                $item = ItemMaster::where('kelompok',$kode)->get();
+                $item = ItemMaster::where('kelompok_anggaran',$kode)->get();
                 $array = [];
                 foreach ($item as $row) {
                     array_push($array,$row->pos_anggaran);
@@ -1127,10 +1127,10 @@ class AnggaranController extends Controller
                 }
                 $kode= ItemAnggaranMaster::where('name',$decode)->where('type',1)->first()->kode;
                 // echo $kode;
-                $item = ItemMaster::where('jenis',$kode)->get();
+                $item = ItemMaster::where('jenis_anggaran',$kode)->get();
                 $array = [];
                 foreach ($item as $row) {
-                    array_push($array,$row->kelompok);
+                    array_push($array,$row->kelompok_anggaran);
                 }
                 $return = ItemAnggaranMaster::select('name')->where('type',2)->whereIn('kode',$array)->orderBy('name','ASC')->get(); 
                 // $return = ItemAnggaranMaster::select('name')->where('type',2)->orderBy('name','ASC')->get(); 
