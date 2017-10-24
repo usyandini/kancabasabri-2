@@ -258,7 +258,7 @@ class TransaksiController extends Controller
                 break;
             case 'bank':
                 $header = ['BANK' => '-1', 'BANK_NAME' => 'Silahkan Pilih Bank', 'accessible' => true];
-                $KAS = ['BANK' => 'KAS KC/KCP', 'BANK_NAME' => 'KAS KC/KCP', 'accessible' => true];
+                $KAS = ['BANK' => 'KAS-KC', 'BANK_NAME' => 'KAS KC/KCP', 'accessible' => true];
                 $return = $this->bankModel->get(['BANK','BANK_NAME','ID_CABANG']);
                 
                 foreach ($return as $key => $value) {
