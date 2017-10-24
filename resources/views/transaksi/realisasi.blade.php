@@ -35,15 +35,6 @@
               <div class="content-body"><!-- Basic scenario start -->
                 <section id="basic">
                   <div class="row">
-                    @if(count($errors->all()) > 0)
-                    <duv class="col-xs-6">
-                      <div class="alert alert-danger alert-dismissable">
-                        @foreach ($errors->all() as $error)
-                        {!! $error !!}<br>
-                        @endforeach
-                      </div>
-                    </div>
-                    @endif
                     <div class="col-xs-12">
                       <div class="card">
                         <div class="card-header">
@@ -53,6 +44,17 @@
                         <div class="card-body collapse in">
                           <div class="card-block">
                             <form method="POST" action="{{ url('transaksi/filter/reports') }}">
+                              @if(count($errors->all()) > 0)
+                              <div class="row">
+                                <div class="col-xs-4">
+                                  <div class="alert alert-danger alert-dismissable">
+                                    @foreach ($errors->all() as $error)
+                                    {!! $error !!}<br>
+                                    @endforeach
+                                  </div>
+                                </div>
+                              </div>
+                              @endif
                               <div class="row">
                                 {{ csrf_field() }}
                                 <div class="col-xs-3 col-xl-3">
@@ -63,7 +65,7 @@
                                       @foreach($cabang as $cab)
                                       {{ $id = $cab->VALUE."00" }}
                                       @if(Gate::check("unit_".$id) )
-                                      <option value="{{ $cab->VALUE }}" {{ $filters['cabang'] == $cab->VALUE ? 'selected=""' : '' }}>{{ $cab->DESCRIPTION }}</option>
+                                      <option value="{{ $cab->VALUE }}" {{ ($filters['cabang'] == $cab->VALUE ? 'selected=""' : (old('cabang') == $cab->VALUE ? 'selected=""' : '')) }}>{{ $cab->DESCRIPTION }}</option>
                                       @endif
                                       @endforeach
                                     </select>
@@ -75,7 +77,7 @@
                                     <select class="select2 form-control" name="awal" required>
                                       <option selected disabled>Pilih Periode Awal</option>
                                       @foreach($months as $month)
-                                      <option value="{{ array_search($month, $months) }}" {{ $filters['awal'] == array_search($month, $months)? 'selected=""' : '' }}>{{ $month }}</option>
+                                      <option value="{{ array_search($month, $months) }}" {{ ($filters['awal'] == array_search($month, $months) ? 'selected=""' : (old('awal') == array_search($month, $months) ? 'selected=""' : '')) }}>{{ $month }}</option>
                                       @endforeach
                                     </select>
                                   </div>
@@ -86,7 +88,7 @@
                                     <select class="select2 form-control" name="akhir" required>
                                       <option selected disabled>Pilih Periode Akhir</option>
                                       @foreach($months as $month)
-                                      <option value="{{ array_search($month, $months) }}" {{ $filters['akhir'] == array_search($month, $months)? 'selected=""' : '' }}>{{ $month }}</option>
+                                      <option value="{{ array_search($month, $months) }}" {{ ($filters['akhir'] == array_search($month, $months)? 'selected=""' : (old('akhir') == array_search($month, $months) ? 'selected=""' : '')) }}>{{ $month }}</option>
                                       @endforeach
                                     </select>
                                   </div>
@@ -95,13 +97,11 @@
                                   <div class="form-group">
                                     <label>Tahun</label>
                                     <select class="select2 form-control" name="transyear" required>
-                                      <option selected disabled
-                                      >Pilih Tahun</option>
+                                      <option selected disabled>Pilih Tahun</option>
                                       <?php
                                       $thn_skr = date('Y');
-                                      for($x=$thn_skr; $x >= 2005; $x--){
-                                        ?>
-                                        <option {{ ($filters['transyear'] == $x) ? 'selected=""' : '' }} value="{{$x}}" {{ ($x == $filters['transyear'] ? 'selected=""' : '') }}>{{$x}}</option>
+                                      for ($x = $thn_skr;$x >= 2005;$x--){?>
+                                        <option {{ ($filters['transyear'] == $x) ? 'selected=""' : '' }} value="{{$x}}" {{ ($x == $filters['transyear'] ? 'selected=""' : (old('transyear') == $x ? 'selected=""' : '')) }}>{{$x}}</option>
                                         <?php }?>
                                       </select>
                                     </div>
