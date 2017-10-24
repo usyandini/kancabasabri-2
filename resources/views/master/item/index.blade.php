@@ -36,7 +36,7 @@
             							<h4 class="card-title">Daftar Item Transaksi</h4>
             							<a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
             							<div class="row mt-1">
-            								<div class="col-md-12 col-xl-3">
+            								<div class="col-md-12 col-xl-5">
             									<a href="{{ url('item/create/transaksi') }}" class="btn btn-success btn-sm pull-left"><i class="fa fa-plus"></i> Tambah Item Baru</a>
                                                                   <a href="{{ url('item/import') }}" class="btn btn-outline-success btn-sm ml-1"><i class="fa fa-file-excel-o"></i> Import dari Excel</a>
             								</div>
@@ -58,7 +58,7 @@
             											<tr>
                                                                                     {{-- <th width="20p">No</th> --}}
             												<th id="filterable"><center>Kode Item</center></th>
-            												<th id="filterable">Item</th>
+            												<th id="filterable" width="200px">Item</th>
             												<th>Account</th>
             												<th>Display</th>
                                                                                     <th>Tanggal Dibuat</th>
@@ -77,10 +77,10 @@
             												<td>{{ $item->created_at }}</td>
                                                                                     <td>
                                                                                           <center>
-            													<a href="{{ url('item/edit/transaksi').'/'.$item->id }}" class="btn btn-outline-info btn-sm">
+            													<a href="{{ url('item/edit/transaksi').'/'.$item->id }}" class="btn btn-outline-info btn-sm mb-1">
             														<i class="fa fa-edit"></i> Edit</a>
 
-            														<a href="#" class="btn btn-danger btn-sm" onclick="deleteUser({{ $item->id }})">
+            														<a href="#" class="btn btn-danger btn-sm mb-1" onclick="deleteUser({{ $item->id }})">
             															<i class="fa fa-times"></i> Hapus</a>
             														</center></td>
             													</tr>
