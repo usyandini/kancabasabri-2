@@ -258,7 +258,7 @@ class TransaksiController extends Controller
                 break;
             case 'bank':
                 $header = ['BANK' => '-1', 'BANK_NAME' => 'Silahkan Pilih Bank', 'accessible' => true];
-                $KAS = ['BANK' => 'KAS KC/KCP', 'BANK_NAME' => 'KAS KC/KCP', 'accessible' => true];
+                $KAS = ['BANK' => 'KAS-KC', 'BANK_NAME' => 'KAS KC/KCP', 'accessible' => true];
                 $return = $this->bankModel->get(['BANK','BANK_NAME','ID_CABANG']);
                 
                 foreach ($return as $key => $value) {
@@ -667,7 +667,8 @@ class TransaksiController extends Controller
                     LEFT JOIN dbcabang.dbo.batches B ON T.batch_id = B.id 
                     RIGHT JOIN AX_DEV.dbo.PIL_KCTRANSAKSI KC ON T.id = KC.RECID
                 WHERE
-                    KC.PIL_POSTED = 1 AND B.cabang = ".$cabang." AND
+                    
+                    B.cabang = ".$cabang." AND
                     DATEPART(MONTH, T.tgl) >= ".$awal." AND 
                     DATEPART(MONTH, T.tgl) <= ".$akhir." AND 
                     DATEPART(YEAR, T.tgl) = ".$transyear."
@@ -679,6 +680,8 @@ class TransaksiController extends Controller
                         T2.SUBPOS = MT.SEGMEN_5 AND 
                         T2.MATAANGGARAN = MT.SEGMEN_6
                 GROUP BY T2.ITEM, T2.CABANG, T2.DIVISI, T2.SUBPOS, T2.MATAANGGARAN, MT.nama_item");
+
+        // KC.PIL_POSTED = 1 AND 
     }
     
     public function filter_result_realisasi($cabang, $awal, $akhir, $transyear)

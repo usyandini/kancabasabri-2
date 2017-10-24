@@ -858,20 +858,19 @@
                             }
                           },
                           { name: "satuan", 
-                            type: "text", 
+                            type: "select", 
                             align: "left",
                             title: "Satuan", 
-                            width: 80,
-                            readOnly:true,
-                            insertTemplate: function() {
-                              satuan_field_insert = jsGrid.fields.text.prototype.insertTemplate.call(this);
-                              return satuan_field_insert; 
-                            },
-                            editTemplate: function(value) {
-                              satuan_field_edit = jsGrid.fields.text.prototype.editTemplate.call(this);
-                              $(satuan_field_edit).val(value);
-                              return satuan_field_edit; 
-                            } 
+                            valueField: "name", 
+                            textField: "name", 
+                            width: 100,
+                            items: getData('satuan'),
+                            validate: {
+                              message : "Pilih Satuan Terlebih dahulu." ,
+                              validator :function(value, item) {
+                                  return value != "None" ;
+                              } 
+                            }
                           },
                           { name: "nilai_persatuan", 
                             type: "text", 
@@ -1339,7 +1338,7 @@
                                 tmp = []
                                 for(i=0;i<=data.length;i++){
                                   tmp[i]={};
-                                  if(type == 'jenis'||type == 'kelompok'||type == 'posanggaran'){
+                                  if(type == 'jenis'||type == 'kelompok'||type == 'posanggaran'||type == "satuan"){
                                     if(i == 0){
                                       tmp[0]["name"] = "None";
                                     }else{
