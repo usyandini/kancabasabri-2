@@ -154,17 +154,13 @@ Route::group(['middleware' => 'auth'], function() {
 		Route::get('/transaksi', 'ItemController@listTransaksi');
 		Route::get('/import', 'ItemController@importXls');
 		Route::post('/import/process/', 'ItemController@importXlsProcess');
-		Route::get('/anggaran', 'ItemController@listAnggaran');
 		Route::get('/get/combination/{id}/{tanggal}', 'ItemController@getCombination');
 		Route::get('/create/transaksi', 'ItemController@createItemTransaksi');
 		Route::get('/create/anggaran', 'ItemController@createItemAnggaran');
 		Route::post('/add/transaksi', 'ItemController@addItemTransaksi');
-		Route::post('/add/anggaran', 'ItemController@addItemAnggaran');
 		Route::post('/submit/{type}', 'ItemController@submitAnggaranItem');
 		Route::get('/edit/transaksi/{id}', 'ItemController@editItemTransaksi');
-		Route::get('/edit/anggaran/{id}', 'ItemController@editItemAnggaran');
 		Route::post('/update/transaksi/{id}', 'ItemController@updateItemTransaksi');
-		Route::post('/update/anggaran/{id}', 'ItemController@updateItemAnggaran');
 		Route::post('/update/item/{id}', 'ItemController@updateItem');
 		Route::get('/delete/{jenis}/{id}', 'ItemController@destroy');
 	});

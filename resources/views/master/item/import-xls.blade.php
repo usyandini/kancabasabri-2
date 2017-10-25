@@ -68,15 +68,7 @@
                               </div>
                               <div class="form-body">
                                 <div class="row">
-                                  <div class="form-group col-md-5">
-                                    <label for="eventRegInput1">Jenis Item</label>
-                                    <select class="form-control" name="type" required="">
-                                      <option disabled="" selected="" value="-1">Pilih Jenis Item</option>
-                                      <option value="transaksi">Item Transaksi</option>
-                                      <option value="anggaran">Item Anggaran</option>
-                                    </select>
-                                  </div>
-                                  <div class="form-group col-md-7">
+                                  <div class="form-group col-md-7 col-xl-7 col-sm-12">
                                     <label for="eventRegInput1">File Excel <code class="font-small-1">(.xls, .xlsx, atau .csv)</code></label>
                                     <input type="file" required="" class="form-control" placeholder="" name="file">
                                   </div>

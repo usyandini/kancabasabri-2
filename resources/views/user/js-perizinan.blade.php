@@ -38,9 +38,11 @@
     toastr.info("{!! session('success') !!}", "Update Berhasil", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:10e3});
     @endif
     @if (isset($profile_edit))
+      $('input[name="profile_edit"]').val('true');
+    @endif
+    @if (isset($profile_edit) && !Gate::check('edit_u'))
     $('input[type="checkbox"]').iCheck('disable')
     $('select[name="jenis_user"]').prop('disabled', true)
-    $('input[name="profile_edit"]').val('true');
 
     $('label#dropping').html('')
     $('label#pengajuan').html('')

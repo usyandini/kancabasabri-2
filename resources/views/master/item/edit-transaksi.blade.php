@@ -67,18 +67,70 @@
                                     <input type="text" required="" class="form-control" placeholder="Item" id="nama_item" name="nama_item" value="{{ $items->nama_item }}">
                                   </div>
                                 </div>
-                                <div class="form-group">
-                                  <div class="row">
-                                    <div class="col-md-12 col-sm-12">
-                                      <div class="form-group skin skin-square">
-                                        <label>Display item untuk seluruh cabang</label>
-                                        <fieldset>
-                                          <input type="radio" id='item_display_on' name="item_display" value="1" {{ $items->is_displayed == "1" ? 'checked=""' : '' }}>
-                                          <label class="mr-2">Iya</label>
-                                          <input type="radio" id='item_display_off' name="item_display" value="0" {{ $items->is_displayed == "0" ? 'checked=""' : '' }}>
-                                          <label>Tidak</label>
-                                        </fieldset>
+                                <div class="row">
+                                  <div class="form-group col-md-12 col-sm-12">
+                                    <label for="jenis">Jenis Anggaran</label>
+                                    <div = "row">
+                                      <div class = "col-md-10 col-sm-10">
+                                        <select class="select2 form-control" name="jenis" id="jenis" required>
+                                          <option value="" disabled selected>Jenis Anggaran</option>
+                                          @foreach($jenis as $ja)
+                                          <option {{ $items->jenis_anggaran == $ja->kode ? 'selected=""' : '' }} value="{{ $ja->kode }}">{{ $ja->kode }} - {{ $ja->name }}</option>
+                                          @endforeach
+                                        </select>
                                       </div>
+                                      <div class = "col-md-2 col-sm-2">
+                                        <button type="button" class="btn btn-success" data-target="#tambahJenis" data-toggle="modal">
+                                          <i class="fa fa-plus"></i>
+                                        </button>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="form-group col-md-12 col-sm-12">
+                                    <label for="eventRegInput3">Kelompok Anggaran</label>
+                                    <div = "row">
+                                      <div class = "col-md-10 col-sm-10">
+                                        <select class="select2 form-control" id="kelompok" name="kelompok" required>
+                                          <option value="" disabled selected>Kelompok Anggaran</option>
+                                          @foreach($kelompok as $ka)
+                                          <option {{ $items->kelompok_anggaran == $ka->kode ? 'selected=""' : '' }} value="{{ $ka->kode }}">{{ $ka->kode }} - {{ $ka->name }}</option>
+                                          @endforeach
+                                        </select>
+                                      </div>
+                                      <div class = "col-md-2 col-sm-2">
+                                        <button type="button" class="btn btn-success" data-target="#tambahKelompok" data-toggle="modal">
+                                          <i class="fa fa-plus"></i>
+                                        </button>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="form-group col-md-12 col-sm-12">
+                                    <label for="eventRegInput4">Pos Anggaran</label>
+                                    <div = "row">
+                                      <div class = "col-md-10 col-sm-10">
+                                        <select class="select2 form-control" id="pos" name="pos" required>
+                                          <option value="" disabled selected>Pos Anggaran</option>
+                                          @foreach($pos as $pa)
+                                          <option {{ $items->pos_anggaran == $pa->kode ? 'selected=""' : '' }} value="{{ $pa->kode }}">{{ $pa->kode }} - {{ $pa->name }}</option>
+                                          @endforeach
+                                        </select>
+                                      </div>
+                                      <div class = "col-md-2 col-sm-2">
+                                        <button type="button" class="btn btn-success" data-target="#tambahPos" data-toggle="modal">
+                                          <i class="fa fa-plus"></i>
+                                        </button>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="col-md-12 col-sm-12">
+                                    <div class="form-group skin skin-square">
+                                      <label>Display item untuk seluruh cabang</label>
+                                      <fieldset>
+                                        <input type="radio" id='item_display_on' name="item_display" value="1" {{ $items->is_displayed == "1" ? 'checked=""' : '' }}>
+                                        <label class="mr-2">Iya</label>
+                                        <input type="radio" id='item_display_off' name="item_display" value="0" {{ $items->is_displayed == "0" ? 'checked=""' : '' }}>
+                                        <label>Tidak</label>
+                                      </fieldset>
                                     </div>
                                   </div>
                                 </div>

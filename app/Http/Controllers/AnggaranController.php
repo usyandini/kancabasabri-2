@@ -11,7 +11,6 @@ use App\Models\ListAnggaran;
 use App\Models\FileListAnggaran;
 use App\Models\Kegiatan;
 use App\Models\SubPos;
-use App\Models\ItemMasterAnggaran;
 use App\Models\ItemMaster;
 use App\Models\ItemAnggaranMaster;
 use App\Models\BatasAnggaran;
@@ -1052,25 +1051,7 @@ class AnggaranController extends Controller
                 $return = $this->kanCabModel->select('DESCRIPTION', 'VALUE')->where("VALUE",$id)->get();
                 break;
             case 'satuan':
-                $value = explode("->",$id);
-                $decode = urldecode($id);
-                if(count($value)>1){
-                    $val = $value[0];
-                    for($i = 1;$i<count($val);$i++){
-                        $val .= "/".$value[$i];
-                    }
-                    $decode = urldecode($val);
-                }
-                // echo $decode;
-                $kode= Kegiatan::where('DESCRIPTION',$decode)->first()->VALUE;
-                
-                $item = ItemMasterAnggaran::where('SEGMEN_6',$kode)->get();
-                $array = [];
-                foreach ($item as $row) {
-                    array_push($array,$row->satuan);
-                }
-                $return = ItemAnggaranMaster::select('name')->where('type',4)->whereIn('kode',$array)->orderBy('name','ASC')->get(); 
-                // $return = ItemAnggaranMaster::select('name')->where('type',4)->orderBy('name','ASC')->get(); 
+                $return = ItemAnggaranMaster::select('name')->where('type',4)->orderBy('name','ASC')->get();
                 break;
             case 'mataanggaran':
                 $value = explode("->",$id);
@@ -1085,7 +1066,7 @@ class AnggaranController extends Controller
                 // echo $decode;
                 $kode= SubPos::where('DESCRIPTION',$decode)->first()->VALUE;
                 
-                $item = ItemMasterAnggaran::where('SEGMEN_5',$kode)->get();
+                $item = ItemMaster::where('SEGMEN_5',$kode)->get();
                 $array = [];
                 foreach ($item as $row) {
                     array_push($array,$row->SEGMEN_6);
@@ -1106,7 +1087,7 @@ class AnggaranController extends Controller
                 // echo $decode;
                 $kode= ItemAnggaranMaster::where('name',$decode)->where('type',3)->first()->kode;
                 // echo $kode;
-                $item = ItemMasterAnggaran::where('pos_anggaran',$kode)->get();
+                $item = ItemMaster::where('pos_anggaran',$kode)->get();
                 $array = [];
                 foreach ($item as $row) {
                     // echo $row->sub_pos;
@@ -1126,7 +1107,7 @@ class AnggaranController extends Controller
                     $decode = urldecode($val);
                 }
                 $kode= ItemAnggaranMaster::where('name',$decode)->where('type',2)->first()->kode;
-                $item = ItemMasterAnggaran::where('kelompok',$kode)->get();
+                $item = ItemMaster::where('kelompok_anggaran',$kode)->get();
                 $array = [];
                 foreach ($item as $row) {
                     array_push($array,$row->pos_anggaran);
@@ -1146,10 +1127,10 @@ class AnggaranController extends Controller
                 }
                 $kode= ItemAnggaranMaster::where('name',$decode)->where('type',1)->first()->kode;
                 // echo $kode;
-                $item = ItemMasterAnggaran::where('jenis',$kode)->get();
+                $item = ItemMaster::where('jenis_anggaran',$kode)->get();
                 $array = [];
                 foreach ($item as $row) {
-                    array_push($array,$row->kelompok);
+                    array_push($array,$row->kelompok_anggaran);
                 }
                 $return = ItemAnggaranMaster::select('name')->where('type',2)->whereIn('kode',$array)->orderBy('name','ASC')->get(); 
                 // $return = ItemAnggaranMaster::select('name')->where('type',2)->orderBy('name','ASC')->get(); 
