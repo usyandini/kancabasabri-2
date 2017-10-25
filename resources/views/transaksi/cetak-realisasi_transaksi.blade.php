@@ -71,7 +71,8 @@
                 <td colspan="2" style="padding-top:20px; padding-bottom:20px;"><b><center>JUMLAH</center></b></td>
                 <td align="right"><b>Rp {{ number_format($tmp_anggaran, 2, ',','.') }}</b></td>
                 <td align="right"><b>Rp {{ number_format($tmp_realisasi, 2, ',','.') }}</b></td>
-                <td align="right"></td>
+                <?php $sisa=$tmp_anggaran-$tmp_realisasi; ?>
+                <td align="right"><b>Rp {{ number_format($sisa, 2, ',','.') }}</b></td>
               </tr>
               <tr id="tf2">
                 @if($filters['start'] == $filters['end'])
