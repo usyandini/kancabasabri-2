@@ -471,6 +471,7 @@ class DroppingController extends Controller
             //header('Pragma: public');
             header('Content-Length: '.$berkas->size);
             readfile($file);
+            unlink($file);
             exit($data);
 
         }

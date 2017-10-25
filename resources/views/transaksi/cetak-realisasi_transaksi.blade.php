@@ -17,7 +17,7 @@
   </style>
     <div id="header">
         <img src="{{ asset('app-assets/images/asabri-logo-kecil.png', $secure = null) }}" align="left">
-        <h3><center>LAPORAN REALISASI MATA ANGGARAN PT ASABRI (PERSERO)</center></h3>
+        <h3><center>LAPORAN REALISASI TRANSAKSI PT ASABRI (PERSERO)</center></h3>
         <h3><center>{{ $cabangs->where('VALUE', $filters['cabang'])->first()['DESCRIPTION']}}</center></h3>
         @if($filters['start'] == $filters['end'])
         <h4><center>Periode {{ $filters['start'] }} Th. {{ $filters['year'] }}</center></h4>
@@ -31,6 +31,7 @@
             <thead>
               <tr>
                 <th class="bg-lighten-2" width="40%"><center>DESKRIPSI ANGGARAN</center></th>
+                <th class="bg-lighten-2" width="40%"><center>URAIAN</center></th>
                 <th class="bg-lighten-2" width="20%"><center>ANGGARAN</center></th>
                 <th class="bg-lighten-2" width="20%"><center>REALISASI PERIODE</center></th>
                 <th class="bg-lighten-2" width="20%"><center>SISA ANGGARAN</center></th>
@@ -40,45 +41,47 @@
                 <th class="bg-lighten-2"><center>2</center></th>
                 <th class="bg-lighten-2"><center>3</center></th>
                 <th class="bg-lighten-2"><center>4</center></th>
+                <th class="bg-lighten-2"><center>5</center></th>
               </tr>
             </thead>
             <tbody>
               <tr id="th1">
-                <td style="padding-top:40px;" colspan="4"><b>a. Kancab</b></td>
-                {{-- <td></td>
-                <td></td>
-                <td></td> --}}
+                <td style="padding-top:20px; padding-left:20px;" colspan="5"><b>a. Kancab</b></td>
+                
               </tr>
               <?php 
                 $no=1; 
                 $tmp_anggaran = $tmp_realisasi = $tmp_sisa = 0;
+                $longkap="longkap";
               ?>
               @foreach($transaksi as $trans)
               <tr>
-                <td style="padding-left:20px;" width="35%">{{$no++}}.) {{ $trans->DESCRIPTION }}</td>
+                <td style="padding-left:20px;" width="35%">@if ($longkap != $trans->DESCRIPTION) {{$no++}}.) {{ $trans->DESCRIPTION }} @endif</td>
+                <td style="padding-left:20px;" width="35%">{{ $trans->URAIAN }}</td>
                 <td align="right" width="20%">Rp {{ number_format($trans->ANGGARAN_AWAL, 2, ',','.') }}</td>
                 <td align="right" width="20%">Rp {{ number_format($trans->REALISASI_ANGGARAN, 2, ',','.') }}</td>
                 <td align="right" width="25%">Rp {{ number_format($trans->SISA_ANGGARAN, 2, ',','.') }}</td>
               </tr>
               <?php 
+                $longkap = $trans->DESCRIPTION;
                 $tmp_anggaran += $trans->ANGGARAN_AWAL;
                 $tmp_realisasi += $trans->REALISASI_ANGGARAN;
                 $tmp_sisa += $trans->SISA_ANGGARAN;
               ?>
               @endforeach
               <tr id="tf1">
-                <td><center>JUMLAH</center></td>
+                <td colspan="2"><center>JUMLAH</center></td>
                 <td align="right"><b>Rp {{ number_format($tmp_anggaran, 2, ',','.') }}</b></td>
                 <td align="right"><b>Rp {{ number_format($tmp_realisasi, 2, ',','.') }}</b></td>
                 <td align="right"><b>Rp {{ number_format($tmp_sisa, 2, ',','.') }}</b></td>
               </tr>
               <tr id="tf2">
                 @if($filters['start'] == $filters['end'])
-                <td><center>TOTAL DROPPING PERIODE <br>{{ $filters['start'] }} {{ $filters['year'] }}</br></center></td>
+                <td colspan="2" style="padding-top:20px;"><center>TOTAL DROPPING PERIODE <br>{{ $filters['start'] }} {{ $filters['year'] }}</center></br></td>
                 @else
-                <td><center>TOTAL DROPPING PERIODE <br>{{ $filters['start'] }} s.d {{ $filters['end'] }} {{ $filters['year'] }}</br></center></td>
+                <td colspan="2" style="padding-top:20px;"><center>TOTAL DROPPING PERIODE <br>{{ $filters['start'] }} s.d {{ $filters['end'] }} {{ $filters['year'] }}</center></br></td>
                 @endif
-                <td align="right"><b>Rp {{ number_format($tmp_realisasi, 2, ',','.') }}</b></td>
+                <td colspan="3" align="right"><center><b>Rp {{ number_format($tmp_realisasi, 2, ',','.') }}</b></center></td>
               </tr>
             </tbody>
           </table>

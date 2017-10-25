@@ -19,13 +19,13 @@
               @section('content')
               <div class="content-header row">
                 <div class="content-header-left col-md-6 col-xs-12 mb-2">
-                  <h3 class="content-header-title mb-0">Report Realisasi Mata Anggaran</h3>
+                  <h3 class="content-header-title mb-0">Report Realisasi Transaksi</h3>
                   <div class="row breadcrumbs-top">
                     <div class="breadcrumb-wrapper col-xs-12">
                       <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="/transaksi">Transaksi</a>
                         </li>
-                        <li class="breadcrumb-item active">Report Realisasi Mata Anggaran
+                        <li class="breadcrumb-item active">Report Realisasi Transaksi
                         </li>
                       </ol>
                     </div>
@@ -52,7 +52,7 @@
                         </div>
                         <div class="card-body collapse in">
                           <div class="card-block">
-                            <form method="POST" action="{{ url('transaksi/filter/reports') }}">
+                            <form method="POST" action="{{ url('transaksi/filter/reports_transaksi') }}">
                               <div class="row">
                                 {{ csrf_field() }}
                                 <div class="col-xs-3 col-xl-3">
@@ -111,7 +111,7 @@
                                   <div class="col-xs-6">
                                     <button type="submit" class="btn btn-outline-primary"><i class="fa fa-search"></i> Cari</button>
                                     @if($filters)
-                                    <a href="{{ url('transaksi/report/realisasi') }}" class="btn btn-danger"><i class="fa fa-times"></i></a>
+                                    <a href="{{ url('transaksi/report/realisasi_transaksi') }}" class="btn btn-danger"><i class="fa fa-times"></i></a>
                                     @endif
                                   </div>
                                 </div>
@@ -131,9 +131,9 @@
                             <div class="row">
                               @if ($transaksi)
                               <div class="col-md-12">
-                                <a href="{{ URL('transaksi/realisasi/'.$filters['cabang'].'/'.$filters['awal'].'/'.$filters['akhir'].'/'.$filters['transyear'].'/excel') }}" class="btn btn-success btn-sm pull-right mr-1" target="_blank"><i class="fa fa-file-excel-o"></i> Ekspor ke Excel</a>
-                                <a href="{{ URL('transaksi/realisasi/'.$filters['cabang'].'/'.$filters['awal'].'/'.$filters['akhir'].'/'.$filters['transyear'].'/export') }}" class="btn btn-success btn-sm pull-right mr-1" target="_blank"><i class="fa fa-file-pdf-o"></i> Ekspor ke PDF</a>
-                                <a href="{{ URL('transaksi/realisasi/'.$filters['cabang'].'/'.$filters['awal'].'/'.$filters['akhir'].'/'.$filters['transyear'].'/print') }}" class="btn btn-success btn-sm pull-right mr-1" target="_blank"><i class="fa fa-print"></i> Cetak Realisasi</a>
+                                <a href="{{ URL('transaksi/realisasi_transaksi/'.$filters['cabang'].'/'.$filters['awal'].'/'.$filters['akhir'].'/'.$filters['transyear'].'/excel') }}" class="btn btn-success btn-sm pull-right mr-1" target="_blank"><i class="fa fa-file-excel-o"></i> Ekspor ke Excel</a>
+                                <a href="{{ URL('transaksi/realisasi_transaksi/'.$filters['cabang'].'/'.$filters['awal'].'/'.$filters['akhir'].'/'.$filters['transyear'].'/export') }}" class="btn btn-success btn-sm pull-right mr-1" target="_blank"><i class="fa fa-file-pdf-o"></i> Ekspor ke PDF</a>
+                                <a href="{{ URL('transaksi/realisasi_transaksi/'.$filters['cabang'].'/'.$filters['awal'].'/'.$filters['akhir'].'/'.$filters['transyear'].'/print') }}" class="btn btn-success btn-sm pull-right mr-1" target="_blank"><i class="fa fa-print"></i> Cetak Realisasi</a>
                               </div>
                               @endif
                             </div>
@@ -151,6 +151,7 @@
                                  <thead>
                                    <tr align="middle">
                                     <th id="filterable"><center>Deskripsi Anggaran</center></th>
+                                    <th id="filterable"><center>Uraian</center></th>
                                     <th id="filterable">Anggaran</th>
                                     <th id="filterable">Realisasi Periode</th>
                                     <th id="filterable">Sisa Anggaran</th>
@@ -158,18 +159,25 @@
                                 </thead>
                                 <tbody>
                                   @if($filters)
-                                  <?php $no=1; ?>
+                                  <?php $no=1;
+                                  $longkap="longkap";
+                                  ?>
                                   @forelse($transaksi as $trans)
                                   <tr>
-                                   <td>{{ $trans->DESCRIPTION }}</td>
+                                   <td>@if ($longkap != $trans->DESCRIPTION) {{ $trans->DESCRIPTION }} @endif</td>
+                                   <td>{{ $trans->URAIAN }}</td>
                                    <td>Rp. {{ number_format($trans->ANGGARAN_AWAL, 2, ',','.') }}</td>
                                    <td><b>Rp. {{ number_format($trans->REALISASI_ANGGARAN, 2, ',','.') }}</b></td>
                                    <td>Rp. {{ number_format($trans->SISA_ANGGARAN, 2, ',','.') }}</td>
                                  </tr>
+                                 <?php
+                                  $longkap=$trans->DESCRIPTION;
+                                  ?>
                                  @empty
                                  <tr>
                                    <td colspan="4">Data tidak ditemukan.</td>
                                  </tr>
+                                 
                                  @endforelse
                                  @endif
                                </tbody>

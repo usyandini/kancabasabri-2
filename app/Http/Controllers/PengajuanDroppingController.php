@@ -455,6 +455,7 @@ class PengajuanDroppingController extends Controller
             header('Cache-Control: must-revalidate');
             header('Content-Length: '.$berkas->size);
             readfile($file);
+            unlink($file);
             exit($data);
 
         }

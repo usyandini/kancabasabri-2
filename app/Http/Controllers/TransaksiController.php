@@ -461,6 +461,7 @@ class TransaksiController extends Controller
         // header('Pragma: public');
             header('Content-Length: ' . filesize($file));
             readfile($file);
+            unlink($file);
             exit($data);
         }
     }
@@ -593,6 +594,17 @@ class TransaksiController extends Controller
             'filters'   => null]);
     }
 
+    // Report ralisasi transaksi
+    public function realisasi_transaksi()
+    {
+        $cabang = KantorCabang::where('VALUE','<>','00')->get();
+
+        return view('transaksi.realisasi_transaksi', [
+            'cabang'    => $cabang,
+            'months'    => $this->months,
+            'filters'   => null]);
+    }
+
     public function cetakRealisasi($cabang, $awal, $akhir, $transyear, $type)
     {           
         $transaksi = $this->reportQuery($cabang, $awal, $akhir, $transyear);
@@ -621,6 +633,34 @@ class TransaksiController extends Controller
         }
       }
       
+      public function cetakRealisasi_transaksi($cabang, $awal, $akhir, $transyear, $type)
+    {           
+        $transaksi = $this->reportQuery_transaksi($cabang, $awal, $akhir, $transyear);
+        $start = $this->months[$awal];
+        $end = $this->months[$akhir];
+        $excel = $type == 'excel' ? true : false;
+
+        $data = [
+            'cabangs'   => KantorCabang::get(),
+            'filters'   => array('cabang' => $cabang, 'start' => $start, 'end' => $end,  'year' => $transyear),
+            'transaksi' => $transaksi,
+            'excel'     => $excel];
+
+        switch($type){
+            case 'print' :
+                return view('transaksi.cetak-realisasi_transaksi', $data);
+                break;
+            case 'export' :
+                $pdf = PDF::loadView('transaksi.export-realisasi_transaksi', $data);
+                return $pdf->download('Realisasi Anggaran-'.date("dmY").'.pdf');
+                // return $pdf->stream('Realisasi Anggaran-'.date("dmY").'.pdf'); // hanya untuk view pdf
+                break;
+            case 'excel' :
+                return view('transaksi.export-realisasi_transaksi', $data);
+                break;
+        }
+      }
+
       public function filter_handle_realisasi(Request $request)
       {
         $validatorRR = Validator::make($request->all(),
@@ -639,6 +679,29 @@ class TransaksiController extends Controller
 
         if($validatorRR->passes()){
             return redirect('transaksi/filter/realisasi/'.$request->cabang.'/'.$request->awal.'/'.$request->akhir.'/'.$request->transyear);    
+        }else{
+            return redirect()->back()->withErrors($validatorRR)->withInput();
+        }
+    }
+
+    public function filter_handle_realisasi_transaksi(Request $request)
+      {
+        $validatorRR = Validator::make($request->all(),
+            [
+                'cabang'    => 'required',
+                'awal'      => 'required',
+                'akhir'     => 'required',
+                'transyear' => 'required'
+            ], 
+            [
+                'cabang.required'  => 'Kantor cabang harus dipilih.',
+                'awal.required'  => 'Periode awal harus dipilih.',
+                'akhir.required'  => 'Periode akhir harus dipilih.',
+                'transyear.required'  => 'Tahun periode harus dipilih.'
+            ]);
+
+        if($validatorRR->passes()){
+            return redirect('transaksi/filter/realisasi_transaksi/'.$request->cabang.'/'.$request->awal.'/'.$request->akhir.'/'.$request->transyear);    
         }else{
             return redirect()->back()->withErrors($validatorRR)->withInput();
         }
@@ -683,6 +746,45 @@ class TransaksiController extends Controller
 
         // KC.PIL_POSTED = 1 AND 
     }
+
+    public function reportQuery_transaksi($cabang, $awal, $akhir, $transyear)
+    {
+        return \DB::select("SELECT
+                    T2.ITEM AS ITEM,
+                    MT.nama_item AS DESCRIPTION,
+                    T2.A AS URAIAN,
+                    SUM(T2.ANGGARAN_AWAL) AS ANGGARAN_AWAL,
+                    SUM(T2.REALISASI_ANGGARAN) AS REALISASI_ANGGARAN,
+                    SUM(T2.SISA_ANGGARAN) AS SISA_ANGGARAN 
+                        FROM (SELECT 
+                    DATEPART(MONTH, T.tgl) AS MONTH, 
+                    DATEPART(YEAR, T.tgl) AS YEAR, 
+                    T.[desc] AS A,
+                    T.item AS ITEM, 
+                    B.cabang AS CABANG,
+                    B.divisi AS DIVISI,
+                    T.sub_pos AS SUBPOS,
+                    T.mata_anggaran AS MATAANGGARAN, 
+                    MAX(T.anggaran) AS ANGGARAN_AWAL,
+                    SUM(T.total) AS REALISASI_ANGGARAN,
+                    MIN(T.actual_anggaran) AS SISA_ANGGARAN  
+                FROM dbcabang.dbo.transaksi T
+                    LEFT JOIN dbcabang.dbo.batches B ON T.batch_id = B.id 
+                WHERE
+                    B.cabang = ".$cabang." AND
+                    DATEPART(MONTH, T.tgl) >= ".$awal." AND 
+                    DATEPART(MONTH, T.tgl) <= ".$akhir." AND 
+                    DATEPART(YEAR, T.tgl) = ".$transyear."
+                GROUP BY DATEPART(MONTH, T.tgl), DATEPART(YEAR, T.tgl), T.item, B.cabang, B.divisi, T.sub_pos, T.mata_anggaran, T.[desc]) T2
+                LEFT JOIN dbcabang.dbo.item_master_transaksi MT ON 
+                        T2.ITEM = MT.SEGMEN_1 AND 
+                        T2.CABANG = MT.SEGMEN_3 AND 
+                        T2.DIVISI = MT.SEGMEN_4 AND 
+                        T2.SUBPOS = MT.SEGMEN_5 AND 
+                        T2.MATAANGGARAN = MT.SEGMEN_6
+                GROUP BY T2.ITEM, T2.CABANG, T2.DIVISI, T2.SUBPOS, T2.MATAANGGARAN, MT.nama_item, T2.A");
+
+    }
     
     public function filter_result_realisasi($cabang, $awal, $akhir, $transyear)
     {
@@ -693,6 +795,22 @@ class TransaksiController extends Controller
         $end = array_search($akhir, $this->months);
     
         return view('transaksi.realisasi', [
+            'cabang'    => $cabangs,
+            'filters'   => array('cabang'=>$cabang, 'awal'=>$awal, 'akhir'=>$akhir, 'transyear' => $transyear),
+            'transaksi' => $transaksi,
+            'months'    => $this->months,
+            'items'     => ItemMaster::get()]);
+    }
+
+    public function filter_result_realisasi_transaksi($cabang, $awal, $akhir, $transyear)
+    {
+        $cabangs = KantorCabang::get();
+        $transaksi = $this->reportQuery_transaksi($cabang, $awal, $akhir, $transyear);
+        // dd($transaksi);
+        $start = array_search($awal, $this->months);
+        $end = array_search($akhir, $this->months);
+    
+        return view('transaksi.realisasi_transaksi', [
             'cabang'    => $cabangs,
             'filters'   => array('cabang'=>$cabang, 'awal'=>$awal, 'akhir'=>$akhir, 'transyear' => $transyear),
             'transaksi' => $transaksi,
