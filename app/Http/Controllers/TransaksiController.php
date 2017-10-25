@@ -753,6 +753,7 @@ class TransaksiController extends Controller
                     T2.ITEM AS ITEM,
                     MT.nama_item AS DESCRIPTION,
                     T2.A AS URAIAN,
+                    T2.Z AS IDTRANSAKSI,
                     SUM(T2.ANGGARAN_AWAL) AS ANGGARAN_AWAL,
                     SUM(T2.REALISASI_ANGGARAN) AS REALISASI_ANGGARAN,
                     SUM(T2.SISA_ANGGARAN) AS SISA_ANGGARAN 
@@ -760,6 +761,7 @@ class TransaksiController extends Controller
                     DATEPART(MONTH, T.tgl) AS MONTH, 
                     DATEPART(YEAR, T.tgl) AS YEAR, 
                     T.[desc] AS A,
+                    T.id AS Z,
                     T.item AS ITEM, 
                     B.cabang AS CABANG,
                     B.divisi AS DIVISI,
@@ -775,14 +777,14 @@ class TransaksiController extends Controller
                     DATEPART(MONTH, T.tgl) >= ".$awal." AND 
                     DATEPART(MONTH, T.tgl) <= ".$akhir." AND 
                     DATEPART(YEAR, T.tgl) = ".$transyear."
-                GROUP BY DATEPART(MONTH, T.tgl), DATEPART(YEAR, T.tgl), T.item, B.cabang, B.divisi, T.sub_pos, T.mata_anggaran, T.[desc]) T2
+                GROUP BY DATEPART(MONTH, T.tgl), DATEPART(YEAR, T.tgl), T.item, T.id, B.cabang, B.divisi, T.sub_pos, T.mata_anggaran, T.[desc]) T2
                 LEFT JOIN dbcabang.dbo.item_master_transaksi MT ON 
                         T2.ITEM = MT.SEGMEN_1 AND 
                         T2.CABANG = MT.SEGMEN_3 AND 
                         T2.DIVISI = MT.SEGMEN_4 AND 
                         T2.SUBPOS = MT.SEGMEN_5 AND 
                         T2.MATAANGGARAN = MT.SEGMEN_6
-                GROUP BY T2.ITEM, T2.CABANG, T2.DIVISI, T2.SUBPOS, T2.MATAANGGARAN, MT.nama_item, T2.A");
+                GROUP BY T2.ITEM, T2.CABANG, T2.DIVISI, T2.SUBPOS, T2.MATAANGGARAN, MT.nama_item, T2.A, T2.Z order by DESCRIPTION asc");
 
     }
     

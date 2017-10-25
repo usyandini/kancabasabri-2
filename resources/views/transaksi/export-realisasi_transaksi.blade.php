@@ -39,11 +39,11 @@
 	    	<table>
 	    		<thead>
               <tr>
-                <th class="bg-lighten-2" width="40%"><center>DESKRIPSI ANGGARAN</center></th>
-                <th class="bg-lighten-2" width="40%"><center>URAIAN</center></th>
-                <th class="bg-lighten-2" width="20%"><center>ANGGARAN</center></th>
-                <th class="bg-lighten-2" width="20%"><center>REALISASI PERIODE</center></th>
-                <th class="bg-lighten-2" width="20%"><center>SISA ANGGARAN</center></th>
+                <th class="bg-lighten-2" width="23%"><center>DESKRIPSI ANGGARAN</center></th>
+                <th class="bg-lighten-2" width="23%"><center>URAIAN</center></th>
+                <th class="bg-lighten-2" width="18%"><center>ANGGARAN</center></th>
+                <th class="bg-lighten-2" width="18%"><center>REALISASI PERIODE</center></th>
+                <th class="bg-lighten-2" width="18%"><center>SISA ANGGARAN</center></th>
               </tr>
               <tr>
                 <th class="bg-lighten-2"><center>1</center></th>
@@ -55,7 +55,7 @@
             </thead>
             <tbody>
               <tr id="th1">
-                <td style="padding-top:20px; padding-left:20px;" colspan="5"><b>a. Kancab</b></td>
+                <td style="padding-top:20px; padding-left:20px; padding-bottom:20px;" colspan="5"><b>a. Kancab</b></td>
                 
               </tr>
               <?php 
@@ -65,30 +65,28 @@
               ?>
               @foreach($transaksi as $trans)
               <tr>
-                <td style="padding-left:20px;" width="35%">@if ($longkap != $trans->DESCRIPTION) {{$no++}}.) {{ $trans->DESCRIPTION }} @endif</td>
-                <td style="padding-left:20px;" width="35%">{{ $trans->URAIAN }}</td>
-                <td align="right" width="20%">Rp {{ number_format($trans->ANGGARAN_AWAL, 2, ',','.') }}</td>
-                <td align="right" width="20%">Rp {{ number_format($trans->REALISASI_ANGGARAN, 2, ',','.') }}</td>
-                <td align="right" width="25%">Rp {{ number_format($trans->SISA_ANGGARAN, 2, ',','.') }}</td>
+                <td style="padding-left:20px;">@if ($longkap != $trans->DESCRIPTION) {{$no++}}.) {{ $trans->DESCRIPTION }} @endif</td>
+                <td style="padding-left:20px;">{{ $trans->URAIAN }}</td>
+                <td align="right">@if ($longkap != $trans->DESCRIPTION)Rp {{ number_format($trans->ANGGARAN_AWAL, 2, ',','.') }}<?php $tmp_anggaran += $trans->ANGGARAN_AWAL;?>@endif</td>
+                <td align="right">Rp {{ number_format($trans->REALISASI_ANGGARAN, 2, ',','.') }}</td>
+                <td align="right">Rp {{ number_format($trans->SISA_ANGGARAN, 2, ',','.') }}</td>
               </tr>
               <?php 
                 $longkap = $trans->DESCRIPTION;
-                $tmp_anggaran += $trans->ANGGARAN_AWAL;
                 $tmp_realisasi += $trans->REALISASI_ANGGARAN;
-                $tmp_sisa += $trans->SISA_ANGGARAN;
               ?>
               @endforeach
               <tr id="tf1">
-                <td colspan="2"><center>JUMLAH</center></td>
+                <td colspan="2" style="padding-top:20px; padding-bottom:20px;"><b><center>JUMLAH</center></b></td>
                 <td align="right"><b>Rp {{ number_format($tmp_anggaran, 2, ',','.') }}</b></td>
                 <td align="right"><b>Rp {{ number_format($tmp_realisasi, 2, ',','.') }}</b></td>
-                <td align="right"><b>Rp {{ number_format($tmp_sisa, 2, ',','.') }}</b></td>
+                <td align="right"></td>
               </tr>
               <tr id="tf2">
                 @if($filters['start'] == $filters['end'])
-                <td colspan="2" style="padding-top:20px;"><center>TOTAL DROPPING PERIODE <br>{{ $filters['start'] }} {{ $filters['year'] }}</center></br></td>
+                <td colspan="2" style="padding-top:20px;"><center><b>TOTAL DROPPING PERIODE </b><br>{{ $filters['start'] }} {{ $filters['year'] }}</center></br></td>
                 @else
-                <td colspan="2" style="padding-top:20px;"><center>TOTAL DROPPING PERIODE <br>{{ $filters['start'] }} s.d {{ $filters['end'] }} {{ $filters['year'] }}</center></br></td>
+                <td colspan="2" style="padding-top:20px;"><center><b>TOTAL DROPPING PERIODE </b><br>{{ $filters['start'] }} s.d {{ $filters['end'] }} {{ $filters['year'] }}</center></br></td>
                 @endif
                 <td colspan="3" align="right"><center><b>Rp {{ number_format($tmp_realisasi, 2, ',','.') }}</b></center></td>
               </tr>
