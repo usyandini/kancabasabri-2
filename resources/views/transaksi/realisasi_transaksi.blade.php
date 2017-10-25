@@ -166,7 +166,7 @@
                                   <tr>
                                    <td>@if ($longkap != $trans->DESCRIPTION) {{ $trans->DESCRIPTION }} @endif</td>
                                    <td>{{ $trans->URAIAN }}</td>
-                                   <td>Rp. {{ number_format($trans->ANGGARAN_AWAL, 2, ',','.') }}</td>
+                                   <td>@if ($longkap != $trans->DESCRIPTION) Rp. {{ number_format($trans->ANGGARAN_AWAL, 2, ',','.') }}@endif</td>
                                    <td><b>Rp. {{ number_format($trans->REALISASI_ANGGARAN, 2, ',','.') }}</b></td>
                                    <td>Rp. {{ number_format($trans->SISA_ANGGARAN, 2, ',','.') }}</td>
                                  </tr>
