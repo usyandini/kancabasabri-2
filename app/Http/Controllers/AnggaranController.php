@@ -12,6 +12,7 @@ use App\Models\FileListAnggaran;
 use App\Models\Kegiatan;
 use App\Models\SubPos;
 use App\Models\ItemMaster;
+use App\Models\ItemMasterAnggaran;
 use App\Models\ItemAnggaranMaster;
 use App\Models\BatasAnggaran;
 use App\Models\Divisi;
@@ -1066,10 +1067,10 @@ class AnggaranController extends Controller
                 // echo $decode;
                 $kode= SubPos::where('DESCRIPTION',$decode)->first()->VALUE;
                 
-                $item = ItemMaster::where('SEGMEN_5',$kode)->get();
+                $item = ItemMasterAnggaran::where('sub_pos',$kode)->get();
                 $array = [];
                 foreach ($item as $row) {
-                    array_push($array,$row->SEGMEN_6);
+                    array_push($array,$row->mata_anggaran);
                 }
                 $return = Kegiatan::select('DESCRIPTION')->where('DESCRIPTION','<>','None')->whereIn('VALUE',$array)->orderBy('DESCRIPTION','ASC')->get();
                 // $return = Kegiatan::select('DESCRIPTION')->where('DESCRIPTION','<>','None')->orderBy('DESCRIPTION','ASC')->get();
@@ -1087,11 +1088,11 @@ class AnggaranController extends Controller
                 // echo $decode;
                 $kode= ItemAnggaranMaster::where('name',$decode)->where('type',3)->first()->kode;
                 // echo $kode;
-                $item = ItemMaster::where('pos_anggaran',$kode)->get();
+                $item = ItemMasterAnggaran::where('pos_anggaran',$kode)->get();
                 $array = [];
                 foreach ($item as $row) {
                     // echo $row->sub_pos;
-                    array_push($array,$row->SEGMEN_5);  
+                    array_push($array,$row->sub_pos);  
                 }
                 $return = SubPos::select('DESCRIPTION')->where('DESCRIPTION','<>','None')->whereIn('VALUE',$array)->orderBy('DESCRIPTION','ASC')->get(); 
                 // $return = SubPos::select('DESCRIPTION')->where('DESCRIPTION','<>','None')->orderBy('DESCRIPTION','ASC')->get(); 
@@ -1107,7 +1108,7 @@ class AnggaranController extends Controller
                     $decode = urldecode($val);
                 }
                 $kode= ItemAnggaranMaster::where('name',$decode)->where('type',2)->first()->kode;
-                $item = ItemMaster::where('kelompok_anggaran',$kode)->get();
+                $item = ItemMasterAnggaran::where('kelompok',$kode)->get();
                 $array = [];
                 foreach ($item as $row) {
                     array_push($array,$row->pos_anggaran);
@@ -1127,10 +1128,10 @@ class AnggaranController extends Controller
                 }
                 $kode= ItemAnggaranMaster::where('name',$decode)->where('type',1)->first()->kode;
                 // echo $kode;
-                $item = ItemMaster::where('jenis_anggaran',$kode)->get();
+                $item = ItemMasterAnggaran::where('jenis',$kode)->get();
                 $array = [];
                 foreach ($item as $row) {
-                    array_push($array,$row->kelompok_anggaran);
+                    array_push($array,$row->kelompok);
                 }
                 $return = ItemAnggaranMaster::select('name')->where('type',2)->whereIn('kode',$array)->orderBy('name','ASC')->get(); 
                 // $return = ItemAnggaranMaster::select('name')->where('type',2)->orderBy('name','ASC')->get(); 
