@@ -84,7 +84,7 @@
             					</div>
             					<div class="card-body collapse in">
             						<div class="card-block">
-            							<form enctype="multipart/form-data" role="form" action="{{ URL('acc_pengajuan_dropping2/carimyform') }}" method="GET" >
+            							<form enctype="multipart/form-data" role="form" action="{{ URL('acc_pengajuan_dropping3/carimyform') }}" method="GET" >
             								<div class="row">
             									{{ csrf_field() }}
             									<div class="col-xs-6 col-xl-6">
@@ -124,7 +124,7 @@
             				<script type="text/javascript">
             					function changeUnit(){
             						var cabang = $('#cabang').val();
-            						var uri = "{{ url('acc_pengajuan_dropping2/myform').'/'}}"+ encodeURI(cabang);
+            						var uri = "{{ url('acc_pengajuan_dropping3/myform').'/'}}"+ encodeURI(cabang);
 
             						$.ajax({
             							'async': false, 

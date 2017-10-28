@@ -84,7 +84,7 @@
             					</div>
             					<div class="card-body collapse in">
             						<div class="card-block">
-            							<form enctype="multipart/form-data" role="form" action="{{ URL('pengajuan_dropping/carimyform') }}" method="GET" >
+            							<form enctype="multipart/form-data" role="form" action="{{ URL('acc_pengajuan_dropping/carimyform') }}" method="GET" >
             								<div class="row">
             									{{ csrf_field() }}
             									<div class="col-xs-6 col-xl-6">

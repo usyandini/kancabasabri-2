@@ -39,8 +39,7 @@ class PengajuanDroppingController extends Controller
         $dec_cabang=urldecode($cabang);
         $a =DB::table('pengajuan_dropping_cabang')
         ->where('kantor_cabang',$dec_cabang)
-        ->where('kirim','1')->Orwhere('kirim','2')->Orwhere('kirim','5')
-        ->orderBy('tanggal','DESC')
+        ->where('kirim','<>','3')->where('kirim','<>','4')
         ->lists('tanggal');
         return json_encode($a);
     }

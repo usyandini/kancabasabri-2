@@ -71,7 +71,7 @@
             <div class="row">
               <section id="select-inputs">
                 <div class="row">
-                  <div class="col-xs-6">
+                  <div class="col-xs-12">
                     <div class="card">
                       <div class="card-header">
                         <h4 class="card-title">Pencarian Pengajuan Dropping</h4>
@@ -82,10 +82,10 @@
                           <form enctype="multipart/form-data" role="form" action="{{ URL('pengajuan_dropping/carimyform') }}" method="GET" >
                             <div class="row">
                               {{ csrf_field() }}
-                              <div class="col-xs-6 col-xl-6">
+                              <div class="col-xs-4">
                                 <div class="form-group">
-                                  <label>Kantor Cabang</label>
-                                  <select class="select2 form-control block" name="cabang" id="cabang" onchange="changeUnit()" required="required">
+                                  <label>Kantor Cabang</label><br>
+                                  <select class="select2 form-control block" name="cabang" id="cabang" style="width:300px" onchange="changeUnit()" required="required">
                                     <option value=""> - Pilih Kantor Cabang - </option>
                                     <?php
                                     $second="SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_KPKC]  WHERE VALUE!='00'";
@@ -100,15 +100,15 @@
                                   </select>
                                 </div>
                               </div>
-                              <div class="col-xl-6 col-xs-6 col-md-6">
-                                <div class="form-grpup">
-                                  <label>Tanggal</label>
-                                  <select class="select2 form-control block" name="tanggal" style="width:300px" required="required"></select>
+                              <div class="col-xs-3.5">
+                                <div class="form-group">
+                                  <label>Tanggal</label><br>
+                                  <select class="select2 form-control block" name="tanggal" style="width:200px" required="required"></select>
                                 </div>
                               </div>
                             </div>
                             <div class="row">
-                              <div class="col-xs-6">
+                              <div class="col-xs-7">
                                 <button type="submit" class="btn btn-outline-primary"><i class="fa fa-search "></i> Cari</button>
                               </div>
                             </div>
@@ -155,7 +155,7 @@
                           <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
                           <div class="card-body collapse in">                           
                             <div class="card-block">
-                              <a href="#" class="btn btn-success btn-sm" data-target="#tambah" data-toggle="modal"><i class="fa fa-plus"></i> Tambah Pengajuan</a>
+                              <a href="#" class="btn btn-outline-success btn" data-target="#tambah" data-toggle="modal"><i class="fa fa-plus"></i> Tambah Pengajuan</a>
                               <div class="modal fade" data-backdrop="static" id="tambah" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                                 <div class="modal-dialog">
                                   <div class="modal-content">

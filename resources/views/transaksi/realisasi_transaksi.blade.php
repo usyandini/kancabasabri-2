@@ -152,9 +152,9 @@
                                    <tr align="middle">
                                     <th id="filterable"><center>Deskripsi Anggaran</center></th>
                                     <th id="filterable"><center>Uraian</center></th>
-                                    <th id="filterable">Anggaran</th>
+                                    <th id="filterable">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Anggaran&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
                                     <th id="filterable">Realisasi Periode</th>
-                                    <th id="filterable">Sisa Anggaran</th>
+                                    <th id="filterable">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sisa Anggaran&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
                                   </tr>
                                 </thead>
                                 <tbody>
@@ -164,11 +164,11 @@
                                   ?>
                                   @forelse($transaksi as $trans)
                                   <tr>
-                                   <td>@if ($longkap != $trans->DESCRIPTION) {{ $trans->DESCRIPTION }} @endif</td>
-                                   <td>{{ $trans->URAIAN }}</td>
-                                   <td>@if ($longkap != $trans->DESCRIPTION) Rp. {{ number_format($trans->ANGGARAN_AWAL, 2, ',','.') }}@endif</td>
-                                   <td><b>Rp. {{ number_format($trans->REALISASI_ANGGARAN, 2, ',','.') }}</b></td>
-                                   <td>Rp. {{ number_format($trans->SISA_ANGGARAN, 2, ',','.') }}</td>
+                                   @if ($longkap != $trans->DESCRIPTION)<td style="padding-left:20px;" rowspan = "{{$data_count[$trans->DESCRIPTION]}}"> {{$no++}}.) {{ $trans->DESCRIPTION }}</td> @endif
+                                   <td style="padding-left:20px;">{{ $trans->URAIAN }}</td>
+                                   <td align="right">Rp {{ number_format($trans->ANGGARAN_AWAL, 2, ',','.') }}</td>
+                                   <td align="right"><b>Rp. {{ number_format($trans->REALISASI_ANGGARAN, 2, ',','.') }}</b></td>
+                                   <td align="right">Rp. {{ number_format($trans->SISA_ANGGARAN, 2, ',','.') }}</td>
                                  </tr>
                                  <?php
                                   $longkap=$trans->DESCRIPTION;

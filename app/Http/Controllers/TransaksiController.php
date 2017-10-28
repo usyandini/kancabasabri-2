@@ -639,11 +639,22 @@ class TransaksiController extends Controller
         $start = $this->months[$awal];
         $end = $this->months[$akhir];
         $excel = $type == 'excel' ? true : false;
+        $sebelum="";
+        $data_count= [];
+        foreach ($transaksi as $trans) {
+            if($trans->DESCRIPTION != $sebelum){
+                $sebelum = $trans->DESCRIPTION;
+                $data_count[$trans->DESCRIPTION] = 1;
+            }else{
+                $data_count[$trans->DESCRIPTION]++;
+            }
+        }
 
         $data = [
             'cabangs'   => KantorCabang::get(),
             'filters'   => array('cabang' => $cabang, 'start' => $start, 'end' => $end,  'year' => $transyear),
             'transaksi' => $transaksi,
+            'data_count' => $data_count,
             'excel'     => $excel];
 
         switch($type){
@@ -730,7 +741,7 @@ class TransaksiController extends Controller
                     LEFT JOIN dbcabang.dbo.batches B ON T.batch_id = B.id 
                     RIGHT JOIN AX_DEV.dbo.PIL_KCTRANSAKSI KC ON T.id = KC.RECID
                 WHERE
-                    
+                    KC.PIL_POSTED = 1 AND 
                     B.cabang = ".$cabang." AND
                     DATEPART(MONTH, T.tgl) >= ".$awal." AND 
                     DATEPART(MONTH, T.tgl) <= ".$akhir." AND 
@@ -744,13 +755,13 @@ class TransaksiController extends Controller
                         T2.MATAANGGARAN = MT.SEGMEN_6
                 GROUP BY T2.ITEM, T2.CABANG, T2.DIVISI, T2.SUBPOS, T2.MATAANGGARAN, MT.nama_item");
 
-        // KC.PIL_POSTED = 1 AND 
     }
 
     public function reportQuery_transaksi($cabang, $awal, $akhir, $transyear)
     {
         return \DB::select("SELECT
                     T2.ITEM AS ITEM,
+                    T2.CR AS CR,
                     MT.nama_item AS DESCRIPTION,
                     T2.A AS URAIAN,
                     T2.Z AS IDTRANSAKSI,
@@ -762,7 +773,8 @@ class TransaksiController extends Controller
                     DATEPART(YEAR, T.tgl) AS YEAR, 
                     T.[desc] AS A,
                     T.id AS Z,
-                    T.item AS ITEM, 
+                    T.item AS ITEM,
+                    T.currently_rejected AS CR, 
                     B.cabang AS CABANG,
                     B.divisi AS DIVISI,
                     T.sub_pos AS SUBPOS,
@@ -774,17 +786,18 @@ class TransaksiController extends Controller
                     LEFT JOIN dbcabang.dbo.batches B ON T.batch_id = B.id 
                 WHERE
                     B.cabang = ".$cabang." AND
+                    T.currently_rejected = 0 AND
                     DATEPART(MONTH, T.tgl) >= ".$awal." AND 
                     DATEPART(MONTH, T.tgl) <= ".$akhir." AND 
                     DATEPART(YEAR, T.tgl) = ".$transyear."
-                GROUP BY DATEPART(MONTH, T.tgl), DATEPART(YEAR, T.tgl), T.item, T.id, B.cabang, B.divisi, T.sub_pos, T.mata_anggaran, T.[desc]) T2
+                GROUP BY DATEPART(MONTH, T.tgl), DATEPART(YEAR, T.tgl), T.item, T.id, B.cabang, B.divisi, T.sub_pos, T.mata_anggaran, T.[desc], T.currently_rejected) T2
                 LEFT JOIN dbcabang.dbo.item_master_transaksi MT ON 
                         T2.ITEM = MT.SEGMEN_1 AND 
                         T2.CABANG = MT.SEGMEN_3 AND 
                         T2.DIVISI = MT.SEGMEN_4 AND 
                         T2.SUBPOS = MT.SEGMEN_5 AND 
                         T2.MATAANGGARAN = MT.SEGMEN_6
-                GROUP BY T2.ITEM, T2.CABANG, T2.DIVISI, T2.SUBPOS, T2.MATAANGGARAN, MT.nama_item, T2.A, T2.Z order by DESCRIPTION asc");
+                GROUP BY T2.ITEM, T2.CABANG, T2.DIVISI, T2.SUBPOS, T2.MATAANGGARAN, T2.CR, MT.nama_item, T2.A, T2.Z order by DESCRIPTION asc");
 
     }
     
@@ -811,11 +824,21 @@ class TransaksiController extends Controller
         // dd($transaksi);
         $start = array_search($awal, $this->months);
         $end = array_search($akhir, $this->months);
-    
+        $sebelum="";
+        $data_count= [];
+        foreach ($transaksi as $trans) {
+            if($trans->DESCRIPTION != $sebelum){
+                $sebelum = $trans->DESCRIPTION;
+                $data_count[$trans->DESCRIPTION] = 1;
+            }else{
+                $data_count[$trans->DESCRIPTION]++;
+            }
+        }
         return view('transaksi.realisasi_transaksi', [
             'cabang'    => $cabangs,
             'filters'   => array('cabang'=>$cabang, 'awal'=>$awal, 'akhir'=>$akhir, 'transyear' => $transyear),
             'transaksi' => $transaksi,
+            'data_count' => $data_count,
             'months'    => $this->months,
             'items'     => ItemMaster::get()]);
     }
