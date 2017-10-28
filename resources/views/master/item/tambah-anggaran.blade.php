@@ -33,18 +33,14 @@
                 <div class="content-body">
                   <div class="row">
                     @if(session('success'))
-                    <div class="col-xs-7">
+                    <div class="col-xs-5">
                       <div class="alert alert-success">
                         <b>Data item berhasil ditambah.</b>
                       </div>
                     </div>
-                    @elseif(session('unique'))
-                    <div class="col-xs-7">
-                        <div class="alert alert-warning">
-                          <b>Kode item harus unik.</b>
-                        </div>
-                    </div>
                     @endif
+                  </div>
+                  <div class="row">
                     <form class="form" action="{{ url('item/add/anggaran') }}" method="POST">
                       <div class="col-md-5">
                         {{ csrf_field() }}
@@ -82,7 +78,7 @@
                                   </div>
                                 </div>
                                 <div class="form-group">
-                                  <label for="eventRegInput3">Kelompok Anggaran</label>
+                                  <label for="kelompok">Kelompok Anggaran</label>
                                   <div = "row">
                                     <div class = "col-md-10">
                                       <select class="select2 form-control" id="kelompok" name="kelompok" required>
@@ -100,7 +96,7 @@
                                   </div>
                                 </div>
                                 <div class="form-group">
-                                  <label for="eventRegInput4">Pos Anggaran</label>
+                                  <label for="pos">Pos Anggaran</label>
                                   <div = "row">
                                     <div class = "col-md-10">
                                       <select class="select2 form-control" id="pos" name="pos" required>
@@ -112,24 +108,6 @@
                                     </div>
                                     <div class = "col-md-2">
                                       <button type="button" class="btn btn-success" data-target="#tambahPos" data-toggle="modal">
-                                        <i class="fa fa-plus"></i>
-                                      </button>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div class="form-group">
-                                  <label for="jenis">Satuan</label>
-                                  <div = "row">
-                                    <div class = "col-md-10">
-                                      <select class="select2 form-control" name="satuan" id="satuan" required>
-                                        <option value="" disabled selected>Satuan</option>
-                                        @foreach($satuan as $satu)
-                                        <option {{ old('satuan')== $satu->kode ? 'selected=""' : '' }} value="{{ $satu->kode }}">{{ $satu->kode }} - {{ $satu->name }}</option>
-                                        @endforeach
-                                      </select>
-                                    </div>
-                                    <div class = "col-md-2">
-                                      <button type="button" class="btn btn-success" data-target="#tambahSatuan" data-toggle="modal">
                                         <i class="fa fa-plus"></i>
                                       </button>
                                     </div>
@@ -163,52 +141,7 @@
                                     <input id="segmen1" class="form-control" name="segmen1" value="" readonly="">
     		                          </div>
     				                    </div>
-    		                        <div class="form-group row">
-    		                          <label class="col-md-2 label-control" for="segmen2">Program</label>
-    		                          <div class="col-md-7">
-                                    <select class = "select2 form-control" id="program" name="program" onchange="getVal('program', 'segmen2');" required>
-                                      <option value="" disabled selected>Program</option>
-                                      @foreach($program as $prog)
-                                      <option {{ old('program') == $prog->VALUE ? 'selected=""' : '' }} value="{{ $prog->VALUE }}">{{ $prog->DESCRIPTION }}</option>
-                                      @endforeach
-                                    </select>
-    		                          </div>
-    		                          <div class="col-md-3">
-    		                          	<input id="segmen2" class="form-control" name="segmen2" value="" readonly="">
-      				                    </div>
-    		                        </div>
-    		                        <!--<div class="form-group row">
-    		                          <label class="col-md-2 label-control" for="segmen3">KPKC</label>
-    	                        	  <div class="col-md-7">
-                                    <select class = "select2 form-control" id="kpkc" name="kpkc" onchange="getVal('kpkc', 'segmen3');" required>
-                                      <option value="" disabled selected>KPKC</option>
-                                      @foreach($kpkc as $unit)
-                                      <option {{ old('kpkc') == $unit->VALUE ? 'selected=""' : '' }} value="{{ $unit->VALUE }}">{{ $unit->DESCRIPTION }}</option>
-                                      @endforeach                              
-                                    </select>
-    	                        	  </div>
-    		                          <div class="col-md-3">
-    	                          		<input id="segmen3" class="form-control" name="segmen3" value="" readonly="">
-    			                        </div>
-    		                        </div>
-    		                        <div class="form-group row">
-    		                          <label class="col-md-2 label-control" for="segmen4">Divisi</label>
-    		                          <div class="col-md-7">
-                                    <select class = "select2 form-control" id="divisi" name="divisi" onchange="getVal('divisi', 'segmen4');" required>
-                                      <option value="" disabled selected>Divisi</option>
-                                      @foreach($divisi as $div)
-                                      @if($div->VALUE == '00')
-                                        <option {{ old('divisi') == 'None' ? 'selected=""' : '' }} value="00">None</option>
-                                      @else                                    
-                                        <option {{ old('divisi') == $div->VALUE ? 'selected=""' : '' }} value="{{ $div->VALUE }}">{{ $div->DESCRIPTION }}</option>
-                                      @endif    
-                                      @endforeach
-                                      </select>
-    		                          </div>
-    		                          <div class="col-md-3">
-    		                          	<input id="segmen4" class="form-control" name="segmen4" value="" readonly="">
-    				                      </div>
-    		                        </div>-->
+    		                       
     		                        <div class="form-group row">
     		                          <label class="col-md-2 label-control" for="segmen5">Sub Pos</label>
     		                          <div class="col-md-7">

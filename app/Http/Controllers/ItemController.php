@@ -102,6 +102,24 @@ class ItemController extends Controller
             'no'    => 1]);
     }
 
+    public function listAnggaran()
+    {
+        $master_item = ItemMasterAnggaran::where('deleted_at',Null)->get();
+        $jenis = ItemAnggaranMaster::withTrashed()->where('type', 1)->get();
+        $kelompok = ItemAnggaranMaster::withTrashed()->where('type', 2)->get();
+        $pos = ItemAnggaranMaster::withTrashed()->where('type', 3)->get();
+        $subpos = SubPos::get();
+        $kegiatan = Kegiatan::get();
+        return view('master.item.list-anggaran', [
+            'items'     => $master_item, 
+            'no'        => 1, 
+            'jenis'     => $jenis,
+            'kelompok'  => $kelompok,
+            'pos'       => $pos,
+            'subpos'    => $subpos,
+            'kegiatan'  => $kegiatan,
+        ]);
+    }
     public function getCombination($mainaccount, $tanggal)
     {
         $tanggal = date("Y-m-d", strtotime($tanggal));
@@ -138,6 +156,21 @@ class ItemController extends Controller
             ]);
     }
 
+    public function createItemAnggaran()
+    {
+        $jenis = ItemAnggaranMaster::where('type', 1)->get();
+        $kelompok = ItemAnggaranMaster::where('type', 2)->get();
+        $pos = ItemAnggaranMaster::where('type', 3)->get();
+        return view('master.item.tambah-anggaran',
+            [   'subpos' => $this->subPosModel->get(),
+                'm_anggaran' => $this->mAnggaranModel->get(),
+                'item' => $this->itemModel->get(),
+                'jenis' => $jenis,
+                'kelompok' => $kelompok,
+                'pos' => $pos
+            ]);
+    }
+
     public function addItemTransaksi(Request $request)
     {
         //$inputItem = $request->except('_method', '_token');
@@ -154,9 +187,6 @@ class ItemController extends Controller
             $inputItem = array(
                 'kode_item'         => $request->kode_item,
                 'nama_item'         => $request->nama_item,
-                'jenis_anggaran'    => $request->jenis,
-                'kelompok_anggaran' => $request->kelompok,
-                'pos_anggaran'      => $request->pos,
                 'sub_pos'           => $name_subpos->DESCRIPTION,
                 'mata_anggaran'     => $name_kegiatan->DESCRIPTION,
 
@@ -174,6 +204,24 @@ class ItemController extends Controller
         }
         session()->flash('success', true);
         return redirect('/item/create/transaksi');
+    }
+
+    public function addItemAnggaran(Request $request)
+    {
+
+        $inputItem = array(
+            'jenis'    => $request->jenis,
+            'kelompok' => $request->kelompok,
+            'pos_anggaran'      => $request->pos,
+            'sub_pos'           => $request->subpos,
+            'mata_anggaran'     => $request->kegiatan,
+            'account'           => $request->account,
+        );
+        
+        ItemMasterAnggaran::create($inputItem);
+        
+        session()->flash('success', true);
+        return redirect('/item/create/anggaran');
     }
 
     //item anggaran master
@@ -242,14 +290,25 @@ class ItemController extends Controller
     public function editItemTransaksi($id)
     {
         $item = ItemMaster::where('id', $id)->first();
-        $jenis = ItemAnggaranMaster::where('type', 1)->get();
-        $kelompok = ItemAnggaranMaster::where('type', 2)->get();
-        $pos = ItemAnggaranMaster::where('type', 3)->get();
         return view('master.item.edit-transaksi', [
             'item' => $this->itemModel->get(),
             'program' => $this->programModel->where("VALUE", "THT")->get(),
             'kpkc' => $this->kpkcModel->get(),
             'divisi' => $this->divisiModel->get(),
+            'subpos' => $this->subPosModel->get(),
+            'm_anggaran' => $this->mAnggaranModel->get(),
+            'items' => $item
+        ]);
+    }
+
+    public function editItemAnggaran($id)
+    {
+        $item = ItemMasterAnggaran::where('id', $id)->first();
+        $jenis = ItemAnggaranMaster::where('type', 1)->get();
+        $kelompok = ItemAnggaranMaster::where('type', 2)->get();
+        $pos = ItemAnggaranMaster::where('type', 3)->get();
+        return view('master.item.edit-anggaran', [
+            'item' => $this->itemModel->get(),
             'subpos' => $this->subPosModel->get(),
             'm_anggaran' => $this->mAnggaranModel->get(),
             'jenis' => $jenis,
@@ -274,9 +333,6 @@ class ItemController extends Controller
             $update = array(
                 'kode_item'         => $request->kode_item,
                 'nama_item'         => $request->nama_item,
-                'jenis_anggaran'    => $request->jenis,
-                'kelompok_anggaran' => $request->kelompok,
-                'pos_anggaran'      => $request->pos,
                 'sub_pos'           => $name_subpos->DESCRIPTION,
                 'mata_anggaran'     => $name_kegiatan->DESCRIPTION,
 
@@ -295,6 +351,23 @@ class ItemController extends Controller
         }
         session()->flash('success', true);
         return redirect('/item/edit/transaksi/'.$id);
+    }
+
+    public function updateItemAnggaran($id, Request $request)
+    {
+        
+        $update = array(
+            'jenis'    => $request->jenis,
+            'kelompok' => $request->kelompok,
+            'pos_anggaran'      => $request->pos,
+            'sub_pos'           => $request->subpos,
+            'mata_anggaran'     => $request->kegiatan,
+            'account'           => $request->account,
+        );
+        ItemMasterAnggaran::where('id', $id)->update($update);   
+        
+        session()->flash('success', true);
+        return redirect('/item/edit/anggaran/'.$id);
     }
 
     public function updateItem($id, Request $request)
