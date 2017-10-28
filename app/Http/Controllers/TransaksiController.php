@@ -749,12 +749,12 @@ class TransaksiController extends Controller
                 GROUP BY DATEPART(MONTH, T.tgl), DATEPART(YEAR, T.tgl), T.item, KC.PIL_KPKC, KC.PIL_DIVISI, KC.PIL_SUBPOS, KC.PIL_MATAANGGARAN) T2
                 LEFT JOIN dbcabang.dbo.item_master_transaksi MT ON 
                         T2.ITEM = MT.SEGMEN_1 AND 
-                        T2.CABANG = MT.SEGMEN_3 AND 
-                        T2.DIVISI = MT.SEGMEN_4 AND 
                         T2.SUBPOS = MT.SEGMEN_5 AND 
                         T2.MATAANGGARAN = MT.SEGMEN_6
                 GROUP BY T2.ITEM, T2.CABANG, T2.DIVISI, T2.SUBPOS, T2.MATAANGGARAN, MT.nama_item");
 
+                        // T2.CABANG = MT.SEGMEN_3 AND 
+                        // T2.DIVISI = MT.SEGMEN_4 AND 
     }
 
     public function reportQuery_transaksi($cabang, $awal, $akhir, $transyear)
@@ -792,13 +792,13 @@ class TransaksiController extends Controller
                     DATEPART(YEAR, T.tgl) = ".$transyear."
                 GROUP BY DATEPART(MONTH, T.tgl), DATEPART(YEAR, T.tgl), T.item, T.id, B.cabang, B.divisi, T.sub_pos, T.mata_anggaran, T.[desc], T.currently_rejected) T2
                 LEFT JOIN dbcabang.dbo.item_master_transaksi MT ON 
-                        T2.ITEM = MT.SEGMEN_1 AND 
-                        T2.CABANG = MT.SEGMEN_3 AND 
-                        T2.DIVISI = MT.SEGMEN_4 AND 
+                        T2.ITEM = MT.SEGMEN_1 AND  
                         T2.SUBPOS = MT.SEGMEN_5 AND 
                         T2.MATAANGGARAN = MT.SEGMEN_6
                 GROUP BY T2.ITEM, T2.CABANG, T2.DIVISI, T2.SUBPOS, T2.MATAANGGARAN, T2.CR, MT.nama_item, T2.A, T2.Z order by DESCRIPTION asc");
 
+                        // T2.CABANG = MT.SEGMEN_3 AND 
+                        // T2.DIVISI = MT.SEGMEN_4 AND
     }
     
     public function filter_result_realisasi($cabang, $awal, $akhir, $transyear)

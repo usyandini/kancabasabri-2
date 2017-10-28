@@ -164,13 +164,13 @@
                                   ?>
                                   @forelse($transaksi as $trans)
                                   <tr>
-                                   @if ($longkap != $trans->DESCRIPTION)<td style="padding-left:20px;" rowspan = "{{$data_count[$trans->DESCRIPTION]}}"> {{$no++}}.) {{ $trans->DESCRIPTION }}</td> @endif
-                                   <td style="padding-left:20px;">{{ $trans->URAIAN }}</td>
-                                   <td align="right">Rp {{ number_format($trans->ANGGARAN_AWAL, 2, ',','.') }}</td>
-                                   <td align="right"><b>Rp. {{ number_format($trans->REALISASI_ANGGARAN, 2, ',','.') }}</b></td>
-                                   <td align="right">Rp. {{ number_format($trans->SISA_ANGGARAN, 2, ',','.') }}</td>
-                                 </tr>
-                                 <?php
+                                  @if ($longkap != $trans->DESCRIPTION)<td style="padding-left:20px;" rowspan = "{{$data_count[$trans->DESCRIPTION]}}"> {{$no++}}.) {{ $trans->DESCRIPTION }}</td> @endif
+                                  <td style="padding-left:20px;">{{ $trans->URAIAN }}</td>
+                                  @if ($longkap != $trans->DESCRIPTION)<td align="right" rowspan = "{{$data_count[$trans->DESCRIPTION]}}">Rp {{ number_format($trans->ANGGARAN_AWAL, 2, ',','.') }}</td>@endif
+                                  <td align="right"><b>Rp {{ number_format($trans->REALISASI_ANGGARAN, 2, ',','.') }}</b></td>
+                                  <td align="right">Rp {{ number_format($trans->SISA_ANGGARAN, 2, ',','.') }}</td>
+                                  </tr>
+                                  <?php
                                   $longkap=$trans->DESCRIPTION;
                                   ?>
                                  @empty
