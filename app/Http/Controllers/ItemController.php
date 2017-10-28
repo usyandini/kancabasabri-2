@@ -407,12 +407,15 @@ class ItemController extends Controller
     public function destroy($jenis, $id, Request $request)
     {
         switch($jenis){
+            case 'anggaran':
+                $item = "Item Anggaran telah dihapus";
+                ItemMasterAnggaran::where('id', $id)->delete(); break;
             case 'transaksi':
-                $item = ItemMaster::withTrashed()->where('id', $id)->first()->nama_item ? ItemMaster::withTrashed()->where('id', $id)->first()->nama_item : ItemMaster::withTrashed()->where('id', $id)->first()->kode_item;
+                $item = ItemMaster::where('id', $id)->first()->nama_item ? ItemMaster::where('id', $id)->first()->nama_item : ItemMaster::where('id', $id)->first()->kode_item;
 
                 ItemMaster::where('id', $id)->delete(); break;
             case 'item':
-                $item = ItemAnggaranMaster::withTrashed()->where('id', $id)->first()->name ? ItemAnggaranMaster::withTrashed()->where('id', $id)->first()->name : ItemAnggaranMaster::withTrashed()->where('id', $id)->first()->kode;
+                $item = ItemAnggaranMaster::where('id', $id)->first()->name ? ItemAnggaranMaster::where('id', $id)->first()->name : ItemAnggaranMaster::where('id', $id)->first()->kode;
 
                 ItemAnggaranMaster::where('id', $id)->delete(); break;
         }
