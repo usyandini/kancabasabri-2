@@ -385,6 +385,11 @@
 												{{$no}}
 												@endif
 			                        			</center></td>
+			                        			<!-- @if ($longkap != $b->unitkerja)
+			                        			<td rowspan="{{$data_count[$b->unitkerja]}}">
+			                        				{{ $b->unitkerja }}
+			                        			</td>
+			                        			@endif -->
 			                        			<td>
 			                        			@if ($longkap != $b->unitkerja) 
 			                        			{{ $b->unitkerja }}
@@ -393,7 +398,7 @@
 			                        			<td>
 			                        			@if ($b->temuan=="")
 			                        				@if ($b->kirim!='3')
-			                        					<center><span><a class="btn btn-success btn-sm" data-target="#tambahtemuan{{$b->id1}}" data-toggle="modal"><i class="fa fa-plus"></i> <b>Tambah Temuan</b></a></span></center>
+			                        					<span><a class="btn btn-success btn-sm" data-target="#tambahtemuan{{$b->id1}}" data-toggle="modal"><i class="fa fa-plus"></i> <b>Tambah Temuan</b></a></span>
 			                        				@endif
 			                        			@else
 				                           			@if ($longkap2 != $b->temuan) 
@@ -414,7 +419,7 @@
 			                        			@if ($b->temuan!="")
 			                        				@if ($b->rekomendasi=="")
 			                        					@if ($b->kirim!='3')
-				                        				<center><span><a class="btn btn-success btn-sm" data-target="#tambahrekomendasi{{$b->id2}}" data-toggle="modal"><i class="fa fa-plus"></i> <b>Tambah Rekomendasi</b></a></span></center>
+				                        				<span><a class="btn btn-success btn-sm" data-target="#tambahrekomendasi{{$b->id2}}" data-toggle="modal"><i class="fa fa-plus"></i> <b>Tambah Rekomendasi</b></a></span>
 				                        				@endif
 					                           		@else
 						                           		@if ($longkap3 != $b->rekomendasi) 
