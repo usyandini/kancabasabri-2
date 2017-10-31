@@ -69,7 +69,12 @@ class ItemController extends Controller
             $this->mAnggaranModel = $m_anggaran;
 
             $this->middleware('can:manajemen_i', ['only' => 'index']);
-            $this->middleware('can:manajemen_i_t', ['only' => 'editItemTransaksi']);
+            $this->middleware('can:manajemen_i_t', ['only' => 'listTransaksi',
+                                                                'createItemTransaksi',
+                                                                'editItemTransaksi']);
+            $this->middleware('can:manajemen_i_a', ['only' => 'listAnggaran',
+                                                                'createItemAnggaran',
+                                                                'editItemAnggaran']);
             $this->middleware('can:manajemen_a_m', ['only' => 'reason']);
             $this->middleware('can:manajemen_p_p', ['only' => 'program_prioritas',
                                                         'store_program_prioritas',
@@ -680,15 +685,32 @@ class ItemController extends Controller
     public function importXlsProcess(Request $request)
     {
         $input['ext'] = strtolower($request->file->getClientOriginalExtension());
+        $input['item'] = strtolower($request->item);
 
         $validator = Validator::make($input,
-            ['ext' => 'in:xls,xlsx'],
-            ['ext.in' => 'File yang diunggah untuk insert ke database harus berekstensi : <b>xls, xlsx, atau csv</b>.']);   
+            [
+             'ext' => 'in:xls,xlsx',
+             'item'=> 'required'
+            ],
+            [
+             'ext.in'           => 'File yang diunggah untuk insert ke database harus berekstensi : <b>xls, xlsx, atau csv</b>.',
+             'item.required'    => 'Jenis Item harus dipilih.'
+
+            ]);   
 
         if ($validator->passes()) {
             $data = Excel::selectSheetsByIndex(0)->load($request->file->getRealPath(), function($reader) {})->toArray();
-            $this->validateTransaksiXlsColumns($data[0]);
-            $result = $this->insertTransaksiXlsData($data);
+
+            
+            $result;
+            if($input['item'] == 1){
+                $this->validateTransaksiXlsColumns($data[0]);
+                $result = $this->insertTransaksiXlsData($data);
+                // echo "transaksi";
+            }else{
+                $this->validateAnggaranXlsColumns($data[0]);
+                $result = $this->insertAnggaranXlsData($data);
+            }
             if (count($result) > 0) {
                 return redirect()->back()->withErrors($result);
             }
@@ -733,6 +755,30 @@ class ItemController extends Controller
                 "mata_anggaran.present" => "<b>Kolom Mata Anggaran</b> harus ada pada file Excel yang diupload.",
                 // "mata_ang_dec.present" => "<b>Kolom Nama Mata Anggaran</b> harus ada pada file Excel yang diupload.",
                 "display_item_semua_cabang.present" => "<b>Kolom Display Item untuk Semua Cabang</b> harus ada pada file Excel yang diupload."]);
+
+        if ($validator->passes()) {
+            return true;
+        }
+        return redirect()->back()->withErrors($validator);
+    }
+
+    public function validateAnggaranXlsColumns($data)
+    {
+        $validator = Validator::make($data, 
+            [
+                "jenis_anggaran"        => "present",
+                "kelompok_anggaran"     => "present",
+                "pos_anggaran"          => "present",
+                "subpos"                => "present",
+                "mata_anggaran"         => "present",
+                "main_account"          => "present"], 
+            [
+                "JENIS ANGGARAN.present" => "<b>Kolom JENIS_ANGGARAN</b> harus ada pada file Excel yang diupload.",
+                "KELOMPOK ANGGARAN.present" => "<b>Kolom KELOMPOK_ANGGARAN</b> harus ada pada file Excel yang diupload.",
+                "POS ANGGARAN.present" => "<b>Kolom POS_ANGGARAN</b> harus ada pada file Excel yang diupload.",
+                "SUBPOS.present" => "<b>Kolom SUBPOS</b> harus ada pada file Excel yang diupload.",
+                "MATA ANGGARAN.present" => "<b>Kolom MATA_ANGGARAN</b> harus ada pada file Excel yang diupload.",
+                "MAIN_ACCOUNT.present" => "<b>Kolom MAIN_ACCOUNT</b> harus ada pada file Excel yang diupload."]);
 
         if ($validator->passes()) {
             return true;
@@ -807,10 +853,121 @@ class ItemController extends Controller
         return $errors;
     }
 
+    public function insertAnggaranXlsData($data)
+    {
+        $insert_success = $errors = [];
+        $count = 0;
+        if (isset($data) && !empty($data) && count($data) > 0) {
+            foreach ($data as $key => $value) {
+                if(isset($value['jenis_anggaran'])){
+                    $input = [
+                        'jenis'         => $this->isExistInDB($value['jenis_anggaran'], 'jenis_kode'),
+                        'kelompok'      => $this->isExistInDB($value['kelompok_anggaran'], 'kelompok_kode'),
+                        'pos_anggaran'  => $this->isExistInDB($value['pos_anggaran'], 'pos_kode'),
+                        'sub_pos'       => $this->isExistInDB($value['subpos'], 'sub_pos_kode'),
+                        'mata_anggaran' => $this->isExistInDB($value['mata_anggaran'], 'mata_anggaran_kode'),
+                        'account'       => $this->isExistInDB($value['main_account'], 'account')];
+
+                    $validate[$key] = Validator::make($input, 
+                        [
+                            'sub_pos'       => 'not_in:-',
+                            'mata_anggaran' => 'not_in:-',
+                            'account'       => 'not_in:-'],
+                        [
+                            'sub_pos.not_in'       => '<b>Nilai (ID) Sub Pos ('.$value['subpos'].')</b> pada <b>row '.($key+1).'</b> tidak terdapat di basis data. Baris gagal diinput.',
+                            'mata_anggaran.not_in' => '<b>Nilai (ID) Mata Anggaran ('.$value['mata_anggaran'].')</b> pada <b>row '.($key+1).'</b> tidak terdapat di basis data. Baris gagal diinput.',
+                            'account.not_in'       => '<b>Nilai (ID) Main Account ('.$value['main_account'].')</b> pada <b>row '.($key+1).'</b> tidak terdapat di basis data. Baris gagal diinput.']);
+                    
+                    if ($validate[$key]->passes()) {
+                        $cek = ItemMasterAnggaran::where('jenis',$input['jenis'])->
+                                                    where('kelompok',$input['kelompok'])->
+                                                    where('pos_anggaran',$input['pos_anggaran'])->
+                                                    where('sub_pos',$input['sub_pos'])->
+                                                    where('mata_anggaran',$input['mata_anggaran'])->
+                                                    where('account',$input['account'])->count();
+                        if($cek > 0){
+                            $insert_success[$count++] = 'Data baris ke-'.($key+1).' item anggaran terdapat di database.';
+                        }else{
+                            ItemMasterAnggaran::create($input);  
+                        }
+                    }
+                    if (count($validate[$key]->failed()) == 8) {
+                        unset($validate[$key]);
+                    }
+                }
+            }
+
+            foreach ($validate as $val) { 
+                foreach ($val->errors()->messages() as $value) {
+                    array_push($errors, $value);
+                }
+            }
+            $insert_success[$count] = ($count-count($insert_success)).' data item anggaran berhasil di inputkan.';
+            if (count($insert_success) > 0) { session()->flash('insert_success', $insert_success); }
+        } else {
+            $errors = ['1' => 'Data Excel tidak boleh kosong.'];
+        }
+
+        return $errors;
+    }
+
     public function isExistInDB($value, $type)
     {
         $return = null;
         switch ($type) {
+            case 'jenis_kode':
+                $jenis = ItemAnggaranMaster::where('type',1)->get();
+                $jenisVal = ItemAnggaranMaster::where('type',1)->where('name', $value)->get();
+                if(count($jenisVal) == 0){
+                    $kode = 'JA-'.(count($jenis)+1);
+                    $inputJenis = array(
+                        'kode'  => $kode,
+                        'name'  => $value,
+                        'type'  => 1,
+                        'created_by' => \Auth::id()
+                    );
+                    ItemAnggaranMaster::create($inputJenis);
+                }
+                $return = ItemAnggaranMaster::where('type',1)->where('name', $value)->first()->kode;
+                break;
+            case 'kelompok_kode':
+                $kelompok = ItemAnggaranMaster::where('type',2)->get();
+                $kelompokVal = ItemAnggaranMaster::where('type',2)->where('name', $value)->get();
+                if(count($kelompokVal) == 0){
+                    $kode = 'KA-'.(count($kelompok)+1);
+                    $inputKelompok = array(
+                        'kode'  => $kode,
+                        'name'  => $value,
+                        'type'  => 2,
+                        'created_by' => \Auth::id()
+                    );
+                    ItemAnggaranMaster::create($inputKelompok);
+                }
+                $return = ItemAnggaranMaster::where('type',2)->where('name', $value)->first()->kode;
+                break;
+            case 'pos_kode':
+                $pos = ItemAnggaranMaster::where('type',3)->get();
+                $posVal = ItemAnggaranMaster::where('type',3)->where('name', $value)->get();
+                if(count($posVal) == 0){
+                    $kode = 'PA-'.(count($pos)+1);
+                    $inputPos = array(
+                        'kode'  => $kode,
+                        'name'  => $value,
+                        'type'  => 3,
+                        'created_by' => \Auth::id()
+                    );
+                    ItemAnggaranMaster::create($inputPos);
+                }
+                $return = ItemAnggaranMaster::where('type',3)->where('name', $value)->first()->kode;
+                break;
+            case 'sub_pos_kode':
+                $subVal = SubPos::where('DESCRIPTION', $value)->first();
+                $return = $subVal ? $subVal->VALUE : '-';
+                break;
+            case 'mata_anggaran_kode':
+                $mataVal = Kegiatan::where('DESCRIPTION', $value)->first();
+                $return = $mataVal ? $mataVal->VALUE : '-';
+                break;
             case 'account':
                 $return = Item::where('MAINACCOUNTID', $value)->first() ? $value : '-';
                 break;
