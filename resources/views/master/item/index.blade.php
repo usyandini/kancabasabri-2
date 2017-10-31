@@ -38,8 +38,9 @@
             							<div class="row mt-1">
             								<div class="col-md-12 col-xl-5">
             									<a href="{{ url('item/create/transaksi') }}" class="btn btn-success btn-sm pull-left"><i class="fa fa-plus"></i> Tambah Item Baru</a>
-                                                                  <a href="{{ url('item/import') }}" class="btn btn-outline-success btn-sm ml-1"><i class="fa fa-file-excel-o"></i> Import dari Excel</a>
-            								</div>
+                                                                  <!--<a href="{{ url('item/import') }}" class="btn btn-outline-success btn-sm ml-1"><i class="fa fa-file-excel-o"></i> Import dari Excel</a>
+            								          -->
+                                                            </div>
             							</div>
             						</div>
             						<div class="card-body collapse in">			                

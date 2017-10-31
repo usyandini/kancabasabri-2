@@ -706,7 +706,6 @@ class ItemController extends Controller
             if($input['item'] == 1){
                 $this->validateTransaksiXlsColumns($data[0]);
                 $result = $this->insertTransaksiXlsData($data);
-                // echo "transaksi";
             }else{
                 $this->validateAnggaranXlsColumns($data[0]);
                 $result = $this->insertAnggaranXlsData($data);
@@ -888,7 +887,8 @@ class ItemController extends Controller
                         if($cek > 0){
                             $insert_success[$count++] = 'Data baris ke-'.($key+1).' item anggaran terdapat di database.';
                         }else{
-                            ItemMasterAnggaran::create($input);  
+                            ItemMasterAnggaran::create($input); 
+                            $count++ ;
                         }
                     }
                     if (count($validate[$key]->failed()) == 8) {
@@ -902,7 +902,7 @@ class ItemController extends Controller
                     array_push($errors, $value);
                 }
             }
-            $insert_success[$count] = ($count-count($insert_success)).' data item anggaran berhasil di inputkan.';
+            $insert_success[$count] = "<b>".($count-count($insert_success)).' data item anggaran</b> berhasil di inputkan.';
             if (count($insert_success) > 0) { session()->flash('insert_success', $insert_success); }
         } else {
             $errors = ['1' => 'Data Excel tidak boleh kosong.'];
