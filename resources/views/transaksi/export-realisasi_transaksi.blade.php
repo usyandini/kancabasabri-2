@@ -66,7 +66,7 @@
               @foreach($transaksi as $trans)
               <tr>
                 @if ($longkap != $trans->DESCRIPTION)<td style="padding-left:20px;" rowspan = "{{$data_count[$trans->DESCRIPTION]}}"> {{$no++}}.) {{ $trans->DESCRIPTION }}</td> @endif
-                <td style="padding-left:20px;">{{ $trans->URAIAN }}</td>
+                <td style="padding-left:20px;"><?php echo nl2br(str_replace('', '', htmlspecialchars($trans->URAIAN))); ?></td>
                 @if ($longkap != $trans->DESCRIPTION)<td align="right" rowspan = "{{$data_count[$trans->DESCRIPTION]}}">Rp {{ number_format($trans->ANGGARAN_AWAL, 2, ',','.') }}<?php $tmp_anggaran += $trans->ANGGARAN_AWAL;?></td>@endif
                 <td align="right">Rp {{ number_format($trans->REALISASI_ANGGARAN, 2, ',','.') }}</td>
                 <td align="right">Rp {{ number_format($trans->SISA_ANGGARAN, 2, ',','.') }}</td>
