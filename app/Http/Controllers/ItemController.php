@@ -679,7 +679,7 @@ class ItemController extends Controller
 
     public function importXls()
     {
-        return view('master.item.import-xls');
+        return view('master.item.import-xls',['fail'=>null]);
     }
 
     public function importXlsProcess(Request $request)
@@ -689,7 +689,7 @@ class ItemController extends Controller
 
         $validator = Validator::make($input,
             [
-             'ext' => 'in:xls,xlsx',
+             'ext' => 'in:xls,xlsx,csv',
              'item'=> 'required'
             ],
             [
@@ -710,10 +710,13 @@ class ItemController extends Controller
                 $this->validateAnggaranXlsColumns($data[0]);
                 $result = $this->insertAnggaranXlsData($data);
             }
+
             if (count($result) > 0) {
-                return redirect()->back()->withErrors($result);
+                // return redirect()->back()->withErrors($result);
+                return view('master.item.import-xls',['fail'=>$result]);
             }
-            redirect()->back();
+            // redirect()->back();
+             return view('master.item.import-xls',['fail'=>null]);
         }
 
         return redirect()->back()->withErrors($validator);
@@ -823,14 +826,14 @@ class ItemController extends Controller
                         'SEGMEN_6.not_in'       => '<b>Nilai (ID) Mata Anggaran ('.$value['mata_anggaran'].')</b> pada <b>row '.($key+1).'</b> tidak terdapat di basis data. Row gagal diinput.']);
                 
                 if ($validate[$key]->passes()) {
-                    $kodeIsStored = ItemMaster::where('kode_item', $input['kode_item'])->first();
-                    if (!$kodeIsStored) {
-                        ItemMaster::create($input);
+                    // $kodeIsStored = ItemMaster::where('kode_item', $input['kode_item'])->first();
+                    // if (!$kodeIsStored) {
+                        // ItemMaster::create($input);
                         $insert_success[$key] = 'Item dengan <b>Kode Item '.$input['kode_item'].'</b> berhasil diinput.';
-                    } else {
-                        ItemMaster::where('kode_item', $input['kode_item'])->update($input);
-                        $insert_success[$key] = 'Item dengan <b>Kode Item '.$input['kode_item'].'</b> berhasil diperbarui.';
-                    }
+                    // } else {
+                        // ItemMaster::where('kode_item', $input['kode_item'])->update($input);
+                        // $insert_success[$key] = 'Item dengan <b>Kode Item '.$input['kode_item'].'</b> berhasil diperbarui.';
+                    // }
                 }
 
                 if (count($validate[$key]->failed()) == 8) {
@@ -843,6 +846,8 @@ class ItemController extends Controller
                     array_push($errors, $value);
                 }
             }
+
+            // print_r($errors);
 
             if (count($insert_success) > 0) { session()->flash('insert_success', $insert_success); }
         } else {

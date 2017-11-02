@@ -240,10 +240,10 @@
                         @can('manajemen_i_a')
                         <li class="is-shown {{ checkActiveMenu('item/anggaran') }}"><a href="{{ url('/item/anggaran', $parameters = [], $secure = null) }}" class="menu-item">Item Anggaran</a></li>
                         @endcan
-                        <li class="is-shown {{ checkActiveMenu('item/import') }}"><a href="{{ url('/item/import', $parameters = [], $secure = null) }}" class="menu-item">Import Item</a></li>
                         @can('manajemen_i')
                         <li class="is-shown {{ checkActiveMenu('item') }}"><a href="{{ url('/item', $parameters = [], $secure = null) }}" class="menu-item">Manajemen Item</a>
                         @endcan
+                        <li class="is-shown {{ checkActiveMenu('item/import') }}"><a href="{{ url('/item/import', $parameters = [], $secure = null) }}" class="menu-item">Import Item</a></li>
                         @can('manajemen_a_m')
                         <li class="is-shown {{ checkActiveMenu('reason') }}"><a href="{{ url('/reason', $parameters = [], $secure = null) }}" class="menu-item">Alasan Menolak</a>
                         @endcan
