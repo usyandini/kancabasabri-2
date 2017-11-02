@@ -794,7 +794,7 @@ class ItemController extends Controller
         if (isset($data) && !empty($data) && count($data) > 0) {
             foreach ($data as $key => $value) {
                 $input = [
-                    'kode_item' => $value['kode_item'],
+                    'kode_item' => $this->isExistInDB($value['item'], 'item_kode'),
                     'nama_item' => $value['item'],
                     'SEGMEN_1'  => $this->isExistInDB($value['account'], 'account'),
                     'SEGMEN_2'  => $this->isExistInDB($value['program'], 'program'),
@@ -807,7 +807,7 @@ class ItemController extends Controller
 
                 $validate[$key] = Validator::make($input, 
                     [
-                        'kode_item' => 'required',
+                        // 'kode_item' => 'required',
                         'nama_item' => 'required',
                         'SEGMEN_1'  => 'not_in:-',
                         'SEGMEN_2'  => 'not_in:-',
@@ -816,7 +816,7 @@ class ItemController extends Controller
                         'SEGMEN_5'  => 'not_in:-',
                         'SEGMEN_6'  => 'not_in:-'], 
                     [
-                        'kode_item.required'    => '<b>Nilai Kode Item ('.$value['kode_item'].')</b> pada <b>row '.($key+1).'</b> harus diisi. Row gagal diinput.',
+                        // 'kode_item.required'    => '<b>Nilai Kode Item ('.$value['kode_item'].')</b> pada <b>row '.($key+1).'</b> harus diisi. Row gagal diinput.',
                         'nama_item.required'    => '<b>Nilai Nama Item ('.$value['item'].')</b> pada <b>row '.($key+1).'</b> harus diisi. Row gagal diinput.',
                         'SEGMEN_1.not_in'       => '<b>Nilai (ID) Account ('.$value['account'].')</b> pada <b>row '.($key+1).'</b> tidak terdapat di basis data. Row gagal diinput.',
                         'SEGMEN_2.not_in'       => '<b>Nilai (ID) Program ('.$value['program'].')</b> pada <b>row '.($key+1).'</b> tidak terdapat di basis data. Row gagal diinput.',
@@ -972,6 +972,19 @@ class ItemController extends Controller
             case 'mata_anggaran_kode':
                 $mataVal = Kegiatan::where('DESCRIPTION', $value)->first();
                 $return = $mataVal ? $mataVal->VALUE : '-';
+                break;
+            case 'item_kode':
+                $item_master = ItemMaster::where('nama_item',$value)->get();
+                $kode = '';
+                if(count($item_master) == 0){
+                    $kode = 'KD-'.(count($item_master)+1);
+                    ItemAnggaranMaster::create($inputJenis);
+                }else{
+                    foreach ($item_master as $row) {
+                        $kode = $row->kode_item;
+                    }
+                }
+                $return = $kode;
                 break;
             case 'account':
                 $return = Item::where('MAINACCOUNTID', $value)->first() ? $value : '-';
