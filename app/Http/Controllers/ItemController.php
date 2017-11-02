@@ -826,14 +826,14 @@ class ItemController extends Controller
                         'SEGMEN_6.not_in'       => '<b>Nilai (ID) Mata Anggaran ('.$value['mata_anggaran'].')</b> pada <b>row '.($key+1).'</b> tidak terdapat di basis data. Row gagal diinput.']);
                 
                 if ($validate[$key]->passes()) {
-                    // $kodeIsStored = ItemMaster::where('kode_item', $input['kode_item'])->first();
-                    // if (!$kodeIsStored) {
-                        // ItemMaster::create($input);
+                    $kodeIsStored = ItemMaster::where('kode_item', $input['kode_item'])->first();
+                    if (!$kodeIsStored) {
+                        ItemMaster::create($input);
                         $insert_success[$key] = 'Item dengan <b>Kode Item '.$input['kode_item'].'</b> berhasil diinput.';
-                    // } else {
-                        // ItemMaster::where('kode_item', $input['kode_item'])->update($input);
-                        // $insert_success[$key] = 'Item dengan <b>Kode Item '.$input['kode_item'].'</b> berhasil diperbarui.';
-                    // }
+                    } else {
+                        ItemMaster::where('kode_item', $input['kode_item'])->update($input);
+                        $insert_success[$key] = 'Item dengan <b>Kode Item '.$input['kode_item'].'</b> berhasil diperbarui.';
+                    }
                 }
 
                 if (count($validate[$key]->failed()) == 8) {
