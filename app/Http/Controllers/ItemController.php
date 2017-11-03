@@ -978,7 +978,7 @@ class ItemController extends Controller
                 $kode = '';
                 if(count($item_master) == 0){
                     $kode = 'KD-'.(count($item_master)+1);
-                    ItemAnggaranMaster::create($item_master);
+                    // ItemMaster::create($item_master);
                 }else{
                     foreach ($item_master as $row) {
                         $kode = $row->kode_item;
