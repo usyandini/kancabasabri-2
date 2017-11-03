@@ -713,13 +713,13 @@ class ItemController extends Controller
 
             if (count($result) > 0) {
                 // return redirect()->back()->withErrors($result);
-                return view('master.item.import-xls',['fail'=>$result]);
+                // return view('master.item.import-xls',['fail'=>$result]);
             }
             // redirect()->back();
-             return view('master.item.import-xls',['fail'=>null]);
+             // return view('master.item.import-xls',['fail'=>null]);
         }
 
-        return redirect()->back()->withErrors($validator);
+        // return redirect()->back()->withErrors($validator);
     }
 
     public function validateTransaksiXlsColumns($data)
@@ -793,51 +793,53 @@ class ItemController extends Controller
         $insert_success = $errors = [];
         if (isset($data) && !empty($data) && count($data) > 0) {
             foreach ($data as $key => $value) {
-                $input = [
-                    'kode_item' => $this->isExistInDB($value['item'], 'item_kode'),
-                    'nama_item' => $value['item'],
-                    'SEGMEN_1'  => $this->isExistInDB($value['account'], 'account'),
-                    'SEGMEN_2'  => $this->isExistInDB($value['program'], 'program'),
-                    'SEGMEN_3'  => $this->isExistInDB($value['kpkc'], 'kpkc'),
-                    'SEGMEN_4'  => $this->isExistInDB($value['divisi'], 'divisi'),
-                    'SEGMEN_5'  => $this->isExistInDB($value['sub_pos'], 'sub_pos'),
-                    'SEGMEN_6'  => $this->isExistInDB($value['mata_anggaran'], 'mata_anggaran'),
-                    'is_displayed'  => $value['display_item_semua_cabang'] == 'Y' ? 1 : 0,
-                    'created_by'    => \Auth::user()->id];
+                if(isset($value['item'])){
+                    $input = [
+                        'kode_item' => $this->isExistInDB($value['item'], 'item_kode'),
+                        'nama_item' => $value['item'],
+                        'SEGMEN_1'  => $this->isExistInDB($value['account'], 'account'),
+                        'SEGMEN_2'  => $this->isExistInDB($value['program'], 'program'),
+                        'SEGMEN_3'  => $this->isExistInDB($value['kpkc'], 'kpkc'),
+                        'SEGMEN_4'  => $this->isExistInDB($value['divisi'], 'divisi'),
+                        'SEGMEN_5'  => $this->isExistInDB($value['sub_pos'], 'sub_pos'),
+                        'SEGMEN_6'  => $this->isExistInDB($value['mata_anggaran'], 'mata_anggaran'),
+                        'is_displayed'  => $value['display_item_semua_cabang'] == 'Y' ? 1 : 0,
+                        'created_by'    => \Auth::user()->id];
 
-                $validate[$key] = Validator::make($input, 
-                    [
-                        // 'kode_item' => 'required',
-                        'nama_item' => 'required',
-                        'SEGMEN_1'  => 'not_in:-',
-                        'SEGMEN_2'  => 'not_in:-',
-                        'SEGMEN_3'  => 'not_in:-',
-                        'SEGMEN_4'  => 'not_in:-',
-                        'SEGMEN_5'  => 'not_in:-',
-                        'SEGMEN_6'  => 'not_in:-'], 
-                    [
-                        // 'kode_item.required'    => '<b>Nilai Kode Item ('.$value['kode_item'].')</b> pada <b>row '.($key+1).'</b> harus diisi. Row gagal diinput.',
-                        'nama_item.required'    => '<b>Nilai Nama Item ('.$value['item'].')</b> pada <b>row '.($key+1).'</b> harus diisi. Row gagal diinput.',
-                        'SEGMEN_1.not_in'       => '<b>Nilai (ID) Account ('.$value['account'].')</b> pada <b>row '.($key+1).'</b> tidak terdapat di basis data. Row gagal diinput.',
-                        'SEGMEN_2.not_in'       => '<b>Nilai (ID) Program ('.$value['program'].')</b> pada <b>row '.($key+1).'</b> tidak terdapat di basis data. Row gagal diinput.',
-                        'SEGMEN_3.not_in'       => '<b>Nilai (ID) KPKC ('.$value['kpkc'].')</b> pada <b>row '.($key+1).'</b> tidak terdapat di basis data. Row gagal diinput.',
-                        'SEGMEN_4.not_in'       => '<b>Nilai (ID) Divisi ('.$value['divisi'].')</b> pada <b>row '.($key+1).'</b> tidak terdapat di basis data. Row gagal diinput.',
-                        'SEGMEN_5.not_in'       => '<b>Nilai (ID) Subpos ('.$value['sub_pos'].')</b> pada <b>row '.($key+1).'</b> tidak terdapat di basis data. Row gagal diinput.',
-                        'SEGMEN_6.not_in'       => '<b>Nilai (ID) Mata Anggaran ('.$value['mata_anggaran'].')</b> pada <b>row '.($key+1).'</b> tidak terdapat di basis data. Row gagal diinput.']);
-                
-                if ($validate[$key]->passes()) {
-                    $kodeIsStored = ItemMaster::where('kode_item', $input['kode_item'])->first();
-                    if (!$kodeIsStored) {
-                        ItemMaster::create($input);
-                        $insert_success[$key] = 'Item dengan <b>Kode Item '.$input['kode_item'].'</b> berhasil diinput.';
-                    } else {
-                        ItemMaster::where('kode_item', $input['kode_item'])->update($input);
-                        $insert_success[$key] = 'Item dengan <b>Kode Item '.$input['kode_item'].'</b> berhasil diperbarui.';
+                    $validate[$key] = Validator::make($input, 
+                        [
+                            // 'kode_item' => 'required',
+                            'nama_item' => 'required',
+                            'SEGMEN_1'  => 'not_in:-',
+                            'SEGMEN_2'  => 'not_in:-',
+                            'SEGMEN_3'  => 'not_in:-',
+                            'SEGMEN_4'  => 'not_in:-',
+                            'SEGMEN_5'  => 'not_in:-',
+                            'SEGMEN_6'  => 'not_in:-'], 
+                        [
+                            // 'kode_item.required'    => '<b>Nilai Kode Item ('.$value['kode_item'].')</b> pada <b>row '.($key+1).'</b> harus diisi. Row gagal diinput.',
+                            'nama_item.required'    => '<b>Nilai Nama Item ('.$value['item'].')</b> pada <b>row '.($key+1).'</b> harus diisi. Row gagal diinput.',
+                            'SEGMEN_1.not_in'       => '<b>Nilai (ID) Account ('.$value['account'].')</b> pada <b>row '.($key+1).'</b> tidak terdapat di basis data. Row gagal diinput.',
+                            'SEGMEN_2.not_in'       => '<b>Nilai (ID) Program ('.$value['program'].')</b> pada <b>row '.($key+1).'</b> tidak terdapat di basis data. Row gagal diinput.',
+                            'SEGMEN_3.not_in'       => '<b>Nilai (ID) KPKC ('.$value['kpkc'].')</b> pada <b>row '.($key+1).'</b> tidak terdapat di basis data. Row gagal diinput.',
+                            'SEGMEN_4.not_in'       => '<b>Nilai (ID) Divisi ('.$value['divisi'].')</b> pada <b>row '.($key+1).'</b> tidak terdapat di basis data. Row gagal diinput.',
+                            'SEGMEN_5.not_in'       => '<b>Nilai (ID) Subpos ('.$value['sub_pos'].')</b> pada <b>row '.($key+1).'</b> tidak terdapat di basis data. Row gagal diinput.',
+                            'SEGMEN_6.not_in'       => '<b>Nilai (ID) Mata Anggaran ('.$value['mata_anggaran'].')</b> pada <b>row '.($key+1).'</b> tidak terdapat di basis data. Row gagal diinput.']);
+                    
+                    if ($validate[$key]->passes()) {
+                        $kodeIsStored = ItemMaster::where('kode_item', $input['kode_item'])->first();
+                        if (!$kodeIsStored) {
+                            ItemMaster::create($input);
+                            $insert_success[$key] = 'Item dengan <b>Kode Item '.$input['kode_item'].'</b> berhasil diinput.';
+                        } else {
+                            ItemMaster::where('kode_item', $input['kode_item'])->update($input);
+                            $insert_success[$key] = 'Item dengan <b>Kode Item '.$input['kode_item'].'</b> berhasil diperbarui.';
+                        }
                     }
-                }
 
-                if (count($validate[$key]->failed()) == 8) {
-                    unset($validate[$key]);
+                    if (count($validate[$key]->failed()) == 8) {
+                        unset($validate[$key]);
+                    }
                 }
             }
 
@@ -847,7 +849,7 @@ class ItemController extends Controller
                 }
             }
 
-            // print_r($errors);
+            print_r($errors);
 
             if (count($insert_success) > 0) { session()->flash('insert_success', $insert_success); }
         } else {
