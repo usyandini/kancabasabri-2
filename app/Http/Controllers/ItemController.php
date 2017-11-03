@@ -713,13 +713,13 @@ class ItemController extends Controller
 
             if (count($result) > 0) {
                 // return redirect()->back()->withErrors($result);
-                // return view('master.item.import-xls',['fail'=>$result]);
+                return view('master.item.import-xls',['fail'=>$result]);
             }
             // redirect()->back();
-             // return view('master.item.import-xls',['fail'=>null]);
+             return view('master.item.import-xls',['fail'=>null]);
         }
 
-        // return redirect()->back()->withErrors($validator);
+        return redirect()->back()->withErrors($validator);
     }
 
     public function validateTransaksiXlsColumns($data)
