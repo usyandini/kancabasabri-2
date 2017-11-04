@@ -258,6 +258,8 @@
                         @can('manajemen_a_RUPS')
                         <li class="is-shown {{ checkActiveMenu('arahan_rups') }}"><a href="{{ url('/arahan_rups', $parameters = [], $secure = null) }}" class="menu-item">Arahan RUPS</a></li>
                         @endcan
+                        <li class="is-shown {{ checkActiveMenu('arahan_rups') }}" style="visibility:hidden"><a href="" class="menu-item"></a>/li>
+                        
                     </ul>
                     </li>
                     @endif
