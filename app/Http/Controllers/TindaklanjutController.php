@@ -789,7 +789,7 @@ class TindaklanjutController extends Controller
         $tgl_mulai = DB::table('tl_tanggal')
                     ->where('unitkerja',$dec_unit_kerja)
                     ->where('internal','1')
-                    ->where('kirim','<>','1')
+                    ->where('kirim','<>','1')->orderBy('tgl_mulai','DESC')
                     ->lists('tgl_mulai');
         return json_encode($tgl_mulai);
     }
@@ -799,7 +799,7 @@ class TindaklanjutController extends Controller
     	$dec_unit_kerja=urldecode($unitkerja);
         $tgl_mulai = DB::table('tl_tanggal')
                     ->where('unitkerja',$dec_unit_kerja)
-                    ->where('internal','1')
+                    ->where('internal','1')->orderBy('tgl_mulai','DESC')
                     ->lists('tgl_mulai');
         return json_encode($tgl_mulai);
     }
@@ -809,7 +809,7 @@ class TindaklanjutController extends Controller
     	$dec_unit_kerja=urldecode($unitkerja);
         $tgl_mulai = DB::table('tl_tanggal')
                     ->where('unitkerja',$dec_unit_kerja)
-                    ->where('internal','2')
+                    ->where('internal','2')->orderBy('tgl_mulai','DESC')
                     ->lists('tgl_mulai');
         return json_encode($tgl_mulai);
     }

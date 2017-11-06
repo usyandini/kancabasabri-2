@@ -409,8 +409,7 @@
 				                           		<td><center>
 				                           			@if ($b->tindaklanjut!="")
 				                           				@if ($b->name=="") Tidak Ada
-				                           				@else 
-				                           					{{ $b->name }}<br>
+				                           				@else
 				                           					<a href="{{ URL('tindaklanjut/download/'. $b->id4) }}" target="_blank">{{ $b->name }}</a>
 				                           				@endif
 				                           			@endif</center></td>
