@@ -76,7 +76,7 @@
             <div class="row">
             	<section id="select-inputs">
             		<div class="row">
-            			<div class="col-xs-6">
+            			<div class="col-xs-12">
             				<div class="card">
             					<div class="card-header">
             						<h4 class="card-title">Pencarian Pengajuan Dropping</h4>
@@ -87,10 +87,10 @@
             							<form enctype="multipart/form-data" role="form" action="{{ URL('acc_pengajuan_dropping/carimyform') }}" method="GET" >
             								<div class="row">
             									{{ csrf_field() }}
-            									<div class="col-xs-6 col-xl-6">
+            									<div class="col-xs-4">
             										<div class="form-group">
-            											<label>Kantor Cabang</label>
-            											<select class="select2 form-control block" name="cabang" id="cabang" onchange="changeUnit()" required="required">
+            											<label>Kantor Cabang</label><br>
+            											<select class="select2 form-control block" name="cabang" id="cabang" style="width:300px" onchange="changeUnit()" required="required">
             												<option value=""> - Pilih Kantor Cabang - </option>
             												<?php
             												$second="SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_KPKC]  WHERE VALUE!='00'";
@@ -105,15 +105,15 @@
             											</select>
             										</div>
             									</div>
-            									<div class="col-xl-6 col-xs-6 col-md-6">
+            									<div class="col-xs-3.5">
             										<div class="form-grpup">
-            											<label>Tanggal</label>
-            											<select class="select2 form-control block" name="tanggal" style="width:300px" required="required"></select>
+            											<label>Tanggal</label><br>
+            											<select class="select2 form-control block" name="tanggal" style="width:200px" required="required"></select>
             										</div>
             									</div>
             								</div>
             								<div class="row">
-            									<div class="col-xs-6">
+            									<div class="col-xs-7">
             										<button type="submit" class="btn btn-outline-primary"><i class="fa fa-search "></i> Cari</button>
             									</div>
             								</div>

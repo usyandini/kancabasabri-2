@@ -61,7 +61,7 @@
                 <div class="row breadcrumbs-top">
                   <div class="breadcrumb-wrapper col-xs-12">
                     <ol class="breadcrumb">
-                      <li class="breadcrumb-item">Pengajuan Dropping</li>
+                      <li class="breadcrumb-item"><a href="#">Pengajuan Dropping</a></li>
                     </ol>
                   </div>
                 </div>
@@ -155,7 +155,7 @@
                           <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
                           <div class="card-body collapse in">                           
                             <div class="card-block">
-                              <a href="#" class="btn btn-outline-success btn" data-target="#tambah" data-toggle="modal"><i class="fa fa-plus"></i> Tambah Pengajuan</a>
+                              <a href="#" class="btn btn-outline-success btn" data-target="#tambah" data-toggle="modal"><i class="fa fa-plus"></i><b> Tambah Pengajuan</b></a>
                               <div class="modal fade" data-backdrop="static" id="tambah" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                                 <div class="modal-dialog">
                                   <div class="modal-content">

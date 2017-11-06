@@ -244,7 +244,7 @@ Route::group(['middleware' => 'auth'], function() {
 
 	Route::group(['prefix' => 'tindaklanjutinternal'], function(){
 		Route::get('/', 'TindaklanjutController@tindaklanjutinternal');
-		Route::post('/cari', 'TindaklanjutController@cari_unitkerjainternal');
+		Route::get('/cari/tindaklanjut', 'TindaklanjutController@cari_unitkerjainternal');
 		Route::get('/{id}', 'TindaklanjutController@unitkerjainternal');
 		Route::get('/myform/{unitkerja}', 'TindaklanjutController@myformAjax');
 		Route::get('/kirim2/{id1}', 'TindaklanjutController@kirim_tindaklanjut2');
