@@ -54,13 +54,23 @@
                                   </div>
                                 </div>
                                 @endif
-                                @if(count($errors) > 0)
+
+                              
+                                @if(count($errors) > 0||count($fail) >0)
                                 <div class="col-xs-12">
                                   <div class="alert alert-danger alert-dismissable">
                                     <ul>
-                                      @foreach ($errors->all() as $error)
-                                      <li>{!! $error !!}</li>
-                                      @endforeach
+                                      @if(count($fail) > 0)
+                                        @foreach ($fail as $err)
+                                          @foreach ($err as $error)
+                                          <li>{!! $error !!}</li>
+                                          @endforeach
+                                        @endforeach
+                                      @else
+                                        @foreach ($errors->all() as $error)
+                                          <li>{!! $error !!}</li>
+                                        @endforeach
+                                      @endif
                                     </ul>
                                   </div>
                                 </div>

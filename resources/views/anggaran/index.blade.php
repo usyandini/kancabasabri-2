@@ -372,7 +372,7 @@
                         document.getElementById("bts_detik").value= seconds + " Detik";
                         document.getElementById("bts").innerHTML = days + "d " + hours + "h "
                         + minutes + "m " + seconds + "s ";
-                        
+
                         // If the count down is over, write some text 
                         if (distance < 0) {
                             @if($mulai)

@@ -168,11 +168,19 @@ class AnggaranController extends Controller
 
     public function change_pengajuan(Request $request, $id){
         $input = $request->except('_method', '_token');
+        if(!isset($input['tanggal_mulai'])){
+            unset($input['tanggal_mulai']);
+        }
         $validator = $this->validateBatas($input);
 
         if ($validator->passes()) {
             $batas = BatasAnggaran::where('id',$id)->first();
-            BatasAnggaran::where('id',$id)->update(['tanggal_mulai'=>$input['tanggal_mulai'],'tanggal_selesai'=>$input['tanggal_selesai'],'active'=>'1']);
+            if(!isset($input['tanggal_mulai'])){
+                BatasAnggaran::where('id',$id)->update(['tanggal_selesai'=>$input['tanggal_selesai'],'active'=>'1']);
+            }else{
+                BatasAnggaran::where('id',$id)->update(['tanggal_mulai'=>$input['tanggal_mulai'],'tanggal_selesai'=>$input['tanggal_selesai'],'active'=>'1']);
+            }
+            // BatasAnggaran::where('id',$id)->update(['tanggal_mulai'=>$input['tanggal_mulai'],'tanggal_selesai'=>$input['tanggal_selesai'],'active'=>'1']);
             session()->flash('success', 'Waktu Pengajuan Anggaran dan Kegiatan Untuk '.$batas->unit_kerja." telah diubah");
 
             return redirect()->back();
@@ -184,7 +192,7 @@ class AnggaranController extends Controller
     {
         return Validator::make($input, 
             [
-                'tanggal_mulai'  => 'required',
+                'tanggal_mulai'  => 'sometimes|required',
                 'tanggal_selesai'  => 'required',
                 'unit_kerja'    => 'unique:batas_anggaran,unit_kerja,'.$id
             ],[
@@ -263,21 +271,24 @@ class AnggaranController extends Controller
         $diff2 = strtotime($date_selesai) - strtotime($date_now);
         $mulai=false;
         $batas=$date_selesai;
-        if($diff2 <= 0){
+
+        if($diff2 < 0){
             $beda = false;
         }else{
             $beda = true;
+            if($diff1 < 0){
+                $mulai=true;
+                $batas= $date_mulai;
+                $beda = false;
+            }else{
+                $beda = true;
+            }
         }
 
-        if($diff1 < 0){
-            $mulai=true;
-            $batas= $date_mulai;
-            $beda = false;
-        }else{
-            $beda = true;
-        }
+       
 
         // echo $date_mulai.":".$diff1;
+        // echo $beda?1:0;
 
         return view('anggaran.index', [
             'title' => 'Tambah Kegiatan dan Anggaran',
