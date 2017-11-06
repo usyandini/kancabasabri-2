@@ -52,9 +52,12 @@
                                       <label>Tahun</label>
                                       <select class="select2 form-control" name="cari_tahun" id="cari_tahun">
                                         <option value="0">Semua Tahun</option>
-                                        <option value="2017">2017</option>
-                                        <option value="2016">2016</option>
-                                        <option value="2015">2015</option>
+                                        <?php
+                                          $thn_skr = date('Y');
+                                          for($x=$thn_skr; $x >= 2005; $x--){
+                                        ?>
+                                          <option value="<?php echo $x;?>"><?php echo $x;?></option>
+                                        <?php }?>
                                       </select>
                                     </div>
                                   </div>                                    
