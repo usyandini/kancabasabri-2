@@ -183,31 +183,21 @@
                                           <div onclick="download_post()" id="download_r" name="download_r" class="btn btn-secondary" target="_blank"><i class="fa fa-download"></i> Unduh</div>
                                         </div>
                                       </div>
-                                      <div id="grup_r_p">
-                                        <div class="col-xs-6 ">
-                                          <div class="col-xs-4 ">
-                                            <div class="form-group">
-                                              <!-- <button type="submit" class="btn btn-info"><i class="fa fa-check"></i> Disetujui</button> -->
-                                              <div id="accept_r" name="accept_r" onclick="changeButton()" class="btn btn-success"><i class="fa fa-check"></i> Disetujui</div>
-                                            
-                                            </div>
+                                      <div class="col-xs-6 ">
+                                      </div>
+                                      <div id="grup_r_p" class="col-xs-4">
+                                        <div class="col-xs-6">
+                                          <div class="form-group">
+                                            <!-- <button type="submit" class="btn btn-warning"><i class="fa fa-edit"></i> Edit</button> -->
+                                            <a href="{{url('anggaran/persetujuan/'.$filters['nd_surat'].'/3')}}" id="edit_r" name="edit_r"  class="btn btn-warning"><i class="fa fa-edit"></i> Edit</a>
+                                            <div onclick="check('Simpan')" id="save_r" name="save_r"  class="btn btn-primary" style="display:none"><i class="fa fa-save"></i> Simpan</div>
                                           </div>
                                         </div>
-                                        <div class="col-xs-6 " >
-
-                                          <div class="col-xs-3 pull-right">
-                                            <div class="form-group">
-                                              <!-- <button type="submit" class="btn btn-success"><i class="fa fa-send"></i> Kirim</button> -->
-                                              <div id="send_r" name="send_r" class="btn btn-success" style="display:none"><i class="fa fa-send"></i> Kirim</div>
-                                            </div>
-                                          </div>
-                                          <div class="col-xs-3 pull-right">
-                                            <div class="form-group">
-                                              <!-- <button type="submit" class="btn btn-warning"><i class="fa fa-edit"></i> Edit</button> -->
-                                              <a href="{{url('anggaran/persetujuan/'.$filters['nd_surat'].'/3')}}" id="edit_r" name="edit_r"  class="btn btn-warning"><i class="fa fa-edit"></i> Edit</a>
-                                              <div style="display:none" onclick="check('Simpan')" id="save_r" name="save_r"  class="btn btn-primary"><i class="fa fa-save"></i> Simpan</div>
-                                            
-                                            </div>
+                                        <div class="col-xs-6 ">
+                                          <div class="form-group">
+                                            <!-- <button type="submit" class="btn btn-success"><i class="fa fa-send"></i> Kirim</button> -->
+                                            <div id="accept_r" name="accept_r" class="btn btn-success"  onclick="changeButton()"><i class="fa fa-check"></i> Disetujui</div>
+                                            <div id="send_r" name="send_r" class="btn btn-success" style="display:none"><i class="fa fa-send"></i> Kirim</div>
                                           </div>
                                         </div>
                                       </div>
@@ -484,6 +474,7 @@
                           item["tw_iii"]= validDigits(item.tw_iii);
                           item["tw_iv"]= validDigits(item.tw_iv);
                           item["anggarana_setahun"]= validDigits(item.anggarana_setahun);
+
                           item["delete"]="none";
                           if(item["isNew"]){
                             inputs.splice(item["tempId"], 1, item); 
@@ -496,8 +487,8 @@
                                     for(j=0;j<inputs[i]["file"].length;j++){
                                       item["file"][j]["delete"]=inputs[i]["file"][j]["delete"];
                                     }
-                                    inputs[i] = item; 
                                   }
+                                  inputs[i] = item;
                                 }
                               }
                             }
@@ -853,7 +844,17 @@
                             validate: {
                               message : "Isi Kolom Kuantitas terlebih dahulu." ,
                               validator :function(value, item) {
-                                  return value > 0 ;
+                                  
+
+                                  @if($persetujuan == 1)
+                                    return value > 0 ;
+                                  @else
+                                    if(item.terpusat == 1){
+                                      return true;
+                                    }else{
+                                      return value > 0 ;
+                                    }
+                                  @endif
                               } 
                             }
                           },
@@ -928,7 +929,16 @@
                                 validator :function(value, item) {
 
                                     var val = validDigits(value);
-                                    return val > 0 ;
+
+                                    @if($persetujuan == 1)
+                                      return val > 0 ;
+                                    @else
+                                      if(item.terpusat == 1){
+                                        return true;
+                                      }else{
+                                        return val > 0 ;
+                                      }
+                                    @endif
                                 } 
                               }
                           },
@@ -946,15 +956,18 @@
                             insertTemplate: function() {
                               var result = jsGrid.fields.select.prototype.insertTemplate.call(this);
                               result.on("change", function() {
-                                  changeDataUnitKerjaLine($(this).val(),"insert");
+                                  if({{$persetujuan}}!=1)
+                                    changeDataUnitKerjaLine($(this).val(),"insert");
                               });
                               return result; 
                             },
                             editTemplate: function(value) {
                               var result = jsGrid.fields.select.prototype.editTemplate.call(this);
                               $(result).val(value);
+                              
                               result.on("change", function() {
-                                  changeDataUnitKerjaLine($(this).val(),"edit");
+                                  if({{$persetujuan}}!=1)
+                                    changeDataUnitKerjaLine($(this).val(),"edit");
                               });
                               return result; 
                             },
@@ -1032,11 +1045,15 @@
                                   var sum = twi_val+twii_val+twiii_val+twiv_val;
                                   
                                   // alert(twi_val+"+"+twii_val+"+"+twiii_val+"+"+twiv_val);
-                                  if(item.terpusat == 1){
-                                    return true;
-                                  }else{
+                                  @if($persetujuan == 1)
                                     return (sum <= anggaran_val && sum >= anggaran_val) ;
-                                  }
+                                  @else
+                                    if(item.terpusat == 1){
+                                      return true;
+                                    }else{
+                                      return (sum <= anggaran_val && sum >= anggaran_val) ;
+                                    }
+                                  @endif
                               }
                             }
                           },
@@ -1188,11 +1205,16 @@
                                   // alert("anggarant");
                                   var sum = twi_val+twii_val+twiii_val+twiv_val;
                                   // alert(sum);
-                                  if(item.terpusat == 1){
-                                    return true;
-                                  }else{
+
+                                  @if($persetujuan == 1)
                                     return (sum <= anggaran_val && sum >= anggaran_val) ;
-                                  }
+                                  @else
+                                    if(item.terpusat == 1){
+                                      return true;
+                                    }else{
+                                      return (sum <= anggaran_val && sum >= anggaran_val) ;
+                                    }
+                                  @endif
                               }
                             }
                           },
@@ -1518,7 +1540,7 @@
                                       inserting: false,
                                     });
                                 }
-                                   // alert('{{$beda}}');
+                                   // alert('{{$beda?1:0}}');
                                 document.getElementById("nd_surat").value = nd_surat;
                                 document.getElementById("id_anggaran").value = data[0].id;
                                 document.getElementById("stat_anggaran").value = status_anggaran;
@@ -1538,7 +1560,7 @@
                                   document.getElementById("grup_uk").style.display="none";
                                 }else if(data[0].persetujuan =="1"){
                                   document.getElementById("grup_m").style.display="none";
-                                  @if($status=='setuju'&&$beda)
+                                  @if($status=='setuju')
                                     document.getElementById("grup_r").style.display="block";
                                   @else
                                     document.getElementById("grup_r").style.display="block";
@@ -1586,6 +1608,10 @@
                   function changeDataUnitKerjaLine(type,type2){
                     if(type2 == "insert"){
                       if(type == 1){
+                        $(kuantitas_field_insert).val("");
+                        $(kuantitas_field_insert).attr("readOnly", true);
+                        $(nilai_field_insert).val("");
+                        $(nilai_field_insert).attr("readOnly", true);
                         $(unitk_field_insert).val("");
                         $(twi_field_insert).val("");
                         $(twi_field_insert).attr("readOnly", true);
@@ -1596,6 +1622,10 @@
                         $(twiv_field_insert).val("");
                         $(twiv_field_insert).attr("readOnly", true);
                       }else{
+                        $(kuantitas_field_insert).val("");
+                        $(kuantitas_field_insert).attr("readOnly", false);
+                        $(nilai_field_insert).val("");
+                        $(nilai_field_insert).attr("readOnly", false);
                         $(unitk_field_insert).val(document.getElementById("unit_kerja").value);
                         $(twi_field_insert).val("");
                         $(twi_field_insert).attr("readOnly", false);
@@ -1608,6 +1638,10 @@
                       } 
                     }else if(type2 == "edit"){
                       if(type == 1){
+                        $(kuantitas_field_edit).val("");
+                        $(kuantitas_field_edit).attr("readOnly", true);
+                        $(nilai_field_edit).val("");
+                        $(nilai_field_edit).attr("readOnly", true);
                         $(unitk_field_edit).val("");
                         $(twi_field_edit).val("");
                         $(twi_field_edit).attr("readOnly", true);
@@ -1618,6 +1652,10 @@
                         $(twiv_field_edit).val("");
                         $(twiv_field_edit).attr("readOnly", true);
                       }else{
+                        $(kuantitas_field_edit).val("");
+                        $(kuantitas_field_edit).attr("readOnly", false);
+                        $(nilai_field_edit).val("");
+                        $(nilai_field_edit).attr("readOnly", false);
                         $(unitk_field_edit).val(document.getElementById("unit_kerja").value);
                         $(twi_field_edit).val("");
                         $(twi_field_edit).attr("readOnly", false);
@@ -1702,91 +1740,108 @@
                       toastr.error("Silahkan Isi Form Nomor Surat Terlebih Dahulu. Terima kasih.", "Perhatian.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
                     } else if(inputs.length < 1){
                       toastr.error("Silahkan tambahkan minimal 1 daftar anggaran untuk melakukan penyimpanan. Terima kasih.", "Minimal satu anggaran yang diisi.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
-                    }else{
-                      var stop = false;
-
-                      status = {{ $status=='edit' ? 1 : 0 }};
+                    } else {
+                      var terpusat = false;
                       for(i=0;i<inputs.length;i++){
-                        nameClass = $('.file_'+i);
-                        if(nameClass.length != 0){
-                          count=0;
-                          for(j=0;j<nameClass.length;j++){
-                            if(document.getElementById("file_name_"+i+"_"+j) != null){
-                              file = document.getElementById("file_name_"+i+"_"+j).value;
-                              if(file=="null"){
-                                count++;
+                        
+                        if(inputs[i]["terpusat"] == 1){
+                          if(inputs[i]["anggarana_setahun"] == 0){
+                            terpusat = true;
+                            break;
+                          }
+                        }
+                        
+
+                      }
+                      if({{$persetujuan}} == 1&&terpusat){
+                        toastr.error("Silahkan isi terlebih dahulu data anggaran yang terpusat untuk menyimpan perubahan atau melanjutkan verifikasi . Terima kasih.", "Terdapat data anggaran kegiatan terpusat.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
+                      }else{
+
+                        var stop = false;
+
+                        status = {{ $status=='edit' ? 1 : 0 }};
+                        for(i=0;i<inputs.length;i++){
+                          nameClass = $('.file_'+i);
+                          if(nameClass.length != 0){
+                            count=0;
+                            for(j=0;j<nameClass.length;j++){
+                              if(document.getElementById("file_name_"+i+"_"+j) != null){
+                                file = document.getElementById("file_name_"+i+"_"+j).value;
+                                if(file=="null"){
+                                  count++;
+                                }
                               }
                             }
+                            if(count==nameClass.length){
+                              stop=true;
+                            }
                           }
-                          if(count==nameClass.length){
-                            stop=true;
+                          if(!stop){
+                            if(nameClass.length!=0){
+                              var countFile = $('<input/>',{type:'hidden',id:('count_file_'+i),
+                              name:('count_file_'+i),value:nameClass.length});
+                              countFile.appendTo("#file_grid");
+                            }
+                            
                           }
                         }
-                        if(!stop){
-                          if(nameClass.length!=0){
-                            var countFile = $('<input/>',{type:'hidden',id:('count_file_'+i),
-                            name:('count_file_'+i),value:nameClass.length});
-                            countFile.appendTo("#file_grid");
-                          }
-                          
-                        }
-                      }
-                      if(status == 1){
-                        stop = false;
-                      }else{
-                        stop = false;
-                      }
-
-                      if(stop){
-                        toastr.error("Silahkan tambahkan berkas minimal 1 pada anggaran untuk melakukan penyimpanan. Terima kasih.", "Minimal satu berkas yang diunggah.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
-                      }else{
-                        if(statusTable!="null"){
-                          tampilan="";
-                          judul="";
-                          if(statusTable == "edit"){
-                            judul = "Terdapat Anggaran masih dalam perubahan";
-                            tampilan= "Silahkan Rubah dengan menekan tombol centang terlebih tahulu atau Batalkan dengan menekan tombol silang. Terima kasih.";
-                          }else if("insert"){
-                            judul = "Terdapat form masukan anggaran yang aktif";
-                            tampilan= "Silahkan isi pada form masukkan anggaran dan tekan tombol tambah pada baris anggaran atau Batalkan dengan menekan tombol tambah di kepala tabel anggaran. Terima kasih.";
-                          }
-
-                          toastr.error(tampilan, judul, { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
+                        if(status == 1){
+                          stop = false;
                         }else{
-                          document.getElementById("setuju").value = type;
-                          var title_modal="";
-                          var pernyataan_modal="";
-                          var form_penolakan="none";
-                          var nd_surat = document.getElementById("nd_surat").value;
-                          if(type=="Simpan"){
-                            title_modal="Pernyimpanan Anggaran dan Kegiatan";
-                            pernyataan_modal = "<p>Apakah anda yakin Akan Menyimpan Anggaran dan Kegiatan dengan Nomor Dinas/Surat "+nd_surat+"?</p>";
-                          }else if(type=="Kirim"){
-                            title_modal="Pengajuan Anggaran dan Kegiatan";
-                            pernyataan_modal = "<p>Apakah anda yakin Akan Mengajukan Anggaran dan Kegiatan dengan Nomor Dinas/Surat "+nd_surat+"?</p>";
-                          }else if(type=="Setuju"){
-                            title_modal="Persetujuan Anggaran dan Kegiatan";
-                            pernyataan_modal = "<p>Apakah anda yakin Akan Menyetujui Pengajuan dan Anggaran Kegiatan dengan Nomor Dinas/Surat "+nd_surat+"?</p>";
-                          }else if(type=="Tolak"){
-                            title_modal="Penolakkan Anggaran dan Kegiatan";
-                            pernyataan_modal = "<p>Apakah anda yakin Akan Menolak Pengajuan Anggaran dan Kegiatan dengan Nomor Dinas/Surat "+nd_surat+"?</p>";
-                            pernyataan_modal += "<p>Silahkan Isi Alasan Penolakan DIbawah ini : </p>";
-                            form_penolakan = "block";
-                          }
-                          document.getElementById("title_modal_pernyataan").innerHTML = title_modal;
-                          document.getElementById("teks_pernyataan").value = pernyataan_modal;
-                          document.getElementById("form_penolakan").style.display = form_penolakan;
-                          document.getElementById("button_peryataan").innerHTML = "Ya, "+type;
+                          stop = false;
+                        }
 
-                          if(type == "Tolak"&&document.getElementById("alasan_penolakan".value="")){
-                            toastr.error("Silahkan Isi Alasan Penolakan Anda. Terima kasih.", "Alasan Penolakan Kosong.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
+                        if(stop){
+                          toastr.error("Silahkan tambahkan berkas minimal 1 pada anggaran untuk melakukan penyimpanan. Terima kasih.", "Minimal satu berkas yang diunggah.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
+                        }else{
+                          if(statusTable!="null"){
+                            tampilan="";
+                            judul="";
+                            if(statusTable == "edit"){
+                              judul = "Terdapat Anggaran masih dalam perubahan";
+                              tampilan= "Silahkan Rubah dengan menekan tombol centang terlebih tahulu atau Batalkan dengan menekan tombol silang. Terima kasih.";
+                            }else if("insert"){
+                              judul = "Terdapat form masukan anggaran yang aktif";
+                              tampilan= "Silahkan isi pada form masukkan anggaran dan tekan tombol tambah pada baris anggaran atau Batalkan dengan menekan tombol tambah di kepala tabel anggaran. Terima kasih.";
+                            }
+
+                            toastr.error(tampilan, judul, { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
                           }else{
-                            $('#modal_pernyataan').modal({
-                                backdrop: 'static'
-                            });
-                          }
-                          
-                        } 
+                            document.getElementById("setuju").value = type;
+                            var title_modal="";
+                            var pernyataan_modal="";
+                            var form_penolakan="none";
+                            var nd_surat = document.getElementById("nd_surat").value;
+                            if(type=="Simpan"){
+                              title_modal="Pernyimpanan Anggaran dan Kegiatan";
+                              pernyataan_modal = "<p>Apakah anda yakin Akan Menyimpan Anggaran dan Kegiatan dengan Nomor Dinas/Surat "+nd_surat+"?</p>";
+                            }else if(type=="Kirim"){
+                              title_modal="Pengajuan Anggaran dan Kegiatan";
+                              pernyataan_modal = "<p>Apakah anda yakin Akan Mengajukan Anggaran dan Kegiatan dengan Nomor Dinas/Surat "+nd_surat+"?</p>";
+                            }else if(type=="Setuju"){
+                              title_modal="Persetujuan Anggaran dan Kegiatan";
+                              pernyataan_modal = "<p>Apakah anda yakin Akan Menyetujui Pengajuan dan Anggaran Kegiatan dengan Nomor Dinas/Surat "+nd_surat+"?</p>";
+                            }else if(type=="Tolak"){
+                              title_modal="Penolakkan Anggaran dan Kegiatan";
+                              pernyataan_modal = "<p>Apakah anda yakin Akan Menolak Pengajuan Anggaran dan Kegiatan dengan Nomor Dinas/Surat "+nd_surat+"?</p>";
+                              pernyataan_modal += "<p>Silahkan Isi Alasan Penolakan DIbawah ini : </p>";
+                              form_penolakan = "block";
+                            }
+                            document.getElementById("title_modal_pernyataan").innerHTML = title_modal;
+                            document.getElementById("teks_pernyataan").value = pernyataan_modal;
+                            document.getElementById("form_penolakan").style.display = form_penolakan;
+                            document.getElementById("button_peryataan").innerHTML = "Ya, "+type;
+
+                            if(type == "Tolak"&&document.getElementById("alasan_penolakan".value="")){
+                              toastr.error("Silahkan Isi Alasan Penolakan Anda. Terima kasih.", "Alasan Penolakan Kosong.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
+                            }else{
+                              $('#modal_pernyataan').modal({
+                                  backdrop: 'static'
+                              });
+                            }
+                            
+                          } 
+                        }
                       }
                     }
                   }
@@ -1819,7 +1874,7 @@
                     });
                     document.getElementById("accept_r").style.display="none";
                     document.getElementById("edit_r").style.display="block";
-                    document.getElementById("send_r").style.display="block";
+                    // document.getElementById("send_r").style.display="block";
                     var edit_href = document.getElementById('edit_r'); //or grab it by tagname etc
                     edit_href.href = "{{url('anggaran/persetujuan/'.$filters['nd_surat'].'/2')}}"
                   }

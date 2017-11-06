@@ -299,6 +299,7 @@ class AnggaranController extends Controller
             'batas' =>$batas,
             'mulai' =>$mulai,
             'status' => 'tambah',
+            'persetujuan'=>-1,
             'reject' => false,
             'filters' =>null,
             'display' => array('edit' => $displayEdit,
@@ -390,6 +391,7 @@ class AnggaranController extends Controller
             'mulai' =>$mulai,
             'status' => 'edit',
             'reject' => false,
+            'persetujuan'=>$persetujuan,
             'filters' => array('nd_surat' => $nd_surat),
             'display' => array('edit' => $displayEdit,
                     'save' => $displaySave,
@@ -458,7 +460,7 @@ class AnggaranController extends Controller
                 // echo "renbang";
         }
 
-        // echo $beda;
+        // echo $status;
         return view('anggaran.index', [
             'title' => 'Persetujuan Kegiatan dan Anggaran',
             'userCabang' =>$this->userCabang,
@@ -469,6 +471,7 @@ class AnggaranController extends Controller
             'mulai' =>false,
             'status' => 'setuju',
             'reject' => $reject,
+            'persetujuan'=>$persetujuan,
             'filters' => array('nd_surat' => $nd_surat),
             'display' => array('edit' => "none",
                     'save' => "none",
@@ -804,9 +807,9 @@ class AnggaranController extends Controller
 
         }
         
-        if($request->persetujuan != "Kirim"&&$request->setuju){
-            $status_view = redirect('anggaran/persetujuan/'.$request->nd_surat.'/1');
-        }
+        // if($request->persetujuan != "Kirim"&&$request->setuju){
+        //     $status_view = redirect('anggaran/persetujuan/'.$request->nd_surat.'/1');
+        // }
         return $status_view;
     }
 

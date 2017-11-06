@@ -227,8 +227,20 @@
                       { name: "nd_surat", align:"center", title: "Detail",  width: 150 ,
 
                         itemTemplate: function(value) {
-
+                          <?php
+                            $setuju = false;
+                            if(Gate::check('setuju_i')||Gate::check('setuju_ii')||Gate::check('setuju_iii')
+                              ||Gate::check('setuju_iv')||Gate::check('setuju_v')||Gate::check('setuju_vi')
+                              ||Gate::check('setuju_vii')||Gate::check('setuju_viii'))
+                              {
+                                $setuju = true;
+                              } 
+                          ?>
+                          @if($setuju)
+                          var button = "<a href='{{ url('anggaran/persetujuan/')}}/"+value+"./1'   class='btn btn-sm btn-primary'> Detail</a>";
+                          @else
                           var button = "<a href='{{ url('anggaran/edit/')}}/"+value+"'   class='btn btn-sm btn-primary'> Detail</a>";
+                          @endif
                           return button;
                         }
                       }
