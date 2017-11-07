@@ -55,8 +55,8 @@
                         }
 
                         if(link_con){
-                            link='';
-                            link2='';
+                            link='<div class="list-group-item">';
+                            link2='</div>';
                         }
                     }
                 }else if(val.type == 12){
