@@ -258,13 +258,18 @@ class TransaksiController extends Controller
                 break;
             case 'bank':
                 $header = ['BANK' => '-1', 'BANK_NAME' => 'Silahkan Pilih Bank', 'accessible' => true];
-                $KAS = ['BANK' => 'KAS-KC', 'BANK_NAME' => 'KAS KC/KCP', 'accessible' => true];
+                // $KAS = ['BANK' => 'KAS-KC', 'BANK_NAME' => 'KAS KC/KCP', 'accessible' => true];
                 $return = $this->bankModel->get(['BANK','BANK_NAME','ID_CABANG']);
                 
                 foreach ($return as $key => $value) {
                     $value->accessible = $value->isAccessibleByCabang();
+                    //unset jika tidak memiliki perizinan unit kerja
+                    $val = $value->isAccessibleByCabang();
+                    if(!$val){
+                        unset($return[$key]);
+                    }
                 }
-                $return->prepend($KAS);
+                // $return->prepend($KAS);
                 $return->prepend($header);
                 break;       
             case 'subpos':
