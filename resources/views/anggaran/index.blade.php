@@ -267,7 +267,7 @@
                         </div>
                       </div>
                       <div class="modal-footer">
-                        <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">Kembali</button>
+                        <button id="kembali" type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">Kembali</button>
                         @if(((Gate::check('tambah_item_a')||Gate::check('ubah_item_a')||Gate::check('hapus_item_a'))&& $beda)||(Gate::check('tambah_a')&&$status == "tambah"))
                         <div id="simpan_file" class="btn btn-outline-primary">Simpan</div>
                         @endif
@@ -464,6 +464,7 @@
                           click_berkas =true;
                                                       
                           inputs.push(item);
+                          console.log('insert','onItemInsert');
 
                         },
                         updateItem: function(item) {
@@ -495,28 +496,43 @@
                           }
 
                           click_berkas = true;
+
+                          console.log('update','onItemUpdate');
                         },
                       }, 
                       onRefreshed: function(args) {
                         var items = args.grid.option("data");
                         items.forEach(function(item) {
                           totalRows += 1;
-
                         });
                       },
                       onItemInserted:function(args){
                         statusTable = "null";
-                      },
-                      onItemInserting:function(args){
                         var count_berkas = 0;
-                        if(upload_file[inputs.length] != null){
-                          for(i=0;i<upload_file[inputs.length].length;i++){
-                            if(upload_file[inputs.length][i]!=null){
+
+                        // console.log('temp',temp_file);
+                        if(temp_file != null){
+                          upload_file[index_modal]=[];
+                          for(i=0;i<temp_file.length;i++){
+                            upload_file[index_modal][i]=temp_file[i];
+                            console.log((index_modal)+':'+i,upload_file[index_modal][i]);
+                            if(upload_file[index_modal][i]!=null){
                               count_berkas++;
                               readerPrev(i,index_modal);
                             }
                           }
                         }
+                        temp_file=[];
+                        console.log('insert','onItemInserted');
+                        var title = "Unggah Berkas";
+                        if(countFile>0){
+                          title=countFile+" Berkas"
+                        }
+                        // temp_file=[];
+                        document.getElementById('button_'+index_modal).innerHTML = title;
+                      },
+                      onItemInserting:function(args){
+                        console.log('insert','onItemInserting');
                       },
                       onItemEditing: function(args) {
 
@@ -530,7 +546,8 @@
 
                                   list_berkas[index_modal] = inputs[index_modal]["file"];
                                   click_berkas = true;
-                                  
+                                  temp_file=[];
+                                  console.log('update','onItemCancel');
                                   // alert("Cancel : "+JSON.stringify(inputs[index_modal]["file"]));
                               });
                            }, 200);
@@ -551,23 +568,40 @@
                           }
                         }
                           statusTable = "null";
+                          console.log('update','onItemDeleted');
 
                       },
                       onItemUpdating:function(args){
-                        var count_berkas = 0;
+
+                          console.log('update','onItemUpdating');
                         
-                        if(upload_file[index_modal] != null){
-                          for(i=0;i<upload_file[index_modal].length;i++){
-                            if(upload_file[index_modal][i]!=null){
-                              count_berkas++;
-                              readerPrev(i,index_modal);
-                            }
-                          }
-                        }
                       },
                       onItemUpdated: function(args) {
                           statusTable = "null";
-
+                          var count_berkas = 0;
+                          // console.log('temp',temp_file);
+                          console.log('status',simpan_file);
+                          if(simpan_file){
+                            if(temp_file != null){
+                              upload_file[index_modal]=[];
+                              for(i=0;i<temp_file.length;i++){
+                                upload_file[index_modal][i]=temp_file[i];
+                                console.log(index_modal+':'+i,upload_file[index_modal][i]);
+                                if(upload_file[index_modal][i]!=null){
+                                  count_berkas++;
+                                  readerPrev(i,index_modal);
+                                }
+                              }
+                            }
+                          }
+                          temp_file=[];
+                          console.log('update','onItemUpdated');
+                          var title = "Unggah Berkas";
+                          if(countFile>0){
+                            title=countFile+" Berkas"
+                          }
+                          // temp_file=[];
+                          document.getElementById('button_'+index_modal).innerHTML = title;
                           // alert(statusTable);
                       },
                       fields: [
@@ -1243,6 +1277,7 @@
                               }
 
                               if(upload_file[id_list] != null){
+                                // alert(upload_file[id_list].length);
                                 for(i=0;i<upload_file[id_list].length;i++){
                                   if(upload_file[id_list][i]!=null){
                                     count_berkas++;
@@ -1622,9 +1657,9 @@
                         $(twiv_field_insert).val("");
                         $(twiv_field_insert).attr("readOnly", true);
                       }else{
-                        $(kuantitas_field_insert).val("");
+                        // $(kuantitas_field_insert).val("");
                         $(kuantitas_field_insert).attr("readOnly", false);
-                        $(nilai_field_insert).val("");
+                        // $(nilai_field_insert).val("");
                         $(nilai_field_insert).attr("readOnly", false);
                         $(unitk_field_insert).val(document.getElementById("unit_kerja").value);
                         $(twi_field_insert).val("");
@@ -1652,9 +1687,9 @@
                         $(twiv_field_edit).val("");
                         $(twiv_field_edit).attr("readOnly", true);
                       }else{
-                        $(kuantitas_field_edit).val("");
+                        // $(kuantitas_field_edit).val("");
                         $(kuantitas_field_edit).attr("readOnly", false);
-                        $(nilai_field_edit).val("");
+                        // $(nilai_field_edit).val("");
                         $(nilai_field_edit).attr("readOnly", false);
                         $(unitk_field_edit).val(document.getElementById("unit_kerja").value);
                         $(twi_field_edit).val("");
@@ -1936,6 +1971,9 @@
                       }
 
                       if(upload_file[index]!=null){
+
+                        // alert(JSON.stringify(upload_file[index]));
+                        // console.log(upload_file[index]);
                         var nameCon = "";
                         for(i = 0; i<upload_file[index].length; i++){
                           if(upload_file[index][i]!=null){
@@ -1985,12 +2023,14 @@
                     simpan_file =true;
                     countFile=0;
                     hasil=[];
+
+                    console.log('statusSimpan',simpan_file);
                     // temp_file=[];
-                     upload_file[index_modal]=[];
+                     // upload_file[index_modal]=[];
                     for(i=0;i<temp_file.length;i++){
 
                         // readerPrev(i,index_modal);
-                        upload_file[index_modal][i]=temp_file[i];
+                        // upload_file[index_modal][i]=temp_file[i];
                         if(temp_file[i]!=null){
                           countFile++;
                         }
@@ -2007,16 +2047,19 @@
                     if(countFile>0){
                       title=countFile+" Berkas"
                     }
-                    temp_file=[];
+                    // temp_file=[];
                     document.getElementById('button_'+index_modal).innerHTML = title;
                     $('#modal_berkas').modal('hide');
                   });
                   $('#modal_berkas').on('hidden.bs.modal', function () {
                       if(!simpan_file){
                         hasil=[];
-                        temp_file=[];
+                        // temp_file=[];
                       }
-                      simpan_file = false;
+                      $('#kembali').click(function() {
+                        console.log('statusClose',simpan_file);
+                        simpan_file = false;
+                      });
                   })
 
                   $("#alasan_penolakan").click(function(){

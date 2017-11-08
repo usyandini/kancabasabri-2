@@ -167,9 +167,19 @@
                                   </thead>
                                   <tbody>
                                   @if($filters)
+                                  <?php $account_id =  []?>
                                   @forelse($transaksi as $trans)
                                   <tr>
                                                 <?php
+                                                  if(count($account_id) == 0){
+                                                    $account_id[$trans->PIL_ACCOUNTID] = $trans->SALDO;
+                                                  }else{
+                                                    if(!isset($account_id[$trans->PIL_ACCOUNTID])){
+                                                      $account_id[$trans->PIL_ACCOUNTID] = $trans->SALDO;
+                                                    }
+                                                  }
+                                                  $account_id[$trans->PIL_ACCOUNTID] -=  $trans->PIL_AmountCurDebit;
+                                                  $account_id[$trans->PIL_ACCOUNTID] +=  $trans->PIL_AmountCurCredit;
                                                   $tanggal=$trans->PIL_TransDate;                                 
                                                   $tgl= date('d', strtotime($tanggal)); 
                                                   $bs= date('m', strtotime($tanggal));
@@ -212,7 +222,7 @@
                                                   $tahun= date('Y', strtotime($tanggal));
                                               ?>
                                     <td><center>{{$tgl}} {{$bulans}} {{$tahun}}</center></td>
-                                    <td>{{$trans->PIL_BK}}</td>
+                                    <td>{{$trans->PIL_ACCOUNTID}}</td>
                                     <td width="150px" colspan="2">{{$trans->PIL_Description}}</td>
                                     <?php
                                       $AccoudId = $trans->PIL_ACCOUNTID;
@@ -227,7 +237,7 @@
                                     <td align="right">@if($isKas)Rp {{ number_format($trans->PIL_AmountCurCredit, 2, ',','.') }} @endif</td>
                                     <td align="right">@if(!$isKas)Rp {{ number_format($trans->PIL_AmountCurDebit, 2, ',','.') }} @endif</td>
                                     <td align="right">@if(!$isKas)Rp {{ number_format($trans->PIL_AmountCurCredit, 2, ',','.') }} @endif</td>
-                                    <td align="right"></td>
+                                    <td align="right">Rp {{ number_format($account_id[$trans->PIL_ACCOUNTID], 2, ',','.') }}</td>
                                   </tr>
                                   @empty
                                   <tr>

@@ -275,7 +275,7 @@ class AnggaranController extends Controller
         if($diff2 < 0){
             $beda = false;
         }else{
-            $beda = true;
+            // $beda = true;
             if($diff1 < 0){
                 $mulai=true;
                 $batas= $date_mulai;
@@ -610,7 +610,6 @@ class AnggaranController extends Controller
                     if($value->id != "-1"){
                         $idBefore = $value->id;
                     }
-                    
                 }else{
                     $idBefore = $value->id_first;
                 }
@@ -1151,6 +1150,7 @@ class AnggaranController extends Controller
                 // $return = ItemAnggaranMaster::select('name')->where('type',2)->orderBy('name','ASC')->get(); 
                 break;
             case 'jenis':
+
                 $return = ItemAnggaranMaster::select('name')->where('type',1)->orderBy('name','ASC')->get(); 
                 break;
             case 'nd_surat':

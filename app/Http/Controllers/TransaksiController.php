@@ -816,6 +816,12 @@ class TransaksiController extends Controller
     bankaccaounttable.NAME as PIL_NAME,
     _ledgerjournaltrans.AmountCurCredit as PIL_AmountCurCredit,
     _ledgerjournaltrans.AmountCurDebit as PIL_AmountCurDebit,
+    (select TOP 1 SUM(AmountCur)+SUM(AmountCorrect) as SALDO FROM [AX_DEV].[dbo].[BANKACCOUNTTRANS]
+        where YEAR(TRANSDATE) = YEAR(_generaljournalentry.AccountingDate) AND
+                MONTH(TRANSDATE) <=  (MONTH(_generaljournalentry.AccountingDate)-1) AND
+                ACCOUNTID = bankaccaounttable.ACCOUNTID
+        GROUP BY ACCOUNTID,  YEAR(TRANSDATE)
+        ORDER BY YEAR(TRANSDATE) DESC) as SALDO,
     _ledgerjournaltrans.PIL_BK as PIL_BK,
     _ledgerjournaltrans.Invoice as PIL_Invoice,
     _ledgerjournaltrans.Voucher as PIL_Voucher,
@@ -855,7 +861,7 @@ FROM
         and DATEPART(MONTH, _generaljournalentry.AccountingDate) >= ".$awal." 
         and DATEPART(MONTH, _generaljournalentry.AccountingDate) <= ".$akhir."
         and DATEPART(YEAR, _generaljournalentry.AccountingDate) = ".$transyear."
-        ORDER BY PIL_TransDate DESC");
+        ORDER BY PIL_TransDate ASC");
         }
     
     public function filter_result_realisasi($cabang, $awal, $akhir, $transyear)

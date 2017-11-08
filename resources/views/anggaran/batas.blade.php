@@ -201,7 +201,7 @@
 
 						$('#tanggal_mulai_edit').val(tanggal_mulai);
 						// document.getElementById('tanggal_mulai_edit').value = tanggal_mulai;
-						if(active == "0")
+						// if(active == "0")
 							$('#tanggal_mulai_edit').datepicker().datepicker('disable');
 						
 							
