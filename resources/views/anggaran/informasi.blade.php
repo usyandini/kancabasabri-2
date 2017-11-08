@@ -264,7 +264,7 @@
                         var length = nd_surat_option.options.length;
                         // alert(length);
                         for (i = 1; i < length; i++) {
-                          alert(nd_surat_option.options[1].innerHTML);
+                          // alert(nd_surat_option.options[1].innerHTML);
                           nd_surat_option.options[1] = null;
                         }
                         for(i =0 ;i<data.length;i++){

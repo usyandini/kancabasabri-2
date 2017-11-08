@@ -866,7 +866,7 @@ class AnggaranController extends Controller
                 'PIL_KPKC'              => $cabang,
                 'PIL_DIVISI'            => $divisi,
                 'PIL_SUBPOS'            => $sub_pos,
-                'PIL_MATAANGGARAN'      => $pos_anggaran,
+                'PIL_MATAANGGARAN'      => $mata_anggaran,
                 'PIL_TRANSDATE'         => $transdate,
                 'PIL_TXT'               => $list_anggaran->mata_anggaran,
                 'PIL_AMOUNT'            => $amount,
