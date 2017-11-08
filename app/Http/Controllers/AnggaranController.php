@@ -17,6 +17,7 @@ use App\Models\ItemAnggaranMaster;
 use App\Models\BatasAnggaran;
 use App\Models\Divisi;
 use App\Models\KantorCabang;
+use App\Models\StagingAnggaran;
 
 use App\Services\FileUpload;
 use App\Services\NotificationSystem;
@@ -781,8 +782,10 @@ class AnggaranController extends Controller
                 NotificationSystem::send($anggaranId, 27);
             else if($setuju == 7)
                 NotificationSystem::send($anggaranId, 29);
-            else if($setuju == 8)
+            else if($setuju == 8){
                 NotificationSystem::send($anggaranId, 31);
+                $this->insertStaging($request->nd_surat);
+            }
         }else if($request->setuju=='Tolak'){
             if($setuju == "-1"){
                 if($request->persetujuan == "Kirim")
@@ -810,6 +813,91 @@ class AnggaranController extends Controller
         //     $status_view = redirect('anggaran/persetujuan/'.$request->nd_surat.'/1');
         // }
         return $status_view;
+    }
+
+    public function insertTW($list_anggaran,$type,$unit_kerja){
+        $amount;
+        $transdate;
+        $year = explode("-", $list_anggaran->created_at);
+        switch ($type) {
+            case 1 :$amount = $list_anggaran->TWI;
+                    $transdate = ((int)$year[0]+1).'-01-01';
+                    break;
+            case 2 :$amount = $list_anggaran->TWII;
+                    $transdate = ((int)$year[0]+1).'-04-01';
+                    break;
+            case 3 :$amount = $list_anggaran->TWIII;
+                    $transdate = ((int)$year[0]+1).'-07-01';
+                    break;
+            case 4 :$amount = $list_anggaran->TWIV;
+                    $transdate = ((int)$year[0]+1).'-10-01';
+                    break;
+            
+        }
+        $unit = explode(' Cabang ',$unit_kerja);
+        $divisi;
+        $cabang;
+        if(count($unit)>1){
+            $cabang = KantorCabang::where('DESCRIPTION',$unit_kerja)->first()->VALUE;
+            $divisi = '00';
+        }else{
+            $divisi = Divisi::where('DESCRIPTION',$unit_kerja)->first()->VALUE;
+            $cabang = '00';
+        }
+        $jenis = ItemAnggaranMaster::where('name',$list_anggaran->jenis)
+                                    ->where('type','1')->first()->kode;
+        $kelompok = ItemAnggaranMaster::where('name',$list_anggaran->kelompok)
+                                    ->where('type','2')->first()->kode;
+        $pos_anggaran = ItemAnggaranMaster::where('name',$list_anggaran->pos_anggaran)
+                                    ->where('type','3')->first()->kode;
+        $sub_pos = SubPos::where('DESCRIPTION',$list_anggaran->sub_pos)
+                                    ->first()->VALUE;
+        $mata_anggaran = Kegiatan::where('DESCRIPTION',$list_anggaran->mata_anggaran)
+                                    ->first()->VALUE;
+
+        $account = ItemMasterAnggaran::where('jenis',$jenis)->where('kelompok',$kelompok)
+                                    ->where('pos_anggaran',$pos_anggaran)->where('sub_pos',$sub_pos)
+                                    ->where('mata_anggaran',$mata_anggaran)->first()->account;
+        $input = [
+                'DATAAREAID'            => 'asbr',
+                'RECID'                 => $list_anggaran->id.$type,
+                'PIL_ACCOUNT'           => $account,
+                'PIL_PROGRAM'           => 'THT',
+                'PIL_KPKC'              => $cabang,
+                'PIL_DIVISI'            => $divisi,
+                'PIL_SUBPOS'            => $sub_pos,
+                'PIL_MATAANGGARAN'      => $pos_anggaran,
+                'PIL_TRANSDATE'         => $transdate,
+                'PIL_TXT'               => $list_anggaran->mata_anggaran,
+                'PIL_AMOUNT'            => $amount,
+                ];
+        // return $input;
+        StagingAnggaran::create($input);
+    }
+
+    public function insertStaging($nd_surat)
+    {
+        $anggaran = $this->anggaranModel->where('nd_surat', $nd_surat)->where('active', '1')->get();
+        foreach ($anggaran as $angga) {
+            $unit_kerja = $angga->unit_kerja;
+            $listAnggaran = $this->listAnggaranModel->where('id_list_anggaran', $angga->id)
+                                                    ->where('active', '1');
+            foreach ($listAnggaran->get() as $list_anggaran) {
+                if($list_anggaran->TWI > 0){
+                    $this->insertTW($list_anggaran,1,$unit_kerja);
+                }
+                if($list_anggaran->TWII > 0){
+                    $this->insertTW($list_anggaran,2,$unit_kerja);
+                }
+                if($list_anggaran->TWIII > 0){
+                    $this->insertTW($list_anggaran,3,$unit_kerja);
+                }
+                if($list_anggaran->TWIV > 0){
+                    $this->insertTW($list_anggaran,4,$unit_kerja);
+                }
+
+            }
+        }
     }
 
     public function getFiltered($nd_surat,$type){
