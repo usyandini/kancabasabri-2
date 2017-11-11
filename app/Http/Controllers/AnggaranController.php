@@ -564,7 +564,7 @@ class AnggaranController extends Controller
         }
         if($request->setuju != 'Simpan' || $request->status == 'tambah'){
             $anggaran_insert = [
-            'tanggal'           => date("Y/m/d"),
+            'tanggal'           => $tanggal,
             'nd_surat'          => $request->nd_surat,
             'unit_kerja'        => $request->unit_kerja,
             'tipe_anggaran'     => $request->tipe_anggaran,
@@ -580,7 +580,7 @@ class AnggaranController extends Controller
         }
 
         $anggaran_update = [
-        'tanggal'           => date("Y/m/d"),
+        'tanggal'           => $tanggal,
         'tipe_anggaran'     => $request->tipe_anggaran,
         'status_anggaran'   => $status,
         'persetujuan'       => $setuju,

@@ -178,8 +178,8 @@
                                                       $account_id[$trans->PIL_ACCOUNTID] = $trans->SALDO;
                                                     }
                                                   }
-                                                  $account_id[$trans->PIL_ACCOUNTID] -=  $trans->PIL_AmountCurDebit;
-                                                  $account_id[$trans->PIL_ACCOUNTID] +=  $trans->PIL_AmountCurCredit;
+                                                  $account_id[$trans->PIL_ACCOUNTID] +=  $trans->PIL_AmountCurDebit;
+                                                  $account_id[$trans->PIL_ACCOUNTID] -=  $trans->PIL_AmountCurCredit;
                                                   $tanggal=$trans->PIL_TransDate;                                 
                                                   $tgl= date('d', strtotime($tanggal)); 
                                                   $bs= date('m', strtotime($tanggal));
@@ -229,14 +229,14 @@
                                       $kas = explode('KAS',$AccoudId);
                                       $kkc = explode('KKC',$AccoudId);
                                       $isKas = false;
-                                      if(count($kas) > 1 || count($kkc)>1 ){
+                                      if(count($kas) > 1 || count($kkc) > 1 ){
                                         $isKas = true;
                                       }
                                     ?>
-                                    <td align="right">@if($isKas)Rp {{ number_format($trans->PIL_AmountCurDebit, 2, ',','.') }} @endif</td>
                                     <td align="right">@if($isKas)Rp {{ number_format($trans->PIL_AmountCurCredit, 2, ',','.') }} @endif</td>
-                                    <td align="right">@if(!$isKas)Rp {{ number_format($trans->PIL_AmountCurDebit, 2, ',','.') }} @endif</td>
+                                    <td align="right">@if($isKas)Rp {{ number_format($trans->PIL_AmountCurDebit, 2, ',','.') }} @endif</td>
                                     <td align="right">@if(!$isKas)Rp {{ number_format($trans->PIL_AmountCurCredit, 2, ',','.') }} @endif</td>
+                                    <td align="right">@if(!$isKas)Rp {{ number_format($trans->PIL_AmountCurDebit, 2, ',','.') }} @endif</td>
                                     <td align="right">Rp {{ number_format($account_id[$trans->PIL_ACCOUNTID], 2, ',','.') }}</td>
                                   </tr>
                                   @empty

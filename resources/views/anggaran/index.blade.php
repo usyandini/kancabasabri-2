@@ -48,7 +48,7 @@
                                       <div class="col-xs-3">
                                           <div class="form-group">
                                             <label>Tanggal</label>
-                                            <input id="tanggal" name="tanggal" class="form-control" value="<?php echo  date("d/m/Y");?>" readonly>
+                                            <input type="date" id="tanggal" name="tanggal" class="form-control">
                                             
                                           </div>
                                       </div>

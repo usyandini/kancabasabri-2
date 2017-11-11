@@ -830,7 +830,7 @@ class ItemController extends Controller
                         $kodeIsStored = ItemMaster::where('kode_item', $input['kode_item'])->first();
                         if (!$kodeIsStored) {
                             ItemMaster::create($input);
-                            $insert_success[$key] = 'Item dengan <b>Kode Item '.$input['kode_item'].'</b> berhasil diinput.';
+                            $insert_success[$key] = 'Item dengan <b>Kode Item '.$input['kode_item'].' '.$value['item'].'</b> berhasil diinput.';
                         } else {
                             ItemMaster::where('kode_item', $input['kode_item'])->update($input);
                             $insert_success[$key] = 'Item dengan <b>Kode Item '.$input['kode_item'].'</b> berhasil diperbarui.';
@@ -849,7 +849,8 @@ class ItemController extends Controller
                 }
             }
 
-            print_r($errors);
+            // print_r($errors);
+            // print_r($insert_success);
 
             if (count($insert_success) > 0) { session()->flash('insert_success', $insert_success); }
         } else {
@@ -979,7 +980,7 @@ class ItemController extends Controller
                 $item_master = ItemMaster::where('nama_item',$value)->get();
                 $kode = '';
                 if(count($item_master) == 0){
-                    $kode = 'KD-'.(count($item_master)+1);
+                    $kode = 'KD-'.(count(ItemMaster::get())+1);
                     // ItemMaster::create($item_master);
                 }else{
                     foreach ($item_master as $row) {

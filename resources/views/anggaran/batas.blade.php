@@ -43,7 +43,7 @@
 			                  <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
 			                  <div class="card-body collapse in">			                
 			                  	<div class="card-block">
-			                  	<span><a class="btn btn-success" data-target="#tambah" data-toggle="modal" style="color:white"><i class="fa fa-plus"></i> <b>Tambah Batas Pengajuan</b></a></span>
+			                  	<span><a class="btn btn-success" data-target="#tambah" data-toggle="modal" style="color:white"><i class="fa fa-plus"></i> <b>Tambah Batas Pengajuan Waktu</b></a></span>
                            			<div class="modal fade" data-backdrop="static" id="tambah" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                                         <div class="modal-dialog">
                                             <div class="modal-content">
