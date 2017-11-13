@@ -128,7 +128,8 @@ class Notification extends Model
             }
         }
         
-
+        $tglmulai = date('d-m-Y', strtotime($this->formMaster['tanggal_mulai']));
+        $tglselesai = date('d-m-Y', strtotime($this->formMaster['tanggal_selesai']));
         switch ($this->type) {
             case 1:
                 return 'Batch <b>'.$batchNo.'</b> butuh review anda untuk approval sebagai Kakancab.';
@@ -213,11 +214,12 @@ class Notification extends Model
             case 33:
                 return 'Pelaporan Anggaran dan kegiatan telah diisi oleh '.$this->formMaster['unit_kerja'].' untuk '.$TW.'.';
             case 34:
-                return 'Form Master untuk Arahan RUPS untuk '.$TW.' unit kerja '.$this->formMaster['unit_kerja'].' telah dibuat dan dapat di isi mulai dari '.$this->formMaster['tanggal_mulai'].' sampai '.$this->formMaster['tanggal_selesai'];
+                return 'Form Master untuk Arahan RUPS untuk '.$TW.' unit kerja '.$this->formMaster['unit_kerja'].' telah dibuat dan dapat di isi mulai dari '.$tglmulai.' sampai '.$tglselesai;
             case 35:
                 return 'Arahan RUPS telah diisi oleh '.$this->formMaster['unit_kerja'].' untuk '.$TW.'.';
             case 36:
-                return 'Form Master untuk Usulan Program Prioritas untuk '.$TW.'  unit kerja '.$this->formMaster['unit_kerja'].' telah dibuat dan dapat di isi mulai dari '.$this->formMaster['tanggal_mulai'].' sampai '.$this->formMaster['tanggal_selesai'];
+            
+                return 'Form Master untuk Usulan Program Prioritas untuk '.$TW.'  unit kerja '.$this->formMaster['unit_kerja'].' telah dibuat dan dapat di isi mulai dari '.$tglmulai.' sampai '.$tglselesai;
             case 37:
                 return 'Usulan Program Prioritas telah diisi oleh '.$this->formMaster['unit_kerja'].' untuk '.$TW.'.';
             case 38:

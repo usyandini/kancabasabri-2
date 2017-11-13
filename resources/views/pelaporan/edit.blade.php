@@ -497,7 +497,8 @@
                           @if($setting['kategori'] == "laporan_anggaran")
                           { name: "program_prioritas", 
                             type: "select", 
-                            readOnly:insertable == 1 ? false : true,
+                            readOnly:insertable == 0 ? false : true,
+                            // readOnly:insertable == 1 ? false : true,
                             title: "Program Prioritas", 
                             width: 170,
                             valueField: "program_prioritas", 
@@ -513,7 +514,8 @@
                           { name: "sasaran_dicapai", 
                             type: "textarea", 
                             title: "Sasaran Yang ingin Di Capai", 
-                            readOnly:insertable == 1 ? false : true,
+                            readOnly:insertable == 0 ? false : true,
+                            // readOnly:insertable == 1 ? false : true,
                             width: 300,
                             validate: {
                               message : "Isi Saran yang ingin di capai terlebih dahulu." ,
@@ -526,7 +528,7 @@
                           @if($type == "item")
                           { name: "uraian_progress", 
                             type: "textarea", 
-                            title: "Uraian Progress", 
+                            title: "Uraian Progres", 
                             width: 300,
                             validate: {
                               message : "Isi Uraian Progress yang ingin di capai terlebih dahulu." ,
@@ -538,7 +540,7 @@
                           @endif
                           @endif
                           @if($setting['berkas'])
-                          { name: "file", align:"center", title: "Berkas",  width: 150 ,
+                          { name: "file", align:"center", title: "Lampiran",  width: 150 ,
 
                             itemTemplate: function(value,item) {
                               // alert("null");
@@ -567,7 +569,7 @@
                               // document.getElementById('button_'+index_modal).innerHTML = countFile+" Berkas";
                               if(count_berkas==0){
                                 @if(!$beda)
-                                title = "Berkas";
+                                title = "0 Berkas";
                                 @else
                                 title = "Unggah Berkas";
                                 @endif

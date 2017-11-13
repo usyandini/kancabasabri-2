@@ -13,6 +13,13 @@
 				<?php 
 				header("Content-type: application/vnd-ms-excel");
 				header("Content-Disposition: attachment; filename=tindak-lanjut-eksternal.xls"); ?>
+				<!-- <?php 
+				header("Content-type: application/vnd-ms-word");
+				header("Content-Disposition: attachment; filename=tindak-lanjut-internal.doc"); ?>
+				@else
+				<?php 
+				header("Content-type: application/vnd-ms-word");
+				header("Content-Disposition: attachment; filename=tindak-lanjut-eksternal.doc"); ?> -->
 				@endif
 			@endif
 

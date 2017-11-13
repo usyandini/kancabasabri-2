@@ -17,7 +17,7 @@
                         <div class="row breadcrumbs-top">
                             <div class="breadcrumb-wrapper col-xs-12">
                                 <ol class="breadcrumb">
-                                    <li class="breadcrumb-item"><a href="index-2.html">Dashboard</a>
+                                    <li class="breadcrumb-item"><a href="#">Dashboard</a>
                                     </li>
                                     <li class="breadcrumb-item">{{$title}}
                                     </li>
@@ -319,7 +319,7 @@
                           
                           { name: "nama_program", 
                             type: "text", 
-                            title: "Nama Program", 
+                            title: "Program Kegiatan", 
                             width: 170,
                             validate: {
                               message : "Isi nama program terlebih dahulu." ,
@@ -331,7 +331,7 @@
 
                           { name: "latar_belakang", 
                             type: "textarea", 
-                            title: "Latar Belakang Alasan", 
+                            title: "Sasaran", 
                             width: 300,
                             validate: {
                               message : "Isi Latar Belakang Alasan terlebih dahulu." ,
@@ -342,7 +342,7 @@
                           },
                           { name: "dampak_positif", 
                             type: "textarea", 
-                            title: "Dampak(+) Pelakasanaan bagi Perusahaan", 
+                            title: "Dampak (+) Jika Dilaksanakan", 
                             width: 500,
                             validate: {
                               message : "Isi Dampak Positif terlebih dahulu." ,
@@ -353,7 +353,7 @@
                           },
                           { name: "dampak_negatif", 
                             type: "textarea", 
-                            title: "Dampak(-) Tidak Dilaksanakan", 
+                            title: "Dampak (-) Jika Tidak Dilaksanakan", 
                             width: 500,
                             validate: {
                               message : "Isi Dampak Negatif terlebih dahulu." ,

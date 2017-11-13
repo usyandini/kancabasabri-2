@@ -421,7 +421,7 @@
                           @if($setting['kategori'] == "arahan_rups")
                           { name: "jenis_arahan", 
                             type: "select", 
-                            title: "Jenis Arahan", 
+                            title: "Jenis Arfahan", 
                             width: 170,
                             readOnly:insertable == 1 ? false : true,
                             valueField: "arahan_rups", 
