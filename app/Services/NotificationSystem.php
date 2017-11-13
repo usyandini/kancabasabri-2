@@ -206,6 +206,9 @@ class NotificationSystem
                 array_push($array_type,44);
             }
         }
+        if(isset($user->perizinan['notif_pengajuan_anggaran'])){
+            array_push($array_type,47);
+        }
 
         return $array_type;
     }

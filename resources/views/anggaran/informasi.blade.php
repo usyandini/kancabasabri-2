@@ -80,9 +80,6 @@
                               </div>
                               <div class="col-lg-3 col-xl-3 mb-1">
                                 <a href="#" class="btn btn-outline-primary" onclick="cariAnggaran()"><i class="fa fa-search"></i> Cari</a>                                            
-                                @if(Gate::check('tambah_a'))
-                                <a href="{{ url('anggaran/tambah') }}" class="btn btn-success"><i class="fa fa-plus"></i> Tambah</a>                                   
-                                @endif
                               </div>
                             </div>
                             <div>
@@ -93,10 +90,15 @@
                     </div>
                   </div>
                   <div class="card">
-                    <div class="card-header"></div>
+                    <div class="card-header">@if(Gate::check('tambah_a'))
+                          <a href="{{ url('anggaran/tambah') }}" class="btn btn-success"><i class="fa fa-plus"></i> Tambah Kegiatan dan Anggaran</a>                                   
+                        @endif</div>
                     <div class="card-body collapse in">
                       <div class="card-block ">
-                        <div id="basicScenario"></div>
+                        
+                        <div id="basicScenario">
+                           
+                        </div>
                       </div>
                     </div>
                   </div>

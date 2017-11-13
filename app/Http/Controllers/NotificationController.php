@@ -16,6 +16,7 @@ use App\Models\Divisi;
 use App\Models\FormMasterPelaporan;
 use App\Models\TlTanggal;
 use App\Models\PengajuanDropping;
+use App\Models\BatasAnggaran;
 
 use App\Services\NotificationSystem;
 
@@ -93,6 +94,16 @@ class NotificationController extends Controller
                 if(Gate::check('unit_'.$this->check($unit_kerja))){
                     $notif = true;
                 }
+            }else if($value->type <48){
+                $unit_kerja = $value->pengajuanAnggaran['unit_kerja'];
+                if($unit_kerja=="Semua Unit Kerja"){
+                    $notif = true;
+                }
+                else{
+                if(Gate::check('unit_'.$this->check($unit_kerja))){
+                    $notif = true;
+                    }
+                }
             }
 
             if($notif){
@@ -122,6 +133,7 @@ class NotificationController extends Controller
         $form_master = FormMasterPelaporan::where('id', $notifDetail->batch_id)->first();
         $tindakLanjut = TlTanggal::where('id1', $notifDetail->batch_id)->first();
         $pengajuan = PengajuanDropping::where('id', $notifDetail->batch_id)->first();
+        $pengajuan_anggaran = BatasAnggaran::where('id', $notifDetail->batch_id)->first();
         $unit_kerja = "";
         if($value_cabang == "00"){
             $unit_kerja = \Auth::user()->divisi()['DESCRIPTION'];
@@ -129,14 +141,18 @@ class NotificationController extends Controller
             $unit_kerja = \Auth::user()->kantorCabang()['DESCRIPTION'];
         }
 
-        if($notifDetail->type >=32 && $notifDetail->type<=42){
+        if($notifDetail->type >=32 && $notifDetail->type<=47){
             $unit = "";
             if($notifDetail->type <= 36){
                 $unit = $form_master->unit_kerja;
             }else if($notifDetail->type <= 38){
                 $unit = $tindakLanjut->unitkerja;
+            }else if($notifDetail->type <= 39){
+                $unit = $tindakLanjut->unitkerja;    
             }else if($notifDetail->type <= 42){
                 $unit = $pengajuan->kantor_cabang;
+            }else if($notifDetail->type <= 47){
+                $unit = $pengajuan_anggaran->unit_kerja;
             }
 
             if($notifDetail->type == 32){
@@ -191,6 +207,12 @@ class NotificationController extends Controller
                     }
                 }
             }
+
+            if($notifDetail->type == 47){
+                if(!Gate::check('notif_pengajuan_anggaran')&&$unit_kerja!=$unit){
+                    $read = false;
+                }
+            }
         }
        
             
@@ -200,7 +222,6 @@ class NotificationController extends Controller
         $tariktunai = TarikTunai::where('id', $notifDetail->batch_id)->first();
         $penyesuaian = PenyesuaianDropping::where('id', $notifDetail->batch_id)->first();
         $anggaran = Anggaran::where('id', $notifDetail->batch_id)->first();
-    	
     	switch ($notifDetail->type) {
     		case 1:
     			return redirect('transaksi/persetujuan/'.$notifDetail->batch_id);
@@ -288,6 +309,8 @@ class NotificationController extends Controller
                 return redirect('pengajuan_dropping/lihat/'.$notifDetail->batch_id);
             case 46:
                 return redirect('pengajuan_dropping/lihat/'.$notifDetail->batch_id);
+            case 47:
+                return redirect('anggaran/tambah');
 			default:
 				return redirect('transaksi/');
     	}
@@ -338,6 +361,11 @@ class NotificationController extends Controller
                     }
                 }else if($value->type <47){
                     $unit_kerja = $value->pengajuanDropping['kantor_cabang'];
+                    if(Gate::check('unit_'.$this->check($unit_kerja))){
+                        $notif = true;
+                    }
+                }else if($value->type <48){
+                    $unit_kerja = $value->pengajuanAnggaran['unit_kerja'];
                     if(Gate::check('unit_'.$this->check($unit_kerja))){
                         $notif = true;
                     }

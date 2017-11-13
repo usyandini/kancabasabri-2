@@ -86,6 +86,11 @@ class Notification extends Model
         return $this->belongsTo('App\Models\PengajuanDropping', 'batch_id', 'id');
     }
 
+    public function pengajuanAnggaran()
+    {
+        return $this->belongsTo('App\Models\BatasAnggaran', 'batch_id', 'id');
+    }
+
     public function wording()
     {
         $batchNo = $this->batch ? $this->batch->batchNo() : '';
@@ -233,6 +238,8 @@ class Notification extends Model
                 return 'Pengajuan Dropping '.$this->pengajuanDropping['kantor_cabang'].' periode TW '.$TW.' dengan Nomor '.$this->pengajuanDropping['nomor'].' telah ditolak oleh Kadiv Akuntansi. Silahkan Kirim Pengajuan Kembali.';
             case 46:
                 return 'Pengajuan Dropping '.$this->pengajuanDropping['kantor_cabang'].' periode TW '.$TW.' dengan Nomor '.$this->pengajuanDropping['nomor'].' telah diterima oleh Kadiv Akuntansi.';
+            case 47:
+                return 'Pengajuan Anggaran dan Kegiatan untuk '.$this->pengajuanAnggaran['unit_kerja'].' telah dibuat oleh Renbang.';
         }
     }
 }

@@ -118,7 +118,11 @@
         <div class="card-block">
           <h5>Notifikasi</h5>
           <div class="form-group skin skin-square" id="anggaran">
-           <fieldset >
+            <fieldset >
+              <input type="checkbox" name="perizinan[notif_pengajuan_anggaran]" {{ isset($user->perizinan['notif_pengajuan_anggaran']) ? 'checked=""' : '' }}>
+              <label>Pemberitahuan Pengajuan Anggaran</label>
+            </fieldset>
+            <fieldset >
               <input type="checkbox" name="perizinan[notif_setuju_ia]" {{ isset($user->perizinan['notif_setuju_ia']) ? 'checked=""' : '' }}>
               <label>Permintaan Persetujuan Kanit Kerja</label>
             </fieldset>
