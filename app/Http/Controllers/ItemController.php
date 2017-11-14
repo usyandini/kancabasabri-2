@@ -130,6 +130,7 @@ class ItemController extends Controller
         $tanggal = date("Y-m-d", strtotime($tanggal));
         $result = ItemMaster::where([
             ['id', $mainaccount]])->first();
+        // print_r( $result->axAnggaran($tanggal));
         if (isset($result) && $result->isAxAnggaranAvailable($tanggal)) {
             $result['ax_anggaran'] = $result->axAnggaran($tanggal);
             $result['ax_anggaran']['PIL_AMOUNTAVAILABLE'] = $result['actual_anggaran'] = (int)$result['ax_anggaran']['PIL_AMOUNTAVAILABLE'];
@@ -795,7 +796,7 @@ class ItemController extends Controller
             foreach ($data as $key => $value) {
                 if(isset($value['item'])){
                     $input = [
-                        'kode_item' => $this->isExistInDB($value['item'], 'item_kode'),
+                        'kode_item' => $this->isExistInDB($value, 'item_kode'),
                         'nama_item' => $value['item'],
                         'SEGMEN_1'  => $this->isExistInDB($value['account'], 'account'),
                         'SEGMEN_2'  => $this->isExistInDB($value['program'], 'program'),
@@ -977,7 +978,12 @@ class ItemController extends Controller
                 $return = $mataVal ? $mataVal->VALUE : '-';
                 break;
             case 'item_kode':
-                $item_master = ItemMaster::where('nama_item',$value)->get();
+                $item_master = ItemMaster::where('SEGMEN_1',$value['account'])->
+                        where('SEGMEN_2',$value['program'])->
+                        where('SEGMEN_3',$value['kpkc'])->
+                        where('SEGMEN_4',$value['divisi'])->
+                        where('SEGMEN_5',$value['sub_pos'])->
+                        where('SEGMEN_6',$value['mata_anggaran'])->get();
                 $kode = '';
                 if(count($item_master) == 0){
                     $kode = 'KD-'.(count(ItemMaster::get())+1);

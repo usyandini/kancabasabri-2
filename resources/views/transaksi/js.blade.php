@@ -484,11 +484,13 @@
                   }
 
                   function getCombination() {
-                    var combination = null
+                    var combination = null;
+                    // alert( "{{ url('item/get/combination').'/' }}" + mainaccount + "/" + date_field)
                     $.ajax({
                       'async': false, 'type': "GET", 'dataType': "JSON", 'url': "{{ url('item/get/combination').'/' }}" + mainaccount + "/" + date_field,
                       'success': function(data) {
-                        combination = data
+                        combination = data;
+                        console.log('kombinasi',data);
                       }
                     })
                     if (combination == null) {

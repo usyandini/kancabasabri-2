@@ -112,7 +112,7 @@ class TransaksiController extends Controller
             $empty_batch = false;
             $jsGrid_url = 'transaksi/get/batch/'.$this->current_batch['id'];
         }
-
+        // $this->getAttributes('item', $this->current_batch);
         return view('transaksi.input', [
             'batch_nos'     => $this->batch_nos,
             'filters'       => null,
@@ -246,9 +246,11 @@ class TransaksiController extends Controller
         $return = null;
         switch ($type) {
             case 'item':
+                $cabang = \Auth::user()->cabang;
                 $header = ['VALUE' => '-1', 'nama_item' => 'Silahkan Pilih Barang/Jasa'];
-                $return = ItemMaster::get(['id', 'SEGMEN_1', 'nama_item', 'SEGMEN_3', 'is_displayed'])->filter(function($item) use($batch) {
-                    return $item->isDisplayed($batch['cabang']);
+                $return = ItemMaster::get(['id', 'SEGMEN_1', 'nama_item', 'SEGMEN_3', 'is_displayed'])->filter(function($item) use($cabang) {
+                    // return $item->isDisplayed($batch['cabang']);
+                    return $item->isDisplayed($cabang);
                 });
                 
                 foreach ($return as $key => $value) {
