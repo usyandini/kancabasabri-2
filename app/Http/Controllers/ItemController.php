@@ -101,10 +101,8 @@ class ItemController extends Controller
 
     public function listTransaksi()
     {
-        $master_item = ItemMaster::orderby('kode_item')->get();
-        return view('master.item.index', [
-            'items' => $master_item, 
-            'no'    => 1]);
+        $items = ItemMaster::orderBy('id','ASC')->get();
+        return view('master.item.index', compact('items'));
     }
 
     public function listAnggaran()
@@ -382,7 +380,7 @@ class ItemController extends Controller
 
         $validatorItemAnggaran = Validator::make($request->all(),
             [
-             'edit_kode' => 'unique:item_anggaran_master,kode,'.$id
+             'edit_kode' => 'unique:item_anggaran,kode,'.$id
             ],
             [
              'edit_kode.unique' => 'Kode item anggaran sudah ada.'
