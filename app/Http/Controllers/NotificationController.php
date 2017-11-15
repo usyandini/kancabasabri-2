@@ -144,7 +144,7 @@ class NotificationController extends Controller
 
         if($notifDetail->type >=32 && $notifDetail->type<=47){
             $unit = "";
-            if($notifDetail->type <= 36){
+            if($notifDetail->type <= 37){
                 $unit = $form_master->unit_kerja;
             }else if($notifDetail->type <= 39){
                 $unit = $tindakLanjut->unitkerja;    
