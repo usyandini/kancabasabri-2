@@ -146,8 +146,6 @@ class NotificationController extends Controller
             $unit = "";
             if($notifDetail->type <= 36){
                 $unit = $form_master->unit_kerja;
-            }else if($notifDetail->type <= 38){
-                $unit = $tindakLanjut->unitkerja;
             }else if($notifDetail->type <= 39){
                 $unit = $tindakLanjut->unitkerja;    
             }else if($notifDetail->type <= 42){
@@ -157,23 +155,37 @@ class NotificationController extends Controller
             }
 
             if($notifDetail->type == 32){
-                if(!Gate::check('tambah_pelaporan_anggaran')&&$unit_kerja!=$unit){
+                if(!Gate::check('tambah_pelaporan_anggaran')||$unit_kerja!=$unit){
+                    $read = false;
+                }
+            }
+            if($notifDetail->type == 33){
+                if(!Gate::check('notif_ajukan_p_a')||$unit_kerja!=$unit){
                     $read = false;
                 }
             }
             if($notifDetail->type == 34){
-                if(!Gate::check('tambah_pelaporan_a_RUPS')&&$unit_kerja!=$unit){
+                if(!Gate::check('tambah_pelaporan_a_RUPS')||$unit_kerja!=$unit){
+                    $read = false;
+                }
+            }
+            if($notifDetail->type == 35){
+                if(!Gate::check('notif_ajukan_a_RUPS')||$unit_kerja!=$unit){
                     $read = false;
                 }
             }
             if($notifDetail->type == 36){
-                if(!Gate::check('tambah_pelaporan_usulan_p_p')&&$unit_kerja!=$unit){
+                if(!Gate::check('tambah_pelaporan_usulan_p_p')||$unit_kerja!=$unit){
                     $read = false;
                 }
             }
-
+            if($notifDetail->type == 37){
+                if(!Gate::check('notif_ajukan_usulan_p_p')||$unit_kerja!=$unit){
+                    $read = false;
+                }
+            }
             if($notifDetail->type == 38){
-                if(!Gate::check('t_l_internal')&&$unit_kerja!=$unit){
+                if(!Gate::check('t_l_internal')||$unit_kerja!=$unit){
                     $read = false;
                 }
             }

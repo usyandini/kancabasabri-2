@@ -210,7 +210,7 @@ class Notification extends Model
                 return 'Risalah RUPS Anggaran dengan Nomer Dinas/Surat '.$this->idAnggaran['nd_surat'].' diajukan oleh '.$this->idAnggaran['unit_kerja'].' pada tanggal '.date('d F Y', strtotime($this->idAnggaran['updated_at'])).
                 ' telah disetujui dan ditandatangani';
             case 32:
-                return 'Form Master untuk Pelaporan Anggaran dan kegiatan untuk '.$TW.'  unit kerja '.$this->formMaster['unit_kerja'].' telah dibuat dan dapat di isi mulai dari '.$this->formMaster['tanggal_mulai'].' sampai '.$this->formMaster['tanggal_selesai'];
+                return 'Form Master untuk Pelaporan Anggaran dan kegiatan untuk '.$TW.'  unit kerja '.$this->formMaster['unit_kerja'].' telah dibuat dan dapat di isi mulai dari '.$tglmulai.' sampai '.$tglselesai;
             case 33:
                 return 'Pelaporan Anggaran dan kegiatan telah diisi oleh '.$this->formMaster['unit_kerja'].' untuk '.$TW.'.';
             case 34:

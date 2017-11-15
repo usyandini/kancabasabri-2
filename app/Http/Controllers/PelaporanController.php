@@ -142,9 +142,9 @@ class PelaporanController extends Controller
     {
 
         $filter = null;
-        $setting = array('editable' => false,
+        $setting = array('editable' =>false,
                     'edit'          =>false,
-                    'insert'          =>false,
+                    'insert'        =>false,
                     'status'        =>"Info",
                     'kategori'      =>'usulan_program',
                     'id_form_master'=>-1,
@@ -228,8 +228,8 @@ class PelaporanController extends Controller
                 return redirect('pelaporan/tambah_usulan_program/'.$id);
             }
             $date_now = date("Y-m-d");
-            $date_mulai;
-            $date_selesai;
+            $date_mulai = date("Y-m-d");
+            $date_selesai = date("Y-m-d");
             if(count($this->check_tambah($id,1))>0){
                 $form = $this->check_tambah($id,1);
                 foreach ($form as $row) {

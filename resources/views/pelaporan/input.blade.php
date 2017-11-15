@@ -45,7 +45,7 @@
                                         <div class="form-group">
                                           <label>Tanggal</label>
                                           @if($setting['insert'])
-                                          <input id="tanggal" name="tanggal" class="form-control" value="{{date('d/m/Y')}}"readOnly>
+                                          <input id="tanggal" name="tanggal" class="form-control" value="{{date('d/m/Y')}}" >
                                           @else
                                           <input id="tanggal" name="tanggal" class="form-control" readOnly>
                                           @endif
