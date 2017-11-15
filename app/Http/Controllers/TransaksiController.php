@@ -746,7 +746,7 @@ class TransaksiController extends Controller
                     MIN(T.actual_anggaran) AS SISA_ANGGARAN 
                 FROM dbcabang.dbo.transaksi T
                     LEFT JOIN dbcabang.dbo.batches B ON T.batch_id = B.id 
-                    RIGHT JOIN AX_DEV.dbo.PIL_KCTRANSAKSI KC ON T.id = KC.RECID
+                    RIGHT JOIN AX_DUMMY.dbo.PIL_KCTRANSAKSI KC ON T.id = KC.RECID
                 WHERE
                     KC.PIL_POSTED = 1 AND 
                     B.cabang = ".$cabang." AND
@@ -821,8 +821,8 @@ class TransaksiController extends Controller
     pil_kc_transaksi.RECID as REC_TRANS,
     _ledgerjournaltrans.AmountCurCredit as PIL_AmountCurCredit,
     _ledgerjournaltrans.AmountCurDebit as PIL_AmountCurDebit,
-    (select SUM(AmountCur)+SUM(AmountCorrect) as SALDO FROM [AX_DEV].[dbo].[BANKACCOUNTTRANS]
-    where CREATEDDATETIME <= (select ba.CREATEDDATETIME from[AX_DEV].[dbo].[BANKACCOUNTTRANS] ba 
+    (select SUM(AmountCur)+SUM(AmountCorrect) as SALDO FROM [AX_DUMMY].[dbo].[BANKACCOUNTTRANS]
+    where CREATEDDATETIME <= (select ba.CREATEDDATETIME from [AX_DUMMY].[dbo].[BANKACCOUNTTRANS] ba 
     where ba.VOUCHER = _ledgerjournaltrans.Voucher AND ba.ACCOUNTID = bankaccaounttable.ACCOUNTID)
     AND ACCOUNTID = bankaccaounttable.ACCOUNTID
     GROUP BY ACCOUNTID) as SALDO,
@@ -835,30 +835,30 @@ class TransaksiController extends Controller
     dimensionFinancialTag.DESCRIPTION as cabang
     --_generaljournalaccountentry.LedgerAccount
 FROM 
-    [AX_DEV].[dbo].[LedgerJournalTable] as _ledgerjournaltable
-        join [AX_DEV].[dbo].[LedgerJournalTrans] as _ledgerjournaltrans
+    [AX_DUMMY].[dbo].[LedgerJournalTable] as _ledgerjournaltable
+        join [AX_DUMMY].[dbo].[LedgerJournalTrans] as _ledgerjournaltrans
             on _ledgerjournaltrans.JournalNum = _ledgerjournaltable.JournalNum 
-        join [AX_DEV].[dbo].[DimensionAttributeValueSet] as dimensionAttributeValueSet
+        join [AX_DUMMY].[dbo].[DimensionAttributeValueSet] as dimensionAttributeValueSet
             on dimensionAttributeValueSet.RecId = _ledgerjournaltrans.DefaultDimension
-        join [AX_DEV].[dbo].[DimensionAttributeValueSetItem] as dimensionAttributeValueSetItem
+        join [AX_DUMMY].[dbo].[DimensionAttributeValueSetItem] as dimensionAttributeValueSetItem
             on dimensionAttributeValueSetItem.DimensionAttributeValueSet = dimensionAttributeValueSet.RecId
-        join [AX_DEV].[dbo].[DIMENSIONATTRIBUTEVALUECOMBINATION] as dimensionAttributeValueCombination
+        join [AX_DUMMY].[dbo].[DIMENSIONATTRIBUTEVALUECOMBINATION] as dimensionAttributeValueCombination
             on dimensionAttributeValueCombination.RECID = _ledgerjournaltrans.LEDGERDIMENSION
-        join [AX_DEV].[dbo].[BANKACCOUNTTABLE] as bankaccaounttable
+        join [AX_DUMMY].[dbo].[BANKACCOUNTTABLE] as bankaccaounttable
             on bankaccaounttable.ACCOUNTID = dimensionAttributeValueCombination.DISPLAYVALUE
-        join [AX_DEV].[dbo].[DimensionAttributeValue] as dimensionAttributeValue
+        join [AX_DUMMY].[dbo].[DimensionAttributeValue] as dimensionAttributeValue
             on dimensionAttributeValue.RecId = dimensionAttributeValueSetItem.DimensionAttributeValue
-        join [AX_DEV].[dbo].[DimensionAttribute] as _DimensionAttribute
+        join [AX_DUMMY].[dbo].[DimensionAttribute] as _DimensionAttribute
             on _DimensionAttribute.RecId = dimensionAttributeValue.DimensionAttribute
                and _DimensionAttribute.Name = 'KPKC'
-        join [AX_DEV].[dbo].[DimensionFinancialTag] as dimensionFinancialTag
+        join [AX_DUMMY].[dbo].[DimensionFinancialTag] as dimensionFinancialTag
             on dimensionFinancialTag.RecId = dimensionAttributeValue.EntityInstance
-        left join [AX_DEV].[dbo].[PIL_KCTRANSAKSI] as pil_kc_transaksi
+        left join [AX_DUMMY].[dbo].[PIL_KCTRANSAKSI] as pil_kc_transaksi
             on pil_kc_transaksi.PIL_VOUCHER = _ledgerjournaltrans.Voucher AND  pil_kc_transaksi.PIL_JOURNALNUM = _ledgerjournaltrans.JOURNALNUM
        
-    join [AX_DEV].[dbo].[GeneralJournalEntry] as _generaljournalentry
+    join [AX_DUMMY].[dbo].[GeneralJournalEntry] as _generaljournalentry
             on _ledgerjournaltrans.Voucher = _generaljournalentry.SubledgerVoucher
-        join [AX_DEV].[dbo].[GeneralJournalAccountEntry] as _generaljournalaccountentry
+        join [AX_DUMMY].[dbo].[GeneralJournalAccountEntry] as _generaljournalaccountentry
             on _generaljournalentry.RecId = _generaljournalaccountentry.GeneralJournalEntry
        where 
 --_generaljournalentry.RecId = _generaljournalaccountentry.GeneralJournalEntry
@@ -888,7 +888,7 @@ ORDER BY PIL_JOURNALNUM ASC");
 //     bankaccaounttable.NAME as PIL_NAME,
 //     _ledgerjournaltrans.AmountCurCredit as PIL_AmountCurCredit,
 //     _ledgerjournaltrans.AmountCurDebit as PIL_AmountCurDebit,
-//     (select TOP 1 SUM(AmountCur)+SUM(AmountCorrect) as SALDO FROM [AX_DEV].[dbo].[BANKACCOUNTTRANS]
+//     (select TOP 1 SUM(AmountCur)+SUM(AmountCorrect) as SALDO FROM [AX_DUMMY].[dbo].[BANKACCOUNTTRANS]
 //         where YEAR(TRANSDATE) = YEAR(_generaljournalentry.AccountingDate) AND
 //                 MONTH(TRANSDATE) <=  (MONTH(_generaljournalentry.AccountingDate)-1) AND
 //                 ACCOUNTID = bankaccaounttable.ACCOUNTID
@@ -904,27 +904,27 @@ ORDER BY PIL_JOURNALNUM ASC");
 //     dimensionFinancialTag.DESCRIPTION as cabang,
 //     _generaljournalaccountentry.LedgerAccount
 // FROM 
-//     [AX_DEV].[dbo].[LedgerJournalTable] as _ledgerjournaltable
-//         join [AX_DEV].[dbo].[LedgerJournalTrans] as _ledgerjournaltrans
+//     [AX_DUMMY].[dbo].[LedgerJournalTable] as _ledgerjournaltable
+//         join [AX_DUMMY].[dbo].[LedgerJournalTrans] as _ledgerjournaltrans
 //             on _ledgerjournaltrans.JournalNum = _ledgerjournaltable.JournalNum
-//         join [AX_DEV].[dbo].[DimensionAttributeValueSet] as dimensionAttributeValueSet
+//         join [AX_DUMMY].[dbo].[DimensionAttributeValueSet] as dimensionAttributeValueSet
 //             on dimensionAttributeValueSet.RecId = _ledgerjournaltrans.DefaultDimension
-//         join [AX_DEV].[dbo].[DimensionAttributeValueSetItem] as dimensionAttributeValueSetItem
+//         join [AX_DUMMY].[dbo].[DimensionAttributeValueSetItem] as dimensionAttributeValueSetItem
 //             on dimensionAttributeValueSetItem.DimensionAttributeValueSet = dimensionAttributeValueSet.RecId
-//         join [AX_DEV].[dbo].[DIMENSIONATTRIBUTEVALUECOMBINATION] as dimensionAttributeValueCombination
+//         join [AX_DUMMY].[dbo].[DIMENSIONATTRIBUTEVALUECOMBINATION] as dimensionAttributeValueCombination
 //             on dimensionAttributeValueCombination.RECID = _ledgerjournaltrans.LEDGERDIMENSION
-//         join [AX_DEV].[dbo].[BANKACCOUNTTABLE] as bankaccaounttable
+//         join [AX_DUMMY].[dbo].[BANKACCOUNTTABLE] as bankaccaounttable
 //             on bankaccaounttable.ACCOUNTID = dimensionAttributeValueCombination.DISPLAYVALUE
-//         join [AX_DEV].[dbo].[DimensionAttributeValue] as dimensionAttributeValue
+//         join [AX_DUMMY].[dbo].[DimensionAttributeValue] as dimensionAttributeValue
 //             on dimensionAttributeValue.RecId = dimensionAttributeValueSetItem.DimensionAttributeValue
-//         join [AX_DEV].[dbo].[DimensionAttribute] as _DimensionAttribute
+//         join [AX_DUMMY].[dbo].[DimensionAttribute] as _DimensionAttribute
 //             on _DimensionAttribute.RecId = dimensionAttributeValue.DimensionAttribute
 //                and _DimensionAttribute.Name = 'KPKC'
-//         join [AX_DEV].[dbo].[DimensionFinancialTag] as dimensionFinancialTag
+//         join [AX_DUMMY].[dbo].[DimensionFinancialTag] as dimensionFinancialTag
 //             on dimensionFinancialTag.RecId = dimensionAttributeValue.EntityInstance
-//         join [AX_DEV].[dbo].[GeneralJournalEntry] as _generaljournalentry
+//         join [AX_DUMMY].[dbo].[GeneralJournalEntry] as _generaljournalentry
 //             on _ledgerjournaltrans.Voucher = _generaljournalentry.SubledgerVoucher
-//         join [AX_DEV].[dbo].[GeneralJournalAccountEntry] as _generaljournalaccountentry
+//         join [AX_DUMMY].[dbo].[GeneralJournalAccountEntry] as _generaljournalaccountentry
 //             on _generaljournalentry.RecId = _generaljournalaccountentry.GeneralJournalEntry
 //         where _generaljournalentry.RecId = _generaljournalaccountentry.GeneralJournalEntry
 //         and _generaljournalaccountentry.PostingType = '20'

@@ -62,10 +62,10 @@ class PelaporanController extends Controller
             );
         // }
         $query="SELECT * 
-                    FROM (SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_DIVISI] 
+                    FROM (SELECT DESCRIPTION, VALUE FROM [AX_DUMMY].[dbo].[PIL_VIEW_DIVISI] 
                     WHERE VALUE!='00') AS A 
                     UNION ALL 
-                    SELECT * FROM (SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_KPKC]  
+                    SELECT * FROM (SELECT DESCRIPTION, VALUE FROM [AX_DUMMY].[dbo].[PIL_VIEW_KPKC]  
                     WHERE VALUE!='00') AS B";
         $unit_kerja = \DB::select($query);
         $sub_title = "";
@@ -113,10 +113,10 @@ class PelaporanController extends Controller
         }
 
         $query="SELECT * 
-                    FROM (SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_DIVISI] 
+                    FROM (SELECT DESCRIPTION, VALUE FROM [AX_DUMMY].[dbo].[PIL_VIEW_DIVISI] 
                     WHERE VALUE!='00') AS A 
                     UNION ALL 
-                    SELECT * FROM (SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_KPKC]  
+                    SELECT * FROM (SELECT DESCRIPTION, VALUE FROM [AX_DUMMY].[dbo].[PIL_VIEW_KPKC]  
                     WHERE VALUE!='00') AS B";
 
         $unit_kerja = \DB::select($query);
@@ -1246,10 +1246,10 @@ class PelaporanController extends Controller
         }
 
         $second="SELECT * 
-            FROM (SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_DIVISI] 
+            FROM (SELECT DESCRIPTION, VALUE FROM [AX_DUMMY].[dbo].[PIL_VIEW_DIVISI] 
             WHERE VALUE!='00' ".$string2.") AS A 
             UNION ALL 
-            SELECT * FROM (SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_KPKC]  
+            SELECT * FROM (SELECT DESCRIPTION, VALUE FROM [AX_DUMMY].[dbo].[PIL_VIEW_KPKC]  
             WHERE VALUE!='00' ".$string1.") AS B";
         $return = \DB::select($second);
         // $json = json_encode($unit);

@@ -88,7 +88,7 @@
                                   <select class="select2 form-control block" name="cabang" id="cabang" style="width:300px" onchange="changeUnit()" required="required">
                                     <option value=""> - Pilih Kantor Cabang - </option>
                                     <?php
-                                    $second="SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_KPKC]  WHERE VALUE!='00'";
+                                    $second="SELECT DESCRIPTION, VALUE FROM [AX_DUMMY].[dbo].[PIL_VIEW_KPKC]  WHERE VALUE!='00'";
                                     $return = DB::select($second);
                                     ?>
                                     @foreach($return as $b)
@@ -493,7 +493,7 @@
             <select class="select2 form-control block" name="kantor_cabang" style="width:300px" required="required" value="{{$b->kantor_cabang}}">
               <option value="0"> - Pilih Kantor Cabang - </option>
               <?php
-              $second="SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_KPKC]  WHERE VALUE!='00'";
+              $second="SELECT DESCRIPTION, VALUE FROM [AX_DUMMY].[dbo].[PIL_VIEW_KPKC]  WHERE VALUE!='00'";
               $return = DB::select($second);
               ?>
               @foreach($return as $bq)

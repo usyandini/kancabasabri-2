@@ -14,7 +14,7 @@ Kancasabri is a Laravel-based web application for do journaling transcation and 
 * Move to project directory with `cd kancabasabri`
 * Run `composer install` to install dependencies
 * Run `php artisan key:generate` to generate key for .env file
-* Create database named `dbcabang` for application database and make sure `AX_DEV` is available on the server
+* Create database named `dbcabang` for application database and make sure `AX_DUMMY` is available on the server
 * Run `php artisan migrate` to generate tables on `dbcabang` database
 * Run `php artisan db:seed` to populate the tables
 * Run `php artisan vendor:publish` to publish filemanager

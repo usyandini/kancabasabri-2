@@ -93,7 +93,7 @@ class DroppingController extends Controller
         return view('dropping.index', ['kcabangs' => $this->kantorCabangs, 'filters' => null]);
     }
 
-    public function getAll() //ambil view PIL_DROPPING_vIE dari AX_DEV
+    public function getAll() //ambil view PIL_DROPPING_vIE dari AX_DUMMY
     {
         $droppings = $this->jDroppingModel->where('DEBIT', '>', 0)->get();
         $result = [];

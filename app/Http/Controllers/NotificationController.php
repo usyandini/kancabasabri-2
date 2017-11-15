@@ -135,6 +135,7 @@ class NotificationController extends Controller
         $pengajuan = PengajuanDropping::where('id', $notifDetail->batch_id)->first();
         $pengajuan_anggaran = BatasAnggaran::where('id', $notifDetail->batch_id)->first();
         $unit_kerja = "";
+        $uk="Semua Unit Kerja";
         if($value_cabang == "00"){
             $unit_kerja = \Auth::user()->divisi()['DESCRIPTION'];
         }else{
@@ -209,7 +210,14 @@ class NotificationController extends Controller
             }
 
             if($notifDetail->type == 47){
-                if(!Gate::check('notif_pengajuan_anggaran')&&$unit_kerja!=$unit){
+                // "Semua Unit Kerja"
+                // if($pengajuanAnggaran->unit_kerja==$uk){
+                //     $read = true;
+                // }
+                if(Gate::check('notif_pengajuan_anggaran')&&$unit_kerja==$unit){
+                    $read = true;
+                }
+                else{
                     $read = false;
                 }
             }

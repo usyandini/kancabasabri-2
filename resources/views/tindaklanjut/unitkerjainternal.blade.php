@@ -93,7 +93,7 @@
 			                  				<td><select class="select2 form-control block" name="unitkerja" id="unitkerja" onchange="changeUnit()">
                                                     <option value="0"> - Pilih Unit Kerja - </option>
                                                     <?php
-                                                    $second="SELECT * FROM (SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_DIVISI] WHERE VALUE!='00') AS A UNION ALL SELECT * FROM (SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_KPKC]  WHERE VALUE!='00') AS B";
+                                                    $second="SELECT * FROM (SELECT DESCRIPTION, VALUE FROM [AX_DUMMY].[dbo].[PIL_VIEW_DIVISI] WHERE VALUE!='00') AS A UNION ALL SELECT * FROM (SELECT DESCRIPTION, VALUE FROM [AX_DUMMY].[dbo].[PIL_VIEW_KPKC]  WHERE VALUE!='00') AS B";
 									                $return = DB::select($second);
 									                ?>
                                                     @foreach($return as $b)

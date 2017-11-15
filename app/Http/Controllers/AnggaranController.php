@@ -90,10 +90,10 @@ class AnggaranController extends Controller
 
         $filter = null;
         $query="SELECT * 
-                    FROM (SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_DIVISI] 
+                    FROM (SELECT DESCRIPTION, VALUE FROM [AX_DUMMY].[dbo].[PIL_VIEW_DIVISI] 
                     WHERE VALUE!='00') AS A 
                     UNION ALL 
-                    SELECT * FROM (SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_KPKC]  
+                    SELECT * FROM (SELECT DESCRIPTION, VALUE FROM [AX_DUMMY].[dbo].[PIL_VIEW_KPKC]  
                     WHERE VALUE!='00') AS B";
         $unit_kerja = \DB::select($query);
         return view('anggaran.informasi', [
@@ -107,10 +107,10 @@ class AnggaranController extends Controller
     {
         
         $query="SELECT * 
-                    FROM (SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_DIVISI] 
+                    FROM (SELECT DESCRIPTION, VALUE FROM [AX_DUMMY].[dbo].[PIL_VIEW_DIVISI] 
                     WHERE VALUE!='00') AS A 
                     UNION ALL 
-                    SELECT * FROM (SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_KPKC]  
+                    SELECT * FROM (SELECT DESCRIPTION, VALUE FROM [AX_DUMMY].[dbo].[PIL_VIEW_KPKC]  
                     WHERE VALUE!='00') AS B";
         $unit_kerja = \DB::select($query);
 
@@ -157,7 +157,9 @@ class AnggaranController extends Controller
                 BatasAnggaran::where('unit_kerja',$input['unit_kerja'])->update(['tanggal_mulai'=>$input['tanggal_mulai'],'tanggal_selesai'=>$input['tanggal_selesai'],'active'=>'1']);
             }else{
                 $input['active']= '1';
-                BatasAnggaran::create($input);
+                $z=BatasAnggaran::create($input);
+                $id=$z->id;
+                NotificationSystem::send($id, 47);
             }
             session()->flash('success', 'Waktu Pengajuan Anggaran dan Kegiatan Untuk '.$input['unit_kerja']." telah ditambah");
             return redirect()->back();
@@ -181,6 +183,7 @@ class AnggaranController extends Controller
             }else{
                 BatasAnggaran::where('id',$id)->update(['tanggal_mulai'=>$input['tanggal_mulai'],'tanggal_selesai'=>$input['tanggal_selesai'],'active'=>'1']);
             }
+            NotificationSystem::send($id, 47);
             // BatasAnggaran::where('id',$id)->update(['tanggal_mulai'=>$input['tanggal_mulai'],'tanggal_selesai'=>$input['tanggal_selesai'],'active'=>'1']);
             session()->flash('success', 'Waktu Pengajuan Anggaran dan Kegiatan Untuk '.$batas->unit_kerja." telah diubah");
 
@@ -214,10 +217,10 @@ class AnggaranController extends Controller
                 );
         }
         $query="SELECT * 
-                    FROM (SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_DIVISI] 
+                    FROM (SELECT DESCRIPTION, VALUE FROM [AX_DUMMY].[dbo].[PIL_VIEW_DIVISI] 
                     WHERE VALUE!='00') AS A 
                     UNION ALL 
-                    SELECT * FROM (SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_KPKC]  
+                    SELECT * FROM (SELECT DESCRIPTION, VALUE FROM [AX_DUMMY].[dbo].[PIL_VIEW_KPKC]  
                     WHERE VALUE!='00') AS B";
         $unit_kerja = \DB::select($query);
         return view('anggaran.informasi', [
@@ -482,10 +485,10 @@ class AnggaranController extends Controller
     public function riwayat(Request $request ) 
     {
         $query="SELECT * 
-                    FROM (SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_DIVISI] 
+                    FROM (SELECT DESCRIPTION, VALUE FROM [AX_DUMMY].[dbo].[PIL_VIEW_DIVISI] 
                     WHERE VALUE!='00') AS A 
                     UNION ALL 
-                    SELECT * FROM (SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_KPKC]  
+                    SELECT * FROM (SELECT DESCRIPTION, VALUE FROM [AX_DUMMY].[dbo].[PIL_VIEW_KPKC]  
                     WHERE VALUE!='00') AS B";
         $unit_kerja = \DB::select($query);
         $filter = null;
@@ -1139,10 +1142,10 @@ class AnggaranController extends Controller
         switch ($type) {
             case 'unitkerja':
                 $second="SELECT * 
-                    FROM (SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_DIVISI] 
+                    FROM (SELECT DESCRIPTION, VALUE FROM [AX_DUMMY].[dbo].[PIL_VIEW_DIVISI] 
                     WHERE VALUE!='00') AS A 
                     UNION ALL 
-                    SELECT * FROM (SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_KPKC]  
+                    SELECT * FROM (SELECT DESCRIPTION, VALUE FROM [AX_DUMMY].[dbo].[PIL_VIEW_KPKC]  
                     WHERE VALUE!='00') AS B";
                 $return = \DB::select($second);
                 break;

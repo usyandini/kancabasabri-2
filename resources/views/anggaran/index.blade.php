@@ -48,8 +48,11 @@
                                       <div class="col-xs-3">
                                           <div class="form-group">
                                             <label>Tanggal</label>
+                                            @if($status=='tambah')
                                             <input type="date" id="tanggal" name="tanggal" class="form-control">
-                                            
+                                            @else
+                                            <input id="tanggal" name="tanggal" class="form-control" readonly>
+                                            @endif
                                           </div>
                                       </div>
                                       <div class="col-xs-3">
