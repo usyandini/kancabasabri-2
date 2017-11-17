@@ -49,7 +49,7 @@
                                           <div class="form-group">
                                             <label>Tanggal</label>
                                             @if($status=='tambah')
-                                            <input type="date" id="tanggal" name="tanggal" class="form-control" onchange="download_post()">
+                                            <input type="date" id="tanggal" name="tanggal" class="form-control">
                                             @else
                                             <input id="tanggal" name="tanggal" class="form-control" readonly>
                                             @endif
@@ -527,12 +527,12 @@
                         }
                         temp_file=[];
                         console.log('insert','onItemInserted');
-                        var title = "Unggah Berkas";
-                        if(countFile>0){
-                          title=countFile+" Berkas"
-                        }
+                        // var title = "Unggah Berkas";
+                        // if(countFile>0){
+                        //   title=countFile+" Berkas"
+                        // }
                         // temp_file=[];
-                        document.getElementById('button_'+index_modal).innerHTML = title;
+                        // document.getElementById('button_'+index_modal).innerHTML = title;
                       },
                       onItemInserting:function(args){
                         console.log('insert','onItemInserting');
@@ -678,9 +678,27 @@
                               return result; 
                             },
                             validate: {
-                              message : "Pilih Item Terlebih dahulu." ,
+                              message :function(value) {
+                                status = "Pilih Jenis Terlebih dahulu";
+                                // console.log("nilai",value);
+                                if(value=="Belanja Modal"){
+                                  status="Nilai Persatuan Kurang dari Rp.5.000.000";
+                                  // console.log("nilai",status);
+                                }
+                                return status;
+                              },
                               validator :function(value, item) {
-                                  return value !== "None" ;
+                                if(value=="None"){
+                                // console.log('nilaiNone',parseInt(validDigits(item.nilai_persatuan)) );
+                                  return false;
+                                }
+                                else if(value=="Belanja Modal"&&parseInt(validDigits(item.nilai_persatuan)) < 5000000){
+                                // console.log('nilaiBelanja',parseInt(validDigits(item.nilai_persatuan)) );
+                                  return false;
+                                }else{
+                                // console.log('nilai',parseInt(validDigits(item.nilai_persatuan)) );
+                                  return true;
+                                }
                               } 
                             }
                           },
@@ -719,7 +737,7 @@
                               return result; 
                             },
                             validate: {
-                              message : "Pilih Item Terlebih dahulu." ,
+                              message : "Pilih Kelompok Terlebih dahulu." ,
                               validator :function(value, item) {
                                   return value !== "None" && value !== "Silahkan Pilih Jenis";
                               } 
@@ -760,7 +778,7 @@
                               return result; 
                             },
                             validate: {
-                              message : "Pilih Item Terlebih dahulu." ,
+                              message : "Pilih Pos Anggaran Terlebih dahulu." ,
                               validator :function(value, item) {
                                   return value !== "None" && value !== "Silahkan Pilih Kelompok";
                               } 
@@ -801,7 +819,7 @@
                               return result; 
                             },
                             validate: {
-                              message : "Pilih Item Terlebih dahulu." ,
+                              message : "Pilih Sub Pos Terlebih dahulu." ,
                               validator :function(value, item) {
                                   return value !== "None" && value !== "Silahkan Pilih Pos Anggaran";
                               } 
@@ -839,7 +857,7 @@
                               return result; 
                             },
                             validate: {
-                              message : "Pilih Item Terlebih dahulu." ,
+                              message : "Pilih Mata Anggaran Terlebih dahulu." ,
                               validator :function(value, item) {
                                   return value !== "None" && value !== "Silahkan Pilih Sup Pos";
                               } 
@@ -1255,8 +1273,9 @@
                               }
                             }
                           },
+                          //qwqwqwqwqwqwqw
                           { name: "file", align:"center", title: "Berkas",  width: 150 ,
-
+                            
                             itemTemplate: function(value,item) {
                               // alert("null");
 
@@ -1369,6 +1388,36 @@
                               var button = "<span class='btn btn-sm btn-primary' id='button_"+id_list+"' onclick='setModalFile("+id_list+")' >"+title+"</span>";
                               return button;
                             },
+                            validate: {
+                              message :"Minimal 1 berkas di unggah", 
+                              validator :function(value, item) {
+                                var id_list=0;
+                                var count_berkas=0;
+                                if(value.length>0){
+                                  for(i =0;i<value.length;i++){
+                                    if(inputs[id_list]["file"][i]["delete"]=="none")
+                                      count_berkas++;
+                                  }
+                                }else{
+                                  id_list=value
+                                }
+                                for(i=0;i<inputs.length;i++){
+                                  if(inputs[i]["id"]==item.id){
+                                    id_list = inputs[i]["tempId"];
+                                  }
+                                }
+                                
+                                if(upload_file[id_list] != null){
+                                  for(i=0;i<upload_file[id_list].length;i++){
+                                    if(upload_file[id_list][i]!=null){
+                                      count_berkas++;
+                                    }
+                                  }
+                                }
+
+                                return count_berkas > 0 ;
+                              }
+                            }
                           },
                           { type: "control",
                             width: 50,
@@ -1774,7 +1823,9 @@
                     });
                   }
                   function check(type){
-                    if(document.getElementById("nd_surat").value==""){
+                    if(document.getElementById("tanggal").value==""){
+                      toastr.error("Silahkan Isi Tanggal Terlebih Dahulu. Terima kasih.", "Perhatian.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
+                    } else if(document.getElementById("nd_surat").value==""){
                       toastr.error("Silahkan Isi Form Nomor Surat Terlebih Dahulu. Terima kasih.", "Perhatian.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
                     } else if(inputs.length < 1){
                       toastr.error("Silahkan tambahkan minimal 1 daftar anggaran untuk melakukan penyimpanan. Terima kasih.", "Minimal satu anggaran yang diisi.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
