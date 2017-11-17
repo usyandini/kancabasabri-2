@@ -49,7 +49,7 @@
                                           <div class="form-group">
                                             <label>Tanggal</label>
                                             @if($status=='tambah')
-                                            <input type="date" id="tanggal" name="tanggal" class="form-control">
+                                            <input type="date" id="tanggal" name="tanggal" class="form-control" onchange="download_post()">
                                             @else
                                             <input id="tanggal" name="tanggal" class="form-control" readonly>
                                             @endif
@@ -1537,7 +1537,7 @@
                     });
                   }
                   function setDetailAnggaran(nd_surat){
-                    if(nd_surat!=null)
+                    if(nd_surat!=null&&tanggal!=null)
                       $.ajax({
                           'async': false, 'type': "GET", 'dataType': 'JSON', 'url': "{{ url('anggaran/get/filtered/') }}/"+nd_surat+"/anggaran",
                           'success': function (data) {
@@ -1585,7 +1585,7 @@
                                 document.getElementById("unit_kerja").value = data[0].unit_kerja;
                                 document.getElementById("persetujuan").value = persetujuan;
                                 document.getElementById("tipe_anggaran").value = data[0].tipe_anggaran;
-                                document.getElementById("tanggal").value = tgl_split[2]+"/"+tgl_split[1]+"/"+tgl_split[0];
+                                document.getElementById("tanggal").value = tgl_split[2]+"-"+tgl_split[1]+"-"+tgl_split[0];
                                 // alert(data[0].persetujuan);
                                 if(data[0].persetujuan == "-1"){
                                   document.getElementById("grup_m").style.display="none";

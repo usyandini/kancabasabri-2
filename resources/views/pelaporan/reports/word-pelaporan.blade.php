@@ -42,7 +42,7 @@
 	<div id="header">
 		<?php 
 		$newheight = 50;
-		$image=$_SERVER["DOCUMENT_ROOT"].'/app-assets/images/asabri-logo.png';
+		$image='app-assets/images/asabri-logo.png';
 		list($originalwidth, $originalheight) = getimagesize($image);
 		$ratio = $originalheight / $newheight;
 		$newwidth = $originalwidth / $ratio;
@@ -50,7 +50,7 @@
 		<!-- <img src='<?php echo $_SERVER["DOCUMENT_ROOT"].'/app-assets/images/asabri-logo.png'; ?>' align="left" width="6%"> -->
 		<div="title">
 	        <h3>
-	        <center><?php echo '<img src="' . $image . '" height="50" width="' . $newwidth . '" align="left"/>';?>Pelaporan Anggaran dan Kegiatan PT ASABRI (PERSERO)</center></h3>	  
+	        <center><img src="{{ asset('app-assets/images/asabri-logo.png', $secure = null) }}" <?php echo ' height="50" width="' . $newwidth . '" align="left"/>';?>Pelaporan Anggaran dan Kegiatan PT ASABRI (PERSERO)</center></h3>	  
 	    </div>
     </div>
     <br><br><br>
