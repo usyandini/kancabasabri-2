@@ -138,6 +138,7 @@ Route::group(['middleware' => 'auth'], function() {
 		Route::get('/get/download/{id}', 'PelaporanController@unduh_file');
 		Route::get('/get/unit_kerja_form/{thn}/{tw1}/{tw2}/{kategori}/{id}', 'PelaporanController@getUnitKerjaFormMaster');
 		Route::get('/reports/export', 'PelaporanController@export_pelaporan');
+		Route::get('/reports/exportword', 'PelaporanController@export_pelaporanword');
    	});
 
 	Route::get('/user/ldap/', 'UserController@filterLDAP');

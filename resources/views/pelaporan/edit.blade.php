@@ -45,7 +45,7 @@
                                         <div class="form-group">
                                           <label>Tanggal</label>
                                           @if($setting['insert'])
-                                          <input id="tanggal" name="tanggal" class="form-control" value="{{date('d/m/Y')}}"readOnly>
+                                          <input id="tanggal" name="tanggal" class="form-control" value="{{date('d-m-Y')}}" readOnly>
                                           @else
                                           <input id="tanggal" name="tanggal" class="form-control" readOnly>
                                           @endif
@@ -184,13 +184,19 @@
                                       @if($type=="item")
                                       <div class="col-xs-3">
                                         <div class="form-group">
-                                          <div onclick="download_post()" class="btn btn-secondary" target="_blank"><i class="fa fa-download"></i> Unduh</div>
+                                          <div onclick="download_post()" class="btn btn-outline-secondary" target="_blank"><i class="fa fa-download"></i> Unduh PDF</div>
+                                        </div>
+                                      </div>
+                                      <div class="col-xs-3">
+                                        <div class="form-group">
+                                          <div onclick="export_post()" class="btn btn-outline-primary" target="_blank"><i class="fa fa-download"></i> Unduh Word</div>
                                         </div>
                                       </div>
                                       @endif
 
                                       <div class="col-xs-7">
                                       </div>
+                                      
                                       @if($setting['edit']&&$beda)
                                       <div class="col-xs-1 pull-right">
                                         <div class="form-group">
@@ -203,11 +209,12 @@
                                         </div>
                                       </div>
                                       @endif
-                                    </div>
+                                   </div>
                                   </div>
                                 </div>
                                 
                                 </form>
+
                             </div>
                         </div>
                       </div>
@@ -275,13 +282,18 @@
                   </div>
                 </div>
 
-                <form method="GET" action="{{url('pelaporan/reports/export')}}" id="downloadPelaporan" name="downloadPelaporan" enctype="multipart/form-data">
+                <form method="GET" action="{{url('pelaporan/reports/export')}}" target="_blank" id="downloadPelaporan" name="downloadPelaporan" enctype="multipart/form-data">
                     
                     <input type="hidden" name="kategori_download" id="kategori_download" value="{{$setting['kategori']}}">              
                     <input type="hidden" name="header_pelaporan_download" id="header_pelaporan_download">
                     <input type="hidden" name="list_pelaporan_download" id="list_pelaporan_download">
-                </form> 
-
+                </form>
+                <form method="GET" action="{{url('pelaporan/reports/exportword')}}" target="_blank" id="exportPelaporan" name="exportPelaporan" enctype="multipart/form-data">
+                    <input type="hidden" name="kategori_download" id="kategori_download" value="{{$setting['kategori']}}">              
+                    <input type="hidden" name="header_pelaporan_download" id="header_pelaporan_download">
+                    <input type="hidden" name="list_pelaporan_download" id="list_pelaporan_download">
+                </form>
+                
                 @section('customjs')
                 <!-- BEGIN PAGE VENDOR JS-->
                 <script type="text/javascript" src="{{ asset('app-assets/vendors/js/ui/jquery.sticky.js') }}"></script>
@@ -497,7 +509,7 @@
                           @if($setting['kategori'] == "laporan_anggaran")
                           { name: "program_prioritas", 
                             type: "select", 
-                            readOnly:insertable == 0 ? false : true,
+                            readOnly:insertable == 1 ? false : true,
                             // readOnly:insertable == 1 ? false : true,
                             title: "Program Prioritas", 
                             width: 170,
@@ -514,7 +526,7 @@
                           { name: "sasaran_dicapai", 
                             type: "textarea", 
                             title: "Sasaran Yang ingin Di Capai", 
-                            readOnly:insertable == 0 ? false : true,
+                            readOnly:insertable == 1 ? false : true,
                             // readOnly:insertable == 1 ? false : true,
                             width: 300,
                             validate: {
@@ -717,7 +729,7 @@
                           // }
                           now = data[0]['created_at']['date'].split(' ');
                           date = now[0].split('-');
-                          tanggal.value = date[2]+"/"+date[1]+"/"+date[0];
+                          tanggal.value = date[2]+"-"+date[1]+"-"+date[0];
                           unit_kerja.value = data[0].unit_kerja;
                           tw_dari_val="";
                           tw_ke_val="";
@@ -1086,6 +1098,20 @@
                     $('input[name="list_pelaporan_download"]').val(JSON.stringify(inputs));
                     // alert(JSON.stringify(header));
                     $('form[id="downloadPelaporan"]').submit();
+                  }
+                  function export_post(){
+                    header={};
+                    header['tanggal'] = $('#tanggal').val();
+                    header['tw_dari'] = $('#tw_dari').val();
+                    header['tw_ke'] = $('#tw_ke').val();
+                    header['unit_kerja'] = $('#unit_kerja').val();
+
+                    array = new Array();
+                    array.push(header);
+                    $('input[name="header_pelaporan_download"]').val(JSON.stringify(array));
+                    $('input[name="list_pelaporan_download"]').val(JSON.stringify(inputs));
+                    // alert(JSON.stringify(header));
+                    $('form[id="exportPelaporan"]').submit();
                   }
                   $('#modal_berkas').on('hidden.bs.modal', function () {
                       if(!simpan_file){

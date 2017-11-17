@@ -379,6 +379,9 @@ class PelaporanController extends Controller
             if($row->status == 'Kirim'){
                 $beda =false;
             }
+            if($row->status != 'Kirim'){
+                $beda =true;
+            }
         }
         $mulai = false;
         if($type == "item"){
@@ -1420,6 +1423,94 @@ class PelaporanController extends Controller
                 
                 $pdf = PDF::loadView('pelaporan.reports.export-usulan', $data);
                 return $pdf->setPaper('a4', 'landscape')->setWarnings(false)->download('Usulan Program Prioritas-'.date("dmY").'.pdf');
+                break;
+        }
+    }
+
+    public function export_pelaporanword(Request $request)
+    {
+        $header_list = []; 
+        $pelaporan_list = [];
+        $type = $request->kategori_download;
+        switch($type){
+            case "laporan_anggaran": 
+                foreach(json_decode($request->header_pelaporan_download) as $header){
+                    $header_list[] = [
+                        'tanggal'       => $header->tanggal,
+                        'tw_dari'       => $header->tw_dari,
+                        'tw_ke'         => $header->tw_ke,
+                        'unit_kerja'    => $header->unit_kerja
+                    ];
+                }
+
+                foreach(json_decode($request->list_pelaporan_download) as $value){
+                    $pelaporan_list[] = [
+                        'program_prioritas' => $value->program_prioritas,
+                        'sasaran_dicapai'   => $value->sasaran_dicapai,
+                        'uraian_progress'   => $value->uraian_progress
+                    ];
+                }
+
+                $data = [
+                    'list'      => $pelaporan_list,
+                    'header'    => $header_list
+                ];
+                $filename="Pelaporan-Anggaran-".date('dmY');
+                return view('pelaporan.reports.word-pelaporan', $data, compact('filename'));
+                break;
+
+            case "arahan_rups": 
+                foreach(json_decode($request->header_pelaporan_download) as $header){
+                    $header_list[] = [
+                        'tanggal'       => $header->tanggal,
+                        'tw_dari'       => $header->tw_dari,
+                        'tw_ke'         => $header->tw_ke,
+                        'unit_kerja'    => $header->unit_kerja
+                    ];
+                }
+
+                foreach(json_decode($request->list_pelaporan_download) as $value){
+                    $pelaporan_list[] = [
+                        'jenis_arahan'              => $value->jenis_arahan,
+                        'arahan'                    => $value->arahan,
+                        'progress_tindak_lanjut'    => $value->progress_tindak_lanjut
+                    ];
+                }
+
+                $data = [
+                    'list'      => $pelaporan_list,
+                    'header'    => $header_list
+                ];
+                
+                $filename="Pelaporan-arahan-RUPS-".date('dmY');
+                return view('pelaporan.reports.word-pelaporan', $data, compact('filename'));
+                break;    
+
+            case "usulan_program": 
+                foreach(json_decode($request->header_pelaporan_download) as $header){
+                    $header_list[] = [
+                        'tanggal'       => $header->tanggal,
+                        'tw_dari'       => $header->tw_dari,
+                        'tw_ke'         => $header->tw_ke,
+                        'unit_kerja'    => $header->unit_kerja
+                    ];
+                }
+
+                foreach(json_decode($request->list_pelaporan_download) as $value){
+                    $pelaporan_list[] = [
+                        'nama_program'     => $value->nama_program,
+                        'latar_belakang'   => $value->latar_belakang,
+                        'dampak_positif'   => $value->dampak_positif,
+                        'dampak_negatif'   => $value->dampak_negatif
+                    ];
+                }
+
+                $data = [
+                    'list'      => $pelaporan_list,
+                    'header'    => $header_list
+                ];
+                $filename="Pelaporan-Usulan-Program-".date('dmY');
+                return view('pelaporan.reports.word-pelaporan', $data, compact('filename'));
                 break;
         }
     }

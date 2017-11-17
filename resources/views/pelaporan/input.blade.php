@@ -45,7 +45,7 @@
                                         <div class="form-group">
                                           <label>Tanggal</label>
                                           @if($setting['insert'])
-                                          <input id="tanggal" name="tanggal" class="form-control" value="{{date('d/m/Y')}}" >
+                                          <input id="tanggal" name="tanggal" class="form-control" type="date" onchange="getUnitKerja()">
                                           @else
                                           <input id="tanggal" name="tanggal" class="form-control" readOnly>
                                           @endif
@@ -123,7 +123,7 @@
                                         <div class="form-group">
                                           <label>Tanggal Selesai</label>
                                           @if($setting['insert'])
-                                          <input type="date"  id="tanggal_selesai" name="tanggal_selesai" class="date form-control">
+                                          <input type="date" id="tanggal_selesai" name="tanggal_selesai" class="date form-control">
                                           @else
                                           <input id="tanggal_selesai" name="tanggal_selesai" class="form-control" readOnly>
                                           @endif
@@ -421,7 +421,7 @@
                           @if($setting['kategori'] == "arahan_rups")
                           { name: "jenis_arahan", 
                             type: "select", 
-                            title: "Jenis Arfahan", 
+                            title: "Jenis Arahan", 
                             width: 170,
                             readOnly:insertable == 1 ? false : true,
                             valueField: "arahan_rups", 
@@ -639,7 +639,7 @@
 
 
                   function getUnitKerja() {
-                    var tanggal = $('#tanggal').val().split("/");
+                    var tanggal = $('#tanggal').val().split("-");
                     var tw_dari = $('#tw_dari').val();
                     var tw_ke = $('#tw_ke').val();
 
@@ -717,7 +717,7 @@
                           document.getElementById('unit_kerja').value = data[0].unit_kerja;
                           now = data[0].created_at.split(' ')
                           date = now[0].split('-');
-                          tanggal.value = date[2]+"/"+date[1]+"/"+date[0];
+                          tanggal.value = date[2]+"-"+date[1]+"-"+date[0];
                           tw_dari_val="";
                           tw_ke_val="";
                           // alert(data[0].tw_dari+data[0].tw_ke)
