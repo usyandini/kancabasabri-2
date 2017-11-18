@@ -682,7 +682,7 @@
                                 status = "Pilih Jenis Terlebih dahulu";
                                 // console.log("nilai",value);
                                 if(value=="Belanja Modal"){
-                                  status="Nilai Persatuan Kurang dari Rp.5.000.000";
+                                  status="Jika Jenisnya Belanja Modal, Nilai Persatuan Harus Lebih Besar dari Rp.5.000.000";
                                   // console.log("nilai",status);
                                 }
                                 return status;
