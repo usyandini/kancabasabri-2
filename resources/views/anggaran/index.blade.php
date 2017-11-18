@@ -1330,7 +1330,7 @@
                             },
 
                             insertTemplate: function() {
-                              var id_list;
+                              var id_list=0;
                               if(inputs.length>0){
                                 id_list=inputs.length;
                               }else{
@@ -1872,7 +1872,8 @@
                         status = {{ $status=='edit' ? 1 : 0 }};
                         for(i=0;i<inputs.length;i++){
                           nameClass = $('.file_'+i);
-                          if(nameClass.length != 0){
+                          // alert(nameClass.length);
+                          if(nameClass.length > 0){
                             count=0;
                             for(j=0;j<nameClass.length;j++){
                               if(document.getElementById("file_name_"+i+"_"+j) != null){
@@ -1885,6 +1886,8 @@
                             if(count==nameClass.length){
                               stop=true;
                             }
+                          }else{
+                            stop=true;
                           }
                           if(!stop){
                             if(nameClass.length!=0){
@@ -1895,11 +1898,11 @@
                             
                           }
                         }
-                        if(status == 1){
-                          stop = false;
-                        }else{
-                          stop = false;
-                        }
+                        // if(status == 1){
+                        //   stop = false;
+                        // }else{
+                        //   stop = false;
+                        // }
 
                         if(stop){
                           toastr.error("Silahkan tambahkan berkas minimal 1 pada anggaran untuk melakukan penyimpanan. Terima kasih.", "Minimal satu berkas yang diunggah.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:2e3});
