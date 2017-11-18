@@ -685,6 +685,10 @@
                                   status="Jika Jenisnya Belanja Modal, Nilai Persatuan Harus Lebih Besar dari Rp.5.000.000";
                                   // console.log("nilai",status);
                                 }
+                                if(value=="Biaya Kantor"){
+                                  status="Jika Jenisnya Biaya Kantor, Nilai Persatuan Harus Lebih Kecil dari Rp.5.000.000";
+                                  // console.log("nilai",status);
+                                }
                                 return status;
                               },
                               validator :function(value, item) {
@@ -693,6 +697,10 @@
                                   return false;
                                 }
                                 else if(value=="Belanja Modal"&&parseInt(validDigits(item.nilai_persatuan)) < 5000000){
+                                // console.log('nilaiBelanja',parseInt(validDigits(item.nilai_persatuan)) );
+                                  return false;
+                                }
+                                else if(value=="Biaya Kantor"&&parseInt(validDigits(item.nilai_persatuan)) > 5000000){
                                 // console.log('nilaiBelanja',parseInt(validDigits(item.nilai_persatuan)) );
                                   return false;
                                 }else{
