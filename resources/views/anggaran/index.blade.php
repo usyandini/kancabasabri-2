@@ -686,7 +686,7 @@
                                   // console.log("nilai",status);
                                 }
                                 if(value=="Biaya Kantor"){
-                                  status="Jika Jenisnya Biaya Kantor, Nilai Persatuan Harus Lebih Kecil dari Rp.5.000.000";
+                                  status="Jika Jenisnya Biaya Kantor, Nilai Persatuan Maksimal Rp.5.000.000";
                                   // console.log("nilai",status);
                                 }
                                 return status;
@@ -700,7 +700,7 @@
                                 // console.log('nilaiBelanja',parseInt(validDigits(item.nilai_persatuan)) );
                                   return false;
                                 }
-                                else if(value=="Biaya Kantor"&&parseInt(validDigits(item.nilai_persatuan)) > 5000000){
+                                else if(value=="Biaya Kantor"&&parseInt(validDigits(item.nilai_persatuan)) >= 5000000){
                                 // console.log('nilaiBelanja',parseInt(validDigits(item.nilai_persatuan)) );
                                   return false;
                                 }else{
@@ -1396,36 +1396,49 @@
                               var button = "<span class='btn btn-sm btn-primary' id='button_"+id_list+"' onclick='setModalFile("+id_list+")' >"+title+"</span>";
                               return button;
                             },
-                            validate: {
-                              message :"Minimal 1 berkas di unggah", 
-                              validator :function(value, item) {
-                                var id_list=0;
-                                var count_berkas=0;
-                                if(value.length>0){
-                                  for(i =0;i<value.length;i++){
-                                    if(inputs[id_list]["file"][i]["delete"]=="none")
-                                      count_berkas++;
-                                  }
-                                }else{
-                                  id_list=value
-                                }
-                                for(i=0;i<inputs.length;i++){
-                                  if(inputs[i]["id"]==item.id){
-                                    id_list = inputs[i]["tempId"];
-                                  }
-                                }
+                            // validate: {
+                            //   message :function(value) {
+                            //     status = "Pilih Berkas Terlebih Dahulu";
+                            //     return status;
+                            //   },
+                            //   validator :function(value, item) {
+                            //     if(count_berkas=0){
+                            //       return false;
+                            //     }else{
+                            //       return true;
+                            //     }
+                            //   } 
+                            // }
+                            // validate: {
+                            //   message :"Minimal 1 berkas di unggah", 
+                            //   validator :function(value, item) {
+                            //     var id_list=0;
+                            //     var count_berkas=0;
+                            //     if(value.length>0){
+                            //       for(i =0;i<value.length;i++){
+                            //         if(inputs[id_list]["file"][i]["delete"]=="none")
+                            //           count_berkas++;
+                            //       }
+                            //     }else{
+                            //       id_list=value
+                            //     }
+                            //     for(i=0;i<inputs.length;i++){
+                            //       if(inputs[i]["id"]==item.id){
+                            //         id_list = inputs[i]["tempId"];
+                            //       }
+                            //     }
                                 
-                                if(upload_file[id_list] != null){
-                                  for(i=0;i<upload_file[id_list].length;i++){
-                                    if(upload_file[id_list][i]!=null){
-                                      count_berkas++;
-                                    }
-                                  }
-                                }
+                            //     if(upload_file[id_list] != null){
+                            //       for(i=0;i<upload_file[id_list].length;i++){
+                            //         if(upload_file[id_list][i]!=null){
+                            //           count_berkas++;
+                            //         }
+                            //       }
+                            //     }
 
-                                return count_berkas > 0 ;
-                              }
-                            }
+                            //     return count_berkas > 0 ;
+                            //   }
+                            // }
                           },
                           { type: "control",
                             width: 50,
