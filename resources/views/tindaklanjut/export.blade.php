@@ -8,18 +8,22 @@
 				@if ($bb->internal=='1')
 				<?php 
 				header("Content-type: application/vnd-ms-excel");
-				header("Content-Disposition: attachment; filename=tindak-lanjut-internal.xls"); ?>
+				header("Content-Disposition: attachment; filename=tindak-lanjut-internal.xls"); 
+				?>
 				@else
 				<?php 
 				header("Content-type: application/vnd-ms-excel");
-				header("Content-Disposition: attachment; filename=tindak-lanjut-eksternal.xls"); ?>
+				header("Content-Disposition: attachment; filename=tindak-lanjut-eksternal.xls"); 
+				?>
 				<!-- <?php 
 				header("Content-type: application/vnd-ms-word");
-				header("Content-Disposition: attachment; filename=tindak-lanjut-internal.doc"); ?>
-				@else
+				header("Content-Disposition: attachment; filename=tindak-lanjut-internal.doc");
+				?> 
+				
 				<?php 
 				header("Content-type: application/vnd-ms-word");
-				header("Content-Disposition: attachment; filename=tindak-lanjut-eksternal.doc"); ?> -->
+				header("Content-Disposition: attachment; filename=tindak-lanjut-eksternal.doc"); 
+				?> -->
 				@endif
 			@endif
 

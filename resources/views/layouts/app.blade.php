@@ -50,7 +50,7 @@
             <div class="navbar-wrapper">
                 <div class="navbar-header">
                     <a href="{{ url('/') }}" class="navbar-brand">
-                        <img src="{{ asset('app-assets/images/asabri-logo-kecil.png', $secure = null) }}" width="80%" align="middle" hspace="55%">
+                        <img src="{{ asset('app-assets/images/asabri-logo-kecil.png', $secure = null) }}" width="100" align="middle" hspace="55%">
                     </a>
                     <ul class="nav navbar-nav">
                         <li class="nav-item mobile-menu hidden-md-up float-xs-left"><a href="#" class="nav-link nav-menu-main menu-toggle hidden-xs"><i class="ft-menu font-large-1"></i></a></li>
