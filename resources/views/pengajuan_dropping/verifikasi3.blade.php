@@ -244,7 +244,7 @@
 			                  	<tr><td><b> Lampiran </b></td><td><b> : </b></td><td><a href="{{ URL('pengajuan_dropping/download/'. $bb->id) }}" target="_blank">{{ $bb->name }}</a>&nbsp;&nbsp;
 			                  														 <span><a href="{{ URL('pengajuan_dropping/print/'. $bb->id) }}" target="_blank" class="btn btn-warning btn-sm" ><i class="fa fa-print"></i> Formulir Pengajuan</a></span></td></tr>
 			                  	<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr><tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>
-			                  	<form enctype="multipart/form-data" role="form" action="{{ URL('acc_pengajuan_dropping/update_accpengajuandropping/'. $bb->id) }}" method="POST" >
+			                  	<form enctype="multipart/form-data" role="form" action="{{ URL('acc_pengajuan_dropping/update_accpengajuandropping/'. $bb->id) }}" method="POST" onsubmit="return validasi_input(this)">
                                 {{ csrf_field() }}
                                 <input type="hidden" name="id" value="{{$bb->id}}" />
 			                  	<tr><td><b> Verifikasi </b></td><td><b> : </b></td><td><select class="select form-control" name="verifikasi" required="required" style="width:400px" value="{{$bb->verifikasi}}" @if ($bb->kirim<>4) disabled="disabled" @endif>
@@ -253,6 +253,7 @@
 																					   <option value="2" @if ($bb->verifikasi=='2')Selected @endif>Ditolak</option>                                                 
 													                                   </select></td></tr>
 			                  	<tr><td></td></tr>
+			                  	<div class="form-group" id="keterangan" style="display:none;">
 			                  	<tr><td><b> keterangan </b></td><td><b> : </b></td><td><select class="select form-control" name="keterangan" style="width:400px" value="{{$bb->keterangan}}" @if ($bb->kirim<>4) disabled="disabled" @endif>
 													                                    <option value=""> - Pilih Keterangan - </option>
 									                                                    <?php
@@ -265,7 +266,7 @@
 											                                              @if($b->id <> $bb->keterangan)>{{ $b->content }}@endif
 											                                              </option>
 									                                                    @endforeach                                               
-													                                   </select></td></tr>
+													                                   </select></td></tr></div>
 			                  	<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>
 			                  	<tr><td></td><td></td><td>
 			                  	@if ($bb->kirim==4)
@@ -324,5 +325,24 @@
 				<script src="{{ asset('app-assets/vendors/js/tables/datatable/dataTables.responsive.min.js') }}"
 				  type="text/javascript"></script>
 				
-				
+				<script type="text/javascript">
+					$(function () {
+                            $('#terima').click(function() {
+                                $('#keterangan').slideUp();
+                            });
+                            $('#tolak').click(function() {
+                                $('#keterangan').slideDown();
+                            });
+                    });
+                	function validasi_input(form){
+                        if (form.verifikasi.value ==2){
+                        	$('#keterangan').slideDown();
+                         if (form.keterangan.value ==""){
+                            alert("Anda belum memilih keterangan!");
+                            return (false);
+                         }
+                        }
+                        return (true);
+                        }
+                </script>
                 @endsection

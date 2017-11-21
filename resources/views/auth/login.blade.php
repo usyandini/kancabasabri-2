@@ -86,7 +86,7 @@
                                 <div class="card-footer">
                                     <div class="">
                                         <p class="float-sm-right text-xs-center m-0">
-                                        	<span class="float-md-left d-xs-block d-md-inline-block">Copyright  &copy; 2017 <a href="https://gumcode.net" target="_blank" class="text-bold-800 grey darken-2">Gumcode </a></span>
+                                        	<span class="float-md-left d-xs-block d-md-inline-block"><center>Copyright  &copy; 2017 <a href="https://asabri.co.id" target="_blank" class="text-bold-800 grey darken-2">PT. ASABRI PERSERO </a></center></span>
                                         </p>
                                     </div>
                                 </div>

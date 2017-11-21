@@ -191,11 +191,13 @@
                                                     <label class="control-label"><b> Periode Realiasi </b></label>
                                                     <label class="control-label"> : </label>
                                                     <select class="select form-control" name="periode_realisasi" required="required" >
-                                                      <option value="">Pilih Periode Realisasi</option>
-                                                      <option value="1">TW I</option>
-                                                      <option value="2">TW II</option>  
-                                                      <option value="3">TW III</option>
-                                                      <option value="4">TW IV</option>                                                 
+                                                      <!-- <option value="">Pilih Periode Realisasi</option> -->
+                                                      <?php
+                                                      if (date('n')==1||date('n')==2||date('n')==3){ echo "<option value=1>TW I</option>";}
+                                                      if (date('n')==4||date('n')==5||date('n')==6){ echo "<option value=2>TW II</option>";}
+                                                      if (date('n')==7||date('n')==8||date('n')==9){ echo "<option value=3>TW III</option>";}
+                                                      if (date('n')==10||date('n')==11||date('n')==12){ echo "<option value=4>TW IV</option>";}
+                                                      ?>                                                
                                                     </select> 
                                                     <br>
                                                     <label class="control-label"><b> Lampiran </b></label>

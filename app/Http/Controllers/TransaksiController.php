@@ -766,46 +766,17 @@ class TransaksiController extends Controller
 
     public function reportQuery_transaksi($cabang, $awal, $akhir, $transyear)
     {
-        return \DB::select("SELECT
-                    T2.ITEM AS ITEM,
-                    T2.CR AS CR,
-                    MT.nama_item AS DESCRIPTION,
-                    T2.A AS URAIAN,
-                    T2.Z AS IDTRANSAKSI,
-                    SUM(T2.ANGGARAN_AWAL) AS ANGGARAN_AWAL,
-                    SUM(T2.REALISASI_ANGGARAN) AS REALISASI_ANGGARAN,
-                    SUM(T2.SISA_ANGGARAN) AS SISA_ANGGARAN 
-                        FROM (SELECT 
-                    DATEPART(MONTH, T.tgl) AS MONTH, 
-                    DATEPART(YEAR, T.tgl) AS YEAR, 
-                    T.[desc] AS A,
-                    T.id AS Z,
-                    T.item AS ITEM,
-                    T.currently_rejected AS CR, 
-                    B.cabang AS CABANG,
-                    B.divisi AS DIVISI,
-                    T.sub_pos AS SUBPOS,
-                    T.mata_anggaran AS MATAANGGARAN, 
-                    MAX(T.anggaran) AS ANGGARAN_AWAL,
-                    SUM(T.total) AS REALISASI_ANGGARAN,
-                    MIN(T.actual_anggaran) AS SISA_ANGGARAN  
-                FROM dbcabang.dbo.transaksi T
-                    LEFT JOIN dbcabang.dbo.batches B ON T.batch_id = B.id 
-                WHERE
-                    B.cabang = ".$cabang." AND
-                    T.currently_rejected = 0 AND
-                    DATEPART(MONTH, T.tgl) >= ".$awal." AND 
-                    DATEPART(MONTH, T.tgl) <= ".$akhir." AND 
-                    DATEPART(YEAR, T.tgl) = ".$transyear."
-                GROUP BY DATEPART(MONTH, T.tgl), DATEPART(YEAR, T.tgl), T.item, T.id, B.cabang, B.divisi, T.sub_pos, T.mata_anggaran, T.[desc], T.currently_rejected) T2
-                LEFT JOIN dbcabang.dbo.item_master_transaksi MT ON 
-                        T2.ITEM = MT.SEGMEN_1 AND  
-                        T2.SUBPOS = MT.SEGMEN_5 AND 
-                        T2.MATAANGGARAN = MT.SEGMEN_6
-                GROUP BY T2.ITEM, T2.CABANG, T2.DIVISI, T2.SUBPOS, T2.MATAANGGARAN, T2.CR, MT.nama_item, T2.A, T2.Z order by DESCRIPTION asc");
+        return \DB::select("SELECT 
+                  mata_anggaran, account, tgl, [desc], anggaran, total as realisasi, actual_anggaran as sisa_anggaran
+                  FROM [DBCabang].[dbo].[transaksi] as a join [DBCabang].[dbo].[batches] as c on a.batch_id=c.id
+                  
+                  where
+                    cabang = ".$cabang." AND
+                    DATEPART(MONTH, tgl) >= ".$awal." AND 
+                    DATEPART(MONTH, tgl) <= ".$akhir." AND 
+                    DATEPART(YEAR, tgl) = ".$transyear."
+                    and currently_rejected=0 order by account, a.id");
 
-                        // T2.CABANG = MT.SEGMEN_3 AND 
-                        // T2.DIVISI = MT.SEGMEN_4 AND
     }
 
     public function reportQuery_kasbank($cabang, $awal, $akhir, $transyear)
@@ -962,11 +933,11 @@ ORDER BY PIL_JOURNALNUM ASC");
         $sebelum="";
         $data_count= [];
         foreach ($transaksi as $trans) {
-            if($trans->DESCRIPTION != $sebelum){
-                $sebelum = $trans->DESCRIPTION;
-                $data_count[$trans->DESCRIPTION] = 1;
+            if($trans->account != $sebelum){
+                $sebelum = $trans->account;
+                $data_count[$trans->account] = 1;
             }else{
-                $data_count[$trans->DESCRIPTION]++;
+                $data_count[$trans->account]++;
             }
         }
         return view('transaksi.realisasi_transaksi', [

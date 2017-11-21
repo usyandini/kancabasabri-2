@@ -303,7 +303,12 @@ class PengajuanDroppingController extends Controller
              'title' => 'Data berhasil diubah.'
              ];
              $verifikasi=$request->verifikasi;
-             $keterangan=$request->keterangan;
+             if ($verifikasi==1){
+                $keterangan='';
+             }
+             else{
+                $keterangan=$request->keterangan;
+             }
 		         $data = [
 		         	'verifikasi' => $verifikasi,
 		         	'keterangan' => $keterangan
