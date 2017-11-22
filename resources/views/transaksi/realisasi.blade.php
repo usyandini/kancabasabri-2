@@ -160,11 +160,17 @@
                                   @if($filters)
                                   <?php $no=1; ?>
                                   @forelse($transaksi as $trans)
+                                  <?php
+                                  $mata=$trans->mata_anggaran;
+                                  $a = DB::table('item_master_transaksi')
+                                   ->where('SEGMEN_6', $mata)->first();
+                                   $nama=$a->nama_item;
+                                  ?>
                                   <tr>
-                                   <td>{{ $trans->DESCRIPTION }}</td>
-                                   <td>Rp. {{ number_format($trans->ANGGARAN_AWAL, 2, ',','.') }}</td>
-                                   <td><b>Rp. {{ number_format($trans->REALISASI_ANGGARAN, 2, ',','.') }}</b></td>
-                                   <td>Rp. {{ number_format($trans->SISA_ANGGARAN, 2, ',','.') }}</td>
+                                   <td>{{ $nama }}</td>
+                                   <td>Rp. {{ number_format($trans->anggaran, 2, ',','.') }}</td>
+                                   <td><b>Rp. {{ number_format($trans->realisasi, 2, ',','.') }}</b></td>
+                                   <td>Rp. {{ number_format($trans->sisa_anggaran, 2, ',','.') }}</td>
                                  </tr>
                                  @empty
                                  <tr>

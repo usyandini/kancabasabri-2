@@ -55,16 +55,22 @@
                 $longkap="longkap";
               ?>
               @foreach($transaksi as $trans)
+              <?php
+                $mata=$trans->mata_anggaran;
+                $a = DB::table('item_master_transaksi')
+                ->where('SEGMEN_6', $mata)->first();
+                $nama=$a->nama_item;
+              ?>
               <tr>
-                @if ($longkap != $trans->DESCRIPTION)<td style="padding-left:20px;" rowspan = "{{$data_count[$trans->DESCRIPTION]}}"> {{$no++}}.) {{ $trans->DESCRIPTION }}</td> @endif
-                <td style="padding-left:20px;"><?php echo nl2br(str_replace('', '', htmlspecialchars($trans->URAIAN))); ?></td>
-                @if ($longkap != $trans->DESCRIPTION)<td align="right" rowspan = "{{$data_count[$trans->DESCRIPTION]}}">Rp {{ number_format($trans->ANGGARAN_AWAL, 2, ',','.') }}<?php $tmp_anggaran += $trans->ANGGARAN_AWAL;?></td>@endif
-                <td align="right">Rp {{ number_format($trans->REALISASI_ANGGARAN, 2, ',','.') }}</td>
-                <td align="right">Rp {{ number_format($trans->SISA_ANGGARAN, 2, ',','.') }}</td>
+                @if ($longkap != $trans->account)<td style="padding-left:20px;" rowspan = "{{$data_count[$trans->account]}}"> {{$no++}}.) {{ $nama }}</td> @endif
+                <td style="padding-left:20px;"><?php echo nl2br(str_replace('', '', htmlspecialchars($trans->desc))); ?></td>
+                @if ($longkap != $trans->account)<td align="right" rowspan = "{{$data_count[$trans->account]}}">Rp {{ number_format($trans->anggaran, 2, ',','.') }}<?php $tmp_anggaran += $trans->anggaran;?></td>@endif
+                <td align="right">Rp {{ number_format($trans->realisasi, 2, ',','.') }}</td>
+                <td align="right">Rp {{ number_format($trans->sisa_anggaran, 2, ',','.') }}</td>
               </tr>
               <?php 
-                $longkap = $trans->DESCRIPTION;
-                $tmp_realisasi += $trans->REALISASI_ANGGARAN;
+                $longkap = $trans->account;
+                $tmp_realisasi += $trans->realisasi;
               ?>
               @endforeach
               <tr id="tf1">

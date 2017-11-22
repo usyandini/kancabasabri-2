@@ -240,7 +240,7 @@ class DroppingController extends Controller
         $bank = AkunBank::where('BANK', $request->akun_bank)->first();
         $program = Program::where('DESCRIPTION', 'Tabungan Hari Tua')->first();
         $kpkc = KantorCabang::where('DESCRIPTION', $request->cabang)->first();
-        $divisi = Divisi::where('DESCRIPTION', '')->first();
+        $divisi = Divisi::where('DESCRIPTION', 'None')->first();
         $subpos = SubPos::where('DESCRIPTION', 'None')->first();
         $kegiatan = Kegiatan::where('DESCRIPTION', 'None')->first();
 
@@ -264,7 +264,7 @@ class DroppingController extends Controller
         $string_tarik = $request->nominal_tarik;
         $tarik = floatval(str_replace('.', '', $string_tarik));
         //dd($tarik);
-
+        // print_r($divisi->VALUE);
         if($validatorTT->passes() && $temp_sisa['stat'] !=1){
             if($temp_sisa){
                 $inputsTT['nominal'] = $temp_sisa['sisa_dropping'];
@@ -382,7 +382,7 @@ class DroppingController extends Controller
                 $bank = AkunBank::where('BANK', $request->p_akun_bank)->first();
                 $program = Program::where('DESCRIPTION', 'Tabungan Hari Tua')->first();
                 $kpkc = KantorCabang::where('DESCRIPTION', $request->p_cabang)->first();
-                $divisi = Divisi::where('DESCRIPTION', '')->first();
+                $divisi = Divisi::where('DESCRIPTION', 'None')->first();
                 $subpos = SubPos::where('DESCRIPTION', 'None')->first();
                 $kegiatan = Kegiatan::where('DESCRIPTION', 'None')->first();
 

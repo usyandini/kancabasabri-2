@@ -54,16 +54,22 @@
                 $tmp_anggaran = $tmp_realisasi = $tmp_sisa = 0;
               ?>
               @foreach($transaksi as $trans)
+              <?php
+                $mata=$trans->mata_anggaran;
+                $a = DB::table('item_master_transaksi')
+                ->where('SEGMEN_6', $mata)->first();
+                $nama=$a->nama_item;
+              ?>           
               <tr>
-                <td style="padding-left:20px;" width="35%">{{$no++}}.) {{ $trans->DESCRIPTION }}</td>
-                <td align="right" width="20%">Rp {{ number_format($trans->ANGGARAN_AWAL, 2, ',','.') }}</td>
-                <td align="right" width="20%">Rp {{ number_format($trans->REALISASI_ANGGARAN, 2, ',','.') }}</td>
-                <td align="right" width="25%">Rp {{ number_format($trans->SISA_ANGGARAN, 2, ',','.') }}</td>
+                <td style="padding-left:20px;" width="35%">{{$no++}}.) {{ $nama }}</td>
+                <td align="right" width="20%">Rp {{ number_format($trans->anggaran, 2, ',','.') }}</td>
+                <td align="right" width="20%">Rp {{ number_format($trans->realisasi, 2, ',','.') }}</td>
+                <td align="right" width="25%">Rp {{ number_format($trans->sisa_anggaran, 2, ',','.') }}</td>
               </tr>
               <?php 
-                $tmp_anggaran += $trans->ANGGARAN_AWAL;
-                $tmp_realisasi += $trans->REALISASI_ANGGARAN;
-                $tmp_sisa += $trans->SISA_ANGGARAN;
+                $tmp_anggaran += $trans->anggaran;
+                $tmp_realisasi += $trans->realisasi;
+                $tmp_sisa += $trans->sisa_anggaran;
               ?>
               @endforeach
               <tr id="tf1">
