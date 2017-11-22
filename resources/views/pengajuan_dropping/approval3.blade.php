@@ -320,23 +320,16 @@
             																	<input type="hidden" name="id" value="{{$b->id}}" />
             																	
             																	<label class="control-label"><b> Verifikasi </b></label>
-            																	<label class="control-label"> : </label>
-            																	<div class="radio">
-                                                                                                                    <label>
-                                                                                                                      <input type="radio" name="verifikasi" id="terima" value="1" required>
-                                                                                                                      <p class="text-success"><b>Terima</b></p>
-                                                                                                                    </label>
-                                                                                                                 &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
-                                                                                                                    <label>
-                                                                                                                      <input type="radio" name="verifikasi" id="tolak" value="2" required>
-                                                                                                                      <p class="text-danger"><b>Tolak</b></p>
-                                                                                                                    </label>
-                                                                                                                  </div>   
+                                                                                                                  <label class="control-label"> : </label>
+                                                                                                                  <select class="select form-control" name="verifikasi" required="required" value="{{$b->verifikasi}}" >
+                                                                                                                        <option value="">- Pilih Verifikasi -</option>
+                                                                                                                        <option value="1" @if ($b->verifikasi=='1')Selected @endif>Diterima</option>
+                                                                                                                        <option value="2" @if ($b->verifikasi=='2')Selected @endif>Ditolak</option>                                                 
+                                                                                                                  </select>   
                                                                                                                   <br>
-                                                                                                                  <div class="form-group" id="keterangan" style="display:none;">
                                                                                                                   <label class="control-label"><b> Keterangan </b></label>
                                                                                                                   <label class="control-label"><b> : </b></label>
-                                                                                                                  <select class="select form-control" name="keterangan" value="{{$b->keterangan}}">
+                                                                                                                  <select class="select form-control" name="keterangan" value="{{$b->keterangan}}" @if ($b->verifikasi!=2) disabled="disabled" @endif>
                                                                                                                         <option value=""> - Pilih Keterangan - </option>
                                                                                                                         <?php
                                                                                                                         $second="SELECT * FROM reject_reasons where type=8";
@@ -349,7 +342,7 @@
                                                                                                                         </option>
                                                                                                                         @endforeach                                               
                                                                                                                   </select>
-                                                                                                                  </div>
+
             																</div>
             																<div class="modal-footer">
             																	<button type="submit" name="save" class="btn btn-sm btn-primary"><i class="fa fa-check"></i> Verifikasi</button>
@@ -390,18 +383,31 @@
             	<script src="{{ asset('app-assets/vendors/js/tables/datatable/dataTables.responsive.min.js') }}"
             	type="text/javascript"></script>
             	<script type="text/javascript">
-                              $(function () {
-                                  $('#terima').click(function() {
-                                      $('#keterangan').slideUp();
-                                  });
-                                  $('#tolak').click(function() {
-                                      $('#keterangan').slideDown();
-                                  });
-                              });
-            		function validasi_input(form){
+                              $('select[name="verifikasi"]').on('change', function() {
+                              if ($(this).val() !== '2') {
+                                $('select[name="keterangan"]').prop("disabled", true);
+                                $('select[name="keterangan"] option:selected').attr("selected",null);
+                                $('select[name="keterangan"] option[value=00]').attr("selected","selected");
+                                $('select[name="keterangan"]').val('00');
+                                $('#select-keterangan-container').attr("title","");
+                                $('#select-keterangan-container').html("");
+                                // alert($('select[name="keterangan"]').val());
+                                toastr.info("Keterangan tidak perlu dipilih jika verifikasi diterima.", "Verifiaksi diterima", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:10e3});
+                              } else {
+                                $('select[name="keterangan"]').prop("disabled", false);
+                              }
+                            });
+                              
+                  function validasi_input(form){
+                        if (form.verifikasi.value ==1){
+                         if (form.keterangan.value !=""){
+                            toastr.info("Jika verifikasi diterima, anda tidak perlu memilih keterangan.", "Anda Tidak Perlu Memilih Keterangan", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:10e3});
+                            return (false);
+                         }
+                        }
                         if (form.verifikasi.value ==2){
                          if (form.keterangan.value ==""){
-                            alert("Anda belum memilih keterangan!");
+                            toastr.info("Jika verifikasi ditolak, silahkan pilih keterangan terlebih dahulu.", "Anda Belum Memilih Keterangan", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:10e3});
                             return (false);
                          }
                         }

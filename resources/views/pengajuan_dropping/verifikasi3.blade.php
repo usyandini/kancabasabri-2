@@ -254,7 +254,7 @@
 													                                   </select></td></tr>
 			                  	<tr><td></td></tr>
 			                  	<div class="form-group" id="keterangan" style="display:none;">
-			                  	<tr><td><b> keterangan </b></td><td><b> : </b></td><td><select class="select form-control" name="keterangan" style="width:400px" value="{{$bb->keterangan}}" @if ($bb->kirim<>4) disabled="disabled" @endif>
+			                  	<tr><td><b> keterangan </b></td><td><b> : </b></td><td><select class="select form-control" name="keterangan" style="width:400px" value="{{$bb->keterangan}}" @if (($bb->kirim<>4)||($bb->verifikasi!=2)) disabled="disabled" @endif>
 													                                    <option value=""> - Pilih Keterangan - </option>
 									                                                    <?php
 									                                                    $second="SELECT * FROM reject_reasons where type=8";
@@ -326,19 +326,31 @@
 				  type="text/javascript"></script>
 				
 				<script type="text/javascript">
-					$(function () {
-                            $('#terima').click(function() {
-                                $('#keterangan').slideUp();
-                            });
-                            $('#tolak').click(function() {
-                                $('#keterangan').slideDown();
-                            });
-                    });
+					 $('select[name="verifikasi"]').on('change', function() {
+				      if ($(this).val() !== '2') {
+				        $('select[name="keterangan"]').prop("disabled", true);
+				        $('select[name="keterangan"] option:selected').attr("selected",null);
+				        $('select[name="keterangan"] option[value=00]').attr("selected","selected");
+				        $('select[name="keterangan"]').val('00');
+				        $('#select-keterangan-container').attr("title","");
+				        $('#select-keterangan-container').html("");
+				        // alert($('select[name="keterangan"]').val());
+				        toastr.info("Keterangan tidak perlu dipilih jika verifikasi diterima.", "Verifiaksi diterima", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:10e3});
+				      } else {
+				        $('select[name="keterangan"]').prop("disabled", false);
+				      }
+				    });
+					
                 	function validasi_input(form){
+                        if (form.verifikasi.value ==1){
+                         if (form.keterangan.value !=""){
+                            toastr.info("Jika verifikasi diterima, anda tidak perlu memilih keterangan.", "Anda Tidak Perlu Memilih Keterangan", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:10e3});
+                            return (false);
+                         }
+                        }
                         if (form.verifikasi.value ==2){
-                        	$('#keterangan').slideDown();
                          if (form.keterangan.value ==""){
-                            alert("Anda belum memilih keterangan!");
+                            toastr.info("Jika verifikasi ditolak, silahkan pilih keterangan terlebih dahulu.", "Anda Belum Memilih Keterangan", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:10e3});
                             return (false);
                          }
                         }

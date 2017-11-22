@@ -244,7 +244,7 @@
 			                  	<tr><td><b> Lampiran </b></td><td><b> : </b></td><td><a href="{{ URL('pengajuan_dropping/download/'. $bb->id) }}" target="_blank">{{ $bb->name }}</a>&nbsp;&nbsp;
 			                  														 <span><a href="{{ URL('pengajuan_dropping/print/'. $bb->id) }}" target="_blank" class="btn btn-warning btn-sm" ><i class="fa fa-print"></i> Formulir Pengajuan</a></span></td></tr>
 			                  	<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr><tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>
-			                  	<form enctype="multipart/form-data" role="form" action="{{ URL('acc_pengajuan_dropping/update_accpengajuandropping/'. $bb->id) }}" method="POST" >
+			                  	<form enctype="multipart/form-data" role="form" action="{{ URL('acc_pengajuan_dropping/update_accpengajuandropping/'. $bb->id) }}" method="POST" onsubmit="return validasi_input(this)">
                                 {{ csrf_field() }}
                                 <input type="hidden" name="id" value="{{$bb->id}}" />
 			                  	<tr><td><b> Verifikasi </b></td><td><b> : </b></td><td><select class="select form-control" name="verifikasi" required="required" style="width:400px" value="{{$bb->verifikasi}}" @if ($bb->kirim<>3) disabled="disabled" @endif>
@@ -253,7 +253,7 @@
 																					   <option value="2" @if ($bb->verifikasi=='2')Selected @endif>Ditolak</option>                                                 
 													                                   </select></td></tr>
 			                  	<tr><td></td></tr>
-			                  	<tr><td><b> keterangan </b></td><td><b> : </b></td><td><select class="select form-control" name="keterangan" style="width:400px" value="{{$bb->keterangan}}" @if ($bb->kirim<>3) disabled="disabled" @endif>
+			                  	<tr><td><b> keterangan </b></td><td><b> : </b></td><td><select class="select form-control" name="keterangan" style="width:400px" value="{{$bb->keterangan}}" @if (($bb->kirim<>3)||($bb->verifikasi!=2)) disabled="disabled" @endif>
 													                                    <option value=""> - Pilih Keterangan - </option>
 									                                                    <?php
 									                                                    $second="SELECT * FROM reject_reasons where type=7";
@@ -328,5 +328,36 @@
 				<script src="{{ asset('app-assets/vendors/js/tables/datatable/dataTables.responsive.min.js') }}"
 				  type="text/javascript"></script>
 				
-				
+				<script type="text/javascript">
+					 $('select[name="verifikasi"]').on('change', function() {
+				      if ($(this).val() !== '2') {
+				        $('select[name="keterangan"]').prop("disabled", true);
+				        $('select[name="keterangan"] option:selected').attr("selected",null);
+				        $('select[name="keterangan"] option[value=00]').attr("selected","selected");
+				        $('select[name="keterangan"]').val('00');
+				        $('#select-keterangan-container').attr("title","");
+				        $('#select-keterangan-container').html("");
+				        // alert($('select[name="keterangan"]').val());
+				        toastr.info("Keterangan tidak perlu dipilih jika verifikasi diterima.", "Verifiaksi diterima", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:10e3});
+				      } else {
+				        $('select[name="keterangan"]').prop("disabled", false);
+				      }
+				    });
+					
+                	function validasi_input(form){
+                        if (form.verifikasi.value ==1){
+                         if (form.keterangan.value !=""){
+                            toastr.info("Jika verifikasi diterima, anda tidak perlu memilih keterangan.", "Anda Tidak Perlu Memilih Keterangan", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:10e3});
+                            return (false);
+                         }
+                        }
+                        if (form.verifikasi.value ==2){
+                         if (form.keterangan.value ==""){
+                            toastr.info("Jika verifikasi ditolak, silahkan pilih keterangan terlebih dahulu.", "Anda Belum Memilih Keterangan", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:10e3});
+                            return (false);
+                         }
+                        }
+                        return (true);
+                        }
+                </script>
                 @endsection
