@@ -739,7 +739,7 @@ class DroppingController extends Controller
     public function penyesuaianlevel1()
     {   
         $a = DB::table('penyesuaian_dropping')
-             ->where('stat', 6)
+             ->where('stat', 4)
              ->orderBy('id','DESC')->get();
         return view('dropping.penyesuaian.penyesuaianlevel1', compact('a'));
     }
@@ -747,7 +747,7 @@ class DroppingController extends Controller
     public function penyesuaianlevel2()
     {   
         $a = DB::table('penyesuaian_dropping')
-             ->where('stat', 8)
+             ->where('stat', 6)
              ->orderBy('id','DESC')->get();
         return view('dropping.penyesuaian.penyesuaianlevel2', compact('a'));
     }
@@ -755,7 +755,7 @@ class DroppingController extends Controller
     public function penarikanlevel1()
     {   
         $a = DB::table('tarik_tunai')
-             ->where('stat', 3)
+             ->where('stat', 1)
              ->orderBy('id','DESC')->get();
         return view('dropping.tariktunai.penarikanlevel1', compact('a'));
     }

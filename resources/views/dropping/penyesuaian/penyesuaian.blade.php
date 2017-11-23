@@ -366,7 +366,7 @@
                                 </a>
                                 <!-- inidia -->
                                 @if(isset($kesesuaian))
-                                @if($kesesuaian->stat==4)
+                                @if($kesesuaian->stat==0)
                                 <button type="submit" data-toggle="modal" data-target="#xSmall" class="btn btn-secondary">
                                   <i class="fa fa-check-square-o"></i> Submit
                                 </button>
