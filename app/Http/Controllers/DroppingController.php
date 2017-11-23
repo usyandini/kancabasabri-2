@@ -481,13 +481,13 @@ class DroppingController extends Controller
     {
         $return = 0;
         switch ($request->input('type')) {
-            case 'bank':
-                $banks = $this->akunBankModel->where('NAMA_CABANG', $request->input('id'))->get();
-                if (count($banks) > 0) {
-                    $return = '<option value="0">Pilih Bank</option>';
-                    foreach($banks as $temp) 
-                        $return .= "<option value='$temp->BANK'>".$temp->BANK_NAME."</option>";
-                } 
+            // case 'bank':
+            //     $banks = $this->akunBankModel->where('NAMA_CABANG', $request->input('id'))->get();
+            //     if (count($banks) > 0) {
+            //         $return = '<option value="0">Pilih Bank</option>';
+            //         foreach($banks as $temp) 
+            //             $return .= "<option value='$temp->BANK'>".$temp->BANK_NAME."</option>";
+            //     } 
             case 'rekening':
                 $rekening = $this->akunBankModel->where('BANK', $request->input('id'))->get();
                 if (count($rekening) > 0) {

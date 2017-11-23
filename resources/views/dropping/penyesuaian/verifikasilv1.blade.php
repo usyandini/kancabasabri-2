@@ -243,12 +243,14 @@
                           <div class="card-body collapse in">
                             <div class="card-block">
                               <div class="form-actions">
+                                @if($penyesuaian->stat==4)
                                 <button type="submit" data-toggle="modal" data-target="#tolak" class="btn btn-warning mr-1">
                                   <i class="ft-x"></i> Tolak
                                 </button>
                                 <button type="submit" data-toggle="modal" data-target="#xSmall" class="btn btn-success">
                                   <i class="fa fa-check-square-o"></i> Verifikasi
                                 </button>
+                                @endif
                               </div>  
                               <!-- Modal -->
                               <div class="modal fade text-xs-left" id="xSmall" tabindex="-1" role="dialog" aria-labelledby="myModalLabel20"

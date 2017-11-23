@@ -172,7 +172,7 @@
                           @if(Gate::check('lihat_p_d'))
                           { name: "id_dropping", type: "text", align:"center", title: "Penyesuaian", width: 120,
                             itemTemplate:function(l) {
-                              return "<a href='{{ url('/dropping/penyesuaian') }}/"+ l +"' class='btn btn-warning btn-sm'>Detail</a>"
+                              return "<a href='{{ url('/dropping/penyesuaian') }}/"+ l +"' class='btn btn-warning btn-sm'>Pilih</a>"
                             }
                           },
                           @endif

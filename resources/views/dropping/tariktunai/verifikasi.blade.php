@@ -110,7 +110,7 @@
                                     <div class="col-md-6">
                                       <div class="form-group">
                                         <label for="tgl_dropping">Tanggal Tarik Tunai</label>
-                                        <input type="date" readonly="" id="tgl_tarik" class="form-control" placeholder="Tanggal Tarik Tunai" name="tgl_tarik" value="{{ date("Y-m-d",strtotime($tariktunai->created_at)) }}" disabled>
+                                        <input type="text" readonly="" id="tgl_tarik" class="form-control" placeholder="Tanggal Tarik Tunai" name="tgl_tarik" value="{{ date("d-m-Y",strtotime($tariktunai->created_at)) }}" disabled>
                                       </div>
                                     </div>
                                     <div class="col-md-6">
@@ -129,7 +129,7 @@
                                     </div>
                                     <div class="col-md-6">
                                       <div class="form-group">
-                                        <label for="nominal_tarik">Nominal Tarik Tunai (Dalam Rupiah)</label>
+                                        <label for="nominal_tarik">Nominal Tarik Tunai (Rupiah)</label>
                                           <input type="text" id="nominal_tarik" readonly="" name="nominal_tarik" class="form-control" placeholder="Nominal Tarik Tunai" value="{{ number_format($tariktunai->nominal_tarik, 0, '', '.') }}" disabled>
                                           <input type="hidden" name="v_nominal_tarik" value="{{ $tariktunai->nominal_tarik }}">
                                       </div>
@@ -269,12 +269,14 @@
                                 {{--<a href="{{ url('dropping/verifikasi/tariktunai/rejected/'.$tariktunai->id) }}" class="btn btn-warning mr-1">
                                   <i class="ft-x"></i> Tolak
                                 </a>--}}
+                                @if($tariktunai->stat==1)
                                 <button type="submit" data-toggle="modal" data-target="#tolak" class="btn btn-warning mr-1">
                                   <i class="ft-x"></i> Tolak
                                 </button>
                                 <button type="submit" data-toggle="modal" data-target="#xSmall" class="btn btn-success">
                                   <i class="fa fa-check-square-o"></i> Verifikasi
                                 </button>
+                                @endif
                               </div>  
                               <!-- Modal -->
                               <div class="modal fade text-xs-left" id="xSmall" tabindex="-1" role="dialog" aria-labelledby="myModalLabel20"
