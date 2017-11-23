@@ -24,6 +24,7 @@ use Validator;
 use Carbon;
 use Response;
 use PDF;
+use DB;
 
 use App\Services\FileUpload;
 use App\Services\NotificationSystem;
@@ -1044,4 +1045,22 @@ ORDER BY PIL_JOURNALNUM ASC");
             }
 
       }
+
+    public function verifikasilevel1()
+    {   
+         $a = DB::table('batches_status')
+             ->join('batches', 'batches_status.batch_id','=','batches.id')
+             ->where('stat', 2)
+             ->orderBy('batch_id','DESC')->get();
+        return view('transaksi.verifikasilevel1', compact('a'));
+    }
+
+    public function verifikasilevel2()
+    {   
+         $a = DB::table('batches_status')
+             ->join('batches', 'batches_status.batch_id','=','batches.id')
+             ->where('stat', 4)
+             ->orderBy('batch_id','DESC')->get();
+        return view('transaksi.verifikasilevel2', compact('a'));
+    }
 }

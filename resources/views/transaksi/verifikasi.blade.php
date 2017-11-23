@@ -51,7 +51,7 @@
                         <div class="card-body collapse in">
                           <div class="card-block">
                             <ul>
-                              <li>Tanggal dibuat : <code>{{ date("d-m-Y", strtotime($active_batch->created_at)) }}</code>, diajukan oleh : <code>{{ $active_batch['creator']['name'] }}</code></li>
+                              <li>Tanggal dibuat : <code>{{ date("d-m-Y", strtotime($active_batch->created_at)) }}</code>, diajukan oleh : <code>Verifikator Level 1 : {{ $active_batch['creator']['name'] }}</code></li>
                               <?php
                               $tanggal=$active_batch->updated_at;                                 
                               $tgl= date('d-m-Y H:i:s', strtotime($tanggal));
@@ -157,7 +157,8 @@
                               $tanggal2=$active_batch->updated_at;                                 
                               $tgl2= date('d-m-Y H:i:s', strtotime($tanggal2));
                               ?>
-                              <li>Terkahir Update : <code>{{ $tgl2 }}</code> oleh <code>{{ $active_batch['creator']['name'] }}</code></li>
+                              <li>Terakhir Update : <code>{{ $tgl2 }}</code> oleh <code>Verifikator Level 1 : {{ $active_batch['creator']['name'] }}</code></li>
+                              <!-- <code>{{ $active_batch['creator']['name'] }}</code></li> -->
                               <li>Banyak item : <code id="totalRows"></code>, dengan <code>{{ count($berkas).' berkas lampiran' }}</code></li>
                             </ul>
                             <div class="row">

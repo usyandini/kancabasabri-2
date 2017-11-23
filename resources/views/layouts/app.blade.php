@@ -150,9 +150,13 @@
                                 <li class="is-shown {{ checkActiveMenu('transaksi/realisasi') }}"><a href="{{ url('/transaksi/report/realisasi', $parameters = [], $secure = null) }}" class="menu-item">Report Realisasi Mata Anggaran</a></li>
                                 <li class="is-shown {{ checkActiveMenu('transaksi/realisasi_transaksi') }}"><a href="{{ url('/transaksi/report/realisasi_transaksi', $parameters = [], $secure = null) }}" class="menu-item">Report Realisasi Transaksi</a></li>
                                 <li class="is-shown {{ checkActiveMenu('transaksi/kasbank') }}"><a href="{{ url('/transaksi/report/kasbank', $parameters = [], $secure = null) }}" class="menu-item">Report Kas/Bank</a></li>
-                           
                                 <!-- <li class="is-shown {{ checkActiveMenu('transaksi/verifikasi') }}"><a href="{{ url('/transaksi/verifikasi', $parameters = [], $secure = null) }}" class="menu-item">Verifikasi Transaksi</a> -->
-                            
+                            @can ('setuju_t')
+                                <li class="is-shown {{ checkActiveMenu('transaksi/lihat/persetujuan') }}"><a href="{{ url('/transaksi/lihat/persetujuan', $parameters = [], $secure = null) }}" class="menu-item">Verifikasi Level 1</a></li>
+                            @endcan
+                            @can ('setuju2_t')
+                                <li class="is-shown {{ checkActiveMenu('transaksi/lihat/verifikasi') }}"><a href="{{ url('/transaksi/lihat/verifikasi', $parameters = [], $secure = null) }}" class="menu-item">Verifikasi Level 2</a></li>
+                            @endcan
                         </ul>
                     </li>
                     @endif

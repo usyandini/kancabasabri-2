@@ -57,7 +57,7 @@ Route::group(['middleware' => 'auth'], function() {
 		Route::post('/submit/verify/{batch}', 'TransaksiController@submit');
 
 		Route::get('/persetujuan/{id_batch}', 'TransaksiController@persetujuan');
-		Route::get('/persetujuan/', 'TransaksiController@persetujuan2');
+		//Route::get('/persetujuan/', 'TransaksiController@persetujuan2');
 		Route::get('/verifikasi/{id_batch}', 'TransaksiController@verifikasi');
 
 		Route::post('/submit/verifikasi/{type}/{id_batch}', 'TransaksiController@submitVerification');
@@ -88,6 +88,10 @@ Route::group(['middleware' => 'auth'], function() {
 		Route::post('/filter/kasbank', 'TransaksiController@filter_handle_kasbank');
 		Route::get('/filter/kasbank/{cabang}/{awal}/{akhir}/{transyear}', 'TransaksiController@filter_result_kasbank');
 		Route::get('/kasbank/{cabang}/{awal}/{akhir}/{transyear}/{type}', 'TransaksiController@cetakKasBank');
+	
+	//verifikasi
+		Route::get('/lihat/persetujuan', 'TransaksiController@verifikasilevel1');
+		Route::get('/lihat/verifikasi', 'TransaksiController@verifikasilevel2');
 	});
 
 
