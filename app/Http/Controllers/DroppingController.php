@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Gate;
 
 use App\User;
 use App\Models\PaymentJournalDropping;
-
+use DB;
 use App\Models\Dropping;
 use App\Models\TarikTunai;
 use App\Models\PenyesuaianDropping;
@@ -734,5 +734,29 @@ class DroppingController extends Controller
     {
        header('Location: ' . $url, true, $statusCode);
        die();
+    }
+
+    public function penyesuaianlevel1()
+    {   
+        $a = DB::table('penyesuaian_dropping')
+             ->where('stat', 6)
+             ->orderBy('id','DESC')->get();
+        return view('dropping.penyesuaian.penyesuaianlevel1', compact('a'));
+    }
+
+    public function penyesuaianlevel2()
+    {   
+        $a = DB::table('penyesuaian_dropping')
+             ->where('stat', 8)
+             ->orderBy('id','DESC')->get();
+        return view('dropping.penyesuaian.penyesuaianlevel2', compact('a'));
+    }
+
+    public function penarikanlevel1()
+    {   
+        $a = DB::table('tarik_tunai')
+             ->where('stat', 3)
+             ->orderBy('id','DESC')->get();
+        return view('dropping.tariktunai.penarikanlevel1', compact('a'));
     }
 }

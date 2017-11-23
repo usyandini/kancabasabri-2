@@ -48,6 +48,10 @@ Route::group(['middleware' => 'auth'], function() {
 		Route::get('/verifikasi/penyesuaian/{level}/{reaction}/{id}', 'DroppingController@submitVerificationPenyesuaian');
 
 		Route::post('/banks/', 'DroppingController@getChainedBank');
+		//verifikasi
+		Route::get('/lihat/penyesuaian', 'DroppingController@penyesuaianlevel1');
+		Route::get('/lihat/penyesuaian2', 'DroppingController@penyesuaianlevel2');
+		Route::get('/lihat/penarikan', 'DroppingController@penarikanlevel1');
 	});
 
 	Route::group(['prefix' => 'transaksi'], function() {

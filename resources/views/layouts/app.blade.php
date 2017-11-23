@@ -118,7 +118,22 @@
                         }
                     ?>
                     @if ($open_dropping)
-                    <li class="nav-item {{ checkActiveMenu('dropping') }}"><a href="{{ url('/dropping', $parameters = [], $secure = null) }}"><i class="ft-box"></i><span data-i18n="" class="menu-title">Dropping</span></a></li>
+                    <li class="nav-item has-sub {{ checkOpenedMenu('dropping') }}"><a href=""><i class="ft-box"></i><span data-i18n="" class="menu-title">Dropping</span></a>
+                    <ul class="menu-content">
+                        @can('informasi_a_d')
+                        <li class="is-shown {{ checkActiveMenu('dropping') }}"><a href="{{ url('/dropping', $parameters = [], $secure = null) }}" class="menu-item">Dropping</a></li>
+                        @endcan
+                        @can('setuju_p_d')
+                        <li class="is-shown {{ checkActiveMenu('dropping/lihat/penyesuaian') }}"><a href="{{ url('dropping/lihat/penyesuaian', $parameters = [], $secure = null) }}" class="menu-item">Penyesuaian Level 1</a></li>
+                        @endcan
+                        @can('setuju_p2_d')
+                        <li class="is-shown {{ checkActiveMenu('dropping/lihat/penyesuaian2') }}"><a href="{{ url('dropping/lihat/penyesuaian2', $parameters = [], $secure = null) }}" class="menu-item">Penyesuaian Level 2</a></li>
+                        @endcan
+                        @can('setuju_tt_d')
+                        <li class="is-shown {{ checkActiveMenu('dropping/lihat/penarikan') }}"><a href="{{ url('dropping/lihat/penarikan', $parameters = [], $secure = null) }}" class="menu-item">Tarik Tunai Level 1</a></li>
+                        @endcan
+                    </ul>
+                    </li>
                     @endif
 
                     @if (Gate::check('informasi_a_d') ||Gate::check('setuju_a_d') ||Gate::check('setuju_a_d_2') ||Gate::check('setuju_a_d_3'))
