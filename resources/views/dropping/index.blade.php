@@ -158,7 +158,7 @@
                       fields: [
                           { name: "journalnum", type: "text", title: "Nomor Jurnal", width: 120 },
                           { name: "bank", type: "text", title: "Nama Bank", width: 120 },
-                          { name: "banknum", type: "text", title: "No. Rekening", width: 120 },
+                          { name: "banknum", type: "text", title: "No. Rekening", width: 160 },
                           { name: "transdate", type: "text", title: "Tanggal Dropping", width: 160 },
                           { name: "debit", type: "text", title: "Nominal", width: 120 },
                           { name: "company", type: "text", title: "Kantor Cabang", width: 120 },
