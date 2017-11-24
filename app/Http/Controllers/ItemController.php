@@ -804,7 +804,7 @@ class ItemController extends Controller
                         'SEGMEN_6'  => $this->isExistInDB($value['mata_anggaran'], 'mata_anggaran'),
                         'is_displayed'  => $value['display_item_semua_cabang'] == 'Y' ? 1 : 0,
                         'created_by'    => \Auth::user()->id];
-
+                    // print_r($value);
                     $validate[$key] = Validator::make($input, 
                         [
                             // 'kode_item' => 'required',
@@ -984,7 +984,9 @@ class ItemController extends Controller
                         where('SEGMEN_6',$value['mata_anggaran'])->get();
                 $kode = '';
                 if(count($item_master) == 0){
-                    $kode = 'KD-'.(count(ItemMaster::get())+1);
+                    $count_item = ItemMaster::orderBy('id', 'desc')->first()->id;
+                    $kode = 'KD-'.($count_item+1);
+                    // echo (ItemMaster::orderBy('id', 'desc')->first()->id);
                     // ItemMaster::create($item_master);
                 }else{
                     foreach ($item_master as $row) {
@@ -992,6 +994,7 @@ class ItemController extends Controller
                     }
                 }
                 $return = $kode;
+                // echo $return."<br />";
                 break;
             case 'account':
                 $return = Item::where('MAINACCOUNTID', $value)->first() ? $value : '-';
