@@ -38,8 +38,7 @@
             											<tr>
             												<th width="5%"><center>No</center></th>
             												<th id="filterable"><center>Cabang</center></th>
-                                                                                    <th id="filterable"><center>Dibuat Tanggal</center></th>
-                                                                                    <th id="filterable"><center>Terakhir di Ubah</center></th>
+                                                                                    <th id="filterable"><center>No Batch</center></th>
             												<th width="10%"><center>Aksi</center></th>
             											</tr>
             										</thead>
@@ -59,8 +58,8 @@
                                                                                           {{ $x->DESCRIPTION }}
                                                                                           @endif
                                                                                         @endforeach</td>
-                                                                                    <td><center>{{ date("d-m-Y H:i:s", strtotime($b->created_at)) }}</center></td>
-                                                                                    <td><center>{{ date("d-m-Y H:i:s", strtotime($b->updated_at)) }}</center></td>
+                                                                                    <td><center>{{date("ymd", strtotime($b->created_at))}}-{{$b->cabang}}/{{$b->divisi}}-{{$b->seq_number}}</center></td>
+                                                                                    
             												<td><center>
                                                                                           <a href="{{ URL('transaksi/persetujuan/'. $b->batch_id) }}" target="_blank" class="btn btn-success btn-sm"><i class="fa fa-eye"></i> Lihat</a>
             													
