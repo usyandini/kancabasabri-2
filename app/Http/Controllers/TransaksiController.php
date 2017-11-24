@@ -850,7 +850,7 @@ DATEPART(MONTH, _generaljournalentry.AccountingDate) >= ".$awal."
 and DATEPART(MONTH, _generaljournalentry.AccountingDate) <= ".$akhir."
 and DATEPART(YEAR, _generaljournalentry.AccountingDate) >= ".$transyear."
 and 
-dimensionFinancialTag.VALUE = ".$cabang." AND 
+dimensionFinancialTag.VALUE = '".$cabang."' AND 
 --_ledgerjournaltable.JournalNum = 'JB17100830' AND 
 --and 
 --_ledgerjournaltrans.VOUCHER = 'PAY-1707-0041'
