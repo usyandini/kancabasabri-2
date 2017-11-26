@@ -151,9 +151,9 @@
                                  <thead>
                                    <tr align="middle">
                                     <th id="filterable"><center>Deskripsi Anggaran</center></th>
-                                    <th id="filterable">Anggaran</th>
-                                    <th id="filterable">Realisasi Periode</th>
-                                    <th id="filterable">Sisa Anggaran</th>
+                                    <th id="filterable"><center>Anggaran</center></th>
+                                    <th id="filterable"><center>Realisasi Periode</center></th>
+                                    <th id="filterable"><center>Sisa Anggaran</center></th>
                                   </tr>
                                 </thead>
                                 <tbody>
@@ -168,9 +168,9 @@
                                   ?>
                                   <tr>
                                    <td>{{ $nama }}</td>
-                                   <td>Rp. {{ number_format($trans->anggaran, 2, ',','.') }}</td>
-                                   <td><b>Rp. {{ number_format($trans->realisasi, 2, ',','.') }}</b></td>
-                                   <td>Rp. {{ number_format($trans->sisa_anggaran, 2, ',','.') }}</td>
+                                   <td align=right>Rp. {{ number_format($trans->anggaran, 2, ',','.') }}</td>
+                                   <td align=right><b>Rp. {{ number_format($trans->realisasi, 2, ',','.') }}</b></td>
+                                   <td align=right>Rp. {{ number_format($trans->sisa_anggaran, 2, ',','.') }}</td>
                                  </tr>
                                  @empty
                                  <tr>

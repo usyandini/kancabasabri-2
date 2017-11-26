@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 use Adldap\Laravel\Facades\Adldap;
+use Auth;
 
 
 class AuthController extends Controller
@@ -114,5 +115,10 @@ class AuthController extends Controller
         }
         
         return redirect()->back()->withInput()->withErrors(['username' => '<b>Username atau password tidak cocok.</b> Silahkan coba lagi.']);
+    }
+
+    public function logout(Request $request) {
+      Auth::logout();
+      return redirect('/login');
     }
 }

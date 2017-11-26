@@ -16,7 +16,7 @@ Route::group(['middleware' => 'guest'], function() {
 	Route::get('/', 'Auth\AuthController@showLoginForm'); 
 	Route::get('/login', 'Auth\AuthController@showLoginForm');
 });
-
+Route::get('logout', 'Auth\AuthController@logout');
 Route::group(['middleware' => 'auth'], function() {
 	Route::get('notification/', 'NotificationController@get');
 	Route::get('notification/redirect/{id}', 'NotificationController@redirect');
