@@ -117,13 +117,13 @@
                                     <div class="col-md-12 col-lg-12 col-xl-6">
                                       <div class="form-group">
                                         <label for="tgl_dropping">Tanggal Dropping</label>
-                                        <input type="text" readonly="" id="tgl_dropping" class="form-control" placeholder="Tanggal Transaksi" name="tgl_dropping" value="{{ date("d-m-Y",strtotime($dropping->TRANSDATE)) }}">
+                                        <input type="text" readonly="" id="tgl_dropping" class="form-control" placeholder="Tanggal Transaksi" name="tgl_dropping" value="{{ date('d-m-Y',strtotime($dropping->TRANSDATE)) }}">
                                       </div>
                                     </div>
                                     <div class="col-md-12 col-lg-12 col-xl-6">
                                       <div class="form-group">
-                                        <label for="nominal">Nominal Dropping (Rupiah)</label>
-                                          <input type="text" readonly="" id="nominal_dropping" class="form-control" placeholder="{{ $dropping->DEBIT }}" name="nominal_dropping" value="{{ number_format($dropping->DEBIT, 0, '', '.') }}">
+                                        <label for="nominal">Nominal Dropping</label>
+                                          <input type="text" readonly="" id="nominal_dropping" class="form-control" placeholder="{{ $dropping->DEBIT }}" name="nominal_dropping" value="Rp. {{ number_format($dropping->DEBIT, 0, '', '.') }}">
                                       </div>
                                     </div>
                                     <div class="col-md-12 col-lg-12 col-xl-6 pull-right">
@@ -199,7 +199,7 @@
                                     <div class="col-md-12 col-lg-12 col-xl-6">
                                       <div class="form-group">
                                         <label for="projectinput1">Tanggal Transaksi</label>
-                                        <input readonly="" type="text" id="p_tgl_dropping" class="form-control" placeholder="{{ date('d/m/Y') }}" name="p_tgl_dropping" value="{{ date('Y-m-d') }}">
+                                        <input readonly="" type="text" id="p_tgl_dropping" class="form-control" placeholder="{{ date('d/m/Y') }}" name="p_tgl_dropping" value="{{ date('d-m-Y') }}">
                                       </div>
                                     </div>
                                     <div class="col-md-12 col-lg-12 col-xl-6">
@@ -239,7 +239,7 @@
                                               <option value="0">- Pilih Bank -</option>
                                               <?php
                                                 $cabang=$dropping->CABANG_DROPPING;
-                                                $z = \DB::select("SELECT BANK, BANK_NAME FROM [AX_DUMMY].[dbo].[PIL_BANK_VIEW] WHERE NAMA_CABANG='".$cabang."'");
+                                                $z = \DB::select("SELECT BANK, BANK_NAME FROM [AX_DUMMY].[dbo].[PIL_BANK_VIEW] WHERE NAMA_CABANG='".$cabang."' AND BANK NOT LIKE '%KKC%'");
                                               ?>
                                                @foreach($z as $temp) 
                                                <option value="{{$temp->BANK}}">{{ $temp->BANK_NAME }}</option>
@@ -314,7 +314,9 @@
                                               <th>Nominal Penyesuaian</th>
                                               <th>Status</th>
                                               <th>Attachment</th>
+                                              @if($kesesuaian->is_pengembalian == 1)
                                               <th>Status Ax</th>
+                                              @endif
                                             </tr>
                                           </thead>
                                           <tbody>
@@ -332,6 +334,7 @@
                                                   <li><a href="{{ url('dropping/penyesuaian/berkas/download').'/'.$value->id }}" target="_blank">{{ $value->name }}</a></li>
                                                   @endforeach
                                                 </td>
+                                                @if($kesesuaian->is_pengembalian == 1)
                                                 <td>
                                                   @if($kesesuaian->integrated['PIL_POSTED'] == 1)
                                                   Terintegrasi
@@ -339,6 +342,7 @@
                                                     -
                                                   @endif
                                                 </td>
+                                                @endif
                                             </tr>
                                           </tbody>
                                         </table>
@@ -365,13 +369,9 @@
                                   <i class="ft-back"></i> Kembali
                                 </a>
                                 <!-- inidia -->
-                                @if(isset($kesesuaian))
-                                @if($kesesuaian->stat==0)
                                 <button type="submit" data-toggle="modal" data-target="#xSmall" class="btn btn-secondary">
                                   <i class="fa fa-check-square-o"></i> Submit
                                 </button>
-                                @endif
-                                @endif
                               </div>  
                               <!-- Modal -->
                               <div class="modal fade text-xs-left" id="xSmall" tabindex="-1" role="dialog" aria-labelledby="myModalLabel20"

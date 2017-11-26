@@ -14,7 +14,7 @@
 
                 @section('content')
                 <div class="content-header row">
-                    <div class="content-header-left col-md-6 col-xs-12 mb-2">
+                    <div class="content-header-left col-md-12 col-xs-12 mb-2">
                         <h3 class="content-header-title mb-0">Verifikasi Penyesuaian Dropping Level 1</h3>
                         <div class="row breadcrumbs-top">
                             <div class="breadcrumb-wrapper col-xs-12">
@@ -36,9 +36,11 @@
                     <div class="row">
                       <div class="col-xs-12">
                         <div class="col-md-6">
+                          @if($penyesuaian->stat==4)
                           <div class="alert alert-info alert-dismissible fade in mb-2" role="alert">
                             <b>Verifikasi dilakukan oleh verifikator <i>level 1</i></b>
                           </div>
+                          @endif
                         </div>
                         @if(session('success'))
                         <div class="col-xs-7">
@@ -96,7 +98,7 @@
                                     <div class="col-md-6">
                                       <div class="form-group">
                                         <label for="tgl_penyesuaian">Tanggal Penyesuaian Dropping</label>
-                                        <input type="date" readonly="" id="tgl_penyesuaian" class="form-control" placeholder="Tanggal Penyesuaian Dropping" name="tgl_penyesuaian" value="{{ date("Y-m-d",strtotime($penyesuaian->created_at)) }}" disabled>
+                                        <input type="text" readonly="" id="tgl_penyesuaian" class="form-control" placeholder="Tanggal Penyesuaian Dropping" name="tgl_penyesuaian" value="{{ date("Y-m-d",strtotime($penyesuaian->created_at)) }}" disabled>
                                       </div>
                                     </div>
                                     <div class="col-md-6">
@@ -108,14 +110,14 @@
                                     </div>
                                     <div class="col-md-6 pull-right">
                                       <div class="form-group">
-                                        <label for="nominal_tarik">Nominal Penyesuaian (Dalam Rupiah)</label>
-                                          <input type="text" id="nominal" readonly="" name="nominal" placeholder="Nominal Penyesuaian" class="form-control" value="{{ number_format($penyesuaian->nominal, 0, '', '.') }}" disabled>
+                                        <label for="nominal_tarik">Nominal Penyesuaian</label>
+                                          <input type="text" id="nominal" readonly="" name="nominal" placeholder="Nominal Penyesuaian" class="form-control" value="Rp. {{ number_format($penyesuaian->nominal, 0, '', '.') }}" disabled>
                                       </div>
                                     </div>
                                     <div class="col-md-6">
                                       <div class="form-group">
-                                        <label for="nominal_tarik">Nominal Awal Dropping (Dalam Rupiah)</label>
-                                          <input type="text" id="nominal_dropping" readonly="" name="nominal_dropping" class="form-control" placeholder="Nominal Dropping" value="{{ number_format($penyesuaian->nominal_dropping, 0, '', '.') }}" disabled>
+                                        <label for="nominal_tarik">Nominal Awal Dropping</label>
+                                          <input type="text" id="nominal_dropping" readonly="" name="nominal_dropping" class="form-control" placeholder="Nominal Dropping" value="Rp. {{ number_format($penyesuaian->nominal_dropping, 0, '', '.') }}" disabled>
                                       </div>
                                     </div>
                                     <div class="col-md-6 pull-right">

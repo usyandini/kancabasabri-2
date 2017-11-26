@@ -14,7 +14,7 @@
 
             @section('content')
             <div class="content-header row">
-            	<div class="content-header-left col-md-6 col-xs-12 mb-2">
+            	<div class="content-header-left col-md-12 col-xs-12 mb-2">
             		<h3 class="content-header-title mb-0">Verifikasi Transaksi Level 1</h3>
             		
             	</div>

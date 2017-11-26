@@ -104,9 +104,9 @@
                                     </div>
                                     <div class="col-md-6">
                                       <div class="form-group">
-                                        <label for="nominal">Nominal Dropping (Dalam Rupiah)</label>
+                                        <label for="nominal">Nominal Dropping</label>
 
-                                          <input type="text" readonly="" class="form-control" placeholder="{{ $dropping->DEBIT }}" name="nominal_dropping" value="{{ number_format($dropping->DEBIT, 0, '','.') }}">
+                                          <input type="text" readonly="" class="form-control" placeholder="{{ $dropping->DEBIT }}" name="nominal_dropping" value="Rp. {{ number_format($dropping->DEBIT, 0, '','.') }}">
 
                                           <input type="hidden" id="nominal" name="nominal" value="{{ $dropping->DEBIT }}">
                                       </div>
@@ -136,7 +136,7 @@
                                     <div class="col-md-6">
                                       <div class="form-group">
                                         <label for="tgl_tarik">Tanggal Tarik Tunai</label>
-                                        <input type="text" readonly="" id="tgl_tarik" class="form-control" placeholder="Tanggal Tarik Tunai" name="tgl_tarik" value="{{ date("Y-m-d") }}">
+                                        <input type="text" readonly="" id="tgl_tarik" class="form-control" placeholder="Tanggal Tarik Tunai" name="tgl_tarik" value="{{ date('d-m-Y') }}">
                                       </div>
                                     </div>
                                     <div class="col-md-6">
@@ -183,13 +183,13 @@
                                   <div class="col-md-12">
                                     <div class="form-group">
                                       <div class="table-responsive">
-                                        <table class="table">
+                                        <table class="table table-striped table-bordered datatable-select-inputs mb-0">
                                           <thead>
                                             <tr>
-                                              <th>Tanggal</th>
-                                              <th>Saldo</th>
-                                              <th>Nominal Tarik</th>
-                                              <th>Sisa Dropping</th>
+                                              <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Tanggal&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                                              <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Saldo&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                                              <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Nominal Tarik&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                                              <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sisa Dropping&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
                                               <th>Attachment</th>
                                               <th>Status Ax</th>
                                             </tr>
@@ -197,11 +197,10 @@
                                           @foreach($tariktunai as $history)
                                           <tbody>
                                             <tr>
-                                              <th>{{ date('d-m-Y H:i:s', strtotime($history->created_at)) }}</th>
-
-                                              <td>Rp. {{ number_format($history->nominal, 0, '','.') }}</td>
-                                              <td>Rp. {{ number_format($history->nominal_tarik, 0, '','.') }}</td>
-                                              <td>Rp. {{ number_format($history->sisa_dropping, 0, '','.') }}</td>
+                                              <td>{{ date('d-m-Y H:i:s', strtotime($history->created_at)) }}</td>
+                                              <td align=right>Rp. {{ number_format($history->nominal, 0, '','.') }}</td>
+                                              <td align=right>Rp. {{ number_format($history->nominal_tarik, 0, '','.') }}</td>
+                                              <td align=right>Rp. {{ number_format($history->sisa_dropping, 0, '','.') }}</td>
                                               <td>
                                                 @foreach($berkas->where('id_tariktunai', $history->id)->get() as $value)
                                                   <li><a href="{{ url('dropping/tariktunai/berkas/download').'/'.$value['id'] }}" target="_blank">{{ $value['name'] }}</a></li>

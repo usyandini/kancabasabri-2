@@ -369,7 +369,7 @@ class DroppingController extends Controller
         
         $string_penyesuaian = $request->p_nominal;
         $penyesuaian = floatval(str_replace('.', '', $string_penyesuaian));
-
+        $tgl_dropping=date('Y-m-d', strtotime($request->p_tgl_dropping));
         if($submitted){
             session()->flash('fail', true);
         }elseif($verLv1){
@@ -392,7 +392,7 @@ class DroppingController extends Controller
                     'is_pengembalian'   => $request->p_is_pengembalian == "1" ? false : true,
                     'nominal'           => $penyesuaian,
                     'rek_bank'          => $request->p_rek_bank,
-                    'tgl_dropping'      => $request->p_tgl_dropping,
+                    'tgl_dropping'      => $tgl_dropping,
                     'SEGMEN_1'          => $bank->ACCOUNT,
                     'SEGMEN_2'          => $program->VALUE,
                     'SEGMEN_3'          => $kpkc->VALUE,

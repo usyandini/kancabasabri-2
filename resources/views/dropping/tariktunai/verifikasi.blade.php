@@ -14,7 +14,7 @@
 
                 @section('content')
                 <div class="content-header row">
-                    <div class="content-header-left col-md-6 col-xs-12 mb-2">
+                    <div class="content-header-left col-md-12 col-xs-12 mb-2">
                         <h3 class="content-header-title mb-0">Verifikasi Tarik Tunai</h3>
                         <div class="row breadcrumbs-top">
                             <div class="breadcrumb-wrapper col-xs-12">
@@ -36,9 +36,11 @@
                     <div class="row">
                       <div class="col-xs-12">
                         <div class="col-md-6">
+                          @if($tariktunai->stat==1)
                           <div class="alert alert-info alert-dismissible fade in mb-2" role="alert">
                             <b>Verifikasi hanya dilakukan oleh verifikator <i>level 1</i></b>
                           </div>
+                          @endif
                         </div>
                         @if(session('success'))
                         <div class="col-xs-7">
@@ -115,15 +117,15 @@
                                     </div>
                                     <div class="col-md-6">
                                       <div class="form-group">
-                                        <label for="nominal">Saldo (Dalam Rupiah)</label>
-                                          <input type="text" readonly="" class="form-control" placeholder="Saldo" name="nominal" value="{{ number_format($tariktunai->nominal, 0, '', '.') }}" disabled>
+                                        <label for="nominal">Saldo</label>
+                                          <input type="text" readonly="" class="form-control" placeholder="Saldo" name="nominal" value="Rp. {{ number_format($tariktunai->nominal, 0, '', '.') }}" disabled>
                                           <input type="hidden" name="v_nominal" value="{{ $tariktunai->nominal }}">
                                       </div>
                                     </div>
                                     <div class="col-md-6 pull-right">
                                       <div class="form-group">
-                                        <label for="nominal_tarik">Sisa Dropping (Dalam Rupiah)</label>
-                                          <input type="text" id="sisa_dropping" readonly="" name="sisa_dropping" placeholder="Sisa Dropping" class="form-control" value="{{ number_format($tariktunai->sisa_dropping, 0, '', '.') }}" disabled>
+                                        <label for="nominal_tarik">Sisa Dropping</label>
+                                          <input type="text" id="sisa_dropping" readonly="" name="sisa_dropping" placeholder="Sisa Dropping" class="form-control" value="Rp. {{ number_format($tariktunai->sisa_dropping, 0, '', '.') }}" disabled>
                                           <input type="hidden" name="v_sisa_dropping" value="{{ $tariktunai->sisa_dropping }}">
                                       </div>
                                     </div>
