@@ -1048,19 +1048,27 @@ ORDER BY PIL_JOURNALNUM ASC");
 
     public function verifikasilevel1()
     {   
-         $a = DB::table('batches_status')
-             ->join('batches', 'batches_status.batch_id','=','batches.id')
-             ->where('stat', 2)
-             ->orderBy('batch_id','DESC')->get();
+        $a = DB::select("SELECT 
+        max(a.id) as id, batch_id, max(divisi) as divisi, 
+        max(cabang) as cabang, max(seq_number) as seq_number, 
+        max(b.created_at) as tanggal, max(stat) stat
+        FROM [DBCabang].[dbo].[batches_status] as a join [DBCabang].[dbo].[batches] as b
+        on a.batch_id=b.id
+        where stat=2
+        group by batch_id order by tanggal desc");
         return view('transaksi.verifikasilevel1', compact('a'));
     }
 
     public function verifikasilevel2()
     {   
-         $a = DB::table('batches_status')
-             ->join('batches', 'batches_status.batch_id','=','batches.id')
-             ->where('stat', 4)
-             ->orderBy('batch_id','DESC')->get();
+         $a = DB::select("SELECT 
+        max(a.id) as id, batch_id, max(divisi) as divisi, 
+        max(cabang) as cabang, max(seq_number) as seq_number, 
+        max(b.created_at) as tanggal, max(stat) stat
+        FROM [DBCabang].[dbo].[batches_status] as a join [DBCabang].[dbo].[batches] as b
+        on a.batch_id=b.id
+        where stat=4
+        group by batch_id order by tanggal desc");
         return view('transaksi.verifikasilevel2', compact('a'));
     }
 }

@@ -19,7 +19,7 @@
                                           $tg2= date('d-m-Y H:i:s', strtotime($tanggal2));
                                           ?>
                                           <code style="padding: 0;">{{ $tg2 }}</code><br>
-                                          <span class="font-small-3">Oleh: {{ $active_batch->latestStat()->submitter->name }} / {{ $active_batch->latestStat()->submitter->username }}</span>
+                                          <span class="font-small-3">Oleh: {{ $active_batch->latestStat()->submitter->username }}</span>
                                         </td>
                                       </tr>
                                     </table>

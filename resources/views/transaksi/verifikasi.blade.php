@@ -51,7 +51,7 @@
                         <div class="card-body collapse in">
                           <div class="card-block">
                             <ul>
-                              <li>Tanggal dibuat : <code>{{ date("d-m-Y", strtotime($active_batch->created_at)) }}</code>, diajukan oleh : <code>Verifikator Level 1 : Kakancab</code></li>
+                              <li>Tanggal dibuat : <code>{{ date("d-m-Y", strtotime($active_batch->created_at)) }}</code>, diajukan oleh : <code>Verifikator Level 1 : {{ $active_batch->latestStat()->submitter->username }}</code></li>
                                <!-- : {{ $active_batch['creator']['name'] }} -->
                               <?php
                               $tanggal=$active_batch->updated_at;                                 
@@ -153,12 +153,12 @@
                           {{ csrf_field() }}
                           <p>Anda akan <b>memverifikasi batch ini</b> sebagai Kakancab. Informasi batch ini : 
                             <ul>
-                              <li>Batch saat ini : <code>{{ date("d-m-Y", strtotime($active_batch->created_at)) }}</code></li>
+                              <li>Batch saat ini : <code>{{ $active_batch->batchNo() }}</code></li>
                               <?php
                               $tanggal2=$active_batch->updated_at;                                 
                               $tgl2= date('d-m-Y H:i:s', strtotime($tanggal2));
                               ?>
-                              <li>Terakhir Update : <code>{{ $tgl2 }}</code> oleh <code>Verifikator Level 1 : Kakancab</code></li>
+                              <li>Terakhir Update : <code>{{ $tgl2 }}</code> oleh <code>Verifikator Level 1 : {{ $active_batch->latestStat()->submitter->username }}</code></li>
                               <!-- <code>{{ $active_batch['creator']['name'] }}</code></li> -->
                               <li>Banyak item : <code id="totalRows"></code>, dengan <code>{{ count($berkas).' berkas lampiran' }}</code></li>
                             </ul>

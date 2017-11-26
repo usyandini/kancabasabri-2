@@ -236,7 +236,7 @@
                           { 
                             name: "anggaran", 
                             width: 200, 
-                            align: "left",
+                            align: "right",
                             type: "text", 
                             title: "Anggaran Tersedia (Awal)",
                             readOnly: true,
@@ -249,7 +249,7 @@
                             itemTemplate: function(value) {
                               //var nilai = validDigits(value);
                               value = addCommas(value);
-                              return "<b>Rp. " + value + ",00</b>";
+                              return "<b>Rp. " + value;
                             },
                             editTemplate: function(value) {
                               var val = addCommas(value);
@@ -264,7 +264,7 @@
                           { 
                             name: "actual_anggaran", 
                             width: 300, 
-                            align: "left",
+                            align: "right",
                             type: "text", 
                             title: "Anggaran Tersedia (Aktual Estimasi)",
                             readOnly: true,
@@ -277,7 +277,7 @@
                             itemTemplate: function(value) {
                               //var nilai = validDigits(value);
                               value = addCommas(value);
-                              return "<b>Rp. " + value + ",00</b>";
+                              return "<b>Rp. " + value;
                             },
                             editTemplate: function(value) {
                               var val = addCommas(value);
@@ -351,7 +351,7 @@
                             }  },
                           { 
                             name: "total", 
-                            align: "left",
+                            align: "right",
                             width: 200, 
                             type: "text", 
                             title: "Jumlah Diajukan (Rupiah)",
@@ -373,7 +373,7 @@
                             itemTemplate: function(value) {
                               //var nilai = validDigits(value);
                               value = addCommas(value);
-                              return "<b>Rp. " + value + ",00</b>";
+                              return "<b>Rp. " + value;
                             },
                             editTemplate: function(value) {
                               var val = addCommas(value);

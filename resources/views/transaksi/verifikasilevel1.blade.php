@@ -46,23 +46,21 @@
             											<?php $no='1';?>
             											@if(count($a))
             											@foreach($a as $b)
-                                                                              <?php
-                                                                                  $cabang=$b->cabang;
-                                                                                  $z = \DB::select("SELECT DESCRIPTION, VALUE FROM [AX_DUMMY].[dbo].[PIL_VIEW_KPKC]  WHERE VALUE!='00'");
-                                                                                  
-                                                                              ?>
+                                                        <?php
+                                                         $cabang=$b->cabang;
+                                                         $z = \DB::select("SELECT DESCRIPTION, VALUE FROM [AX_DUMMY].[dbo].[PIL_VIEW_KPKC]  WHERE VALUE!='00'");
+                                                         ?>
             											<tr>
             												<td><center>{{ $no }}</center></td>
             												<td>@foreach($z as $x)
-                                                                                          @if($cabang==$x->VALUE)
-                                                                                          {{ $x->DESCRIPTION }}
-                                                                                          @endif
-                                                                                        @endforeach</td>
-                                                                                    <td><center>{{date("ymd", strtotime($b->created_at))}}-{{$b->cabang}}/{{$b->divisi}}-{{$b->seq_number}}</center></td>
+                                                             @if($cabang==$x->VALUE)
+                                                             {{ $x->DESCRIPTION }}
+                                                             @endif
+                                                             @endforeach</td>
+                                                            <td><center>{{date("ymd", strtotime($b->tanggal))}}-{{$b->cabang}}/{{$b->divisi}}-{{$b->seq_number}}</center></td>
                                                                                     
             												<td><center>
-                                                                                          <a href="{{ URL('transaksi/persetujuan/'. $b->batch_id) }}" target="_blank" class="btn btn-success btn-sm"><i class="fa fa-eye"></i> Lihat</a>
-            													
+                                                             <a href="{{ URL('transaksi/persetujuan/'. $b->batch_id) }}" target="_blank" class="btn btn-success btn-sm"><i class="fa fa-eye"></i> Lihat</a>
             												</center></td>
             											</tr>
             											

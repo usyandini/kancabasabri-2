@@ -58,7 +58,7 @@
                                                                                           {{ $x->DESCRIPTION }}
                                                                                           @endif
                                                                                         @endforeach</td>
-                                                                                    <td><center>{{date("ymd", strtotime($b->created_at))}}-{{$b->cabang}}/{{$b->divisi}}-{{$b->seq_number}}</center></td>
+                                                                                    <td><center>{{date("ymd", strtotime($b->tanggal))}}-{{$b->cabang}}/{{$b->divisi}}-{{$b->seq_number}}</center></td>
                                                                                     <td><center>
                                                                                           <a href="{{ URL('transaksi/verifikasi/'. $b->batch_id) }}" target="_blank" class="btn btn-success btn-sm"><i class="fa fa-eye"></i> Lihat</a>
                                                                                           
