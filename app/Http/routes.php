@@ -16,7 +16,7 @@ Route::group(['middleware' => 'guest'], function() {
 	Route::get('/', 'Auth\AuthController@showLoginForm'); 
 	Route::get('/login', 'Auth\AuthController@showLoginForm');
 });
-Route::get('logout', 'Auth\AuthController@logout');
+// Route::get('logout', 'Auth\AuthController@logout');
 Route::group(['middleware' => 'auth'], function() {
 	Route::get('notification/', 'NotificationController@get');
 	Route::get('notification/redirect/{id}', 'NotificationController@redirect');
@@ -24,7 +24,7 @@ Route::group(['middleware' => 'auth'], function() {
 	Route::get('notification/mark_all', 'NotificationController@markAllAsRead');
 	Route::get('notification/del_all', 'NotificationController@deleteAll');
 	Route::get('/dashboard', 'DashboardController@index');
-
+	Route::get('logout', 'Auth\AuthController@logout');
 	Route::group(['prefix' => 'dropping'], function() {
 		Route::resource('/', 'DroppingController');
 		Route::get('/get', 'DroppingController@getAll');
