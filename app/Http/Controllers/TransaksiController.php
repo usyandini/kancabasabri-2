@@ -262,7 +262,7 @@ class TransaksiController extends Controller
             case 'bank':
                 $header = ['BANK' => '-1', 'BANK_NAME' => 'Silahkan Pilih Bank', 'accessible' => true];
                 // $KAS = ['BANK' => 'KAS-KC', 'BANK_NAME' => 'KAS KC/KCP', 'accessible' => true];
-                $return = $this->bankModel->get(['BANK','BANK_NAME','ID_CABANG']);
+                $return = $this->bankModel->where('BANK_NAME', 'not like', '%kas%')->get(['BANK','BANK_NAME','ID_CABANG']);
                 
                 foreach ($return as $key => $value) {
                     $value->accessible = $value->isAccessibleByCabang();
