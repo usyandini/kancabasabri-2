@@ -190,21 +190,22 @@ class NotificationController extends Controller
                 }
             }
 
-            if($notifDetail->type == 41||$notifDetail->type == 43||$notifDetail->type == 45||$notifDetail->type == 46){
-                if(!Gate::check('informasi_a_d')&&$unit_kerja!=$unit){
-                    $read = false;
-                }
-            }
             if($notifDetail->type == 40){
-                if(!Gate::check('setuju_a_d')||Gate::check('notif_setuju_a_d')){
+                if(!Gate::check('setuju_a_d')||!Gate::check('notif_setuju_a_d')){
                     if($unit_kerja!="Akuntansi"){
                         $read = false;
                     }
                 }
             }
 
+            if($notifDetail->type == 41||$notifDetail->type == 43||$notifDetail->type == 45||$notifDetail->type == 46){
+                if(!Gate::check('informasi_a_d')&&$unit_kerja!=$unit){
+                    $read = false;
+                }
+            }
+            
             if($notifDetail->type == 42){
-                if(!Gate::check('setuju_a_d_2')||Gate::check('notif_setuju_a_d_2')){
+                if(!Gate::check('setuju_a_d_2')||!Gate::check('notif_setuju_a_d_2')){
                     if($unit_kerja!="Akuntansi"){
                         $read = false;
                     }
@@ -214,7 +215,7 @@ class NotificationController extends Controller
 
 
             if($notifDetail->type == 44){
-                if(!Gate::check('setuju_a_d_3')||Gate::check('notif_setuju_a_d_3')){
+                if(!Gate::check('setuju_a_d_3')||!Gate::check('notif_setuju_a_d_3')){
                     if($unit_kerja!="Akuntansi"){
                         $read = false;
                     }
