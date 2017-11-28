@@ -86,7 +86,26 @@
                 @else
                 <td colspan="2" style="padding-top:20px;"><center><b>TOTAL DROPPING PERIODE </b><br>{{ $filters['start'] }} s.d {{ $filters['end'] }} {{ $filters['year'] }}</center></br></td>
                 @endif
-                <td colspan="3" align="right"><center><b>Rp {{ number_format($tmp_realisasi, 2, ',','.') }}</b></center></td>
+                <!-- <?php
+                $cb    = $cabangs->where('VALUE', $filters['cabang'])->first()['DESCRIPTION'];
+                $from  = $filters['start'];
+                $to    = $filters['end'];
+                $tahun = $filters['year'];
+                $a2 = DB::table('dropping')
+                ->where('CABANG_DROPPING', $cb)
+                ->whereMonth('TRANSDATE','>=', $awal)
+                ->whereMonth('TRANSDATE','<=', $akhir)
+                ->whereYear('TRANSDATE', '=', $transyear)->first();
+                if ($a2)
+                {
+                  $uang=$a2->DEBIT;
+                }
+                else
+                {
+                  $uang="0";
+                }
+                ?> -->
+                <td colspan="3" align="right"><center><b>Rp {{ number_format($uang, 2, ',','.') }}</b></center></td>
               </tr>
             </tbody>
           </table>

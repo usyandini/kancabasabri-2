@@ -262,8 +262,8 @@ class TransaksiController extends Controller
             case 'bank':
                 $header = ['BANK' => '-1', 'BANK_NAME' => 'Silahkan Pilih Bank', 'accessible' => true];
                 // $KAS = ['BANK' => 'KAS-KC', 'BANK_NAME' => 'KAS KC/KCP', 'accessible' => true];
-                $return = $this->bankModel->where('BANK_NAME', 'not like', '%kas%')->get(['BANK','BANK_NAME','ID_CABANG']);
-                
+                // $return = $this->bankModel->where('BANK_NAME', 'not like', '%kas%')->get(['BANK','BANK_NAME','ID_CABANG']);
+                $return = $this->bankModel->get(['BANK','BANK_NAME','ID_CABANG']);
                 foreach ($return as $key => $value) {
                     $value->accessible = $value->isAccessibleByCabang();
                     //unset jika tidak memiliki perizinan unit kerja
@@ -661,9 +661,12 @@ class TransaksiController extends Controller
         $data = [
             'cabangs'   => KantorCabang::get(),
             'filters'   => array('cabang' => $cabang, 'start' => $start, 'end' => $end,  'year' => $transyear),
-            'transaksi' => $transaksi,
+            'transaksi'  => $transaksi,
             'data_count' => $data_count,
-            'excel'     => $excel];
+            'excel'      => $excel,
+            'awal'       => $awal,
+            'akhir'      => $akhir,
+            'transyear'  => $transyear];
 
         switch($type){
             case 'print' :
