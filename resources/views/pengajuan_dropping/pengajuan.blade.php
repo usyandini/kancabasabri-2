@@ -291,7 +291,7 @@
                                                   $angka = number_format($b->jumlah_diajukan,0,"",".");
                                                   ?>
                                                   <td><center>{{ $tgl }} {{ $bulans }} {{ $tahun }}</center></td>
-                                                  <td><center>Rp {{ $angka }},-</center></td>
+                                                  <td align="right">Rp. {{ $angka }}</td>
                                                   <td><center><?php
                                                   function terbilang($angka) {
     // pastikan kita hanya berususan dengan tipe data numeric

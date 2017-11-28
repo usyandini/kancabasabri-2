@@ -624,7 +624,10 @@ class TransaksiController extends Controller
             'cabangs'   => KantorCabang::get(),
             'filters'   => array('cabang' => $cabang, 'start' => $start, 'end' => $end,  'year' => $transyear),
             'transaksi' => $transaksi,
-            'excel'     => $excel];
+            'excel'     => $excel,
+            'awal'       => $awal,
+            'akhir'      => $akhir,
+            'transyear'  => $transyear];
 
         switch($type){
             case 'print' :

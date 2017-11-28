@@ -238,7 +238,7 @@
             													$angka = number_format($b->jumlah_diajukan,0,"",".");
             													?>
             													<td><center>{{ $tgl }} {{ $bulans }} {{ $tahun }}</center></td>
-            													<td><center>Rp {{ $angka }},-</center></td>
+            													<td align="right">Rp. {{ $angka }}</td>
             													<td><center><?php 
             													if($b->periode_realisasi=='1'){ echo "TW I";}
             													if($b->periode_realisasi=='2'){ echo "TW II";}

@@ -65,8 +65,8 @@
                 @if ($longkap != $trans->account)<td style="padding-left:20px;" rowspan = "{{$data_count[$trans->account]}}"> {{$no++}}.) {{ $nama }}</td> @endif
                 <td style="padding-left:20px;"><?php echo nl2br(str_replace('', '', htmlspecialchars($trans->desc))); ?></td>
                 @if ($longkap != $trans->account)<td align="right" rowspan = "{{$data_count[$trans->account]}}">Rp {{ number_format($trans->anggaran, 2, ',','.') }}<?php $tmp_anggaran += $trans->anggaran;?></td>@endif
-                <td align="right">Rp {{ number_format($trans->realisasi, 2, ',','.') }}</td>
-                <td align="right">Rp {{ number_format($trans->sisa_anggaran, 2, ',','.') }}</td>
+                <td align="right">Rp. {{ number_format($trans->realisasi, 0, '', '.') }}</td>
+                <td align="right">Rp. {{ number_format($trans->sisa_anggaran, 0, '', '.') }}</td>
               </tr>
               <?php 
                 $longkap = $trans->account;
@@ -75,10 +75,10 @@
               @endforeach
               <tr id="tf1">
                 <td colspan="2" style="padding-top:20px; padding-bottom:20px;"><b><center>JUMLAH</center></b></td>
-                <td align="right"><b>Rp {{ number_format($tmp_anggaran, 2, ',','.') }}</b></td>
-                <td align="right"><b>Rp {{ number_format($tmp_realisasi, 2, ',','.') }}</b></td>
+                <td align="right"><b>Rp. {{ number_format($tmp_anggaran, 0, '', '.') }}</b></td>
+                <td align="right"><b>Rp. {{ number_format($tmp_realisasi, 0, '', '.') }}</b></td>
                 <?php $sisa=$tmp_anggaran-$tmp_realisasi; ?>
-                <td align="right"><b>Rp {{ number_format($sisa, 2, ',','.') }}</b></td>
+                <td align="right"><b>Rp. {{ number_format($sisa, 0, '', '.') }}</b></td>
               </tr>
               <tr id="tf2">
                 @if($filters['start'] == $filters['end'])
@@ -86,11 +86,8 @@
                 @else
                 <td colspan="2" style="padding-top:20px;"><center><b>TOTAL DROPPING PERIODE </b><br>{{ $filters['start'] }} s.d {{ $filters['end'] }} {{ $filters['year'] }}</center></br></td>
                 @endif
-                <!-- <?php
+                <?php
                 $cb    = $cabangs->where('VALUE', $filters['cabang'])->first()['DESCRIPTION'];
-                $from  = $filters['start'];
-                $to    = $filters['end'];
-                $tahun = $filters['year'];
                 $a2 = DB::table('dropping')
                 ->where('CABANG_DROPPING', $cb)
                 ->whereMonth('TRANSDATE','>=', $awal)
@@ -104,8 +101,8 @@
                 {
                   $uang="0";
                 }
-                ?> -->
-                <td colspan="3" align="right"><center><b>Rp {{ number_format($uang, 2, ',','.') }}</b></center></td>
+                ?>
+                <td colspan="3" align="right"><center><b>Rp. {{ number_format($uang, 0, '', '.') }}</b></center></td>
               </tr>
             </tbody>
           </table>
