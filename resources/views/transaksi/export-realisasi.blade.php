@@ -68,9 +68,9 @@
 	              ?>
 	              <tr>
 	                <td style="padding-left:20px;" width="35%">{{$no++}}) {{ $nama }}</td>
-	                <td align="right" width="20%">Rp {{ number_format($trans->anggaran, 2, ',','.') }}</td>
-	                <td align="right" width="20%">Rp {{ number_format($trans->realisasi, 2, ',','.') }}</td>
-	                <td align="right" width="25%">Rp {{ number_format($trans->sisa_anggaran, 2, ',','.') }}</td>
+	                <td align="right" width="20%">Rp. {{ number_format($trans->anggaran, 0, '','.') }}</td>
+	                <td align="right" width="20%">Rp. {{ number_format($trans->realisasi, 0, '','.') }}</td>
+	                <td align="right" width="25%">Rp. {{ number_format($trans->sisa_anggaran, 0, '','.') }}</td>
 	              </tr>
 	              <?php 
 	                $tmp_anggaran += $trans->anggaran;
@@ -80,9 +80,9 @@
 	              @endforeach
 	              <tr id="tf1">
 	                <td><center>JUMLAH</center></td>
-	                <td align="right"><b>Rp {{ number_format($tmp_anggaran, 2, ',','.') }}</b></td>
-	                <td align="right"><b>Rp {{ number_format($tmp_realisasi, 2, ',','.') }}</b></td>
-	                <td align="right"><b>Rp {{ number_format($tmp_sisa, 2, ',','.') }}</b></td>
+	                <td align="right"><b>Rp. {{ number_format($tmp_anggaran,0, '','.') }}</b></td>
+	                <td align="right"><b>Rp. {{ number_format($tmp_realisasi, 0, '','.') }}</b></td>
+	                <td align="right"><b>Rp. {{ number_format($tmp_sisa, 0, '','.') }}</b></td>
 	              </tr>
 	              <tr id="tf2">
 	              	@if($filters['start'] == $filters['end'])
@@ -90,8 +90,23 @@
 			        @else
 	                <td><center>TOTAL DROPPING PERIODE <br>{{ $filters['start'] }} s.d {{ $filters['end'] }} {{ $filters['year'] }}</br></center></td>
 	                @endif
-	                <td align="right"><b>Rp {{ number_format($tmp_realisasi, 2, ',','.') }}</b></td>
-	                <td colspan="2" style="border-bottom:none; border-right:none"></td>
+	                <?php
+	                $cb    = $cabangs->where('VALUE', $filters['cabang'])->first()['DESCRIPTION'];
+	                $a2 = DB::table('dropping')
+	                ->where('CABANG_DROPPING', $cb)
+	                ->whereMonth('TRANSDATE','>=', $awal)
+	                ->whereMonth('TRANSDATE','<=', $akhir)
+	                ->whereYear('TRANSDATE', '=', $transyear)->first();
+	                if ($a2)
+	                {
+	                  $uang=$a2->DEBIT;
+	                }
+	                else
+	                {
+	                  $uang="0";
+	                }
+	                ?>
+	                <td colspan="3" align="right"><center><b>Rp. {{ number_format($uang, 0, '', '.') }}</b></center></td>
 	              </tr>
 	            </tbody>
 	    	</table>

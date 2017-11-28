@@ -249,7 +249,7 @@ class TransaksiController extends Controller
             case 'item':
                 // $cabang = \Auth::user()->cabang;
                 $header = ['VALUE' => '-1', 'nama_item' => 'Silahkan Pilih Barang/Jasa'];
-                $return = ItemMaster::get(['id', 'SEGMEN_1', 'nama_item', 'SEGMEN_3', 'is_displayed'])->filter(function($item) use($batch) {
+                $return = ItemMaster::orderBy('nama_item','ASC')->get(['id', 'SEGMEN_1', 'nama_item', 'SEGMEN_3', 'is_displayed'])->filter(function($item) use($batch) {
                     return $item->isDisplayed($batch['cabang']);
                     //return $item->isDisplayed($cabang);
                 });
