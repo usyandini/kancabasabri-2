@@ -64,28 +64,39 @@
                   <label>Ajukan batch untuk verifikasi</label>
                 </fieldset>
               </li>
+              <li>
+                <fieldset>
+                  <input type="checkbox" name="perizinan[setuju_t]" {{ isset(old("perizinan")['setuju_t']) ? 'checked=""' : '' }}>
+                  <label>Persetujuan transaksi</label>
+                </fieldset>
+              </li>
+              <li>
+                <fieldset>
+                  <input type="checkbox" name="perizinan[setuju2_t]" {{ isset(old("perizinan")['setuju2_t']) ? 'checked=""' : '' }}>
+                  <label>Persetujuan final transaksi</label>
+                </fieldset>
+              </li>
+              <li>
+                <fieldset>
+                  <input type="checkbox" name="perizinan[report_mata_anggaran]" {{ isset(old("perizinan")['report_mata_anggaran']) ? 'checked=""' : '' }}>
+                  <label>Report Realisasi Mata Anggaran</label>
+                </fieldset>
+              </li>
+              <li>
+                <fieldset>
+                  <input type="checkbox" name="perizinan[report_realisasi_anggaran]" {{ isset(old("perizinan")['report_realisasi_anggaran']) ? 'checked=""' : '' }}>
+                  <label>Report Realisasi Transaksi</label>
+                </fieldset>
+              </li>
+              <li>
+                <fieldset>
+                  <input type="checkbox" name="perizinan[report_kasbank]" {{ isset(old("perizinan")['report_kasbank']) ? 'checked=""' : '' }}>
+                  <label>Report Kas/Bank</label>
+                </fieldset>
+              </li>
             </ul>
           </div>
-          <fieldset>
-            <input type="checkbox" name="perizinan[setuju_t]" {{ isset(old("perizinan")['setuju_t']) ? 'checked=""' : '' }}>
-            <label>Persetujuan transaksi</label>
-          </fieldset>
-          <fieldset>
-            <input type="checkbox" name="perizinan[setuju2_t]" {{ isset(old("perizinan")['setuju2_t']) ? 'checked=""' : '' }}>
-            <label>Persetujuan final transaksi</label>
-          </fieldset>
-          <fieldset>
-            <input type="checkbox" name="perizinan[report_mata_anggaran]" {{ isset(old("perizinan")['report_mata_anggaran']) ? 'checked=""' : '' }}>
-            <label>Report Realisasi Mata Anggaran</label>
-          </fieldset>
-          <fieldset>
-            <input type="checkbox" name="perizinan[report_realisasi_anggaran]" {{ isset(old("perizinan")['report_realisasi_anggaran']) ? 'checked=""' : '' }}>
-            <label>Report Realisasi Transaksi</label>
-          </fieldset>
-          <fieldset>
-            <input type="checkbox" name="perizinan[report_kasbank]" {{ isset(old("perizinan")['report_kasbank']) ? 'checked=""' : '' }}>
-            <label>Report Kas/Bank</label>
-          </fieldset>
+          
         </div>
         <h5>Notifikasi</h5>
         <div class="form-group skin skin-square" id="transaksi">
