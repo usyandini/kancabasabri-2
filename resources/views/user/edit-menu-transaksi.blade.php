@@ -22,8 +22,8 @@
               </fieldset>
             </li>
             <li>
-              <fieldset>
-                <input type="checkbox" name="perizinan[cari_t]" {{ isset($user->perizinan['cari_t']) ? 'checked=""' : '' }}>
+              <fieldset style="display: none">
+                <input type="checkbox" name="perizinan[cari_t]" checked="checked">
                 <label >Pencarian batch transaksi</label>
               </fieldset>
             </li>
