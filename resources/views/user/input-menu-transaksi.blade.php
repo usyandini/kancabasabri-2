@@ -72,7 +72,19 @@
           </fieldset>
           <fieldset>
             <input type="checkbox" name="perizinan[setuju2_t]" {{ isset(old("perizinan")['setuju2_t']) ? 'checked=""' : '' }}>
-            <label>Verifikasi final transaksi</label>
+            <label>Persetujuan final transaksi</label>
+          </fieldset>
+          <fieldset>
+            <input type="checkbox" name="perizinan[report_mata_anggaran]" {{ isset(old("perizinan")['report_mata_anggaran']) ? 'checked=""' : '' }}>
+            <label>Report Realisasi Mata Anggaran</label>
+          </fieldset>
+          <fieldset>
+            <input type="checkbox" name="perizinan[report_realisasi_anggaran]" {{ isset(old("perizinan")['report_realisasi_anggaran']) ? 'checked=""' : '' }}>
+            <label>Report Realisasi Transaksi</label>
+          </fieldset>
+          <fieldset>
+            <input type="checkbox" name="perizinan[report_kasbank]" {{ isset(old("perizinan")['report_kasbank']) ? 'checked=""' : '' }}>
+            <label>Report Kas/Bank</label>
           </fieldset>
         </div>
         <h5>Notifikasi</h5>

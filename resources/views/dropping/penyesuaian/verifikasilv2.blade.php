@@ -15,7 +15,7 @@
                 @section('content')
                 <div class="content-header row">
                     <div class="content-header-left col-md-12 col-xs-12 mb-2">
-                        <h3 class="content-header-title mb-0">Verifikasi Penyesuaian Dropping Level 2</h3>
+                        <h3 class="content-header-title mb-0">Verifikasi Penyesuaian Dropping</h3>
                         <div class="row breadcrumbs-top">
                             <div class="breadcrumb-wrapper col-xs-12">
                                 <ol class="breadcrumb">
@@ -37,7 +37,7 @@
                         <div class="col-md-6">
                           @if($penyesuaian->stat==6)
                           <div class="alert alert-info alert-dismissible fade in mb-2" role="alert">
-                            <b>Verifikasi dilakukan oleh verifikator <i>level 2</i></b>
+                            <b>Verifikasi dilakukan oleh <i>Akuntansi</i></b>
                           </div>
                           @endif
                         </div>

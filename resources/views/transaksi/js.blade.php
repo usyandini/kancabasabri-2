@@ -341,7 +341,11 @@
                             name: "qty_item", 
                             width: 250, 
                             align: "left",
-                            type: "number", 
+                            type: "number",
+                            _createTextBox:function(){
+                              var $input = jsGrid.fields.number.prototype._createTextBox.call(this);
+                              return $input.attr("min",0);
+                            },
                             title: "Jumlah Diajukan (Kuantitas)",
                             validate: {
                               validator: function(value, item) {

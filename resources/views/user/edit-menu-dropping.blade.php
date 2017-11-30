@@ -34,13 +34,13 @@
               <input type="checkbox" name="perizinan[masuk_p_d]" {{ isset($user->perizinan['masuk_p_d']) ? 'checked=""' : '' }}>
               <label>Masukkan penyesuaian dropping</label>
             </fieldset>
-            <fieldset>
+            <!-- <fieldset>
               <input type="checkbox" name="perizinan[setuju_p_d]" {{ isset($user->perizinan['setuju_p_d']) ? 'checked=""' : '' }}>
               <label>Persetujuan penyesuaian dropping</label>
-            </fieldset>
+            </fieldset> -->
             <fieldset>
               <input type="checkbox" name="perizinan[setuju_p2_d]" {{ isset($user->perizinan['setuju_p2_d']) ? 'checked=""' : '' }}>
-              <label>Persetujuan akhir penyesuaian dropping</label>
+              <label>Persetujuan penyesuaian dropping</label>
             </fieldset>
           </div>
         </div>

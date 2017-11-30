@@ -15,7 +15,7 @@
             @section('content')
             <div class="content-header row">
             	<div class="content-header-left col-md-6 col-xs-12 mb-2">
-            		<h3 class="content-header-title mb-0">Verifikasi Penyesuaian Level 2</h3>
+            		<h3 class="content-header-title mb-0">Verifikasi Penyesuaian</h3>
             		
             	</div>
             </div>
@@ -26,7 +26,7 @@
             			<div class="col-xs-12">
             				<div class="card">
             					<div class="card-header">
-            						<h4 class="card-title">Daftar Penyesuaian Transaksi Level 2</h4>
+            						<h4 class="card-title">Daftar Penyesuaian Transaksi</h4>
             						<a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
             					</div>
             					

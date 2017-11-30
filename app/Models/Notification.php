@@ -154,7 +154,8 @@ class Notification extends Model
             case 11:
                 return 'Penyesuaian dropping oleh '.$this->idPenyesuaian['cabang'].' pada tanggal '.date('d F Y', strtotime($this->idPenyesuaian['created_at'])).' ditolak dengan alasan '.$this->rejectPenyesuaian['reason']['content'].'. Silahkan melakukan Penyesuaian Dropping kembali.';
             case 12:
-                return 'Penyesuaian dropping oleh '.$this->idPenyesuaian['cabang'].' pada tanggal '.date('d F Y', strtotime($this->idPenyesuaian['created_at'])).' telah diverifikasi level 1. Mohon review untuk verifikasi level 2.';
+                return 'Penyesuaian dropping dilakukan oleh '.$this->idPenyesuaian['cabang'].'. Mohon review untuk verifikasi level 1.';
+                // return 'Penyesuaian dropping oleh '.$this->idPenyesuaian['cabang'].' pada tanggal '.date('d F Y', strtotime($this->idPenyesuaian['created_at'])).' telah diverifikasi level 1. Mohon review untuk verifikasi level 2.';
             case 13:
                 return 'Penyesuaian dropping oleh '.$this->idPenyesuaian['cabang'].' pada tanggal '.date('d F Y', strtotime($this->idPenyesuaian['created_at'])).' ditolak dengan alasan '.$this->rejectPenyesuaian['reason']['content'].'. Silahkan melakukan Penyesuaian Dropping kembali.';
             case 14:

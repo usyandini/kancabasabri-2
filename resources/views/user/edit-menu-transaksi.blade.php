@@ -72,6 +72,18 @@
             <input type="checkbox" name="perizinan[setuju2_t]" {{ isset($user->perizinan['setuju2_t']) ? 'checked=""' : '' }}>
             <label>Persetujuan final transaksi</label>
           </fieldset>
+          <fieldset>
+            <input type="checkbox" name="perizinan[report_mata_anggaran]" {{ isset($user->perizinan['report_mata_anggaran']) ? 'checked=""' : '' }}>
+            <label>Report Realisasi Mata Anggaran</label>
+          </fieldset>
+          <fieldset>
+            <input type="checkbox" name="perizinan[report_realisasi_anggaran]" {{ isset($user->perizinan['report_realisasi_anggaran']) ? 'checked=""' : '' }}>
+            <label>Report Realisasi Transaksi</label>
+          </fieldset>
+          <fieldset>
+            <input type="checkbox" name="perizinan[report_kasbank]" {{ isset($user->perizinan['report_kasbank']) ? 'checked=""' : '' }}>
+            <label>Report Kas/Bank</label>
+          </fieldset>
         </div>
         <h5>Notifikasi</h5>
         <div class="form-group skin skin-square" id="transaksi">

@@ -364,7 +364,7 @@ class DroppingController extends Controller
             ]);
 
         $submitted = PenyesuaianDropping::where([['id_dropping', $id_drop], ['stat', 4]])->orderby('created_at', 'desc')->first();
-        $verLv1 = PenyesuaianDropping::where([['id_dropping', $id_drop], ['stat', 6]])->orderby('created_at', 'desc')->first();
+        //$verLv1 = PenyesuaianDropping::where([['id_dropping', $id_drop], ['stat', 6]])->orderby('created_at', 'desc')->first();
         $verLv2 = PenyesuaianDropping::where([['id_dropping', $id_drop], ['stat', 8]])->orderby('created_at', 'desc')->first();
         
         $string_penyesuaian = $request->p_nominal;
@@ -372,9 +372,11 @@ class DroppingController extends Controller
         $tgl_dropping=date('Y-m-d', strtotime($request->p_tgl_dropping));
         if($submitted){
             session()->flash('fail', true);
-        }elseif($verLv1){
-            session()->flash('verifikasi1', true);
-        }elseif($verLv2){
+        }
+        // elseif($verLv1){
+        //     session()->flash('verifikasi1', true);
+        // }
+        elseif($verLv2){
             session()->flash('verifikasi2', true);
         }else{
             if($validatorPD->passes())
@@ -406,11 +408,11 @@ class DroppingController extends Controller
                 $inputsPD['id_dropping'] = $id_drop;
                 $inputsPD['nominal_dropping']  = $request->nominal_dropping;
 
-                $inputsPD['stat'] = 4;
+                $inputsPD['stat'] = 6;
                 
                 $PD = PenyesuaianDropping::create($inputsPD); 
                 $this->storeBerkas($request->berkas, 'penyesuaian', $PD->id); 
-                NotificationSystem::send($PD->id, 10);
+                NotificationSystem::send($PD->id, 12);
 
                 session()->flash('success', true);
             }else{

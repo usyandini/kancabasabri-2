@@ -123,14 +123,14 @@
                         @can('informasi_a_d')
                         <li class="is-shown {{ checkActiveMenu('dropping') }}"><a href="{{ url('/dropping', $parameters = [], $secure = null) }}" class="menu-item">Dropping</a></li>
                         @endcan
-                        @can('setuju_p_d')
+                        <!-- @can('setuju_p_d')
                         <li class="is-shown {{ checkActiveMenu('dropping/lihat/penyesuaian') }}"><a href="{{ url('dropping/lihat/penyesuaian', $parameters = [], $secure = null) }}" class="menu-item">Penyesuaian Level 1</a></li>
-                        @endcan
+                        @endcan -->
                         @can('setuju_p2_d')
-                        <li class="is-shown {{ checkActiveMenu('dropping/lihat/penyesuaian2') }}"><a href="{{ url('dropping/lihat/penyesuaian2', $parameters = [], $secure = null) }}" class="menu-item">Penyesuaian Level 2</a></li>
+                        <li class="is-shown {{ checkActiveMenu('dropping/lihat/penyesuaian2') }}"><a href="{{ url('dropping/lihat/penyesuaian2', $parameters = [], $secure = null) }}" class="menu-item">Verifikasi Penyesuaian</a></li>
                         @endcan
                         @can('setuju_tt_d')
-                        <li class="is-shown {{ checkActiveMenu('dropping/lihat/penarikan') }}"><a href="{{ url('dropping/lihat/penarikan', $parameters = [], $secure = null) }}" class="menu-item">Tarik Tunai Level 1</a></li>
+                        <li class="is-shown {{ checkActiveMenu('dropping/lihat/penarikan') }}"><a href="{{ url('dropping/lihat/penarikan', $parameters = [], $secure = null) }}" class="menu-item">Verifikasi Tarik Tunai</a></li>
                         @endcan
                     </ul>
                     </li>
@@ -160,11 +160,18 @@
                             @can ('info_t')
                                 <li class="is-shown {{ checkActiveMenu('transaksi') }}"><a href="{{ url('/transaksi', $parameters = [], $secure = null) }}" class="menu-item">Informasi Transaksi</a></li>
                             @endcan
+                            @can ('tambah_item_t')
                                 <li class="is-shown {{ checkActiveMenu('transaksi/create') }}"><a href="{{ url('/transaksi/create', $parameters = [], $secure = null) }}" class="menu-item">Tambah Batch Baru</a></li>
-                            
+                            @endcan
+                            @can ('report_mata_anggaran')
                                 <li class="is-shown {{ checkActiveMenu('transaksi/realisasi') }}"><a href="{{ url('/transaksi/report/realisasi', $parameters = [], $secure = null) }}" class="menu-item">Report Realisasi Mata Anggaran</a></li>
+                            @endcan
+                            @can ('report_realisasi_anggaran')    
                                 <li class="is-shown {{ checkActiveMenu('transaksi/realisasi_transaksi') }}"><a href="{{ url('/transaksi/report/realisasi_transaksi', $parameters = [], $secure = null) }}" class="menu-item">Report Realisasi Transaksi</a></li>
+                            @endcan
+                            @can ('report_kasbank')    
                                 <li class="is-shown {{ checkActiveMenu('transaksi/kasbank') }}"><a href="{{ url('/transaksi/report/kasbank', $parameters = [], $secure = null) }}" class="menu-item">Report Kas/Bank</a></li>
+                            @endcan
                                 <!-- <li class="is-shown {{ checkActiveMenu('transaksi/verifikasi') }}"><a href="{{ url('/transaksi/verifikasi', $parameters = [], $secure = null) }}" class="menu-item">Verifikasi Transaksi</a> -->
                             @can ('setuju_t')
                                 <li class="is-shown {{ checkActiveMenu('transaksi/lihat/persetujuan') }}"><a href="{{ url('/transaksi/lihat/persetujuan', $parameters = [], $secure = null) }}" class="menu-item">Verifikasi Level 1</a></li>
