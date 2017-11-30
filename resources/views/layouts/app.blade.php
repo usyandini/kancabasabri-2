@@ -154,8 +154,8 @@
                     </ul>
                     </li>
                     @endif
-                    @if (Gate::check('info_t'))
-                    <li class="nav-item has-sub {{ checkOpenedMenu('transaksi') }}"><a href=""><i class="ft-layout"></i><span data-i18n="" class="menu-title">Transaksi</span></a>
+                    @if (Gate::check('menu_transaksi'))
+                    <li class="nav-item has-sub {{ checkOpenedMenu('menutransaksi') }}"><a href=""><i class="ft-layout"></i><span data-i18n="" class="menu-title">Transaksi</span></a>
                         <ul class="menu-content">
                             @can ('info_t')
                                 <li class="is-shown {{ checkActiveMenu('transaksi') }}"><a href="{{ url('/transaksi', $parameters = [], $secure = null) }}" class="menu-item">Informasi Transaksi</a></li>

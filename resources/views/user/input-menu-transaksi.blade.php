@@ -11,21 +11,27 @@
         <h5>Aksi</h5>
         <div class="form-group skin skin-square" id="transaksi">
           <fieldset >
-            <input id="info_transaksi" type="checkbox"  name="perizinan[info_t]" {{ isset(old("perizinan")['info_t']) ? 'checked=""' : '' }} >
-            <label>Informasi transaksi</label>
+            <input id="menu_trans" type="checkbox" name="perizinan[menu_transaksi]" {{ isset(old("perizinan")['menu_transaksi']) ? 'checked=""' : '' }} >
+            <label>Menu transaksi</label>
           </fieldset>
-          <div id="info_transaksi">
+          <div id="menu_trans">
             <ul style="margin-bottom: 0;">
               <li>
-                <fieldset>
-                  <input type="checkbox" name="perizinan[tambah_t]" {{ isset(old("perizinan")['tambah_t']) ? 'checked=""' : '' }}>
-                  <label >Tambah batch transaksi</label>
+                <fieldset >
+                  <input type="checkbox" name="perizinan[info_t]" {{ isset(old("perizinan")['info_t']) ? 'checked=""' : '' }} >
+                  <label>Informasi transaksi</label>
                 </fieldset>
               </li>
               <li>
                 <fieldset>
                   <input type="checkbox" name="perizinan[cari_t]" {{ isset(old("perizinan")['cari_t']) ? 'checked=""' : '' }}>
                   <label >Pencarian batch transaksi</label>
+                </fieldset>
+              </li>
+              <li>
+                <fieldset>
+                  <input type="checkbox" name="perizinan[tambah_t]" {{ isset(old("perizinan")['tambah_t']) ? 'checked=""' : '' }}>
+                  <label >Tambah batch transaksi</label>
                 </fieldset>
               </li>
               <li>
