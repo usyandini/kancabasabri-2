@@ -41,24 +41,6 @@
                               {{ csrf_field() }}
                               <div class="col-lg-6 col-xl-3 mb-1">
                                 <div class="form-group">
-                                  <select class="select2 form-control " name="cari_nd_surat" id="cari_nd_surat">
-                                    <option disabled="" selected="">ND/Surat</option>
-                                  </select>
-                                </div>
-                              </div>
-                              <div class="col-lg-6 col-xl-3 mb-1">
-                                <div class="form-group">
-                                  <select class="select2 form-control" name="cari_stat_anggaran" id="cari_stat_anggaran" onchange="set_nd_surat()">
-                                    <option disabled="" selected="">Status Anggaran</option>
-                                    <option value="0">Semua</option>
-                                    <option value="1">Draft</option>
-                                    <option value="2">Transfer</option>
-                                    <option value="3">Complate</option>
-                                  </select>
-                                </div>
-                              </div>
-                              <div class="col-lg-6 col-xl-3 mb-1">
-                                <div class="form-group">
                                   <select class="select2 form-control " name="cari_unit_kerja" id="cari_unit_kerja" onchange="set_nd_surat()">
                                     <option disabled="" selected="">Unit Kerja</option>
                                     @foreach($unit_kerja as $unit)
@@ -78,6 +60,26 @@
                                   </select>
                                 </div>
                               </div>
+                              <div class="col-lg-6 col-xl-3 mb-1">
+                                <div class="form-group">
+                                  <select class="select2 form-control" name="cari_stat_anggaran" id="cari_stat_anggaran" onchange="set_nd_surat()">
+                                    <option disabled="" selected="">Status Anggaran</option>
+                                    <option value="0">Semua</option>
+                                    <option value="1">Draft</option>
+                                    <option value="2">Transfer</option>
+                                    <option value="3">Complate</option>
+                                  </select>
+                                </div>
+                              </div>
+                              <div class="col-lg-6 col-xl-3 mb-1">
+                                <div class="form-group">
+                                  <select class="select2 form-control " name="cari_nd_surat" id="cari_nd_surat">
+                                    <option disabled="" selected="">ND/Surat</option>
+                                  </select>
+                                </div>
+                              </div>
+                              
+                              
                               <div class="col-lg-3 col-xl-3 mb-1">
                                 <a href="#" class="btn btn-outline-primary" onclick="cariAnggaran()"><i class="fa fa-search"></i> Cari</a>                                            
                               </div>
