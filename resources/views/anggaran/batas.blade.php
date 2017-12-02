@@ -123,8 +123,8 @@
 												<tr>
 													<td><center>{{ $no }}</center></td>
 													<td>{{ $batas->unit_kerja }}</td>
-													<td id="tanggal_mulai_{{$batas->id}}">{{ $batas->tanggal_mulai }}</td>
-													<td id="tanggal_selesai_{{$batas->id}}">{{ $batas->tanggal_selesai }}</td>
+													<td id="tanggal_mulai_{{$batas->id}}"><center>{{ date('d-m-Y', strtotime($batas->tanggal_mulai)) }}</center></td>
+													<td id="tanggal_selesai_{{$batas->id}}"><center>{{ date('d-m-Y', strtotime($batas->tanggal_selesai)) }}</center></td>
 													<td style="color:{{$batas->active?'green':'red'}}"><b>{{ $batas->active?"Ya":"Tidak"}}</b></td>
 													<td><center>
 														<input type="hidden" id="active_{{$batas->id}}" value="{{$batas->active}}">

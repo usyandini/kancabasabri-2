@@ -60,7 +60,7 @@
 			                        			<td>{!! $user->email ? $user->email : '-' !!}</td>
 			                        			<td>{!! $user->kantorCabang() ? $user->kantorCabang()->DESCRIPTION : '-' !!}</td>
 			                        			<td>{!! $user->divisi() ? $user->divisi()->DESCRIPTION : '-' !!}</td>
-			                        			<td>{{ date('Y-m-d, H:m', strtotime($user->updated_at)) }}</td>
+			                        			<td><center>{{ date('d-m-Y, H:m', strtotime($user->updated_at)) }}</center></td>
 			                        			{!! $user->deleted_at ? '<td class="red">Deleted</td>' : '<td class="blue">Aktif</td>' !!}
 			                        			<td>
 			                        				@if(!$user->deleted_at && Gate::check('edit_u'))

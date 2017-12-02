@@ -22,12 +22,6 @@
               </fieldset>
             </li>
             <li>
-              <fieldset style="display: none">
-                <input type="checkbox" name="perizinan[cari_t]" checked="checked">
-                <label >Pencarian batch transaksi</label>
-              </fieldset>
-            </li>
-            <li>
               <fieldset>
                 <input type="checkbox" name="perizinan[tambah_t]" {{ isset($user->perizinan['tambah_t']) ? 'checked=""' : '' }}>
                 <label >Tambah batch transaksi</label>
@@ -100,7 +94,10 @@
               </fieldset>
             </li>
           </ul>
-          
+          <fieldset style="display: none">
+              <input type="checkbox" name="perizinan[cari_t]" checked="checked">
+              <label >Pencarian batch transaksi</label>
+          </fieldset>
         </div>
         <h5>Notifikasi</h5>
         <div class="form-group skin skin-square" id="transaksi">

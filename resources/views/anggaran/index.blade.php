@@ -82,7 +82,7 @@
                                           <div class="form-grpup">
                                             <label>Tipe Anggaran</label>
                                             @if($status=='tambah')
-                                              <input id="tipe_anggaran" name="tipe_anggaran" class="form-control" readonly value="Default Original Budget">
+                                              <input id="tipe_anggaran" name="tipe_anggaran" class="form-control" readonly value="Original Budget">
                                             @else
                                                 <input id="tipe_anggaran" name="tipe_anggaran" class="form-control" readonly>
                                             @endif
@@ -872,7 +872,11 @@
                             }
                           },
                           { name: "kuantitas", 
-                            type: "number", 
+                            type: "number",
+                            _createTextBox:function(){
+                              var $input = jsGrid.fields.number.prototype._createTextBox.call(this);
+                              return $input.attr("min",0);
+                            }, 
                             align: "left",
                             title: "Kuantitas", 
                             width: 90, 

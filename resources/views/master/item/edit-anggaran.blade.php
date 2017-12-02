@@ -138,7 +138,7 @@
                                     </select>
                                   </div>
                                   <div class="col-md-3">
-                                    <input id="segmen1" class="form-control" name="segmen1" value="{{ $items->SEGMEN_1}}" readonly="">
+                                    <input id="segmen1" class="form-control" name="segmen1" value="{{ $items->account}}" readonly="">
     		                          </div>
     				                    </div>
     		                        <div class="form-group row">
@@ -152,7 +152,7 @@
                                     </select>
     		                          </div>
     		                          <div class="col-md-3">
-    		                          	<input id="segmen5" class="form-control" name="segmen5" value="{{ $items->SEGMEN_5}}" readonly="">
+    		                          	<input id="segmen5" class="form-control" name="segmen5" value="{{ $items->sub_pos}}" readonly="">
     				                      </div>
     		                        </div>
                               	<div class="form-group row">
@@ -166,7 +166,7 @@
                                     </select>
     		                          </div>
     		                          <div class="col-md-3">
-    		                        	  <input id="segmen6" class="form-control" name="segmen6" value="{{ $items->SEGMEN_6}}" readonly="">
+    		                        	  <input id="segmen6" class="form-control" name="segmen6" value="{{ $items->mata_anggaran}}" readonly="">
         				                  </div>
         				              	</div>
                               </div>

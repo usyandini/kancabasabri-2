@@ -896,6 +896,8 @@ class ItemController extends Controller
                         }else{
                             ItemMasterAnggaran::create($input); 
                             $count++ ;
+                            $insert_success[$count] = "<b>".($count-count($insert_success)).' data item anggaran</b> berhasil di inputkan.';
+            
                         }
                     }
                     if (count($validate[$key]->failed()) == 8) {
@@ -909,7 +911,7 @@ class ItemController extends Controller
                     array_push($errors, $value);
                 }
             }
-            $insert_success[$count] = "<b>".($count-count($insert_success)).' data item anggaran</b> berhasil di inputkan.';
+            // $insert_success[$count] = "<b>".($count-count($insert_success)).' data item anggaran</b> berhasil di inputkan.';
             if (count($insert_success) > 0) { session()->flash('insert_success', $insert_success); }
         } else {
             $errors = ['1' => 'Data Excel tidak boleh kosong.'];
@@ -923,7 +925,7 @@ class ItemController extends Controller
         $return = null;
         switch ($type) {
             case 'jenis_kode':
-                $jenis = ItemAnggaranMaster::where('type',1)->get();
+                $jenis = ItemAnggaranMaster::withTrashed()->where('type',1)->get();
                 $jenisVal = ItemAnggaranMaster::where('type',1)->where('name', $value)->get();
                 if(count($jenisVal) == 0){
                     $kode = 'JA-'.(count($jenis)+1);
@@ -935,10 +937,11 @@ class ItemController extends Controller
                     );
                     ItemAnggaranMaster::create($inputJenis);
                 }
+                // echo count($jenis);
                 $return = ItemAnggaranMaster::where('type',1)->where('name', $value)->first()->kode;
                 break;
             case 'kelompok_kode':
-                $kelompok = ItemAnggaranMaster::where('type',2)->get();
+                $kelompok = ItemAnggaranMaster::withTrashed()->where('type',2)->get();
                 $kelompokVal = ItemAnggaranMaster::where('type',2)->where('name', $value)->get();
                 if(count($kelompokVal) == 0){
                     $kode = 'KA-'.(count($kelompok)+1);
@@ -953,7 +956,7 @@ class ItemController extends Controller
                 $return = ItemAnggaranMaster::where('type',2)->where('name', $value)->first()->kode;
                 break;
             case 'pos_kode':
-                $pos = ItemAnggaranMaster::where('type',3)->get();
+                $pos = ItemAnggaranMaster::withTrashed()->where('type',3)->get();
                 $posVal = ItemAnggaranMaster::where('type',3)->where('name', $value)->get();
                 if(count($posVal) == 0){
                     $kode = 'PA-'.(count($pos)+1);
