@@ -168,9 +168,15 @@
                       },
                       { name: "tanggal", 
                       type: "text", 
-                      align: "left",
+                      align: "center",
                       title: "Tanggal", 
-                      width: 90
+                      width: 90,
+                      itemTemplate: function (value) { debugger; if (value == "") return ""; else return new Date(value).toLocaleDateString(); }
+                      // ,
+                      // itemTemplate:function(value,item)
+                      // {
+                      //   return date('d-m-Y',value);
+                      // }
                       },
                       { name: "nd_surat", 
                       type: "text", 
