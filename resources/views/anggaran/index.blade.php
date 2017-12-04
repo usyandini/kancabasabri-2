@@ -700,7 +700,7 @@
                                 // console.log('nilaiBelanja',parseInt(validDigits(item.nilai_persatuan)) );
                                   return false;
                                 }
-                                else if(value=="Biaya Kantor"&&parseInt(validDigits(item.nilai_persatuan)) >= 5000000){
+                                else if(value=="Biaya Kantor"&&parseInt(validDigits(item.nilai_persatuan)) > 4999999){
                                 // console.log('nilaiBelanja',parseInt(validDigits(item.nilai_persatuan)) );
                                   return false;
                                 }else{
