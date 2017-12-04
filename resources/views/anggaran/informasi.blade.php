@@ -171,7 +171,8 @@
                       align: "center",
                       title: "Tanggal", 
                       width: 90,
-                      itemTemplate: function (value) { debugger; if (value == "") return ""; else return new Date(value).toLocaleDateString(); }
+                      itemTemplate: function (value) { debugger; if (value == "") return ""; else var ta=new Date(value);
+                                                                                              return ta.getDate() + '-' + (ta.getMonth()+1) + '-' +  ta.getFullYear(); }
                       // ,
                       // itemTemplate:function(value,item)
                       // {
