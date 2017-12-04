@@ -1892,6 +1892,9 @@
                             }
                           }else{
                             stop=true;
+                            if(list_berkas[i].length>0){
+                              stop = false;
+                            }
                           }
                           if(!stop){
                             if(nameClass.length!=0){
