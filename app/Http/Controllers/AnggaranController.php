@@ -527,7 +527,7 @@ class AnggaranController extends Controller
           case ""                               : $setuju="-1";break;
           // case "Kirim"                          : $setuju="0";break;*Hapus Kanit Kerja*
           // case "Persetujuan Ka Unit Kerja"      : $setuju="1";break;
-          case "Kirim"                          : $setuju="1";break;
+          case "Persetujuan Ka Unit Kerja"      : $setuju="1";break;
           case "Persetujuan Kadiv Renbang"      : $setuju="2";break;
           case "Persetujuan Direksi"            : $setuju="3";break;
           case "Persetujuan Dekom"              : $setuju="4";break;
@@ -800,7 +800,7 @@ class AnggaranController extends Controller
             }
         }else if($request->setuju=='Tolak'){
             if($setuju == "-1"){
-                if($request->persetujuan == "Kirim")
+                if($request->persetujuan == "Persetujuan Ka Unit Kerja")
                     NotificationSystem::send($anggaranId, 18);
                 // *Hapus dan Ganti Ditolak Kanit dengan Di Tolak Rembang*
                 //  if($request->persetujuan == "Kirim")
@@ -808,7 +808,7 @@ class AnggaranController extends Controller
                 // else if($request->persetujuan == "Persetujuan Kanit Kerja")
                 //     NotificationSystem::send($anggaranId, 18);
             }else if($setuju == "1"){
-                if($request->persetujuan == "Persetujuan Renbang")
+                if($request->persetujuan == "Persetujuan Kadiv Renbang")
                     NotificationSystem::send($anggaranId, 20);
                 else if($request->persetujuan == "Persetujuan Direksi")
                     NotificationSystem::send($anggaranId, 22);
