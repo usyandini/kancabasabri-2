@@ -28,7 +28,7 @@
                             return new Date(date1) - new Date(date2);
                         },
                         itemTemplate: function(value) {
-                            return value ? ("0" + new Date(value).getDate()).slice(-2) + '/' + ("0" + (new Date(value).getMonth() + 1)).slice(-2) + '/' + new Date(value).getFullYear() : '';
+                            return value ? ("0" + new Date(value).getDate()).slice(-2) + '-' + ("0" + (new Date(value).getMonth() + 1)).slice(-2) + '-' + new Date(value).getFullYear() : '';
                         },
                         insertTemplate: function(value) {
                             return this._insertPicker = $("<input>").datepicker({ defaultDate: new Date() });
@@ -133,13 +133,14 @@
                             type: "date", 
                             width: 150, 
                             title: "Tanggal", 
-                            align: "left",
+                            align: "center",
                             validate: {
                               validator : "required",
                               message : "Kolom tanggal tidak boleh kosong."  
                             },
                             insertTemplate: function(value) {
                               var result = this._insertPicker = $("<input>").datepicker({ defaultDate: new Date() })
+                                                                // $("<input>").datepicker({ dateFormat: 'dd-mm-yy' })
                               result.on("change", function() {
                                 date_field = result.val()
                                 
@@ -213,7 +214,7 @@
                           { 
                             name: "account", 
                             width: 250, 
-                            align: "left",
+                            align: "center",
                             type: "text", 
                             title: "Account", 
                             readOnly: true,

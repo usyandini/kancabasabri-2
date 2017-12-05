@@ -47,7 +47,7 @@
                                       {{ csrf_field() }}
                                       <div class="col-xs-3">
                                           <div class="form-group">
-                                            <label>Tanggal</label>
+                                            <label>Tanggal Pengajuan</label>
                                             @if($status=='tambah')
                                             <input type="date" id="tanggal" name="tanggal" class="form-control">
                                             @else
@@ -57,7 +57,7 @@
                                       </div>
                                       <div class="col-xs-3">
                                           <div class="form-grpup">
-                                            <label>ND/Surat</label>
+                                            <label>Nomor ND/Surat</label>
 
                                             @if($status=='tambah')
                                                <input id="nd_surat" name="nd_surat" class="form-control">
@@ -682,11 +682,11 @@
                                 status = "Pilih Jenis Terlebih dahulu";
                                 // console.log("nilai",value);
                                 if(value=="Belanja Modal"){
-                                  status="Jika Jenisnya Belanja Modal, Nilai Persatuan Harus Lebih Besar dari Rp.5.000.000";
+                                  status="Jika Jenisnya Belanja Modal, Nilai Persatuan Harus Lebih Besar dari Rp. 5.000.000";
                                   // console.log("nilai",status);
                                 }
                                 if(value=="Biaya Kantor"){
-                                  status="Jika Jenisnya Biaya Kantor, Nilai Persatuan Maksimal Rp.5.000.000";
+                                  status="Peringatan, Jenis Biaya Kantor yang diajukan lebih dari Rp. 5.000.000";
                                   // console.log("nilai",status);
                                 }
                                 return status;
@@ -696,13 +696,14 @@
                                 // console.log('nilaiNone',parseInt(validDigits(item.nilai_persatuan)) );
                                   return false;
                                 }
-                                else if(value=="Belanja Modal"&&parseInt(validDigits(item.nilai_persatuan)) < 5000000){
+                                else if(value=="Belanja Modal"&&parseInt(validDigits(item.nilai_persatuan)) < 5000001){
                                 // console.log('nilaiBelanja',parseInt(validDigits(item.nilai_persatuan)) );
                                   return false;
                                 }
-                                else if(value=="Biaya Kantor"&&parseInt(validDigits(item.nilai_persatuan)) > 4999999){
+                                else if(value=="Biaya Kantor"&&parseInt(validDigits(item.nilai_persatuan)) > 5000001){
                                 // console.log('nilaiBelanja',parseInt(validDigits(item.nilai_persatuan)) );
-                                  return false;
+                                  confirm("Peringatan, Jenis Biaya Kantor yang diajukan lebih dari Rp. 5.000.000, anda yakin ingin mengajukan anggaran?") == true;
+                                  return true;
                                 }else{
                                 // console.log('nilai',parseInt(validDigits(item.nilai_persatuan)) );
                                   return true;
@@ -1619,8 +1620,8 @@
                                 switch(data[0].persetujuan){
                                   case "-1" : persetujuan="";break;
                                   case "0" : persetujuan="Kirim";break;
-                                  case "1" : persetujuan="Persetujuan Kanit Kerja";break;
-                                  case "2" : persetujuan="Persetujuan Renbang";break;
+                                  case "1" : persetujuan="Persetujuan Ka Unit Kerja";break;
+                                  case "2" : persetujuan="Persetujuan Kadiv Renbang";break;
                                   case "3" : persetujuan="Persetujuan Direksi";break;
                                   case "4" : persetujuan="Persetujuan Dekom";break;
                                   case "5" : persetujuan="Persetujuan Ratek";break;

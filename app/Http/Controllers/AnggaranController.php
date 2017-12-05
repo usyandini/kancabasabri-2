@@ -40,8 +40,8 @@ use PDF;
 *-------LVL Persetujuan :----------
 *-1 = ""
 *0 = "Kirim"
-*1 = "Persetujuan Kanit Kerja"
-*2 = "Persetujuan Renbang"
+*1 = "Persetujuan Ka Unit Kerja"
+*2 = "Persetujuan Kadiv Renbang"
 *3 = "Persetujuan Direksi"
 *4 = "Persetujuan Dekom"
 *5 = "Persetujuan Ratek"
@@ -526,8 +526,8 @@ class AnggaranController extends Controller
         switch($request->persetujuan){
           case ""                               : $setuju="-1";break;
           case "Kirim"                          : $setuju="0";break;
-          case "Persetujuan Kanit Kerja"        : $setuju="1";break;
-          case "Persetujuan Renbang"            : $setuju="2";break;
+          case "Persetujuan Ka Unit Kerja"      : $setuju="1";break;
+          case "Persetujuan Kadiv Renbang"      : $setuju="2";break;
           case "Persetujuan Direksi"            : $setuju="3";break;
           case "Persetujuan Dekom"              : $setuju="4";break;
           case "Persetujuan Ratek"              : $setuju="5";break;
