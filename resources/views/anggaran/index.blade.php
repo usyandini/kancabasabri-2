@@ -951,7 +951,7 @@
                           },
                           { name: "nilai_persatuan", 
                             type: "text", 
-                            align: "left",
+                            align: "right",
                             title: "Nilai Per Satuan", 
                             width: 130, 
                             itemTemplate: function(value) {
@@ -1074,7 +1074,7 @@
                           },
                           { name: "tw_i", 
                             type: "text", 
-                            align: "left",
+                            align: "right",
                             title: "TW I", 
                             width: 200,
                             itemTemplate: function(value) {
@@ -1136,7 +1136,7 @@
                           },
                           { name: "tw_ii", 
                             type: "text", 
-                            align: "left",
+                            align: "right",
                             title: "TW II", 
                             width: 200 ,
                             itemTemplate: function(value) {
@@ -1169,7 +1169,7 @@
                           },
                           { name: "tw_iii", 
                             type: "text", 
-                            align: "left",
+                            align: "right",
                             title: "TW III", 
                             width: 200 ,
                             itemTemplate: function(value) {
@@ -1202,7 +1202,7 @@
                           },
                           { name: "tw_iv", 
                             type: "text", 
-                            align: "left",
+                            align: "right",
                             title: "TW IV",
                             width: 200,
                             itemTemplate: function(value) {
@@ -1236,7 +1236,7 @@
                            },
                           { name: "anggarana_setahun", 
                             type: "text", 
-                            align: "left",
+                            align: "right",
                             title: "Anggaran Setahun", 
                             width: 200 ,
                             readOnly:true,
