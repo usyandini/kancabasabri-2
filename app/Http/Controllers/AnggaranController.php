@@ -357,7 +357,7 @@ class AnggaranController extends Controller
         $beda = false;
         $mulai= false;
         $batas=$date_selesai;
-        if($userUnit == $unit){
+        if($userUnit == $unit||Gate::check('setuju_iia')){
             $beda = true;
             if($diff2 <= 0){
                 $beda = false;
@@ -370,7 +370,7 @@ class AnggaranController extends Controller
             }
         }
 
-        if($persetujuan != "-1"){
+        if($persetujuan != "-1"&&$persetujuan!='1'){
             $beda = false;
         }
 
@@ -384,7 +384,7 @@ class AnggaranController extends Controller
             $displaySend = 'block';
         }
 
-        // echo $mulai?1:0;
+        // echo $beda?1:0;
         return view('anggaran.index', [
             'title' => 'Ubah Kegiatan dan Anggaran',
             'userCabang' =>$this->userCabang,

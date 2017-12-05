@@ -1682,7 +1682,8 @@
                                   document.getElementById("grup_uk").style.display="none";
                                 }else if(data[0].persetujuan =="1"){
                                   document.getElementById("grup_m").style.display="none";
-                                  @if($status=='setuju')
+                                  // alert("{{$status}}")
+                                  @if($status=='setuju'||($status=='edit'&&Gate::check('setuju_iia')))
                                     document.getElementById("grup_r").style.display="block";
                                   @else
                                     document.getElementById("grup_r").style.display="block";
