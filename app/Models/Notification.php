@@ -160,14 +160,16 @@ class Notification extends Model
                 return 'Penyesuaian dropping oleh '.$this->idPenyesuaian['cabang'].' pada tanggal '.date('d F Y', strtotime($this->idPenyesuaian['created_at'])).' ditolak dengan alasan '.$this->rejectPenyesuaian['reason']['content'].'. Silahkan melakukan Penyesuaian Dropping kembali.';
             case 14:
                 return 'Penyesuaian dropping oleh '.$this->idPenyesuaian['cabang'].' pada tanggal '.date('d F Y', strtotime($this->idPenyesuaian['created_at'])).' telah diverifikasi.';
+            // Case 15 dan 16 Tidak Digunakan
             case 15:
                 return 'Anggaran dengan Nomer Dinas/Surat '.$this->idAnggaran['nd_surat'].' diajukan oleh '.$this->idAnggaran['unit_kerja'].'. Mohon review untuk disetujui anda sebagai Ka Unit Kerja '.$this->idAnggaran['unit_kerja'].'.';
             case 16:
                 return 'Anggaran dengan Nomer Dinas/Surat '.$this->idAnggaran['nd_surat'].' diajukan oleh '.$this->idAnggaran['unit_kerja'].' pada tanggal '.date('d F Y', strtotime($this->idAnggaran['updated_at'])).
                 ' ditolak oleh Ka Unit Kerja dengan alasan '.$this->idAnggaran['keterangan'].'. Silahkan melakukan Perbaikan Anggaran dan Kegiatan kembali.';
+            // Case 15 dan 16 Tidak Digunakan
             case 17:
                 return 'Anggaran dengan Nomer Dinas/Surat '.$this->idAnggaran['nd_surat'].' diajukan oleh '.$this->idAnggaran['unit_kerja'].' pada tanggal '.date('d F Y', strtotime($this->idAnggaran['updated_at'])).
-                ' telah disetujui oleh Ka Unit Kerja. Mohon review untuk disetujui anda sebagai Kadiv Renbang.';
+                ' Mohon review untuk disetujui anda sebagai Kadiv Renbang.';
             case 18:
                 return 'Anggaran dengan Nomer Dinas/Surat '.$this->idAnggaran['nd_surat'].' diajukan oleh '.$this->idAnggaran['unit_kerja'].' pada tanggal '.date('d F Y', strtotime($this->idAnggaran['updated_at'])).
                 ' ditolak oleh Kadiv Renbang dengan alasan '.$this->idAnggaran['keterangan'].'. Silahkan melakukan Perbaikan Anggaran dan Kegiatan kembali.';

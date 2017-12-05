@@ -69,9 +69,16 @@ class AuthServiceProvider extends ServiceProvider
              $permissions[] = $transaksi[$i];
         }
 
+        // *Ganti PErizinan Anggaran utk hapus persetujuan i dan notifikasinya*
+        // $anggaran = ["info_a","cari_a","batas_a","tambah_a","tambah_item_a","ubah_item_a","hapus_item_a",
+        //             "berkas_item_a","kirim_a","setuju_ia","setuju_iia","setuju_iiia","setuju_iva",
+        //             "setuju_va","setuju_via","setuju_viia","setuju_viiia","riwayat_a","notif_setuju_ia",
+        //             "notif_setuju_iia","notif_setuju_iiia","notif_setuju_iva","notif_setuju_va",
+        //             "notif_setuju_via","notif_setuju_viia","notif_setuju_viiia","notif_setuju_ixa",
+        //             "notif_ubah_a","notif_pengajuan_anggaran"];
         $anggaran = ["info_a","cari_a","batas_a","tambah_a","tambah_item_a","ubah_item_a","hapus_item_a",
-                    "berkas_item_a","kirim_a","setuju_ia","setuju_iia","setuju_iiia","setuju_iva",
-                    "setuju_va","setuju_via","setuju_viia","setuju_viiia","riwayat_a","notif_setuju_ia",
+                    "berkas_item_a","kirim_a","setuju_iia","setuju_iiia","setuju_iva",
+                    "setuju_va","setuju_via","setuju_viia","setuju_viiia","riwayat_a",
                     "notif_setuju_iia","notif_setuju_iiia","notif_setuju_iva","notif_setuju_va",
                     "notif_setuju_via","notif_setuju_viia","notif_setuju_viiia","notif_setuju_ixa",
                     "notif_ubah_a","notif_pengajuan_anggaran"];

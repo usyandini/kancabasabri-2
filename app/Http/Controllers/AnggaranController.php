@@ -39,8 +39,8 @@ use PDF;
 *
 *-------LVL Persetujuan :----------
 *-1 = ""
-*0 = "Kirim"
-*1 = "Persetujuan Ka Unit Kerja"
+*0 = "Kirim" -> Tidak Ada
+*1 = "Persetujuan Ka Unit Kerja"  -> "Kirim"
 *2 = "Persetujuan Kadiv Renbang"
 *3 = "Persetujuan Direksi"
 *4 = "Persetujuan Dekom"
@@ -289,8 +289,6 @@ class AnggaranController extends Controller
             }
         }
 
-       
-
         // echo $date_mulai.":".$diff1;
         // echo $beda?1:0;
 
@@ -436,10 +434,12 @@ class AnggaranController extends Controller
 
         $beda = false;
 
-        if($persetujuan == "0"){
-            if(Gate::check('setuju_ia')&&($userUnit == $unit))
-                $beda = true;
-        }else if($persetujuan == "1"&&Gate::check('setuju_iia')){
+        //  *Hapus Persetujuan Kanit Kerja*
+        // if($persetujuan == "0"){
+        //     if(Gate::check('setuju_ia')&&($userUnit == $unit))
+        //         $beda = true;
+        // }else 
+        if($persetujuan == "1"&&Gate::check('setuju_iia')){
             if($status == '2'||$status == '3'){
                 $beda = true;
                 if($status == '3'){
@@ -525,8 +525,9 @@ class AnggaranController extends Controller
 
         switch($request->persetujuan){
           case ""                               : $setuju="-1";break;
-          case "Kirim"                          : $setuju="0";break;
-          case "Persetujuan Ka Unit Kerja"      : $setuju="1";break;
+          // case "Kirim"                          : $setuju="0";break;*Hapus Kanit Kerja*
+          // case "Persetujuan Ka Unit Kerja"      : $setuju="1";break;
+          case "Kirim"                          : $setuju="1";break;
           case "Persetujuan Kadiv Renbang"      : $setuju="2";break;
           case "Persetujuan Direksi"            : $setuju="3";break;
           case "Persetujuan Dekom"              : $setuju="4";break;
@@ -545,7 +546,13 @@ class AnggaranController extends Controller
 
         if($request->setuju =='Kirim'||$request->setuju =='Setuju'){
             $status = "2";
-            $setuju = (int)$setuju+1;
+            // *Seleksi KEtika -1(Unit Kerja) maka Kirim Ke Renbang*
+            if($setuju == -1){
+                $setuju = 1 ;
+            }else{
+                $setuju = (int)$setuju+1;
+            }
+
             if($setuju == 2){
                 $status = "1";
             }else if($setuju == 8){
@@ -769,9 +776,11 @@ class AnggaranController extends Controller
         $status_view = redirect('anggaran/edit/'.$request->nd_surat); 
         // echo $setuju;
         if($request->setuju=='Kirim'||$request->setuju=='Setuju'){
-            if($setuju == 0)
-                NotificationSystem::send($anggaranId, 15);
-            else if($setuju == 1)
+            // *Hapus Notifikasi Ke Kanit Kerja*
+            // if($setuju == 0)
+            //     NotificationSystem::send($anggaranId, 15);
+            // else 
+            if($setuju == 1)
                 NotificationSystem::send($anggaranId, 17);
             else if($setuju == 2)
                 NotificationSystem::send($anggaranId, 19);
@@ -792,9 +801,12 @@ class AnggaranController extends Controller
         }else if($request->setuju=='Tolak'){
             if($setuju == "-1"){
                 if($request->persetujuan == "Kirim")
-                    NotificationSystem::send($anggaranId, 16);
-                else if($request->persetujuan == "Persetujuan Kanit Kerja")
                     NotificationSystem::send($anggaranId, 18);
+                // *Hapus dan Ganti Ditolak Kanit dengan Di Tolak Rembang*
+                //  if($request->persetujuan == "Kirim")
+                //     NotificationSystem::send($anggaranId, 16);
+                // else if($request->persetujuan == "Persetujuan Kanit Kerja")
+                //     NotificationSystem::send($anggaranId, 18);
             }else if($setuju == "1"){
                 if($request->persetujuan == "Persetujuan Renbang")
                     NotificationSystem::send($anggaranId, 20);
@@ -886,17 +898,20 @@ class AnggaranController extends Controller
             $listAnggaran = $this->listAnggaranModel->where('id_list_anggaran', $angga->id)
                                                     ->where('active', '1');
             foreach ($listAnggaran->get() as $list_anggaran) {
-                if($list_anggaran->TWI > 0){
-                    $this->insertTW($list_anggaran,1,$unit_kerja);
-                }
-                if($list_anggaran->TWII > 0){
-                    $this->insertTW($list_anggaran,2,$unit_kerja);
-                }
-                if($list_anggaran->TWIII > 0){
-                    $this->insertTW($list_anggaran,3,$unit_kerja);
-                }
-                if($list_anggaran->TWIV > 0){
-                    $this->insertTW($list_anggaran,4,$unit_kerja);
+                //Ini Seleksi Jika Anggaran Tidak Terpusat Disimpan Kestaging
+                if($list_anggaran->terpusat != "1"){
+                    if($list_anggaran->TWI > 0){
+                        $this->insertTW($list_anggaran,1,$unit_kerja);
+                    }
+                    if($list_anggaran->TWII > 0){
+                        $this->insertTW($list_anggaran,2,$unit_kerja);
+                    }
+                    if($list_anggaran->TWIII > 0){
+                        $this->insertTW($list_anggaran,3,$unit_kerja);
+                    }
+                    if($list_anggaran->TWIV > 0){
+                        $this->insertTW($list_anggaran,4,$unit_kerja);
+                    }
                 }
 
             }
