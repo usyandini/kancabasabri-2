@@ -498,6 +498,7 @@
                             }
                           }
 
+
                           click_berkas = true;
 
                           console.log('update','onItemUpdate');
@@ -597,14 +598,16 @@
                               }
                             }
                           }
+
                           temp_file=[];
                           console.log('update','onItemUpdated');
                           var title = "Unggah Berkas";
                           if(countFile>0){
                             title=countFile+" Berkas"
+                            document.getElementById('button_'+index_modal).innerHTML = title;
                           }
                           // temp_file=[];
-                          document.getElementById('button_'+index_modal).innerHTML = title;
+                          // alert(index_modal);
                           // alert(statusTable);
                       },
                       fields: [
@@ -686,7 +689,7 @@
                                   // console.log("nilai",status);
                                 }
                                 if(value=="Biaya Kantor"){
-                                  status="Peringatan, Jenis Biaya Kantor yang diajukan lebih dari Rp. 5.000.000";
+                                  status="Mohon cek kembali kolom Nilai Per Satuan";
                                   // console.log("nilai",status);
                                 }
                                 return status;
@@ -702,8 +705,13 @@
                                 }
                                 else if(value=="Biaya Kantor"&&parseInt(validDigits(item.nilai_persatuan)) > 5000001){
                                 // console.log('nilaiBelanja',parseInt(validDigits(item.nilai_persatuan)) );
-                                  confirm("Peringatan, Jenis Biaya Kantor yang diajukan lebih dari Rp. 5.000.000, anda yakin ingin mengajukan anggaran?") == true;
-                                  return true;
+                                  var r=confirm("Peringatan, Jenis Biaya Kantor yang diajukan lebih dari Rp. 5.000.000, anda yakin ingin mengajukan anggaran?");
+                                  if (r == true){
+                                    return true;
+                                  }
+                                  else {
+                                    return false;
+                                  }
                                 }else{
                                 // console.log('nilai',parseInt(validDigits(item.nilai_persatuan)) );
                                   return true;
@@ -917,7 +925,7 @@
                                   @if($persetujuan == 1)
                                     return value > 0 ;
                                   @else
-                                    if(item.terpusat == 1){
+                                    if(item.terpusat == '1'){
                                       return true;
                                     }else{
                                       return value > 0 ;
@@ -1001,7 +1009,7 @@
                                     @if($persetujuan == 1)
                                       return val > 0 ;
                                     @else
-                                      if(item.terpusat == 1){
+                                      if(item.terpusat == '1'){
                                         return true;
                                       }else{
                                         return val > 0 ;
@@ -1014,17 +1022,18 @@
                             type: "select", 
                             align: "left",
                             title: "Terpusat", 
-                            width: 80, items:[
-                                { Name: "None", Id: 0 },
-                                { Name: "Ya", Id: 1 },
-                                { Name: "Tidak", Id: 2}
+                            width: 80,
+                            items:[
+                                { Name: "None", Id: '0' },
+                                { Name: "Ya", Id: '1' },
+                                { Name: "Tidak", Id: '2'}
                             ],
                             valueField: "Id",
                             textField: "Name",
                             insertTemplate: function() {
                               var result = jsGrid.fields.select.prototype.insertTemplate.call(this);
                               result.on("change", function() {
-                                  if({{$persetujuan}}!=1)
+                                  // if({{$persetujuan}}!=1)
                                     changeDataUnitKerjaLine($(this).val(),"insert");
                               });
                               return result; 
@@ -1034,7 +1043,7 @@
                               $(result).val(value);
                               
                               result.on("change", function() {
-                                  if({{$persetujuan}}!=1)
+                                  // if({{$persetujuan}}!=1)
                                     changeDataUnitKerjaLine($(this).val(),"edit");
                               });
                               return result; 
@@ -1116,7 +1125,7 @@
                                   @if($persetujuan == 1)
                                     return (sum <= anggaran_val && sum >= anggaran_val) ;
                                   @else
-                                    if(item.terpusat == 1){
+                                    if(item.terpusat == '1'){
                                       return true;
                                     }else{
                                       return (sum <= anggaran_val && sum >= anggaran_val) ;
@@ -1277,7 +1286,7 @@
                                   @if($persetujuan == 1)
                                     return (sum <= anggaran_val && sum >= anggaran_val) ;
                                   @else
-                                    if(item.terpusat == 1){
+                                    if(item.terpusat == '1'){
                                       return true;
                                     }else{
                                       return (sum <= anggaran_val && sum >= anggaran_val) ;
@@ -1720,65 +1729,78 @@
                   }
                   function changeDataUnitKerjaLine(type,type2){
                     if(type2 == "insert"){
-                      if(type == 1){
-                        $(kuantitas_field_insert).val("");
-                        $(kuantitas_field_insert).attr("readOnly", true);
-                        $(nilai_field_insert).val("");
-                        $(nilai_field_insert).attr("readOnly", true);
-                        $(unitk_field_insert).val("");
-                        $(twi_field_insert).val("");
-                        $(twi_field_insert).attr("readOnly", true);
-                        $(twii_field_insert).val("");
-                        $(twii_field_insert).attr("readOnly", true);
-                        $(twiii_field_insert).val("");
-                        $(twiii_field_insert).attr("readOnly", true);
-                        $(twiv_field_insert).val("");
-                        $(twiv_field_insert).attr("readOnly", true);
+                      if({{$persetujuan}}!=1){
+                        if(type == '1'){
+                          $(kuantitas_field_insert).val("");
+                          $(kuantitas_field_insert).attr("readOnly", true);
+                          $(nilai_field_insert).val("");
+                          $(nilai_field_insert).attr("readOnly", true);
+                          $(twi_field_insert).val("");
+                          $(twi_field_insert).attr("readOnly", true);
+                          $(twii_field_insert).val("");
+                          $(twii_field_insert).attr("readOnly", true);
+                          $(twiii_field_insert).val("");
+                          $(twiii_field_insert).attr("readOnly", true);
+                          $(twiv_field_insert).val("");
+                          $(twiv_field_insert).attr("readOnly", true);
+                        }else{
+                          // $(kuantitas_field_insert).val("");
+                          $(kuantitas_field_insert).attr("readOnly", false);
+                          // $(nilai_field_insert).val("");
+                          $(nilai_field_insert).attr("readOnly", false);
+                          $(twi_field_insert).val("");
+                          $(twi_field_insert).attr("readOnly", false);
+                          $(twii_field_insert).val("");
+                          $(twii_field_insert).attr("readOnly", false);
+                          $(twiii_field_insert).val("");
+                          $(twiii_field_insert).attr("readOnly", false);
+                          $(twiv_field_insert).val("");
+                          $(twiv_field_insert).attr("readOnly", false);
+                        } 
                       }else{
-                        // $(kuantitas_field_insert).val("");
-                        $(kuantitas_field_insert).attr("readOnly", false);
-                        // $(nilai_field_insert).val("");
-                        $(nilai_field_insert).attr("readOnly", false);
-                        $(unitk_field_insert).val(document.getElementById("unit_kerja").value);
-                        $(twi_field_insert).val("");
-                        $(twi_field_insert).attr("readOnly", false);
-                        $(twii_field_insert).val("");
-                        $(twii_field_insert).attr("readOnly", false);
-                        $(twiii_field_insert).val("");
-                        $(twiii_field_insert).attr("readOnly", false);
-                        $(twiv_field_insert).val("");
-                        $(twiv_field_insert).attr("readOnly", false);
-                      } 
+                        if(type == '1'){
+                          $(unitk_field_insert).val("");
+                        }else{
+                          $(unitk_field_insert).val(document.getElementById("unit_kerja").value);
+                        }
+                      }
+                      
                     }else if(type2 == "edit"){
-                      if(type == 1){
-                        $(kuantitas_field_edit).val("");
-                        $(kuantitas_field_edit).attr("readOnly", true);
-                        $(nilai_field_edit).val("");
-                        $(nilai_field_edit).attr("readOnly", true);
-                        $(unitk_field_edit).val("");
-                        $(twi_field_edit).val("");
-                        $(twi_field_edit).attr("readOnly", true);
-                        $(twii_field_edit).val("");
-                        $(twii_field_edit).attr("readOnly", true);
-                        $(twiii_field_edit).val("");
-                        $(twiii_field_edit).attr("readOnly", true);
-                        $(twiv_field_edit).val("");
-                        $(twiv_field_edit).attr("readOnly", true);
+                      if({{$persetujuan}}!=1){
+                        if(type == '1'){
+                          $(kuantitas_field_edit).val("");
+                          $(kuantitas_field_edit).attr("readOnly", true);
+                          $(nilai_field_edit).val("");
+                          $(nilai_field_edit).attr("readOnly", true);
+                          $(twi_field_edit).val("");
+                          $(twi_field_edit).attr("readOnly", true);
+                          $(twii_field_edit).val("");
+                          $(twii_field_edit).attr("readOnly", true);
+                          $(twiii_field_edit).val("");
+                          $(twiii_field_edit).attr("readOnly", true);
+                          $(twiv_field_edit).val("");
+                          $(twiv_field_edit).attr("readOnly", true);
+                        }else{
+                          // $(kuantitas_field_edit).val("");
+                          $(kuantitas_field_edit).attr("readOnly", false);
+                          // $(nilai_field_edit).val("");
+                          $(nilai_field_edit).attr("readOnly", false);
+                          $(twi_field_edit).val("");
+                          $(twi_field_edit).attr("readOnly", false);
+                          $(twii_field_edit).val("");
+                          $(twii_field_edit).attr("readOnly", false);
+                          $(twiii_field_edit).val("");
+                          $(twiii_field_edit).attr("readOnly", false);
+                          $(twiv_field_edit).val("");
+                          $(twiv_field_edit).attr("readOnly", false);
+                        } 
                       }else{
-                        // $(kuantitas_field_edit).val("");
-                        $(kuantitas_field_edit).attr("readOnly", false);
-                        // $(nilai_field_edit).val("");
-                        $(nilai_field_edit).attr("readOnly", false);
-                        $(unitk_field_edit).val(document.getElementById("unit_kerja").value);
-                        $(twi_field_edit).val("");
-                        $(twi_field_edit).attr("readOnly", false);
-                        $(twii_field_edit).val("");
-                        $(twii_field_edit).attr("readOnly", false);
-                        $(twiii_field_edit).val("");
-                        $(twiii_field_edit).attr("readOnly", false);
-                        $(twiv_field_edit).val("");
-                        $(twiv_field_edit).attr("readOnly", false);
-                      } 
+                        if(type == '1'){
+                          $(unitk_field_edit).val("");
+                        }else{
+                          $(unitk_field_edit).val(document.getElementById("unit_kerja").value);
+                        }
+                      }
                     }        
                   }
                   function addCommas(n){
@@ -1859,7 +1881,7 @@
                       var terpusat = false;
                       for(i=0;i<inputs.length;i++){
                         
-                        if(inputs[i]["terpusat"] == 1){
+                        if(inputs[i]["terpusat"] == '1'){
                           if(inputs[i]["anggarana_setahun"] == 0){
                             terpusat = true;
                             break;
