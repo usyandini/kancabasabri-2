@@ -1796,7 +1796,7 @@
                           $(twiv_field_edit).attr("readOnly", false);
                         } 
                       }
-                      
+
                       if(type == '1'){
                         $(unitk_field_edit).val("");
                       }else{
@@ -1917,8 +1917,10 @@
                             }
                           }else{
                             stop=true;
-                            if(list_berkas[i].length>0){
-                              stop = false;
+                            if(list_berkas.length>0){
+                              if(list_berkas[i].length>0){
+                                stop = false;
+                              }
                             }
                           }
                           if(!stop){
