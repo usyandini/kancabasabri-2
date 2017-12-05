@@ -1757,13 +1757,14 @@
                           $(twiv_field_insert).val("");
                           $(twiv_field_insert).attr("readOnly", false);
                         } 
-                      }else{
-                        if(type == '1'){
-                          $(unitk_field_insert).val("");
-                        }else{
-                          $(unitk_field_insert).val(document.getElementById("unit_kerja").value);
-                        }
                       }
+
+                      if(type == '1'){
+                        $(unitk_field_insert).val("");
+                      }else{
+                        $(unitk_field_insert).val(document.getElementById("unit_kerja").value);
+                      }
+                      
                       
                     }else if(type2 == "edit"){
                       if({{$persetujuan}}!=1){
@@ -1794,13 +1795,14 @@
                           $(twiv_field_edit).val("");
                           $(twiv_field_edit).attr("readOnly", false);
                         } 
-                      }else{
-                        if(type == '1'){
-                          $(unitk_field_edit).val("");
-                        }else{
-                          $(unitk_field_edit).val(document.getElementById("unit_kerja").value);
-                        }
                       }
+                      
+                      if(type == '1'){
+                        $(unitk_field_edit).val("");
+                      }else{
+                        $(unitk_field_edit).val(document.getElementById("unit_kerja").value);
+                      }
+                      
                     }        
                   }
                   function addCommas(n){
