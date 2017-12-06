@@ -133,7 +133,7 @@
 			                  	<table>
 			                  	<tr><td><b> Kantor Cabang </b></td><td><b> : </b></td><td><input class="form-control" type="text" style="width:400px" value="{{$bb->kantor_cabang}}" disabled="disabled"></td></tr>
 			                  	<tr><td></td></tr>
-			                  	<tr><td><b> Nomor </b></td><td><b> : </b></td><td><input class="form-control" type="text" style="width:400px" value="{{$bb->nomor}}" disabled="disabled"></td></tr>
+			                  	<tr><td><b> Nomor Nota Dinas </b></td><td><b> : </b></td><td><input class="form-control" type="text" style="width:400px" value="{{$bb->nomor}}" disabled="disabled"></td></tr>
 			                  	<tr><td></td></tr>
 			                  	<tr><td><b> Tanggal </b></td><td><b> : </b></td><td><input class="form-control" type="text" style="width:400px" value="{{$tgl}} {{$bulan}} {{$tahun}}" disabled="disabled"></td></tr>
 			                  	<tr><td></td></tr>

@@ -176,7 +176,7 @@
             												<tr>
             													<th><center>No</center></th>
             													<th id="filterable"><center>Kantor Cabang</center></th>
-            													<th id="filterable"><center>Nomor</center></th>
+            													<th id="filterable"><center>Nomor Nota Dinas</center></th>
             													<th id="filterable"><center>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Tanggal&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</center></th>
             													<th id="filterable"><center>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Jumlah Diajukan&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</center></th>
             													<th id="filterable"><center>Periode Realisasi</center></th>

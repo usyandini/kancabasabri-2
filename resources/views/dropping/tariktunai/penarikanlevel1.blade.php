@@ -15,7 +15,7 @@
             @section('content')
             <div class="content-header row">
             	<div class="content-header-left col-md-12 col-xs-12 mb-2">
-            		<h3 class="content-header-title mb-0">Verifikasi Transaksi Level 1</h3>
+            		<h3 class="content-header-title mb-0">Verifikasi Transaksi</h3>
             		
             	</div>
             </div>
@@ -26,7 +26,7 @@
             			<div class="col-xs-12">
             				<div class="card">
             					<div class="card-header">
-            						<h4 class="card-title">Daftar Penarikan Transaksi Level 1</h4>
+            						<h4 class="card-title">Daftar Penarikan Transaksi</h4>
             						<a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
             					</div>
             					
@@ -52,7 +52,7 @@
             												<td><center>{{ $no }}</center></td>
                                                                                     <td><center>{{ $b->cabang }}</center></td>
                                                                                     <td><center>{{ date("d-m-Y", strtotime($b->tgl_dropping)) }}</center></td>
-                                                                                    <td><center>Rp {{ number_format($b->nominal_tarik,0,"",".") }}</center></td>
+                                                                                    <td align="right">Rp {{ number_format($b->nominal_tarik,0,"",".") }}</td>
                                                                                     <td><center>{{ $b->akun_bank }}</center></td>
             												<td><center>
                                                                                           <a href="{{ URL('/dropping/verifikasi/tariktunai/'. $b->id) }}" target="_blank" class="btn btn-success btn-sm"><i class="fa fa-eye"></i> Lihat</a>

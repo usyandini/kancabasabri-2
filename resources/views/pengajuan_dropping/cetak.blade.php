@@ -94,7 +94,7 @@
 			                  <tr>
 			                  <td><b>
 			                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			                  NOMOR </b></td><td> </td><td><b> : </b></td><td> </td><td><b>{{ $b->nomor }}</b></td>
+			                  NOMOR NOTA DINAS</b></td><td> </td><td><b> : </b></td><td> </td><td><b>{{ $b->nomor }}</b></td>
 			                  </tr>
 			                  <tr>
                               <td><b>

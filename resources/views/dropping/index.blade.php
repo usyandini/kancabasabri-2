@@ -37,7 +37,7 @@
                                             {{ csrf_field() }}
                                             <div class="col-lg-6 col-xl-3 mb-1">
                                                   <select class="select2 form-control" name="transyear">
-                                                    <option disabled="">Berdsasar Tahun</option>
+                                                    <option disabled="">Berdasarkan Tahun</option>
                                                     <option value="0">Semua Tahun</option>
                                                     <?php
                                                       $thn_skr = date('Y');
@@ -159,8 +159,8 @@
                           { name: "journalnum", type: "text", title: "Nomor Jurnal", width: 120 },
                           { name: "bank", type: "text", title: "Nama Bank", width: 120 },
                           { name: "banknum", type: "text", title: "No. Rekening", width: 160 },
-                          { name: "transdate", type: "text", title: "Tanggal Dropping", width: 160 },
-                          { name: "debit", type: "text", title: "Nominal", width: 120 },
+                          { name: "transdate", type: "text", title: "Tanggal Dropping", align: "center", width: 160 },
+                          { name: "debit", type: "text", align: "right", title: "Nominal", width: 120 },
                           { name: "company", type: "text", title: "Kantor Cabang", width: 120 },
                           /*{ name: "stat", type: "text", title: "Status Posting", 
                             itemTemplate:function(e) {

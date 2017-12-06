@@ -25,6 +25,7 @@ Route::group(['middleware' => 'auth'], function() {
 	Route::get('notification/del_all', 'NotificationController@deleteAll');
 	Route::get('/dashboard', 'DashboardController@index');
 	Route::get('logout', 'Auth\AuthController@logout');
+	
 	Route::group(['prefix' => 'dropping'], function() {
 		Route::resource('/', 'DroppingController');
 		Route::get('/get', 'DroppingController@getAll');

@@ -38,8 +38,11 @@ class PengajuanDroppingController extends Controller
     {
         $dec_cabang=urldecode($cabang);
         $a =DB::table('pengajuan_dropping_cabang')
+        ->select(DB::raw('count(*) cabang, tanggal'))
         ->where('kantor_cabang',$dec_cabang)
         ->where('kirim','<>','3')->where('kirim','<>','4')
+        ->groupBy('tanggal')
+        ->orderBy('tanggal', 'DESC')
         ->lists('tanggal');
         return json_encode($a);
     }
@@ -70,8 +73,11 @@ class PengajuanDroppingController extends Controller
     {
         $dec_cabang=urldecode($cabang);
         $a =DB::table('pengajuan_dropping_cabang')
-        ->where('kirim','2')->Orwhere('kirim','3')
-        ->where('kantor_cabang',$dec_cabang)->orderBy('tanggal','DESC')
+        ->select(DB::raw('count(*) cabang, tanggal'))
+        ->where('kantor_cabang',$dec_cabang)
+        ->where('kirim','<>','1')->where('kirim','<>','4')->where('kirim','<>','5')
+        ->groupBy('tanggal')
+        ->orderBy('tanggal', 'DESC')
         ->lists('tanggal');
         return json_encode($a);
     }
@@ -99,10 +105,14 @@ class PengajuanDroppingController extends Controller
 
     public function myformAjax2($cabang)
     {
+        
         $dec_cabang=urldecode($cabang);
         $a =DB::table('pengajuan_dropping_cabang')
-        ->where('kirim','3')->Orwhere('kirim','4')
-        ->where('kantor_cabang',$dec_cabang)->orderBy('tanggal','DESC')
+        ->select(DB::raw('count(*) cabang, tanggal'))
+        ->where('kantor_cabang',$dec_cabang)
+        ->where('kirim','<>','1')->where('kirim','<>','2')->where('kirim','<>','5')
+        ->groupBy('tanggal')
+        ->orderBy('tanggal', 'DESC')
         ->lists('tanggal');
         return json_encode($a);
     }
@@ -133,8 +143,11 @@ class PengajuanDroppingController extends Controller
     {
         $dec_cabang=urldecode($cabang);
         $a =DB::table('pengajuan_dropping_cabang')
-        ->where('kirim','4')->Orwhere('kirim','5')
-        ->where('kantor_cabang',$dec_cabang)->orderBy('tanggal','DESC')
+        ->select(DB::raw('count(*) cabang, tanggal'))
+        ->where('kantor_cabang',$dec_cabang)
+        ->where('kirim','<>','1')->where('kirim','<>','2')->where('kirim','<>','3')
+        ->groupBy('tanggal')
+        ->orderBy('tanggal', 'DESC')
         ->lists('tanggal');
         return json_encode($a);
     }
@@ -184,26 +197,34 @@ class PengajuanDroppingController extends Controller
         $c=$request->tanggal;
         $tgl= date('Y', strtotime($c));
         $kirim='1';
-        $db = DB::table('pengajuan_dropping_cabang')->where('kantor_cabang', $d)->where('periode_realisasi', $b)->where(DB::raw('YEAR(tanggal)'), '=', $tgl)->get();
-        
-        if($db){
-            $after_save = [
-             'alert' => 'danger',
-             'title' => 'Data gagal ditambah, data sudah ada.'
-             ];
-             return redirect()->back()->with('after_save', $after_save);
-         }
+        $nomor=$request->nomor;
+        // $db = DB::table('pengajuan_dropping_cabang')->where('kantor_cabang', $d)->where('periode_realisasi', $b)->where(DB::raw('YEAR(tanggal)'), '=', $tgl)->get();
+        $db = DB::table('pengajuan_dropping_cabang')->where('nomor', $nomor)->get();
+        // if($db){
+        //     $after_save = [
+        //      'alert' => 'danger',
+        //      'title' => 'Data gagal ditambah, data sudah ada.'
+        //      ];
+        //      return redirect()->back()->with('after_save', $after_save);
+        //  }
          $berkas = $request->inputs;
 
          if (isset($berkas)) {
             $fileUpload = new FileUpload();
+            if ($db){
+            $after_save = [
+             'alert' => 'success',
+             'title' => 'Data berhasil ditambah dengan meggunakan nomor Nota Dinas yang sudah ada'
+            ];
+            }
+            else{
             $after_save = [
              'alert' => 'success',
              'title' => 'Data berhasil ditambah.'
             ];
-
+            }
 	        $value['kantor_cabang'] = $d;
-	        $value['nomor'] = $request->nomor;
+	        $value['nomor'] = $nomor;
 	        $value['tanggal'] = $c;
 	        $value['jumlah_diajukan'] = $nilai;
 	        $value['periode_realisasi'] = $b;
@@ -216,7 +237,7 @@ class PengajuanDroppingController extends Controller
             $id=$z->id;
             // $a =PengajuanDropping::where('id', $id)
             // ->get();
-            return redirect('pengajuan_dropping/lihat/'.$id);
+            return redirect('pengajuan_dropping/lihat/'.$id)->with('after_save', $after_save);
             // $userCab =\Auth::user()->kantorCabang()['DESCRIPTION']; 
             // return view('pengajuan_dropping.pengajuan', compact('a','userCab'));
         }else {

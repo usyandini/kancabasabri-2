@@ -55,7 +55,7 @@
                                                                                     <td><center>{{ date("d-m-Y", strtotime($b->tgl_dropping)) }}</center></td>
                                                                                     <td><center>@if($b->is_pengembalian==1) Pengembalian
                                                                                     @else Penambahan @endif</center></td>
-                                                                                    <td><center>Rp {{ number_format($b->nominal,0,"",".") }}</center></td>
+                                                                                    <td align="right">Rp {{ number_format($b->nominal,0,"",".") }}</td>
                                                                                     <td><center>{{ $b->akun_bank }}</center></td>
             												<td><center>
                                                                                           <a href="{{ URL('/dropping/verifikasi/penyesuaian/final/'. $b->id) }}" target="_blank" class="btn btn-success btn-sm"><i class="fa fa-eye"></i> Lihat</a>
