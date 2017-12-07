@@ -38,6 +38,7 @@
             											<tr>
             												<th><center>No</center></th>
                                                             <th id="filterable"><center>Ditolak Oleh</center></th>
+                                                            <th id="filterable"><center>Verifikasi Level</center></th>
                                                             <th id="filterable"><center>Alasan</center></th>
                                                             <th id="filterable"><center>Dibuat Oleh</center></th>
                                                             <th id="filterable"><center>Cabang</center></th>
@@ -56,7 +57,7 @@
                                                          $z = \DB::select("SELECT DESCRIPTION, VALUE FROM [AX_DUMMY].[dbo].[PIL_VIEW_KPKC]  WHERE VALUE!='00'");
                                                          $z2 = \DB::select("SELECT id, username FROM [DBCabang].[dbo].[users]");
                                                          $z3 = \DB::select("SELECT id, content FROM [DBCabang].[dbo].[reject_reasons]");
-                                                         
+
                                                          ?>
             											<tr>
             												<td><center>{{ $no }}</center></td>
@@ -65,6 +66,11 @@
                                                              {{ $x2->username }}
                                                              @endif
                                                              @endforeach</td>
+                                                            <td><center>
+                                                            @if($b->stat==3) level 1 
+                                                            @elseif($b->stat==5) level 2 
+                                                            @endif
+                                                            </center></td>
                                                             <td>@foreach($z3 as $x3)
                                                              @if($rejectreason==$x3->id)
                                                              {{ $x3->content }}
