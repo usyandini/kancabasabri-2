@@ -94,6 +94,12 @@
                   <label>Report Kas/Bank</label>
                 </fieldset>
               </li>
+              <li>
+                <fieldset>
+                  <input type="checkbox" name="perizinan[reject_t]" {{ isset(old("perizinan")['reject_t']) ? 'checked=""' : '' }}>
+                  <label>Reject History Transaksi</label>
+                </fieldset>
+              </li>
             </ul>
             <fieldset style="display: none">
                   <input type="checkbox" name="perizinan[cari_t]" checked="checked">

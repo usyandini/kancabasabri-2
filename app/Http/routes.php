@@ -97,6 +97,8 @@ Route::group(['middleware' => 'auth'], function() {
 	//verifikasi
 		Route::get('/lihat/persetujuan', 'TransaksiController@verifikasilevel1');
 		Route::get('/lihat/verifikasi', 'TransaksiController@verifikasilevel2');
+
+		Route::get('/lihat/reject_history', 'TransaksiController@rejecthistory');
 	});
 
 

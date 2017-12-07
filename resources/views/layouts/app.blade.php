@@ -179,6 +179,9 @@
                             @can ('setuju2_t')
                                 <li class="is-shown {{ checkActiveMenu('transaksi/lihat/verifikasi') }}"><a href="{{ url('/transaksi/lihat/verifikasi', $parameters = [], $secure = null) }}" class="menu-item">Verifikasi Level 2</a></li>
                             @endcan
+                            @can ('reject_t')
+                                <li class="is-shown {{ checkActiveMenu('transaksi/lihat/reject_history') }}"><a href="{{ url('/transaksi/lihat/reject_history', $parameters = [], $secure = null) }}" class="menu-item">Reject History</a></li>
+                            @endcan
                         </ul>
                     </li>
                     @endif

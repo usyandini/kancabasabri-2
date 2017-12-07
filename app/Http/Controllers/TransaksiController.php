@@ -1067,7 +1067,7 @@ ORDER BY PIL_JOURNALNUM ASC");
 
     public function verifikasilevel2()
     {   
-         $a = DB::select("SELECT 
+        $a = DB::select("SELECT 
         max(a.id) as id, batch_id, max(divisi) as divisi, 
         max(cabang) as cabang, max(seq_number) as seq_number, 
         max(b.created_at) as tanggal, max(stat) stat
@@ -1076,5 +1076,17 @@ ORDER BY PIL_JOURNALNUM ASC");
         where stat=4
         group by batch_id order by tanggal desc");
         return view('transaksi.verifikasilevel2', compact('a'));
+    }
+
+    public function rejecthistory()
+    {   
+          $a = DB::select("SELECT batch_id, stat, submitted_by, batch_status_id, reject_reason, created_by, c.created_at as tanggal, divisi, cabang, seq_number
+          FROM [DBCabang].[dbo].[batches_status] as a
+          join [DBCabang].[dbo].[reject_history] as b
+          on a.id=b.batch_status_id
+          join [DBCabang].[dbo].[batches] as c
+          on a.batch_id=c.id
+          order by tanggal desc");
+          return view('transaksi.rejecthistory', compact('a'));
     }
 }
