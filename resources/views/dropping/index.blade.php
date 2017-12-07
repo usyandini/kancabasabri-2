@@ -169,10 +169,42 @@
                               return "<span class='tag "+tag+"'>"+content+"</span>" ;
                             } 
                           },*/
+                          
                           @if(Gate::check('lihat_p_d'))
                           { name: "id_dropping", type: "text", align:"center", title: "Penyesuaian", width: 120,
-                            itemTemplate:function(l) {
-                              return "<a href='{{ url('/dropping/penyesuaian') }}/"+ l +"' class='btn btn-warning btn-sm'>Pilih</a>"
+                            itemTemplate:function(l, item) {
+                              var tanggal=item.transdate;
+                              var res = tanggal.split("-");
+                              var bulan= res[1];
+                              var d = new Date();
+                              var n = d.getMonth();
+                              if (n==1||n==2||n==3){
+                                var hasil='tw1';
+                              }
+                              if (n==4||n==5||n==6){
+                                var hasil='tw2';
+                              }
+                              if (n==7||n==8||n==9){
+                                var hasil='tw3'; 
+                              }
+                              if (n==10||n==11||n==12){
+                                var hasil='tw4';
+                              }
+                              if (hasil=='tw1' && (bulan > 0 && bulan < 4)) {
+                                return "<a href='{{ url('/dropping/penyesuaian') }}/"+ l +"' class='btn btn-warning btn-sm'>Pilih</a>"
+                              }
+                              if (hasil=='tw2' && (bulan > 3 && bulan < 7)) {
+                                return "<a href='{{ url('/dropping/penyesuaian') }}/"+ l +"' class='btn btn-warning btn-sm'>Pilih</a>"
+                              }
+                              if (hasil=='tw3' && (bulan > 6 && bulan < 10)) {
+                                return "<a href='{{ url('/dropping/penyesuaian') }}/"+ l +"' class='btn btn-warning btn-sm'>Pilih</a>"
+                              }
+                              if (hasil=='tw4' && (bulan > 9 && bulan < 13)) {
+                                return "<a href='{{ url('/dropping/penyesuaian') }}/"+ l +"' class='btn btn-warning btn-sm'>Pilih</a>"
+                              }
+                              else{
+                                return ""
+                              }
                             }
                           },
                           @endif

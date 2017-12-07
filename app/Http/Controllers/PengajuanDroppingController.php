@@ -267,15 +267,15 @@ class PengajuanDroppingController extends Controller
         $b=$request->periode_realisasi;
         $c=$request->tanggal;
         $tgl= date('Y', strtotime($c));
-        $db = DB::table('pengajuan_dropping_cabang')->where('kantor_cabang', $a)->where('periode_realisasi', $b)->where(DB::raw('YEAR(tanggal)'), '=', $tgl)
-         ->where('id','<>', $id)->get();
-         if($db){
-            $after_update = [
-             'alert' => 'danger',
-             'title' => 'Data gagal diubah, data sudah ada.'
-             ];
-             return redirect()->back()->with('after_update', $after_update);
-         }
+        // $db = DB::table('pengajuan_dropping_cabang')->where('kantor_cabang', $a)->where('periode_realisasi', $b)->where(DB::raw('YEAR(tanggal)'), '=', $tgl)
+        //  ->where('id','<>', $id)->get();
+        //  if($db){
+        //     $after_update = [
+        //      'alert' => 'danger',
+        //      'title' => 'Data gagal diubah, data sudah ada.'
+        //      ];
+        //      return redirect()->back()->with('after_update', $after_update);
+        //  }
          $berkas = $request->inputs;
          if (isset($berkas)) {
             $fileUpload = new FileUpload();

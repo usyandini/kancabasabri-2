@@ -1630,7 +1630,7 @@
                                   case "-1" : persetujuan="";break;
                                   // case "0" : persetujuan="Kirim";break;
                                   // case "1" : persetujuan="Persetujuan Ka Unit Kerja";break;
-                                  case "1" : persetujuan="Kirim";break;
+                                  case "1" : persetujuan="Persetujuan Ka Unit Kerja";break;
                                   case "2" : persetujuan="Persetujuan Kadiv Renbang";break;
                                   case "3" : persetujuan="Persetujuan Direksi";break;
                                   case "4" : persetujuan="Persetujuan Dekom";break;
