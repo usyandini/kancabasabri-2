@@ -37,7 +37,6 @@
             										<thead>
             											<tr>
             												<th><center>No</center></th>
-            												<th id="filterable"><center>Status</center></th>
                                                             <th id="filterable"><center>Ditolak Oleh</center></th>
                                                             <th id="filterable"><center>Alasan</center></th>
                                                             <th id="filterable"><center>Dibuat Oleh</center></th>
@@ -50,15 +49,32 @@
             											@if(count($a))
             											@foreach($a as $b)
                                                         <?php
+                                                         $rejectreason=$b->reject_reason;
                                                          $cabang=$b->cabang;
+                                                         $submitted=$b->submitted_by;
+                                                         $created=$b->created_by;
                                                          $z = \DB::select("SELECT DESCRIPTION, VALUE FROM [AX_DUMMY].[dbo].[PIL_VIEW_KPKC]  WHERE VALUE!='00'");
+                                                         $z2 = \DB::select("SELECT id, username FROM [DBCabang].[dbo].[users]");
+                                                         $z3 = \DB::select("SELECT id, content FROM [DBCabang].[dbo].[reject_reasons]");
+                                                         
                                                          ?>
             											<tr>
             												<td><center>{{ $no }}</center></td>
-                                                            <td><center>{{ $b->stat }}</center></td>
-                                                            <td><center>{{ $b->submitted_by }}</center></td>
-                                                            <td><center>{{ $b->reject_reason }}</center></td>
-                                                            <td><center>{{ $b->created_by }}</center></td>
+                                                            <td>@foreach($z2 as $x2)
+                                                             @if($submitted==$x2->id)
+                                                             {{ $x2->username }}
+                                                             @endif
+                                                             @endforeach</td>
+                                                            <td>@foreach($z3 as $x3)
+                                                             @if($rejectreason==$x3->id)
+                                                             {{ $x3->content }}
+                                                             @endif
+                                                             @endforeach</td>
+                                                            <td>@foreach($z2 as $x2)
+                                                             @if($created==$x2->id)
+                                                             {{ $x2->username }}
+                                                             @endif
+                                                             @endforeach</td>
             												<td>@foreach($z as $x)
                                                              @if($cabang==$x->VALUE)
                                                              {{ $x->DESCRIPTION }}
