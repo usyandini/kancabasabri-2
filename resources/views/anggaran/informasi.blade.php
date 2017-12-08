@@ -74,7 +74,7 @@
                               <div class="col-lg-6 col-xl-3 mb-1">
                                 <div class="form-group">
                                   <select class="select2 form-control " name="cari_nd_surat" id="cari_nd_surat">
-                                    <option disabled="" selected="">ND/Surat</option>
+                                    <option disabled="" selected="">Nomor ND/Surat</option>
                                   </select>
                                 </div>
                               </div>

@@ -92,16 +92,22 @@
             											<label>Kantor Cabang</label><br>
             											<select class="select2 form-control block" name="cabang" id="cabang" style="width:300px" onchange="changeUnit()" required="required">
             												<option value=""> - Pilih Kantor Cabang - </option>
-            												<?php
-            												$second="SELECT DESCRIPTION, VALUE FROM [AX_DUMMY].[dbo].[PIL_VIEW_KPKC]  WHERE VALUE!='00'";
-            												$return = DB::select($second);
-            												?>
-            												@foreach($return as $b)
-            												<?php $id = $b->VALUE."00"; ?>
-            												@if(Gate::check("unit_".$id) )
-            												<option value="{{ $b->DESCRIPTION }}" >{{ $b->DESCRIPTION }}</option>
-            												@endif
-            												@endforeach
+            												
+                                                                                    <?php
+                                                                                    $units = array();
+                                                                                    $second="SELECT DESCRIPTION, VALUE FROM [AX_DUMMY].[dbo].[PIL_VIEW_KPKC]  WHERE VALUE!='00'";
+                                                                                    $return = DB::select($second);
+                                                                                    foreach ($return as $cabang) {
+                                                                                    if(Gate::check('unit_'.$cabang->VALUE."00")){
+                                                                                    array_push($units, $cabang);
+                                                                                    }                                         }
+                                                                                    ?>
+                                                                                    @if(count($units)>1)
+                                                                                    <option value="0">Semua Cabang</option>
+                                                                                    @endif
+                                                                                    @foreach($units as $unit)
+                                                                                      <option value="{{ $unit->DESCRIPTION }}" >{{ $unit->DESCRIPTION }}</option>
+                                                                                    @endforeach
             											</select>
             										</div>
             									</div>
@@ -124,8 +130,13 @@
             				<script type="text/javascript">
             					function changeUnit(){
             						var cabang = $('#cabang').val();
-            						var uri = "{{ url('acc_pengajuan_dropping/myform').'/'}}"+ encodeURI(cabang);
-
+            						
+                                                if(cabang=="0"){
+                                                  $('select[name="tanggal"]').empty();
+                                                  $('select[name="tanggal"]').append('<option value="0">Semua Tanggal</option>');
+                                                }
+                                                else{
+                                                var uri = "{{ url('acc_pengajuan_dropping/myform').'/'}}"+ encodeURI(cabang);
             						$.ajax({
             							'async': false, 
             							'type': "GET", 
@@ -144,6 +155,7 @@
             								});
             							}
             						});
+                                                }
             					}
             				</script>
             			</div>

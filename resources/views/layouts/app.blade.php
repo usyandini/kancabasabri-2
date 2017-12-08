@@ -43,16 +43,16 @@
         {{-- <link rel="stylesheet" type="text/css" href="assets/css/style.css"> --}}
         <!-- END Custom CSS-->
     </head>
-    <body data-open="click" data-menu="vertical-menu" data-col="2-columns" class="vertical-layout vertical-menu 2-columns  fixed-navbar" style="">
+    <body data-open="click" data-menu="vertical-menu" data-col="2-columns" class="vertical-layout vertical-menu 2-columns  fixed-navbar" >
         <!-- - var navbarShadow = true-->
         <!-- navbar-fixed-top-->
-        <nav class="header-navbar navbar navbar-with-menu navbar-fixed-top navbar-semi-light bg-gradient-x-grey-blue">
-            <div class="navbar-wrapper">
-                <div class="navbar-header">
+        <nav class="header-navbar navbar navbar-with-menu navbar-fixed-top navbar-semi-light bg-gradient-x-grey-blue" >
+            <div class="navbar-wrapper" >
+                <div class="navbar-header" >
                     <a href="{{ url('/') }}" class="navbar-brand">
                         <img src="{{ asset('app-assets/images/asabri-logo-kecil.png', $secure = null) }}" width="100" align="middle" hspace="55">
                     </a>
-                    <ul class="nav navbar-nav">
+                    <ul class="nav navbar-nav" >
                         <li class="nav-item mobile-menu hidden-md-up float-xs-left"><a href="#" class="nav-link nav-menu-main menu-toggle hidden-xs"><i class="ft-menu font-large-1"></i></a></li>
                         
                         <li class="nav-item hidden-md-up float-xs-right">
@@ -60,14 +60,14 @@
                         </li>
                     </ul>
                 </div>
-                <div class="navbar-container content container-fluid">
+                <div class="navbar-container content container-fluid" >
                     <div id="navbar-mobile" class="collapse navbar-toggleable-sm">
-                        <ul class="nav navbar-nav">
+                        <!-- <ul class="nav navbar-nav">
                             <li class="nav-item hidden-sm-down"><a href="#" class="nav-link nav-menu-main menu-toggle hidden-xs"><i class="ft-menu"></i></a></li>
                             <li class="nav-item hidden-sm-down"><a href="#" class="nav-link nav-link-expand"><i class="ficon ft-maximize"></i></a></li>
-                        </ul>
-                        <ul class="nav navbar-nav float-xs-right">
-                            <li class="dropdown dropdown-notification nav-item">
+                        </ul> -->
+                        <ul class="nav navbar-nav float-xs-right" >
+                            <li class="dropdown dropdown-notification nav-item" >
                               <a href="#" data-toggle="dropdown" class="nav-link nav-link-label"><i class="ficon ft-bell"></i>
                                 <span class="tag tag-pill tag-default tag-danger tag-default tag-up" id="unreadCount"></span>
                               </a>
@@ -101,10 +101,10 @@
             </div>
         </nav>
         <!-- ////////////////////////////////////////////////////////////////////////////-->
-        <div data-scroll-to-active="true" class="main-menu menu-fixed menu-light menu-accordion menu-shadow">
-            <div class="main-menu-content" style="margin-top:45px;">
+        <div data-scroll-to-active="true" class="main-menu menu-fixed menu-light menu-accordion menu-shadow" >
+            <div class="main-menu-content" style="margin-top:55px;">
                 <ul id="main-menu-navigation" data-menu="menu-navigation" class="navigation navigation-main">
-                    <li class="navigation-header"><span >Menu Utama</span><i data-toggle="tooltip" data-placement="right" data-original-title="General"class=" ft-minus"></i></li>
+                    <li class="navigation-header"><span >Menu Utama</span><i data-toggle="tooltip" data-placement="right" data-original-title="General" class="ft-minus"></i></li>
                     <?php
                         $open_dropping = false;
                         $dropping =["cari_d","lihat_tt_d","masuk_tt_d","setuju_tt_d","lihat_p_d","masuk_p_d","setuju_p_d",

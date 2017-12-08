@@ -349,11 +349,29 @@
                             },
                             title: "Jumlah Diajukan (Kuantitas)",
                             validate: {
-                              validator: function(value, item) {
-                                return value != ''
+                              message :function(value) {
+                                if(value == ''){
+                                  status="Kolom jumlah item tidak boleh kosong";
+                                }
+                                if(value<0){
+                                  status="Kolom jumlah item minimal 1";
+                                }
+                                return status;
                               },
-                              message: "Kolom jumlah item tidak boleh kosong."
-                            }  },
+
+                            //validator
+                              validator :function(value, item) {
+                                if(value<0){
+                                  return false;
+                                }
+                                else if(value == ''){
+                                  return false;
+                                }else{
+                                  return true;
+                                }
+                              }
+                            }  
+                          },
                           { 
                             name: "total", 
                             align: "right",

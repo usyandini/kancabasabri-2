@@ -942,10 +942,21 @@
                             textField: "name", 
                             width: 100,
                             items: getData('satuan'),
+                            
                             validate: {
-                              message : "Pilih Satuan Terlebih dahulu." ,
+                              message : "Pilih Satuan terlebih dahulu." ,
                               validator :function(value, item) {
-                                  return value != "None" ;
+                                  
+
+                                  @if($persetujuan == 1)
+                                    return value > 0 ;
+                                  @else
+                                    if(item.terpusat == '1'){
+                                      return true;
+                                    }else{
+                                      return value > 0 ;
+                                    }
+                                  @endif
                               } 
                             }
                           },

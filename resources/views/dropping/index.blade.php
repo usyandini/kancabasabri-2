@@ -59,13 +59,19 @@
                                             </div>
                                             <div class="col-lg-6 col-xl-3 mb-1">
                                                   <select class="select2 form-control" name="kcabang">
-                                                    <option disabled="">Berdasar Kantor Cabang</option>
+                                                    <option disabled="">Berdasarkan Kantor Cabang</option>
+                                                    <?php
+                                                      $units = array();
+                                                      foreach ($kcabangs as $cabang) {
+                                                         if(Gate::check('unit_'.$cabang->VALUE."00")){
+                                                          array_push($units, $cabang);
+                                                    }                                         }
+                                                    ?>
+                                                    @if(count($units)>1)
                                                     <option value="0" selected>Semua Cabang</option>
-                                                    @foreach($kcabangs as $cabang)
-                                                      {{ $id = $cabang->VALUE."00" }}
-                                                      @if(Gate::check("unit_".$id) )
-                                                      <option value="{{ $cabang->DESCRIPTION }}" {{ ($cabang->DESCRIPTION == $filters['kcabang'] ? 'selected=""' : '') }}>{{ $cabang->DESCRIPTION }}</option>
-                                                      @endif
+                                                    @endif
+                                                    @foreach($units as $unit)
+                                                      <option value="{{ $unit->DESCRIPTION }}" {{ ($unit->DESCRIPTION == $filters['kcabang'] ? 'selected=""' : '') }}>{{ $unit->DESCRIPTION }}</option>
                                                     @endforeach
                                                   </select>
                                             </div>
