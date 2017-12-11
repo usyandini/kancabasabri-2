@@ -49,9 +49,16 @@ class PengajuanDroppingController extends Controller
     {
         $kantor_cabang = $request->get('cabang');
         $tanggal = $request->get('tanggal');
-        if($kantor_cabang=="0"){
+        if($kantor_cabang=="0" && $tanggal=="0"){
             $a = DB::table('pengajuan_dropping_cabang')
              ->where('kirim','<>','3')->where('kirim','<>','4')
+             ->orderBy('tanggal', 'DESC')
+             ->get();
+        }
+        if($tanggal=="0"){
+            $a = DB::table('pengajuan_dropping_cabang')
+             ->where('kirim','<>','3')->where('kirim','<>','4')
+             ->where('kantor_cabang', $kantor_cabang)
              ->orderBy('tanggal', 'DESC')
              ->get();
         }
