@@ -109,7 +109,9 @@
                               <div class="col-xs-3.5">
                                 <div class="form-group">
                                   <label>Tanggal</label><br>
-                                  <select class="select2 form-control block" name="tanggal" style="width:200px" required="required"></select>
+                                  <select class="select2 form-control block" name="tanggal" style="width:200px" required="required">
+                                    <option value="0">Semua Tanggal</option>
+                                  </select>
                                 </div>
                               </div>
                             </div>
