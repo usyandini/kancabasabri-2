@@ -55,14 +55,14 @@ class PengajuanDroppingController extends Controller
              ->orderBy('tanggal', 'DESC')
              ->get();
         }
-        if($tanggal=="0"){
+        if(($kantor_cabang!="0") && ($tanggal=="0")){
             $a = DB::table('pengajuan_dropping_cabang')
              ->where('kirim','<>','3')->where('kirim','<>','4')
              ->where('kantor_cabang', $kantor_cabang)
              ->orderBy('tanggal', 'DESC')
              ->get();
         }
-        else {
+        if(($kantor_cabang!="0") && ($tanggal!="0")){
             $a = DB::table('pengajuan_dropping_cabang')
              ->where('kirim','<>','3')->where('kirim','<>','4')
              ->where('kantor_cabang', $kantor_cabang)
@@ -107,14 +107,14 @@ class PengajuanDroppingController extends Controller
              ->orderBy('tanggal', 'DESC')
              ->get();
         }
-        if($tanggal=="0"){
+        if(($kantor_cabang!="0") && ($tanggal=="0")){
             $a = DB::table('pengajuan_dropping_cabang')
              ->where('kirim','<>','1')->where('kirim','<>','4')->where('kirim','<>','5')
              ->where('kantor_cabang', $kantor_cabang)
              ->orderBy('tanggal', 'DESC')
              ->get();
         }
-        else {
+        if(($kantor_cabang!="0") && ($tanggal!="0")){
         $a = DB::table('pengajuan_dropping_cabang')
              ->where('kantor_cabang', $kantor_cabang)
              ->where('kirim','<>','1')->where('kirim','<>','4')->where('kirim','<>','5')
@@ -158,14 +158,14 @@ class PengajuanDroppingController extends Controller
              ->orderBy('tanggal', 'DESC')
              ->get();
         }
-        if($tanggal=="0"){
+        if(($kantor_cabang!="0") && ($tanggal=="0")){
             $a = DB::table('pengajuan_dropping_cabang')
              ->where('kirim','<>','1')->where('kirim','<>','2')->where('kirim','<>','5')
              ->where('kantor_cabang', $kantor_cabang)
              ->orderBy('tanggal', 'DESC')
              ->get();
         }
-        else{
+        if(($kantor_cabang!="0") && ($tanggal!="0")){
             $a = DB::table('pengajuan_dropping_cabang')
              ->where('kantor_cabang', $kantor_cabang)
              ->where('kirim','<>','1')->where('kirim','<>','2')->where('kirim','<>','5')
@@ -209,14 +209,14 @@ class PengajuanDroppingController extends Controller
              ->orderBy('tanggal', 'DESC')
              ->get();
         }
-        if($tanggal=="0"){
+        if(($kantor_cabang!="0") && ($tanggal=="0")){
             $a = DB::table('pengajuan_dropping_cabang')
              ->where('kirim','<>','1')->where('kirim','<>','2')->where('kirim','<>','3')
              ->where('kantor_cabang', $kantor_cabang)
              ->orderBy('tanggal', 'DESC')
              ->get();
         }
-        else {
+        if(($kantor_cabang!="0") && ($tanggal!="0")){
             $a = DB::table('pengajuan_dropping_cabang')
              ->where('kantor_cabang', $kantor_cabang)
              ->where('kirim','<>','1')->where('kirim','<>','2')->where('kirim','<>','3')

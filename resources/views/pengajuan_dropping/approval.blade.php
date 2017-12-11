@@ -131,11 +131,7 @@
             					function changeUnit(){
             						var cabang = $('#cabang').val();
             						
-                                                if(cabang=="0"){
-                                                  $('select[name="tanggal"]').empty();
-                                                  $('select[name="tanggal"]').append('<option value="0">Semua Tanggal</option>');
-                                                }
-                                                else{
+                                                
                                                 var uri = "{{ url('acc_pengajuan_dropping/myform').'/'}}"+ encodeURI(cabang);
             						$.ajax({
             							'async': false, 
@@ -143,7 +139,11 @@
             							'dataType': 'JSON', 
             							'url': uri,
             							'success': function (data) {
-
+                                                            if(cabang=="0"){
+                                                              $('select[name="tanggal"]').empty();
+                                                              $('select[name="tanggal"]').append('<option value="0">Semua Tanggal</option>');
+                                                            }
+                                                            else{
             								$('select[name="tanggal"]').empty();
                                                             $('select[name="tanggal"]').append('<option value="0">Semua Tanggal</option>');
             								$.each(data, function(key, value) {
@@ -154,9 +154,10 @@
             									var tahun = new Date(value).getFullYear();
             									$('select[name="tanggal"]').append('<option value="'+ value +'">'+ tanggal +' '+ bulana +' '+ tahun +'</option>');
             								});
+                                                            }
             							}
             						});
-                                                }
+                                                
             					}
             				</script>
             			</div>
