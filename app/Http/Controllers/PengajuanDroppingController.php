@@ -49,7 +49,7 @@ class PengajuanDroppingController extends Controller
     {
         $kantor_cabang = $request->get('cabang');
         $tanggal = $request->get('tanggal');
-        if($kantor_cabang=="0" && $tanggal=="0"){
+        if(($kantor_cabang=="0") && ($tanggal=="0")){
             $a = DB::table('pengajuan_dropping_cabang')
              ->where('kirim','<>','3')->where('kirim','<>','4')
              ->orderBy('tanggal', 'DESC')
@@ -64,8 +64,10 @@ class PengajuanDroppingController extends Controller
         }
         else {
             $a = DB::table('pengajuan_dropping_cabang')
+             ->where('kirim','<>','3')->where('kirim','<>','4')
              ->where('kantor_cabang', $kantor_cabang)
              ->where('tanggal', $tanggal)
+             ->orderBy('tanggal', 'DESC')
              ->get();
         }     
         $userCab =\Auth::user()->kantorCabang()['DESCRIPTION'];
@@ -76,8 +78,8 @@ class PengajuanDroppingController extends Controller
 	public function acc() 
     {
     	$a =DB::table('pengajuan_dropping_cabang')
-    	->where('kirim','2')->Orwhere('kirim','3')
-        ->orderBy('id','DESC')
+    	->where('kirim','<>','1')->where('kirim','<>','4')->where('kirim','<>','5')
+        ->orderBy('tanggal', 'DESC')
         ->paginate(100);
         return view('pengajuan_dropping.approval', compact('a'));
 	}
@@ -99,16 +101,25 @@ class PengajuanDroppingController extends Controller
     {
         $kantor_cabang = $request->get('cabang');
         $tanggal = $request->get('tanggal');
-        if($kantor_cabang=="0"){
+        if(($kantor_cabang=="0") && ($tanggal=="0")){
              $a = DB::table('pengajuan_dropping_cabang')
              ->where('kirim','<>','1')->where('kirim','<>','4')->where('kirim','<>','5')
              ->orderBy('tanggal', 'DESC')
              ->get();
-         }
+        }
+        if($tanggal=="0"){
+            $a = DB::table('pengajuan_dropping_cabang')
+             ->where('kirim','<>','1')->where('kirim','<>','4')->where('kirim','<>','5')
+             ->where('kantor_cabang', $kantor_cabang)
+             ->orderBy('tanggal', 'DESC')
+             ->get();
+        }
         else {
         $a = DB::table('pengajuan_dropping_cabang')
              ->where('kantor_cabang', $kantor_cabang)
+             ->where('kirim','<>','1')->where('kirim','<>','4')->where('kirim','<>','5')
              ->where('tanggal', $tanggal)
+             ->orderBy('tanggal', 'DESC')
              ->get();
         }
         return view('pengajuan_dropping.approval', compact('kantor_cabang', 'tanggal', 'a'));
@@ -117,8 +128,8 @@ class PengajuanDroppingController extends Controller
     public function acc2() 
     {
         $a =DB::table('pengajuan_dropping_cabang')
-        ->where('kirim','3')->Orwhere('kirim','4')
-        ->orderBy('id','DESC')
+        ->where('kirim','<>','1')->where('kirim','<>','2')->where('kirim','<>','5')
+        ->orderBy('tanggal', 'DESC')
         ->paginate(100);
         return view('pengajuan_dropping.approval2', compact('a'));
     }
@@ -141,16 +152,25 @@ class PengajuanDroppingController extends Controller
     {
         $kantor_cabang = $request->get('cabang');
         $tanggal = $request->get('tanggal');
-        if($kantor_cabang=="0"){
+        if(($kantor_cabang=="0") && ($tanggal=="0")){
             $a = DB::table('pengajuan_dropping_cabang')
              ->where('kirim','<>','1')->where('kirim','<>','2')->where('kirim','<>','5')
+             ->orderBy('tanggal', 'DESC')
+             ->get();
+        }
+        if($tanggal=="0"){
+            $a = DB::table('pengajuan_dropping_cabang')
+             ->where('kirim','<>','1')->where('kirim','<>','2')->where('kirim','<>','5')
+             ->where('kantor_cabang', $kantor_cabang)
              ->orderBy('tanggal', 'DESC')
              ->get();
         }
         else{
             $a = DB::table('pengajuan_dropping_cabang')
              ->where('kantor_cabang', $kantor_cabang)
+             ->where('kirim','<>','1')->where('kirim','<>','2')->where('kirim','<>','5')
              ->where('tanggal', $tanggal)
+             ->orderBy('tanggal', 'DESC')
              ->get();
         }
         return view('pengajuan_dropping.approval2', compact('kantor_cabang', 'tanggal', 'a'));
@@ -160,8 +180,8 @@ class PengajuanDroppingController extends Controller
     public function acc3() 
     {
         $a =DB::table('pengajuan_dropping_cabang')
-        ->where('kirim','4')->Orwhere('kirim','5')
-        ->orderBy('id','DESC')
+        ->where('kirim','<>','1')->where('kirim','<>','2')->where('kirim','<>','3')
+        ->orderBy('tanggal', 'DESC')
         ->paginate(100);
         return view('pengajuan_dropping.approval3', compact('a'));
     }
@@ -183,16 +203,25 @@ class PengajuanDroppingController extends Controller
     {
         $kantor_cabang = $request->get('cabang');
         $tanggal = $request->get('tanggal');
-        if($kantor_cabang=="0"){
+        if(($kantor_cabang=="0") && ($tanggal=="0")){
             $a = DB::table('pengajuan_dropping_cabang')
              ->where('kirim','<>','1')->where('kirim','<>','2')->where('kirim','<>','3')
+             ->orderBy('tanggal', 'DESC')
+             ->get();
+        }
+        if($tanggal=="0"){
+            $a = DB::table('pengajuan_dropping_cabang')
+             ->where('kirim','<>','1')->where('kirim','<>','2')->where('kirim','<>','3')
+             ->where('kantor_cabang', $kantor_cabang)
              ->orderBy('tanggal', 'DESC')
              ->get();
         }
         else {
             $a = DB::table('pengajuan_dropping_cabang')
              ->where('kantor_cabang', $kantor_cabang)
+             ->where('kirim','<>','1')->where('kirim','<>','2')->where('kirim','<>','3')
              ->where('tanggal', $tanggal)
+             ->orderBy('tanggal', 'DESC')
              ->get();
         }
         return view('pengajuan_dropping.approval3', compact('kantor_cabang', 'tanggal', 'a'));
