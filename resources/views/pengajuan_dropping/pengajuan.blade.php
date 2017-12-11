@@ -86,7 +86,7 @@
                                 <div class="form-group">
                                   <label>Kantor Cabang</label><br>
                                   <select class="select2 form-control block" name="cabang" id="cabang" style="width:300px" onchange="changeUnit()" required="required">
-                                    <!-- <option value=""> - Pilih Kantor Cabang - </option> -->
+                                    <option value=""> - Pilih Kantor Cabang - </option>
                                     <?php
                                     $units = array();
                                     $second="SELECT DESCRIPTION, VALUE FROM [AX_DUMMY].[dbo].[PIL_VIEW_KPKC]  WHERE VALUE!='00'";
