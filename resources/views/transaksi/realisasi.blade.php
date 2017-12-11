@@ -61,7 +61,7 @@
                                   <div class="form-group">
                                     <label>Kantor Cabang</label>
                                     <select class="select2 form-control" name="cabang" required>
-                                      <option selected disabled>Pilih cabang</option>
+                                      <!-- <option selected disabled>Pilih cabang</option> -->
                                       @foreach($cabang as $cab)
                                       {{ $id = $cab->VALUE."00" }}
                                       @if(Gate::check("unit_".$id) )
