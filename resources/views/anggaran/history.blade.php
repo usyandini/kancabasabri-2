@@ -273,7 +273,7 @@
               type: "text", 
               align: "left",
               title: "Sub Pos", 
-              width: 70
+              width: 150
             },
             { name: "mata_anggaran", 
             type: "text", 
