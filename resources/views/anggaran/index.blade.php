@@ -954,7 +954,7 @@
                                     if(item.terpusat == '1'){
                                       return true;
                                     }else{
-                                      return value > 0 ;
+                                      return value != "None" ;
                                     }
                                   @endif
                               } 

@@ -49,7 +49,7 @@
                                             <div class="modal-content">
                                                 <div class="modal-header">
                                                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><center>
-                                                    <center><h4 class="modal-title text-success" id="myModalLabel" ><i class="glyphicon glyphicon-edit"></i> Batas Pengajuan Anggaran dan Kegiatan</h4></center>
+                                                    <center><h4 class="modal-title text-success" id="myModalLabel" ><i class="fa fa-plus"></i> Batas Pengajuan Anggaran dan Kegiatan</h4></center>
                                                 </div>
                                                 <form enctype="multipart/form-data" role="form" action="{{ url('/anggaran/batas/tambah/') }}" method="POST" >
                                                  {{ csrf_field() }}
@@ -147,7 +147,7 @@
 									        <div class="modal-content">
 									            <div class="modal-header">
 									                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><center>
-									                <center><h4 class="modal-title text-success" id="myModalLabel" ><i class="glyphicon glyphicon-edit"></i> Batas Pengajuan Anggaran dan Kegiatan</h4></center>
+									                <center><h4 class="modal-title text-success" id="myModalLabel" ><i class="fa fa-edit"></i> Batas Pengajuan Anggaran dan Kegiatan</h4></center>
 									            </div>
 									            <form method="post" action="#" id="form_edit_pengajuan" >
 									             {{ csrf_field() }}

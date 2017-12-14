@@ -377,7 +377,7 @@
 																		<select class="form-control" name="unitkerja" value="{{$reason->unitkerja}}">
 						                                                    <option value=""> - Pilih Unit Kerja - </option>
 						                                                    <?php
-						                                                    $secondq="SELECT * FROM (SELECT DESCRIPTION, VALUE FROM [AX_DUMMY].[dbo].[PIL_VIEW_DIVISI] WHERE VALUE!='00') AS A UNION ALL SELECT * FROM (SELECT DESCRIPTION, VALUE FROM [AX_DUMMY].[dbo].[PIL_VIEW_KPKC]  WHERE VALUE!='00') AS B";
+						                                                    $secondq ="SELECT * FROM (SELECT DESCRIPTION, VALUE FROM [AX_DUMMY].[dbo].[PIL_VIEW_DIVISI] WHERE VALUE!='00') AS A UNION ALL SELECT * FROM (SELECT DESCRIPTION, VALUE FROM [AX_DUMMY].[dbo].[PIL_VIEW_KPKC]  WHERE VALUE!='00') AS B";
 															                $returnq = DB::select($secondq);
 															                ?>
 																			@foreach($returnq as $bq)

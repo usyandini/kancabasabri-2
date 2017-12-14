@@ -588,9 +588,9 @@ class AnggaranController extends Controller
         if($request->setuju == 'Simpan'){
             $active = '1';
         }
-
+        // $ubahtanggal=date("Y-m-d", strtotime($request->tanggal));
         $anggaran_update = [
-        'tanggal'           => $request->tanggal,
+        // 'tanggal'           => $ubahtanggal,
         'tipe_anggaran'     => $request->tipe_anggaran,
         'status_anggaran'   => $status,
         'persetujuan'       => $setuju,
