@@ -60,7 +60,7 @@
             
 
             <div class="content-header row">
-            	<div class="content-header-left col-md-6 col-xs-12 mb-2">
+            	<div class="content-header-left col-xs-12 mb-2">
             		<h3 class="content-header-title mb-0">Approval Pengajuan Dropping Level 2</h3>
             		<div class="row breadcrumbs-top">
             			<div class="breadcrumb-wrapper col-xs-12">
@@ -76,7 +76,7 @@
             <div class="row">
             	<section id="select-inputs">
             		<div class="row">
-            			<div class="col-xs-6">
+            			<div class="col-xs-12">
             				<div class="card">
             					<div class="card-header">
             						<h4 class="card-title">Pencarian Pengajuan Dropping</h4>
@@ -87,33 +87,38 @@
             							<form enctype="multipart/form-data" role="form" action="{{ URL('acc_pengajuan_dropping2/carimyform') }}" method="GET" >
             								<div class="row">
             									{{ csrf_field() }}
-            									<div class="col-xs-6 col-xl-6">
+            									<div class="col-xs-4">
             										<div class="form-group">
-            											<label>Kantor Cabang</label>
-            											<select class="select2 form-control block" name="cabang" id="cabang" onchange="changeUnit()" required="required">
+            											<label>Kantor Cabang</label><br>
+            											<select class="select2 form-control block" name="cabang" id="cabang" style="width:300px" onchange="changeUnit()" required="required">
             												<option value=""> - Pilih Kantor Cabang - </option>
             												<?php
-            												$second="SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_KPKC]  WHERE VALUE!='00'";
-            												$return = DB::select($second);
-            												?>
-            												@foreach($return as $b)
-            												<?php $id = $b->VALUE."00"; ?>
-            												@if(Gate::check("unit_".$id) )
-            												<option value="{{ $b->DESCRIPTION }}" >{{ $b->DESCRIPTION }}</option>
-            												@endif
-            												@endforeach
+                                                                                    $units = array();
+                                                                                    $second="SELECT DESCRIPTION, VALUE FROM [AX_DUMMY].[dbo].[PIL_VIEW_KPKC]  WHERE VALUE!='00'";
+                                                                                    $return = DB::select($second);
+                                                                                    foreach ($return as $cabang) {
+                                                                                    if(Gate::check('unit_'.$cabang->VALUE."00")){
+                                                                                    array_push($units, $cabang);
+                                                                                    }                                         }
+                                                                                    ?>
+                                                                                    @if(count($units)>1)
+                                                                                    <option value="0">Semua Cabang</option>
+                                                                                    @endif
+                                                                                    @foreach($units as $unit)
+                                                                                      <option value="{{ $unit->DESCRIPTION }}" >{{ $unit->DESCRIPTION }}</option>
+                                                                                    @endforeach
             											</select>
             										</div>
             									</div>
-            									<div class="col-xl-6 col-xs-6 col-md-6">
+            									<div class="col-xs-3.5">
             										<div class="form-grpup">
-            											<label>Tanggal</label>
-            											<select class="select2 form-control block" name="tanggal" style="width:300px" required="required"></select>
+            											<label>Tanggal</label><br>
+            											<select class="select2 form-control block" name="tanggal" style="width:200px" required="required"></select>
             										</div>
             									</div>
             								</div>
             								<div class="row">
-            									<div class="col-xs-6">
+            									<div class="col-xs-7">
             										<button type="submit" class="btn btn-outline-primary"><i class="fa fa-search "></i> Cari</button>
             									</div>
             								</div>
@@ -124,6 +129,11 @@
             				<script type="text/javascript">
             					function changeUnit(){
             						var cabang = $('#cabang').val();
+                                                if(cabang=="0"){
+                                                  $('select[name="tanggal"]').empty();
+                                                  $('select[name="tanggal"]').append('<option value="0">Semua Tanggal</option>');
+                                                }
+                                                else{
             						var uri = "{{ url('acc_pengajuan_dropping2/myform').'/'}}"+ encodeURI(cabang);
 
             						$.ajax({
@@ -134,6 +144,7 @@
             							'success': function (data) {
 
             								$('select[name="tanggal"]').empty();
+                                                            $('select[name="tanggal"]').append('<option value="0">Semua Tanggal</option>');
             								$.each(data, function(key, value) {
             									var tanggal = new Date(value).getDate();
             									var bulan = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
@@ -144,6 +155,7 @@
             								});
             							}
             						});
+                                          }
             					}
             				</script>
             			</div>
@@ -176,7 +188,7 @@
             												<tr>
             													<th><center>No</center></th>
             													<th id="filterable"><center>Kantor Cabang</center></th>
-            													<th id="filterable"><center>Nomor</center></th>
+            													<th id="filterable"><center>Nomor Nota Dinas</center></th>
             													<th id="filterable"><center>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Tanggal&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</center></th>
             													<th id="filterable"><center>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Jumlah Diajukan&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</center></th>
             													<th id="filterable"><center>Periode Realisasi</center></th>
@@ -238,7 +250,7 @@
             													$angka = number_format($b->jumlah_diajukan,0,"",".");
             													?>
             													<td><center>{{ $tgl }} {{ $bulans }} {{ $tahun }}</center></td>
-            													<td><center>Rp {{ $angka }},-</center></td>
+            													<td align="right">Rp. {{ $angka }}</td>
             													<td><center><?php 
             													if($b->periode_realisasi=='1'){ echo "TW I";}
             													if($b->periode_realisasi=='2'){ echo "TW II";}
@@ -320,33 +332,33 @@
             																	<center><h4 class="modal-title text-info" id="myModalLabel" ><i class="fa fa-check"></i> Verifikasi Pengajuan Dropping</h4></center>
             																</div>
             																<div class="modal-body">
-            																	<form enctype="multipart/form-data" role="form" action="{{ URL('acc_pengajuan_dropping/update_accpengajuandropping/'. $b->id) }}" method="POST" >
+            																	<form enctype="multipart/form-data" role="form" action="{{ URL('acc_pengajuan_dropping/update_accpengajuandropping/'. $b->id) }}" method="POST" onsubmit="return validasi_input(this)">
             																		{{ csrf_field() }}
             																		<input type="hidden" name="id" value="{{$b->id}}" />
             																		
             																		<label class="control-label"><b> Verifikasi </b></label>
-            																		<label class="control-label"> : </label>
-            																		<select class="select form-control" name="verifikasi" required="required" value="{{$b->verifikasi}}" >
-            																			<option value="">- Pilih Verifikasi -</option>
-            																			<option value="1" @if ($b->verifikasi=='1')Selected @endif>Diterima</option>
-            																			<option value="2" @if ($b->verifikasi=='2')Selected @endif>Ditolak</option>                                                 
-            																		</select>   
-            																		<br>
-            																		<label class="control-label"><b> Keterangan </b></label>
-            																		<label class="control-label"><b> : </b></label>
-            																		<select class="select form-control" name="keterangan" value="{{$b->keterangan}}">
-            																			<option value=""> - Pilih Keterangan - </option>
-            																			<?php
-            																			$second="SELECT * FROM reject_reasons where type=7";
-            																			$return = DB::select($second);
-            																			?>
-            																			@foreach($return as $bb)
-            																			<option value="{{ $bb->id }}"
-            																				@if($bb->id == $b->keterangan) Selected>{{ $bb->content }}@endif
-            																				@if($bb->id <> $b->keterangan)>{{ $bb->content }}@endif
-            																			</option>
-            																			@endforeach                                               
-            																		</select>
+                                                                                                                  <label class="control-label"> : </label>
+                                                                                                                  <select class="select form-control" name="verifikasi" required="required" value="{{$b->verifikasi}}" >
+                                                                                                                        <option value="">- Pilih Verifikasi -</option>
+                                                                                                                        <option value="1" @if ($b->verifikasi=='1')Selected @endif>Diterima</option>
+                                                                                                                        <option value="2" @if ($b->verifikasi=='2')Selected @endif>Ditolak</option>                                                 
+                                                                                                                  </select>   
+                                                                                                                  <br>
+                                                                                                                  <label class="control-label"><b> Keterangan </b></label>
+                                                                                                                  <label class="control-label"><b> : </b></label>
+                                                                                                                  <select class="select form-control" name="keterangan" value="{{$b->keterangan}}" @if ($b->verifikasi!=2) disabled="disabled" @endif>
+                                                                                                                        <option value=""> - Pilih Keterangan - </option>
+                                                                                                                        <?php
+                                                                                                                        $second="SELECT * FROM reject_reasons where type=7";
+                                                                                                                        $return = DB::select($second);
+                                                                                                                        ?>
+                                                                                                                        @foreach($return as $bb)
+                                                                                                                        <option value="{{ $bb->id }}"
+                                                                                                                              @if($bb->id == $b->keterangan) Selected>{{ $bb->content }}@endif
+                                                                                                                              @if($bb->id <> $b->keterangan)>{{ $bb->content }}@endif
+                                                                                                                        </option>
+                                                                                                                        @endforeach                                               
+                                                                                                                  </select>
             																	</div>
             																	<div class="modal-footer">
             																		<button type="submit" name="save" class="btn btn-sm btn-primary"><i class="fa fa-check"></i> Verifikasi</button>
@@ -387,9 +399,37 @@
             		<script src="{{ asset('app-assets/vendors/js/tables/datatable/dataTables.responsive.min.js') }}"
             		type="text/javascript"></script>
             		<script type="text/javascript">
-
-            			
-            			
+                             $('select[name="verifikasi"]').on('change', function() {
+                              if ($(this).val() !== '2') {
+                                $('select[name="keterangan"]').prop("disabled", true);
+                                $('select[name="keterangan"] option:selected').attr("selected",null);
+                                $('select[name="keterangan"] option[value=00]').attr("selected","selected");
+                                $('select[name="keterangan"]').val('00');
+                                $('#select-keterangan-container').attr("title","");
+                                $('#select-keterangan-container').html("");
+                                // alert($('select[name="keterangan"]').val());
+                                toastr.info("Keterangan tidak perlu dipilih jika verifikasi diterima.", "Verifiaksi diterima", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:10e3});
+                              } else {
+                                $('select[name="keterangan"]').prop("disabled", false);
+                              }
+                            });
+                              
+                                    function validasi_input(form){
+                                    if (form.verifikasi.value ==1){
+                                     if (form.keterangan.value !=""){
+                                        toastr.info("Jika verifikasi diterima, anda tidak perlu memilih keterangan.", "Anda Tidak Perlu Memilih Keterangan", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:10e3});
+                                        return (false);
+                                     }
+                                    }
+                                    if (form.verifikasi.value ==2){
+                                     if (form.keterangan.value ==""){
+                                        toastr.info("Jika verifikasi ditolak, silahkan pilih keterangan terlebih dahulu.", "Anda Belum Memilih Keterangan", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:10e3});
+                                        return (false);
+                                     }
+                                    }
+                                    return (true);
+                                    }
+                              
             			$('.datatable-select-inputs').DataTable( {
             				scrollX: true,
             				"language": {

@@ -61,20 +61,27 @@ class AuthServiceProvider extends ServiceProvider
              $permissions[] = $aju_dropping[$i];
         }
 
-        $transaksi = ["tambah_t","info_t","cari_t","tambah_item_t","ubah_item_t","hapus_item_t","berkas_t",
+        $transaksi = ["menu_transaksi","tambah_t","info_t","cari_t","tambah_item_t","ubah_item_t","hapus_item_t","berkas_t",
                     "simpan_t","ajukan_t","setuju_t","setuju2_t","notif_setuju_t","notif_setuju2_t",
-                    "notif_ubah_t"];
+                    "notif_ubah_t", "report_mata_anggaran", "report_realisasi_anggaran", "report_kasbank", "reject_t"];
 
         for($i=0;$i<count($transaksi);$i++){
              $permissions[] = $transaksi[$i];
         }
 
+        // *Ganti PErizinan Anggaran utk hapus persetujuan i dan notifikasinya*
+        // $anggaran = ["info_a","cari_a","batas_a","tambah_a","tambah_item_a","ubah_item_a","hapus_item_a",
+        //             "berkas_item_a","kirim_a","setuju_ia","setuju_iia","setuju_iiia","setuju_iva",
+        //             "setuju_va","setuju_via","setuju_viia","setuju_viiia","riwayat_a","notif_setuju_ia",
+        //             "notif_setuju_iia","notif_setuju_iiia","notif_setuju_iva","notif_setuju_va",
+        //             "notif_setuju_via","notif_setuju_viia","notif_setuju_viiia","notif_setuju_ixa",
+        //             "notif_ubah_a","notif_pengajuan_anggaran"];
         $anggaran = ["info_a","cari_a","batas_a","tambah_a","tambah_item_a","ubah_item_a","hapus_item_a",
-                    "berkas_item_a","kirim_a","setuju_ia","setuju_iia","setuju_iiia","setuju_iva",
-                    "setuju_va","setuju_via","setuju_viia","setuju_viiia","riwayat_a","notif_setuju_ia",
+                    "berkas_item_a","kirim_a","setuju_iia","setuju_iiia","setuju_iva",
+                    "setuju_va","setuju_via","setuju_viia","setuju_viiia","riwayat_a",
                     "notif_setuju_iia","notif_setuju_iiia","notif_setuju_iva","notif_setuju_va",
                     "notif_setuju_via","notif_setuju_viia","notif_setuju_viiia","notif_setuju_ixa",
-                    "notif_ubah_a"];
+                    "notif_ubah_a","notif_pengajuan_anggaran"];
 
         for($i=0;$i<count($anggaran);$i++){
              $permissions[] = $anggaran[$i];
@@ -103,7 +110,8 @@ class AuthServiceProvider extends ServiceProvider
              $permissions[] = $pelaporan[$i];
         }
 
-        $manajemen_item = ["manajemen_i_t","manajemen_i","manajemen_a_m","manajemen_p_p","manajemen_a_RUPS"];
+        $manajemen_item = ["manajemen_i_t","manajemen_i_a","manajemen_i",
+                            "manajemen_a_m","manajemen_p_p","manajemen_a_RUPS"];
 
         for($i=0;$i<count($manajemen_item);$i++){
              $permissions[] = $manajemen_item[$i];

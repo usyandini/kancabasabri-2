@@ -12,10 +12,12 @@ use App\Models\FileListAnggaran;
 use App\Models\Kegiatan;
 use App\Models\SubPos;
 use App\Models\ItemMaster;
+use App\Models\ItemMasterAnggaran;
 use App\Models\ItemAnggaranMaster;
 use App\Models\BatasAnggaran;
 use App\Models\Divisi;
 use App\Models\KantorCabang;
+use App\Models\StagingAnggaran;
 
 use App\Services\FileUpload;
 use App\Services\NotificationSystem;
@@ -37,9 +39,9 @@ use PDF;
 *
 *-------LVL Persetujuan :----------
 *-1 = ""
-*0 = "Kirim"
-*1 = "Persetujuan Kanit Kerja"
-*2 = "Persetujuan Renbang"
+*0 = "Kirim" -> Tidak Ada
+*1 = "Persetujuan Ka Unit Kerja"  -> "Kirim"
+*2 = "Persetujuan Kadiv Renbang"
 *3 = "Persetujuan Direksi"
 *4 = "Persetujuan Dekom"
 *5 = "Persetujuan Ratek"
@@ -88,10 +90,10 @@ class AnggaranController extends Controller
 
         $filter = null;
         $query="SELECT * 
-                    FROM (SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_DIVISI] 
+                    FROM (SELECT DESCRIPTION, VALUE FROM [AX_DUMMY].[dbo].[PIL_VIEW_DIVISI] 
                     WHERE VALUE!='00') AS A 
                     UNION ALL 
-                    SELECT * FROM (SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_KPKC]  
+                    SELECT * FROM (SELECT DESCRIPTION, VALUE FROM [AX_DUMMY].[dbo].[PIL_VIEW_KPKC]  
                     WHERE VALUE!='00') AS B";
         $unit_kerja = \DB::select($query);
         return view('anggaran.informasi', [
@@ -105,10 +107,10 @@ class AnggaranController extends Controller
     {
         
         $query="SELECT * 
-                    FROM (SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_DIVISI] 
+                    FROM (SELECT DESCRIPTION, VALUE FROM [AX_DUMMY].[dbo].[PIL_VIEW_DIVISI] 
                     WHERE VALUE!='00') AS A 
                     UNION ALL 
-                    SELECT * FROM (SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_KPKC]  
+                    SELECT * FROM (SELECT DESCRIPTION, VALUE FROM [AX_DUMMY].[dbo].[PIL_VIEW_KPKC]  
                     WHERE VALUE!='00') AS B";
         $unit_kerja = \DB::select($query);
 
@@ -155,7 +157,9 @@ class AnggaranController extends Controller
                 BatasAnggaran::where('unit_kerja',$input['unit_kerja'])->update(['tanggal_mulai'=>$input['tanggal_mulai'],'tanggal_selesai'=>$input['tanggal_selesai'],'active'=>'1']);
             }else{
                 $input['active']= '1';
-                BatasAnggaran::create($input);
+                $z=BatasAnggaran::create($input);
+                $id=$z->id;
+                NotificationSystem::send($id, 47);
             }
             session()->flash('success', 'Waktu Pengajuan Anggaran dan Kegiatan Untuk '.$input['unit_kerja']." telah ditambah");
             return redirect()->back();
@@ -167,11 +171,20 @@ class AnggaranController extends Controller
 
     public function change_pengajuan(Request $request, $id){
         $input = $request->except('_method', '_token');
+        if(!isset($input['tanggal_mulai'])){
+            unset($input['tanggal_mulai']);
+        }
         $validator = $this->validateBatas($input);
 
         if ($validator->passes()) {
             $batas = BatasAnggaran::where('id',$id)->first();
-            BatasAnggaran::where('id',$id)->update(['tanggal_mulai'=>$input['tanggal_mulai'],'tanggal_selesai'=>$input['tanggal_selesai'],'active'=>'1']);
+            if(!isset($input['tanggal_mulai'])){
+                BatasAnggaran::where('id',$id)->update(['tanggal_selesai'=>$input['tanggal_selesai'],'active'=>'1']);
+            }else{
+                BatasAnggaran::where('id',$id)->update(['tanggal_mulai'=>$input['tanggal_mulai'],'tanggal_selesai'=>$input['tanggal_selesai'],'active'=>'1']);
+            }
+            NotificationSystem::send($id, 47);
+            // BatasAnggaran::where('id',$id)->update(['tanggal_mulai'=>$input['tanggal_mulai'],'tanggal_selesai'=>$input['tanggal_selesai'],'active'=>'1']);
             session()->flash('success', 'Waktu Pengajuan Anggaran dan Kegiatan Untuk '.$batas->unit_kerja." telah diubah");
 
             return redirect()->back();
@@ -183,7 +196,7 @@ class AnggaranController extends Controller
     {
         return Validator::make($input, 
             [
-                'tanggal_mulai'  => 'required',
+                'tanggal_mulai'  => 'sometimes|required',
                 'tanggal_selesai'  => 'required',
                 'unit_kerja'    => 'unique:batas_anggaran,unit_kerja,'.$id
             ],[
@@ -204,10 +217,10 @@ class AnggaranController extends Controller
                 );
         }
         $query="SELECT * 
-                    FROM (SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_DIVISI] 
+                    FROM (SELECT DESCRIPTION, VALUE FROM [AX_DUMMY].[dbo].[PIL_VIEW_DIVISI] 
                     WHERE VALUE!='00') AS A 
                     UNION ALL 
-                    SELECT * FROM (SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_KPKC]  
+                    SELECT * FROM (SELECT DESCRIPTION, VALUE FROM [AX_DUMMY].[dbo].[PIL_VIEW_KPKC]  
                     WHERE VALUE!='00') AS B";
         $unit_kerja = \DB::select($query);
         return view('anggaran.informasi', [
@@ -262,21 +275,22 @@ class AnggaranController extends Controller
         $diff2 = strtotime($date_selesai) - strtotime($date_now);
         $mulai=false;
         $batas=$date_selesai;
-        if($diff2 <= 0){
-            $beda = false;
-        }else{
-            $beda = true;
-        }
 
-        if($diff1 < 0){
-            $mulai=true;
-            $batas= $date_mulai;
+        if($diff2 < 0){
             $beda = false;
         }else{
-            $beda = true;
+            // $beda = true;
+            if($diff1 < 0){
+                $mulai=true;
+                $batas= $date_mulai;
+                $beda = false;
+            }else{
+                $beda = true;
+            }
         }
 
         // echo $date_mulai.":".$diff1;
+        // echo $beda?1:0;
 
         return view('anggaran.index', [
             'title' => 'Tambah Kegiatan dan Anggaran',
@@ -287,6 +301,7 @@ class AnggaranController extends Controller
             'batas' =>$batas,
             'mulai' =>$mulai,
             'status' => 'tambah',
+            'persetujuan'=>-1,
             'reject' => false,
             'filters' =>null,
             'display' => array('edit' => $displayEdit,
@@ -331,8 +346,6 @@ class AnggaranController extends Controller
                 $date_mulai = $batas->tanggal_mulai;
                 $date_selesai = $batas->tanggal_selesai;
             }
-
-
         }
 
         $diff1 = strtotime($date_now) - strtotime($date_mulai);
@@ -340,7 +353,7 @@ class AnggaranController extends Controller
         $beda = false;
         $mulai= false;
         $batas=$date_selesai;
-        if($userUnit == $unit){
+        if($userUnit == $unit||Gate::check('setuju_iia')){
             $beda = true;
             if($diff2 <= 0){
                 $beda = false;
@@ -353,7 +366,7 @@ class AnggaranController extends Controller
             }
         }
 
-        if($persetujuan != "-1"){
+        if($persetujuan != "-1"&&$persetujuan!='1'){
             $beda = false;
         }
 
@@ -367,7 +380,7 @@ class AnggaranController extends Controller
             $displaySend = 'block';
         }
 
-        // echo $mulai?1:0;
+        // echo $beda?1:0;
         return view('anggaran.index', [
             'title' => 'Ubah Kegiatan dan Anggaran',
             'userCabang' =>$this->userCabang,
@@ -378,6 +391,7 @@ class AnggaranController extends Controller
             'mulai' =>$mulai,
             'status' => 'edit',
             'reject' => false,
+            'persetujuan'=>$persetujuan,
             'filters' => array('nd_surat' => $nd_surat),
             'display' => array('edit' => $displayEdit,
                     'save' => $displaySave,
@@ -418,10 +432,12 @@ class AnggaranController extends Controller
 
         $beda = false;
 
-        if($persetujuan == "0"){
-            if(Gate::check('setuju_ia')&&($userUnit == $unit))
-                $beda = true;
-        }else if($persetujuan == "1"&&Gate::check('setuju_iia')){
+        //  *Hapus Persetujuan Kanit Kerja*
+        // if($persetujuan == "0"){
+        //     if(Gate::check('setuju_ia')&&($userUnit == $unit))
+        //         $beda = true;
+        // }else 
+        if($persetujuan == "1"&&Gate::check('setuju_iia')){
             if($status == '2'||$status == '3'){
                 $beda = true;
                 if($status == '3'){
@@ -446,7 +462,7 @@ class AnggaranController extends Controller
                 // echo "renbang";
         }
 
-        // echo $beda;
+        // echo $status;
         return view('anggaran.index', [
             'title' => 'Persetujuan Kegiatan dan Anggaran',
             'userCabang' =>$this->userCabang,
@@ -457,6 +473,7 @@ class AnggaranController extends Controller
             'mulai' =>false,
             'status' => 'setuju',
             'reject' => $reject,
+            'persetujuan'=>$persetujuan,
             'filters' => array('nd_surat' => $nd_surat),
             'display' => array('edit' => "none",
                     'save' => "none",
@@ -466,10 +483,10 @@ class AnggaranController extends Controller
     public function riwayat(Request $request ) 
     {
         $query="SELECT * 
-                    FROM (SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_DIVISI] 
+                    FROM (SELECT DESCRIPTION, VALUE FROM [AX_DUMMY].[dbo].[PIL_VIEW_DIVISI] 
                     WHERE VALUE!='00') AS A 
                     UNION ALL 
-                    SELECT * FROM (SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_KPKC]  
+                    SELECT * FROM (SELECT DESCRIPTION, VALUE FROM [AX_DUMMY].[dbo].[PIL_VIEW_KPKC]  
                     WHERE VALUE!='00') AS B";
         $unit_kerja = \DB::select($query);
         $filter = null;
@@ -506,9 +523,10 @@ class AnggaranController extends Controller
 
         switch($request->persetujuan){
           case ""                               : $setuju="-1";break;
-          case "Kirim"                          : $setuju="0";break;
-          case "Persetujuan Kanit Kerja"        : $setuju="1";break;
-          case "Persetujuan Renbang"            : $setuju="2";break;
+          // case "Kirim"                          : $setuju="0";break;*Hapus Kanit Kerja*
+          // case "Persetujuan Ka Unit Kerja"      : $setuju="1";break;
+          case "Persetujuan Ka Unit Kerja"      : $setuju="1";break;
+          case "Persetujuan Kadiv Renbang"      : $setuju="2";break;
           case "Persetujuan Direksi"            : $setuju="3";break;
           case "Persetujuan Dekom"              : $setuju="4";break;
           case "Persetujuan Ratek"              : $setuju="5";break;
@@ -526,7 +544,13 @@ class AnggaranController extends Controller
 
         if($request->setuju =='Kirim'||$request->setuju =='Setuju'){
             $status = "2";
-            $setuju = (int)$setuju+1;
+            // *Seleksi KEtika -1(Unit Kerja) maka Kirim Ke Renbang*
+            if($setuju == -1){
+                $setuju = 1 ;
+            }else{
+                $setuju = (int)$setuju+1;
+            }
+
             if($setuju == 2){
                 $status = "1";
             }else if($setuju == 8){
@@ -548,7 +572,7 @@ class AnggaranController extends Controller
         }
         if($request->setuju != 'Simpan' || $request->status == 'tambah'){
             $anggaran_insert = [
-            'tanggal'           => date("Y/m/d"),
+            'tanggal'           => $request->tanggal,
             'nd_surat'          => $request->nd_surat,
             'unit_kerja'        => $request->unit_kerja,
             'tipe_anggaran'     => $request->tipe_anggaran,
@@ -562,9 +586,9 @@ class AnggaranController extends Controller
         if($request->setuju == 'Simpan'){
             $active = '1';
         }
-
+        // $ubahtanggal=date("Y-m-d", strtotime($request->tanggal));
         $anggaran_update = [
-        'tanggal'           => date("Y/m/d"),
+        // 'tanggal'           => $ubahtanggal,
         'tipe_anggaran'     => $request->tipe_anggaran,
         'status_anggaran'   => $status,
         'persetujuan'       => $setuju,
@@ -595,7 +619,6 @@ class AnggaranController extends Controller
                     if($value->id != "-1"){
                         $idBefore = $value->id;
                     }
-                    
                 }else{
                     $idBefore = $value->id_first;
                 }
@@ -751,9 +774,11 @@ class AnggaranController extends Controller
         $status_view = redirect('anggaran/edit/'.$request->nd_surat); 
         // echo $setuju;
         if($request->setuju=='Kirim'||$request->setuju=='Setuju'){
-            if($setuju == 0)
-                NotificationSystem::send($anggaranId, 15);
-            else if($setuju == 1)
+            // *Hapus Notifikasi Ke Kanit Kerja*
+            // if($setuju == 0)
+            //     NotificationSystem::send($anggaranId, 15);
+            // else 
+            if($setuju == 1)
                 NotificationSystem::send($anggaranId, 17);
             else if($setuju == 2)
                 NotificationSystem::send($anggaranId, 19);
@@ -767,16 +792,21 @@ class AnggaranController extends Controller
                 NotificationSystem::send($anggaranId, 27);
             else if($setuju == 7)
                 NotificationSystem::send($anggaranId, 29);
-            else if($setuju == 8)
+            else if($setuju == 8){
                 NotificationSystem::send($anggaranId, 31);
+                $this->insertStaging($request->nd_surat);
+            }
         }else if($request->setuju=='Tolak'){
             if($setuju == "-1"){
-                if($request->persetujuan == "Kirim")
-                    NotificationSystem::send($anggaranId, 16);
-                else if($request->persetujuan == "Persetujuan Kanit Kerja")
+                if($request->persetujuan == "Persetujuan Ka Unit Kerja")
                     NotificationSystem::send($anggaranId, 18);
+                // *Hapus dan Ganti Ditolak Kanit dengan Di Tolak Rembang*
+                //  if($request->persetujuan == "Kirim")
+                //     NotificationSystem::send($anggaranId, 16);
+                // else if($request->persetujuan == "Persetujuan Kanit Kerja")
+                //     NotificationSystem::send($anggaranId, 18);
             }else if($setuju == "1"){
-                if($request->persetujuan == "Persetujuan Renbang")
+                if($request->persetujuan == "Persetujuan Kadiv Renbang")
                     NotificationSystem::send($anggaranId, 20);
                 else if($request->persetujuan == "Persetujuan Direksi")
                     NotificationSystem::send($anggaranId, 22);
@@ -792,10 +822,98 @@ class AnggaranController extends Controller
 
         }
         
-        if($request->persetujuan != "Kirim"&&$request->setuju){
-            $status_view = redirect('anggaran/persetujuan/'.$request->nd_surat.'/1');
-        }
+        // if($request->persetujuan != "Kirim"&&$request->setuju){
+        //     $status_view = redirect('anggaran/persetujuan/'.$request->nd_surat.'/1');
+        // }
         return $status_view;
+    }
+
+    public function insertTW($list_anggaran,$type,$unit_kerja){
+        $amount;
+        $transdate;
+        $year = explode("-", $list_anggaran->created_at);
+        switch ($type) {
+            case 1 :$amount = $list_anggaran->TWI;
+                    $transdate = ((int)$year[0]+1).'-01-01';
+                    break;
+            case 2 :$amount = $list_anggaran->TWII;
+                    $transdate = ((int)$year[0]+1).'-04-01';
+                    break;
+            case 3 :$amount = $list_anggaran->TWIII;
+                    $transdate = ((int)$year[0]+1).'-07-01';
+                    break;
+            case 4 :$amount = $list_anggaran->TWIV;
+                    $transdate = ((int)$year[0]+1).'-10-01';
+                    break;
+            
+        }
+        $unit = explode(' Cabang ',$unit_kerja);
+        $divisi;
+        $cabang;
+        if(count($unit)>1){
+            $cabang = KantorCabang::where('DESCRIPTION',$unit_kerja)->first()->VALUE;
+            $divisi = '00';
+        }else{
+            $divisi = Divisi::where('DESCRIPTION',$unit_kerja)->first()->VALUE;
+            $cabang = '00';
+        }
+        $jenis = ItemAnggaranMaster::where('name',$list_anggaran->jenis)
+                                    ->where('type','1')->first()->kode;
+        $kelompok = ItemAnggaranMaster::where('name',$list_anggaran->kelompok)
+                                    ->where('type','2')->first()->kode;
+        $pos_anggaran = ItemAnggaranMaster::where('name',$list_anggaran->pos_anggaran)
+                                    ->where('type','3')->first()->kode;
+        $sub_pos = SubPos::where('DESCRIPTION',$list_anggaran->sub_pos)
+                                    ->first()->VALUE;
+        $mata_anggaran = Kegiatan::where('DESCRIPTION',$list_anggaran->mata_anggaran)
+                                    ->first()->VALUE;
+
+        $account = ItemMasterAnggaran::where('jenis',$jenis)->where('kelompok',$kelompok)
+                                    ->where('pos_anggaran',$pos_anggaran)->where('sub_pos',$sub_pos)
+                                    ->where('mata_anggaran',$mata_anggaran)->first()->account;
+        $input = [
+                'DATAAREAID'            => 'asbr',
+                'RECID'                 => $list_anggaran->id.$type,
+                'PIL_ACCOUNT'           => $account,
+                'PIL_PROGRAM'           => 'THT',
+                'PIL_KPKC'              => $cabang,
+                'PIL_DIVISI'            => $divisi,
+                'PIL_SUBPOS'            => $sub_pos,
+                'PIL_MATAANGGARAN'      => $mata_anggaran,
+                'PIL_TRANSDATE'         => $transdate,
+                'PIL_TXT'               => $list_anggaran->mata_anggaran,
+                'PIL_AMOUNT'            => $amount,
+                ];
+        // return $input;
+        StagingAnggaran::create($input);
+    }
+
+    public function insertStaging($nd_surat)
+    {
+        $anggaran = $this->anggaranModel->where('nd_surat', $nd_surat)->where('active', '1')->get();
+        foreach ($anggaran as $angga) {
+            $unit_kerja = $angga->unit_kerja;
+            $listAnggaran = $this->listAnggaranModel->where('id_list_anggaran', $angga->id)
+                                                    ->where('active', '1');
+            foreach ($listAnggaran->get() as $list_anggaran) {
+                //Ini Seleksi Jika Anggaran Tidak Terpusat Disimpan Kestaging
+                if($list_anggaran->terpusat != "1"){
+                    if($list_anggaran->TWI > 0){
+                        $this->insertTW($list_anggaran,1,$unit_kerja);
+                    }
+                    if($list_anggaran->TWII > 0){
+                        $this->insertTW($list_anggaran,2,$unit_kerja);
+                    }
+                    if($list_anggaran->TWIII > 0){
+                        $this->insertTW($list_anggaran,3,$unit_kerja);
+                    }
+                    if($list_anggaran->TWIV > 0){
+                        $this->insertTW($list_anggaran,4,$unit_kerja);
+                    }
+                }
+
+            }
+        }
     }
 
     public function getFiltered($nd_surat,$type){
@@ -1037,10 +1155,10 @@ class AnggaranController extends Controller
         switch ($type) {
             case 'unitkerja':
                 $second="SELECT * 
-                    FROM (SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_DIVISI] 
+                    FROM (SELECT DESCRIPTION, VALUE FROM [AX_DUMMY].[dbo].[PIL_VIEW_DIVISI] 
                     WHERE VALUE!='00') AS A 
                     UNION ALL 
-                    SELECT * FROM (SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_KPKC]  
+                    SELECT * FROM (SELECT DESCRIPTION, VALUE FROM [AX_DUMMY].[dbo].[PIL_VIEW_KPKC]  
                     WHERE VALUE!='00') AS B";
                 $return = \DB::select($second);
                 break;
@@ -1066,10 +1184,10 @@ class AnggaranController extends Controller
                 // echo $decode;
                 $kode= SubPos::where('DESCRIPTION',$decode)->first()->VALUE;
                 
-                $item = ItemMaster::where('SEGMEN_5',$kode)->get();
+                $item = ItemMasterAnggaran::where('sub_pos',$kode)->get();
                 $array = [];
                 foreach ($item as $row) {
-                    array_push($array,$row->SEGMEN_6);
+                    array_push($array,$row->mata_anggaran);
                 }
                 $return = Kegiatan::select('DESCRIPTION')->where('DESCRIPTION','<>','None')->whereIn('VALUE',$array)->orderBy('DESCRIPTION','ASC')->get();
                 // $return = Kegiatan::select('DESCRIPTION')->where('DESCRIPTION','<>','None')->orderBy('DESCRIPTION','ASC')->get();
@@ -1087,11 +1205,11 @@ class AnggaranController extends Controller
                 // echo $decode;
                 $kode= ItemAnggaranMaster::where('name',$decode)->where('type',3)->first()->kode;
                 // echo $kode;
-                $item = ItemMaster::where('pos_anggaran',$kode)->get();
+                $item = ItemMasterAnggaran::where('pos_anggaran',$kode)->get();
                 $array = [];
                 foreach ($item as $row) {
                     // echo $row->sub_pos;
-                    array_push($array,$row->SEGMEN_5);  
+                    array_push($array,$row->sub_pos);  
                 }
                 $return = SubPos::select('DESCRIPTION')->where('DESCRIPTION','<>','None')->whereIn('VALUE',$array)->orderBy('DESCRIPTION','ASC')->get(); 
                 // $return = SubPos::select('DESCRIPTION')->where('DESCRIPTION','<>','None')->orderBy('DESCRIPTION','ASC')->get(); 
@@ -1107,7 +1225,7 @@ class AnggaranController extends Controller
                     $decode = urldecode($val);
                 }
                 $kode= ItemAnggaranMaster::where('name',$decode)->where('type',2)->first()->kode;
-                $item = ItemMaster::where('kelompok_anggaran',$kode)->get();
+                $item = ItemMasterAnggaran::where('kelompok',$kode)->get();
                 $array = [];
                 foreach ($item as $row) {
                     array_push($array,$row->pos_anggaran);
@@ -1127,15 +1245,16 @@ class AnggaranController extends Controller
                 }
                 $kode= ItemAnggaranMaster::where('name',$decode)->where('type',1)->first()->kode;
                 // echo $kode;
-                $item = ItemMaster::where('jenis_anggaran',$kode)->get();
+                $item = ItemMasterAnggaran::where('jenis',$kode)->get();
                 $array = [];
                 foreach ($item as $row) {
-                    array_push($array,$row->kelompok_anggaran);
+                    array_push($array,$row->kelompok);
                 }
                 $return = ItemAnggaranMaster::select('name')->where('type',2)->whereIn('kode',$array)->orderBy('name','ASC')->get(); 
                 // $return = ItemAnggaranMaster::select('name')->where('type',2)->orderBy('name','ASC')->get(); 
                 break;
             case 'jenis':
+
                 $return = ItemAnggaranMaster::select('name')->where('type',1)->orderBy('name','ASC')->get(); 
                 break;
             case 'nd_surat':

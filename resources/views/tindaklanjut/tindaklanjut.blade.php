@@ -74,39 +74,53 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="row">
-                    <section id="select-inputs">
-			          <div class="row">
-			          	<div class="col-xs-12">
-			              <div class="card">
-			                <div class="card-header">
-			                  
-			                  <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
-			                  	<div class="card-body collapse in">
-			                  	
-			                  		<table>
-			                  		<form enctype="multipart/form-data" role="form" action="{{ URL('tindaklanjut') }}" method="GET" >
-				                    {{ csrf_field() }}
-			                  			<tr>
-			                  				<td><b>Unit Kerja</b></td><td>  </td><td><b> : </b></td><td>  </td>
-			                  				<td><select class="select2 form-control block" name="unitkerja" style="width:300px" id="unitkerja" onchange="changeUnit()" required="required">
+            	<section id="select-inputs">
+            		<div class="row">
+            			<div class="col-xs-12">
+            				<div class="card">
+            					<div class="card-header">
+            						<h4 class="card-title">Pencarian Tindak Lanjut</h4>
+            						<a class="heading-elements-toggle"><i class="ft-align-justify font-medium-3"></i></a>
+            					</div>
+            					<div class="card-body collapse in">
+            						<div class="card-block">
+            							<form enctype="multipart/form-data" role="form" action="{{ URL('tindaklanjut') }}" method="GET" >
+				                    		<div class="row">
+            								{{ csrf_field() }}
+            									<div class="col-xs-4">
+            										<div class="form-group">
+            										<label>Unit Kerja</label><br>
+            										<select class="select2 form-control block" name="unitkerja" id="unitkerja" style="width:300px" onchange="changeUnit()" required="required">
                                                     <option value="0"> - Pilih Unit Kerja - </option>
                                                     <?php
-                                                    $second="SELECT * FROM (SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_DIVISI] WHERE VALUE!='00') AS A UNION ALL SELECT * FROM (SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_KPKC]  WHERE VALUE!='00') AS B";
+                                                    $second="SELECT * FROM (SELECT DESCRIPTION, VALUE FROM [AX_DUMMY].[dbo].[PIL_VIEW_DIVISI] WHERE VALUE!='00') AS A UNION ALL SELECT * FROM (SELECT DESCRIPTION, VALUE FROM [AX_DUMMY].[dbo].[PIL_VIEW_KPKC]  WHERE VALUE!='00') AS B";
 									                $return = DB::select($second);
 									                ?>
                                                     @foreach($return as $b)
                                                       <option value="{{ $b->DESCRIPTION }}" >{{ $b->DESCRIPTION }}</option>
                                                     @endforeach
-                                                  </select></td>
-			                  			</tr>
-			                  			<tr>
-			                  				<td>  </td>
-			                  			</tr>
-			                  			<tr>
-			                  				<td><b>Tanggal Mulai</b></td><td>  </td><td><b> : </b></td><td>  </td>
-			                  				<td><select class="select2 form-control block" name="tgl_mulai" required="required"></select></td>
-			                  				<script type="text/javascript">
+                                                  </select>
+            										</div>
+            									</div>
+            									<div class="col-xs-3.5">
+            										<div class="form-grpup">
+            											<label>Tanggal Mulai</label><br>
+            											<select class="select2 form-control block" name="tgl_mulai" style="width:200px" required="required"></select>
+            										</div>
+            									</div>
+            								</div>
+            								<div class="row">
+            									<div class="col-xs-7">
+            										<button type="submit" class="btn btn-outline-primary"><i class="fa fa-search "></i> Cari</button>
+            									</div>
+            								</div>
+            							</form>
+            						</div>
+            					</div>
+            				</div>
+            				<script type="text/javascript">
 											    function changeUnit(){
 										    		var unitkerja = $('#unitkerja').val();
 									                var uri = "{{ url('tindaklanjut/myform').'/'}}"+ encodeURI(unitkerja);
@@ -132,27 +146,10 @@
 								                    });
 										    	}
 											</script>
-											
-			                  			</tr>
-			                  			<tr>
-			                  				<td>  </td>
-			                  			</tr>
-			                  			<tr>
-			                  				<td>  </td>
-			                  			</tr>
-			                  			<tr>										 
-			                  			<td></td><td></td><td></td><td></td><td><button type="submit" class="btn btn-primary pull-right"><i class="fa fa-search "></i> Cari</button></td>
-
-			                  			</tr>
-			                  			</form>
-			                  		</table>
-			                  	
-			                	</div>
-			              	</div>
-			              </div>
-			            </div>
-			          </div>
-			        </div>
+            			</div>
+            		</div>
+            	</div>
+                
                 @if(count($a))
 				@foreach($a as $bb)
 				<?php 							
@@ -393,7 +390,7 @@
 			                        			<td>
 			                        			@if ($b->temuan=="")
 			                        				@if ($b->kirim!='3')
-			                        					<center><span><a class="btn btn-success btn-sm" data-target="#tambahtemuan{{$b->id1}}" data-toggle="modal"><i class="fa fa-plus"></i> <b>Tambah Temuan</b></a></span></center>
+			                        					<span><a class="btn btn-success btn-sm" data-target="#tambahtemuan{{$b->id1}}" data-toggle="modal"><i class="fa fa-plus"></i> <b>Tambah Temuan</b></a></span>
 			                        				@endif
 			                        			@else
 				                           			@if ($longkap2 != $b->temuan) 
@@ -414,7 +411,7 @@
 			                        			@if ($b->temuan!="")
 			                        				@if ($b->rekomendasi=="")
 			                        					@if ($b->kirim!='3')
-				                        				<center><span><a class="btn btn-success btn-sm" data-target="#tambahrekomendasi{{$b->id2}}" data-toggle="modal"><i class="fa fa-plus"></i> <b>Tambah Rekomendasi</b></a></span></center>
+				                        				<span><a class="btn btn-success btn-sm" data-target="#tambahrekomendasi{{$b->id2}}" data-toggle="modal"><i class="fa fa-plus"></i> <b>Tambah Rekomendasi</b></a></span>
 				                        				@endif
 					                           		@else
 						                           		@if ($longkap3 != $b->rekomendasi) 

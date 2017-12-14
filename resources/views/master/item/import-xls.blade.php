@@ -54,13 +54,23 @@
                                   </div>
                                 </div>
                                 @endif
-                                @if(count($errors) > 0)
+
+                              
+                                @if(count($errors) > 0||count($fail) >0)
                                 <div class="col-xs-12">
                                   <div class="alert alert-danger alert-dismissable">
                                     <ul>
-                                      @foreach ($errors->all() as $error)
-                                      <li>{!! $error !!}</li>
-                                      @endforeach
+                                      @if(count($fail) > 0)
+                                        @foreach ($fail as $err)
+                                          @foreach ($err as $error)
+                                          <li>{!! $error !!}</li>
+                                          @endforeach
+                                        @endforeach
+                                      @else
+                                        @foreach ($errors->all() as $error)
+                                          <li>{!! $error !!}</li>
+                                        @endforeach
+                                      @endif
                                     </ul>
                                   </div>
                                 </div>
@@ -68,7 +78,15 @@
                               </div>
                               <div class="form-body">
                                 <div class="row">
-                                  <div class="form-group col-md-7 col-xl-7 col-sm-12">
+                                  <div class="form-group col-md-5 col-xl-5 col-sm-5">
+                                    <label for="item">Jenis Item</label>
+                                    <select class="select2 form-control" id="item" name="item" required="">
+                                        <option value="" disabled selected>Jenis Item</option>
+                                        <option value="1">Item Kombinasi Transaksi</option>
+                                        <option value="2">Item Anggaran</option>
+                                      </select>
+                                  </div>
+                                  <div class="form-group col-md-7 col-xl-7 col-sm-7">
                                     <label for="eventRegInput1">File Excel <code class="font-small-1">(.xls, .xlsx, atau .csv)</code></label>
                                     <input type="file" required="" class="form-control" placeholder="" name="file">
                                   </div>

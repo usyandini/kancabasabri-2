@@ -61,7 +61,7 @@
                 <div class="row breadcrumbs-top">
                   <div class="breadcrumb-wrapper col-xs-12">
                     <ol class="breadcrumb">
-                      <li class="breadcrumb-item">Pengajuan Dropping</li>
+                      <li class="breadcrumb-item"><a href="#">Pengajuan Dropping</a></li>
                     </ol>
                   </div>
                 </div>
@@ -71,7 +71,7 @@
             <div class="row">
               <section id="select-inputs">
                 <div class="row">
-                  <div class="col-xs-6">
+                  <div class="col-xs-12">
                     <div class="card">
                       <div class="card-header">
                         <h4 class="card-title">Pencarian Pengajuan Dropping</h4>
@@ -82,33 +82,39 @@
                           <form enctype="multipart/form-data" role="form" action="{{ URL('pengajuan_dropping/carimyform') }}" method="GET" >
                             <div class="row">
                               {{ csrf_field() }}
-                              <div class="col-xs-6 col-xl-6">
+                              <div class="col-xs-4">
                                 <div class="form-group">
-                                  <label>Kantor Cabang</label>
-                                  <select class="select2 form-control block" name="cabang" id="cabang" onchange="changeUnit()" required="required">
+                                  <label>Kantor Cabang</label><br>
+                                  <select class="select2 form-control block" name="cabang" id="cabang" style="width:300px" onchange="changeUnit()" required="required">
                                     <option value=""> - Pilih Kantor Cabang - </option>
                                     <?php
-                                    $second="SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_KPKC]  WHERE VALUE!='00'";
+                                    $units = array();
+                                    $second="SELECT DESCRIPTION, VALUE FROM [AX_DUMMY].[dbo].[PIL_VIEW_KPKC]  WHERE VALUE!='00'";
                                     $return = DB::select($second);
+                                      foreach ($return as $cabang) {
+                                      if(Gate::check('unit_'.$cabang->VALUE."00")){
+                                      array_push($units, $cabang);
+                                      }                                         
+                                    }
                                     ?>
-                                    @foreach($return as $b)
-                                    <?php $id = $b->VALUE."00"; ?>
-                                    @if(Gate::check("unit_".$id) )
-                                    <option value="{{ $b->DESCRIPTION }}" >{{ $b->DESCRIPTION }}</option>
+                                    @if(count($units)>1)
+                                    <option value="0">Semua Cabang</option>
                                     @endif
+                                    @foreach($units as $unit)
+                                      <option value="{{ $unit->DESCRIPTION }}" >{{ $unit->DESCRIPTION }}</option>
                                     @endforeach
                                   </select>
                                 </div>
                               </div>
-                              <div class="col-xl-6 col-xs-6 col-md-6">
-                                <div class="form-grpup">
-                                  <label>Tanggal</label>
-                                  <select class="select2 form-control block" name="tanggal" style="width:300px" required="required"></select>
+                              <div class="col-xs-3.5">
+                                <div class="form-group">
+                                  <label>Tanggal</label><br>
+                                  <select class="select2 form-control block" name="tanggal" style="width:200px" required="required"></select>
                                 </div>
                               </div>
                             </div>
                             <div class="row">
-                              <div class="col-xs-6">
+                              <div class="col-xs-7">
                                 <button type="submit" class="btn btn-outline-primary"><i class="fa fa-search "></i> Cari</button>
                               </div>
                             </div>
@@ -119,6 +125,11 @@
                     <script type="text/javascript">
                       function changeUnit(){
                         var cabang = $('#cabang').val();
+                        if(cabang=="0"){
+                          $('select[name="tanggal"]').empty();
+                          $('select[name="tanggal"]').append('<option value="0">Semua Tanggal</option>');
+                        }
+                        else{
                         var uri = "{{ url('pengajuan_dropping/myform').'/'}}"+ encodeURI(cabang);
 
                         $.ajax({
@@ -129,6 +140,7 @@
                           'success': function (data) {
 
                             $('select[name="tanggal"]').empty();
+                            $('select[name="tanggal"]').append('<option value="0">Semua Tanggal</option>');
                             $.each(data, function(key, value) {
                               var tanggal = new Date(value).getDate();
                               var bulan = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
@@ -139,6 +151,7 @@
                             });
                           }
                         });
+                      }
                       }
                     </script>                   
                   </div>
@@ -155,7 +168,7 @@
                           <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
                           <div class="card-body collapse in">                           
                             <div class="card-block">
-                              <a href="#" class="btn btn-success btn-sm" data-target="#tambah" data-toggle="modal"><i class="fa fa-plus"></i> Tambah Pengajuan</a>
+                              <a href="#" class="btn btn-outline-success btn" data-target="#tambah" data-toggle="modal"><i class="fa fa-plus"></i><b> Tambah Pengajuan</b></a>
                               <div class="modal fade" data-backdrop="static" id="tambah" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                                 <div class="modal-dialog">
                                   <div class="modal-content">
@@ -169,14 +182,14 @@
                                         <label class="control-label"><b> Kantor Cabang </b></label>
                                         <label class="control-label"> : </label><br>
                                         <select class="select2 form-control block" name="kantor_cabang" style="width:300px" required="required">
-                                          <option value=""> - Pilih Kantor Cabang - </option>
+                                          <!-- <option value=""> - Pilih Kantor Cabang - </option> -->
                                           <option value="{{$userCab}}" > {{$userCab}} </option>
                                         </select>
                                         
                                                     <!--<input class="form-control" type="text" name="kantor_cabang" disabled="disabled" required="required" value="{{$userCab}}">
                                                     -->
                                                     <br><br>
-                                                    <label class="control-label"><b> Nomor </b></label>
+                                                    <label class="control-label"><b> Nomor Nota Dinas </b></label>
                                                     <label class="control-label"> : </label>
                                                     <input class="form-control" type="text" name="nomor" placeholder="masukkan nomor" required="required">
                                                     <br>
@@ -191,11 +204,13 @@
                                                     <label class="control-label"><b> Periode Realiasi </b></label>
                                                     <label class="control-label"> : </label>
                                                     <select class="select form-control" name="periode_realisasi" required="required" >
-                                                      <option value="">Pilih Periode Realisasi</option>
-                                                      <option value="1">TW I</option>
-                                                      <option value="2">TW II</option>  
-                                                      <option value="3">TW III</option>
-                                                      <option value="4">TW IV</option>                                                 
+                                                      <!-- <option value="">Pilih Periode Realisasi</option> -->
+                                                      <?php
+                                                      if (date('n')==1||date('n')==2||date('n')==3){ echo "<option value=1>TW I</option><option value=2>TW II</option><option value=3>TW III</option><option value=4>TW IV</option>";}
+                                                      if (date('n')==4||date('n')==5||date('n')==6){ echo "<option value=2>TW II</option><option value=3>TW III</option><option value=4>TW IV</option>";}
+                                                      if (date('n')==7||date('n')==8||date('n')==9){ echo "<option value=3>TW III</option><option value=4>TW IV</option>";}
+                                                      if (date('n')==10||date('n')==11||date('n')==12){ echo "<option value=4>TW IV</option>";}
+                                                      ?>                                                
                                                     </select> 
                                                     <br>
                                                     <label class="control-label"><b> Lampiran </b></label>
@@ -226,10 +241,10 @@
                                                 <tr>
                                                   <th><center>No</center></th>
                                                   <th id="filterable"><center>Kantor Cabang</center></th>
-                                                  <th id="filterable"><center>Nomor</center></th>
+                                                  <th id="filterable"><center>Nomor Nota Dinas</center></th>
                                                   <th id="filterable"><center>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Tanggal&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</center></th>
                                                   <th id="filterable"><center>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Jumlah Diajukan&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</center></th>
-                                                  <th id="filterable"><center>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Terbilang&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</center></th>
+                                                  <!-- <th id="filterable"><center>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Terbilang&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</center></th> -->
                                                   <th id="filterable"><center>Periode Realisasi</center></th>
                                                   <th id="filterable"><center>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Lampiran&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</center></th>
                                                   <th id="filterable"><center>Verifikasi</center></th>
@@ -289,102 +304,7 @@
                                                   $angka = number_format($b->jumlah_diajukan,0,"",".");
                                                   ?>
                                                   <td><center>{{ $tgl }} {{ $bulans }} {{ $tahun }}</center></td>
-                                                  <td><center>Rp {{ $angka }},-</center></td>
-                                                  <td><center><?php
-                                                  function terbilang($angka) {
-    // pastikan kita hanya berususan dengan tipe data numeric
-                                                    $angka = (float)$angka;
-
-    // array bilangan 
-    // sepuluh dan sebelas merupakan special karena awalan 'se'
-                                                    $bilangan = array(
-                                                      '',
-                                                      'satu',
-                                                      'dua',
-                                                      'tiga',
-                                                      'empat',
-                                                      'lima',
-                                                      'enam',
-                                                      'tujuh',
-                                                      'delapan',
-                                                      'sembilan',
-                                                      'sepuluh',
-                                                      'sebelas'
-                                                    );
-
-    // pencocokan dimulai dari satuan angka terkecil
-                                                    if ($angka < 12) {
-        // mapping angka ke index array $bilangan
-                                                      return $bilangan[$angka];
-                                                    } else if ($angka < 20) {
-        // bilangan 'belasan'
-        // misal 18 maka 18 - 10 = 8
-                                                      return $bilangan[$angka - 10] . ' belas';
-                                                    } else if ($angka < 100) {
-        // bilangan 'puluhan'
-        // misal 27 maka 27 / 10 = 2.7 (integer => 2) 'dua'
-        // untuk mendapatkan sisa bagi gunakan modulus
-        // 27 mod 10 = 7 'tujuh'
-                                                      $hasil_bagi = (int)($angka / 10);
-                                                      $hasil_mod = $angka % 10;
-                                                      return trim(sprintf('%s puluh %s', $bilangan[$hasil_bagi], $bilangan[$hasil_mod]));
-                                                    } else if ($angka < 200) {
-        // bilangan 'seratusan' (itulah indonesia knp tidak satu ratus saja? :))
-        // misal 151 maka 151 = 100 = 51 (hasil berupa 'puluhan')
-        // daripada menulis ulang rutin kode puluhan maka gunakan
-        // saja fungsi rekursif dengan memanggil fungsi terbilang(51)
-                                                      return sprintf('seratus %s', terbilang($angka - 100));
-                                                    } else if ($angka < 1000) {
-        // bilangan 'ratusan'
-        // misal 467 maka 467 / 100 = 4,67 (integer => 4) 'empat'
-        // sisanya 467 mod 100 = 67 (berupa puluhan jadi gunakan rekursif terbilang(67))
-                                                      $hasil_bagi = (int)($angka / 100);
-                                                      $hasil_mod = $angka % 100;
-                                                      return trim(sprintf('%s ratus %s', $bilangan[$hasil_bagi], terbilang($hasil_mod)));
-                                                    } else if ($angka < 2000) {
-        // bilangan 'seribuan'
-        // misal 1250 maka 1250 - 1000 = 250 (ratusan)
-        // gunakan rekursif terbilang(250)
-                                                      return trim(sprintf('seribu %s', terbilang($angka - 1000)));
-                                                    } else if ($angka < 1000000) {
-        // bilangan 'ribuan' (sampai ratusan ribu
-        $hasil_bagi = (int)($angka / 1000); // karena hasilnya bisa ratusan jadi langsung digunakan rekursif
-        $hasil_mod = $angka % 1000;
-        return sprintf('%s ribu %s', terbilang($hasil_bagi), terbilang($hasil_mod));
-      } else if ($angka < 1000000000) {
-        // bilangan 'jutaan' (sampai ratusan juta)
-        // 'satu puluh' => SALAH
-        // 'satu ratus' => SALAH
-        // 'satu juta' => BENAR 
-        // @#$%^ WT*
-
-        // hasil bagi bisa satuan, belasan, ratusan jadi langsung kita gunakan rekursif
-        $hasil_bagi = (int)($angka / 1000000);
-        $hasil_mod = $angka % 1000000;
-        return trim(sprintf('%s juta %s', terbilang($hasil_bagi), terbilang($hasil_mod)));
-      } else if ($angka < 1000000000000) {
-        // bilangan 'milyaran'
-        $hasil_bagi = (int)($angka / 1000000000);
-        // karena batas maksimum integer untuk 32bit sistem adalah 2147483647
-        // maka kita gunakan fmod agar dapat menghandle angka yang lebih besar
-        $hasil_mod = fmod($angka, 1000000000);
-        return trim(sprintf('%s miliar %s', terbilang($hasil_bagi), terbilang($hasil_mod)));
-      } else if ($angka < 1000000000000000) {
-        // bilangan 'triliun'
-        $hasil_bagi = $angka / 1000000000000;
-        $hasil_mod = fmod($angka, 1000000000000);
-        return trim(sprintf('%s triliun %s', terbilang($hasil_bagi), terbilang($hasil_mod)));
-      } else {
-        return 'Wow...';
-      }
-    }
-
-    if ($b->jumlah_diajukan)
-    {
-      echo ucwords(Terbilang($b->jumlah_diajukan))." Rupiah";
-    }
-
-    ?></center></td>
+                                                  <td align="right">Rp. {{ $angka }}</td>
     <td><center><?php 
     if($b->periode_realisasi=='1'){ echo "TW I";}
     if($b->periode_realisasi=='2'){ echo "TW II";}
@@ -493,7 +413,7 @@
             <select class="select2 form-control block" name="kantor_cabang" style="width:300px" required="required" value="{{$b->kantor_cabang}}">
               <option value="0"> - Pilih Kantor Cabang - </option>
               <?php
-              $second="SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_KPKC]  WHERE VALUE!='00'";
+              $second="SELECT DESCRIPTION, VALUE FROM [AX_DUMMY].[dbo].[PIL_VIEW_KPKC]  WHERE VALUE!='00'";
               $return = DB::select($second);
               ?>
               @foreach($return as $bq)

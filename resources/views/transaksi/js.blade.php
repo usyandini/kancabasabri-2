@@ -28,7 +28,7 @@
                             return new Date(date1) - new Date(date2);
                         },
                         itemTemplate: function(value) {
-                            return value ? ("0" + new Date(value).getDate()).slice(-2) + '/' + ("0" + (new Date(value).getMonth() + 1)).slice(-2) + '/' + new Date(value).getFullYear() : '';
+                            return value ? ("0" + new Date(value).getDate()).slice(-2) + '-' + ("0" + (new Date(value).getMonth() + 1)).slice(-2) + '-' + new Date(value).getFullYear() : '';
                         },
                         insertTemplate: function(value) {
                             return this._insertPicker = $("<input>").datepicker({ defaultDate: new Date() });
@@ -135,13 +135,14 @@
                             type: "date", 
                             width: 150, 
                             title: "Tanggal", 
-                            align: "left",
+                            align: "center",
                             validate: {
                               validator : "required",
                               message : "Kolom tanggal tidak boleh kosong."  
                             },
                             insertTemplate: function(value) {
                               var result = this._insertPicker = $("<input>").datepicker({ defaultDate: new Date() })
+                                                                // $("<input>").datepicker({ dateFormat: 'dd-mm-yy' })
                               result.on("change", function() {
                                 date_field = result.val()
                                 
@@ -215,7 +216,7 @@
                           { 
                             name: "account", 
                             width: 250, 
-                            align: "left",
+                            align: "center",
                             type: "text", 
                             title: "Account", 
                             readOnly: true,
@@ -238,7 +239,7 @@
                           { 
                             name: "anggaran", 
                             width: 200, 
-                            align: "left",
+                            align: "right",
                             type: "text", 
                             title: "Anggaran Tersedia (Awal)",
                             readOnly: true,
@@ -251,7 +252,7 @@
                             itemTemplate: function(value) {
                               //var nilai = validDigits(value);
                               value = addCommas(value);
-                              return "<b>Rp. " + value + ",00</b>";
+                              return "<b>Rp. " + value;
                             },
                             editTemplate: function(value) {
                               var val = addCommas(value);
@@ -266,7 +267,7 @@
                           { 
                             name: "actual_anggaran", 
                             width: 300, 
-                            align: "left",
+                            align: "right",
                             type: "text", 
                             title: "Anggaran Tersedia (Aktual Estimasi)",
                             readOnly: true,
@@ -279,7 +280,7 @@
                             itemTemplate: function(value) {
                               //var nilai = validDigits(value);
                               value = addCommas(value);
-                              return "<b>Rp. " + value + ",00</b>";
+                              return "<b>Rp. " + value;
                             },
                             editTemplate: function(value) {
                               var val = addCommas(value);
@@ -343,17 +344,39 @@
                             name: "qty_item", 
                             width: 250, 
                             align: "left",
-                            type: "number", 
+                            type: "number",
+                            _createTextBox:function(){
+                              var $input = jsGrid.fields.number.prototype._createTextBox.call(this);
+                              return $input.attr("min",0);
+                            },
                             title: "Jumlah Diajukan (Kuantitas)",
                             validate: {
-                              validator: function(value, item) {
-                                return value != ''
+                              message :function(value) {
+                                if(value == ''){
+                                  status="Kolom jumlah item tidak boleh kosong";
+                                }
+                                if(value<0){
+                                  status="Kolom jumlah item minimal 1";
+                                }
+                                return status;
                               },
-                              message: "Kolom jumlah item tidak boleh kosong."
-                            }  },
+
+                            //validator
+                              validator :function(value, item) {
+                                if(value<0){
+                                  return false;
+                                }
+                                else if(value == ''){
+                                  return false;
+                                }else{
+                                  return true;
+                                }
+                              }
+                            }  
+                          },
                           { 
                             name: "total", 
-                            align: "left",
+                            align: "right",
                             width: 200, 
                             type: "text", 
                             title: "Jumlah Diajukan (Rupiah)",
@@ -375,7 +398,7 @@
                             itemTemplate: function(value) {
                               //var nilai = validDigits(value);
                               value = addCommas(value);
-                              return "<b>Rp. " + value + ",00</b>";
+                              return "<b>Rp. " + value;
                             },
                             editTemplate: function(value) {
                               var val = addCommas(value);
@@ -486,11 +509,13 @@
                   }
 
                   function getCombination() {
-                    var combination = null
+                    var combination = null;
+                    // alert( "{{ url('item/get/combination').'/' }}" + mainaccount + "/" + date_field)
                     $.ajax({
                       'async': false, 'type': "GET", 'dataType': "JSON", 'url': "{{ url('item/get/combination').'/' }}" + mainaccount + "/" + date_field,
                       'success': function(data) {
-                        combination = data
+                        combination = data;
+                        console.log('kombinasi',data);
                       }
                     })
                     if (combination == null) {

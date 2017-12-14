@@ -35,6 +35,7 @@ class ItemMaster extends Model
     public function axAnggaran($transaksi_date)
     {
         $displayvalue = $this->SEGMEN_1.'-'.$this->SEGMEN_2.'-'.$this->SEGMEN_3.'-'.$this->SEGMEN_4.'-'.$this->SEGMEN_5.'-'.$this->SEGMEN_6;
+        // echo $displayvalue;
         return $this->hasMany('App\Models\BudgetControl', 'PIL_MAINACCOUNT', 'SEGMEN_1')->where([
             ['PIL_DISPLAYVALUE', $displayvalue], 
             ['PIL_PERIODSTARTDATE', '<=', $transaksi_date], 

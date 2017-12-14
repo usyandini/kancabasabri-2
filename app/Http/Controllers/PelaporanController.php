@@ -62,10 +62,10 @@ class PelaporanController extends Controller
             );
         // }
         $query="SELECT * 
-                    FROM (SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_DIVISI] 
+                    FROM (SELECT DESCRIPTION, VALUE FROM [AX_DUMMY].[dbo].[PIL_VIEW_DIVISI] 
                     WHERE VALUE!='00') AS A 
                     UNION ALL 
-                    SELECT * FROM (SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_KPKC]  
+                    SELECT * FROM (SELECT DESCRIPTION, VALUE FROM [AX_DUMMY].[dbo].[PIL_VIEW_KPKC]  
                     WHERE VALUE!='00') AS B";
         $unit_kerja = \DB::select($query);
         $sub_title = "";
@@ -113,10 +113,10 @@ class PelaporanController extends Controller
         }
 
         $query="SELECT * 
-                    FROM (SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_DIVISI] 
+                    FROM (SELECT DESCRIPTION, VALUE FROM [AX_DUMMY].[dbo].[PIL_VIEW_DIVISI] 
                     WHERE VALUE!='00') AS A 
                     UNION ALL 
-                    SELECT * FROM (SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_KPKC]  
+                    SELECT * FROM (SELECT DESCRIPTION, VALUE FROM [AX_DUMMY].[dbo].[PIL_VIEW_KPKC]  
                     WHERE VALUE!='00') AS B";
 
         $unit_kerja = \DB::select($query);
@@ -142,9 +142,9 @@ class PelaporanController extends Controller
     {
 
         $filter = null;
-        $setting = array('editable' => false,
+        $setting = array('editable' =>false,
                     'edit'          =>false,
-                    'insert'          =>false,
+                    'insert'        =>false,
                     'status'        =>"Info",
                     'kategori'      =>'usulan_program',
                     'id_form_master'=>-1,
@@ -228,8 +228,8 @@ class PelaporanController extends Controller
                 return redirect('pelaporan/tambah_usulan_program/'.$id);
             }
             $date_now = date("Y-m-d");
-            $date_mulai;
-            $date_selesai;
+            $date_mulai = date("Y-m-d");
+            $date_selesai = date("Y-m-d");
             if(count($this->check_tambah($id,1))>0){
                 $form = $this->check_tambah($id,1);
                 foreach ($form as $row) {
@@ -378,6 +378,9 @@ class PelaporanController extends Controller
             }
             if($row->status == 'Kirim'){
                 $beda =false;
+            }
+            if($row->status != 'Kirim'){
+                $beda =true;
             }
         }
         $mulai = false;
@@ -1246,10 +1249,10 @@ class PelaporanController extends Controller
         }
 
         $second="SELECT * 
-            FROM (SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_DIVISI] 
+            FROM (SELECT DESCRIPTION, VALUE FROM [AX_DUMMY].[dbo].[PIL_VIEW_DIVISI] 
             WHERE VALUE!='00' ".$string2.") AS A 
             UNION ALL 
-            SELECT * FROM (SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_KPKC]  
+            SELECT * FROM (SELECT DESCRIPTION, VALUE FROM [AX_DUMMY].[dbo].[PIL_VIEW_KPKC]  
             WHERE VALUE!='00' ".$string1.") AS B";
         $return = \DB::select($second);
         // $json = json_encode($unit);
@@ -1420,6 +1423,94 @@ class PelaporanController extends Controller
                 
                 $pdf = PDF::loadView('pelaporan.reports.export-usulan', $data);
                 return $pdf->setPaper('a4', 'landscape')->setWarnings(false)->download('Usulan Program Prioritas-'.date("dmY").'.pdf');
+                break;
+        }
+    }
+
+    public function export_pelaporanword(Request $request)
+    {
+        $header_list = []; 
+        $pelaporan_list = [];
+        $type = $request->kategori_download;
+        switch($type){
+            case "laporan_anggaran": 
+                foreach(json_decode($request->header_pelaporan_download) as $header){
+                    $header_list[] = [
+                        'tanggal'       => $header->tanggal,
+                        'tw_dari'       => $header->tw_dari,
+                        'tw_ke'         => $header->tw_ke,
+                        'unit_kerja'    => $header->unit_kerja
+                    ];
+                }
+
+                foreach(json_decode($request->list_pelaporan_download) as $value){
+                    $pelaporan_list[] = [
+                        'program_prioritas' => $value->program_prioritas,
+                        'sasaran_dicapai'   => $value->sasaran_dicapai,
+                        'uraian_progress'   => $value->uraian_progress
+                    ];
+                }
+
+                $data = [
+                    'list'      => $pelaporan_list,
+                    'header'    => $header_list
+                ];
+                $filename="Pelaporan-Anggaran-".date('dmY');
+                return view('pelaporan.reports.word-pelaporan', $data, compact('filename'));
+                break;
+
+            case "arahan_rups": 
+                foreach(json_decode($request->header_pelaporan_download) as $header){
+                    $header_list[] = [
+                        'tanggal'       => $header->tanggal,
+                        'tw_dari'       => $header->tw_dari,
+                        'tw_ke'         => $header->tw_ke,
+                        'unit_kerja'    => $header->unit_kerja
+                    ];
+                }
+
+                foreach(json_decode($request->list_pelaporan_download) as $value){
+                    $pelaporan_list[] = [
+                        'jenis_arahan'              => $value->jenis_arahan,
+                        'arahan'                    => $value->arahan,
+                        'progress_tindak_lanjut'    => $value->progress_tindak_lanjut
+                    ];
+                }
+
+                $data = [
+                    'list'      => $pelaporan_list,
+                    'header'    => $header_list
+                ];
+                
+                $filename="Pelaporan-arahan-RUPS-".date('dmY');
+                return view('pelaporan.reports.word-pelaporan', $data, compact('filename'));
+                break;    
+
+            case "usulan_program": 
+                foreach(json_decode($request->header_pelaporan_download) as $header){
+                    $header_list[] = [
+                        'tanggal'       => $header->tanggal,
+                        'tw_dari'       => $header->tw_dari,
+                        'tw_ke'         => $header->tw_ke,
+                        'unit_kerja'    => $header->unit_kerja
+                    ];
+                }
+
+                foreach(json_decode($request->list_pelaporan_download) as $value){
+                    $pelaporan_list[] = [
+                        'nama_program'     => $value->nama_program,
+                        'latar_belakang'   => $value->latar_belakang,
+                        'dampak_positif'   => $value->dampak_positif,
+                        'dampak_negatif'   => $value->dampak_negatif
+                    ];
+                }
+
+                $data = [
+                    'list'      => $pelaporan_list,
+                    'header'    => $header_list
+                ];
+                $filename="Pelaporan-Usulan-Program-".date('dmY');
+                return view('pelaporan.reports.word-pelaporan', $data, compact('filename'));
                 break;
         }
     }

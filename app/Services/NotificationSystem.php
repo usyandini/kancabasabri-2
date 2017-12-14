@@ -103,9 +103,10 @@ class NotificationSystem
             array_push($array_type,2,3,5,6);
         }
 
-        if(isset($user->perizinan['notif_setuju_ia'])){
-            array_push($array_type,15);
-        }
+        // *Hapus Notifikasi Ke Kanit Kerja*
+        // if(isset($user->perizinan['notif_setuju_ia'])){
+        //     array_push($array_type,15);
+        // }
         if(isset($user->perizinan['notif_setuju_iia'])){
             array_push($array_type,17);
         }
@@ -129,7 +130,8 @@ class NotificationSystem
         }
         if(isset($user->perizinan['notif_ubah_a'])){
             
-            array_push($array_type,16);
+            // *Hapus Notifikasi dari Kanit Kerja*
+            // array_push($array_type,16);
             if (!in_array(17, $array_type)) {
                 array_push($array_type,17);
             }
@@ -199,12 +201,15 @@ class NotificationSystem
         }
         if(isset($user->perizinan['notif_ubah_a_d'])){
             array_push($array_type,41,43,45,46);
-            if (!in_array(42, $array_type)) {
-                array_push($array_type,42);
-            }
-            if (!in_array(44, $array_type)) {
-                array_push($array_type,44);
-            }
+            // if (!in_array(42, $array_type)) {
+            //     array_push($array_type,42);
+            // }
+            // if (!in_array(44, $array_type)) {
+            //     array_push($array_type,44);
+            // }
+        }
+        if(isset($user->perizinan['notif_pengajuan_anggaran'])){
+            array_push($array_type,47);
         }
 
         return $array_type;

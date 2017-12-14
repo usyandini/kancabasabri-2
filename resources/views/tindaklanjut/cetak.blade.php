@@ -177,7 +177,6 @@
 								<table class="classtable">
 			                        <thead>
 			                          <tr>
-			                            <th class="classth"><center>No</center></th>
 			                            <th class="classth"><center>Unit Kerja</center></th>
 			                            <th class="classth"><center>Temuan</center></th>
 			                            <th class="classth"><center>Rekomendasi</center></th>
@@ -188,33 +187,28 @@
 			                          </tr>
 			                        </thead>
 			                        <tbody>
-			                        <?php $no='1';
+			                        <?php
 			                        $longkap="longkap";
 			                        $longkap2="longkap";
 			                        $longkap3="longkap";?>
 					                @if(count($a))
 								    @foreach($a as $b)
 								    <tr>
-			                        			<td class="classtd"><center>
 			                        			@if ($longkap != $b->unitkerja)
-												{{$no}}
-												@endif
-			                        			</center></td>
-			                        			<td class="classtd"><center>
-			                        			@if ($longkap != $b->unitkerja) 
-			                        			{{ $b->unitkerja }}
+			                        			<td class="classtd" rowspan="{{$data_count[$b->unitkerja]}}">
+			                        				{{ $b->unitkerja }}
+			                        			</td>
 			                        			@endif
-			                        			</center></td>
-			                        			<td class="classtd">
-			                        			@if ($longkap2 != $b->temuan) 
-				                           			{{ $b->temuan }}
-				                           		@endif
-				                           		</td>
-			                        			<td class="classtd">
-			                        			@if ($longkap3 != $b->rekomendasi) 
-					                           			{{ $b->rekomendasi }}
-					                           	@endif
-					                            </td>
+			                        			@if ($longkap2 != $b->temuan)
+			                        			<td class="classtd" rowspan="{{$data_count2[$b->temuan]}}">
+			                        				{{ $b->temuan }}
+			                        			</td>
+			                        			@endif
+			                        			@if ($longkap3 != $b->rekomendasi)
+			                        			<td class="classtd" rowspan="{{$data_count3[$b->rekomendasi]}}">
+			                        				{{ $b->rekomendasi }}
+			                        			</td>
+			                        			@endif
 			                        			<td class="classtd">
 			                        			@if ($b->rekomendasi!="")
 			                        			{{ $b->tindaklanjut }}
@@ -234,7 +228,7 @@
 				                	<?php $longkap = $b->unitkerja;
 				                		  $longkap2 = $b->temuan;
 				                		  $longkap3 = $b->rekomendasi;
-				                		  $no++; ?>
+				                    ?>
 				                	@endforeach
 			    					@endif
 								    

@@ -37,7 +37,7 @@
                                             {{ csrf_field() }}
                                             <div class="col-lg-6 col-xl-3 mb-1">
                                                   <select class="select2 form-control" name="transyear">
-                                                    <option disabled="">Berdsasar Tahun</option>
+                                                    <option disabled="">Berdasarkan Tahun</option>
                                                     <option value="0">Semua Tahun</option>
                                                     <?php
                                                       $thn_skr = date('Y');
@@ -59,13 +59,19 @@
                                             </div>
                                             <div class="col-lg-6 col-xl-3 mb-1">
                                                   <select class="select2 form-control" name="kcabang">
-                                                    <option disabled="">Berdasar Kantor Cabang</option>
+                                                    <option disabled="">Berdasarkan Kantor Cabang</option>
+                                                    <?php
+                                                      $units = array();
+                                                      foreach ($kcabangs as $cabang) {
+                                                         if(Gate::check('unit_'.$cabang->VALUE."00")){
+                                                          array_push($units, $cabang);
+                                                    }                                         }
+                                                    ?>
+                                                    @if(count($units)>1)
                                                     <option value="0" selected>Semua Cabang</option>
-                                                    @foreach($kcabangs as $cabang)
-                                                      {{ $id = $cabang->VALUE."00" }}
-                                                      @if(Gate::check("unit_".$id) )
-                                                      <option value="{{ $cabang->DESCRIPTION }}" {{ ($cabang->DESCRIPTION == $filters['kcabang'] ? 'selected=""' : '') }}>{{ $cabang->DESCRIPTION }}</option>
-                                                      @endif
+                                                    @endif
+                                                    @foreach($units as $unit)
+                                                      <option value="{{ $unit->DESCRIPTION }}" {{ ($unit->DESCRIPTION == $filters['kcabang'] ? 'selected=""' : '') }}>{{ $unit->DESCRIPTION }}</option>
                                                     @endforeach
                                                   </select>
                                             </div>
@@ -158,9 +164,9 @@
                       fields: [
                           { name: "journalnum", type: "text", title: "Nomor Jurnal", width: 120 },
                           { name: "bank", type: "text", title: "Nama Bank", width: 120 },
-                          { name: "banknum", type: "text", title: "No. Rekening", width: 120 },
-                          { name: "transdate", type: "text", title: "Tanggal Dropping", width: 160 },
-                          { name: "debit", type: "text", title: "Nominal", width: 120 },
+                          { name: "banknum", type: "text", title: "No. Rekening", width: 160 },
+                          { name: "transdate", type: "text", title: "Tanggal Dropping", align: "center", width: 160 },
+                          { name: "debit", type: "text", align: "right", title: "Nominal", width: 120 },
                           { name: "company", type: "text", title: "Kantor Cabang", width: 120 },
                           /*{ name: "stat", type: "text", title: "Status Posting", 
                             itemTemplate:function(e) {
@@ -169,10 +175,42 @@
                               return "<span class='tag "+tag+"'>"+content+"</span>" ;
                             } 
                           },*/
+                          
                           @if(Gate::check('lihat_p_d'))
                           { name: "id_dropping", type: "text", align:"center", title: "Penyesuaian", width: 120,
-                            itemTemplate:function(l) {
-                              return "<a href='{{ url('/dropping/penyesuaian') }}/"+ l +"' class='btn btn-warning btn-sm'>Pilih</a>"
+                            itemTemplate:function(l, item) {
+                              var tanggal=item.transdate;
+                              var res = tanggal.split("-");
+                              var bulan= res[1];
+                              var d = new Date();
+                              var n = d.getMonth();
+                              if (n==1||n==2||n==3){
+                                var hasil='tw1';
+                              }
+                              if (n==4||n==5||n==6){
+                                var hasil='tw2';
+                              }
+                              if (n==7||n==8||n==9){
+                                var hasil='tw3'; 
+                              }
+                              if (n==10||n==11||n==12){
+                                var hasil='tw4';
+                              }
+                              if (hasil=='tw1' && (bulan > 0 && bulan < 4)) {
+                                return "<a href='{{ url('/dropping/penyesuaian') }}/"+ l +"' class='btn btn-warning btn-sm'>Pilih</a>"
+                              }
+                              if (hasil=='tw2' && (bulan > 3 && bulan < 7)) {
+                                return "<a href='{{ url('/dropping/penyesuaian') }}/"+ l +"' class='btn btn-warning btn-sm'>Pilih</a>"
+                              }
+                              if (hasil=='tw3' && (bulan > 6 && bulan < 10)) {
+                                return "<a href='{{ url('/dropping/penyesuaian') }}/"+ l +"' class='btn btn-warning btn-sm'>Pilih</a>"
+                              }
+                              if (hasil=='tw4' && (bulan > 9 && bulan < 13)) {
+                                return "<a href='{{ url('/dropping/penyesuaian') }}/"+ l +"' class='btn btn-warning btn-sm'>Pilih</a>"
+                              }
+                              else{
+                                return ""
+                              }
                             }
                           },
                           @endif

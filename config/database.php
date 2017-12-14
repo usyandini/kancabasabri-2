@@ -93,7 +93,7 @@ return [
             'driver'        => 'sqlsrv',
             'host'          => env('DB_HOST2', '172.25.1.11'),
             'port'          => env('DB_PORT2', '1433'),
-            'database'      => env('DB_DATABASE2', 'AX_DEV'),
+            'database'      => env('DB_DATABASE2', 'AX_DUMMY'),
             'username'      => env('DB_USERNAME2', 'user_cabang'),
             'password'      => env('DB_PASSWORD2', 'cabang123!'),
             'charset'       => 'utf8',

@@ -69,45 +69,76 @@
 	              </tr>
 	            </thead>
 	            <tbody>
-	            	<tr id="th1">
-	            		<td colspan="4"><center><b>SALDO PER 31 Juli 2017</b></center></td>
-		                <td align="right"><?php $debitkas = 1912862; echo number_format($debitkas,'2',',','.'); ?></td>
-		                <td align="right"></td>
-		                <td align="right"><?php $debitbank = 37910743.8; echo number_format($debitbank,'2',',','.'); ?></td>
-		                <td align="right"></td>
-		                <td align="right"><?php $saldo = $debitkas+$debitbank; echo number_format($saldo,'2',',','.'); ?></td>
-	            	</tr>
-	            	<tr id"content">
-	            		<td></td>
-		                <td></td>
-		                <td width="150px"></td>
-		                <td width="80px"></td>
-		                <td align="right"></td>
-		                <td align="right"></td>
-		                <td align="right"></td>
-		                <td align="right"></td>
-		                <td align="right"><?php $saldo = $debitkas+$debitbank; echo number_format($saldo,'2',',','.'); ?></td>
-	            	</tr>
-	            	<tr id"content">
-	            		<td></td>
-		                <td></td>
-		                <td width="150px"></td>
-		                <td width="80px"></td>
-		                <td align="right"></td>
-		                <td align="right"></td>
-		                <td align="right"></td>
-		                <td align="right"></td>
-		                <td align="right"><?php $saldo = $debitkas+$debitbank; echo number_format($saldo,'2',',','.'); ?></td>
-	            	</tr>
-	            	<tr id="tf1">
-	            		<td colspan="4"><center><b>JUMLAH</b></center></td>
-		                <td align="right"><?php $debitkas = 1912862; echo number_format($debitkas,'2',',','.'); ?></td>
-		                <td align="right">-</td>
-		                <td align="right"><?php $debitbank = 37910743.8; echo number_format($debitbank,'2',',','.'); ?></td>
-		                <td align="right">-</td>
-		                <td align="right"><?php $saldo = $saldo; echo number_format($saldo,'2',',','.'); ?></td>
-	            	</tr>
-	            </tbody>	            
+                                  @if($filters)
+                                  @forelse($transaksi as $trans)
+                                  <tr>
+                                                <?php
+                                                  $tanggal=$trans->PIL_TransDate;                                 
+                                                  $tgl= date('d', strtotime($tanggal)); 
+                                                  $bs= date('m', strtotime($tanggal));
+                                                  if ($bs=="01"){
+                                                    $bulans="Januari";
+                                                  }
+                                                  else if ($bs=="02"){
+                                                    $bulans="Februari";
+                                                  }
+                                                  else if ($bs=="03"){
+                                                    $bulans="Maret";
+                                                  }
+                                                  else if ($bs=="04"){
+                                                    $bulans="April";
+                                                  }
+                                                  else if ($bs=="05"){
+                                                    $bulans="Mei";
+                                                  }
+                                                  else if ($bs=="06"){
+                                                    $bulans="Juni";
+                                                  }
+                                                  else if ($bs=="07"){
+                                                    $bulans="Juli";
+                                                  }
+                                                  else if ($bs=="08"){
+                                                    $bulans="Agustus";
+                                                  }
+                                                  else if ($bs=="09"){
+                                                    $bulans="September";
+                                                  }
+                                                  else if ($bs=="10"){
+                                                    $bulans="Oktober";
+                                                  }
+                                                  else if ($bs=="11"){
+                                                    $bulans="November";
+                                                  }
+                                                  else if ($bs=="12"){
+                                                    $bulans="Desember";
+                                                  }
+                                                  $tahun= date('Y', strtotime($tanggal));
+                                              ?>
+                                    <td><center>{{$tgl}} {{$bulans}} {{$tahun}}</center></td>
+                                    <td>{{$trans->PIL_BK}}</td>
+                                    <td width="150px" colspan="2">{{$trans->PIL_Description}}</td>
+                                    <?php
+                                      $AccoudId = $trans->PIL_ACCOUNTID;
+                                      $kas = explode('KAS',$AccoudId);
+                                      $kkc = explode('KKC',$AccoudId);
+                                      $isKas = false;
+                                      if(count($kas) > 1 || count($kkc)>1 ){
+                                        $isKas = true;
+                                      }
+                                    ?>
+                                    <td align="right">@if($isKas)Rp {{ number_format($trans->PIL_AmountCurDebit, 2, ',','.') }} @endif</td>
+                                    <td align="right">@if($isKas)Rp {{ number_format($trans->PIL_AmountCurCredit, 2, ',','.') }} @endif</td>
+                                    <td align="right">@if(!$isKas)Rp {{ number_format($trans->PIL_AmountCurDebit, 2, ',','.') }} @endif</td>
+                                    <td align="right">@if(!$isKas)Rp {{ number_format($trans->PIL_AmountCurCredit, 2, ',','.') }} @endif</td>
+                                    <td align="right"></td>
+                                  </tr>
+                                  @empty
+                                  <tr>
+                                   <td colspan="4">Data tidak ditemukan.</td>
+                                  </tr>
+                                  @endforelse
+                                  @endif
+                                </tbody>	            
 	    	</table>
 	    </div>
     </div>

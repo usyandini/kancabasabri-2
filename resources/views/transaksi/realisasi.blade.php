@@ -19,13 +19,13 @@
               @section('content')
               <div class="content-header row">
                 <div class="content-header-left col-md-6 col-xs-12 mb-2">
-                  <h3 class="content-header-title mb-0">Report Realisasi</h3>
+                  <h3 class="content-header-title mb-0">Report Realisasi Mata Anggaran</h3>
                   <div class="row breadcrumbs-top">
                     <div class="breadcrumb-wrapper col-xs-12">
                       <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="/transaksi">Transaksi</a>
                         </li>
-                        <li class="breadcrumb-item active">Report Realisasi
+                        <li class="breadcrumb-item active">Report Realisasi Mata Anggaran
                         </li>
                       </ol>
                     </div>
@@ -61,7 +61,7 @@
                                   <div class="form-group">
                                     <label>Kantor Cabang</label>
                                     <select class="select2 form-control" name="cabang" required>
-                                      <option selected disabled>Pilih cabang</option>
+                                      <!-- <option selected disabled>Pilih cabang</option> -->
                                       @foreach($cabang as $cab)
                                       {{ $id = $cab->VALUE."00" }}
                                       @if(Gate::check("unit_".$id) )
@@ -151,20 +151,26 @@
                                  <thead>
                                    <tr align="middle">
                                     <th id="filterable"><center>Deskripsi Anggaran</center></th>
-                                    <th id="filterable">Anggaran</th>
-                                    <th id="filterable">Realisasi Periode</th>
-                                    <th id="filterable">Sisa Anggaran</th>
+                                    <th id="filterable"><center>Anggaran</center></th>
+                                    <th id="filterable"><center>Realisasi Periode</center></th>
+                                    <th id="filterable"><center>Sisa Anggaran</center></th>
                                   </tr>
                                 </thead>
                                 <tbody>
                                   @if($filters)
                                   <?php $no=1; ?>
                                   @forelse($transaksi as $trans)
+                                  <?php
+                                  $mata=$trans->mata_anggaran;
+                                  $a = DB::table('item_master_transaksi')
+                                   ->where('SEGMEN_6', $mata)->first();
+                                   $nama=$a->nama_item;
+                                  ?>
                                   <tr>
-                                   <td>{{ $trans->DESCRIPTION }}</td>
-                                   <td>Rp. {{ number_format($trans->ANGGARAN_AWAL, 2, ',','.') }}</td>
-                                   <td><b>Rp. {{ number_format($trans->REALISASI_ANGGARAN, 2, ',','.') }}</b></td>
-                                   <td>Rp. {{ number_format($trans->SISA_ANGGARAN, 2, ',','.') }}</td>
+                                   <td>{{ $nama }}</td>
+                                   <td align=right>Rp. {{ number_format($trans->anggaran, 0, '', '.') }}</td>
+                                   <td align=right><b>Rp. {{ number_format($trans->realisasi, 0, '', '.') }}</b></td>
+                                   <td align=right>Rp. {{ number_format($trans->sisa_anggaran, 0, '', '.') }}</td>
                                  </tr>
                                  @empty
                                  <tr>

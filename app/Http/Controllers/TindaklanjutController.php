@@ -573,6 +573,7 @@ class TindaklanjutController extends Controller
             header('Cache-Control: must-revalidate');
             header('Content-Length: '.$berkas->size);
             readfile($file);
+            unlink($file);
             exit($data);
 
         }
@@ -590,8 +591,37 @@ class TindaklanjutController extends Controller
         	 ->where('id1', $id1)
         	 ->orderBy('id2','DESC')
         	 ->get();
-       
-        return view('tindaklanjut.tindaklanjut', compact('a'));
+        $sebelum="longkap";     
+        $data_count= [];
+        foreach ($a as $b) {
+            if($b->unitkerja != $sebelum){
+                $sebelum = $b->unitkerja;
+                $data_count[$b->unitkerja] = 1;
+            }else{
+                $data_count[$b->unitkerja]++;
+            }
+        }
+        $sebelum2="longkap";     
+        $data_count2= [];
+        foreach ($a as $b) {
+            if($b->temuan != $sebelum2){
+                $sebelum2 = $b->temuan;
+                $data_count2[$b->temuan] = 1;
+            }else{
+                $data_count2[$b->temuan]++;
+            }
+        }
+        $sebelum3="longkap";     
+        $data_count3= [];
+        foreach ($a as $b) {
+            if($b->rekomendasi != $sebelum3){
+                $sebelum3 = $b->rekomendasi;
+                $data_count3[$b->rekomendasi] = 1;
+            }else{
+                $data_count3[$b->rekomendasi]++;
+            }
+        }
+        return view('tindaklanjut.tindaklanjut', compact('a','data_count','data_count2','data_count3'));
 	}
 
 	public function tindaklanjutext(Request $request, $id1)
@@ -667,8 +697,37 @@ class TindaklanjutController extends Controller
         	 ->leftjoin('tl_tindaklanjut', 'tl_rekomendasi.id3','=','tl_tindaklanjut.id_rekomendasi')
         	 ->where('id1', $id1)
         	 ->orderBy('id2','DESC')->get();
-       
-        return view('tindaklanjut.cetak', compact('a'));
+        $sebelum="longkap";     
+        $data_count= [];
+        foreach ($a as $b) {
+            if($b->unitkerja != $sebelum){
+                $sebelum = $b->unitkerja;
+                $data_count[$b->unitkerja] = 1;
+            }else{
+                $data_count[$b->unitkerja]++;
+            }
+        }
+        $sebelum2="longkap";     
+        $data_count2= [];
+        foreach ($a as $b) {
+            if($b->temuan != $sebelum2){
+                $sebelum2 = $b->temuan;
+                $data_count2[$b->temuan] = 1;
+            }else{
+                $data_count2[$b->temuan]++;
+            }
+        }
+        $sebelum3="longkap";     
+        $data_count3= [];
+        foreach ($a as $b) {
+            if($b->rekomendasi != $sebelum3){
+                $sebelum3 = $b->rekomendasi;
+                $data_count3[$b->rekomendasi] = 1;
+            }else{
+                $data_count3[$b->rekomendasi]++;
+            }
+        }
+        return view('tindaklanjut.cetak', compact('a','data_count','data_count2','data_count3'));
 	}
 
 	public function export_tindaklanjut(Request $request, $id1, $type)
@@ -679,8 +738,38 @@ class TindaklanjutController extends Controller
         	 ->leftjoin('tl_tindaklanjut', 'tl_rekomendasi.id3','=','tl_tindaklanjut.id_rekomendasi')
         	 ->where('id1', $id1)
         	 ->orderBy('id2','DESC')->get();
+        $sebelum="longkap";     
+        $data_count= [];
+        foreach ($a as $b) {
+            if($b->unitkerja != $sebelum){
+                $sebelum = $b->unitkerja;
+                $data_count[$b->unitkerja] = 1;
+            }else{
+                $data_count[$b->unitkerja]++;
+            }
+        }
+        $sebelum2="longkap";     
+        $data_count2= [];
+        foreach ($a as $b) {
+            if($b->temuan != $sebelum2){
+                $sebelum2 = $b->temuan;
+                $data_count2[$b->temuan] = 1;
+            }else{
+                $data_count2[$b->temuan]++;
+            }
+        }
+        $sebelum3="longkap";     
+        $data_count3= [];
+        foreach ($a as $b) {
+            if($b->rekomendasi != $sebelum3){
+                $sebelum3 = $b->rekomendasi;
+                $data_count3[$b->rekomendasi] = 1;
+            }else{
+                $data_count3[$b->rekomendasi]++;
+            }
+        }
         $excel = false;
-        $data = ['a' => $a, 'excel' => $excel];
+        $data = ['a' => $a, 'excel' => $excel, 'data_count' => $data_count, 'data_count2' => $data_count2, 'data_count3' => $data_count3];
         //export ke pdf
         switch($type){
             case 'pdf':
@@ -689,7 +778,7 @@ class TindaklanjutController extends Controller
                 break;
             case 'excel':
                 $excel = true;
-                return view('tindaklanjut.export', compact('a', 'excel'));
+                return view('tindaklanjut.export', compact('a', 'excel','data_count','data_count2','data_count3'));
                 break;
         }
 	}
@@ -700,7 +789,7 @@ class TindaklanjutController extends Controller
         $tgl_mulai = DB::table('tl_tanggal')
                     ->where('unitkerja',$dec_unit_kerja)
                     ->where('internal','1')
-                    ->where('kirim','<>','1')
+                    ->where('kirim','<>','1')->orderBy('tgl_mulai','DESC')
                     ->lists('tgl_mulai');
         return json_encode($tgl_mulai);
     }
@@ -710,7 +799,7 @@ class TindaklanjutController extends Controller
     	$dec_unit_kerja=urldecode($unitkerja);
         $tgl_mulai = DB::table('tl_tanggal')
                     ->where('unitkerja',$dec_unit_kerja)
-                    ->where('internal','1')
+                    ->where('internal','1')->orderBy('tgl_mulai','DESC')
                     ->lists('tgl_mulai');
         return json_encode($tgl_mulai);
     }
@@ -720,7 +809,7 @@ class TindaklanjutController extends Controller
     	$dec_unit_kerja=urldecode($unitkerja);
         $tgl_mulai = DB::table('tl_tanggal')
                     ->where('unitkerja',$dec_unit_kerja)
-                    ->where('internal','2')
+                    ->where('internal','2')->orderBy('tgl_mulai','DESC')
                     ->lists('tgl_mulai');
         return json_encode($tgl_mulai);
     }

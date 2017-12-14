@@ -13,17 +13,15 @@ use App\Models\PengajuanDropping;
 class PengajuanDroppingController extends Controller
 {
 
-    public function index(Request $request)
+    public function index()
     {   
-        $kantor_cabang = $request->get('cabang');
-        $tanggal = $request->get('tanggal');
-    	$a =DB::table('pengajuan_dropping_cabang')
-        ->orderBy('id','DESC')->where('kirim','<>','3')->where('kirim','<>','4')
-        ->where('kantor_cabang', $kantor_cabang)
-        ->where('tanggal', $tanggal)
-        ->paginate(100);
         $userCab =\Auth::user()->kantorCabang()['DESCRIPTION']; 
-        return view('pengajuan_dropping.pengajuan', compact('kantor_cabang', 'tanggal', 'a','userCab'));
+    	$a =DB::table('pengajuan_dropping_cabang')
+        ->where('kirim','<>','3')->where('kirim','<>','4')
+        ->where('kantor_cabang', $userCab)
+        ->orderBy('tanggal','DESC')
+        ->paginate(100);
+        return view('pengajuan_dropping.pengajuan', compact('a','userCab'));
 	}
 
     public function aftercreate($id)
@@ -38,9 +36,11 @@ class PengajuanDroppingController extends Controller
     {
         $dec_cabang=urldecode($cabang);
         $a =DB::table('pengajuan_dropping_cabang')
+        ->select(DB::raw('count(*) cabang, tanggal'))
         ->where('kantor_cabang',$dec_cabang)
-        ->where('kirim','1')->Orwhere('kirim','2')->Orwhere('kirim','5')
-        ->orderBy('tanggal','DESC')
+        ->where('kirim','<>','3')->where('kirim','<>','4')
+        ->groupBy('tanggal')
+        ->orderBy('tanggal', 'DESC')
         ->lists('tanggal');
         return json_encode($a);
     }
@@ -49,10 +49,27 @@ class PengajuanDroppingController extends Controller
     {
         $kantor_cabang = $request->get('cabang');
         $tanggal = $request->get('tanggal');
-        $a = DB::table('pengajuan_dropping_cabang')
+        if(($kantor_cabang=="0") && ($tanggal=="0")){
+            $a = DB::table('pengajuan_dropping_cabang')
+             ->where('kirim','<>','3')->where('kirim','<>','4')
+             ->orderBy('tanggal', 'DESC')
+             ->get();
+        }
+        if(($kantor_cabang!="0") && ($tanggal=="0")){
+            $a = DB::table('pengajuan_dropping_cabang')
+             ->where('kirim','<>','3')->where('kirim','<>','4')
+             ->where('kantor_cabang', $kantor_cabang)
+             ->orderBy('tanggal', 'DESC')
+             ->get();
+        }
+        if(($kantor_cabang!="0") && ($tanggal!="0")){
+            $a = DB::table('pengajuan_dropping_cabang')
+             ->where('kirim','<>','3')->where('kirim','<>','4')
              ->where('kantor_cabang', $kantor_cabang)
              ->where('tanggal', $tanggal)
+             ->orderBy('tanggal', 'DESC')
              ->get();
+        }     
         $userCab =\Auth::user()->kantorCabang()['DESCRIPTION'];
         return view('pengajuan_dropping.pengajuan', compact('kantor_cabang', 'tanggal', 'a','userCab'));
          
@@ -61,8 +78,8 @@ class PengajuanDroppingController extends Controller
 	public function acc() 
     {
     	$a =DB::table('pengajuan_dropping_cabang')
-    	->where('kirim','2')->Orwhere('kirim','3')
-        ->orderBy('id','DESC')
+    	->where('kirim','<>','1')->where('kirim','<>','4')->where('kirim','<>','5')
+        ->orderBy('tanggal', 'DESC')
         ->paginate(100);
         return view('pengajuan_dropping.approval', compact('a'));
 	}
@@ -71,8 +88,11 @@ class PengajuanDroppingController extends Controller
     {
         $dec_cabang=urldecode($cabang);
         $a =DB::table('pengajuan_dropping_cabang')
-        ->where('kirim','2')->Orwhere('kirim','3')
-        ->where('kantor_cabang',$dec_cabang)->orderBy('tanggal','DESC')
+        ->select(DB::raw('count(*) cabang, tanggal'))
+        ->where('kantor_cabang',$dec_cabang)
+        ->where('kirim','<>','1')->where('kirim','<>','4')->where('kirim','<>','5')
+        ->groupBy('tanggal')
+        ->orderBy('tanggal', 'DESC')
         ->lists('tanggal');
         return json_encode($a);
     }
@@ -81,29 +101,49 @@ class PengajuanDroppingController extends Controller
     {
         $kantor_cabang = $request->get('cabang');
         $tanggal = $request->get('tanggal');
+        if(($kantor_cabang=="0") && ($tanggal=="0")){
+             $a = DB::table('pengajuan_dropping_cabang')
+             ->where('kirim','<>','1')->where('kirim','<>','4')->where('kirim','<>','5')
+             ->orderBy('tanggal', 'DESC')
+             ->get();
+        }
+        if(($kantor_cabang!="0") && ($tanggal=="0")){
+            $a = DB::table('pengajuan_dropping_cabang')
+             ->where('kirim','<>','1')->where('kirim','<>','4')->where('kirim','<>','5')
+             ->where('kantor_cabang', $kantor_cabang)
+             ->orderBy('tanggal', 'DESC')
+             ->get();
+        }
+        if(($kantor_cabang!="0") && ($tanggal!="0")){
         $a = DB::table('pengajuan_dropping_cabang')
              ->where('kantor_cabang', $kantor_cabang)
+             ->where('kirim','<>','1')->where('kirim','<>','4')->where('kirim','<>','5')
              ->where('tanggal', $tanggal)
+             ->orderBy('tanggal', 'DESC')
              ->get();
-        
+        }
         return view('pengajuan_dropping.approval', compact('kantor_cabang', 'tanggal', 'a'));
     }
 
     public function acc2() 
     {
         $a =DB::table('pengajuan_dropping_cabang')
-        ->where('kirim','3')->Orwhere('kirim','4')
-        ->orderBy('id','DESC')
+        ->where('kirim','<>','1')->where('kirim','<>','2')->where('kirim','<>','5')
+        ->orderBy('tanggal', 'DESC')
         ->paginate(100);
         return view('pengajuan_dropping.approval2', compact('a'));
     }
 
     public function myformAjax2($cabang)
     {
+        
         $dec_cabang=urldecode($cabang);
         $a =DB::table('pengajuan_dropping_cabang')
-        ->where('kirim','3')->Orwhere('kirim','4')
-        ->where('kantor_cabang',$dec_cabang)->orderBy('tanggal','DESC')
+        ->select(DB::raw('count(*) cabang, tanggal'))
+        ->where('kantor_cabang',$dec_cabang)
+        ->where('kirim','<>','1')->where('kirim','<>','2')->where('kirim','<>','5')
+        ->groupBy('tanggal')
+        ->orderBy('tanggal', 'DESC')
         ->lists('tanggal');
         return json_encode($a);
     }
@@ -112,11 +152,27 @@ class PengajuanDroppingController extends Controller
     {
         $kantor_cabang = $request->get('cabang');
         $tanggal = $request->get('tanggal');
-        $a = DB::table('pengajuan_dropping_cabang')
-             ->where('kantor_cabang', $kantor_cabang)
-             ->where('tanggal', $tanggal)
+        if(($kantor_cabang=="0") && ($tanggal=="0")){
+            $a = DB::table('pengajuan_dropping_cabang')
+             ->where('kirim','<>','1')->where('kirim','<>','2')->where('kirim','<>','5')
+             ->orderBy('tanggal', 'DESC')
              ->get();
-        
+        }
+        if(($kantor_cabang!="0") && ($tanggal=="0")){
+            $a = DB::table('pengajuan_dropping_cabang')
+             ->where('kirim','<>','1')->where('kirim','<>','2')->where('kirim','<>','5')
+             ->where('kantor_cabang', $kantor_cabang)
+             ->orderBy('tanggal', 'DESC')
+             ->get();
+        }
+        if(($kantor_cabang!="0") && ($tanggal!="0")){
+            $a = DB::table('pengajuan_dropping_cabang')
+             ->where('kantor_cabang', $kantor_cabang)
+             ->where('kirim','<>','1')->where('kirim','<>','2')->where('kirim','<>','5')
+             ->where('tanggal', $tanggal)
+             ->orderBy('tanggal', 'DESC')
+             ->get();
+        }
         return view('pengajuan_dropping.approval2', compact('kantor_cabang', 'tanggal', 'a'));
     }
 
@@ -124,8 +180,8 @@ class PengajuanDroppingController extends Controller
     public function acc3() 
     {
         $a =DB::table('pengajuan_dropping_cabang')
-        ->where('kirim','4')->Orwhere('kirim','5')
-        ->orderBy('id','DESC')
+        ->where('kirim','<>','1')->where('kirim','<>','2')->where('kirim','<>','3')
+        ->orderBy('tanggal', 'DESC')
         ->paginate(100);
         return view('pengajuan_dropping.approval3', compact('a'));
     }
@@ -134,8 +190,11 @@ class PengajuanDroppingController extends Controller
     {
         $dec_cabang=urldecode($cabang);
         $a =DB::table('pengajuan_dropping_cabang')
-        ->where('kirim','4')->Orwhere('kirim','5')
-        ->where('kantor_cabang',$dec_cabang)->orderBy('tanggal','DESC')
+        ->select(DB::raw('count(*) cabang, tanggal'))
+        ->where('kantor_cabang',$dec_cabang)
+        ->where('kirim','<>','1')->where('kirim','<>','2')->where('kirim','<>','3')
+        ->groupBy('tanggal')
+        ->orderBy('tanggal', 'DESC')
         ->lists('tanggal');
         return json_encode($a);
     }
@@ -144,11 +203,27 @@ class PengajuanDroppingController extends Controller
     {
         $kantor_cabang = $request->get('cabang');
         $tanggal = $request->get('tanggal');
-        $a = DB::table('pengajuan_dropping_cabang')
-             ->where('kantor_cabang', $kantor_cabang)
-             ->where('tanggal', $tanggal)
+        if(($kantor_cabang=="0") && ($tanggal=="0")){
+            $a = DB::table('pengajuan_dropping_cabang')
+             ->where('kirim','<>','1')->where('kirim','<>','2')->where('kirim','<>','3')
+             ->orderBy('tanggal', 'DESC')
              ->get();
-        
+        }
+        if(($kantor_cabang!="0") && ($tanggal=="0")){
+            $a = DB::table('pengajuan_dropping_cabang')
+             ->where('kirim','<>','1')->where('kirim','<>','2')->where('kirim','<>','3')
+             ->where('kantor_cabang', $kantor_cabang)
+             ->orderBy('tanggal', 'DESC')
+             ->get();
+        }
+        if(($kantor_cabang!="0") && ($tanggal!="0")){
+            $a = DB::table('pengajuan_dropping_cabang')
+             ->where('kantor_cabang', $kantor_cabang)
+             ->where('kirim','<>','1')->where('kirim','<>','2')->where('kirim','<>','3')
+             ->where('tanggal', $tanggal)
+             ->orderBy('tanggal', 'DESC')
+             ->get();
+        }
         return view('pengajuan_dropping.approval3', compact('kantor_cabang', 'tanggal', 'a'));
     }
 
@@ -185,26 +260,34 @@ class PengajuanDroppingController extends Controller
         $c=$request->tanggal;
         $tgl= date('Y', strtotime($c));
         $kirim='1';
-        $db = DB::table('pengajuan_dropping_cabang')->where('kantor_cabang', $d)->where('periode_realisasi', $b)->where(DB::raw('YEAR(tanggal)'), '=', $tgl)->get();
-        
-        if($db){
-            $after_save = [
-             'alert' => 'danger',
-             'title' => 'Data gagal ditambah, data sudah ada.'
-             ];
-             return redirect()->back()->with('after_save', $after_save);
-         }
+        $nomor=$request->nomor;
+        // $db = DB::table('pengajuan_dropping_cabang')->where('kantor_cabang', $d)->where('periode_realisasi', $b)->where(DB::raw('YEAR(tanggal)'), '=', $tgl)->get();
+        $db = DB::table('pengajuan_dropping_cabang')->where('nomor', $nomor)->get();
+        // if($db){
+        //     $after_save = [
+        //      'alert' => 'danger',
+        //      'title' => 'Data gagal ditambah, data sudah ada.'
+        //      ];
+        //      return redirect()->back()->with('after_save', $after_save);
+        //  }
          $berkas = $request->inputs;
 
          if (isset($berkas)) {
             $fileUpload = new FileUpload();
+            if ($db){
+            $after_save = [
+             'alert' => 'success',
+             'title' => 'Data berhasil ditambah dengan meggunakan nomor Nota Dinas yang sudah ada'
+            ];
+            }
+            else{
             $after_save = [
              'alert' => 'success',
              'title' => 'Data berhasil ditambah.'
             ];
-
+            }
 	        $value['kantor_cabang'] = $d;
-	        $value['nomor'] = $request->nomor;
+	        $value['nomor'] = $nomor;
 	        $value['tanggal'] = $c;
 	        $value['jumlah_diajukan'] = $nilai;
 	        $value['periode_realisasi'] = $b;
@@ -217,7 +300,7 @@ class PengajuanDroppingController extends Controller
             $id=$z->id;
             // $a =PengajuanDropping::where('id', $id)
             // ->get();
-            return redirect('pengajuan_dropping/lihat/'.$id);
+            return redirect('pengajuan_dropping/lihat/'.$id)->with('after_save', $after_save);
             // $userCab =\Auth::user()->kantorCabang()['DESCRIPTION']; 
             // return view('pengajuan_dropping.pengajuan', compact('a','userCab'));
         }else {
@@ -247,15 +330,15 @@ class PengajuanDroppingController extends Controller
         $b=$request->periode_realisasi;
         $c=$request->tanggal;
         $tgl= date('Y', strtotime($c));
-        $db = DB::table('pengajuan_dropping_cabang')->where('kantor_cabang', $a)->where('periode_realisasi', $b)->where(DB::raw('YEAR(tanggal)'), '=', $tgl)
-         ->where('id','<>', $id)->get();
-         if($db){
-            $after_update = [
-             'alert' => 'danger',
-             'title' => 'Data gagal diubah, data sudah ada.'
-             ];
-             return redirect()->back()->with('after_update', $after_update);
-         }
+        // $db = DB::table('pengajuan_dropping_cabang')->where('kantor_cabang', $a)->where('periode_realisasi', $b)->where(DB::raw('YEAR(tanggal)'), '=', $tgl)
+        //  ->where('id','<>', $id)->get();
+        //  if($db){
+        //     $after_update = [
+        //      'alert' => 'danger',
+        //      'title' => 'Data gagal diubah, data sudah ada.'
+        //      ];
+        //      return redirect()->back()->with('after_update', $after_update);
+        //  }
          $berkas = $request->inputs;
          if (isset($berkas)) {
             $fileUpload = new FileUpload();
@@ -304,7 +387,12 @@ class PengajuanDroppingController extends Controller
              'title' => 'Data berhasil diubah.'
              ];
              $verifikasi=$request->verifikasi;
-             $keterangan=$request->keterangan;
+             if ($verifikasi==1){
+                $keterangan='';
+             }
+             else{
+                $keterangan=$request->keterangan;
+             }
 		         $data = [
 		         	'verifikasi' => $verifikasi,
 		         	'keterangan' => $keterangan
@@ -455,6 +543,7 @@ class PengajuanDroppingController extends Controller
             header('Cache-Control: must-revalidate');
             header('Content-Length: '.$berkas->size);
             readfile($file);
+            unlink($file);
             exit($data);
 
         }

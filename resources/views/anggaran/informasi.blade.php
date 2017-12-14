@@ -41,24 +41,6 @@
                               {{ csrf_field() }}
                               <div class="col-lg-6 col-xl-3 mb-1">
                                 <div class="form-group">
-                                  <select class="select2 form-control " name="cari_nd_surat" id="cari_nd_surat">
-                                    <option disabled="" selected="">ND/Surat</option>
-                                  </select>
-                                </div>
-                              </div>
-                              <div class="col-lg-6 col-xl-3 mb-1">
-                                <div class="form-group">
-                                  <select class="select2 form-control" name="cari_stat_anggaran" id="cari_stat_anggaran" onchange="set_nd_surat()">
-                                    <option disabled="" selected="">Status Anggaran</option>
-                                    <option value="0">Semua</option>
-                                    <option value="1">Draft</option>
-                                    <option value="2">Transfer</option>
-                                    <option value="3">Complate</option>
-                                  </select>
-                                </div>
-                              </div>
-                              <div class="col-lg-6 col-xl-3 mb-1">
-                                <div class="form-group">
                                   <select class="select2 form-control " name="cari_unit_kerja" id="cari_unit_kerja" onchange="set_nd_surat()">
                                     <option disabled="" selected="">Unit Kerja</option>
                                     @foreach($unit_kerja as $unit)
@@ -78,11 +60,28 @@
                                   </select>
                                 </div>
                               </div>
+                              <div class="col-lg-6 col-xl-3 mb-1">
+                                <div class="form-group">
+                                  <select class="select2 form-control" name="cari_stat_anggaran" id="cari_stat_anggaran" onchange="set_nd_surat()">
+                                    <option disabled="" selected="">Status Anggaran</option>
+                                    <option value="0">Semua</option>
+                                    <option value="1">Draft</option>
+                                    <option value="2">Transfer</option>
+                                    <option value="3">Complate</option>
+                                  </select>
+                                </div>
+                              </div>
+                              <div class="col-lg-6 col-xl-3 mb-1">
+                                <div class="form-group">
+                                  <select class="select2 form-control " name="cari_nd_surat" id="cari_nd_surat">
+                                    <option disabled="" selected="">Nomor ND/Surat</option>
+                                  </select>
+                                </div>
+                              </div>
+                              
+                              
                               <div class="col-lg-3 col-xl-3 mb-1">
                                 <a href="#" class="btn btn-outline-primary" onclick="cariAnggaran()"><i class="fa fa-search"></i> Cari</a>                                            
-                                @if(Gate::check('tambah_a'))
-                                <a href="{{ url('anggaran/tambah') }}" class="btn btn-success"><i class="fa fa-plus"></i> Tambah</a>                                   
-                                @endif
                               </div>
                             </div>
                             <div>
@@ -93,10 +92,15 @@
                     </div>
                   </div>
                   <div class="card">
-                    <div class="card-header"></div>
+                    <div class="card-header">@if(Gate::check('tambah_a'))
+                          <a href="{{ url('anggaran/tambah') }}" class="btn btn-success"><i class="fa fa-plus"></i> Tambah Kegiatan dan Anggaran</a>                                   
+                        @endif</div>
                     <div class="card-body collapse in">
                       <div class="card-block ">
-                        <div id="basicScenario"></div>
+                        
+                        <div id="basicScenario">
+                           
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -164,9 +168,16 @@
                       },
                       { name: "tanggal", 
                       type: "text", 
-                      align: "left",
+                      align: "center",
                       title: "Tanggal", 
-                      width: 90
+                      width: 90,
+                      itemTemplate: function (value) { debugger; if (value == "") return ""; else var ta=new Date(value);
+                                                                                              return ta.getDate() + '-' + (ta.getMonth()+1) + '-' +  ta.getFullYear(); }
+                      // ,
+                      // itemTemplate:function(value,item)
+                      // {
+                      //   return date('d-m-Y',value);
+                      // }
                       },
                       { name: "nd_surat", 
                       type: "text", 
@@ -227,8 +238,20 @@
                       { name: "nd_surat", align:"center", title: "Detail",  width: 150 ,
 
                         itemTemplate: function(value) {
-
+                          <?php
+                            $setuju = false;
+                            if(Gate::check('setuju_i')||Gate::check('setuju_ii')||Gate::check('setuju_iii')
+                              ||Gate::check('setuju_iv')||Gate::check('setuju_v')||Gate::check('setuju_vi')
+                              ||Gate::check('setuju_vii')||Gate::check('setuju_viii'))
+                              {
+                                $setuju = true;
+                              } 
+                          ?>
+                          @if($setuju)
+                          var button = "<a href='{{ url('anggaran/persetujuan/')}}/"+value+"./1'   class='btn btn-sm btn-primary'> Detail</a>";
+                          @else
                           var button = "<a href='{{ url('anggaran/edit/')}}/"+value+"'   class='btn btn-sm btn-primary'> Detail</a>";
+                          @endif
                           return button;
                         }
                       }
@@ -252,7 +275,7 @@
                         var length = nd_surat_option.options.length;
                         // alert(length);
                         for (i = 1; i < length; i++) {
-                          alert(nd_surat_option.options[1].innerHTML);
+                          // alert(nd_surat_option.options[1].innerHTML);
                           nd_surat_option.options[1] = null;
                         }
                         for(i =0 ;i<data.length;i++){

@@ -14,7 +14,7 @@
 
                 @section('content')
                 <div class="content-header row">
-                    <div class="content-header-left col-md-6 col-xs-12 mb-2">
+                    <div class="content-header-left col-md-12 col-xs-12 mb-2">
                         <h3 class="content-header-title mb-0">Verifikasi Tarik Tunai</h3>
                         <div class="row breadcrumbs-top">
                             <div class="breadcrumb-wrapper col-xs-12">
@@ -36,9 +36,11 @@
                     <div class="row">
                       <div class="col-xs-12">
                         <div class="col-md-6">
+                          @if($tariktunai->stat==1)
                           <div class="alert alert-info alert-dismissible fade in mb-2" role="alert">
                             <b>Verifikasi hanya dilakukan oleh verifikator <i>level 1</i></b>
                           </div>
+                          @endif
                         </div>
                         @if(session('success'))
                         <div class="col-xs-7">
@@ -110,26 +112,26 @@
                                     <div class="col-md-6">
                                       <div class="form-group">
                                         <label for="tgl_dropping">Tanggal Tarik Tunai</label>
-                                        <input type="date" readonly="" id="tgl_tarik" class="form-control" placeholder="Tanggal Tarik Tunai" name="tgl_tarik" value="{{ date("Y-m-d",strtotime($tariktunai->created_at)) }}" disabled>
+                                        <input type="text" readonly="" id="tgl_tarik" class="form-control" placeholder="Tanggal Tarik Tunai" name="tgl_tarik" value="{{ date("d-m-Y",strtotime($tariktunai->created_at)) }}" disabled>
                                       </div>
                                     </div>
                                     <div class="col-md-6">
                                       <div class="form-group">
-                                        <label for="nominal">Saldo (Dalam Rupiah)</label>
-                                          <input type="text" readonly="" class="form-control" placeholder="Saldo" name="nominal" value="{{ number_format($tariktunai->nominal, 0, '', '.') }}" disabled>
+                                        <label for="nominal">Saldo</label>
+                                          <input type="text" readonly="" class="form-control" placeholder="Saldo" name="nominal" value="Rp. {{ number_format($tariktunai->nominal, 0, '', '.') }}" disabled>
                                           <input type="hidden" name="v_nominal" value="{{ $tariktunai->nominal }}">
                                       </div>
                                     </div>
                                     <div class="col-md-6 pull-right">
                                       <div class="form-group">
-                                        <label for="nominal_tarik">Sisa Dropping (Dalam Rupiah)</label>
-                                          <input type="text" id="sisa_dropping" readonly="" name="sisa_dropping" placeholder="Sisa Dropping" class="form-control" value="{{ number_format($tariktunai->sisa_dropping, 0, '', '.') }}" disabled>
+                                        <label for="nominal_tarik">Sisa Dropping</label>
+                                          <input type="text" id="sisa_dropping" readonly="" name="sisa_dropping" placeholder="Sisa Dropping" class="form-control" value="Rp. {{ number_format($tariktunai->sisa_dropping, 0, '', '.') }}" disabled>
                                           <input type="hidden" name="v_sisa_dropping" value="{{ $tariktunai->sisa_dropping }}">
                                       </div>
                                     </div>
                                     <div class="col-md-6">
                                       <div class="form-group">
-                                        <label for="nominal_tarik">Nominal Tarik Tunai (Dalam Rupiah)</label>
+                                        <label for="nominal_tarik">Nominal Tarik Tunai (Rupiah)</label>
                                           <input type="text" id="nominal_tarik" readonly="" name="nominal_tarik" class="form-control" placeholder="Nominal Tarik Tunai" value="{{ number_format($tariktunai->nominal_tarik, 0, '', '.') }}" disabled>
                                           <input type="hidden" name="v_nominal_tarik" value="{{ $tariktunai->nominal_tarik }}">
                                       </div>
@@ -269,12 +271,14 @@
                                 {{--<a href="{{ url('dropping/verifikasi/tariktunai/rejected/'.$tariktunai->id) }}" class="btn btn-warning mr-1">
                                   <i class="ft-x"></i> Tolak
                                 </a>--}}
+                                @if($tariktunai->stat==1)
                                 <button type="submit" data-toggle="modal" data-target="#tolak" class="btn btn-warning mr-1">
                                   <i class="ft-x"></i> Tolak
                                 </button>
                                 <button type="submit" data-toggle="modal" data-target="#xSmall" class="btn btn-success">
                                   <i class="fa fa-check-square-o"></i> Verifikasi
                                 </button>
+                                @endif
                               </div>  
                               <!-- Modal -->
                               <div class="modal fade text-xs-left" id="xSmall" tabindex="-1" role="dialog" aria-labelledby="myModalLabel20"

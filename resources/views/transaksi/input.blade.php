@@ -178,8 +178,8 @@
                       <p>Anda akan melakukan submit untuk verifikasi batch ini. Anda tidak diperbolehkan untuk memperbarui item batch selama batch ini masih dalam proses verifikasi. Informasi batch ini : 
                         <ul>
                           @if(!$empty_batch && $editable)
-                          <li>Batch saat ini : <code>{{ date("d-m-Y", strtotime($active_batch->created_at)) }}</code></li>
-                          <li>Terakhir Update : <code>{{ $active_batch->updated_at }}</code> oleh <code>{{ $active_batch['creator']['name'] }}</code></li>
+                          <li>Batch saat ini : <code>{{ $active_batch->batchNo() }}</code></li>
+                          <li>Terakhir Update : <code>{{ date("d-m-Y", strtotime($active_batch->updated_at)) }}</code> oleh <code>{{ $active_batch->latestStat()->submitter->username }}</code></li>
                           <li>Banyak item : <code id="totalRows"></code>, dengan <code>{{ count($berkas).' berkas lampiran' }}</code></li>
                           @endif
                         </ul>

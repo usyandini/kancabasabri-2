@@ -80,17 +80,21 @@
 												  	$periode="TW IV";
 												  }
 						?>
-							  <img src="{{ asset('app-assets/images/asabri-logo.png', $secure = null) }}" width="8%" align="middle" hspace="1%">
-			   				  <h3><center>
-			                  <p class="uppercase">{{$b->kantor_cabang}}<br>
-			                  FORMULIR PENGAJUAN DROPPING<br>
-			                  TAHUN ANGGARAN {{$tahun}}
-			                  </center></h3></br>
+							  
+			                  <div id="header">
+						        <img src="{{ asset('app-assets/images/asabri-logo-kecil.png', $secure = null) }}" align="left">
+						        <h3><center><p class="uppercase">{{$b->kantor_cabang}}</p></center></h3>
+						        <h3><center>FORMULIR PENGAJUAN DROPPING</center></h3>
+						        <h3><center>TAHUN ANGGARAN {{$tahun}}</center></h3>
+						      </div>
+						      <br>
+						      <br>
+						      <br>
 			                  <table>
 			                  <tr>
 			                  <td><b>
 			                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			                  NOMOR </b></td><td> </td><td><b> : </b></td><td> </td><td><b>{{ $b->nomor }}</b></td>
+			                  NOMOR NOTA DINAS</b></td><td> </td><td><b> : </b></td><td> </td><td><b>{{ $b->nomor }}</b></td>
 			                  </tr>
 			                  <tr>
                               <td><b>

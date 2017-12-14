@@ -38,8 +38,9 @@
             							<div class="row mt-1">
             								<div class="col-md-12 col-xl-5">
             									<a href="{{ url('item/create/transaksi') }}" class="btn btn-success btn-sm pull-left"><i class="fa fa-plus"></i> Tambah Item Baru</a>
-                                                                  <a href="{{ url('item/import') }}" class="btn btn-outline-success btn-sm ml-1"><i class="fa fa-file-excel-o"></i> Import dari Excel</a>
-            								</div>
+                                                                  <!--<a href="{{ url('item/import') }}" class="btn btn-outline-success btn-sm ml-1"><i class="fa fa-file-excel-o"></i> Import dari Excel</a>
+            								          -->
+                                                            </div>
             							</div>
             						</div>
             						<div class="card-body collapse in">			                
@@ -56,7 +57,7 @@
             									<table class="table table-striped table-bordered datatable-select-inputs wrap" cellspacing="0" width="100%">
             										<thead>
             											<tr>
-                                                                                    {{-- <th width="20p">No</th> --}}
+                                                                                    <th width="20p" hidden>Id</th>
             												<th id="filterable"><center>Kode Item</center></th>
             												<th id="filterable" width="200px">Item</th>
             												<th>Account</th>
@@ -69,12 +70,24 @@
                                                                               <?php $no='1';?>
             											@foreach($items as $item)
             											<tr>
-                                                                                    {{-- <td>{{ $no }}</td> --}}
+                                                                                    <td hidden>{{ $item->id }}</td>
             												<td>{{ $item->kode_item }}</td>
             												<td>{{ $item->nama_item }}</td>
             												<td>{{ $item->SEGMEN_1.'-'.$item->SEGMEN_2.'-'.$item->SEGMEN_3.'-'.$item->SEGMEN_4.'-'.$item->SEGMEN_5.'-'.$item->SEGMEN_6 }}</td>
-            												{!! $item->is_displayed ? '<td class="blue">Semua Cabang</td>' : '<td class="red">Cabang Bersangkutan</td>' !!}
-            												<td>{{ $item->created_at }}</td>
+                                                                                    
+                                                                                    
+                                                                                          @if($item->is_displayed!=0)
+                                                                                          <td class="blue">Semua Cabang</td>
+                                                                                          @else
+                                                                                          <?php $second="SELECT DESCRIPTION, VALUE FROM [AX_DUMMY].[dbo].[PIL_VIEW_KPKC] WHERE VALUE='$item->SEGMEN_3'";
+                                                                                          $return = DB::select($second);
+                                                                                          ?>
+                                                                                          @foreach($return as $b)
+                                                                                                <td class="red">{{ $b->DESCRIPTION }}</td>
+                                                                                          @endforeach
+                                                                                          @endif
+                                                                                    
+                                                                                    <td>{{ $item->created_at }}</td>
                                                                                     <td>
                                                                                           <center>
             													<a href="{{ url('item/edit/transaksi').'/'.$item->id }}" class="btn btn-outline-info btn-sm mb-1">
@@ -85,7 +98,7 @@
             														</center></td>
             													</tr>
                                                                                           <?php $no++; ?>
-            													@endforeach
+            											@endforeach
             												</tbody>
             											</table>
             											<form method="GET" action="#" id="deleteU">

@@ -17,7 +17,7 @@
   </style>
     <div id="header">
         <img src="{{ asset('app-assets/images/asabri-logo-kecil.png', $secure = null) }}" align="left">
-        <h3><center>LAPORAN REALISASI ANGGARAN PT ASABRI (PERSERO)</center></h3>
+        <h3><center>LAPORAN REALISASI MATA ANGGARAN PT ASABRI (PERSERO)</center></h3>
         <h3><center>{{ $cabangs->where('VALUE', $filters['cabang'])->first()['DESCRIPTION']}}</center></h3>
         @if($filters['start'] == $filters['end'])
         <h4><center>Periode {{ $filters['start'] }} Th. {{ $filters['year'] }}</center></h4>
@@ -44,7 +44,7 @@
             </thead>
             <tbody>
               <tr id="th1">
-                <td style="padding-top:40px;" colspan="4"><b>a. Kancab</b></td>
+                <td style="padding-top:20px; padding-left:20px; padding-bottom:20px;" colspan="4"><b>a. Kancab</b></td>
                 {{-- <td></td>
                 <td></td>
                 <td></td> --}}
@@ -54,23 +54,29 @@
                 $tmp_anggaran = $tmp_realisasi = $tmp_sisa = 0;
               ?>
               @foreach($transaksi as $trans)
+              <?php
+                $mata=$trans->mata_anggaran;
+                $a = DB::table('item_master_transaksi')
+                ->where('SEGMEN_6', $mata)->first();
+                $nama=$a->nama_item;
+              ?>           
               <tr>
-                <td style="padding-left:20px;" width="35%">{{$no++}}.) {{ $trans->DESCRIPTION }}</td>
-                <td align="right" width="20%">Rp {{ number_format($trans->ANGGARAN_AWAL, 2, ',','.') }}</td>
-                <td align="right" width="20%">Rp {{ number_format($trans->REALISASI_ANGGARAN, 2, ',','.') }}</td>
-                <td align="right" width="25%">Rp {{ number_format($trans->SISA_ANGGARAN, 2, ',','.') }}</td>
+                <td style="padding-left:20px;" width="35%">{{$no++}}.) {{ $nama }}</td>
+                <td align="right" width="20%">Rp. {{ number_format($trans->anggaran, 0, '', '.') }}</td>
+                <td align="right" width="20%">Rp. {{ number_format($trans->realisasi, 0, '', '.') }}</td>
+                <td align="right" width="25%">Rp. {{ number_format($trans->sisa_anggaran, 0, '', '.') }}</td>
               </tr>
               <?php 
-                $tmp_anggaran += $trans->ANGGARAN_AWAL;
-                $tmp_realisasi += $trans->REALISASI_ANGGARAN;
-                $tmp_sisa += $trans->SISA_ANGGARAN;
+                $tmp_anggaran += $trans->anggaran;
+                $tmp_realisasi += $trans->realisasi;
+                $tmp_sisa += $trans->sisa_anggaran;
               ?>
               @endforeach
               <tr id="tf1">
                 <td><center>JUMLAH</center></td>
-                <td align="right"><b>Rp {{ number_format($tmp_anggaran, 2, ',','.') }}</b></td>
-                <td align="right"><b>Rp {{ number_format($tmp_realisasi, 2, ',','.') }}</b></td>
-                <td align="right"><b>Rp {{ number_format($tmp_sisa, 2, ',','.') }}</b></td>
+                <td align="right"><b>Rp. {{ number_format($tmp_anggaran, 0, '', '.') }}</b></td>
+                <td align="right"><b>Rp. {{ number_format($tmp_realisasi, 0, '', '.') }}</b></td>
+                <td align="right"><b>Rp. {{ number_format($tmp_sisa, 0, '', '.') }}</b></td>
               </tr>
               <tr id="tf2">
                 @if($filters['start'] == $filters['end'])
@@ -78,7 +84,23 @@
                 @else
                 <td><center>TOTAL DROPPING PERIODE <br>{{ $filters['start'] }} s.d {{ $filters['end'] }} {{ $filters['year'] }}</br></center></td>
                 @endif
-                <td align="right"><b>Rp {{ number_format($tmp_realisasi, 2, ',','.') }}</b></td>
+                <?php
+                $cb    = $cabangs->where('VALUE', $filters['cabang'])->first()['DESCRIPTION'];
+                $a2 = DB::table('dropping')
+                ->where('CABANG_DROPPING', $cb)
+                ->whereMonth('TRANSDATE','>=', $awal)
+                ->whereMonth('TRANSDATE','<=', $akhir)
+                ->whereYear('TRANSDATE', '=', $transyear)->first();
+                if ($a2)
+                {
+                  $uang=$a2->DEBIT;
+                }
+                else
+                {
+                  $uang="0";
+                }
+                ?>
+                <td colspan="3" align="right"><center><b>Rp. {{ number_format($uang, 0, '', '.') }}</b></center></td>
               </tr>
             </tbody>
           </table>

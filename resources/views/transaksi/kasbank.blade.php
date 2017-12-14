@@ -133,9 +133,9 @@
                               <h4 class="card-title">Hasil Pencarian Report Kas/Bank</h4><br>
 
                               <table align="right"><tr>
-                                <td style="display:none;"><span><a href="{{ URL('transaksi/kasbank/'.$filters['cabang'].'/'.$filters['awal'].'/'.$filters['akhir'].'/'.$filters['transyear'].'/excel') }}" class="btn btn-success" target="_blank"><i class="fa fa-file-excel-o"></i> <b> Ekspor ke Excel </b></a></span></td>
+                                <td><span><a href="{{ URL('transaksi/kasbank/'.$filters['cabang'].'/'.$filters['awal'].'/'.$filters['akhir'].'/'.$filters['transyear'].'/excel') }}" class="btn btn-success" target="_blank"><i class="fa fa-file-excel-o"></i> <b> Ekspor ke Excel </b></a></span></td>
 
-                                <td style="display:none;"><span><a href="{{ URL('transaksi/kasbank/'.$filters['cabang'].'/'.$filters['awal'].'/'.$filters['akhir'].'/'.$filters['transyear'].'/export') }}" class="btn btn-success" target="_blank"><i class="fa fa-file-pdf-o"></i> <b> Ekspor ke PDF </b></a></span></td>
+                                <td><span><a href="{{ URL('transaksi/kasbank/'.$filters['cabang'].'/'.$filters['awal'].'/'.$filters['akhir'].'/'.$filters['transyear'].'/export') }}" class="btn btn-success" target="_blank"><i class="fa fa-file-pdf-o"></i> <b> Ekspor ke PDF </b></a></span></td>
 
                                 <td><span><a href="{{ URL('transaksi/kasbank/'.$filters['cabang'].'/'.$filters['awal'].'/'.$filters['akhir'].'/'.$filters['transyear'].'/print') }}" class="btn btn-success" target="_blank"><i class="fa fa-print"></i> <b> Cetak Report</b></a></span></td> 
                               </tr></table>
@@ -148,35 +148,104 @@
                               <div class="card-block card-dashboard ">
                                 <name="data" id="data">
                                 <div class="table-responsive">
-                                 <table class="table table-striped table-bordered datatable-select-inputs wrap" cellspacing="0" width="120%">
+                                 <table class="table table-striped table-bordered datatable-select-inputs mb-0">
                                    <thead>
                                      <tr>
-                                      <th rowspan="2" width="60px" style="vertical-align:middle;"><center>TGL</center></th>
-                                      <th rowspan="2" width="50px" style="vertical-align:middle;"><center>NO.BK</center></th>
+                                      <th rowspan="2" style="vertical-align:middle;"><center>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TANGGAL&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</center></th>
+                                      <th rowspan="2" style="vertical-align:middle;"><center>NO.BK</center></th>
                                       <th rowspan="2" colspan="2" style="vertical-align:middle;"><center>URAIAN TRANSAKSI</center></th>
-                                      <th colspan="2" width="100px"><center>KAS</center></th>
-                                      <th colspan="2" width="100px"><center>BANK</center></th>
-                                      <th rowspan="2" width="80px" style="vertical-align:middle;"><center>SALDO</center></th>
+                                      <th colspan="2"><center>KAS</center></th>
+                                      <th colspan="2"><center>BANK</center></th>
+                                      <th rowspan="2" style="vertical-align:middle;"><center>SALDO</center></th>
                                     </tr>
                                     <tr>
-                                      <th><center>DEBET</center></th>
-                                      <th><center>KREDIT</center></th>
-                                      <th><center>DEBET</center></th>
-                                      <th><center>KREDIT</center></th>
+                                      <th><center>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DEBET&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</center></th>
+                                      <th><center>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;KREDIT&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</center></th>
+                                      <th><center>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DEBET&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</center></th>
+                                      <th><center>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;KREDIT&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</center></th>
                                     </tr>
                                   </thead>
-                                  @if($filters)
                                   <tbody>
-                                    <td></td>
-                                    <td></td>
-                                    <td width="150px" colspan="2"></td>
-                                    <td align="right"><?php $debitkas = 1912862; echo number_format($debitkas,'2',',','.'); ?></td>
-                                    <td align="right"></td>
-                                    <td align="right"><?php $debitbank = 37910743.8; echo number_format($debitbank,'2',',','.'); ?></td>
-                                    <td align="right"></td>
-                                    <td align="right"><?php $saldo = $debitkas+$debitbank; echo number_format($saldo,'2',',','.'); ?></td>
-                                  </tbody>
+                                  @if($filters)
+                                  <?php $account_id =  []?>
+                                  @forelse($transaksi as $trans)
+                                  <tr>
+                                                <?php
+                                                  if(count($account_id) == 0){
+                                                    $account_id[$trans->PIL_ACCOUNTID] = $trans->SALDO;
+                                                  }else{
+                                                    if(!isset($account_id[$trans->PIL_ACCOUNTID])){
+                                                      $account_id[$trans->PIL_ACCOUNTID] = $trans->SALDO;
+                                                    }
+                                                  }
+                                                  $account_id[$trans->PIL_ACCOUNTID] +=  $trans->PIL_AmountCurDebit;
+                                                  $account_id[$trans->PIL_ACCOUNTID] -=  $trans->PIL_AmountCurCredit;
+                                                  $tanggal=$trans->PIL_TransDate;                                 
+                                                  $tgl= date('d', strtotime($tanggal)); 
+                                                  $bs= date('m', strtotime($tanggal));
+                                                  if ($bs=="01"){
+                                                    $bulans="Januari";
+                                                  }
+                                                  else if ($bs=="02"){
+                                                    $bulans="Februari";
+                                                  }
+                                                  else if ($bs=="03"){
+                                                    $bulans="Maret";
+                                                  }
+                                                  else if ($bs=="04"){
+                                                    $bulans="April";
+                                                  }
+                                                  else if ($bs=="05"){
+                                                    $bulans="Mei";
+                                                  }
+                                                  else if ($bs=="06"){
+                                                    $bulans="Juni";
+                                                  }
+                                                  else if ($bs=="07"){
+                                                    $bulans="Juli";
+                                                  }
+                                                  else if ($bs=="08"){
+                                                    $bulans="Agustus";
+                                                  }
+                                                  else if ($bs=="09"){
+                                                    $bulans="September";
+                                                  }
+                                                  else if ($bs=="10"){
+                                                    $bulans="Oktober";
+                                                  }
+                                                  else if ($bs=="11"){
+                                                    $bulans="November";
+                                                  }
+                                                  else if ($bs=="12"){
+                                                    $bulans="Desember";
+                                                  }
+                                                  $tahun= date('Y', strtotime($tanggal));
+                                              ?>
+                                    <td><center>{{$tgl}} {{$bulans}} {{$tahun}}</center></td>
+                                    <td>{{$trans->PIL_ACCOUNTID}}</td>
+                                    <td width="150px" colspan="2">{{$trans->PIL_Description}}</td>
+                                    <?php
+                                      $AccoudId = $trans->PIL_ACCOUNTID;
+                                      $kas = explode('KAS',$AccoudId);
+                                      $kkc = explode('KKC',$AccoudId);
+                                      $isKas = false;
+                                      if(count($kas) > 1 || count($kkc) > 1 ){
+                                        $isKas = true;
+                                      }
+                                    ?>
+                                    <td align="right">@if($isKas)Rp {{ number_format($trans->PIL_AmountCurCredit, 2, ',','.') }} @endif</td>
+                                    <td align="right">@if($isKas)Rp {{ number_format($trans->PIL_AmountCurDebit, 2, ',','.') }} @endif</td>
+                                    <td align="right">@if(!$isKas)Rp {{ number_format($trans->PIL_AmountCurCredit, 2, ',','.') }} @endif</td>
+                                    <td align="right">@if(!$isKas)Rp {{ number_format($trans->PIL_AmountCurDebit, 2, ',','.') }} @endif</td>
+                                    <td align="right">Rp {{ number_format($account_id[$trans->PIL_ACCOUNTID], 2, ',','.') }}</td>
+                                  </tr>
+                                  @empty
+                                  <tr>
+                                   <td colspan="4">Data tidak ditemukan.</td>
+                                  </tr>
+                                  @endforelse
                                   @endif
+                                </tbody>
                                 </table>
                               </div>
                             </div>

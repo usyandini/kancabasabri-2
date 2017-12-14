@@ -54,9 +54,9 @@ class BatchStatus extends Model
             case 4:
                 return "Mendapat persetujuan dari Kakancab";
             case 5:
-                return "Tidak diverifikasi Akutansi";
+                return "Tidak diverifikasi Akuntansi";
             case 6:
-                return "Mendapat verifikasi dari Akutansi";
+                return "Mendapat verifikasi dari Akuntansi";
         }
     }
 }

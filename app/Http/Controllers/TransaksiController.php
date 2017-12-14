@@ -24,6 +24,7 @@ use Validator;
 use Carbon;
 use Response;
 use PDF;
+use DB;
 
 use App\Services\FileUpload;
 use App\Services\NotificationSystem;
@@ -112,7 +113,7 @@ class TransaksiController extends Controller
             $empty_batch = false;
             $jsGrid_url = 'transaksi/get/batch/'.$this->current_batch['id'];
         }
-
+        // $this->getAttributes('item', $this->current_batch);
         return view('transaksi.input', [
             'batch_nos'     => $this->batch_nos,
             'filters'       => null,
@@ -246,9 +247,11 @@ class TransaksiController extends Controller
         $return = null;
         switch ($type) {
             case 'item':
+                // $cabang = \Auth::user()->cabang;
                 $header = ['VALUE' => '-1', 'nama_item' => 'Silahkan Pilih Barang/Jasa'];
-                $return = ItemMaster::get(['id', 'SEGMEN_1', 'nama_item', 'SEGMEN_3', 'is_displayed'])->filter(function($item) use($batch) {
+                $return = ItemMaster::orderBy('nama_item','ASC')->get(['id', 'SEGMEN_1', 'nama_item', 'SEGMEN_3', 'is_displayed'])->filter(function($item) use($batch) {
                     return $item->isDisplayed($batch['cabang']);
+                    //return $item->isDisplayed($cabang);
                 });
                 
                 foreach ($return as $key => $value) {
@@ -258,13 +261,18 @@ class TransaksiController extends Controller
                 break;
             case 'bank':
                 $header = ['BANK' => '-1', 'BANK_NAME' => 'Silahkan Pilih Bank', 'accessible' => true];
-                $KAS = ['BANK' => 'KAS-KC', 'BANK_NAME' => 'KAS KC/KCP', 'accessible' => true];
+                // $KAS = ['BANK' => 'KAS-KC', 'BANK_NAME' => 'KAS KC/KCP', 'accessible' => true];
+                // $return = $this->bankModel->where('BANK_NAME', 'not like', '%kas%')->get(['BANK','BANK_NAME','ID_CABANG']);
                 $return = $this->bankModel->get(['BANK','BANK_NAME','ID_CABANG']);
-                
                 foreach ($return as $key => $value) {
                     $value->accessible = $value->isAccessibleByCabang();
+                    //unset jika tidak memiliki perizinan unit kerja
+                    $val = $value->isAccessibleByCabang();
+                    if(!$val){
+                        unset($return[$key]);
+                    }
                 }
-                $return->prepend($KAS);
+                // $return->prepend($KAS);
                 $return->prepend($header);
                 break;       
             case 'subpos':
@@ -461,6 +469,7 @@ class TransaksiController extends Controller
         // header('Pragma: public');
             header('Content-Length: ' . filesize($file));
             readfile($file);
+            unlink($file);
             exit($data);
         }
     }
@@ -495,7 +504,7 @@ class TransaksiController extends Controller
             'empty_batch'   => $empty_batch,
             'berkas'        => $berkas,
             'batch_history' => $history,
-            'item'          => $this->getAttributes('item', $this->current_batch),
+            'item'          => $this->getAttributes('item', $valid_batch),
             'bank'          => $this->getAttributes('bank'),
             'kegiatan'      => $this->getAttributes('kegiatan'),
             'subpos'        => $this->getAttributes('subpos'),
@@ -525,7 +534,7 @@ class TransaksiController extends Controller
             'empty_batch'   => $empty_batch,
             'berkas'        => $berkas,
             'batch_history' => $history,
-            'item'          => $this->getAttributes('item', $this->current_batch),
+            'item'          => $this->getAttributes('item',  $valid_batch),
             'bank'          => $this->getAttributes('bank'),
             'kegiatan'      => $this->getAttributes('kegiatan'),
             'subpos'        => $this->getAttributes('subpos'),
@@ -593,6 +602,17 @@ class TransaksiController extends Controller
             'filters'   => null]);
     }
 
+    // Report ralisasi transaksi
+    public function realisasi_transaksi()
+    {
+        $cabang = KantorCabang::where('VALUE','<>','00')->get();
+
+        return view('transaksi.realisasi_transaksi', [
+            'cabang'    => $cabang,
+            'months'    => $this->months,
+            'filters'   => null]);
+    }
+
     public function cetakRealisasi($cabang, $awal, $akhir, $transyear, $type)
     {           
         $transaksi = $this->reportQuery($cabang, $awal, $akhir, $transyear);
@@ -604,7 +624,10 @@ class TransaksiController extends Controller
             'cabangs'   => KantorCabang::get(),
             'filters'   => array('cabang' => $cabang, 'start' => $start, 'end' => $end,  'year' => $transyear),
             'transaksi' => $transaksi,
-            'excel'     => $excel];
+            'excel'     => $excel,
+            'awal'       => $awal,
+            'akhir'      => $akhir,
+            'transyear'  => $transyear];
 
         switch($type){
             case 'print' :
@@ -621,6 +644,48 @@ class TransaksiController extends Controller
         }
       }
       
+      public function cetakRealisasi_transaksi($cabang, $awal, $akhir, $transyear, $type)
+    {           
+        $transaksi = $this->reportQuery_transaksi($cabang, $awal, $akhir, $transyear);
+        $start = $this->months[$awal];
+        $end = $this->months[$akhir];
+        $excel = $type == 'excel' ? true : false;
+        $sebelum="";
+        $data_count= [];
+        foreach ($transaksi as $trans) {
+            if($trans->account != $sebelum){
+                $sebelum = $trans->account;
+                $data_count[$trans->account] = 1;
+            }else{
+                $data_count[$trans->account]++;
+            }
+        }
+
+        $data = [
+            'cabangs'   => KantorCabang::get(),
+            'filters'   => array('cabang' => $cabang, 'start' => $start, 'end' => $end,  'year' => $transyear),
+            'transaksi'  => $transaksi,
+            'data_count' => $data_count,
+            'excel'      => $excel,
+            'awal'       => $awal,
+            'akhir'      => $akhir,
+            'transyear'  => $transyear];
+
+        switch($type){
+            case 'print' :
+                return view('transaksi.cetak-realisasi_transaksi', $data);
+                break;
+            case 'export' :
+                $pdf = PDF::loadView('transaksi.export-realisasi_transaksi', $data);
+                return $pdf->setPaper('a4', 'landscape')->setWarnings(false)->download('Realisasi Anggaran-'.date("dmY").'.pdf');
+                // return $pdf->stream('Realisasi Anggaran-'.date("dmY").'.pdf'); // hanya untuk view pdf
+                break;
+            case 'excel' :
+                return view('transaksi.export-realisasi_transaksi', $data);
+                break;
+        }
+      }
+
       public function filter_handle_realisasi(Request $request)
       {
         $validatorRR = Validator::make($request->all(),
@@ -644,45 +709,220 @@ class TransaksiController extends Controller
         }
     }
 
+    public function filter_handle_realisasi_transaksi(Request $request)
+      {
+        $validatorRR = Validator::make($request->all(),
+            [
+                'cabang'    => 'required',
+                'awal'      => 'required',
+                'akhir'     => 'required',
+                'transyear' => 'required'
+            ], 
+            [
+                'cabang.required'  => 'Kantor cabang harus dipilih.',
+                'awal.required'  => 'Periode awal harus dipilih.',
+                'akhir.required'  => 'Periode akhir harus dipilih.',
+                'transyear.required'  => 'Tahun periode harus dipilih.'
+            ]);
+
+        if($validatorRR->passes()){
+            return redirect('transaksi/filter/realisasi_transaksi/'.$request->cabang.'/'.$request->awal.'/'.$request->akhir.'/'.$request->transyear);    
+        }else{
+            return redirect()->back()->withErrors($validatorRR)->withInput();
+        }
+    }
+
     public function reportQuery($cabang, $awal, $akhir, $transyear)
     {
-        return \DB::select("SELECT 
-                    T2.ITEM AS ITEM,
-                    MT.nama_item AS DESCRIPTION,
-                    SUM(T2.ANGGARAN_AWAL) AS ANGGARAN_AWAL,
-                    SUM(T2.REALISASI_ANGGARAN) AS REALISASI_ANGGARAN,
-                    SUM(T2.SISA_ANGGARAN) AS SISA_ANGGARAN 
-                        FROM (SELECT 
-                    DATEPART(MONTH, T.tgl) AS MONTH, 
-                    DATEPART(YEAR, T.tgl) AS YEAR, 
-                    T.item AS ITEM, 
-                    KC.PIL_KPKC AS CABANG,
-                    KC.PIL_DIVISI AS DIVISI,
-                    KC.PIL_SUBPOS AS SUBPOS,
-                    KC.PIL_MATAANGGARAN AS MATAANGGARAN, 
-                    MAX(T.anggaran) AS ANGGARAN_AWAL,
-                    SUM(T.total) AS REALISASI_ANGGARAN,
-                    MIN(T.actual_anggaran) AS SISA_ANGGARAN 
-                FROM dbcabang.dbo.transaksi T
-                    LEFT JOIN dbcabang.dbo.batches B ON T.batch_id = B.id 
-                    RIGHT JOIN AX_DEV.dbo.PIL_KCTRANSAKSI KC ON T.id = KC.RECID
-                WHERE
-                    
-                    B.cabang = ".$cabang." AND
-                    DATEPART(MONTH, T.tgl) >= ".$awal." AND 
-                    DATEPART(MONTH, T.tgl) <= ".$akhir." AND 
-                    DATEPART(YEAR, T.tgl) = ".$transyear."
-                GROUP BY DATEPART(MONTH, T.tgl), DATEPART(YEAR, T.tgl), T.item, KC.PIL_KPKC, KC.PIL_DIVISI, KC.PIL_SUBPOS, KC.PIL_MATAANGGARAN) T2
-                LEFT JOIN dbcabang.dbo.item_master_transaksi MT ON 
-                        T2.ITEM = MT.SEGMEN_1 AND 
-                        T2.CABANG = MT.SEGMEN_3 AND 
-                        T2.DIVISI = MT.SEGMEN_4 AND 
-                        T2.SUBPOS = MT.SEGMEN_5 AND 
-                        T2.MATAANGGARAN = MT.SEGMEN_6
-                GROUP BY T2.ITEM, T2.CABANG, T2.DIVISI, T2.SUBPOS, T2.MATAANGGARAN, MT.nama_item");
+        // return \DB::select("SELECT 
+        //             T2.ITEM AS ITEM,
+        //             MT.nama_item AS DESCRIPTION,
+        //             SUM(T2.ANGGARAN_AWAL) AS ANGGARAN_AWAL,
+        //             SUM(T2.REALISASI_ANGGARAN) AS REALISASI_ANGGARAN,
+        //             SUM(T2.SISA_ANGGARAN) AS SISA_ANGGARAN 
+        //                 FROM (SELECT 
+        //             DATEPART(MONTH, T.tgl) AS MONTH, 
+        //             DATEPART(YEAR, T.tgl) AS YEAR, 
+        //             T.item AS ITEM, 
+        //             KC.PIL_KPKC AS CABANG,
+        //             KC.PIL_DIVISI AS DIVISI,
+        //             KC.PIL_SUBPOS AS SUBPOS,
+        //             KC.PIL_MATAANGGARAN AS MATAANGGARAN, 
+        //             MAX(T.anggaran) AS ANGGARAN_AWAL,
+        //             SUM(T.total) AS REALISASI_ANGGARAN,
+        //             MIN(T.actual_anggaran) AS SISA_ANGGARAN 
+        //         FROM dbcabang.dbo.transaksi T
+        //             LEFT JOIN dbcabang.dbo.batches B ON T.batch_id = B.id 
+        //             RIGHT JOIN AX_DUMMY.dbo.PIL_KCTRANSAKSI KC ON T.id = KC.RECID
+        //         WHERE
+        //             KC.PIL_POSTED = 1 AND 
+        //             B.cabang = ".$cabang." AND
+        //             DATEPART(MONTH, T.tgl) >= ".$awal." AND 
+        //             DATEPART(MONTH, T.tgl) <= ".$akhir." AND 
+        //             DATEPART(YEAR, T.tgl) = ".$transyear."
+        //         GROUP BY DATEPART(MONTH, T.tgl), DATEPART(YEAR, T.tgl), T.item, KC.PIL_KPKC, KC.PIL_DIVISI, KC.PIL_SUBPOS, KC.PIL_MATAANGGARAN) T2
+        //         LEFT JOIN dbcabang.dbo.item_master_transaksi MT ON 
+        //                 T2.ITEM = MT.SEGMEN_1 AND 
+        //                 T2.SUBPOS = MT.SEGMEN_5 AND 
+        //                 T2.MATAANGGARAN = MT.SEGMEN_6
+        //         GROUP BY T2.ITEM, T2.CABANG, T2.DIVISI, T2.SUBPOS, T2.MATAANGGARAN, MT.nama_item");
 
-        // KC.PIL_POSTED = 1 AND 
+        //             T2.CABANG = MT.SEGMEN_3 AND 
+        //             T2.DIVISI = MT.SEGMEN_4 AND 
+        return \DB::select("SELECT 
+          mata_anggaran, min(tgl) as tanggal, max(anggaran) as anggaran, sum(total) as realisasi, min(actual_anggaran) as sisa_anggaran
+          FROM [DBCabang].[dbo].[transaksi] as a join [DBCabang].[dbo].[batches] as c on a.batch_id=c.id
+          join [AX_DUMMY].[dbo].[PIL_KCTRANSAKSI] as b on a.id=b.RECID
+          where 
+          cabang = ".$cabang." AND
+                    DATEPART(MONTH, tgl) >= ".$awal." AND 
+                    DATEPART(MONTH, tgl) <= ".$akhir." AND 
+                    DATEPART(YEAR, tgl) = ".$transyear."
+          and pil_posted=1 group by mata_anggaran order by mata_anggaran");
     }
+
+    public function reportQuery_transaksi($cabang, $awal, $akhir, $transyear)
+    {
+        return \DB::select("SELECT 
+                  mata_anggaran, account, tgl, [desc], anggaran, total as realisasi, actual_anggaran as sisa_anggaran
+                  FROM [DBCabang].[dbo].[transaksi] as a join [DBCabang].[dbo].[batches] as c on a.batch_id=c.id
+                  
+                  where
+                    cabang = ".$cabang." AND
+                    DATEPART(MONTH, tgl) >= ".$awal." AND 
+                    DATEPART(MONTH, tgl) <= ".$akhir." AND 
+                    DATEPART(YEAR, tgl) = ".$transyear."
+                    and currently_rejected=0 order by account, a.id");
+
+    }
+
+    public function reportQuery_kasbank($cabang, $awal, $akhir, $transyear)
+    {
+        return \DB::select("SELECT distinct
+    
+    _ledgerjournaltable.JournalNum as PIL_JournalNum,
+    _ledgerjournaltable.RECID as PIL_RECID,
+    _generaljournalentry.AccountingDate as PIL_TransDate,
+    _ledgerjournaltrans.LEDGERDIMENSION as PIL_LEDGERDIMENSION,
+    bankaccaounttable.ACCOUNTID as PIL_ACCOUNTID,
+    bankaccaounttable.NAME as PIL_NAME,
+    pil_kc_transaksi.RECID as REC_TRANS,
+    _ledgerjournaltrans.AmountCurCredit as PIL_AmountCurCredit,
+    _ledgerjournaltrans.AmountCurDebit as PIL_AmountCurDebit,
+    (select SUM(AmountCur)+SUM(AmountCorrect) as SALDO FROM [AX_DUMMY].[dbo].[BANKACCOUNTTRANS]
+    where CREATEDDATETIME <= (select ba.CREATEDDATETIME from [AX_DUMMY].[dbo].[BANKACCOUNTTRANS] ba 
+    where ba.VOUCHER = _ledgerjournaltrans.Voucher AND ba.ACCOUNTID = bankaccaounttable.ACCOUNTID)
+    AND ACCOUNTID = bankaccaounttable.ACCOUNTID
+    GROUP BY ACCOUNTID) as SALDO,
+    _ledgerjournaltrans.PIL_BK as PIL_BK,
+    _ledgerjournaltrans.Invoice as PIL_Invoice,
+    _ledgerjournaltrans.Voucher as PIL_Voucher,
+    _ledgerjournaltrans.TXT as PIL_Description,
+    _generaljournalaccountentry.PostingType,
+    dimensionFinancialTag.VALUE as idcabang,
+    dimensionFinancialTag.DESCRIPTION as cabang
+    --_generaljournalaccountentry.LedgerAccount
+FROM 
+    [AX_DUMMY].[dbo].[LedgerJournalTable] as _ledgerjournaltable
+        join [AX_DUMMY].[dbo].[LedgerJournalTrans] as _ledgerjournaltrans
+            on _ledgerjournaltrans.JournalNum = _ledgerjournaltable.JournalNum 
+        join [AX_DUMMY].[dbo].[DimensionAttributeValueSet] as dimensionAttributeValueSet
+            on dimensionAttributeValueSet.RecId = _ledgerjournaltrans.DefaultDimension
+        join [AX_DUMMY].[dbo].[DimensionAttributeValueSetItem] as dimensionAttributeValueSetItem
+            on dimensionAttributeValueSetItem.DimensionAttributeValueSet = dimensionAttributeValueSet.RecId
+        join [AX_DUMMY].[dbo].[DIMENSIONATTRIBUTEVALUECOMBINATION] as dimensionAttributeValueCombination
+            on dimensionAttributeValueCombination.RECID = _ledgerjournaltrans.LEDGERDIMENSION
+        join [AX_DUMMY].[dbo].[BANKACCOUNTTABLE] as bankaccaounttable
+            on bankaccaounttable.ACCOUNTID = dimensionAttributeValueCombination.DISPLAYVALUE
+        join [AX_DUMMY].[dbo].[DimensionAttributeValue] as dimensionAttributeValue
+            on dimensionAttributeValue.RecId = dimensionAttributeValueSetItem.DimensionAttributeValue
+        join [AX_DUMMY].[dbo].[DimensionAttribute] as _DimensionAttribute
+            on _DimensionAttribute.RecId = dimensionAttributeValue.DimensionAttribute
+               and _DimensionAttribute.Name = 'KPKC'
+        join [AX_DUMMY].[dbo].[DimensionFinancialTag] as dimensionFinancialTag
+            on dimensionFinancialTag.RecId = dimensionAttributeValue.EntityInstance
+        left join [AX_DUMMY].[dbo].[PIL_KCTRANSAKSI] as pil_kc_transaksi
+            on pil_kc_transaksi.PIL_VOUCHER = _ledgerjournaltrans.Voucher AND  pil_kc_transaksi.PIL_JOURNALNUM = _ledgerjournaltrans.JOURNALNUM
+       
+    join [AX_DUMMY].[dbo].[GeneralJournalEntry] as _generaljournalentry
+            on _ledgerjournaltrans.Voucher = _generaljournalentry.SubledgerVoucher
+        join [AX_DUMMY].[dbo].[GeneralJournalAccountEntry] as _generaljournalaccountentry
+            on _generaljournalentry.RecId = _generaljournalaccountentry.GeneralJournalEntry
+       where 
+--_generaljournalentry.RecId = _generaljournalaccountentry.GeneralJournalEntry
+--and _generaljournalaccountentry.PostingType = '20'
+--_generaljournalaccountentry.LedgerAccount like '%-THT-%' and
+DATEPART(MONTH, _generaljournalentry.AccountingDate) >= ".$awal." 
+and DATEPART(MONTH, _generaljournalentry.AccountingDate) <= ".$akhir."
+and DATEPART(YEAR, _generaljournalentry.AccountingDate) >= ".$transyear."
+and 
+dimensionFinancialTag.VALUE = '".$cabang."' AND 
+--_ledgerjournaltable.JournalNum = 'JB17100830' AND 
+--and 
+--_ledgerjournaltrans.VOUCHER = 'PAY-1707-0041'
+
+--AND
+bankaccaounttable.ACCOUNTID ='KAS-KC'
+and 
+ISNUMERIC(_ledgerjournaltable.JournalNum) = '' 
+and 
+isnumeric(bankaccaounttable.ACCOUNTID) = ''
+ORDER BY PIL_JOURNALNUM ASC");
+//     return \DB::select("SELECT 
+//     _ledgerjournaltable.JournalNum as PIL_JournalNum,
+//     _generaljournalentry.AccountingDate as PIL_TransDate,
+//     _ledgerjournaltrans.LEDGERDIMENSION as PIL_LEDGERDIMENSION,
+//     bankaccaounttable.ACCOUNTID as PIL_ACCOUNTID,
+//     bankaccaounttable.NAME as PIL_NAME,
+//     _ledgerjournaltrans.AmountCurCredit as PIL_AmountCurCredit,
+//     _ledgerjournaltrans.AmountCurDebit as PIL_AmountCurDebit,
+//     (select TOP 1 SUM(AmountCur)+SUM(AmountCorrect) as SALDO FROM [AX_DUMMY].[dbo].[BANKACCOUNTTRANS]
+//         where YEAR(TRANSDATE) = YEAR(_generaljournalentry.AccountingDate) AND
+//                 MONTH(TRANSDATE) <=  (MONTH(_generaljournalentry.AccountingDate)-1) AND
+//                 ACCOUNTID = bankaccaounttable.ACCOUNTID
+//         GROUP BY ACCOUNTID,  YEAR(TRANSDATE)
+//         ORDER BY YEAR(TRANSDATE) DESC) as SALDO,
+//     _ledgerjournaltrans.PIL_BK as PIL_BK,
+//     _ledgerjournaltrans.Invoice as PIL_Invoice,
+//     _ledgerjournaltrans.Voucher as PIL_Voucher,
+//     _generaljournalaccountentry.Text as PIL_Description,
+//     _generaljournalaccountentry.LEDGERACCOUNT as PIL_Findim,
+//     _generaljournalaccountentry.PostingType,
+//     dimensionFinancialTag.VALUE as idcabang,
+//     dimensionFinancialTag.DESCRIPTION as cabang,
+//     _generaljournalaccountentry.LedgerAccount
+// FROM 
+//     [AX_DUMMY].[dbo].[LedgerJournalTable] as _ledgerjournaltable
+//         join [AX_DUMMY].[dbo].[LedgerJournalTrans] as _ledgerjournaltrans
+//             on _ledgerjournaltrans.JournalNum = _ledgerjournaltable.JournalNum
+//         join [AX_DUMMY].[dbo].[DimensionAttributeValueSet] as dimensionAttributeValueSet
+//             on dimensionAttributeValueSet.RecId = _ledgerjournaltrans.DefaultDimension
+//         join [AX_DUMMY].[dbo].[DimensionAttributeValueSetItem] as dimensionAttributeValueSetItem
+//             on dimensionAttributeValueSetItem.DimensionAttributeValueSet = dimensionAttributeValueSet.RecId
+//         join [AX_DUMMY].[dbo].[DIMENSIONATTRIBUTEVALUECOMBINATION] as dimensionAttributeValueCombination
+//             on dimensionAttributeValueCombination.RECID = _ledgerjournaltrans.LEDGERDIMENSION
+//         join [AX_DUMMY].[dbo].[BANKACCOUNTTABLE] as bankaccaounttable
+//             on bankaccaounttable.ACCOUNTID = dimensionAttributeValueCombination.DISPLAYVALUE
+//         join [AX_DUMMY].[dbo].[DimensionAttributeValue] as dimensionAttributeValue
+//             on dimensionAttributeValue.RecId = dimensionAttributeValueSetItem.DimensionAttributeValue
+//         join [AX_DUMMY].[dbo].[DimensionAttribute] as _DimensionAttribute
+//             on _DimensionAttribute.RecId = dimensionAttributeValue.DimensionAttribute
+//                and _DimensionAttribute.Name = 'KPKC'
+//         join [AX_DUMMY].[dbo].[DimensionFinancialTag] as dimensionFinancialTag
+//             on dimensionFinancialTag.RecId = dimensionAttributeValue.EntityInstance
+//         join [AX_DUMMY].[dbo].[GeneralJournalEntry] as _generaljournalentry
+//             on _ledgerjournaltrans.Voucher = _generaljournalentry.SubledgerVoucher
+//         join [AX_DUMMY].[dbo].[GeneralJournalAccountEntry] as _generaljournalaccountentry
+//             on _generaljournalentry.RecId = _generaljournalaccountentry.GeneralJournalEntry
+//         where _generaljournalentry.RecId = _generaljournalaccountentry.GeneralJournalEntry
+//         and _generaljournalaccountentry.PostingType = '20'
+//         and _generaljournalaccountentry.LedgerAccount like '%-THT-%'
+//         and dimensionFinancialTag.VALUE = ".$cabang."
+//         and DATEPART(MONTH, _generaljournalentry.AccountingDate) >= ".$awal." 
+//         and DATEPART(MONTH, _generaljournalentry.AccountingDate) <= ".$akhir."
+//         and DATEPART(YEAR, _generaljournalentry.AccountingDate) = ".$transyear."
+//         ORDER BY PIL_TransDate asc");
+        }
     
     public function filter_result_realisasi($cabang, $awal, $akhir, $transyear)
     {
@@ -696,6 +936,32 @@ class TransaksiController extends Controller
             'cabang'    => $cabangs,
             'filters'   => array('cabang'=>$cabang, 'awal'=>$awal, 'akhir'=>$akhir, 'transyear' => $transyear),
             'transaksi' => $transaksi,
+            'months'    => $this->months,
+            'items'     => ItemMaster::get()]);
+    }
+
+    public function filter_result_realisasi_transaksi($cabang, $awal, $akhir, $transyear)
+    {
+        $cabangs = KantorCabang::get();
+        $transaksi = $this->reportQuery_transaksi($cabang, $awal, $akhir, $transyear);
+        // dd($transaksi);
+        $start = array_search($awal, $this->months);
+        $end = array_search($akhir, $this->months);
+        $sebelum="";
+        $data_count= [];
+        foreach ($transaksi as $trans) {
+            if($trans->account != $sebelum){
+                $sebelum = $trans->account;
+                $data_count[$trans->account] = 1;
+            }else{
+                $data_count[$trans->account]++;
+            }
+        }
+        return view('transaksi.realisasi_transaksi', [
+            'cabang'    => $cabangs,
+            'filters'   => array('cabang'=>$cabang, 'awal'=>$awal, 'akhir'=>$akhir, 'transyear' => $transyear),
+            'transaksi' => $transaksi,
+            'data_count' => $data_count,
             'months'    => $this->months,
             'items'     => ItemMaster::get()]);
     }
@@ -735,44 +1001,21 @@ class TransaksiController extends Controller
     public function filter_result_kasbank($cabang, $awal, $akhir, $transyear)
     {
         $cabangs = KantorCabang::get();
-
-        // $query = "SELECT item, anggaran, SUM(total) as total 
-        // FROM [dbcabang].[dbo].[transaksi] as transaksi
-        // JOIN [dbcabang].[dbo].[batches] as batches on batches.id = transaksi.batch_id 
-        // JOIN [dbcabang].[dbo].[batches_status] as batches_status on batches_status.batch_id = batches.id 
-        // JOIN [AX_DEV].[dbo].[PIL_KCTRANSAKSI] as PIL_KCTRANSAKSI on PIL_KCTRANSAKSI.PIL_KCJOURNALNUM = batches.id
-        // WHERE batches.cabang = ".$cabang." and batches_status.stat = '6' and PIL_KCTRANSAKSI.PIL_POSTED = '1'
-        // and DATEPART(MONTH, transaksi.tgl) >= ".$awal." 
-        // and DATEPART(MONTH, transaksi.tgl) <= ".$akhir." 
-        // and DATEPART(YEAR, transaksi.tgl) = ".$transyear."
-        // GROUP BY transaksi.item, transaksi.anggaran";
-        // $transaksi = \DB::select($query);
+        $transaksi = $this->reportQuery_kasbank($cabang, $awal, $akhir, $transyear);
 
         $start = array_search($awal, $this->months);
         $end = array_search($akhir, $this->months);
         return view('transaksi.kasbank', [
             'cabang'    => $cabangs,
             'months'    => $this->months,
-            // 'transaksi' => $transaksi,
+            'transaksi' => $transaksi,
             'filters'   => array('cabang'=>$cabang, 'awal'=>$awal, 'akhir'=>$akhir, 'transyear' => $transyear)]
         );
     }
 
     public function cetakKasBank($cabang, $awal, $akhir, $transyear, $type)
     {   
-        // $query = "SELECT item, anggaran, SUM(total) as total 
-        // FROM [dbcabang].[dbo].[transaksi] as transaksi
-        // JOIN [dbcabang].[dbo].[batches] as batches on batches.id = transaksi.batch_id 
-        // JOIN [dbcabang].[dbo].[batches_status] as batches_status on batches_status.batch_id = batches.id 
-        // JOIN [AX_DEV].[dbo].[PIL_KCTRANSAKSI] as PIL_KCTRANSAKSI on PIL_KCTRANSAKSI.PIL_KCJOURNALNUM = batches.id
-        // WHERE batches.cabang = ".$cabang." and batches_status.stat = '6' and PIL_KCTRANSAKSI.PIL_POSTED = '1'
-        // and DATEPART(MONTH, transaksi.tgl) >= ".$awal." 
-        // and DATEPART(MONTH, transaksi.tgl) <= ".$akhir." 
-        // and DATEPART(YEAR, transaksi.tgl) = ".$transyear."
-        // GROUP BY transaksi.item, transaksi.anggaran";
-        
-        // $transaksi = \DB::select($query);
-
+        $transaksi = $this->reportQuery_kasbank($cabang, $awal, $akhir, $transyear);
         $start = $this->months[$awal];
         $end = $this->months[$akhir];
         $excel = false;
@@ -784,7 +1027,7 @@ class TransaksiController extends Controller
         $data = [
             'cabangs'   => KantorCabang::get(),
             'filters'   => array('cabang' => $cabang, 'awal'=>$awal, 'akhir'=>$akhir,  'transyear' => $transyear),
-            //'transaksi' => $transaksi,
+            'transaksi' => $transaksi,
             'items'     => ItemMaster::get(),
             'start'     => $start,
             'end'       => $end,
@@ -796,16 +1039,54 @@ class TransaksiController extends Controller
                 case 'print' :
                     return view('transaksi.cetak-kasbank', $data);
                     break;
-                // case 'export' :
-                //     $pdf = PDF::loadView('transaksi.export-realisasi', $data);
-                //     return $pdf->download('Realisasi Anggaran-'.date("dmY").'.pdf');
-                //     return $pdf->stream('Realisasi Anggaran-'.date("dmY").'.pdf'); 
+                case 'export' :
+                    $pdf = PDF::loadView('transaksi.export-kasbank', $data);
+                    return $pdf->download('Realisasi Anggaran-'.date("dmY").'.pdf');
+                    return $pdf->stream('Realisasi Anggaran-'.date("dmY").'.pdf'); 
                 // hanya untuk view pdf
-                //     break;
-                // case 'excel' :
-                //     return view('transaksi.export-realisasi', $data);
-                //     break;
+                    break;
+                case 'excel' :
+                    return view('transaksi.export-kasbank', $data);
+                    break;
             }
 
       }
+
+    public function verifikasilevel1()
+    {   
+        $a = DB::select("SELECT 
+        max(a.id) as id, batch_id, max(divisi) as divisi, 
+        max(cabang) as cabang, max(seq_number) as seq_number, 
+        max(b.created_at) as tanggal, max(stat) stat
+        FROM [DBCabang].[dbo].[batches_status] as a join [DBCabang].[dbo].[batches] as b
+        on a.batch_id=b.id
+        where stat=2
+        group by batch_id order by tanggal desc");
+        return view('transaksi.verifikasilevel1', compact('a'));
+    }
+
+    public function verifikasilevel2()
+    {   
+        $a = DB::select("SELECT 
+        max(a.id) as id, batch_id, max(divisi) as divisi, 
+        max(cabang) as cabang, max(seq_number) as seq_number, 
+        max(b.created_at) as tanggal, max(stat) stat
+        FROM [DBCabang].[dbo].[batches_status] as a join [DBCabang].[dbo].[batches] as b
+        on a.batch_id=b.id
+        where stat=4
+        group by batch_id order by tanggal desc");
+        return view('transaksi.verifikasilevel2', compact('a'));
+    }
+
+    public function rejecthistory()
+    {   
+          $a = DB::select("SELECT batch_id, stat, submitted_by, batch_status_id, reject_reason, created_by, c.created_at as tanggal, divisi, cabang, seq_number
+          FROM [DBCabang].[dbo].[batches_status] as a
+          join [DBCabang].[dbo].[reject_history] as b
+          on a.id=b.batch_status_id
+          join [DBCabang].[dbo].[batches] as c
+          on a.batch_id=c.id
+          order by tanggal desc");
+          return view('transaksi.rejecthistory', compact('a'));
+    }
 }

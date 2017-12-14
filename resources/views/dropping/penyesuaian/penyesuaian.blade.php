@@ -117,13 +117,13 @@
                                     <div class="col-md-12 col-lg-12 col-xl-6">
                                       <div class="form-group">
                                         <label for="tgl_dropping">Tanggal Dropping</label>
-                                        <input type="date" readonly="" id="tgl_dropping" class="form-control" placeholder="Tanggal Transaksi" name="tgl_dropping" value="{{ date("Y-m-d",strtotime($dropping->TRANSDATE)) }}">
+                                        <input type="text" readonly="" id="tgl_dropping" class="form-control" placeholder="Tanggal Transaksi" name="tgl_dropping" value="{{ date('d-m-Y',strtotime($dropping->TRANSDATE)) }}">
                                       </div>
                                     </div>
                                     <div class="col-md-12 col-lg-12 col-xl-6">
                                       <div class="form-group">
-                                        <label for="nominal">Nominal Dropping (Dalam Rupiah)</label>
-                                          <input type="text" readonly="" id="nominal_dropping" class="form-control" placeholder="{{ $dropping->DEBIT }}" name="nominal_dropping" value="{{ number_format($dropping->DEBIT, 0, '', '.') }}">
+                                        <label for="nominal">Nominal Dropping</label>
+                                          <input type="text" readonly="" id="nominal_dropping" class="form-control" placeholder="{{ $dropping->DEBIT }}" name="nominal_dropping" value="Rp. {{ number_format($dropping->DEBIT, 0, '', '.') }}">
                                       </div>
                                     </div>
                                     <div class="col-md-12 col-lg-12 col-xl-6 pull-right">
@@ -138,7 +138,7 @@
                                         <input type="text" readonly="" id="akun_bank" class="form-control" placeholder="Nama Bank" name="akun_bank" value="{{ $dropping->BANK_DROPPING }}">
                                       </div>
                                     </div>
-                                    <div class="col-md-12 col-lg-12 col-xl-10">
+                                    <div class="col-md-12 col-lg-12 col-xl-12">
                                       <div class="form-group">
                                         <label for="cabang">Kantor Cabang</label>
                                         <input type="text" readonly="" id="cabang" class="form-control" placeholder="Kantor Cabang" name="cabang" value="{{ $dropping->CABANG_DROPPING }}">
@@ -199,13 +199,12 @@
                                     <div class="col-md-12 col-lg-12 col-xl-6">
                                       <div class="form-group">
                                         <label for="projectinput1">Tanggal Transaksi</label>
-                                        <input readonly="" type="date" id="p_tgl_dropping" class="form-control" placeholder="{{ date('d/m/Y') }}" name="p_tgl_dropping" value="{{ date('Y-m-d') }}">
+                                        <input readonly="" type="text" id="p_tgl_dropping" class="form-control" placeholder="{{ date('d/m/Y') }}" name="p_tgl_dropping" value="{{ date('d-m-Y') }}">
                                       </div>
                                     </div>
                                     <div class="col-md-12 col-lg-12 col-xl-6">
                                       <div class="form-group">
-                                        <label for="projectinput2">Nominal Transaksi (Dalam Rupiah)</label>
-                                        <span class="required"> *</span>
+                                        <label for="projectinput2">Nominal Transaksi (Rupiah) *</label>
                                         <div class="controls">
                                           <input type="text" id="p_nominal" name="p_nominal" class="form-control" value="{{ old('p_nominal') }}" required>
                                         </div>
@@ -217,9 +216,9 @@
                                     <div class="col-md-12 col-lg-12 col-xl-12">
                                       <div class="form-group">
                                         <label for="p_cabang">Kantor Cabang</label>
-                                        <span class="required"> *</span>
                                         <div class="controls">
-                                          <select class="form-control kcabang" id="cabang" name="p_cabang" required>
+                                          <input type="text" readonly="" id="cabang" class="form-control kcabang" name="p_cabang" value="{{ $dropping->CABANG_DROPPING }}">
+                                          <!-- <select class="form-control kcabang" id="cabang" name="p_cabang" required>
                                               <option value="0">--Pilih Kantor Cabang</option>
                                             @foreach($kcabangs as $cabang)
                                               {{ $id = $cabang->VALUE."00" }}
@@ -227,7 +226,7 @@
                                               <option value="{{ $cabang->DESCRIPTION }}">{{ $cabang->DESCRIPTION }}</option>
                                               @endif
                                             @endforeach
-                                          </select>
+                                          </select> -->
                                         </div>
                                       </div>
                                     </div>
@@ -236,9 +235,25 @@
                                         <label for="p_akun_bank">Nama Bank</label>
                                         <span class="required"> *</span>
                                         <div class="controls">
-                                          <select class="form-control akun_bank" id="akun_bank" name="p_akun_bank" disabled="" required>
-                                              <option value="0">Pilih kantor cabang terlebih dahulu</option>
+                                          <select class="form-control akun_bank" id="akun_bank" name="p_akun_bank" required>
+                                              <option value="0">- Pilih Bank -</option>
+                                              <?php
+                                                $cabang=$dropping->CABANG_DROPPING;
+                                                $z = \DB::select("SELECT BANK, BANK_NAME FROM [AX_DUMMY].[dbo].[PIL_BANK_VIEW] WHERE NAMA_CABANG='".$cabang."' AND BANK NOT LIKE '%KKC%'");
+                                              ?>
+                                               @foreach($z as $temp) 
+                                               <option value="{{$temp->BANK}}">{{ $temp->BANK_NAME }}</option>
+                                               @endforeach   
+                                            <!-- @foreach($kcabangs as $cabang)
+                                              {{ $id = $cabang->VALUE."00" }}
+                                              @if(Gate::check("unit_".$id) )
+                                              <option value="{{ $cabang->DESCRIPTION }}">{{ $cabang->DESCRIPTION }}</option>
+                                              @endif
+                                            @endforeach -->
                                           </select>
+                                          <!-- <select class="form-control akun_bank" id="akun_bank" name="p_akun_bank" disabled="" required>
+                                              <option value="0">Pilih kantor cabang terlebih dahulu</option>
+                                          </select> -->
                                         </div>
                                       </div>
                                     </div>
@@ -299,7 +314,9 @@
                                               <th>Nominal Penyesuaian</th>
                                               <th>Status</th>
                                               <th>Attachment</th>
+                                              @if($kesesuaian->is_pengembalian == 1)
                                               <th>Status Ax</th>
+                                              @endif
                                             </tr>
                                           </thead>
                                           <tbody>
@@ -317,6 +334,7 @@
                                                   <li><a href="{{ url('dropping/penyesuaian/berkas/download').'/'.$value->id }}" target="_blank">{{ $value->name }}</a></li>
                                                   @endforeach
                                                 </td>
+                                                @if($kesesuaian->is_pengembalian == 1)
                                                 <td>
                                                   @if($kesesuaian->integrated['PIL_POSTED'] == 1)
                                                   Terintegrasi
@@ -324,6 +342,7 @@
                                                     -
                                                   @endif
                                                 </td>
+                                                @endif
                                             </tr>
                                           </tbody>
                                         </table>
@@ -347,8 +366,9 @@
                             <div class="card-block">
                               <div class="form-actions pull-right">
                                 <a href="{{ url('dropping') }}" class="btn btn-warning">
-                                  <i class="ft-x"></i> Batalkan
+                                  <i class="ft-back"></i> Kembali
                                 </a>
+                                <!-- inidia -->
                                 <button type="submit" data-toggle="modal" data-target="#xSmall" class="btn btn-secondary">
                                   <i class="fa fa-check-square-o"></i> Submit
                                 </button>
@@ -481,22 +501,22 @@
                     }
                   };
 
-                  $('select.kcabang').on('change', function(){
-                      $.post('{{ url('/dropping/banks') }}', {_token: '{{ csrf_token() }}', type: 'bank', id: $(this).val()}, function(e){
-                        console.log(e);
-                          if (e != 0) {
-                            $('select[name="p_akun_bank"]').html(e);
-                            $('select[name="p_akun_bank"]').prop("disabled", false);
-                          } else {
-                            $('select[name="p_akun_bank"]').html("<option value='0'>Pilih kantor cabang terlebih dahulu</option>");
-                            $('select[name="p_akun_bank"]').prop("disabled", true);
-                            toastr.error("Daftar bank pada kantor cabang yang dimaksud tidak ditemukan. Silahkan pilih kantor cabang lain. Terima kasih.", "Perhatian", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:10e3});
-                          }
+                  // $('select.kcabang').on('change', function(){
+                  //     $.post('{{ url('/dropping/banks') }}', {_token: '{{ csrf_token() }}', type: 'bank', id: $(this).val()}, function(e){
+                  //       console.log(e);
+                  //         if (e != 0) {
+                  //           $('select[name="p_akun_bank"]').html(e);
+                  //           $('select[name="p_akun_bank"]').prop("disabled", false);
+                  //         } else {
+                  //           $('select[name="p_akun_bank"]').html("<option value='0'>Pilih kantor cabang terlebih dahulu</option>");
+                  //           $('select[name="p_akun_bank"]').prop("disabled", true);
+                  //           toastr.error("Daftar bank pada kantor cabang yang dimaksud tidak ditemukan. Silahkan pilih kantor cabang lain. Terima kasih.", "Perhatian", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:10e3});
+                  //         }
 
-                          $('select[name="p_rek_bank"]').html("<option value='0'>Pilih bank terlebih dahulu</option>");
-                          $('select[name="p_rek_bank"]').prop("disabled", true);
-                      });
-                  });
+                  //         $('select[name="p_rek_bank"]').html("<option value='0'>Pilih bank terlebih dahulu</option>");
+                  //         $('select[name="p_rek_bank"]').prop("disabled", true);
+                  //     });
+                  // });
 
                   $('select.akun_bank').on('change', function(){
                       $.post('{{ url('/dropping/banks') }}', {_token: '{{ csrf_token() }}', type: 'rekening', id: $(this).val()}, function(e){

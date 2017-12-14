@@ -16,7 +16,7 @@ Route::group(['middleware' => 'guest'], function() {
 	Route::get('/', 'Auth\AuthController@showLoginForm'); 
 	Route::get('/login', 'Auth\AuthController@showLoginForm');
 });
-
+// Route::get('logout', 'Auth\AuthController@logout');
 Route::group(['middleware' => 'auth'], function() {
 	Route::get('notification/', 'NotificationController@get');
 	Route::get('notification/redirect/{id}', 'NotificationController@redirect');
@@ -24,7 +24,8 @@ Route::group(['middleware' => 'auth'], function() {
 	Route::get('notification/mark_all', 'NotificationController@markAllAsRead');
 	Route::get('notification/del_all', 'NotificationController@deleteAll');
 	Route::get('/dashboard', 'DashboardController@index');
-
+	Route::get('logout', 'Auth\AuthController@logout');
+	
 	Route::group(['prefix' => 'dropping'], function() {
 		Route::resource('/', 'DroppingController');
 		Route::get('/get', 'DroppingController@getAll');
@@ -48,6 +49,10 @@ Route::group(['middleware' => 'auth'], function() {
 		Route::get('/verifikasi/penyesuaian/{level}/{reaction}/{id}', 'DroppingController@submitVerificationPenyesuaian');
 
 		Route::post('/banks/', 'DroppingController@getChainedBank');
+		//verifikasi
+		Route::get('/lihat/penyesuaian', 'DroppingController@penyesuaianlevel1');
+		Route::get('/lihat/penyesuaian2', 'DroppingController@penyesuaianlevel2');
+		Route::get('/lihat/penarikan', 'DroppingController@penarikanlevel1');
 	});
 
 	Route::group(['prefix' => 'transaksi'], function() {
@@ -57,7 +62,7 @@ Route::group(['middleware' => 'auth'], function() {
 		Route::post('/submit/verify/{batch}', 'TransaksiController@submit');
 
 		Route::get('/persetujuan/{id_batch}', 'TransaksiController@persetujuan');
-		Route::get('/persetujuan/', 'TransaksiController@persetujuan2');
+		//Route::get('/persetujuan/', 'TransaksiController@persetujuan2');
 		Route::get('/verifikasi/{id_batch}', 'TransaksiController@verifikasi');
 
 		Route::post('/submit/verifikasi/{type}/{id_batch}', 'TransaksiController@submitVerification');
@@ -79,10 +84,21 @@ Route::group(['middleware' => 'auth'], function() {
 		Route::get('/filter/realisasi/{cabang}/{awal}/{akhir}/{transyear}', 'TransaksiController@filter_result_realisasi');
 		Route::get('/realisasi/{cabang}/{awal}/{akhir}/{transyear}/{type}', 'TransaksiController@cetakRealisasi');
 
+		Route::get('/report/realisasi_transaksi', 'TransaksiController@realisasi_transaksi');
+		Route::post('/filter/reports_transaksi', 'TransaksiController@filter_handle_realisasi_transaksi');
+		Route::get('/filter/realisasi_transaksi/{cabang}/{awal}/{akhir}/{transyear}', 'TransaksiController@filter_result_realisasi_transaksi');
+		Route::get('/realisasi_transaksi/{cabang}/{awal}/{akhir}/{transyear}/{type}', 'TransaksiController@cetakRealisasi_transaksi');
+
 		Route::get('/report/kasbank', 'TransaksiController@kasbank');
 		Route::post('/filter/kasbank', 'TransaksiController@filter_handle_kasbank');
 		Route::get('/filter/kasbank/{cabang}/{awal}/{akhir}/{transyear}', 'TransaksiController@filter_result_kasbank');
 		Route::get('/kasbank/{cabang}/{awal}/{akhir}/{transyear}/{type}', 'TransaksiController@cetakKasBank');
+	
+	//verifikasi
+		Route::get('/lihat/persetujuan', 'TransaksiController@verifikasilevel1');
+		Route::get('/lihat/verifikasi', 'TransaksiController@verifikasilevel2');
+
+		Route::get('/lihat/reject_history', 'TransaksiController@rejecthistory');
 	});
 
 
@@ -133,6 +149,7 @@ Route::group(['middleware' => 'auth'], function() {
 		Route::get('/get/download/{id}', 'PelaporanController@unduh_file');
 		Route::get('/get/unit_kerja_form/{thn}/{tw1}/{tw2}/{kategori}/{id}', 'PelaporanController@getUnitKerjaFormMaster');
 		Route::get('/reports/export', 'PelaporanController@export_pelaporan');
+		Route::get('/reports/exportword', 'PelaporanController@export_pelaporanword');
    	});
 
 	Route::get('/user/ldap/', 'UserController@filterLDAP');
@@ -147,15 +164,19 @@ Route::group(['middleware' => 'auth'], function() {
 	Route::group(['prefix' => 'item'], function(){
 		Route::resource('/', 'ItemController');
 		Route::get('/transaksi', 'ItemController@listTransaksi');
+		Route::get('/anggaran', 'ItemController@listAnggaran');
 		Route::get('/import', 'ItemController@importXls');
 		Route::post('/import/process/', 'ItemController@importXlsProcess');
 		Route::get('/get/combination/{id}/{tanggal}', 'ItemController@getCombination');
 		Route::get('/create/transaksi', 'ItemController@createItemTransaksi');
 		Route::get('/create/anggaran', 'ItemController@createItemAnggaran');
 		Route::post('/add/transaksi', 'ItemController@addItemTransaksi');
+		Route::post('/add/anggaran', 'ItemController@addItemAnggaran');
 		Route::post('/submit/{type}', 'ItemController@submitAnggaranItem');
 		Route::get('/edit/transaksi/{id}', 'ItemController@editItemTransaksi');
+		Route::get('/edit/anggaran/{id}', 'ItemController@editItemAnggaran');
 		Route::post('/update/transaksi/{id}', 'ItemController@updateItemTransaksi');
+		Route::post('/update/anggaran/{id}', 'ItemController@updateItemAnggaran');
 		Route::post('/update/item/{id}', 'ItemController@updateItem');
 		Route::get('/delete/{jenis}/{id}', 'ItemController@destroy');
 	});
@@ -235,7 +256,7 @@ Route::group(['middleware' => 'auth'], function() {
 
 	Route::group(['prefix' => 'tindaklanjutinternal'], function(){
 		Route::get('/', 'TindaklanjutController@tindaklanjutinternal');
-		Route::post('/cari', 'TindaklanjutController@cari_unitkerjainternal');
+		Route::get('/cari/tindaklanjut', 'TindaklanjutController@cari_unitkerjainternal');
 		Route::get('/{id}', 'TindaklanjutController@unitkerjainternal');
 		Route::get('/myform/{unitkerja}', 'TindaklanjutController@myformAjax');
 		Route::get('/kirim2/{id1}', 'TindaklanjutController@kirim_tindaklanjut2');

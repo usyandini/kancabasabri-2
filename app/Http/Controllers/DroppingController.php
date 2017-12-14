@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Gate;
 
 use App\User;
 use App\Models\PaymentJournalDropping;
-
+use DB;
 use App\Models\Dropping;
 use App\Models\TarikTunai;
 use App\Models\PenyesuaianDropping;
@@ -93,7 +93,7 @@ class DroppingController extends Controller
         return view('dropping.index', ['kcabangs' => $this->kantorCabangs, 'filters' => null]);
     }
 
-    public function getAll() //ambil view PIL_DROPPING_vIE dari AX_DEV
+    public function getAll() //ambil view PIL_DROPPING_VIEW dari AX_DUMMY
     {
         $droppings = $this->jDroppingModel->where('DEBIT', '>', 0)->get();
         $result = [];
@@ -240,7 +240,7 @@ class DroppingController extends Controller
         $bank = AkunBank::where('BANK', $request->akun_bank)->first();
         $program = Program::where('DESCRIPTION', 'Tabungan Hari Tua')->first();
         $kpkc = KantorCabang::where('DESCRIPTION', $request->cabang)->first();
-        $divisi = Divisi::where('DESCRIPTION', '')->first();
+        $divisi = Divisi::where('DESCRIPTION', 'None')->first();
         $subpos = SubPos::where('DESCRIPTION', 'None')->first();
         $kegiatan = Kegiatan::where('DESCRIPTION', 'None')->first();
 
@@ -264,7 +264,7 @@ class DroppingController extends Controller
         $string_tarik = $request->nominal_tarik;
         $tarik = floatval(str_replace('.', '', $string_tarik));
         //dd($tarik);
-
+        // print_r($divisi->VALUE);
         if($validatorTT->passes() && $temp_sisa['stat'] !=1){
             if($temp_sisa){
                 $inputsTT['nominal'] = $temp_sisa['sisa_dropping'];
@@ -364,17 +364,19 @@ class DroppingController extends Controller
             ]);
 
         $submitted = PenyesuaianDropping::where([['id_dropping', $id_drop], ['stat', 4]])->orderby('created_at', 'desc')->first();
-        $verLv1 = PenyesuaianDropping::where([['id_dropping', $id_drop], ['stat', 6]])->orderby('created_at', 'desc')->first();
+        //$verLv1 = PenyesuaianDropping::where([['id_dropping', $id_drop], ['stat', 6]])->orderby('created_at', 'desc')->first();
         $verLv2 = PenyesuaianDropping::where([['id_dropping', $id_drop], ['stat', 8]])->orderby('created_at', 'desc')->first();
         
         $string_penyesuaian = $request->p_nominal;
         $penyesuaian = floatval(str_replace('.', '', $string_penyesuaian));
-
+        $tgl_dropping=date('Y-m-d', strtotime($request->p_tgl_dropping));
         if($submitted){
             session()->flash('fail', true);
-        }elseif($verLv1){
-            session()->flash('verifikasi1', true);
-        }elseif($verLv2){
+        }
+        // elseif($verLv1){
+        //     session()->flash('verifikasi1', true);
+        // }
+        elseif($verLv2){
             session()->flash('verifikasi2', true);
         }else{
             if($validatorPD->passes())
@@ -382,7 +384,7 @@ class DroppingController extends Controller
                 $bank = AkunBank::where('BANK', $request->p_akun_bank)->first();
                 $program = Program::where('DESCRIPTION', 'Tabungan Hari Tua')->first();
                 $kpkc = KantorCabang::where('DESCRIPTION', $request->p_cabang)->first();
-                $divisi = Divisi::where('DESCRIPTION', '')->first();
+                $divisi = Divisi::where('DESCRIPTION', 'None')->first();
                 $subpos = SubPos::where('DESCRIPTION', 'None')->first();
                 $kegiatan = Kegiatan::where('DESCRIPTION', 'None')->first();
 
@@ -392,7 +394,7 @@ class DroppingController extends Controller
                     'is_pengembalian'   => $request->p_is_pengembalian == "1" ? false : true,
                     'nominal'           => $penyesuaian,
                     'rek_bank'          => $request->p_rek_bank,
-                    'tgl_dropping'      => $request->p_tgl_dropping,
+                    'tgl_dropping'      => $tgl_dropping,
                     'SEGMEN_1'          => $bank->ACCOUNT,
                     'SEGMEN_2'          => $program->VALUE,
                     'SEGMEN_3'          => $kpkc->VALUE,
@@ -406,11 +408,11 @@ class DroppingController extends Controller
                 $inputsPD['id_dropping'] = $id_drop;
                 $inputsPD['nominal_dropping']  = $request->nominal_dropping;
 
-                $inputsPD['stat'] = 4;
+                $inputsPD['stat'] = 6;
                 
                 $PD = PenyesuaianDropping::create($inputsPD); 
                 $this->storeBerkas($request->berkas, 'penyesuaian', $PD->id); 
-                NotificationSystem::send($PD->id, 10);
+                NotificationSystem::send($PD->id, 12);
 
                 session()->flash('success', true);
             }else{
@@ -471,6 +473,7 @@ class DroppingController extends Controller
             //header('Pragma: public');
             header('Content-Length: '.$berkas->size);
             readfile($file);
+            unlink($file);
             exit($data);
 
         }
@@ -480,13 +483,13 @@ class DroppingController extends Controller
     {
         $return = 0;
         switch ($request->input('type')) {
-            case 'bank':
-                $banks = $this->akunBankModel->where('NAMA_CABANG', $request->input('id'))->get();
-                if (count($banks) > 0) {
-                    $return = '<option value="0">Pilih Bank</option>';
-                    foreach($banks as $temp) 
-                        $return .= "<option value='$temp->BANK'>".$temp->BANK_NAME."</option>";
-                } 
+            // case 'bank':
+            //     $banks = $this->akunBankModel->where('NAMA_CABANG', $request->input('id'))->get();
+            //     if (count($banks) > 0) {
+            //         $return = '<option value="0">Pilih Bank</option>';
+            //         foreach($banks as $temp) 
+            //             $return .= "<option value='$temp->BANK'>".$temp->BANK_NAME."</option>";
+            //     } 
             case 'rekening':
                 $rekening = $this->akunBankModel->where('BANK', $request->input('id'))->get();
                 if (count($rekening) > 0) {
@@ -733,5 +736,29 @@ class DroppingController extends Controller
     {
        header('Location: ' . $url, true, $statusCode);
        die();
+    }
+
+    public function penyesuaianlevel1()
+    {   
+        $a = DB::table('penyesuaian_dropping')
+             ->where('stat', 4)
+             ->orderBy('id','DESC')->get();
+        return view('dropping.penyesuaian.penyesuaianlevel1', compact('a'));
+    }
+
+    public function penyesuaianlevel2()
+    {   
+        $a = DB::table('penyesuaian_dropping')
+             ->where('stat', 6)
+             ->orderBy('id','DESC')->get();
+        return view('dropping.penyesuaian.penyesuaianlevel2', compact('a'));
+    }
+
+    public function penarikanlevel1()
+    {   
+        $a = DB::table('tarik_tunai')
+             ->where('stat', 1)
+             ->orderBy('id','DESC')->get();
+        return view('dropping.tariktunai.penarikanlevel1', compact('a'));
     }
 }

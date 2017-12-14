@@ -75,39 +75,53 @@
                     </div>
                 </div>
                 
-                <div class="row">
-                    <section id="select-inputs">
-			          <div class="row">
-			          	<div class="col-xs-12">
-			              <div class="card">
-			                <div class="card-header">
-			                  
-			                  <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
-			                  	<div class="card-body collapse in">
-			                  	
-			                  		<table>
-			                  		<form enctype="multipart/form-data" role="form" action="{{ URL('tindaklanjut') }}" method="GET" >
-				                    {{ csrf_field() }}
-			                  			<tr>
-			                  				<td><b>Unit Kerja</b></td><td>  </td><td><b> : </b></td><td>  </td>
-			                  				<td><select class="select2 form-control block" name="unitkerja" id="unitkerja" onchange="changeUnit()" required="required">
+
+			<div class="row">
+            	<section id="select-inputs">
+            		<div class="row">
+            			<div class="col-xs-12">
+            				<div class="card">
+            					<div class="card-header">
+            						<h4 class="card-title">Pencarian Tindak Lanjut</h4>
+            						<a class="heading-elements-toggle"><i class="ft-align-justify font-medium-3"></i></a>
+            					</div>
+            					<div class="card-body collapse in">
+            						<div class="card-block">
+            							<form enctype="multipart/form-data" role="form" action="{{ URL('tindaklanjut') }}" method="GET" >
+				                    		<div class="row">
+            								{{ csrf_field() }}
+            									<div class="col-xs-4">
+            										<div class="form-group">
+            										<label>Unit Kerja</label><br>
+            										<select class="select2 form-control block" name="unitkerja" id="unitkerja" style="width:300px" onchange="changeUnit()" required="required">
                                                     <option value="0"> - Pilih Unit Kerja - </option>
                                                     <?php
-                                                    $second="SELECT * FROM (SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_DIVISI] WHERE VALUE!='00') AS A UNION ALL SELECT * FROM (SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_KPKC]  WHERE VALUE!='00') AS B";
+                                                    $second="SELECT * FROM (SELECT DESCRIPTION, VALUE FROM [AX_DUMMY].[dbo].[PIL_VIEW_DIVISI] WHERE VALUE!='00') AS A UNION ALL SELECT * FROM (SELECT DESCRIPTION, VALUE FROM [AX_DUMMY].[dbo].[PIL_VIEW_KPKC]  WHERE VALUE!='00') AS B";
 									                $return = DB::select($second);
 									                ?>
                                                     @foreach($return as $b)
                                                       <option value="{{ $b->DESCRIPTION }}" >{{ $b->DESCRIPTION }}</option>
                                                     @endforeach
-                                                  </select></td>
-			                  			</tr>
-			                  			<tr>
-			                  				<td>  </td>
-			                  			</tr>
-			                  			<tr>
-			                  				<td><b>Tanggal Mulai</b></td><td>  </td><td><b> : </b></td><td>  </td>
-			                  				<td><select class="select2 form-control block" name="tgl_mulai" style="width:300px" required="required"></select></td>
-			                  				<script type="text/javascript">
+                                                  </select>
+            										</div>
+            									</div>
+            									<div class="col-xs-3.5">
+            										<div class="form-grpup">
+            											<label>Tanggal Mulai</label><br>
+            											<select class="select2 form-control block" name="tgl_mulai" style="width:200px" required="required"></select>
+            										</div>
+            									</div>
+            								</div>
+            								<div class="row">
+            									<div class="col-xs-7">
+            										<button type="submit" class="btn btn-outline-primary"><i class="fa fa-search "></i> Cari</button>
+            									</div>
+            								</div>
+            							</form>
+            						</div>
+            					</div>
+            				</div>
+            				<script type="text/javascript">
 											    function changeUnit(){
 										    		var unitkerja = $('#unitkerja').val();
 									                var uri = "{{ url('tindaklanjut/myform').'/'}}"+ encodeURI(unitkerja);
@@ -133,28 +147,9 @@
 								                    });
 										    	}
 											</script>
-											
-			                  			</tr>
-			                  			<tr>
-			                  				<td>  </td>
-			                  			</tr>
-			                  			<tr>
-			                  				<td>  </td>
-			                  			</tr>
-			                  			<tr>										 
-			                  			<td></td><td></td><td></td><td></td><td><button type="submit" class="btn btn-primary pull-right"><i class="fa fa-search "></i> Cari</button></td>
-
-			                  			</tr>
-			                  			</form>
-			                  		</table>
-			                  	
-			                	</div>
-			              	</div>
-			              </div>
-			            </div>
-			          </div>
-			        </div>
-
+            			</div>
+            		</div>
+            	</div>
 
                   	<div class="row">
                     <section id="select-inputs">
@@ -166,7 +161,7 @@
 			                  <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
 			                  <div class="card-body collapse in">			                
 			                  	<div class="card-block">
-			                  	<span><a class="btn btn-success" data-target="#tambah" data-toggle="modal"><i class="fa fa-plus"></i> <b>Tambah Tindak Lanjut</b></a></span>
+			                  	<a href="#" class="btn btn-outline-success btn" data-target="#tambah" data-toggle="modal"><i class="fa fa-plus"></i> <b>Tambah Tindak Lanjut</b></a>
                            			<div class="modal fade" data-backdrop="static" id="tambah" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                                         <div class="modal-dialog">
                                             <div class="modal-content">
@@ -182,7 +177,7 @@
                                                 <select class="select2 form-control" name="unitkerja" required="required" style="width:300px">
                                                     <option value="0"> - Pilih Unit Kerja - </option>
                                                     <?php
-                                                    $second="SELECT * FROM (SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_DIVISI] WHERE VALUE!='00') AS A UNION ALL SELECT * FROM (SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_KPKC]  WHERE VALUE!='00') AS B";
+                                                    $second="SELECT * FROM (SELECT DESCRIPTION, VALUE FROM [AX_DUMMY].[dbo].[PIL_VIEW_DIVISI] WHERE VALUE!='00') AS A UNION ALL SELECT * FROM (SELECT DESCRIPTION, VALUE FROM [AX_DUMMY].[dbo].[PIL_VIEW_KPKC]  WHERE VALUE!='00') AS B";
 									                $return = DB::select($second);
 									                ?>
                                                     @foreach($return as $b)
@@ -382,7 +377,7 @@
 																		<select class="form-control" name="unitkerja" value="{{$reason->unitkerja}}">
 						                                                    <option value=""> - Pilih Unit Kerja - </option>
 						                                                    <?php
-						                                                    $secondq="SELECT * FROM (SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_DIVISI] WHERE VALUE!='00') AS A UNION ALL SELECT * FROM (SELECT DESCRIPTION, VALUE FROM [AX_DEV].[dbo].[PIL_VIEW_KPKC]  WHERE VALUE!='00') AS B";
+						                                                    $secondq ="SELECT * FROM (SELECT DESCRIPTION, VALUE FROM [AX_DUMMY].[dbo].[PIL_VIEW_DIVISI] WHERE VALUE!='00') AS A UNION ALL SELECT * FROM (SELECT DESCRIPTION, VALUE FROM [AX_DUMMY].[dbo].[PIL_VIEW_KPKC]  WHERE VALUE!='00') AS B";
 															                $returnq = DB::select($secondq);
 															                ?>
 																			@foreach($returnq as $bq)

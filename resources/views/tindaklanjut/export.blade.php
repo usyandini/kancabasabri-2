@@ -8,11 +8,14 @@
 				@if ($bb->internal=='1')
 				<?php 
 				header("Content-type: application/vnd-ms-excel");
-				header("Content-Disposition: attachment; filename=tindak-lanjut-internal.xls"); ?>
+				header("Content-Disposition: attachment; filename=tindak-lanjut-internal.xls"); 
+				?>
 				@else
 				<?php 
 				header("Content-type: application/vnd-ms-excel");
-				header("Content-Disposition: attachment; filename=tindak-lanjut-eksternal.xls"); ?>
+				header("Content-Disposition: attachment; filename=tindak-lanjut-eksternal.xls"); 
+				?>
+				
 				@endif
 			@endif
 
@@ -121,18 +124,15 @@
 			                  <table>
 				                  <tr>
 					                  <td><b> Unit Kerja </b></td>
-					                  <td><b> : </b></td>
-					                  <td align="left"><b>{{ $bb->unitkerja}}</b></td>
+					                  <td align="left"><b> : {{ $bb->unitkerja}}</b></td>
 					              </tr>
 					              <tr>
 		                              <td><b> Tanggal Mulai </b></td>
-		                              <td><b> : </b></td>
-		                              <td align="left"><b>{{ $tgls }} {{ $bulans }} {{ $tahuns }} </b></td>
+		                              <td align="left"><b> : {{ $tgls }} {{ $bulans }} {{ $tahuns }} </b></td>
 		                          </tr>
 		                          <tr>
 		                              <td><b> Durasi </b></td>
-		                              <td><b> : </b></td>
-		                              <td align="left"><b>{{ $bb->durasi }} Hari </b></td>
+		                              <td align="left"><b> : {{ $bb->durasi }} Hari </b></td>
 	                              </tr>
                                 <?php 
                                 $id1=$bb->id1;
@@ -161,23 +161,19 @@
                                 ?>
                                 	<tr>
                                 		<td><b>Total Temuan </b></td>
-                                		<td><b> : </b></td>
-                                		<td align="left"><b>{{$ab1}}</b></td>
+                                		<td align="left"><b> : {{$ab1}}</b></td>
                                 	</tr>
                                 	<tr>
                                 		<td><b>Total Rekomendasi </b></td>
-                                		<td><b> : </b></td>
-                                		<td align="left"><b>{{$ab2}}</b></td>
+                                		<td align="left"><b> : {{$ab2}}</b></td>
                                 	</tr>
                                 	<tr>
                                 		<td><b>Dalam Proses </b></td>
-                                		<td><b> : </b></td>
-                                		<td align="left"><b>{{$ab3}}</b></td>
+                                		<td align="left"><b> : {{$ab3}}</b></td>
                                 	</tr>
                                 	<tr>
                                 		<td><b>Selesai </b></td>
-                                		<td><b> : </b></td>
-                                		<td align="left"><b>{{$ab4}}</b></td>
+                                		<td align="left"><b> : {{$ab4}}</b></td>
                                 	</tr>
                                 </table>
                                 	
@@ -205,59 +201,58 @@
 								<table class="classtable">
 			                        <thead>
 			                          <tr>
-			                            <th class="classth"><center>No</center></th>
 			                            <th class="classth"><center>Unit Kerja</center></th>
 			                            <th class="classth"><center>Temuan</center></th>
 			                            <th class="classth"><center>Rekomendasi</center></th>
 			                            <th class="classth"><center>Tindak Lanjut</center></th>
+			                            <th class="classth"><center>Berkas</center></th>
 			                            <th class="classth"><center>Status</center></th>
 			                            <th class="classth"><center>Keterangan</center></th>
 			                          </tr>
 			                        </thead>
 			                        <tbody>
-			                        <?php $no='1';
+			                        <?php
 			                        $longkap="longkap";
 			                        $longkap2="longkap";
 			                        $longkap3="longkap";?>
 					                @if(count($a))
 								    @foreach($a as $b)
 								    <tr>
-			                        			<td class="classtd"><center>
 			                        			@if ($longkap != $b->unitkerja)
-												{{$no}}
-												@endif
-			                        			</center></td>
-			                        			<td class="classtd"><center>
-			                        			@if ($longkap != $b->unitkerja) 
-			                        			{{ $b->unitkerja }}
+			                        			<td class="classtd" rowspan="{{$data_count[$b->unitkerja]}}">
+			                        				{{ $b->unitkerja }}
+			                        			</td>
 			                        			@endif
-			                        			</center></td>
-			                        			<td class="classtd">
-			                        			@if ($longkap2 != $b->temuan) 
-				                           			{{ $b->temuan }}
-				                           		@endif
-				                           		</td>
-			                        			<td class="classtd">
-			                        			@if ($longkap3 != $b->rekomendasi) 
-					                           			{{ $b->rekomendasi }}
-					                           	@endif
-					                            </td>
+			                        			@if ($longkap2 != $b->temuan)
+			                        			<td class="classtd" rowspan="{{$data_count2[$b->temuan]}}">
+			                        				{{ $b->temuan }}
+			                        			</td>
+			                        			@endif
+			                        			@if ($longkap3 != $b->rekomendasi)
+			                        			<td class="classtd" rowspan="{{$data_count3[$b->rekomendasi]}}">
+			                        				{{ $b->rekomendasi }}
+			                        			</td>
+			                        			@endif
 			                        			<td class="classtd">
 			                        			@if ($b->rekomendasi!="")
 			                        			{{ $b->tindaklanjut }}
 					                           	@endif
 				                           		</td>
-				                           		<td class="classtd"><center>@if ($b->status=='1') Dalam Proses @endif
-			                        				@if ($b->status=='2') Selesai @endif</center>
-			                        			</td>
-			                        			<td class="classtd"><center>{{ $b->keterangan }}</center>
-			                        			</td>
-			                        </tr>
+				                           		<td class="classtd"><center>@if ($b->tindaklanjut!="")
+				                           			@if ($b->name=="") Tidak Ada
+				                           				@else 
+				                           					{{ $b->name }}</a>
+				                           				@endif
+				                           			@endif</center></td>
+			                        			<td class="classtd"><center>@if ($b->status=='1') Dalam Proses @endif
+			                        				@if ($b->status=='2') Selesai @endif</center></td>
+			                        			<td class="classtd"><center>{{ $b->keterangan }}</center></td>
+			                        			</tr>
 			                        				
 				                	<?php $longkap = $b->unitkerja;
 				                		  $longkap2 = $b->temuan;
 				                		  $longkap3 = $b->rekomendasi;
-				                		  $no++; ?>
+				                    ?>
 				                	@endforeach
 			    					@endif
 								    

@@ -11,20 +11,20 @@
         <h5>Aksi</h5>
         <div class="form-group skin skin-square" id="transaksi">
           <fieldset >
-            <input id="info_transaksi" type="checkbox"  name="perizinan[info_t]" {{ isset($user->perizinan['info_t']) ? 'checked=""' : '' }} >
-            <label>Informasi transaksi</label>
+            <input id="menu_trans" type="checkbox" name="perizinan[menu_transaksi]" {{ isset($user->perizinan['menu_transaksi']) ? 'checked=""' : '' }} >
+            <label>Menu transaksi</label>
           </fieldset>
-          <ul id="info_transaksi" style="margin-bottom: 0;">
+          <ul id="menu_trans" style="margin-bottom: 0;">
             <li>
               <fieldset>
-                <input type="checkbox" name="perizinan[tambah_t]" {{ isset($user->perizinan['tambah_t']) ? 'checked=""' : '' }}>
-                <label >Tambah batch transaksi</label>
+                <input type="checkbox" name="perizinan[info_t]" {{ isset($user->perizinan['info_t']) ? 'checked=""' : '' }}>
+                <label >Informasi transaksi</label>
               </fieldset>
             </li>
             <li>
               <fieldset>
-                <input type="checkbox" name="perizinan[cari_t]" {{ isset($user->perizinan['cari_t']) ? 'checked=""' : '' }}>
-                <label >Pencarian batch transaksi</label>
+                <input type="checkbox" name="perizinan[tambah_t]" {{ isset($user->perizinan['tambah_t']) ? 'checked=""' : '' }}>
+                <label >Tambah batch transaksi</label>
               </fieldset>
             </li>
             <li>
@@ -63,14 +63,46 @@
                 <label>Ajukan batch untuk verifikasi</label>
               </fieldset>
             </li>
+            <li>
+              <fieldset>
+                <input type="checkbox" name="perizinan[setuju_t]" {{ isset($user->perizinan['setuju_t']) ? 'checked=""' : '' }}>
+                <label>Persetujuan transaksi</label>
+              </fieldset>
+            </li>
+            <li>
+              <fieldset>
+                <input type="checkbox" name="perizinan[setuju2_t]" {{ isset($user->perizinan['setuju2_t']) ? 'checked=""' : '' }}>
+                <label>Persetujuan final transaksi</label>
+              </fieldset>
+            </li>
+            <li>
+              <fieldset>
+                <input type="checkbox" name="perizinan[report_mata_anggaran]" {{ isset($user->perizinan['report_mata_anggaran']) ? 'checked=""' : '' }}>
+                <label>Report Realisasi Mata Anggaran</label>
+              </fieldset>
+            </li>
+            <li>
+              <fieldset>
+                <input type="checkbox" name="perizinan[report_realisasi_anggaran]" {{ isset($user->perizinan['report_realisasi_anggaran']) ? 'checked=""' : '' }}>
+                <label>Report Realisasi Transaksi</label>
+              </fieldset>
+            </li>
+            <li>
+              <fieldset>
+                <input type="checkbox" name="perizinan[report_kasbank]" {{ isset($user->perizinan['report_kasbank']) ? 'checked=""' : '' }}>
+                <label>Report Kas/Bank</label>
+              </fieldset>
+            </li>
+            <li>
+              <fieldset>
+                <input type="checkbox" name="perizinan[reject_t]" {{ isset($user->perizinan['reject_t']) ? 'checked=""' : '' }}>
+                <label>Reject History Transaksi</label>
+              </fieldset>
+            </li>
           </ul>
-          <fieldset>
-            <input type="checkbox" name="perizinan[setuju_t]" {{ isset($user->perizinan['setuju_t']) ? 'checked=""' : '' }}>
-            <label>Persetujuan transaksi</label>
-          </fieldset>
-          <fieldset>
-            <input type="checkbox" name="perizinan[setuju2_t]" {{ isset($user->perizinan['setuju2_t']) ? 'checked=""' : '' }}>
-            <label>Persetujuan final transaksi</label>
+          <fieldset style="display: none">
+              <input type="checkbox" name="perizinan[cari_t]" checked="checked">
+              <label >Pencarian batch transaksi</label>
           </fieldset>
         </div>
         <h5>Notifikasi</h5>

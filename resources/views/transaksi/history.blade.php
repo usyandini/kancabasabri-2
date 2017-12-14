@@ -14,8 +14,12 @@
                                           @endif
                                         </td>
                                         <td>
-                                          <code style="padding: 0;">{{ $active_batch->latestStat()->updated_at }}</code><br>
-                                          <span class="font-small-3">Oleh: {{ $active_batch->latestStat()->submitter->name }} / {{ $active_batch->latestStat()->submitter->username }}</span>
+                                          <?php
+                                          $tanggal2=$active_batch->latestStat()->updated_at;                                 
+                                          $tg2= date('d-m-Y H:i:s', strtotime($tanggal2));
+                                          ?>
+                                          <code style="padding: 0;">{{ $tg2 }}</code><br>
+                                          <span class="font-small-3">Oleh: {{ $active_batch->latestStat()->submitter->username }}</span>
                                         </td>
                                       </tr>
                                     </table>
@@ -30,7 +34,11 @@
                                           <code>({{ $hist['total'] }}x)</code>
                                           @endif
                                         </td>
-                                        <td>| <code>{{ $hist['tgl'] }}</code></td>
+                                        <?php
+                                        $tanggal=$hist['tgl'];                                 
+                                        $tgl= date('d-m-Y H:i:s', strtotime($tanggal));
+                                        ?>
+                                        <td>| <code>{{ $tgl }}</code></td>
                                       </tr>
                                       @empty
                                       <code>Belum ada Histori batch terbaru.</code>
