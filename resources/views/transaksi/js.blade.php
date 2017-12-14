@@ -76,11 +76,17 @@
                           inputs.push(item);
                         },
                         updateItem: function(item) {
-                          if (item["isNew"]) {
-                            inputs.splice(item["tempId"]-1, 1, item);  
-                          } else {
-                            inputs.push(item);
-                          } 
+                          var isFound = inputs.find(function (value, index) {
+                              return item.id == value.id || item.tempId == value.id
+                          })
+                          if (!isFound) {
+                            if (item["isNew"]) {
+                              inputs.splice(item["tempId"]-1, 1, item);  
+                            } else {
+                              inputs.push(item);
+                            } 
+                          }
+                          console.log(inputs)
                         },
                         deleteItem: function(item) {
                           if (item["isNew"]) {
@@ -97,12 +103,8 @@
                         date_field = mainaccount = null;
                         var items = args.grid.option("data");
                         items.forEach(function(item) {
-                          if (item.is_anggaran_safe != true) {
-                            is_all_anggaran_safe = false
-                          }
-                          if (item.is_rejected == true) {
-                            is_all_rows_not_rejected = false
-                          }
+                          if (item.is_anggaran_safe != true) { is_all_anggaran_safe = false }
+                          if (item.is_rejected == true) { is_all_rows_not_rejected = false }
                           totalRows += 1;
                         });
                         
