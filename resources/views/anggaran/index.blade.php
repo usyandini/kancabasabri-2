@@ -804,7 +804,7 @@
                           { name: "sub_pos", 
                             type: "select", 
                             title: "Sub Pos", 
-                            width: 130,
+                            width: 180,
                             align: "left",
                             valueField: "DESCRIPTION", 
                             textField: "DESCRIPTION", 
@@ -1427,7 +1427,7 @@
                             //     return status;
                             //   },
                             //   validator :function(value, item) {
-                            //     if(count_berkas=0){
+                            //     if(count_berkas==0){
                             //       return false;
                             //     }else{
                             //       return true;
@@ -1931,10 +1931,11 @@
                           }else{
                             stop=true;
                             if(list_berkas.length>0){
-                              if(list_berkas[i].length>0){
+                             if(list_berkas[i].length>0){
                                 stop = false;
                               }
                             }
+                                                       
                           }
                           if(!stop){
                             if(nameClass.length!=0){

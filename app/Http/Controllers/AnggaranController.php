@@ -346,8 +346,6 @@ class AnggaranController extends Controller
                 $date_mulai = $batas->tanggal_mulai;
                 $date_selesai = $batas->tanggal_selesai;
             }
-
-
         }
 
         $diff1 = strtotime($date_now) - strtotime($date_mulai);
