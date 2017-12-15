@@ -305,7 +305,7 @@
                       <div class="modal-body" id="confirmation-msg">
                         <div class="row">
                           <div class="col-md-12" id="teks_pernyataan">
-                            <p>Apakah anda yakin Akan Mengajukan Anggaran Kegiatan dengan Nomor Dinas/Surat {{$filters['nd_surat']}}?</p>
+                            <p>Apakah anda yakin Akan Menolak Pengajuan Anggaran dan Kegiatan dengan Nomor Dinas/Surat {{$filters['nd_surat']}}?</p>
                           </div>
                           <div class="col-md-12" id="form_penolakan">
                             <textarea rows="4" value="" style="float: left" class="col-md-12" id="alasan_penolakan" name="alasan_penolakan">
@@ -1996,11 +1996,14 @@
                               title_modal="Persetujuan Anggaran dan Kegiatan";
                               pernyataan_modal = "<p>Apakah anda yakin Akan Menyetujui Pengajuan dan Anggaran Kegiatan dengan Nomor Dinas/Surat "+nd_surat+"?</p>";
                             }else if(type=="Tolak"){
+                              // alert(type);
                               title_modal="Penolakkan Anggaran dan Kegiatan";
+
                               pernyataan_modal = "<p>Apakah anda yakin Akan Menolak Pengajuan Anggaran dan Kegiatan dengan Nomor Dinas/Surat "+nd_surat+"?</p>";
                               pernyataan_modal += "<p>Silahkan Isi Alasan Penolakan DIbawah ini : </p>";
                               form_penolakan = "block";
                             }
+                            // alert(pernyataan_modal);
                             document.getElementById("title_modal_pernyataan").innerHTML = title_modal;
                             document.getElementById("teks_pernyataan").value = pernyataan_modal;
                             document.getElementById("form_penolakan").style.display = form_penolakan;
