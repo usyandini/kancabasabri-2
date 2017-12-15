@@ -513,15 +513,7 @@ class AnggaranController extends Controller
 
     public function store(Request $request)
     {
-        $surat=$request->nd_surat;
-        $db = DB::table('anggaran')->where('nd_surat', $surat)->get();
-            if($db){
-                $after_save = [
-                 'alert' => 'danger',
-                 'title' => 'Data gagal ditambah, Nomor ND Surat sudah ada.'
-                 ];
-                 return redirect()->back()->with('after_save', $after_save);
-             }
+        
              
         $anggaran_insert = $anggaran_update = [];
         $anggaran_insert_list = $anggaran_update_list = [];
@@ -581,7 +573,15 @@ class AnggaranController extends Controller
             }
         }
         if($request->setuju != 'Simpan' || $request->status == 'tambah'){
-            
+            $surat=$request->nd_surat;
+            $db = DB::table('anggaran')->where('nd_surat', $surat)->get();
+                if($db){
+                    $after_save = [
+                     'alert' => 'danger',
+                     'title' => 'Data gagal ditambah, Nomor ND Surat sudah ada.'
+                     ];
+                     return redirect()->back()->with('after_save', $after_save);
+                 }
             $tambahtanggal=date("Y-m-d", strtotime($request->tanggal));
             $anggaran_insert = [
             'tanggal'           => $tambahtanggal,
