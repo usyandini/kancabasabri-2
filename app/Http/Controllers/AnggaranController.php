@@ -571,8 +571,9 @@ class AnggaranController extends Controller
             }
         }
         if($request->setuju != 'Simpan' || $request->status == 'tambah'){
+            $tambahtanggal=date("Y-m-d", strtotime($request->tanggal));
             $anggaran_insert = [
-            'tanggal'           => $request->tanggal,
+            'tanggal'           => $tambahtanggal,
             'nd_surat'          => $request->nd_surat,
             'unit_kerja'        => $request->unit_kerja,
             'tipe_anggaran'     => $request->tipe_anggaran,
@@ -586,9 +587,9 @@ class AnggaranController extends Controller
         if($request->setuju == 'Simpan'){
             $active = '1';
         }
-        // $ubahtanggal=date("Y-m-d", strtotime($request->tanggal));
+        $ubahtanggal=date("Y-m-d", strtotime($request->tanggal));
         $anggaran_update = [
-        // 'tanggal'           => $ubahtanggal,
+        'tanggal'           => $ubahtanggal,
         'tipe_anggaran'     => $request->tipe_anggaran,
         'status_anggaran'   => $status,
         'persetujuan'       => $setuju,
