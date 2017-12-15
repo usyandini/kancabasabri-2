@@ -11,6 +11,19 @@
                 @endsection
 
                 @section('content')
+                {{-- part alert --}}
+                @if (Session::has('after_save'))
+                <div class="row">
+                 <div class="col-md-12">
+                   <div class="alert alert-dismissible alert-{{ Session::get('after_save.alert') }}">
+                     <button type="button" class="close" data-dismiss="alert">×</button>
+                     <strong>{{ Session::get('after_save.title') }}</strong>
+
+                   </div>
+                 </div>
+               </div>
+               @endif
+               {{-- end part alert --}}
                 <div class="content-header row">
                     <div class="content-header-left col-md-6 col-xs-12 mb-2">
                         <h3 class="content-header-title mb-0">{{$title}}</h3>

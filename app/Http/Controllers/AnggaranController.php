@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
-
+use DB;
 use App\Http\Requests;
 use App\Models\Anggaran;
 use App\Models\ListAnggaran;
@@ -513,6 +513,16 @@ class AnggaranController extends Controller
 
     public function store(Request $request)
     {
+        $surat=$request->nd_surat;
+        $db = DB::table('anggaran')->where('nd_surat', $surat)->get();
+            if($db){
+                $after_save = [
+                 'alert' => 'danger',
+                 'title' => 'Data gagal ditambah, Nomor ND Surat sudah ada.'
+                 ];
+                 return redirect()->back()->with('after_save', $after_save);
+             }
+             
         $anggaran_insert = $anggaran_update = [];
         $anggaran_insert_list = $anggaran_update_list = [];
         $anggaran_insert_file_list  = $anggaran_insert_file_list = [];
@@ -571,6 +581,7 @@ class AnggaranController extends Controller
             }
         }
         if($request->setuju != 'Simpan' || $request->status == 'tambah'){
+            
             $tambahtanggal=date("Y-m-d", strtotime($request->tanggal));
             $anggaran_insert = [
             'tanggal'           => $tambahtanggal,
@@ -581,6 +592,7 @@ class AnggaranController extends Controller
             'persetujuan'       => $setuju,
             'keterangan'        => $keterangan,
             'active'            => '1'];
+            
         }
         
         $active = '0';
