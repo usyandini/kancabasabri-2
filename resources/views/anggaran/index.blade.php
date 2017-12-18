@@ -962,7 +962,11 @@
                                   
 
                                   @if($persetujuan == 1)
-                                    return value > 0 ;
+                                    if(item.terpusat == '1'){
+                                      return true;
+                                    }else{
+                                      return value != "None" ;
+                                    }
                                   @else
                                     if(item.terpusat == '1'){
                                       return true;
@@ -2000,7 +2004,7 @@
                               title_modal="Penolakkan Anggaran dan Kegiatan";
 
                               pernyataan_modal = "<p>Apakah anda yakin Akan Menolak Pengajuan Anggaran dan Kegiatan dengan Nomor Dinas/Surat "+nd_surat+"?</p>";
-                              pernyataan_modal += "<p>Silahkan Isi Alasan Penolakan DIbawah ini : </p>";
+                              pernyataan_modal += "<p>Silahkan Isi Alasan Penolakan Dibawah ini : </p>";
                               form_penolakan = "block";
                             }
                             // alert(pernyataan_modal);
