@@ -2009,7 +2009,7 @@
                             }
                             // alert(pernyataan_modal);
                             document.getElementById("title_modal_pernyataan").innerHTML = title_modal;
-                            document.getElementById("teks_pernyataan").value = pernyataan_modal;
+                            document.getElementById("teks_pernyataan").innerHTML = pernyataan_modal;
                             document.getElementById("form_penolakan").style.display = form_penolakan;
                             document.getElementById("button_peryataan").innerHTML = "Ya, "+type;
 
