@@ -111,7 +111,7 @@ class AuthServiceProvider extends ServiceProvider
         }
 
         $manajemen_item = ["manajemen_i_t","manajemen_i_a","manajemen_i",
-                            "manajemen_a_m","manajemen_p_p","manajemen_a_RUPS"];
+                            "manajemen_a_m","manajemen_p_p","manajemen_a_RUPS","manajemen_nilai_m_a"];
 
         for($i=0;$i<count($manajemen_item);$i++){
              $permissions[] = $manajemen_item[$i];

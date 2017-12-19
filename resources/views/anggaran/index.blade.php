@@ -305,7 +305,7 @@
                       <div class="modal-body" id="confirmation-msg">
                         <div class="row">
                           <div class="col-md-12" id="teks_pernyataan">
-                            <p>Apakah anda yakin Akan Menolak Pengajuan Anggaran dan Kegiatan dengan Nomor Dinas/Surat {{$filters['nd_surat']}}?</p>
+                            <p>Apakah anda yakin Akan Mengajukan Anggaran dan Kegiatan dengan Nomor Dinas/Surat {{$filters['nd_surat']}}?</p>
                           </div>
                           <div class="col-md-12" id="form_penolakan">
                             <textarea rows="4" value="" style="float: left" class="col-md-12" id="alasan_penolakan" name="alasan_penolakan">
@@ -866,7 +866,7 @@
                             // items: getData('mataanggaran'),
 
                             items:[
-                                { DESCRIPTION: "Silahkan Pilih Sup Pos" },
+                                { DESCRIPTION: "Silahkan Pilih Sub Pos" },
                             ],
                             insertTemplate: function() {
                               mata_anggaran = this._grid.fields[7];
@@ -889,7 +889,7 @@
                             validate: {
                               message : "Pilih Mata Anggaran Terlebih dahulu." ,
                               validator :function(value, item) {
-                                  return value !== "None" && value !== "Silahkan Pilih Sup Pos";
+                                  return value !== "None" && value !== "Silahkan Pilih Sub Pos";
                               } 
                             }
                           },

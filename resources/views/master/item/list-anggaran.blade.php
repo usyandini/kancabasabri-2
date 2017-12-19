@@ -55,7 +55,7 @@
                                         <table class="table table-striped table-bordered datatable-select-inputs wrap" cellspacing="0" width="100%">
                                           <thead>
                                             <tr>
-                                                <th width="5%"><center>No</center></th>
+                                              <th width="5%"><center>No</center></th>
                                               <th id="filterable" width="10%">Jenis</th>
                                               <th id="filterable" width="10%">Kelompok</th>
                                               <th id="filterable" width="10%">Pos Anggaran</th>
@@ -74,7 +74,7 @@
                                                       <td width="10%">{{ $pos->where('kode', $item->pos_anggaran)->first()['name'] }}</td>
                                                       <td width="20%">{{ $subpos->where('VALUE', $item->sub_pos)->first()['DESCRIPTION'] }}</td>
                                                       <td width="20%">{{ $kegiatan->where('VALUE', $item->mata_anggaran)->first()['DESCRIPTION'] }}</td>
-                                                      <td>{{ $item->created_at }}</td>
+                                                      <td>{{ date('d-m-Y H:i:s', strtotime($item->created_at)) }}</td>
                                                       <td width="25%"><center>
                                                             <a href="{{ url('item/edit/anggaran').'/'.$item->id }}" style="width:80px" class="btn btn-info btn-sm">
                                                             <i class="fa fa-edit"></i> Edit</a>

@@ -52,8 +52,8 @@
                                 {{ csrf_field() }}
                                 <div class="col-xs-12 col-xl-6 col-lg-12 mb-1">
                                   {{-- <div class="form-group mb-1 mr-1"> --}}
-                                    <select class="select2 form-control" name="batch">
-                                      <option value="0" disabled="" selected="">Pilih Nomor Batch</option>
+                                    <select class="select2 form-control" name="batch" required="required">
+                                      <option value="" disabled="" selected="">Pilih Nomor Batch</option>
                                       @foreach($batch_nos as $batch)
                                       <option value="{{ $batch->id }}" {{ $filters[0] == $batch->id ? 'selected=""' : '' }}>{{ $batch->batchNo() }}</option>
                                       @endforeach

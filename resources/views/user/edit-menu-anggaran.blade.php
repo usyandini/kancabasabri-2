@@ -17,6 +17,12 @@
             <ul id="info_anggaran">
                 <li>
                   <fieldset>
+                    <input type="checkbox" name="perizinan[manajemen_nilai_m_a]" {{ isset($user->perizinan['manajemen_nilai_m_a']) ? 'checked=""' : '' }}>
+                    <label>Master Nilai Mata Anggaran</label>
+                  </fieldset>
+                </li>
+                <li>
+                  <fieldset>
                     <input type="checkbox" name="perizinan[cari_a]" {{ isset($user->perizinan['cari_a']) ? 'checked=""' : '' }}>
                     <label >Pencarian anggaran dan kegiatan</label>
                   </fieldset>
