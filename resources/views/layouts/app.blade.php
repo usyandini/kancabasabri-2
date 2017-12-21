@@ -197,6 +197,9 @@
                     @if (Gate::check('info_a')||Gate::check('riwayat_a'))
                     <li class="nav-item has-sub {{ checkOpenedMenu('anggaran') }}"><a href=""><i class="ft-edit"></i><span data-i18n="" class="menu-title">Anggaran Kegiatan</span></a>
                         <ul class="menu-content">
+                            @can('manajemen_nilai_m_a')
+                            <li class="is-shown {{ checkActiveMenu('nilai_mataanggaran') }}"><a href="{{ url('/nilai_mataanggaran', $parameters = [], $secure = null) }}" class="menu-item">Nilai Mata Anggaran</a></li>
+                            @endcan
                             @can('info_a')
                                 <li class="is-shown {{ checkActiveMenu('anggaran') }}"><a href="{{ url('/anggaran', $parameters = [], $secure = null) }}" class="menu-item">Informasi Anggaran</a></li>
                             @endcan
@@ -272,7 +275,7 @@
                     </ul>
                     </li>
                     @endif
-                    @if (Gate::check('manajemen_i_t') || Gate::check('manajemen_i_a') || Gate::check('manajemen_i') ||  Gate::check('manajemen_a_m')||  Gate::check('manajemen_p_p')||  Gate::check('manajemen_a_RUPS'))
+                    @if (Gate::check('manajemen_i_t') || Gate::check('manajemen_i_a') || Gate::check('manajemen_i') ||  Gate::check('manajemen_a_m')||  Gate::check('manajemen_p_p')||  Gate::check('manajemen_a_RUPS')||  Gate::check('manajemen_nilai_m_a'))
                     <li class="nav-item has-sub {{ checkOpenedMenu('item') }}"><a href=""><i class="ft-file"></i><span data-i18n="" class="menu-title">Manajemen Item</span></a>
                     <ul class="menu-content">
                         @can('manajemen_i_t')
@@ -296,8 +299,8 @@
                         @can('manajemen_a_RUPS')
                         <li class="is-shown {{ checkActiveMenu('arahan_rups') }}"><a href="{{ url('/arahan_rups', $parameters = [], $secure = null) }}" class="menu-item">Arahan RUPS</a></li>
                         @endcan
-                        <li class="is-shown {{ checkActiveMenu('arahan_rups') }}" style="visibility:hidden"><a href="" class="menu-item"></a>/li>
                         
+                        <li class="is-shown {{ checkActiveMenu('arahan_rups') }}" style="visibility:hidden"><a href="" class="menu-item"></a>/li>
                     </ul>
                     </li>
                     @endif

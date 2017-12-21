@@ -302,5 +302,13 @@ Route::group(['middleware' => 'auth'], function() {
 		Route::get('/myform/{cabang}', 'PengajuanDroppingController@myformAjax3');
 		Route::get('/carimyform', 'PengajuanDroppingController@carimyformAjax3');
 	});
+
+	Route::group(['prefix' => 'nilai_mataanggaran'], function(){
+		Route::resource('/', 'ItemController@nilai_mataanggaran');
+		Route::post('/store_nilai_mataanggaran', 'ItemController@store_nilai_mataanggaran');
+		Route::post('/update_nilai_mataanggaran/{id}', 'ItemController@update_nilai_mataanggaran');
+		Route::get('/delete_nilai_mataanggaran/{id}', 'ItemController@delete_nilai_mataanggaran');
+		
+	});
 });
 

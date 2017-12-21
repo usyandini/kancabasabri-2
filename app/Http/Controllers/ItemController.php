@@ -449,6 +449,13 @@ class ItemController extends Controller
         return view('master.arahan_rups.index', compact('arahan_rups'));
     }
 
+    public function nilai_mataanggaran()
+    {
+        $a = DB::table('nilai_mata_anggaran')
+             ->orderBy('id','DESC')->get();
+        return view('master.nilai_mataanggaran.index', compact('a'));
+    }
+
     public function store(Request $request)
     {
                
@@ -479,6 +486,60 @@ class ItemController extends Controller
              return redirect()->back()->with('after_save', $after_save);
         }
     }
+
+    public function store_nilai_mataanggaran(Request $request)
+    {
+               
+        $kode=$request->kode;
+        $nilai= str_replace('.', '', $request->nilai);
+        $db = DB::table('nilai_mata_anggaran')->where('value', $kode)->get();
+        $z = DB::select("SELECT DESCRIPTION
+                         FROM [AX_DUMMY].[dbo].[PIL_VIEW_KEGIATAN]
+                         where VALUE= '$kode'");
+        foreach ($z as $x) {
+            $description=$x->DESCRIPTION;
+        }
+        if($db){
+            $after_save = [
+             'alert' => 'danger',
+             'title' => 'Data gagal ditambah, data sudah ada.'
+             ];
+             return redirect()->back()->with('after_save', $after_save);
+         }else{
+             $after_save = [
+                 'alert' => 'success',
+                 'title' => 'Data berhasil ditambah.'
+             ];
+         
+            $data = [
+             'value' => $kode,
+             'description' =>$description,
+             'nilai' => $nilai
+            ];
+ 
+             $store = DB::table('nilai_mata_anggaran')->insert($data);
+           
+             return redirect()->back()->with('after_save', $after_save);
+        }
+    }
+
+    public function update_nilai_mataanggaran(Request $request, $id)
+     {
+            $nilai= str_replace('.', '', $request->nilai);
+            $after_update = [
+                 'alert' => 'success',
+                 'title' => 'Data berhasil diubah.'
+             ];
+     
+             $data = [
+                'nilai' => $nilai= str_replace('.', '', $request->nilai)
+             ];
+             
+             $update = DB::table('nilai_mata_anggaran')->where('id', $id)->update($data);
+
+             return redirect()->back()->with('after_update', $after_update);
+         
+     }
 
     public function store_program_prioritas(Request $request)
     {
@@ -583,6 +644,8 @@ class ItemController extends Controller
          }   
      }
 
+
+
      public function update_program_prioritas(Request $request, $id)
      {
          
@@ -675,6 +738,17 @@ class ItemController extends Controller
          $update = \App\Models\ArahanRups::where('id', $id)->delete();
          return redirect()->back()->with('after_delete', $after_delete);
     }
+
+    public function delete_nilai_mataanggaran(Request $request, $id)
+     {
+         $after_delete = [
+             'alert' => 'success',
+             'title' => 'Data berhasil dihapus.'
+         ];
+
+         $update = \DB::table('nilai_mata_anggaran')->where('id', $id)->delete();
+         return redirect()->back()->with('after_delete', $after_delete);
+     }
 
     public function importXls()
     {

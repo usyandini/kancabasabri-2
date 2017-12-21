@@ -43,7 +43,7 @@
                           <div class="card-block">
                             <div class="row">
                               <div class="col-md-12">
-                                <p>Anda akan membuat batch baru untuk <b>Kantor Cabang Pembantu</b> <code>{{ $cabang }}</code> dan <b>Divisi</b> <code>{{ $divisi }}</code> dengan nomor pengenal Batch <code>{{ $no_batch }}</code>. </p>
+                                <p>Anda akan membuat batch baru untuk <code>{{ $cabang }}</code> dan <b>Divisi</b> <code>{{ $divisi }}</code> dengan nomor pengenal Batch <code>{{ $no_batch }}</code>. </p>
                                 <div class="form-group pull-right">
                                   <form method="POST" action="{{ url('transaksi/create/process') }}">
                                     {{ csrf_field() }}
