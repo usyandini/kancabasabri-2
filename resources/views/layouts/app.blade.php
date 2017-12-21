@@ -42,6 +42,15 @@
         <!-- BEGIN Custom CSS-->
         {{-- <link rel="stylesheet" type="text/css" href="assets/css/style.css"> --}}
         <!-- END Custom CSS-->
+        <style type="text/css">
+            .main-menu.menu-light .navigation {
+                font-size: 12px;
+            }
+            .main-menu.menu-light .navigation>li ul li>a {
+                padding-left: 10px;
+                font-size: 12px;
+            }
+        </style>
     </head>
     <body data-open="click" data-menu="vertical-menu" data-col="2-columns" class="vertical-layout vertical-menu 2-columns  fixed-navbar" >
         <!-- - var navbarShadow = true-->
