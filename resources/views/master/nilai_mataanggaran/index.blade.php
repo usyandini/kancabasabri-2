@@ -92,7 +92,7 @@
                                   <label><b>Mata Anggaran</b></label><br>
                                   <select class="select2 form-control block" name="description" id="description" onchange="getVal('description', 'kode');" required="required">
                                     
-                                    <option disabled="" selected="">- Pilih Mata Anggaran -</option>
+                                    <option disabled="" selected="" value="">- Pilih Mata Anggaran -</option>
                                     <?php
                                     $second="SELECT DESCRIPTION, VALUE
                                             FROM [AX_DUMMY].[dbo].[PIL_VIEW_KEGIATAN] as a
@@ -305,7 +305,7 @@
             		}
             	} );
 
-                  function tandaPemisahTitik(b){
+  function tandaPemisahTitik(b){
     var _minus = false;
     if (b<0) _minus = true;
     b = b.toString();

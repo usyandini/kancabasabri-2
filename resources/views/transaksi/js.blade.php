@@ -235,7 +235,8 @@
                             editTemplate: function(value) {
                               account_field = jsGrid.fields.text.prototype.editTemplate.call(this);
                               $(account_field).val(value);
-                              return account_field; } },
+                              return account_field; } 
+                          },
                           { 
                             name: "anggaran", 
                             width: 200, 

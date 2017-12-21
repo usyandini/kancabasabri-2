@@ -957,7 +957,7 @@ class AnggaranController extends Controller
                         if($file_list_anggaran->id_list_anggaran == $id_list_anggaran){
                             $fileList[] = [
                                 'id'   => $file_list_anggaran->id,
-                                'count' => $countIndex,
+                                'count'=> $countIndex,
                                 'name' => $file_list_anggaran->name,
                                 'type' => $file_list_anggaran->type,
                                 'size' => $file_list_anggaran->size
@@ -966,25 +966,25 @@ class AnggaranController extends Controller
                     }
 
                     $result[] = [
-                        'id'            => $list_anggaran->id,
-                        'jenis'           => $list_anggaran->jenis,
+                        'id'                => $list_anggaran->id,
+                        'jenis'             => $list_anggaran->jenis,
                         'kelompok'          => $list_anggaran->kelompok,
                         'pos_anggaran'      => $list_anggaran->pos_anggaran,
-                        'sub_pos'       => $list_anggaran->sub_pos,
-                        'mata_anggaran' => $list_anggaran->mata_anggaran,
-                        'item'          => $list_anggaran->item,
-                        'kuantitas'     => $list_anggaran->kuantitas,
-                        'satuan'     => $list_anggaran->satuan,
-                        'nilai_persatuan'       => (int)$list_anggaran->nilai_persatuan,
-                        'terpusat'      => $list_anggaran->terpusat,
-                        'unit_kerja'         => $list_anggaran->unit_kerja,
-                        'tw_i'    => (int)$list_anggaran->TWI,
-                        'tw_ii'    => (int)$list_anggaran->TWII,
-                        'tw_iii'    => (int)$list_anggaran->TWIII,
-                        'tw_iv'    => (int)$list_anggaran->TWIV,
-                        'id_first'    => $list_anggaran->id_first,
-                        'anggarana_setahun'      => (int)$list_anggaran->anggaran_setahun,
-                        'file'  => $fileList
+                        'sub_pos'           => $list_anggaran->sub_pos,
+                        'mata_anggaran'     => $list_anggaran->mata_anggaran,
+                        'item'              => $list_anggaran->item,
+                        'kuantitas'         => $list_anggaran->kuantitas,
+                        'satuan'            => $list_anggaran->satuan,
+                        'nilai_persatuan'   => (int)$list_anggaran->nilai_persatuan,
+                        'terpusat'          => $list_anggaran->terpusat,
+                        'unit_kerja'        => $list_anggaran->unit_kerja,
+                        'tw_i'              => (int)$list_anggaran->TWI,
+                        'tw_ii'             => (int)$list_anggaran->TWII,
+                        'tw_iii'            => (int)$list_anggaran->TWIII,
+                        'tw_iv'             => (int)$list_anggaran->TWIV,
+                        'id_first'          => $list_anggaran->id_first,
+                        'anggarana_setahun' => (int)$list_anggaran->anggaran_setahun,
+                        'file'              => $fileList
                         
                     ];
                     $countIndex++;
@@ -1118,8 +1118,8 @@ class AnggaranController extends Controller
                     }
                 }
                 $result[] = [
-                    'id'             => $list_anggaran->id,
-                    'active'             => $list_anggaran->active,
+                    'id'                => $list_anggaran->id,
+                    'active'            => $list_anggaran->active,
                     'jenis'             => $list_anggaran->jenis,
                     'kelompok'          => $list_anggaran->kelompok,
                     'pos_anggaran'      => $list_anggaran->pos_anggaran,
