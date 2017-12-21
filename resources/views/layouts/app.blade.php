@@ -44,11 +44,11 @@
         <!-- END Custom CSS-->
         <style type="text/css">
             .main-menu.menu-light .navigation {
-                font-size: 12px;
+                font-size: 13px;
             }
             .main-menu.menu-light .navigation>li ul li>a {
                 padding-left: 10px;
-                font-size: 12px;
+                font-size: 13px;
             }
         </style>
     </head>
@@ -228,13 +228,13 @@
                             <li class="nav-item has-sub {{ checkOpenedMenu('tindaklanjut') }}"><a href=""><span data-i18n="" class="menu-title">Tindak Lanjut Temuan</span></a>
                             <ul class="menu-content">
                                 @can('manajemen_u_k')
-                                <li class="is-shown {{ checkActiveMenu('unitkerja') }}"><a href="{{ url('/unitkerja', $parameters = [], $secure = null) }}" class="menu-item">Manajemen Unit Kerja</a></li>
+                                <li style="margin-left:-40px;" class="is-shown {{ checkActiveMenu('unitkerja') }}"><a href="{{ url('/unitkerja', $parameters = [], $secure = null) }}" class="menu-item">Manajemen Unit Kerja</a></li>
                                 @endcan
                                 @can('t_l_internal')
-                                <li class="is-shown {{ checkActiveMenu('tindaklanjutinternal') }}"><a href="{{ url('/tindaklanjutinternal', $parameters = [], $secure = null) }}" class="menu-item">Tindak Lanjut Internal</a></li>
+                                <li style="margin-left:-40px;" class="is-shown {{ checkActiveMenu('tindaklanjutinternal') }}"><a href="{{ url('/tindaklanjutinternal', $parameters = [], $secure = null) }}" class="menu-item">Tindak Lanjut Internal</a></li>
                                 @endcan
                                 @can('t_l_eksterenal')
-                                <li class="is-shown {{ checkActiveMenu('tindaklanjutex') }}"><a href="{{ url('/tindaklanjutex', $parameters = [], $secure = null) }}" class="menu-item">Tindak Lanjut Eksternal</a></li>
+                                <li style="margin-left:-40px;" class="is-shown {{ checkActiveMenu('tindaklanjutex') }}"><a href="{{ url('/tindaklanjutex', $parameters = [], $secure = null) }}" class="menu-item">Tindak Lanjut Eksternal</a></li>
                                 @endcan
                             </ul>
                             </li>
@@ -243,14 +243,15 @@
                             <li class="nav-item has-sub {{ checkOpenedMenu('pelaporan/informasi/master/laporan_anggaran') }}"><a href=""><span data-i18n="" class="menu-title">Form Master</span></a>
                                 <ul class="menu-content">
                                     @can('master_pelaporan_anggaran')
-                                    <li class="is-shown {{ checkActiveMenu('pelaporan/informasi/master/laporan_anggaran') }}"><a href="{{ url('/pelaporan/informasi/master/laporan_anggaran', $parameters = [], $secure = null) }}" class="menu-item">Anggaran Kegiatan</a></li>
+                                    <li style="margin-left:-40px;" class="is-shown {{ checkActiveMenu('pelaporan/informasi/master/laporan_anggaran') }}"><a href="{{ url('/pelaporan/informasi/master/laporan_anggaran', $parameters = [], $secure = null) }}" class="menu-item">Anggaran Kegiatan</a></li>
                                     @endcan
                                     @can('master_arahan_a_RUPS')
-                                    <li class="is-shown {{ checkActiveMenu('pelaporan/informasi/master/arahan_rups') }}"><a href="{{ url('/pelaporan/informasi/master/arahan_rups', $parameters = [], $secure = null) }}" class="menu-item">Arahan RUPS</a></li>
+                                    <li style="margin-left:-40px;" class="is-shown {{ checkActiveMenu('pelaporan/informasi/master/arahan_rups') }}"><a href="{{ url('/pelaporan/informasi/master/arahan_rups', $parameters = [], $secure = null) }}" class="menu-item">Arahan RUPS</a></li>
                                     @endcan
                                     @can('master_usulan_p_p')
-                                    <li class="is-shown {{ checkActiveMenu('pelaporan/informasi/master/usulan_program') }}"><a href="{{ url('/pelaporan/informasi/master/usulan_program', $parameters = [], $secure = null) }}" class="menu-item">Usulan Program Prioritas</a></li>
+                                    <li style="margin-left:-40px;" class="is-shown {{ checkActiveMenu('pelaporan/informasi/master/usulan_program') }}"><a href="{{ url('/pelaporan/informasi/master/usulan_program', $parameters = [], $secure = null) }}" class="menu-item">Usulan Program Prioritas</a></li>
                                     @endcan
+                                    <!-- <li class="is-shown {{ checkActiveMenu('arahan_rups') }}" style="visibility:hidden"><a href="" class="menu-item"></a>/li> -->
                                 </ul>
                             </li>
                             @endcan
