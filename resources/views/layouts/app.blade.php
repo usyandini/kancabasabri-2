@@ -302,6 +302,7 @@
                         @endcan
                         
                         <li class="is-shown {{ checkActiveMenu('arahan_rups') }}" style="visibility:hidden"><a href="" class="menu-item"></a>/li>
+                        <li class="is-shown {{ checkActiveMenu('arahan_rups') }}" style="visibility:hidden"><a href="" class="menu-item"></a>/li>
                     </ul>
                     </li>
                     @endif

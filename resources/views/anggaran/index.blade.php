@@ -560,7 +560,7 @@
                            window.setTimeout(function() {
                               $('.jsgrid-cancel-edit-button').one('click.avoidAuthorClickHandler', function() {
                                   statusTable = "null";
-
+                                  alert(JSON. stringify(input));
                                   list_berkas[index_modal] = inputs[index_modal]["file"];
                                   click_berkas = true;
                                   temp_file=[];
@@ -687,7 +687,7 @@
                             editTemplate: function(value) {
                               var result = jsGrid.fields.select.prototype.editTemplate.call(this);
                               $(result).val(value);
-                              changeDataSelect('kelompok',$(this).val(),"");
+                              changeDataSelect('kelompok',value,"");
                               result.on("change", function() {
                                   changeDataSelect('kelompok',$(this).val(),"");
                               });
@@ -760,7 +760,7 @@
                               kelompok = this._grid.fields[4];
                               var result = jsGrid.fields.select.prototype.editTemplate.call(this);
                               $(result).val(value);
-                              changeDataSelect('posanggaran',$(this).val(),"");
+                              changeDataSelect('posanggaran',value,"");
                               result.on("change", function() {
                                   changeDataSelect('posanggaran',$(this).val(),"");
                               });
@@ -801,7 +801,7 @@
                               pos = this._grid.fields[5];
                               var result = jsGrid.fields.select.prototype.editTemplate.call(this);
                               $(result).val(value);
-                              changeDataSelect('subpos',$(this).val(),"");
+                              changeDataSelect('subpos',value,"");
                               result.on("change", function() {
                                   changeDataSelect('subpos',$(this).val(),"");
                               });
@@ -842,7 +842,7 @@
                               sub = this._grid.fields[6];
                               var result = jsGrid.fields.select.prototype.editTemplate.call(this);
                               $(result).val(value);
-                              changeDataSelect('mataanggaran',$(this).val(),"");
+                              changeDataSelect('mataanggaran',value,"");
                               result.on("change", function() {
                                   changeDataSelect('mataanggaran',$(this).val(),"");
                               });
@@ -880,7 +880,7 @@
                               mata_anggaran = this._grid.fields[7];
                               var result = jsGrid.fields.select.prototype.editTemplate.call(this);
                               $(result).val(value);
-                              changeDataSelect('satuan',$(this).val(),"Edit");
+                              changeDataSelect('satuan',value,"Edit");
                               result.on("change", function() {
                                   changeDataSelect('satuan',$(this).val(),"Edit");
                               });
@@ -1565,6 +1565,7 @@
                                   }
                                 }
                                 if(type == "kelompok"){
+                                  // alert(JSON.stringify(tmp));
                                   kelompok.items = tmp;
                                   $(".kelompok_select").empty().append(kelompok.insertTemplate());
                                   // $(".kelompok_select").empty().append(kelompok.editTemplate());

@@ -73,7 +73,7 @@
                                     </select>
                                   </div>
                                 </div>
-                                <div class="col-xs-2">
+                                <div class="col-xs-3">
                                   <div class="form-grpup">
                                     <label>Periode Awal</label>
                                     <select class="select2 form-control" name="awal" required>
@@ -84,7 +84,7 @@
                                     </select>
                                   </div>
                                 </div>
-                                <div class="col-xs-2">
+                                <div class="col-xs-3">
                                   <div class="form-grpup">
                                     <label>Periode Akhir</label>
                                     <select class="select2 form-control" name="akhir" required>
@@ -95,7 +95,7 @@
                                     </select>
                                   </div>
                                 </div>
-                                <div class="col-xs-2">
+                                <div class="col-xs-3">
                                   <div class="form-group">
                                     <label>Tahun</label>
                                     <select class="select2 form-control" name="transyear" required>
