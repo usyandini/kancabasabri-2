@@ -240,7 +240,7 @@
                             <li class="is-shown {{ checkActiveMenu('pelaporan/informasi/item/usulan_program') }}"><a href="{{ url('/pelaporan/informasi/item/usulan_program', $parameters = [], $secure = null) }}" class="menu-item"><b>Usulan Program Prioritas</b></a></li>
                             @endcan
                             @can('pelaporan_tindak_lanjut')
-                            <li class="nav-item has-sub {{ checkOpenedMenu('tindaklanjut') }}"><a href=""><span data-i18n="" class="menu-title">Tindak Lanjut Temuan</span></a>
+                            <li class="nav-item has-sub {{ checkOpenedMenu('tindaklanjut') }}"><a href=""><span data-i18n="" class="menu-title"><b>Tindak Lanjut Temuan</b></span></a>
                             <ul class="menu-content">
                                 @can('manajemen_u_k')
                                 <li style="margin-left:-40px;" class="is-shown {{ checkActiveMenu('unitkerja') }}"><a href="{{ url('/unitkerja', $parameters = [], $secure = null) }}" class="menu-item"><b>Manajemen Unit Kerja</b></a></li>
