@@ -141,9 +141,9 @@
                                     </div>
                                     <div class="col-md-6">
                                       <div class="form-group">
-                                        <label for="nominal_tarik">Nominal Tarik Tunai (Rupiah)*</label>
+                                        <label for="nominal_tarik">Nominal Tarik Tunai</label>
                                         <div class="controls">
-                                          <input type="text" id="nominal_tarik" name="nominal_tarik" class="form-control" value="{{ old('nominal_tarik') }}" required>
+                                          <input type="text" id="nominal_tarik" name="nominal_tarik" class="form-control" value="Rp. {{ old('nominal_tarik') }}" required>
                                         </div>
                                       </div>
                                     </div>

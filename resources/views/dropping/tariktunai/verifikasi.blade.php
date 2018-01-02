@@ -131,8 +131,8 @@
                                     </div>
                                     <div class="col-md-6">
                                       <div class="form-group">
-                                        <label for="nominal_tarik">Nominal Tarik Tunai (Rupiah)</label>
-                                          <input type="text" id="nominal_tarik" readonly="" name="nominal_tarik" class="form-control" placeholder="Nominal Tarik Tunai" value="{{ number_format($tariktunai->nominal_tarik, 0, '', '.') }}" disabled>
+                                        <label for="nominal_tarik">Nominal Tarik Tunai</label>
+                                          <input type="text" id="nominal_tarik" readonly="" name="nominal_tarik" class="form-control" placeholder="Nominal Tarik Tunai" value="Rp. {{ number_format($tariktunai->nominal_tarik, 0, '', '.') }}" disabled>
                                           <input type="hidden" name="v_nominal_tarik" value="{{ $tariktunai->nominal_tarik }}">
                                       </div>
                                     </div>
