@@ -18,7 +18,7 @@ use App\Models\BatasAnggaran;
 use App\Models\Divisi;
 use App\Models\KantorCabang;
 use App\Models\StagingAnggaran;
-
+use App\Models\Notification;
 use App\Services\FileUpload;
 use App\Services\NotificationSystem;
 use Validator;
@@ -183,7 +183,7 @@ class AnggaranController extends Controller
             }else{
                 BatasAnggaran::where('id',$id)->update(['tanggal_mulai'=>$input['tanggal_mulai'],'tanggal_selesai'=>$input['tanggal_selesai'],'active'=>'1']);
             }
-            NotificationSystem::send($id, 47);
+            Notification::where('batch_id', $id)->update(['is_read'=>'0']);
             // BatasAnggaran::where('id',$id)->update(['tanggal_mulai'=>$input['tanggal_mulai'],'tanggal_selesai'=>$input['tanggal_selesai'],'active'=>'1']);
             session()->flash('success', 'Waktu Pengajuan Anggaran dan Kegiatan Untuk '.$batas->unit_kerja." telah diubah");
 
