@@ -113,7 +113,7 @@
                                     <div class="col-md-6">
                                       <div class="form-group">
                                         <label for="tgl_penyesuaian">Tanggal Penyesuaian Dropping</label>
-                                        <input type="text" readonly="" id="tgl_penyesuaian" class="form-control" placeholder="Tanggal Penyesuaian Dropping" name="tgl_penyesuaian" value="{{ date("Y-m-d",strtotime($penyesuaian->created_at)) }}" disabled>
+                                        <input type="text" readonly="" id="tgl_penyesuaian" class="form-control" placeholder="Tanggal Penyesuaian Dropping" name="tgl_penyesuaian" value="{{ date("d-m-Y",strtotime($penyesuaian->created_at)) }}" disabled>
                                       </div>
                                     </div>
                                     <div class="col-md-6">
@@ -161,7 +161,7 @@
                                             <tr>
                                               <li><a href="{{ url('dropping/penyesuaian/berkas/download').'/'.$value->id }}" target="_blank">{{ $value->name }}</a></li>
                                             </tr>
-                                          @empty
+                                            @empty
                                             <code>Tidak ada berkas terlampir</code>
                                           @endforelse
                                         </table>
