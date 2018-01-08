@@ -798,76 +798,120 @@ class TransaksiController extends Controller
 
     public function reportQuery_kasbank($cabang, $awal, $akhir, $transyear)
     {
-        return \DB::select("SELECT distinct
+        return \DB::select("SELECT
+    ledgerjournaltable.JOURNALNAME as JournalName,
+    ledgerjournaltrans.PIL_BK as Nomor_BK,
+    ledgerjournaltrans.JournalNum as PIL_JournalNum,
+    dimensionAttributeValueSetItem.DISPLAYVALUE as displayvalue,
+    ledgerjournaltrans.VOUCHER as voucher,
+    bankaccaounttable.ACCOUNTID as bankid,
+    ledgerjournaltrans.TRANSDATE as tanggal,
+    ledgerjournaltrans.AMOUNTCURDEBIT as debit,
+    ledgerjournaltrans.AMOUNTCURCREDIT as credit,
+    ledgerjournaltrans.TXT as Description
     
-    _ledgerjournaltable.JournalNum as PIL_JournalNum,
-    _ledgerjournaltable.RECID as PIL_RECID,
-    _generaljournalentry.AccountingDate as PIL_TransDate,
-    _ledgerjournaltrans.LEDGERDIMENSION as PIL_LEDGERDIMENSION,
-    bankaccaounttable.ACCOUNTID as PIL_ACCOUNTID,
-    bankaccaounttable.NAME as PIL_NAME,
-    pil_kc_transaksi.RECID as REC_TRANS,
-    _ledgerjournaltrans.AmountCurCredit as PIL_AmountCurCredit,
-    _ledgerjournaltrans.AmountCurDebit as PIL_AmountCurDebit,
-    (select SUM(AmountCur)+SUM(AmountCorrect) as SALDO FROM [AX_DUMMY].[dbo].[BANKACCOUNTTRANS]
-    where CREATEDDATETIME <= (select ba.CREATEDDATETIME from [AX_DUMMY].[dbo].[BANKACCOUNTTRANS] ba 
-    where ba.VOUCHER = _ledgerjournaltrans.Voucher AND ba.ACCOUNTID = bankaccaounttable.ACCOUNTID)
-    AND ACCOUNTID = bankaccaounttable.ACCOUNTID
-    GROUP BY ACCOUNTID) as SALDO,
-    _ledgerjournaltrans.PIL_BK as PIL_BK,
-    _ledgerjournaltrans.Invoice as PIL_Invoice,
-    _ledgerjournaltrans.Voucher as PIL_Voucher,
-    _ledgerjournaltrans.TXT as PIL_Description,
-    _generaljournalaccountentry.PostingType,
-    dimensionFinancialTag.VALUE as idcabang,
-    dimensionFinancialTag.DESCRIPTION as cabang
-    --_generaljournalaccountentry.LedgerAccount
-FROM 
-    [AX_DUMMY].[dbo].[LedgerJournalTable] as _ledgerjournaltable
-        join [AX_DUMMY].[dbo].[LedgerJournalTrans] as _ledgerjournaltrans
-            on _ledgerjournaltrans.JournalNum = _ledgerjournaltable.JournalNum 
-        join [AX_DUMMY].[dbo].[DimensionAttributeValueSet] as dimensionAttributeValueSet
-            on dimensionAttributeValueSet.RecId = _ledgerjournaltrans.DefaultDimension
-        join [AX_DUMMY].[dbo].[DimensionAttributeValueSetItem] as dimensionAttributeValueSetItem
-            on dimensionAttributeValueSetItem.DimensionAttributeValueSet = dimensionAttributeValueSet.RecId
-        join [AX_DUMMY].[dbo].[DIMENSIONATTRIBUTEVALUECOMBINATION] as dimensionAttributeValueCombination
-            on dimensionAttributeValueCombination.RECID = _ledgerjournaltrans.LEDGERDIMENSION
-        join [AX_DUMMY].[dbo].[BANKACCOUNTTABLE] as bankaccaounttable
-            on bankaccaounttable.ACCOUNTID = dimensionAttributeValueCombination.DISPLAYVALUE
-        join [AX_DUMMY].[dbo].[DimensionAttributeValue] as dimensionAttributeValue
-            on dimensionAttributeValue.RecId = dimensionAttributeValueSetItem.DimensionAttributeValue
-        join [AX_DUMMY].[dbo].[DimensionAttribute] as _DimensionAttribute
-            on _DimensionAttribute.RecId = dimensionAttributeValue.DimensionAttribute
-               and _DimensionAttribute.Name = 'KPKC'
-        join [AX_DUMMY].[dbo].[DimensionFinancialTag] as dimensionFinancialTag
-            on dimensionFinancialTag.RecId = dimensionAttributeValue.EntityInstance
-        left join [AX_DUMMY].[dbo].[PIL_KCTRANSAKSI] as pil_kc_transaksi
-            on pil_kc_transaksi.PIL_VOUCHER = _ledgerjournaltrans.Voucher AND  pil_kc_transaksi.PIL_JOURNALNUM = _ledgerjournaltrans.JOURNALNUM
-       
-    join [AX_DUMMY].[dbo].[GeneralJournalEntry] as _generaljournalentry
-            on _ledgerjournaltrans.Voucher = _generaljournalentry.SubledgerVoucher
-        join [AX_DUMMY].[dbo].[GeneralJournalAccountEntry] as _generaljournalaccountentry
-            on _generaljournalentry.RecId = _generaljournalaccountentry.GeneralJournalEntry
-       where 
---_generaljournalentry.RecId = _generaljournalaccountentry.GeneralJournalEntry
---and _generaljournalaccountentry.PostingType = '20'
---_generaljournalaccountentry.LedgerAccount like '%-THT-%' and
-DATEPART(MONTH, _generaljournalentry.AccountingDate) >= ".$awal." 
-and DATEPART(MONTH, _generaljournalentry.AccountingDate) <= ".$akhir."
-and DATEPART(YEAR, _generaljournalentry.AccountingDate) >= ".$transyear."
-and 
-dimensionFinancialTag.VALUE = '".$cabang."' AND 
---_ledgerjournaltable.JournalNum = 'JB17100830' AND 
---and 
---_ledgerjournaltrans.VOUCHER = 'PAY-1707-0041'
 
---AND
-bankaccaounttable.ACCOUNTID ='KAS-KC'
-and 
-ISNUMERIC(_ledgerjournaltable.JournalNum) = '' 
-and 
-isnumeric(bankaccaounttable.ACCOUNTID) = ''
-ORDER BY PIL_JOURNALNUM ASC");
+    FROM [AX_DUMMY].[dbo].[LEDGERJOURNALTABLE] AS ledgerjournaltable
+    
+    join [AX_DUMMY].[dbo].[LedgerJournalTrans] as ledgerjournaltrans
+    on ledgerjournaltrans.JournalNum = ledgerjournaltable.JournalNum
+
+    join [AX_DUMMY].[dbo].[DIMENSIONATTRIBUTEVALUECOMBINATION] as dimensionAttributeValueCombination
+    on dimensionAttributeValueCombination.RECID = ledgerjournaltrans.LEDGERDIMENSION
+
+    join [AX_DUMMY].[dbo].[BANKACCOUNTTABLE] as bankaccaounttable
+    on bankaccaounttable.ACCOUNTID = dimensionAttributeValueCombination.DISPLAYVALUE
+     
+    join [AX_DUMMY].[dbo].[DimensionAttributeValueSet] as dimensionAttributeValueSet
+    on dimensionAttributeValueSet.RecId = bankaccaounttable.DEFAULTDIMENSION 
+    
+    join [AX_DUMMY].[dbo].[DimensionAttributeValueSetItem] as dimensionAttributeValueSetItem
+    on dimensionAttributeValueSetItem.DimensionAttributeValueSet = dimensionAttributeValueSet.RecId
+
+    join [AX_DUMMY].[dbo].[DimensionAttributeValue] as dimensionAttributeValue
+    on dimensionAttributeValue.RecId = dimensionAttributeValueSetItem.DimensionAttributeValue
+
+    join [AX_DUMMY].[dbo].[DimensionAttribute] as DimensionAttribute
+    on DimensionAttribute.RecId = dimensionAttributeValue.DimensionAttribute
+    and DimensionAttribute.Name = 'KPKC'
+
+  WHERE dimensionAttributeValueSetItem.DISPLAYVALUE = '".$cabang."'
+  and DATEPART(MONTH, ledgerjournaltrans.TRANSDATE) >= ".$awal." 
+  and DATEPART(MONTH, ledgerjournaltrans.TRANSDATE) <= ".$akhir."
+  and DATEPART(YEAR, ledgerjournaltrans.TRANSDATE) >= ".$transyear."
+  order by ledgerjournaltrans.TRANSDATE asc");
+//         return \DB::select("SELECT distinct
+    
+//     _ledgerjournaltable.JournalNum as PIL_JournalNum,
+//     _ledgerjournaltable.RECID as PIL_RECID,
+//     _ledgerjournaltrans.PIL_BK as PIL_BK,
+//     _ledgerjournaltrans.TXT as PIL_Description,
+//     _generaljournalentry.AccountingDate as PIL_TransDate,
+//     _ledgerjournaltrans.LEDGERDIMENSION as PIL_LEDGERDIMENSION,
+//     bankaccaounttable.ACCOUNTID as PIL_ACCOUNTID,
+//     bankaccaounttable.NAME as PIL_NAME,
+//     pil_kc_transaksi.RECID as REC_TRANS,
+//     _ledgerjournaltrans.AmountCurCredit as PIL_AmountCurCredit,
+//     _ledgerjournaltrans.AmountCurDebit as PIL_AmountCurDebit,
+//     (select SUM(AmountCur)+SUM(AmountCorrect) as SALDO FROM [AX_DUMMY].[dbo].[BANKACCOUNTTRANS]
+//     where CREATEDDATETIME <= (select ba.CREATEDDATETIME from [AX_DUMMY].[dbo].[BANKACCOUNTTRANS] ba 
+//     where ba.VOUCHER = _ledgerjournaltrans.Voucher AND ba.ACCOUNTID = bankaccaounttable.ACCOUNTID)
+//     AND ACCOUNTID = bankaccaounttable.ACCOUNTID
+//     GROUP BY ACCOUNTID) as SALDO,
+//     _ledgerjournaltrans.PIL_BK as PIL_BK,
+//     _ledgerjournaltrans.Invoice as PIL_Invoice,
+//     _ledgerjournaltrans.Voucher as PIL_Voucher,
+//     _ledgerjournaltrans.TXT as PIL_Description,
+//     _generaljournalaccountentry.PostingType,
+//     dimensionFinancialTag.VALUE as idcabang,
+//     dimensionFinancialTag.DESCRIPTION as cabang
+//     --_generaljournalaccountentry.LedgerAccount
+// FROM 
+//     [AX_DUMMY].[dbo].[LedgerJournalTable] as _ledgerjournaltable
+//         join [AX_DUMMY].[dbo].[LedgerJournalTrans] as _ledgerjournaltrans
+//             on _ledgerjournaltrans.JournalNum = _ledgerjournaltable.JournalNum 
+//         join [AX_DUMMY].[dbo].[DimensionAttributeValueSet] as dimensionAttributeValueSet
+//             on dimensionAttributeValueSet.RecId = _ledgerjournaltrans.DefaultDimension
+//         join [AX_DUMMY].[dbo].[DimensionAttributeValueSetItem] as dimensionAttributeValueSetItem
+//             on dimensionAttributeValueSetItem.DimensionAttributeValueSet = dimensionAttributeValueSet.RecId
+//         join [AX_DUMMY].[dbo].[DIMENSIONATTRIBUTEVALUECOMBINATION] as dimensionAttributeValueCombination
+//             on dimensionAttributeValueCombination.RECID = _ledgerjournaltrans.LEDGERDIMENSION
+//         join [AX_DUMMY].[dbo].[BANKACCOUNTTABLE] as bankaccaounttable
+//             on bankaccaounttable.ACCOUNTID = dimensionAttributeValueCombination.DISPLAYVALUE
+//         join [AX_DUMMY].[dbo].[DimensionAttributeValue] as dimensionAttributeValue
+//             on dimensionAttributeValue.RecId = dimensionAttributeValueSetItem.DimensionAttributeValue
+//         join [AX_DUMMY].[dbo].[DimensionAttribute] as _DimensionAttribute
+//             on _DimensionAttribute.RecId = dimensionAttributeValue.DimensionAttribute
+//                and _DimensionAttribute.Name = 'KPKC'
+//         join [AX_DUMMY].[dbo].[DimensionFinancialTag] as dimensionFinancialTag
+//             on dimensionFinancialTag.RecId = dimensionAttributeValue.EntityInstance
+//         left join [AX_DUMMY].[dbo].[PIL_KCTRANSAKSI] as pil_kc_transaksi
+//             on pil_kc_transaksi.PIL_VOUCHER = _ledgerjournaltrans.Voucher AND  pil_kc_transaksi.PIL_JOURNALNUM = _ledgerjournaltrans.JOURNALNUM
+       
+//     join [AX_DUMMY].[dbo].[GeneralJournalEntry] as _generaljournalentry
+//             on _ledgerjournaltrans.Voucher = _generaljournalentry.SubledgerVoucher
+//         join [AX_DUMMY].[dbo].[GeneralJournalAccountEntry] as _generaljournalaccountentry
+//             on _generaljournalentry.RecId = _generaljournalaccountentry.GeneralJournalEntry
+//        where 
+// --_generaljournalentry.RecId = _generaljournalaccountentry.GeneralJournalEntry
+// --and _generaljournalaccountentry.PostingType = '20'
+// --_generaljournalaccountentry.LedgerAccount like '%-THT-%' and
+// DATEPART(MONTH, _generaljournalentry.AccountingDate) >= ".$awal." 
+// and DATEPART(MONTH, _generaljournalentry.AccountingDate) <= ".$akhir."
+// and DATEPART(YEAR, _generaljournalentry.AccountingDate) >= ".$transyear."
+// and 
+// dimensionFinancialTag.VALUE = '".$cabang."' AND 
+// --_ledgerjournaltable.JournalNum = 'JB17100830' AND 
+// --and 
+// --_ledgerjournaltrans.VOUCHER = 'PAY-1707-0041'
+
+// --AND
+// bankaccaounttable.ACCOUNTID ='KAS-KC'
+// and 
+// ISNUMERIC(_ledgerjournaltable.JournalNum) = '' 
+// and 
+// isnumeric(bankaccaounttable.ACCOUNTID) = ''
+// ORDER BY PIL_JOURNALNUM ASC");
 //     return \DB::select("SELECT 
 //     _ledgerjournaltable.JournalNum as PIL_JournalNum,
 //     _generaljournalentry.AccountingDate as PIL_TransDate,
@@ -1002,13 +1046,27 @@ ORDER BY PIL_JOURNALNUM ASC");
     {
         $cabangs = KantorCabang::get();
         $transaksi = $this->reportQuery_kasbank($cabang, $awal, $akhir, $transyear);
-
+        // $tgl1="".$transyear."-".$awal."-01";
+        // $tgl1="2018-01-01";
+        // $tgl2 = date('Y-m-d', strtotime('-1 days', strtotime($tgl1))); 
+        // $saldo=DB::select("SELECT 
+        //                    accountid,
+        //                    SUM(AmountCur)+SUM(AmountCorrect) as saldo
+        //                         FROM [AX_DUMMY].[dbo].[BANKACCOUNTTRANS] as a
+        //                         join [AX_DUMMY].[dbo].[PIL_BANK_VIEW] as b
+        //                         on a.ACCOUNTID=b.BANK
+        //                         where  b.ID_CABANG = '".$cabang."'
+        //                         and a.TRANSDATE <= ".$tgl2."
+        //                         and a.ACCOUNTID like '%KKC%'
+        //                         group by a.ACCOUNTID");
+                                        
         $start = array_search($awal, $this->months);
         $end = array_search($akhir, $this->months);
         return view('transaksi.kasbank', [
             'cabang'    => $cabangs,
             'months'    => $this->months,
             'transaksi' => $transaksi,
+            // 'saldo'     => $saldo,
             'filters'   => array('cabang'=>$cabang, 'awal'=>$awal, 'akhir'=>$akhir, 'transyear' => $transyear)]
         );
     }
@@ -1040,9 +1098,9 @@ ORDER BY PIL_JOURNALNUM ASC");
                     return view('transaksi.cetak-kasbank', $data);
                     break;
                 case 'export' :
-                    $pdf = PDF::loadView('transaksi.export-kasbank', $data);
-                    return $pdf->download('Realisasi Anggaran-'.date("dmY").'.pdf');
-                    return $pdf->stream('Realisasi Anggaran-'.date("dmY").'.pdf'); 
+                    $pdf = PDF::loadView('transaksi.cetak-kasbank', $data);
+                    return $pdf->download('Report-kasbank-'.date("dmY").'.pdf');
+                    return $pdf->stream('Report-kasbank-'.date("dmY").'.pdf'); 
                 // hanya untuk view pdf
                     break;
                 case 'excel' :

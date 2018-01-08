@@ -71,7 +71,7 @@
 				                        			@endif
 				                        			@if($user->deleted_at)
 				                        				<a class="btn btn-sm btn-outline-warning" href="#" onclick="restoreUser({{ $user->id }})"><i class="fa fa-backward"></i> Restore</a>
-				                        				<!-- <a class="btn btn-sm btn-danger" href="#" onclick="deleteUser({{ $user->id }}, true)"><i class="fa fa-times"></i> Hapus permanen</a> -->
+				                        				<a class="btn btn-sm btn-danger" href="#" onclick="deleteUser({{ $user->id }}, true)"><i class="fa fa-times"></i> Hapus permanen</a>
 			                        				@endif
 		                        				</td>
 			                        		</tr>

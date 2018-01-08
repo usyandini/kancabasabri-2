@@ -35,40 +35,79 @@
     </div>
     <br><br>
     <div id="content">
-    	<div style="overflow-x:auto;">
 	    	<table>
           <thead>
                 <tr>
-                  <th rowspan="2" width="60px"><center>TGL</center></th>
-                  <th rowspan="2" width="50px"><center>NO.BK</center></th>
-                  <th rowspan="2" colspan="2"><center>URAIAN TRANSAKSI</center></th>
-                  <th colspan="2" width="100px"><center>KAS</center></th>
-                  <th colspan="2" width="100px"><center>BANK</center></th>
-                  <th rowspan="2" width="80px"><center>SALDO</center></th>
-                </tr>
-                <tr>
-                  <th><center>DEBET</center></th>
-                  <th><center>KREDIT</center></th>
-                  <th><center>DEBET</center></th>
-                  <th><center>KREDIT</center></th>
-                </tr>
-                <tr>
-                  <th><center>1</center></th>
-                  <th><center>2</center></th>
-                  <th colspan="2"><center>3</center></th>
-                  <th><center>4</center></th>
-                  <th><center>5</center></th>
-                  <th><center>6</center></th>
-                  <th><center>7</center></th>
-                  <th><center>8</center></th>
-                </tr>
-              </thead>
-              <tbody>
+                                      <th rowspan="2" style="vertical-align:middle;"><center>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TANGGAL&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</center></th>
+                                      <th rowspan="2" style="vertical-align:middle;"><center>NO.BK</center></th>
+                                      <th rowspan="2" style="vertical-align:middle;"><center>Journal Name</center></th>
+                                      <th rowspan="2" colspan="2" style="vertical-align:middle;"><center>URAIAN TRANSAKSI</center></th>
+                                      <th colspan="2"><center>KAS</center></th>
+                                      <th colspan="2"><center>BANK</center></th>
+                                      <th style="vertical-align:middle;"><center>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SALDO KAS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</center></th>
+                                      
+                                      <th style="vertical-align:middle;"><center>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SALDO BANK&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</center></th>
+                                      
+                                    </tr>
+                                    <tr>
+                                      <th><center>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DEBET&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</center></th>
+                                      <th><center>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;KREDIT&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</center></th>
+                                      <th><center>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DEBET&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</center></th>
+                                      <th><center>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;KREDIT&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</center></th>
+                                      <?php
+                                      $tgl1="".$filters['transyear']."-".$filters['awal']."-01";
+                                      $tgl2 = date('Y-m-d', strtotime('-1 days', strtotime($tgl1))); 
+                                      $saldoo=DB::select("SELECT 
+                                                         accountid,
+                                                         SUM(AmountCur)+SUM(AmountCorrect) as saldo
+                                                              FROM [AX_DUMMY].[dbo].[BANKACCOUNTTRANS] as a
+                                                              join [AX_DUMMY].[dbo].[PIL_BANK_VIEW] as b
+                                                              on a.ACCOUNTID=b.BANK
+                                                              where  b.ID_CABANG = '".$filters['cabang']."'
+                                                              and a.TRANSDATE <= '$tgl2'
+                                                              and a.ACCOUNTID like '%KKC%'
+                                                              group by a.ACCOUNTID");
+                                      ?>
+                                      <td align="right"><b>@foreach($saldoo as $aa) Rp {{ number_format($aa->saldo, 2, ',','.') }} @endforeach</b></td>
+                                      
+                                      <?php
+                                      $tglb="".$filters['transyear']."-".$filters['awal']."-01";
+                                      $tglb = date('Y-m-d', strtotime('-1 days', strtotime($tglb))); 
+                                      $saldob=DB::select("SELECT 
+                                                         accountid,
+                                                         SUM(AmountCur)+SUM(AmountCorrect) as saldo
+                                                              FROM [AX_DUMMY].[dbo].[BANKACCOUNTTRANS] as a
+                                                              join [AX_DUMMY].[dbo].[PIL_BANK_VIEW] as b
+                                                              on a.ACCOUNTID=b.BANK
+                                                              where  b.ID_CABANG = '".$filters['cabang']."'
+                                                              and a.TRANSDATE <= '$tgl2'
+                                                              and a.ACCOUNTID like '%GKC%'
+                                                              group by a.ACCOUNTID");
+                                      ?>
+                                      <td align="right"><b>@foreach($saldob as $bb) Rp {{ number_format($bb->saldo, 2, ',','.') }} @endforeach</b></td>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                  <?php
+                                  if (empty($aa->saldo)){
+                                    $saldokas=0;
+                                  }
+                                  else {
+                                    $saldokas=$aa->saldo;
+                                  }
+                                  if (empty($bb->saldo)){
+                                    $saldobank=0;
+                                  }
+                                   else {
+                                    $saldobank=$bb->saldo;
+                                  }
+                                  ?>
                                   @if($filters)
                                   @forelse($transaksi as $trans)
                                   <tr>
                                                 <?php
-                                                  $tanggal=$trans->PIL_TransDate;                                 
+                                                  
+                                                  $tanggal=$trans->tanggal;                                 
                                                   $tgl= date('d', strtotime($tanggal)); 
                                                   $bs= date('m', strtotime($tanggal));
                                                   if ($bs=="01"){
@@ -110,22 +149,40 @@
                                                   $tahun= date('Y', strtotime($tanggal));
                                               ?>
                                     <td><center>{{$tgl}} {{$bulans}} {{$tahun}}</center></td>
-                                    <td>{{$trans->PIL_BK}}</td>
-                                    <td width="150px" colspan="2">{{$trans->PIL_Description}}</td>
+                                    <td>{{$trans->Nomor_BK}}</td>
+                                    <td>{{$trans->JournalName}}</td>
+                                    <td width="150px" colspan="2">{{$trans->Description}}</td>
+                                    
                                     <?php
-                                      $AccoudId = $trans->PIL_ACCOUNTID;
-                                      $kas = explode('KAS',$AccoudId);
+                                      $AccoudId = $trans->bankid;
+                                      $gkc = explode('GKC',$AccoudId);
                                       $kkc = explode('KKC',$AccoudId);
+                                      
+                                      if(count($kkc) > 1 ){
+                                      $isKas = true;
+                                      }
+                                      if(count($gkc) > 1 ){
                                       $isKas = false;
-                                      if(count($kas) > 1 || count($kkc)>1 ){
-                                        $isKas = true;
                                       }
                                     ?>
-                                    <td align="right">@if($isKas)Rp {{ number_format($trans->PIL_AmountCurDebit, 2, ',','.') }} @endif</td>
-                                    <td align="right">@if($isKas)Rp {{ number_format($trans->PIL_AmountCurCredit, 2, ',','.') }} @endif</td>
-                                    <td align="right">@if(!$isKas)Rp {{ number_format($trans->PIL_AmountCurDebit, 2, ',','.') }} @endif</td>
-                                    <td align="right">@if(!$isKas)Rp {{ number_format($trans->PIL_AmountCurCredit, 2, ',','.') }} @endif</td>
-                                    <td align="right"></td>
+                                    
+                                    <td align="right">@if($isKas)Rp {{ number_format($trans->debit, 2, ',','.') }} @endif</td>
+                                    <td align="right">@if($isKas)Rp {{ number_format($trans->credit, 2, ',','.') }} @endif</td>
+                                    <td align="right">@if(!$isKas)Rp {{ number_format($trans->debit, 2, ',','.') }} @endif</td>
+                                    <td align="right">@if(!$isKas)Rp {{ number_format($trans->credit, 2, ',','.') }} @endif</td>
+                                    <?php
+                                    if(!$isKas){  
+                                    $saldobank +=  $trans->debit;
+                                    $saldobank -=  $trans->credit;
+                                    }
+                                    if($isKas){  
+                                    $saldokas +=  $trans->debit;
+                                    $saldokas -=  $trans->credit;
+                                    }
+                                    ?>
+                                    <td align="right">@if($isKas)<b>Rp {{ number_format($saldokas, 2, ',','.') }}</b> @endif</td>
+                                    <td align="right">@if(!$isKas)<b>Rp {{ number_format($saldobank, 2, ',','.') }}</b> @endif</td>
+                                    
                                   </tr>
                                   @empty
                                   <tr>
@@ -135,7 +192,6 @@
                                   @endif
                                 </tbody>              
         </table>
-	    </div>
     </div>
 </body>
 <html>

@@ -48,7 +48,7 @@
             											@foreach($a as $b)
                                                         <?php
                                                          $cabang=$b->cabang;
-                                                         $z = \DB::select("SELECT DESCRIPTION, VALUE FROM [AX_DUMMY].[dbo].[PIL_VIEW_KPKC]  WHERE VALUE!='00'");
+                                                         $z = \DB::select("SELECT DESCRIPTION, VALUE FROM [AX_DUMMY].[dbo].[PIL_VIEW_KPKC]");
                                                          ?>
             											<tr>
             												<td><center>{{ $no }}</center></td>
