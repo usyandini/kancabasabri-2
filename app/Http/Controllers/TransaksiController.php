@@ -1098,7 +1098,8 @@ class TransaksiController extends Controller
                     return view('transaksi.cetak-kasbank', $data);
                     break;
                 case 'export' :
-                    $pdf = PDF::loadView('transaksi.cetak-kasbank', $data);
+                    $pdf = PDF::loadView('transaksi.export-kasbank', $data);
+                    $pdf->setPaper('A4', 'landscape');
                     return $pdf->download('Report-kasbank-'.date("dmY").'.pdf');
                     return $pdf->stream('Report-kasbank-'.date("dmY").'.pdf'); 
                 // hanya untuk view pdf

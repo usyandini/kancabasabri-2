@@ -38,22 +38,22 @@
 	    	<table>
           <thead>
                 <tr>
-                                      <th rowspan="2" style="vertical-align:middle;"><center>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TANGGAL&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</center></th>
+                                      <th rowspan="2" style="vertical-align:middle;"><center>&nbsp;&nbsp;&nbsp;&nbsp;TANGGAL&nbsp;&nbsp;&nbsp;&nbsp;</center></th>
                                       <th rowspan="2" style="vertical-align:middle;"><center>NO.BK</center></th>
                                       <th rowspan="2" style="vertical-align:middle;"><center>Journal Name</center></th>
                                       <th rowspan="2" colspan="2" style="vertical-align:middle;"><center>URAIAN TRANSAKSI</center></th>
                                       <th colspan="2"><center>KAS</center></th>
                                       <th colspan="2"><center>BANK</center></th>
-                                      <th style="vertical-align:middle;"><center>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SALDO KAS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</center></th>
+                                      <th rowspan="2"><center>SALDO KAS</center></th>
                                       
-                                      <th style="vertical-align:middle;"><center>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SALDO BANK&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</center></th>
+                                      <th rowspan="2"><center>SALDO BANK</center></th>
                                       
                                     </tr>
                                     <tr>
-                                      <th><center>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DEBET&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</center></th>
-                                      <th><center>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;KREDIT&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</center></th>
-                                      <th><center>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DEBET&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</center></th>
-                                      <th><center>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;KREDIT&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</center></th>
+                                      <th><center>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DEBET&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</center></th>
+                                      <th><center>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;KREDIT&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</center></th>
+                                      <th><center>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DEBET&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</center></th>
+                                      <th><center>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;KREDIT&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</center></th>
                                       <?php
                                       $tgl1="".$filters['transyear']."-".$filters['awal']."-01";
                                       $tgl2 = date('Y-m-d', strtotime('-1 days', strtotime($tgl1))); 
@@ -68,7 +68,7 @@
                                                               and a.ACCOUNTID like '%KKC%'
                                                               group by a.ACCOUNTID");
                                       ?>
-                                      <td align="right"><b>@foreach($saldoo as $aa) Rp {{ number_format($aa->saldo, 2, ',','.') }} @endforeach</b></td>
+                                     @foreach($saldoo as $aa)  @endforeach
                                       
                                       <?php
                                       $tglb="".$filters['transyear']."-".$filters['awal']."-01";
@@ -84,7 +84,7 @@
                                                               and a.ACCOUNTID like '%GKC%'
                                                               group by a.ACCOUNTID");
                                       ?>
-                                      <td align="right"><b>@foreach($saldob as $bb) Rp {{ number_format($bb->saldo, 2, ',','.') }} @endforeach</b></td>
+                                      @foreach($saldob as $bb)  @endforeach
                                     </tr>
                                   </thead>
                                   <tbody>
@@ -180,8 +180,8 @@
                                     $saldokas -=  $trans->credit;
                                     }
                                     ?>
-                                    <td align="right">@if($isKas)<b>Rp {{ number_format($saldokas, 2, ',','.') }}</b> @endif</td>
-                                    <td align="right">@if(!$isKas)<b>Rp {{ number_format($saldobank, 2, ',','.') }}</b> @endif</td>
+                                    <td align="right">@if($isKas)<b>Rp&nbsp;{{ number_format($saldokas, 2, ',','.') }}</b> @endif</td>
+                                    <td align="right">@if(!$isKas)<b>Rp&nbsp;{{ number_format($saldobank, 2, ',','.') }}</b> @endif</td>
                                     
                                   </tr>
                                   @empty
@@ -190,7 +190,7 @@
                                   </tr>
                                   @endforelse
                                   @endif
-                                </tbody>              
+                                </tbody>               
         </table>
     </div>
 </body>
