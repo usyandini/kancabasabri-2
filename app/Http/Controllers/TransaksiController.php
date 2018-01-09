@@ -839,6 +839,7 @@ class TransaksiController extends Controller
   and DATEPART(MONTH, ledgerjournaltrans.TRANSDATE) >= ".$awal." 
   and DATEPART(MONTH, ledgerjournaltrans.TRANSDATE) <= ".$akhir."
   and DATEPART(YEAR, ledgerjournaltrans.TRANSDATE) >= ".$transyear."
+  and ledgerjournaltable.POSTED=1
   order by ledgerjournaltrans.TRANSDATE asc");
 //         return \DB::select("SELECT distinct
     
@@ -1028,12 +1029,15 @@ class TransaksiController extends Controller
                 'cabang'    => 'required',
                 'awal'      => 'required',
                 'akhir'     => 'required',
-                'transyear' => 'required'], 
+                'transyear' => 'required'
+            ], 
             [
                 'cabang.required'  => 'Kantor cabang harus dipilih.',
                 'awal.required'  => 'Periode awal harus dipilih.',
                 'akhir.required'  => 'Periode akhir harus dipilih.',
-                'transyear.required'  => 'Tahun periode harus dipilih.']);
+                'transyear.required'  => 'Tahun periode harus dipilih.'
+            ]
+        );
 
         if($validatorRK->passes()){
             return redirect('transaksi/filter/kasbank/'.$request->cabang.'/'.$request->awal.'/'.$request->akhir.'/'.$request->transyear);    
