@@ -12,10 +12,26 @@
           <div class="form-group skin skin-square" id="pengajuan">
             <fieldset>
               <input type="checkbox" name="perizinan[informasi_a_d]" {{ isset(old("perizinan")['informasi_a_d']) ? 'checked=""' : '' }}>
-              <label>Pengajuan Dropping</label>
+              <label>Informasi Pengajuan Dropping</label>
             </fieldset>
             <fieldset>
-              <input type="checkbox" name="perizinan[setuju_a_d]" {{ isset(old("perizinan")['lihat_tt_d']) ? 'checked=""' : '' }}>
+              <input type="checkbox" name="perizinan[tambah_a_d]" {{ isset(old("perizinan")['tambah_a_d']) ? 'checked=""' : '' }}>
+              <label>Tambah Pengajuan Dropping</label>
+            </fieldset>
+            <fieldset>
+              <input type="checkbox" name="perizinan[ubah_a_d]" {{ isset(old("perizinan")['ubah_a_d']) ? 'checked=""' : '' }}>
+              <label>Ubah Pengajuan Dropping</label>
+            </fieldset>
+            <fieldset>
+              <input type="checkbox" name="perizinan[hapus_a_d]" {{ isset(old("perizinan")['hapus_a_d']) ? 'checked=""' : '' }}>
+              <label>Hapus Pengajuan Dropping</label>
+            </fieldset>
+            <fieldset>
+              <input type="checkbox" name="perizinan[kirim_a_d]" {{ isset(old("perizinan")['kirim_a_d']) ? 'checked=""' : '' }}>
+              <label>Kirim Pengajuan Dropping</label>
+            </fieldset>
+            <fieldset>
+              <input type="checkbox" name="perizinan[setuju_a_d]" {{ isset(old("perizinan")['setuju_a_d']) ? 'checked=""' : '' }}>
               <label>Persetujuan Pengajuan Dropping</label>
             </fieldset>
             <fieldset>

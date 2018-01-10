@@ -12,7 +12,23 @@
           <div class="form-group skin skin-square" id="pengajuan">
             <fieldset>
               <input type="checkbox" name="perizinan[informasi_a_d]" {{ isset($user->perizinan['informasi_a_d']) ? 'checked=""' : '' }}>
-              <label>Pengajuan Dropping</label>
+              <label>Informasi Pengajuan Dropping</label>
+            </fieldset>
+            <fieldset>
+              <input type="checkbox" name="perizinan[tambah_a_d]" {{ isset($user->perizinan['tambah_a_d']) ? 'checked=""' : '' }}>
+              <label>Tambah Pengajuan Dropping</label>
+            </fieldset>
+            <fieldset>
+              <input type="checkbox" name="perizinan[ubah_a_d]" {{ isset($user->perizinan['ubah_a_d']) ? 'checked=""' : '' }}>
+              <label>Ubah Pengajuan Dropping</label>
+            </fieldset>
+            <fieldset>
+              <input type="checkbox" name="perizinan[hapus_a_d]" {{ isset($user->perizinan['hapus_a_d']) ? 'checked=""' : '' }}>
+              <label>Hapus Pengajuan Dropping</label>
+            </fieldset>
+            <fieldset>
+              <input type="checkbox" name="perizinan[kirim_a_d]" {{ isset($user->perizinan['kirim_a_d']) ? 'checked=""' : '' }}>
+              <label>Kirim Pengajuan Dropping</label>
             </fieldset>
             <fieldset>
               <input type="checkbox" name="perizinan[setuju_a_d]" {{ isset($user->perizinan['setuju_a_d']) ? 'checked=""' : '' }}>

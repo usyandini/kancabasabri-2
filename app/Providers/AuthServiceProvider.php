@@ -54,7 +54,7 @@ class AuthServiceProvider extends ServiceProvider
              $permissions[] = $dropping[$i];
         }
 
-        $aju_dropping =["informasi_a_d","setuju_a_d","setuju_a_d_2","setuju_a_d_3",
+        $aju_dropping =["informasi_a_d","tambah_a_d","ubah_a_d","hapus_a_d","kirim_a_d","setuju_a_d","setuju_a_d_2","setuju_a_d_3",
                     "notif_setuju_a_d","notif_setuju_a_d_2","notif_setuju_a_d_3","notif_ubah_a_d"] ;
 
         for($i=0;$i<count($aju_dropping);$i++){

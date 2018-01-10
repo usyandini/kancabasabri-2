@@ -168,7 +168,7 @@
                           <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
                           <div class="card-body collapse in">                           
                             <div class="card-block">
-                              <a href="#" class="btn btn-outline-success btn" data-target="#tambah" data-toggle="modal"><i class="fa fa-plus"></i><b> Tambah Pengajuan</b></a>
+                            @can('tambah_a_d')<a href="#" class="btn btn-outline-success btn" data-target="#tambah" data-toggle="modal"><i class="fa fa-plus"></i><b> Tambah Pengajuan</b></a>@endcan
                               <div class="modal fade" data-backdrop="static" id="tambah" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                                 <div class="modal-dialog">
                                   <div class="modal-content">
@@ -351,9 +351,9 @@
     <td><center>
       @if ($b->kirim==1)
       @if ($userCab)
-      <span data-toggle='tooltip' title='Kirim'><a class="btn btn-success btn-sm" data-target="#kirim{{$b->id}}" data-toggle="modal"><i class="fa fa-send"></i> </a></span>
-      <span data-toggle='tooltip' title='Ubah'><a class="btn btn-info btn-sm" data-target="#ubah{{$b->id}}" data-toggle="modal"><i class="fa fa-edit"></i> </a></span>
-      <span data-toggle='tooltip' title='Hapus'><a class="btn btn-danger btn-sm" data-target="#hapus{{$b->id}}" data-toggle="modal"><i class="fa fa-trash"></i> </a></span>
+      @can('kirim_a_d')<span data-toggle='tooltip' title='Kirim'><a class="btn btn-success btn-sm" data-target="#kirim{{$b->id}}" data-toggle="modal"><i class="fa fa-send"></i> </a></span>@endcan
+      @can('ubah_a_d')<span data-toggle='tooltip' title='Ubah'><a class="btn btn-info btn-sm" data-target="#ubah{{$b->id}}" data-toggle="modal"><i class="fa fa-edit"></i> </a></span>@endcan
+      @can('hapus_a_d')<span data-toggle='tooltip' title='Hapus'><a class="btn btn-danger btn-sm" data-target="#hapus{{$b->id}}" data-toggle="modal"><i class="fa fa-trash"></i> </a></span>@endcan
       @endif
       @elseif ($b->kirim==2)
       <div class="btn btn-info btn-sm"><span><b>Telah Dikirim</b></span></div>
