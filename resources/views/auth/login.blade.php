@@ -44,7 +44,7 @@
                             <div class="card border-grey border-lighten-3 m-0">
                                 <div class="card-header no-border">
                                     <div class="card-title text-xs-center">
-                                        <div class="p-1"><img src="{{ asset('app-assets/images/asabri-logo.png') }}" width="50%"><h2 class="brand-text">SELAMAT DATANG</h2></div>
+                                        <div class="p-1"><img src="{{ asset('app-assets/images/asabri-logo.png') }}" width="70%"><h2 class="brand-text">SELAMAT DATANG</h2></div>
                                     </div>
                                     <h3 class="card-subtitle text-muted text-xs-center"><span>Aplikasi Anggaran dan Belanja</span></h3>
                                 </div>
