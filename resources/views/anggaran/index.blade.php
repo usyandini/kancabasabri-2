@@ -678,6 +678,7 @@
                             valueField: "name", 
                             textField: "name", 
                             insertcss: "jenis_select",
+                            editcss: "jenis_select_edit",
                             items: getData('jenis'),
                             itemTemplate:function(value){
                               changeDataSelect('kelompok',value,"");
@@ -746,6 +747,7 @@
                             valueField: "name", 
                             textField: "name", 
                             insertcss: "kelompok_select",
+                            editcss: "kelompok_select_edit",
                             // items: getData('kelompok'),
                             items:[
                                 { name: "Silahkan Pilih Jenis" }
@@ -787,6 +789,7 @@
                             valueField: "name", 
                             textField: "name", 
                             insertcss: "pos_select",
+                            editcss: "pos_select_edit",
                             // items: getData('posanggaran'),
                             items:[
                                 { name: "Silahkan Pilih Kelompok" },
@@ -828,6 +831,7 @@
                             valueField: "DESCRIPTION", 
                             textField: "DESCRIPTION", 
                             insertcss: "sub_select",
+                            editcss: "sub_select_edit",
                             // items: getData('subpos'),
                             items:[
                                 { DESCRIPTION: "Silahkan Pilih Pos Anggaran" },
@@ -869,6 +873,7 @@
                             valueField: "DESCRIPTION", 
                             textField: "DESCRIPTION", 
                             insertcss: "mata_select",
+                            editcss: "mata_select_edit",
                             // items: getData('mataanggaran'),
 
                             items:[
@@ -1083,7 +1088,7 @@
                               return result; 
                             },
                             validate: {
-                              message : "Pilih Ya/Tidak Terlebih dahulu." ,
+                              message : "Pilih Terpusat ya/tidak Terlebih dahulu." ,
                               validator :function(value, item) {
                                   return value > 0 ;
                               } 
@@ -1546,6 +1551,7 @@
                     if(split.length>1){
                       decode = split[0]+"->"+split[1];
                     }
+                    // console.log(value);
                     // alert("{{ url('anggaran/get/attributes') }}/" +type+"/"+decode);
                     if(value!="None"){
                       $.ajax({
@@ -1574,38 +1580,41 @@
                                   // alert(JSON.stringify(tmp));
                                   kelompok.items = tmp;
                                   $(".kelompok_select").empty().append(kelompok.insertTemplate());
+                                  $(".kelompok_select_edit").empty().append(kelompok.editTemplate());
+                                  // console.log(JSON.stringify(tmp));
+                                  // console.log(kelompok.items);
                                   // $(".kelompok_select").empty().append(kelompok.editTemplate());
                                 }else if(type == "posanggaran"){
                                   pos.items = tmp;
                                   $(".pos_select").empty().append(pos.insertTemplate());
-                                  // $(".pos_select").empty().append(pos.editTemplate());
+                                  $(".pos_select_edit").empty().append(pos.editTemplate());
                                 }else if(type == "subpos"){
                                   sub.items = tmp;
                                   $(".sub_select").empty().append(sub.insertTemplate());
-                                  // $(".sub_select").empty().append(sub.editTemplate());
+                                  $(".sub_select_edit").empty().append(sub.editTemplate());
                                 }else if(type == "mataanggaran"){
                                   mata_anggaran.items = tmp;
                                   $(".mata_select").empty().append(mata_anggaran.insertTemplate());
-                                  // $(".mata_select").empty().append(mata_anggaran.editTemplate());
+                                  $(".mata_select_edit").empty().append(mata_anggaran.editTemplate());
                                 }
 
                                 if(type == "kelompok"){
                                   data[0]["name"] = "Silahkan Pilih Kelompok";
                                   pos.items = data;
                                   $(".pos_select").empty().append(pos.insertTemplate());
-                                  // $(".pos_select").empty().append(pos.editTemplate());
+                                  $(".pos_select_edit").empty().append(pos.editTemplate());
                                 }
                                 if(type == "kelompok"||type == "posanggaran"){
                                   data[0]["DESCRIPTION"] = "Silahkan Pilih Pos Anggaran";
                                   sub.items = data;
                                   $(".sub_select").empty().append(sub.insertTemplate());
-                                  // $(".sub_select").empty().append(sub.editTemplate());
+                                  $(".sub_select_edit").empty().append(sub.editTemplate());
                                 }
                                 if(type == "kelompok"||type == "posanggaran"||type == "subpos"){
                                   data[0]["DESCRIPTION"] = "Silahkan Pilih Sub Pos";
                                   mata_anggaran.items = data;
                                   $(".mata_select").empty().append(mata_anggaran.insertTemplate());
-                                  // $(".mata_select").empty().append(mata_anggaran.editTemplate());
+                                  $(".mata_select_edit").empty().append(mata_anggaran.editTemplate());
                                 }
                               }else{
                                 if(jenis == "Insert"){
@@ -1623,25 +1632,25 @@
                         data[0]["name"] = "Silahkan Pilih Jenis";
                         kelompok.items = data;
                         $(".kelompok_select").empty().append(kelompok.insertTemplate());
-                        // $(".kelompok_select").empty().append(kelompok.editTemplate());
+                        $(".kelompok_select_edit").empty().append(kelompok.editTemplate());
                       }
                       if(type == "kelompok"||type == "posanggaran"){
                         data[0]["name"] = "Silahkan Pilih Kelompok";
                         pos.items = data;
                         $(".pos_select").empty().append(pos.insertTemplate());
-                        // $(".pos_select").empty().append(pos.editTemplate());
+                        $(".pos_select_edit").empty().append(pos.editTemplate());
                       }
                       if(type == "kelompok"||type == "posanggaran"||type == "subpos"){
                         data[0]["DESCRIPTION"] = "Silahkan Pilih Pos Anggaran";
                         sub.items = data;
                         $(".sub_select").empty().append(sub.insertTemplate());
-                        // $(".sub_select").empty().append(sub.editTemplate());
+                        $(".sub_select_edit").empty().append(sub.editTemplate());
                       }
                       if(type == "kelompok"||type == "posanggaran"||type == "subpos"||type == "mataanggaran"){
                         data[0]["DESCRIPTION"] = "Silahkan Pilih Sub Pos";
                         mata_anggaran.items = data;
                         $(".mata_select").empty().append(mata_anggaran.insertTemplate());
-                        // $(".mata_select").empty().append(mata_anggaran.editemplate());
+                        $(".mata_select_edit").empty().append(mata_anggaran.editemplate());
                       }
                     }
                   }
@@ -1751,6 +1760,7 @@
                                   @if($beda)
                                     document.getElementById("accept_r").style.display="none";
                                     document.getElementById("download_r").style.display="none";
+                                    document.getElementById("export_r").style.display="none";
                                     document.getElementById("edit_r").style.display="none";
                                     document.getElementById("save_r").style.display="block";
                                     document.getElementById("send_r").style.display="block";

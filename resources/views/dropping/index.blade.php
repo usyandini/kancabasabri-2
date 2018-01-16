@@ -182,30 +182,32 @@
                               var tanggal=item.transdate;
                               var res = tanggal.split("-");
                               var bulan= res[1];
+                              var tahun= res[2];
                               var d = new Date();
                               var n = d.getMonth();
-                              if (n==1||n==2||n==3){
+                              var y = d.getFullYear();
+                              if (n==0||n==1||n==2){
                                 var hasil='tw1';
                               }
-                              if (n==4||n==5||n==6){
+                              if (n==3||n==4||n==5){
                                 var hasil='tw2';
                               }
-                              if (n==7||n==8||n==9){
+                              if (n==6||n==7||n==8){
                                 var hasil='tw3'; 
                               }
-                              if (n==10||n==11||n==12){
+                              if (n==9||n==10||n==11){
                                 var hasil='tw4';
                               }
-                              if (hasil=='tw1' && (bulan > 0 && bulan < 4)) {
+                              if (hasil=='tw1' && (bulan > 0 && bulan < 4) && tahun==y){
                                 return "<a href='{{ url('/dropping/penyesuaian') }}/"+ l +"' class='btn btn-warning btn-sm'>Pilih</a>"
                               }
-                              if (hasil=='tw2' && (bulan > 3 && bulan < 7)) {
+                              if (hasil=='tw2' && (bulan > 3 && bulan < 7) && tahun==y){
                                 return "<a href='{{ url('/dropping/penyesuaian') }}/"+ l +"' class='btn btn-warning btn-sm'>Pilih</a>"
                               }
-                              if (hasil=='tw3' && (bulan > 6 && bulan < 10)) {
+                              if (hasil=='tw3' && (bulan > 6 && bulan < 10) && tahun==y){
                                 return "<a href='{{ url('/dropping/penyesuaian') }}/"+ l +"' class='btn btn-warning btn-sm'>Pilih</a>"
                               }
-                              if (hasil=='tw4' && (bulan > 9 && bulan < 13)) {
+                              if (hasil=='tw4' && (bulan > 9 && bulan < 13) && tahun==y){
                                 return "<a href='{{ url('/dropping/penyesuaian') }}/"+ l +"' class='btn btn-warning btn-sm'>Pilih</a>"
                               }
                               else{
@@ -213,6 +215,7 @@
                               }
                             }
                           },
+
                           @endif
                           @if(Gate::check('lihat_tt_d'))
                           { name: "id_dropping", type: "text", align:"center", title: "Penarikan", width: 120,
