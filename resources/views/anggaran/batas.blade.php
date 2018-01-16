@@ -116,7 +116,7 @@
 										    <th hidden><center>Tanggal Selesai</center></th>
 										    <th id="filterable"><center>Tanggal Selesai</center></th>
 										    <th><center>Aktif</center></th>
-										    <th><center>Aksi</center></th>
+										    <th><center>Edit Waktu</center></th>
 										  </tr>
 										</thead>
 										<tbody>
@@ -134,7 +134,7 @@
 													<td style="color:{{$batas->active?'green':'red'}}"><b><center>{{ $batas->active?"Ya":"Tidak"}}</center></b></td>
 													<td><center>
 														<input type="hidden" id="active_{{$batas->id}}" value="{{$batas->active}}">
-														<span data-toggle='tooltip' title='Edit'><a class="btn btn-info btn-sm" onclick='modal_ubah("{{$batas->id}}")' style="color:black"><i class="fa fa-edit"></i> </a></span>
+														<span><a class="btn btn-info btn-sm" onclick='modal_ubah("{{$batas->id}}")' style="color:black"><i class="fa fa-edit"></i> </a></span>
 													</center></td>
 										 		</tr>
 												<?php $no++;?>
@@ -207,7 +207,7 @@
 						$('#tanggal_mulai_edit').val(tanggal_mulai);
 						// document.getElementById('tanggal_mulai_edit').value = tanggal_mulai;
 						// if(active == "0")
-							$('#tanggal_mulai_edit').datepicker().datepicker('disable');
+							// $('#tanggal_mulai_edit').datepicker().datepicker('disable');
 						
 							
 						$('#tanggal_selesai_edit').val(tanggal_selesai);

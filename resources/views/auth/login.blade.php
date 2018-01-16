@@ -9,7 +9,7 @@
         <meta name="author" content="PIXINVENT">
         <title>Aplikasi Anggaran dan Belanja PT. Asabri (Persero)</title>
         <link rel="apple-touch-icon" href="{{ asset('app-assets/images/ico/apple-icon-120.png') }}">
-        <link rel="shortcut icon" type="image/x-icon" href="{{ asset('app-assets/images/asabri-logo-kecil.png') }}">
+        <link rel="shortcut icon" type="image/x-icon" href="{{ asset('app-assets/images/icon-asabri.png') }}">
         <link href="https://fonts.googleapis.com/css?family=Montserrat:300,300i,400,400i,500,500i%7COpen+Sans:300,300i,400,400i,600,600i,700,700i" rel="stylesheet">
         <!-- BEGIN VENDOR CSS-->
         <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/bootstrap.min.css') }}">

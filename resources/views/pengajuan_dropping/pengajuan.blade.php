@@ -20,10 +20,9 @@
                  <div class="alert alert-dismissible alert-{{ Session::get('after_save.alert') }}">
                    <button type="button" class="close" data-dismiss="alert">×</button>
                    <strong>{{ Session::get('after_save.title') }}</strong>
-
                  </div>
                </div>
-             </div>
+              </div>
              @endif
              {{-- end part alert --}}
 

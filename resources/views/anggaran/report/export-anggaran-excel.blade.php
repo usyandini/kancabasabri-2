@@ -1,5 +1,9 @@
 <html>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<?php 
+	header("Content-type: application/vnd-ms-excel");
+	header("Content-Disposition: attachment; filename=Anggaran dan Kegiatan.xls"); 
+	?>
 	<style>
 		h3 {
             text-transform: uppercase;
@@ -38,14 +42,13 @@
 	</style>
 <body>
 	<div id="header">
-		<img src='<?php echo $_SERVER["DOCUMENT_ROOT"].'/app-assets/images/asabri-logo.png'; ?>' align="left" style="max-height: 80px;">
-        <div="title">
+		<div="title">
 	        <h3><center>LAPORAN Anggaran dan Kegiatan PT ASABRI (PERSERO)</center></h3>	  
 	    </div>
     </div>
     <br><br><br>
     <div id="content">
-    	<div style="overflow-x:auto;">
+    	<div>
 			<table class='header'>
 				@foreach($header as $head)
 				<tr class='header'>

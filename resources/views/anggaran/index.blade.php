@@ -193,10 +193,11 @@
 
                                     <div class="row col-xs-12" id="grup_r" style="display:none">
 
-                                      <div class="col-xs-2 ">
+                                      <div class="col-xs-6">
                                         <div class="form-group">
                                           <!-- <button type="submit" class="btn btn-secondary"><i class="fa fa-download"></i> Unduh</button> -->
-                                          <div onclick="download_post()" id="download_r" name="download_r" class="btn btn-secondary" target="_blank"><i class="fa fa-download"></i> Unduh</div>
+                                          <div onclick="download_post()" id="download_r" name="download_r" class="btn btn-outline-danger" target="_blank"><i class="fa fa-file-pdf-o"></i> Export to PDF</div>
+                                          <div onclick="export_post()" id="export_r" name="export_r" class="btn btn-outline-success" target="_blank"><i class="fa fa-file-excel-o"></i> Export to Excel</div>
                                         </div>
                                       </div>
                                       <div class="col-xs-6 ">
@@ -224,7 +225,8 @@
                                       <div class="col-xs-6 ">
                                         <div class="form-group">
                                           <!-- <button type="submit" class="btn btn-secondary"><i class="fa fa-download"></i> Unduh</button> -->
-                                            <div onclick="download_post()" id="download_m" name="download_m" class="btn btn-secondary" target="_blank"><i class="fa fa-download"></i> Unduh</div>
+                                            <div onclick="download_post()" id="download_m" name="download_m" class="btn btn-outline-danger" target="_blank"><i class="fa fa-file-pdf-o"></i> Export to PDF</div>
+                                            <div onclick="export_post()" id="export_m" name="export_m" class="btn btn-outline-success" target="_blank"><i class="fa fa-file-excel-o"></i> Export to Excel</div>
                                         </div>
                                       </div>
                                       <div id="grup_m_p">
@@ -326,6 +328,10 @@
                 <form method="GET" action="{{ url('anggaran/reports/export') }}" id="downloadAnggaran" name="downloadAnggaran" enctype="multipart/form-data">
                     <input type="hidden" name="header_anggaran_download" id="header_anggaran_download">
                     <input type="hidden" name="list_anggaran_download" id="list_anggaran_download">
+                </form>
+                <form method="GET" action="{{ url('anggaran/reports/export-excel') }}" id="exportAnggaran" name="exportAnggaran" enctype="multipart/form-data">
+                    <input type="hidden" name="header_anggaran_export" id="header_anggaran_export">
+                    <input type="hidden" name="list_anggaran_export" id="list_anggaran_export">
                 </form>                  
                 @endsection
                 @section('customjs')
@@ -1052,7 +1058,7 @@
                             title: "Terpusat", 
                             width: 80,
                             items:[
-                                { Name: "None", Id: '0' },
+                                { Name: "-", Id: '0' },
                                 { Name: "Ya", Id: '1' },
                                 { Name: "Tidak", Id: '2'}
                             ],
@@ -1976,7 +1982,7 @@
                           }
                         }
                         // if(status == 1){
-                        //   stop = false;
+                          stop = false;
                         // }else{
                         //   stop = false;
                         // }
@@ -2058,6 +2064,22 @@
                     $('input[name="list_anggaran_download"]').val(JSON.stringify(inputs));
                     //alert(JSON.stringify(header));
                     $('form[id="downloadAnggaran"]').submit();
+                  }
+                  function export_post(){
+                    header={};
+                    header['tanggal'] = $('#tanggal').val();
+                    header['nd_surat'] = $('#nd_surat').val();
+                    header['unit_kerja'] = $('#unit_kerja').val();
+                    header['tipe_anggaran'] = $('#tipe_anggaran').val();
+                    header['stat_anggaran'] = $('#stat_anggaran').val();
+                    header['persetujuan'] = $('#persetujuan').val();
+
+                    array = new Array();
+                    array.push(header);
+                    $('input[name="header_anggaran_export"]').val(JSON.stringify(array));
+                    $('input[name="list_anggaran_export"]').val(JSON.stringify(inputs));
+                    //alert(JSON.stringify(header));
+                    $('form[id="exportAnggaran"]').submit();
                   }
 
                   function changeButton(){

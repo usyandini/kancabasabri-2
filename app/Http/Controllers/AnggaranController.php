@@ -1368,6 +1368,55 @@ class AnggaranController extends Controller
         return $pdf->setPaper('a4', 'landscape')->setWarnings(false)->download('Anggaran dan Kegiatan-'.date("dmY").'.pdf');
     }
 
+    public function export_list_anggaran_excel(Request $request)
+    {
+        $header_list = [];
+        
+        foreach(json_decode($request->header_anggaran_export) as $header){
+
+            $header_list[] = [
+                'tanggal'       => $header->tanggal,
+                'nd_surat'      => $header->nd_surat,
+                'unit_kerja'    => $header->unit_kerja,
+                'tipe_anggaran' => $header->tipe_anggaran,
+                'stat_anggaran' => $header->stat_anggaran,
+                'persetujuan'   => $header->persetujuan
+            ];
+        }
+
+        $anggaran_view_list = [];
+        foreach (json_decode($request->list_anggaran_export) as $value) {
+            $idBefore = '0';
+            $anggaranId = $request->id_anggaran;
+
+            $anggaran_view_list[] = [
+                'jenis'             => $value->jenis,
+                'kelompok'          => $value->kelompok,
+                'pos_anggaran'      => $value->pos_anggaran,
+                'sub_pos'           => $value->sub_pos,
+                'mata_anggaran'     => $value->mata_anggaran,
+                'item'              => $value->item,
+                'kuantitas'         => (int)$value->kuantitas,
+                'satuan'            => $value->satuan,
+                'nilai_persatuan'   => (double)$value->nilai_persatuan,
+                'terpusat'          => $value->terpusat,
+                'unit_kerja'        => $value->unit_kerja,
+                'TWI'               => (double)$value->tw_i,
+                'TWII'              => (double)$value->tw_ii,
+                'TWIII'             => (double)$value->tw_iii,
+                'TWIV'              => (double)$value->tw_iv,
+                'anggaran_setahun'  => (double)$value->anggarana_setahun
+            ];
+        }
+
+        $data = [
+            'list'      => $anggaran_view_list,
+            'header'    => $header_list
+        ];
+
+        return view('anggaran.report.export-anggaran-excel', $data);
+    }
+
     public function export_riwayat(Request $request)
     {
         $header_list = [];  

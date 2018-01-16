@@ -7,7 +7,7 @@
 <style>
 									.uppercase {
     								text-transform: uppercase;
-}									}
+									}
 							        body {
 							            font-family: Arial;
 							        }
@@ -24,8 +24,8 @@
 							            padding: 15px;
 							        }
 							</style>
-						@foreach($a as $b)
-						<?php
+							@foreach($a as $b)
+							<?php
 												$tanggal=$b->tanggal;								  
 												$tgl= date('d', strtotime($tanggal)); 
 												$bs= date('m', strtotime($tanggal));
@@ -82,7 +82,7 @@
 						?>
 							  
 			                  <div id="header">
-						        <img src="{{ asset('app-assets/images/asabri-logo-kecil.png', $secure = null) }}" align="left">
+						        <img src="{{ asset('app-assets/images/asabri-logo-kecil.png', $secure = null) }}" align="left" width="200">
 						        <h3><center><p class="uppercase">{{$b->kantor_cabang}}</p></center></h3>
 						        <h3><center>FORMULIR PENGAJUAN DROPPING</center></h3>
 						        <h3><center>TAHUN ANGGARAN {{$tahun}}</center></h3>
@@ -99,7 +99,7 @@
 			                  <tr>
                               <td><b>
                               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                              TANGGAL </b></td><td> </td><td><b> : </b></td><td> </td><td><b>{{ $tgl }} {{ $bulans }} {{ $tahun }}</b></td>
+                              TANGGAL </b></td><td></td><td><b> : </b></td><td> </td><td><b>{{ $tgl }} {{ $bulans }} {{ $tahun }}</b></td>
                               </tr>
                               <tr>
                               <td><b> 
