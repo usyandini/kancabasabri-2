@@ -1088,7 +1088,7 @@
                               return result; 
                             },
                             validate: {
-                              message : "Pilih Terpusat ya/tidak Terlebih dahulu." ,
+                              message : "Pilih Terpusat Ya/Tidak Terlebih dahulu." ,
                               validator :function(value, item) {
                                   return value > 0 ;
                               } 

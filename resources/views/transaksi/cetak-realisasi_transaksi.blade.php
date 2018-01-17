@@ -16,13 +16,13 @@
         td{ padding: 3px; font-size: 90%; }
   </style>
     <div id="header">
-        <img src="{{ asset('app-assets/images/asabri-logo-kecil.png', $secure = null) }}" align="left">
-        <h3><center>LAPORAN REALISASI TRANSAKSI PT ASABRI (PERSERO)</center></h3>
-        <h3><center>{{ $cabangs->where('VALUE', $filters['cabang'])->first()['DESCRIPTION']}}</center></h3>
+        <img src="{{ asset('app-assets/images/asabri-logo-kecil.png', $secure = null) }}" align="left" height="80">
+        <h3><center>LAPORAN REALISASI TRANSAKSI PT ASABRI (PERSERO)<br>
+        {{ $cabangs->where('VALUE', $filters['cabang'])->first()['DESCRIPTION']}} <br>
         @if($filters['start'] == $filters['end'])
-        <h4><center>Periode {{ $filters['start'] }} Th. {{ $filters['year'] }}</center></h4>
+        Periode {{ $filters['start'] }} Th. {{ $filters['year'] }}
         @else
-        <h4><center>Periode {{ $filters['start'] }} s.d. {{ $filters['end'] }} Th. {{$filters['year']}}</center></h4>
+        Periode {{ $filters['start'] }} s.d. {{ $filters['end'] }} Th. {{$filters['year']}}</center></h3>
         @endif
     </div>
     <br><br>

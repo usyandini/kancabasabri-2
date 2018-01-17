@@ -155,6 +155,7 @@
                                     <th id="filterable">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Anggaran&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
                                     <th id="filterable">Realisasi Periode</th>
                                     <th id="filterable">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sisa Anggaran&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                                    <th id="filterable">Status</th>
                                   </tr>
                                 </thead>
                                 <tbody>
@@ -168,6 +169,10 @@
                                   $a = DB::table('item_master_transaksi')
                                    ->where('SEGMEN_6', $mata)->first();
                                    $nama=$a->nama_item;
+                                  $idtransaksi=$trans->id;
+                                  $saldoo=DB::select("SELECT PIL_POSTED
+                                                      FROM [AX_DUMMY].[dbo].[PIL_KCTRANSAKSI]
+                                                      where RECID=$idtransaksi");
                                   ?>
                                   <tr>
                                   @if ($longkap != $trans->account)<td style="padding-left:20px;" rowspan = "{{$data_count[$trans->account]}}"> {{$no++}}.) {{ $nama }}</td> @endif
@@ -175,6 +180,7 @@
                                   @if ($longkap != $trans->account)<td align="right" rowspan = "{{$data_count[$trans->account]}}">Rp. {{ number_format($trans->anggaran, 0, '', '.') }}</td>@endif
                                   <td align="right"><b>Rp. {{ number_format($trans->realisasi, 0, '', '.') }}</b></td>
                                   <td align="right">Rp. {{ number_format($trans->sisa_anggaran, 0, '', '.') }}</td>
+                                  <td style="padding-left:20px;">@foreach($saldoo as $aa) @if ($aa->PIL_POSTED==1) Terintegrasi AX @else Belum Terintegrasi @endif @endforeach</td>
                                   </tr>
                                   <?php
                                   $longkap=$trans->account;

@@ -784,7 +784,7 @@ class TransaksiController extends Controller
     public function reportQuery_transaksi($cabang, $awal, $akhir, $transyear)
     {
         return \DB::select("SELECT 
-                  mata_anggaran, account, tgl, [desc], anggaran, total as realisasi, actual_anggaran as sisa_anggaran
+                  a.id as id, mata_anggaran, account, tgl, [desc], anggaran, total as realisasi, actual_anggaran as sisa_anggaran
                   FROM [DBCabang].[dbo].[transaksi] as a join [DBCabang].[dbo].[batches] as c on a.batch_id=c.id
                   
                   where
