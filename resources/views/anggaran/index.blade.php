@@ -883,7 +883,7 @@
                               mata_anggaran = this._grid.fields[7];
                               var result = jsGrid.fields.select.prototype.insertTemplate.call(this);
                               result.on("change", function() {
-                                  changeDataSelect('satuan',$(this).val(),"Insert");
+                                  changeDataSelect('nilaipersatuan',$(this).val(),"Insert");
                               });
                               return result;
                             },
@@ -891,9 +891,9 @@
                               mata_anggaran = this._grid.fields[7];
                               var result = jsGrid.fields.select.prototype.editTemplate.call(this);
                               $(result).val(value);
-                              changeDataSelect('satuan',value,"Edit");
+                              // changeDataSelect('satuan',value,"Edit");
                               result.on("change", function() {
-                                  changeDataSelect('satuan',$(this).val(),"Edit");
+                                  changeDataSelect('nilaipersatuan',$(this).val(),"Edit");
                               });
                               return result; 
                             },
@@ -1545,13 +1545,13 @@
                   }
                   function changeDataSelect(type,value,jenis){
 
-
                     decode = encodeURI(value);
                     split = decode.split("/");
                     if(split.length>1){
                       decode = split[0]+"->"+split[1];
                     }
-                    // console.log(value);
+                    // console.log(type+"->"+decode);
+                    // if(type=="nilaipersatuan")
                     // alert("{{ url('anggaran/get/attributes') }}/" +type+"/"+decode);
                     if(value!="None"){
                       $.ajax({
@@ -1568,7 +1568,7 @@
                                     }else{
                                       tmp[i]["name"] = data[i-1]["name"];
                                     }
-                                  }else{
+                                  }else if(type=='subpos'||type=='mataanggaran'){
                                     if(i == 0){
                                       tmp[0]["DESCRIPTION"] = "None";
                                     }else{
@@ -1596,6 +1596,23 @@
                                   mata_anggaran.items = tmp;
                                   $(".mata_select").empty().append(mata_anggaran.insertTemplate());
                                   $(".mata_select_edit").empty().append(mata_anggaran.editTemplate());
+                                }else if(type == "nilaipersatuan"){
+                                  if(data.length>0){
+                                    var val = addCommas(parseInt(data[0].nilai));
+                                    if(jenis == "Insert"){
+                                      $(nilai_field_insert).val(val);
+                                      var nilai = parseInt(data[0].nilai)*$(kuantitas_field_insert).val();
+                                      var satutahun = addCommas(nilai);
+                                      $(anggarant_field_insert).val(satutahun);
+                                    }else{
+                                      $(nilai_field_edit).val(val);
+                                      var nilai = parseInt(data[0].nilai)*$(kuantitas_field_edit).val();
+                                      var satutahun = addCommas(nilai);
+                                      $(anggarant_field_edit).val(satutahun);
+                                    }
+                                  }else{
+                                    //Disini kamu bisa kasih alert jika data nilai persatuan belum tersedia
+                                  }
                                 }
 
                                 if(type == "kelompok"){

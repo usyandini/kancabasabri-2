@@ -13,6 +13,7 @@ use App\Models\Kegiatan;
 use App\Models\SubPos;
 use App\Models\ItemMaster;
 use App\Models\ItemMasterAnggaran;
+use App\Models\NilaiMataAnggaran;
 use App\Models\ItemAnggaranMaster;
 use App\Models\BatasAnggaran;
 use App\Models\Divisi;
@@ -1180,6 +1181,20 @@ class AnggaranController extends Controller
                 break;       
             case 'cabang':
                 $return = $this->kanCabModel->select('DESCRIPTION', 'VALUE')->where("VALUE",$id)->get();
+                break;
+            case 'nilaipersatuan':
+                $value = explode("->",$id);
+                $decode = urldecode($id);
+                if(count($value)>1){
+                    $val = $value[0];
+                    for($i = 1;$i<count($val);$i++){
+                        $val .= "/".$value[$i];
+                    }
+                    $decode = urldecode($val);
+                }
+                $mataanggaran= Kegiatan::where('DESCRIPTION',$decode)->first()->VALUE;
+                // echo $mataanggaran;
+                $return = NilaiMataAnggaran::select('nilai')->where('value',$mataanggaran)->orderBy('nilai','ASC')->get();
                 break;
             case 'satuan':
                 $return = ItemAnggaranMaster::select('name')->where('type',4)->orderBy('name','ASC')->get();
