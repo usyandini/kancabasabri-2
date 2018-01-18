@@ -53,6 +53,7 @@ class NotificationController extends Controller
     	foreach (NotificationSystem::getUnreads() as $value) {
             $unit_kerja = "";
             $notif = false;
+            // echo $value->type."<br />";
             if($value->type < 7){
 
                 $divisi = $value->batch['divisi'];
@@ -80,6 +81,7 @@ class NotificationController extends Controller
                     $notif = true;
                 }
             }else if($value->type <38){
+
                 $unit_kerja = $value->formMaster['unit_kerja'];
                 if(Gate::check('unit_'.$this->check($unit_kerja))){
                     $notif = true;

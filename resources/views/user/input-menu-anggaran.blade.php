@@ -110,6 +110,12 @@
                     <label>Persetujuan Risalah RUPS</label>
                   </fieldset>
                 </li>
+                <li>
+                  <fieldset>
+                    <input type="checkbox" name="perizinan[semua_a]" {{ isset(old("perizinan")['semua_a']) ? 'checked=""' : '' }}>
+                    <label>Verifikasi/Tolak Semua</label>
+                  </fieldset>
+                </li>
             </ul>    
             <fieldset>
               <input type="checkbox" name="perizinan[riwayat_a]" {{ isset(old("perizinan")['riwayat_a']) ? 'checked=""' : '' }}>

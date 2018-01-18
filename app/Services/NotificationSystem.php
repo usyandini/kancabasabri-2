@@ -162,26 +162,24 @@ class NotificationSystem
             array_push($array_type,30);
             array_push($array_type,31);
         }
-        if(isset($user->perizinan['notif_ajukan_p_a'])){
-            array_push($array_type,33);
-        }
-        if(isset($user->perizinan['notif_ajukan_a_RUPS'])){
-            array_push($array_type,35);
-        }
-        if(isset($user->perizinan['notif_ajukan_usulan_p_p'])){
-            array_push($array_type,37);
-        }
-
         if(isset($user->perizinan['notif_ajukan_master_p_a'])){
             array_push($array_type,32);
+        }
+        if(isset($user->perizinan['notif_ajukan_p_a'])){
+            array_push($array_type,33);
         }
         if(isset($user->perizinan['notif_ajukan_master_a_RUPS'])){
             array_push($array_type,34);
         }
+        if(isset($user->perizinan['notif_ajukan_a_RUPS'])){
+            array_push($array_type,35);
+        }
         if(isset($user->perizinan['notif_ajukan_master_usulan_p_p'])){
             array_push($array_type,36);
         }
-
+        if(isset($user->perizinan['notif_ajukan_usulan_p_p'])){
+            array_push($array_type,37);
+        }
         if(isset($user->perizinan['notif_tindak_lanjut'])){
             array_push($array_type,38);
         }
@@ -252,15 +250,24 @@ class NotificationSystem
 	{
 	    $array_type = static::checkArrayTypes();	
         if(count($array_type) == 0) { return null; }
+        // print_r($array_type);
+        // exit;
         
-        return Notification::where('receiver_id', \Auth::user()->id)
-                        ->orWhereNull('receiver_id')
+        return Notification::where('is_read', 0)
                         ->whereIn('type',$array_type)
                         ->orderBy('id', 'desc')
-                        ->get()->filter(function($notif) {
-                            $isread = $notif->is_read != 1 ? true : false;
-                            $receiver = $notif->receiver_id == \Auth::user()->id || $notif->receiver_id == null;
-                            return $isread && $receiver;
-                        });
+                        ->get();
+
+        // return Notification::where('receiver_id', \Auth::user()->id)
+                        //  ->orWhereNull('receiver_id')
+                        
+                        // ->whereIn('type',$array_type)
+                        // ->orderBy('id', 'desc')
+                        // ->get();
+                        // ->filter(function($notif) {
+                        //     $isread = $notif->is_read != 1 ? true : false;
+                        //     $receiver = $notif->receiver_id == \Auth::user()->id || $notif->receiver_id == null;
+                        //     return $isread && $receiver;
+                        // });
 	}
 }

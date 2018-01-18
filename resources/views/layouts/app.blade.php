@@ -218,6 +218,9 @@
                             @can('info_a')
                                 <li class="is-shown {{ checkActiveMenu('anggaran') }}"><a href="{{ url('/anggaran', $parameters = [], $secure = null) }}" class="menu-item"><b>Informasi Anggaran</b></a></li>
                             @endcan
+                            @can('semua_a')
+                                <li class="is-shown {{ checkActiveMenu('anggaran/semua') }}"><a href="{{ url('/anggaran/semua', $parameters = [], $secure = null) }}" class="menu-item"><b>Semua Anggaran</b></a></li>
+                            @endcan
                             @can('riwayat_a')
                                 <li class="is-shown {{ checkActiveMenu('anggaran/riwayat') }}"><a href="{{ url('/anggaran/riwayat', $parameters = [], $secure = null) }}" class="menu-item"><b>Riwayat Anggaran</b></a></li>
                             @endcan

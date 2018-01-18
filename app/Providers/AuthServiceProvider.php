@@ -81,7 +81,7 @@ class AuthServiceProvider extends ServiceProvider
                     "setuju_va","setuju_via","setuju_viia","setuju_viiia","riwayat_a",
                     "notif_setuju_iia","notif_setuju_iiia","notif_setuju_iva","notif_setuju_va",
                     "notif_setuju_via","notif_setuju_viia","notif_setuju_viiia","notif_setuju_ixa",
-                    "notif_ubah_a","notif_pengajuan_anggaran"];
+                    "notif_ubah_a","notif_pengajuan_anggaran","semua_a"];
 
         for($i=0;$i<count($anggaran);$i++){
              $permissions[] = $anggaran[$i];

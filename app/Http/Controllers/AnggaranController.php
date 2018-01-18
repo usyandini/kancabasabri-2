@@ -104,6 +104,24 @@ class AnggaranController extends Controller
             'filters' =>$filter]);
     }
 
+    public function semua_anggaran() 
+    {
+
+        $filter = null;
+        $query="SELECT * 
+                    FROM (SELECT DESCRIPTION, VALUE FROM [AX_DUMMY].[dbo].[PIL_VIEW_DIVISI] 
+                    WHERE VALUE!='00') AS A 
+                    UNION ALL 
+                    SELECT * FROM (SELECT DESCRIPTION, VALUE FROM [AX_DUMMY].[dbo].[PIL_VIEW_KPKC]  
+                    WHERE VALUE!='00') AS B";
+        $unit_kerja = \DB::select($query);
+        return view('anggaran.semualist', [
+            'title' => 'Semua Anggaran dan Kegiatan',
+            'unit_kerja' =>$unit_kerja,
+            'nd_surat' => '',
+            'filters' =>$filter]);
+    }
+
     public function batas()
     {
         
