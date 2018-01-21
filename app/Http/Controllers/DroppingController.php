@@ -758,6 +758,7 @@ class DroppingController extends Controller
     {   
         $a = DB::table('tarik_tunai')
              ->where('stat', 1)
+             ->where('stat', 3)
              ->orderBy('id','DESC')->get();
         return view('dropping.tariktunai.penarikanlevel1', compact('a'));
     }

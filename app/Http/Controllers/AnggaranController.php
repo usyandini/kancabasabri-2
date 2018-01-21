@@ -104,23 +104,80 @@ class AnggaranController extends Controller
             'filters' =>$filter]);
     }
 
-    public function semua_anggaran() 
+    public function semua_anggaran()
     {
-
-        $filter = null;
-        $query="SELECT * 
-                    FROM (SELECT DESCRIPTION, VALUE FROM [AX_DUMMY].[dbo].[PIL_VIEW_DIVISI] 
-                    WHERE VALUE!='00') AS A 
-                    UNION ALL 
-                    SELECT * FROM (SELECT DESCRIPTION, VALUE FROM [AX_DUMMY].[dbo].[PIL_VIEW_KPKC]  
-                    WHERE VALUE!='00') AS B";
-        $unit_kerja = \DB::select($query);
-        return view('anggaran.semualist', [
-            'title' => 'Semua Anggaran dan Kegiatan',
-            'unit_kerja' =>$unit_kerja,
-            'nd_surat' => '',
-            'filters' =>$filter]);
+        
+        $a = null;
+       
+        return view('anggaran.semualist', compact('a'));
     }
+
+    public function cari_semua_anggaran(Request $request)
+    {
+        $persetujuan=$request->persetujuan;
+        $tahun=$request->tahun;
+        $query="SELECT * 
+                FROM [DBCabang].[dbo].[anggaran] 
+                where DATEPART(YEAR, tanggal) = ".$tahun."
+                and persetujuan= ".$persetujuan."
+                and active=1";
+
+        $a = \DB::select($query);
+       
+        return view('anggaran.semualist', compact('a'));
+    }
+    public function verifikasi_semua_anggaran(Request $request)
+    {   
+        if(isset($request->terima)){
+            $id=$request->id;
+            $jumlah_id = count($id);
+            for($x=0;$x<$jumlah_id;$x++){
+                if($request->cek[$x]=='y'){
+                    $tasks = Anggaran::find($request->id[$x]);
+                    $newTask = $tasks->replicate();
+                    $newTask->save();
+                    $newID = $newTask->id;
+                    $tasks->update(['active'=>'0']);
+                    if($newTask->persetujuan==8){
+                        Anggaran::where('id',$newID)->update(['status_anggaran'=>$newTask->status_anggaran+1,'persetujuan'=>$newTask->persetujuan+1]);
+                    }
+                    else{
+                        Anggaran::where('id',$newID)->update(['persetujuan'=>$newTask->persetujuan+1]);
+                    }
+                }  
+            }
+            $after_save = [
+             'alert' => 'success',
+             'title' => 'Data berhasil diterima.'
+            ];
+            return redirect()->back()->with('after_save', $after_save);
+        }
+        else{
+            $id=$request->id;
+            $jumlah_id = count($id);
+            for($x=0;$x<$jumlah_id;$x++){
+                if($request->cek[$x]=='y'){
+                    $tasks = Anggaran::find($request->id[$x]);
+                    $newTask = $tasks->replicate();
+                    $newTask->save();
+                    $newID = $newTask->id;
+                    $tasks->update(['active'=>'0']);
+                    if($newTask->persetujuan==2){
+                        Anggaran::where('id',$newID)->update(['persetujuan'=>1]);
+                    }
+                    else{
+                        Anggaran::where('id',$newID)->update(['persetujuan'=>2]);
+                    }
+                }  
+            }
+            $after_save = [
+             'alert' => 'danger',
+             'title' => 'Data berhasil ditolak.'
+            ];
+            return redirect()->back()->with('after_save', $after_save);
+        }
+    }
+    
 
     public function batas()
     {
@@ -1486,4 +1543,6 @@ class AnggaranController extends Controller
         $pdf = PDF::loadView('anggaran.report.export-history', $data);
         return $pdf->setPaper('a4', 'landscape')->setWarnings(false)->download('Riwayat Anggaran-'.date("dmY").'.pdf');
     }
+
+    
 }

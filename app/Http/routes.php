@@ -105,7 +105,8 @@ Route::group(['middleware' => 'auth'], function() {
 	Route::group(['prefix' => 'anggaran'], function() {
 		Route::resource('/', 'AnggaranController');
 		Route::resource('/semua', 'AnggaranController@semua_anggaran');
-		Route::resource('/semua/cari', 'AnggaranController@cari_semua_anggaran');
+		Route::get('/semualist/cari', 'AnggaranController@cari_semua_anggaran');
+		Route::post('/semualist/verifikasi', 'AnggaranController@verifikasi_semua_anggaran');
 		Route::get('/batas/', 'AnggaranController@batas');
 		Route::post('/batas/tambah/', 'AnggaranController@add_pengajuan');
 		Route::post('/batas/ubah/{id}', 'AnggaranController@change_pengajuan');
