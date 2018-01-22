@@ -165,7 +165,6 @@
                                       <th id="filterable"><center>ND/Surat</center></th>
                                       <th id="filterable"><center>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Unit Kerja&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</center></th>
                                       <th id="filterable"><center>Tipe Anggaran</center></th>
-                                      <th id="filterable"><center>Status Anggaran</center></th>
                                       <th id="filterable"><center>Persetujuan</center></th>
                                       <th id="filterable"><center>Detail</center></th>
                                       <th>
@@ -197,8 +196,7 @@
                                       <td>{{ date('d-m-Y', strtotime($b->tanggal)) }}</td>
                                       <td><center>{{ $b->nd_surat }}</center></td>
                                       <td><center>{{ $b->unit_kerja }}</center></td>
-                                      <td>{{ $b->tipe_anggaran }}</td>
-                                      <td><center>{{ $b->keterangan }}</center></td>
+                                      <td><center>{{ $b->tipe_anggaran }}</center></td>
                                       <td><center>@if ($b->persetujuan==2) Persetujuan Kadiv Renbang 
                                                   @elseif ($b->persetujuan==3) Persetujuan Direksi
                                                   @elseif ($b->persetujuan==4) Persetujuan Dekom
@@ -231,8 +229,8 @@
                                 </table>
                                 <br>
                                 <div class="form-group" align="right">
-                                  <span><a class="btn btn-success" data-target="#terima" data-toggle="modal"><i class="fa fa-check"></i> Terima</a></span>
-                                  <span><a class="btn btn-danger" data-target="#tolak" data-toggle="modal"><i class="fa fa-times"></i> Tolak</a></span>
+                                  <span><a class="btn btn-outline-success" data-target="#terima" data-toggle="modal"><i class="fa fa-check"></i> Terima</a></span>
+                                  <span><a class="btn btn-outline-danger" data-target="#tolak" data-toggle="modal"><i class="fa fa-times"></i> Tolak</a></span>
                                 </div>
                                         <div class="modal fade" data-backdrop="static" id="terima" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                                           <div class="modal-dialog">
@@ -293,7 +291,19 @@
               type="text/javascript"></script>
               <script src="{{ asset('app-assets/vendors/js/tables/datatable/dataTables.responsive.min.js') }}"
               type="text/javascript"></script>
-              <script type="text/javascript">
+             
+              <!-- BEGIN PAGE VENDOR JS-->
+              <script type="text/javascript" src="{{ asset('app-assets/vendors/js/ui/jquery.sticky.js') }}"></script>
+              <script type="text/javascript" src="{{ asset('app-assets/vendors/js/charts/jquery.sparkline.min.js') }}"></script>
+              <script src="{{ asset('app-assets/vendors/js/tables/jsgrid/jsgrid.min.js') }}" type="text/javascript"></script>
+              <script src="{{ asset('app-assets/vendors/js/tables/jsgrid/griddata.js') }}" type="text/javascript"></script>
+              <script src="{{ asset('app-assets/vendors/js/tables/jsgrid/jquery.validate.min.js') }}" type="text/javascript"></script>
+              <!-- END PAGE VENDOR JS-->
+              <!-- BEGIN PAGE LEVEL JS-->
+              <script type="text/javascript" src="{{ asset('app-assets/js/scripts/ui/breadcrumbs-with-stats.min.js') }}"></script>
+              <script src="{{ asset('app-assets/vendors/js/forms/icheck/icheck.min.js') }}" type="text/javascript"></script>
+              <script src="{{ asset('app-assets/js/scripts/forms/checkbox-radio.min.js') }}" type="text/javascript"></script>
+               <script type="text/javascript">
                         
                 $('.datatable-select-inputs').DataTable( {
                   scrollX: true,
@@ -333,7 +343,10 @@
                   }
                 } );
 
-                
+                $('input').iCheck({
+                  checkboxClass: 'icheckbox_flat-green',
+                    increaseArea: '20%' // optional
+                  });
 
                 $('input[name="check"]').on('ifClicked', function (event) {
                    checkAll(this) 
@@ -356,15 +369,4 @@
                 }
                 
               </script>
-              <!-- BEGIN PAGE VENDOR JS-->
-              <script type="text/javascript" src="{{ asset('app-assets/vendors/js/ui/jquery.sticky.js') }}"></script>
-              <script type="text/javascript" src="{{ asset('app-assets/vendors/js/charts/jquery.sparkline.min.js') }}"></script>
-              <script src="{{ asset('app-assets/vendors/js/tables/jsgrid/jsgrid.min.js') }}" type="text/javascript"></script>
-              <script src="{{ asset('app-assets/vendors/js/tables/jsgrid/griddata.js') }}" type="text/javascript"></script>
-              <script src="{{ asset('app-assets/vendors/js/tables/jsgrid/jquery.validate.min.js') }}" type="text/javascript"></script>
-              <!-- END PAGE VENDOR JS-->
-              <!-- BEGIN PAGE LEVEL JS-->
-              <script type="text/javascript" src="{{ asset('app-assets/js/scripts/ui/breadcrumbs-with-stats.min.js') }}"></script>
-              <script src="{{ asset('app-assets/vendors/js/forms/icheck/icheck.min.js') }}" type="text/javascript"></script>
-              <script src="{{ asset('app-assets/js/scripts/forms/checkbox-radio.min.js') }}" type="text/javascript"></script>
               @endsection

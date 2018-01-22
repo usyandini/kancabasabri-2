@@ -167,7 +167,7 @@ class AnggaranController extends Controller
                         NotificationSystem::send($newID, 29);
                     }
                     else if($newTask->persetujuan == 8){
-                        Anggaran::where('id',$newID)->update(['persetujuan'=>$newTask->persetujuan+1]);
+                        Anggaran::where('id',$newID)->update(['status_anggaran'=>$newTask->status_anggaran+1,'persetujuan'=>$newTask->persetujuan+1]);
                         NotificationSystem::send($newID, 31);
                         // $this->insertStaging($request->nd_surat);
                     }
