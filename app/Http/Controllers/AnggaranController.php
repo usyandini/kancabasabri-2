@@ -233,7 +233,7 @@ class AnggaranController extends Controller
                 }  
             }
             $after_save = [
-             'alert' => 'danger',
+             'alert' => 'success',
              'title' => 'Data berhasil ditolak.'
             ];
             return redirect()->back()->with('after_save', $after_save);

@@ -231,9 +231,43 @@
                                 </table>
                                 <br>
                                 <div class="form-group" align="right">
-                                  <button type="submit" name="terima" class="btn btn-success"><i class="fa fa-check"></i> Terima</button>
-                                  <button type="submit" name="tolak" class="btn btn-danger"><i class="fa fa-times"></i> Tolak</button>
+                                  <span><a class="btn btn-success" data-target="#terima" data-toggle="modal"><i class="fa fa-check"></i> Terima</a></span>
+                                  <span><a class="btn btn-danger" data-target="#tolak" data-toggle="modal"><i class="fa fa-times"></i> Tolak</a></span>
                                 </div>
+                                        <div class="modal fade" data-backdrop="static" id="terima" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                          <div class="modal-dialog">
+                                            <div class="modal-content">
+                                              <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                                <center><h4 class="modal-title text-primary" id="myModalLabel" ><i class="fa fa-send"></i> Dialog Konfirmasi</h4></center>
+                                              </div>
+                                              <div class="modal-body">
+                                                <center><h4>Anda yakin ingin Menerima ?</h4></center>
+                                              </div>
+                                              <div class="modal-footer">
+                                                <button type="submit" name="terima" class="btn btn-success"><i class="fa fa-check"></i> Terima</button>
+                                                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"></i> Tidak</button>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                        <div class="modal fade" data-backdrop="static" id="tolak" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                          <div class="modal-dialog">
+                                            <div class="modal-content">
+                                              <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                                <center><h4 class="modal-title text-primary" id="myModalLabel" ><i class="fa fa-send"></i> Dialog Konfirmasi</h4></center>
+                                              </div>
+                                              <div class="modal-body">
+                                                <center><h4>Anda yakin ingin Menolak ?</h4></center>
+                                              </div>
+                                              <div class="modal-footer">
+                                                <button type="submit" name="tolak" class="btn btn-success"><i class="fa fa-check"></i> Tolak</button>
+                                                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"></i> Tidak</button>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
                               </div>
                               </form>
                             </div>
