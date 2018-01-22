@@ -138,12 +138,45 @@ class AnggaranController extends Controller
                     $newTask->save();
                     $newID = $newTask->id;
                     $tasks->update(['active'=>'0']);
-                    if($newTask->persetujuan==8){
-                        Anggaran::where('id',$newID)->update(['status_anggaran'=>$newTask->status_anggaran+1,'persetujuan'=>$newTask->persetujuan+1]);
+                    $ubahlist=ListAnggaran::where('id_list_anggaran',$tasks->id)->get();
+                    foreach ($ubahlist as $list) {
+                        $list->update(['id_list_anggaran'=>$newID]);
                     }
-                    else{
+                    if($newTask->persetujuan == 2){
                         Anggaran::where('id',$newID)->update(['persetujuan'=>$newTask->persetujuan+1]);
+                        NotificationSystem::send($newID, 19);
                     }
+                    else if($newTask->persetujuan == 3){
+                        Anggaran::where('id',$newID)->update(['persetujuan'=>$newTask->persetujuan+1]);
+                        NotificationSystem::send($newID, 21);
+                    }
+                    else if($newTask->persetujuan == 4){
+                        Anggaran::where('id',$newID)->update(['persetujuan'=>$newTask->persetujuan+1]);
+                        NotificationSystem::send($newID, 23);
+                    }
+                    else if($newTask->persetujuan == 5){
+                        Anggaran::where('id',$newID)->update(['persetujuan'=>$newTask->persetujuan+1]);
+                        NotificationSystem::send($newID, 25);
+                    }
+                    else if($newTask->persetujuan == 6){
+                        Anggaran::where('id',$newID)->update(['persetujuan'=>$newTask->persetujuan+1]);
+                        NotificationSystem::send($newID, 27);
+                    }
+                    else if($newTask->persetujuan == 7){
+                        Anggaran::where('id',$newID)->update(['persetujuan'=>$newTask->persetujuan+1]);
+                        NotificationSystem::send($newID, 29);
+                    }
+                    else if($newTask->persetujuan == 8){
+                        Anggaran::where('id',$newID)->update(['persetujuan'=>$newTask->persetujuan+1]);
+                        NotificationSystem::send($newID, 31);
+                        // $this->insertStaging($request->nd_surat);
+                    }
+                    // if($newTask->persetujuan==8){
+                    //     Anggaran::where('id',$newID)->update(['status_anggaran'=>$newTask->status_anggaran+1,'persetujuan'=>$newTask->persetujuan+1]);
+                    // }
+                    // else{
+                    //     Anggaran::where('id',$newID)->update(['persetujuan'=>$newTask->persetujuan+1]);
+                    // }
                 }  
             }
             $after_save = [
@@ -162,12 +195,41 @@ class AnggaranController extends Controller
                     $newTask->save();
                     $newID = $newTask->id;
                     $tasks->update(['active'=>'0']);
-                    if($newTask->persetujuan==2){
+                    if($newTask->persetujuan == 2){
                         Anggaran::where('id',$newID)->update(['persetujuan'=>1]);
+                        NotificationSystem::send($newID, 18);
                     }
-                    else{
+                    else if($newTask->persetujuan == 3){
                         Anggaran::where('id',$newID)->update(['persetujuan'=>2]);
+                        NotificationSystem::send($newID, 20);
                     }
+                    else if($newTask->persetujuan == 4){
+                        Anggaran::where('id',$newID)->update(['persetujuan'=>2]);
+                        NotificationSystem::send($newID, 22);
+                    }
+                    else if($newTask->persetujuan == 5){
+                        Anggaran::where('id',$newID)->update(['persetujuan'=>2]);
+                        NotificationSystem::send($newID, 24);
+                    }
+                    else if($newTask->persetujuan == 6){
+                        Anggaran::where('id',$newID)->update(['persetujuan'=>2]);
+                        NotificationSystem::send($newID, 26);
+                    }
+                    else if($newTask->persetujuan == 7){
+                        Anggaran::where('id',$newID)->update(['persetujuan'=>2]);
+                        NotificationSystem::send($newID, 28);
+                    }
+                    else if($newTask->persetujuan == 8){
+                        Anggaran::where('id',$newID)->update(['persetujuan'=>2]);
+                        NotificationSystem::send($newID, 30);
+                    }
+            
+                    // if($newTask->persetujuan==2){
+                    //     Anggaran::where('id',$newID)->update(['persetujuan'=>1]);
+                    // }
+                    // else{
+                    //     Anggaran::where('id',$newID)->update(['persetujuan'=>2]);
+                    // }
                 }  
             }
             $after_save = [
