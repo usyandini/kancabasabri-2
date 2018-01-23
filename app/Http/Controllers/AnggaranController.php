@@ -19,6 +19,8 @@ use App\Models\BatasAnggaran;
 use App\Models\Divisi;
 use App\Models\KantorCabang;
 use App\Models\StagingAnggaran;
+use App\Models\pil_kcanggaranheader;
+use App\Models\pil_kcanggaranlines;
 use App\Models\Notification;
 use App\Services\FileUpload;
 use App\Services\NotificationSystem;
@@ -167,16 +169,49 @@ class AnggaranController extends Controller
                         NotificationSystem::send($newID, 29);
                     }
                     else if($newTask->persetujuan == 8){
-                        Anggaran::where('id',$newID)->update(['status_anggaran'=>$newTask->status_anggaran+1,'persetujuan'=>$newTask->persetujuan+1]);
+                        Anggaran::where('id',$newID)->update(['status_anggaran'=>3,'persetujuan'=>$newTask->persetujuan+1]);
                         NotificationSystem::send($newID, 31);
-                        // $this->insertStaging($request->nd_surat);
+                        pil_kcanggaranheader::create(['RECID'=>$newID,'PIL_TRANSDATE'=>$newTask->tanggal]);
+                        $lines=ListAnggaran::where('id_list_anggaran',$newID)->get();
+                            foreach ($lines as $line) {
+                                $unit = explode(' Cabang ',$line->unit_kerja);
+                                if(count($unit)>1){
+                                    $cabang = KantorCabang::where('DESCRIPTION',$line->unit_kerja)->first()->VALUE;
+                                    $divisi = '00';
+                                }else{
+                                    $divisi = Divisi::where('DESCRIPTION',$line->unit_kerja)->first()->VALUE;
+                                    $cabang = '00';
+                                }
+                                $jenis = ItemAnggaranMaster::where('name',$line->jenis)
+                                                            ->where('type','1')->first()->kode;
+                                $kelompok = ItemAnggaranMaster::where('name',$line->kelompok)
+                                                            ->where('type','2')->first()->kode;
+                                $pos_anggaran = ItemAnggaranMaster::where('name',$line->pos_anggaran)
+                                                            ->where('type','3')->first()->kode;
+                                $sub_pos = SubPos::where('DESCRIPTION',$line->sub_pos)
+                                                            ->first()->VALUE;
+                                $mata_anggaran = Kegiatan::where('DESCRIPTION',$line->mata_anggaran)
+                                                            ->first()->VALUE;
+                                $account = ItemMasterAnggaran::where('jenis',$jenis)->where('kelompok',$kelompok)
+                                                            ->where('pos_anggaran',$pos_anggaran)->where('sub_pos',$sub_pos)
+                                                            ->where('mata_anggaran',$mata_anggaran)->first()->account;
+                                $input = [
+                                        'DATAAREAID'            => 'asbr',
+                                        'RECID'                 => $line->id,
+                                        'PIL_ACCOUNT'           => $account,
+                                        'PIL_PROGRAM'           => 'THT',
+                                        'PIL_TRANSDATE'         => $newTask->tanggal,
+                                        'PIL_KPKC'              => $cabang,
+                                        'PIL_DIVISI'            => $divisi,
+                                        'PIL_SUBPOS'            => $sub_pos,
+                                        'PIL_MATAANGGARAN'      => $mata_anggaran,
+                                        'PIL_TXT'               => $line->mata_anggaran,
+                                        'PIL_AMOUNT'            => $line->anggaran_setahun,
+                                        'PIL_TRANSID'           => $line->id_list_anggaran
+                                        ];
+                                pil_kcanggaranlines::create($input);
+                            }
                     }
-                    // if($newTask->persetujuan==8){
-                    //     Anggaran::where('id',$newID)->update(['status_anggaran'=>$newTask->status_anggaran+1,'persetujuan'=>$newTask->persetujuan+1]);
-                    // }
-                    // else{
-                    //     Anggaran::where('id',$newID)->update(['persetujuan'=>$newTask->persetujuan+1]);
-                    // }
                 }  
             }
             $after_save = [
@@ -223,13 +258,6 @@ class AnggaranController extends Controller
                         Anggaran::where('id',$newID)->update(['persetujuan'=>2]);
                         NotificationSystem::send($newID, 30);
                     }
-            
-                    // if($newTask->persetujuan==2){
-                    //     Anggaran::where('id',$newID)->update(['persetujuan'=>1]);
-                    // }
-                    // else{
-                    //     Anggaran::where('id',$newID)->update(['persetujuan'=>2]);
-                    // }
                 }  
             }
             $after_save = [
@@ -996,7 +1024,6 @@ class AnggaranController extends Controller
             case 4 :$amount = $list_anggaran->TWIV;
                     $transdate = ((int)$year[0]+1).'-10-01';
                     break;
-            
         }
         $unit = explode(' Cabang ',$unit_kerja);
         $divisi;
@@ -1033,15 +1060,18 @@ class AnggaranController extends Controller
                 'PIL_MATAANGGARAN'      => $mata_anggaran,
                 'PIL_TRANSDATE'         => $transdate,
                 'PIL_TXT'               => $list_anggaran->mata_anggaran,
-                'PIL_AMOUNT'            => $amount,
+                'PIL_AMOUNT'            => $list_anggaran->anggaran_setahun,
+                'PIL_TRANSID'           => $list_anggaran->id_list_anggaran
                 ];
         // return $input;
-        StagingAnggaran::create($input);
+        pil_kcanggaranlines::create($input);
+        // StagingAnggaran::create($input);
     }
 
     public function insertStaging($nd_surat)
     {
         $anggaran = $this->anggaranModel->where('nd_surat', $nd_surat)->where('active', '1')->get();
+        pil_kcanggaranheader::create(['RECID'=>$anggaran->id,'PIL_TRANSDATE'=>$anggaran->tanggal]);
         foreach ($anggaran as $angga) {
             $unit_kerja = $angga->unit_kerja;
             $listAnggaran = $this->listAnggaranModel->where('id_list_anggaran', $angga->id)
