@@ -171,7 +171,7 @@ class AnggaranController extends Controller
                     else if($newTask->persetujuan == 8){
                         Anggaran::where('id',$newID)->update(['status_anggaran'=>3,'persetujuan'=>$newTask->persetujuan+1]);
                         NotificationSystem::send($newID, 31);
-                        pil_kcanggaranheader::create(['RECID'=>$newID,'PIL_TRANSDATE'=>$newTask->tanggal]);
+                        pil_kcanggaranheader::create(['RECID'=>$newID,'PIL_TRANSID'=>'AC-'.$newID,'PIL_TRANSDATE'=>$newTask->tanggal,'DATAAREAID'=>'asbr']);
                         $lines=ListAnggaran::where('id_list_anggaran',$newID)->get();
                             foreach ($lines as $line) {
                                 $unit = explode(' Cabang ',$line->unit_kerja);
@@ -207,7 +207,7 @@ class AnggaranController extends Controller
                                         'PIL_MATAANGGARAN'      => $mata_anggaran,
                                         'PIL_TXT'               => $line->mata_anggaran,
                                         'PIL_AMOUNT'            => $line->anggaran_setahun,
-                                        'PIL_TRANSID'           => $line->id_list_anggaran
+                                        'PIL_TRANSID'           => 'AC-'.$line->id_list_anggaran
                                         ];
                                 pil_kcanggaranlines::create($input);
                             }
@@ -1061,7 +1061,7 @@ class AnggaranController extends Controller
                 'PIL_TRANSDATE'         => $transdate,
                 'PIL_TXT'               => $list_anggaran->mata_anggaran,
                 'PIL_AMOUNT'            => $list_anggaran->anggaran_setahun,
-                'PIL_TRANSID'           => $list_anggaran->id_list_anggaran
+                'PIL_TRANSID'           => 'AC-'.$list_anggaran->id_list_anggaran
                 ];
         // return $input;
         pil_kcanggaranlines::create($input);
@@ -1071,7 +1071,7 @@ class AnggaranController extends Controller
     public function insertStaging($nd_surat)
     {
         $anggaran = $this->anggaranModel->where('nd_surat', $nd_surat)->where('active', '1')->get();
-        pil_kcanggaranheader::create(['RECID'=>$anggaran->id,'PIL_TRANSDATE'=>$anggaran->tanggal]);
+        pil_kcanggaranheader::create(['RECID'=>$anggaran->id,'PIL_TRANSID'=>'AC-'.$anggaran->id,'PIL_TRANSDATE'=>$anggaran->tanggal,'DATAAREAID'=>'asbr']);
         foreach ($anggaran as $angga) {
             $unit_kerja = $angga->unit_kerja;
             $listAnggaran = $this->listAnggaranModel->where('id_list_anggaran', $angga->id)

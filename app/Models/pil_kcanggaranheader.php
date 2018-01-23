@@ -15,7 +15,9 @@ class pil_kcanggaranheader extends Model
     protected $fillable = [
         
         'RECID',
-        'PIL_TRANSDATE'
+        'PIL_TRANSID',
+        'PIL_TRANSDATE',
+        'DATAAREAID'
     ];
         // 'PIL_BUDGETTYPE'
     
