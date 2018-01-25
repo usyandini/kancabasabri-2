@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use App\User;
 use App\Http\Requests;
 use App\Models\JenisUser;
 use App\Models\Divisi;
@@ -102,6 +102,11 @@ class JenisUserController extends Controller
             $jenisUser->save();
             unset($input['perizinan']);
             JenisUser::where('id', $id)->update($input);
+            $z= JenisUser::where('id', $id)->first()->perizinan;
+            $a = User::where('jenis_user', $id)->get();
+            foreach ($a as $b) {
+                        $b->update(['perizinan'=>$z]);
+                    }
 
             session()->flash('success', 'Jenis user <b>'.$input['nama'].'</b> berhasil diperbaharui.');
             return redirect('jenis_user');

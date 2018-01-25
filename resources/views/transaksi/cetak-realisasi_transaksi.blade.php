@@ -92,17 +92,22 @@
                 ->where('CABANG_DROPPING', $cb)
                 ->whereMonth('TRANSDATE','>=', $awal)
                 ->whereMonth('TRANSDATE','<=', $akhir)
-                ->whereYear('TRANSDATE', '=', $transyear)->first();
+                ->whereYear('TRANSDATE', '=', $transyear)->get();
+                $z2=0;
+                foreach ($a2 as $b2) {
+                  $z3=$b2->DEBIT;
+                  $z2=$z2+$z3;
+                }
                 if ($a2)
                 {
-                  $uang=$a2->DEBIT;
+                  $z2;
                 }
                 else
                 {
-                  $uang="0";
+                  $z2="0";
                 }
                 ?>
-                <td colspan="3" align="right"><center><b>Rp. {{ number_format($uang, 0, '', '.') }}</b></center></td>
+                <td colspan="3" align="right"><center><b>Rp. {{ number_format($z2, 0, '', '.') }}</b></center></td>
               </tr>
             </tbody>
           </table>

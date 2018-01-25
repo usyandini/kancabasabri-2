@@ -171,7 +171,7 @@
                                           <div class="card-block">
                                             <div class="form-group skin skin-square">
                                               <div class="col-md-8">
-                                                <label >Pengaturan Perizinan <code>Unit Kerja</code></label>
+                                                <label>Pengaturan Perizinan <code>Unit Kerja</code></label>
                                               </div>
                                               <div class="col-md-4">
                                                 <div class="btn btn-sm btn-outline-primary" id="toogle_unit"><i class="fa fa-edit"></i> Konfigurasi</div>

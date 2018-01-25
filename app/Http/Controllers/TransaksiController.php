@@ -838,7 +838,7 @@ class TransaksiController extends Controller
   WHERE dimensionAttributeValueSetItem.DISPLAYVALUE = '".$cabang."'
   and DATEPART(MONTH, ledgerjournaltrans.TRANSDATE) >= ".$awal." 
   and DATEPART(MONTH, ledgerjournaltrans.TRANSDATE) <= ".$akhir."
-  and DATEPART(YEAR, ledgerjournaltrans.TRANSDATE) >= ".$transyear."
+  and DATEPART(YEAR, ledgerjournaltrans.TRANSDATE) = ".$transyear."
   and ledgerjournaltable.POSTED=1
   order by ledgerjournaltrans.TRANSDATE asc");
 //         return \DB::select("SELECT distinct

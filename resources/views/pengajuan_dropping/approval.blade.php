@@ -98,9 +98,10 @@
                                                                                     $second="SELECT DESCRIPTION, VALUE FROM [AX_DUMMY].[dbo].[PIL_VIEW_KPKC]  WHERE VALUE!='00'";
                                                                                     $return = DB::select($second);
                                                                                     foreach ($return as $cabang) {
-                                                                                    if(Gate::check('unit_'.$cabang->VALUE."00")){
-                                                                                    array_push($units, $cabang);
-                                                                                    }                                         }
+                                                                                          if(Gate::check('unit_'.$cabang->VALUE."00")){
+                                                                                          array_push($units, $cabang);
+                                                                                          }                                         
+                                                                                    }
                                                                                     ?>
                                                                                     @if(count($units)>1)
                                                                                     <option value="0">Semua Cabang</option>
