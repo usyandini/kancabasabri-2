@@ -75,8 +75,8 @@
             														<label for="nama_jenis">Tipe Item Anggaran</label>
             														<select class="form-control" type="text" name="type" placeholder="Tipe Item Anggaran" required>
             															<option value="1" selected>Jenis Anggaran</option>
-            															<option value="2">Pos Anggaran</option>
-                                                                                                      <option value="3">Kelompok Anggaran</option>
+            															<option value="2">Kelompok Anggaran</option>
+                                                                                                      <option value="3">Pos Anggaran</option>
             															<option value="4">Satuan</option>
             														</select>
             													</div>
