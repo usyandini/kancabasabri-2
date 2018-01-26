@@ -142,7 +142,13 @@ class AnggaranController extends Controller
                     $tasks->update(['active'=>'0']);
                     $ubahlist=ListAnggaran::where('id_list_anggaran',$tasks->id)->get();
                     foreach ($ubahlist as $list) {
-                        $list->update(['id_list_anggaran'=>$newID]);
+                        $listbaru=$list->replicate();
+                        $listbaru->save();
+                        $idlistbaru=$listbaru->id;
+                        $list->update(['active'=>'0']);
+                        $datalistbaru=ListAnggaran::where('id',$listbaru->id)->first();
+                        $datalistbaru->update(['id_list_anggaran'=>$newID,'id_first'=>$list->id]);
+                        // $list->update(['id_list_anggaran'=>$newID]);
                     }
                     if($newTask->persetujuan == 2){
                         Anggaran::where('id',$newID)->update(['persetujuan'=>$newTask->persetujuan+1]);
