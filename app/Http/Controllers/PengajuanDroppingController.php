@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use DB;
 use App\Http\Requests;
 use App\User;
@@ -77,7 +78,20 @@ class PengajuanDroppingController extends Controller
 
 	public function acc() 
     {
-    	$a =DB::table('pengajuan_dropping_cabang')
+        $units = array();
+        $second="SELECT DESCRIPTION, VALUE FROM [AX_DUMMY].[dbo].[PIL_VIEW_KPKC]  WHERE VALUE!='00'";
+        $return = DB::select($second);
+          foreach ($return as $cabang) {
+          if(Gate::check('unit_'.$cabang->VALUE."00")){
+          array_push($units, $cabang);
+          }                                         
+        }
+        $unitkerja=array();
+        foreach($units as $unit){
+          array_push($unitkerja, $unit->DESCRIPTION);
+        }
+        $a = DB::table('pengajuan_dropping_cabang')
+        ->whereIn('kantor_cabang', $unitkerja)
     	->where('kirim','<>','1')->where('kirim','<>','4')->where('kirim','<>','5')
         ->orderBy('tanggal', 'DESC')
         ->paginate(100);
@@ -102,7 +116,20 @@ class PengajuanDroppingController extends Controller
         $kantor_cabang = $request->get('cabang');
         $tanggal = $request->get('tanggal');
         if(($kantor_cabang=="0") && ($tanggal=="0")){
+            $units = array();
+            $second="SELECT DESCRIPTION, VALUE FROM [AX_DUMMY].[dbo].[PIL_VIEW_KPKC]  WHERE VALUE!='00'";
+            $return = DB::select($second);
+              foreach ($return as $cabang) {
+              if(Gate::check('unit_'.$cabang->VALUE."00")){
+              array_push($units, $cabang);
+              }                                         
+            }
+            $unitkerja=array();
+            foreach($units as $unit){
+              array_push($unitkerja, $unit->DESCRIPTION);
+            }
              $a = DB::table('pengajuan_dropping_cabang')
+             ->whereIn('kantor_cabang', $unitkerja)
              ->where('kirim','<>','1')->where('kirim','<>','4')->where('kirim','<>','5')
              ->orderBy('tanggal', 'DESC')
              ->get();

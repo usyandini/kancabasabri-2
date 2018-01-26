@@ -123,7 +123,7 @@
                                     <div class="col-md-12 col-lg-12 col-xl-6">
                                       <div class="form-group">
                                         <label for="nominal">Nominal Dropping</label>
-                                          <input type="text" readonly="" id="nominal_dropping" class="form-control" placeholder="{{ $dropping->DEBIT }}" name="nominal_dropping" value="Rp. {{ number_format($dropping->DEBIT, 0, '', '.') }}">
+                                          <input type="text" readonly="" id="nominal_dropping" class="form-control" placeholder="{{ $dropping->DEBIT }}" name="nominal_dropping" value="Rp. {{ number_format($dropping->DEBIT, 2, ',', '.') }}">
                                       </div>
                                     </div>
                                     <div class="col-md-12 col-lg-12 col-xl-6 pull-right">

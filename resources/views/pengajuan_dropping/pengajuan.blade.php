@@ -175,7 +175,7 @@
                                       <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><center>
                                         <center><h4 class="modal-title text-success" id="myModalLabel" ><i class="fa fa-plus"></i> Tambah Pengajuan Dropping</h4></center>
                                       </div>
-                                      <form enctype="multipart/form-data" role="form" action="{{ URL('pengajuan_dropping/store_pengajuandropping') }}" method="POST" >
+                                      <form enctype="multipart/form-data" role="form" action="{{ URL('pengajuan_dropping/store_pengajuandropping') }}" method="POST" onsubmit="return validasi_input(this)">
                                        {{ csrf_field() }}
                                        <div class="modal-body">
                                         <label class="control-label"><b> Kantor Cabang </b></label>
@@ -194,7 +194,8 @@
                                                     <br>
                                                     <label class="control-label"><b> Tanggal </b></label>
                                                     <label class="control-label"> : </label>
-                                                    <input class="form-control" type="date" name="tanggal" required="required">  
+                                                    <input class="form-control" type="date" name="tanggal" id="my_date" required="required">
+                                                    
                                                     <br> 
                                                     <label class="control-label"><b> Jumlah Diajukan </b></label>
                                                     <label class="control-label"> : </label>
@@ -531,6 +532,36 @@ type="text/javascript"></script>
     }
   } );
 
+  function validasi_input(form){
+   if (form.tanggal.value.length > 10){
+      toastr.info("Tahun lebih dari 4 digit.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:10e3});
+      return (false);
+   }
+   else{  
+    return (true);
+   }
+  }
+
+
+  // var myDate = document.querySelector('#my_date');
+  // myDate.onkeypress = function (evt) {
+  //     var _evt = evt || windows.event;
+  //     var keyCode = _evt.keyCode || _evt.charCode;
+  //     var sKey = String.fromCharCode(keyCode);
+  //     // TODO: test for key value
+
+  //     // Test for text lenth
+  //     var text = this.value;
+  //     // TODO: test value, return true to accept, false to reject.
+  //     if (text.length > 10) {
+  //         alert(text + ' length reach quota.');
+  //         return false;
+  //     }
+  //     else {
+  //         return true;
+  //     }
+  // };
+                                                      
 
   function tandaPemisahTitik(b){
     var _minus = false;
