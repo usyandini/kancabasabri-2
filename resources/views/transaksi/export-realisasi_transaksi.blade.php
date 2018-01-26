@@ -97,16 +97,18 @@
                 @endif
                 <?php
                 $cb    = $cabangs->where('VALUE', $filters['cabang'])->first()['DESCRIPTION'];
-                $a2 = DB::table('dropping')
-                ->where('CABANG_DROPPING', $cb)
-                ->whereMonth('TRANSDATE','>=', $awal)
-                ->whereMonth('TRANSDATE','<=', $akhir)
-                ->whereYear('TRANSDATE', '=', $transyear)
-                ->Orderby('RECID','DESC')
-                ->first();
-                if ($a2)
+                $a2=DB::select("SELECT SUM(DEBIT) as debit
+                        FROM [AX_DUMMY].[dbo].[PIL_DROPPING_VIEW]
+                        where 
+                        CABANG_DROPPING = '".$cb."' AND
+                        DATEPART(MONTH, TRANSDATE) >= ".$awal." AND 
+                        DATEPART(MONTH, TRANSDATE) <= ".$akhir." AND 
+                        DATEPART(YEAR, TRANSDATE) = ".$transyear."
+                        ");
+                foreach($a2 as $bb){}
+                if ($bb)
                 {
-                  $uang=$a2->DEBIT;
+                  $uang=$bb->debit;
                 }
                 else
                 {
