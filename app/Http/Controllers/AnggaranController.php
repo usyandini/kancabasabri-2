@@ -147,7 +147,7 @@ class AnggaranController extends Controller
                         $idlistbaru=$listbaru->id;
                         $list->update(['active'=>'0']);
                         $datalistbaru=ListAnggaran::where('id',$listbaru->id)->first();
-                        $datalistbaru->update(['id_list_anggaran'=>$newID,'id_first'=>$list->id]);
+                        $datalistbaru->update(['id_list_anggaran'=>$newID]);
                         // $list->update(['id_list_anggaran'=>$newID]);
                     }
                     if($newTask->persetujuan == 2){
