@@ -438,15 +438,16 @@
                   };*/
 
                   function forms_submit() {
-                    var num = document.getElementById('p_nominal').value;
-                      var val = parseFloat(validDigits(num));
-                      var mod = val%100
+                    document.getElementById("kesesuaian-form").submit();
+                    // var num = document.getElementById('p_nominal').value;
+                    //   var val = parseFloat(validDigits(num));
+                    //   var mod = val%100
 
-                      if(mod != 0 || val < 100){
-                        alert("Nominal tidak valid! Silahkan input nominal kembali.\nMinimal input nominal Rp. 100 dengan kelipatan 100.");
-                      }else{
-                        document.getElementById("kesesuaian-form").submit();
-                      }
+                    //   if(mod != 0 || val < 100){
+                    //     alert("Nominal tidak valid! Silahkan input nominal kembali.\nMinimal input nominal Rp. 100 dengan kelipatan 100.");
+                    //   }else{
+                    //     document.getElementById("kesesuaian-form").submit();
+                    //   }
                   };
 
                   function addCommas(n){
