@@ -18,20 +18,16 @@
         td { border-bottom: 1px solid #000; padding: 3px; font-size: 90%; }
 	</style>
 <body>
-	<div id="header">
-		@if($excel == false)
-		<img src='<?php echo $_SERVER["DOCUMENT_ROOT"].'/app-assets/images/asabri-logo.png'; ?>' align="left" style="max-width: 132px;">
-		@endif
-		
-        <div="title">
-          <h3><center>LAPORAN KAS & BANK PT  ASABRI (PERSERO)</center></h3>
-          <h3><center>{{ $cabangs->where('VALUE', $filters['cabang'])->first()['DESCRIPTION']}}</center></h3>
-          @if($start == $end)
-          <h4><center>Periode {{$start}} Th. {{$year}}</center></h4>
+	  <div id="header">
+        <img src="{{ asset('app-assets/images/asabri-logo-kecil.png', $secure = null) }}" align="left" height="80">
+        <h3><center>LAPORAN KAS & BANK PT  ASABRI (PERSERO)<br>
+        {{ $cabangs->where('VALUE', $filters['cabang'])->first()['DESCRIPTION']}}<br>
+        @if($start == $end)
+          Periode {{$start}} Th. {{$year}}
           @else
-          <h4><center>Periode {{$start}} s.d. {{$end}} Th. {{$year}}</center></h4>
+          Periode {{$start}} s.d. {{$end}} Th. {{$year}}</center></h3>
           @endif
-      </div>
+    </div>
     </div>
     <br><br>
     <div id="content">

@@ -19,23 +19,19 @@
 	</style>
 <body>
 	<div id="header">
-		@if($excel == false)
-		<img src='<?php echo $_SERVER["DOCUMENT_ROOT"].'/app-assets/images/asabri-logo.png'; ?>' align="left" style="max-width: 132px;">
-		@endif
-		
-        <div="title">
-	        <h3><center>LAPORAN REALISASI MATA ANGGARAN PT ASABRI (PERSERO)</center></h3>
-	        <h3><center>{{ $cabangs->where('VALUE', $filters['cabang'])->first()['DESCRIPTION']}}</center></h3>
-	        @if($filters['start'] == $filters['end'])
-	        <h4><center>Periode {{ $filters['start'] }} Th. {{ $filters['year'] }}</center></h4>
-	        @else
-	        <h4><center>Periode {{ $filters['start'] }} s.d. {{ $filters['end'] }} Th. {{$filters['year']}}</center></h4>
-	        @endif
-	    </div>
+      <img src="{{ asset('app-assets/images/asabri-logo-kecil.png', $secure = null) }}" align="left" height="80">
+      <h3><center>LAPORAN REALISASI MATA ANGGARAN PT ASABRI (PERSERO)<br>
+      {{ $cabangs->where('VALUE', $filters['cabang'])->first()['DESCRIPTION']}} <br>
+      @if($filters['start'] == $filters['end'])
+      Periode {{ $filters['start'] }} Th. {{ $filters['year'] }}
+      @else
+      Periode {{ $filters['start'] }} s.d. {{ $filters['end'] }} Th. {{$filters['year']}}</center></h3>
+      @endif
+    </div>
     </div>
     <br><br>
     <div id="content">
-    	<div style="overflow-x:auto;">
+    	<div>
 	    	<table>
 	    		<thead>
 	              <tr>
@@ -92,14 +88,18 @@
 	                @endif
 	                <?php
 	                $cb    = $cabangs->where('VALUE', $filters['cabang'])->first()['DESCRIPTION'];
-	                $a2 = DB::table('dropping')
-	                ->where('CABANG_DROPPING', $cb)
-	                ->whereMonth('TRANSDATE','>=', $awal)
-	                ->whereMonth('TRANSDATE','<=', $akhir)
-	                ->whereYear('TRANSDATE', '=', $transyear)->first();
-	                if ($a2)
+	                $a2=DB::select("SELECT SUM(DEBIT) as debit
+                        FROM [AX_DUMMY].[dbo].[PIL_DROPPING_VIEW]
+                        where 
+                        CABANG_DROPPING = '".$cb."' AND
+                        DATEPART(MONTH, TRANSDATE) >= ".$awal." AND 
+                        DATEPART(MONTH, TRANSDATE) <= ".$akhir." AND 
+                        DATEPART(YEAR, TRANSDATE) = ".$transyear."
+                        ");
+	                foreach($a2 as $bb){}
+	                if ($bb)
 	                {
-	                  $uang=$a2->DEBIT;
+	                  $uang=$bb->debit;
 	                }
 	                else
 	                {

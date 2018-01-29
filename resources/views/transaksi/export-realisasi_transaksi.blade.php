@@ -2,7 +2,7 @@
 	@if($excel)
 		<?php 
 		header("Content-Type:   application/vnd.ms-excel; charset=utf-8");
-		header("Content-Disposition: attachment; filename=Realisasi-anggaran-".date("dmY").".xls"); 
+		header("Content-Disposition: attachment; filename=Realisasi-transaksi-".date("dmY").".xls"); 
 		header("Expires: 0");
 		header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
 		header("Cache-Control: private",false);
@@ -10,32 +10,27 @@
 	@endif
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 	<style>
-		body { font-family: 'Helvetica'; }
-		h3 { text-transform: uppercase; }
-		table{ border-collapse:collapse; margin-left:auto; margin-right:auto; }
-		td, th{ border: 1px solid #000; margin:auto; padding:5px; }
-        th { background-color: #cccccc; }
-        td { border-bottom: 1px solid #000; padding: 3px; font-size: 90%; }
-	</style>
+        body { font-family: 'Helvetica'; }
+        h3 { text-transform: uppercase; }
+        table { border-collapse: collapse; }
+        th { background-color: #cccccc; text-transform: uppercase; }
+        th, td { border: 1px solid #000; margin:auto; padding: 5px; }
+        td{ padding: 3px; font-size: 90%; }
+  </style>
 <body>
-	<div id="header">
-		@if($excel == false)
-		<img src='<?php echo $_SERVER["DOCUMENT_ROOT"].'/app-assets/images/asabri-logo.png'; ?>' align="left" style="max-width: 132px;">
-		@endif
-		
-        <div="title">
-	        <h3><center>LAPORAN REALISASI TRANSAKSI PT ASABRI (PERSERO)</center></h3>
-	        <h3><center>{{ $cabangs->where('VALUE', $filters['cabang'])->first()['DESCRIPTION']}}</center></h3>
-	        @if($filters['start'] == $filters['end'])
-	        <h4><center>Periode {{ $filters['start'] }} Th. {{ $filters['year'] }}</center></h4>
-	        @else
-	        <h4><center>Periode {{ $filters['start'] }} s.d. {{ $filters['end'] }} Th. {{$filters['year']}}</center></h4>
-	        @endif
-	    </div>
+	  <div id="header">
+      <img src="{{ asset('app-assets/images/asabri-logo-kecil.png', $secure = null) }}" align="left" height="80">
+      <h3><center>LAPORAN REALISASI TRANSAKSI PT ASABRI (PERSERO)<br>
+      {{ $cabangs->where('VALUE', $filters['cabang'])->first()['DESCRIPTION']}} <br>
+      @if($filters['start'] == $filters['end'])
+      Periode {{ $filters['start'] }} Th. {{ $filters['year'] }}
+      @else
+      Periode {{ $filters['start'] }} s.d. {{ $filters['end'] }} Th. {{$filters['year']}}</center></h3>
+      @endif
     </div>
     <br><br>
     <div id="content">
-    	<div style="overflow-x:auto;">
+    	<div>
 	    	<table>
 	    		<thead>
               <tr>

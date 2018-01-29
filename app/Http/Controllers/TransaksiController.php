@@ -175,7 +175,7 @@ class TransaksiController extends Controller
             'item'          => $this->getAttributes('item', $active_batch),
             'bank'          => $this->getAttributes('bank'),
             'kegiatan'      => $this->getAttributes('kegiatan'),
-            'subpos'      => $this->getAttributes('subpos'),
+            'subpos'        => $this->getAttributes('subpos'),
             'jsGrid_url'    => $jsGrid_url]);   
     }
 
@@ -635,7 +635,7 @@ class TransaksiController extends Controller
                 break;
             case 'export' :
                 $pdf = PDF::loadView('transaksi.export-realisasi', $data);
-                return $pdf->download('Realisasi Anggaran-'.date("dmY").'.pdf');
+                return $pdf->setPaper('a4', 'landscape')->setWarnings(false)->download('Realisasi Anggaran-'.date("dmY").'.pdf');
                 // return $pdf->stream('Realisasi Anggaran-'.date("dmY").'.pdf'); // hanya untuk view pdf
                 break;
             case 'excel' :
@@ -676,8 +676,8 @@ class TransaksiController extends Controller
                 return view('transaksi.cetak-realisasi_transaksi', $data);
                 break;
             case 'export' :
-                $pdf = PDF::loadView('transaksi.export-realisasi_transaksi', $data);
-                return $pdf->setPaper('a4', 'landscape')->setWarnings(false)->download('Realisasi Anggaran-'.date("dmY").'.pdf');
+                $pdf = PDF::loadView('transaksi.cetak-realisasi_transaksi', $data);
+                return $pdf->setPaper('a4', 'landscape')->setWarnings(false)->download('Realisasi Transaksi-'.date("dmY").'.pdf');
                 // return $pdf->stream('Realisasi Anggaran-'.date("dmY").'.pdf'); // hanya untuk view pdf
                 break;
             case 'excel' :
@@ -1102,12 +1102,10 @@ class TransaksiController extends Controller
                     return view('transaksi.cetak-kasbank', $data);
                     break;
                 case 'export' :
-                    $pdf = PDF::loadView('transaksi.export-kasbank', $data);
-                    $pdf->setPaper('A4', 'landscape');
-                    return $pdf->download('Report-kasbank-'.date("dmY").'.pdf');
-                    return $pdf->stream('Report-kasbank-'.date("dmY").'.pdf'); 
-                // hanya untuk view pdf
-                    break;
+                $pdf = PDF::loadView('transaksi.cetak-kasbank', $data);
+                return $pdf->setPaper('a4', 'landscape')->setWarnings(false)->download('Report-kasbank-'.date("dmY").'.pdf');
+                // return $pdf->stream('Realisasi Anggaran-'.date("dmY").'.pdf'); // hanya untuk view pdf
+                break;
                 case 'excel' :
                     return view('transaksi.export-kasbank', $data);
                     break;

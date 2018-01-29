@@ -63,7 +63,7 @@
                                   <div class="form-group">
                                     <label>Kantor Cabang</label>
                                     <select class="select2 form-control" name="cabang" required>
-                                      <option selected disabled>Pilih cabang</option>
+                                      
                                       @foreach($cabang as $cab)
                                       {{ $id = $cab->VALUE."00" }}
                                       @if(Gate::check("unit_".$id) )
@@ -133,11 +133,11 @@
                               <h4 class="card-title">Hasil Pencarian Report Kas/Bank</h4><br>
 
                               <table align="right"><tr>
-                                <td><span><a href="{{ URL('transaksi/kasbank/'.$filters['cabang'].'/'.$filters['awal'].'/'.$filters['akhir'].'/'.$filters['transyear'].'/excel') }}" class="btn btn-success" target="_blank"><i class="fa fa-file-excel-o"></i> <b> Ekspor ke Excel </b></a></span></td>
+                                <td><span><a href="{{ URL('transaksi/kasbank/'.$filters['cabang'].'/'.$filters['awal'].'/'.$filters['akhir'].'/'.$filters['transyear'].'/print') }}" class="btn btn-success btn-sm pull-right mr-1" target="_blank"><i class="fa fa-print"></i> <b> Cetak Report</b></a></span></td>
+                                
+                                <td><span><a href="{{ URL('transaksi/kasbank/'.$filters['cabang'].'/'.$filters['awal'].'/'.$filters['akhir'].'/'.$filters['transyear'].'/export') }}" class="btn btn-success btn-sm pull-right mr-1" target="_blank"><i class="fa fa-file-pdf-o"></i> <b> Ekspor ke PDF </b></a></span></td>
 
-                                <td><span><a href="{{ URL('transaksi/kasbank/'.$filters['cabang'].'/'.$filters['awal'].'/'.$filters['akhir'].'/'.$filters['transyear'].'/export') }}" class="btn btn-success" target="_blank"><i class="fa fa-file-pdf-o"></i> <b> Ekspor ke PDF </b></a></span></td>
-
-                                <td><span><a href="{{ URL('transaksi/kasbank/'.$filters['cabang'].'/'.$filters['awal'].'/'.$filters['akhir'].'/'.$filters['transyear'].'/print') }}" class="btn btn-success" target="_blank"><i class="fa fa-print"></i> <b> Cetak Report</b></a></span></td> 
+                                <td><span><a href="{{ URL('transaksi/kasbank/'.$filters['cabang'].'/'.$filters['awal'].'/'.$filters['akhir'].'/'.$filters['transyear'].'/excel') }}" class="btn btn-success btn-sm pull-right mr-1" target="_blank"><i class="fa fa-file-excel-o"></i> <b> Ekspor ke Excel </b></a></span></td>
                               </tr></table>
                               @else
                               <h4 class="card-title">Daftar Report</h4><br>

@@ -201,21 +201,89 @@ class AnggaranController extends Controller
                                 $account = ItemMasterAnggaran::where('jenis',$jenis)->where('kelompok',$kelompok)
                                                             ->where('pos_anggaran',$pos_anggaran)->where('sub_pos',$sub_pos)
                                                             ->where('mata_anggaran',$mata_anggaran)->first()->account;
+                                if($line->TWI > 0){
+                                $year = explode("-", $line->created_at);
+                                $amount = $line->TWI;
+                                $transdate = ((int)$year[0]+1).'-01-01';
                                 $input = [
                                         'DATAAREAID'            => 'asbr',
-                                        'RECID'                 => $line->id,
+                                        'RECID'                 => $line->id.'1',
                                         'PIL_ACCOUNT'           => $account,
                                         'PIL_PROGRAM'           => 'THT',
-                                        'PIL_TRANSDATE'         => $newTask->tanggal,
+                                        'PIL_TRANSDATE'         => $transdate,
                                         'PIL_KPKC'              => $cabang,
                                         'PIL_DIVISI'            => $divisi,
                                         'PIL_SUBPOS'            => $sub_pos,
                                         'PIL_MATAANGGARAN'      => $mata_anggaran,
                                         'PIL_TXT'               => $line->mata_anggaran,
-                                        'PIL_AMOUNT'            => $line->anggaran_setahun,
+                                        'PIL_AMOUNT'            => $amount,
                                         'PIL_TRANSID'           => 'AC-'.$line->id_list_anggaran
                                         ];
                                 pil_kcanggaranlines::create($input);
+                                }
+                                //2
+                                if($line->TWII > 0){
+                                $year = explode("-", $line->created_at);
+                                $amount = $line->TWII;
+                                $transdate = ((int)$year[0]+1).'-04-01';
+                                $input = [
+                                        'DATAAREAID'            => 'asbr',
+                                        'RECID'                 => $line->id.'2',
+                                        'PIL_ACCOUNT'           => $account,
+                                        'PIL_PROGRAM'           => 'THT',
+                                        'PIL_TRANSDATE'         => $transdate,
+                                        'PIL_KPKC'              => $cabang,
+                                        'PIL_DIVISI'            => $divisi,
+                                        'PIL_SUBPOS'            => $sub_pos,
+                                        'PIL_MATAANGGARAN'      => $mata_anggaran,
+                                        'PIL_TXT'               => $line->mata_anggaran,
+                                        'PIL_AMOUNT'            => $amount,
+                                        'PIL_TRANSID'           => 'AC-'.$line->id_list_anggaran
+                                        ];
+                                pil_kcanggaranlines::create($input);
+                                }
+                                //3
+                                if($line->TWIII > 0){
+                                $year = explode("-", $line->created_at);
+                                $amount = $line->TWIII;
+                                $transdate = ((int)$year[0]+1).'-07-01';
+                                $input = [
+                                        'DATAAREAID'            => 'asbr',
+                                        'RECID'                 => $line->id.'3',
+                                        'PIL_ACCOUNT'           => $account,
+                                        'PIL_PROGRAM'           => 'THT',
+                                        'PIL_TRANSDATE'         => $transdate,
+                                        'PIL_KPKC'              => $cabang,
+                                        'PIL_DIVISI'            => $divisi,
+                                        'PIL_SUBPOS'            => $sub_pos,
+                                        'PIL_MATAANGGARAN'      => $mata_anggaran,
+                                        'PIL_TXT'               => $line->mata_anggaran,
+                                        'PIL_AMOUNT'            => $amount,
+                                        'PIL_TRANSID'           => 'AC-'.$line->id_list_anggaran
+                                        ];
+                                pil_kcanggaranlines::create($input);
+                                }
+                                //4
+                                if($line->TWIV > 0){
+                                $year = explode("-", $line->created_at);
+                                $amount = $line->TWIV;
+                                $transdate = ((int)$year[0]+1).'-10-01';
+                                $input = [
+                                        'DATAAREAID'            => 'asbr',
+                                        'RECID'                 => $line->id.'4',
+                                        'PIL_ACCOUNT'           => $account,
+                                        'PIL_PROGRAM'           => 'THT',
+                                        'PIL_TRANSDATE'         => $transdate,
+                                        'PIL_KPKC'              => $cabang,
+                                        'PIL_DIVISI'            => $divisi,
+                                        'PIL_SUBPOS'            => $sub_pos,
+                                        'PIL_MATAANGGARAN'      => $mata_anggaran,
+                                        'PIL_TXT'               => $line->mata_anggaran,
+                                        'PIL_AMOUNT'            => $amount,
+                                        'PIL_TRANSID'           => 'AC-'.$line->id_list_anggaran
+                                        ];
+                                pil_kcanggaranlines::create($input);
+                                }
                             }
                     }
                 }  
@@ -1066,7 +1134,7 @@ class AnggaranController extends Controller
                 'PIL_MATAANGGARAN'      => $mata_anggaran,
                 'PIL_TRANSDATE'         => $transdate,
                 'PIL_TXT'               => $list_anggaran->mata_anggaran,
-                'PIL_AMOUNT'            => $list_anggaran->anggaran_setahun,
+                'PIL_AMOUNT'            => $amount,
                 'PIL_TRANSID'           => 'AC-'.$list_anggaran->id_list_anggaran
                 ];
         // return $input;

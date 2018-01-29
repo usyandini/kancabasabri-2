@@ -26,17 +26,16 @@
       @page { size: landscape; }
     </style>
 <body onload="window.print()">
-	<div id="header">
-		<img src="{{ asset('app-assets/images/asabri-logo-kecil.png', $secure = null) }}" align="left">
-        <div="title">
-	        <h3><center>LAPORAN KAS & BANK PT  ASABRI (PERSERO)</center></h3>
-	        <h3><center>{{ $cabangs->where('VALUE', $filters['cabang'])->first()['DESCRIPTION']}}</center></h3>
-	        @if($start == $end)
-	        <h4><center>Periode {{$start}} Th. {{$year}}</center></h4>
-	        @else
-	        <h4><center>Periode {{$start}} s.d. {{$end}} Th. {{$year}}</center></h4>
-	        @endif
-	    </div>
+	  <div id="header">
+        <img src="{{ asset('app-assets/images/asabri-logo-kecil.png', $secure = null) }}" align="left" height="80">
+        <h3><center>LAPORAN KAS & BANK PT  ASABRI (PERSERO)<br>
+        {{ $cabangs->where('VALUE', $filters['cabang'])->first()['DESCRIPTION']}}<br>
+        @if($start == $end)
+          Periode {{$start}} Th. {{$year}}
+          @else
+          Periode {{$start}} s.d. {{$end}} Th. {{$year}}</center></h3>
+          @endif
+    </div>
     </div>
     <br><br>
     <div id="content">
