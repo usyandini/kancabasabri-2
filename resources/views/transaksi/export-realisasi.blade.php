@@ -19,7 +19,8 @@
 	</style>
 <body>
 	<div id="header">
-	  <img src='<?php echo $_SERVER["DOCUMENT_ROOT"].'/app-assets/images/asabri-logo-kecil.png'; ?>' align="left" height="80">
+	 <!--  <img src='<?php echo $_SERVER["DOCUMENT_ROOT"].'/app-assets/images/asabri-logo-kecil.png'; ?>' align="left" height="80"> -->
+	  <img src="{{ asset('app-assets/images/asabri-logo-kecil.png', $secure = null) }}" align="left" height="80">
       <!-- <img src="{{ asset('app-assets/images/asabri-logo-kecil.png', $secure = null) }}" align="left" height="80"> -->
       <h3><center>LAPORAN REALISASI MATA ANGGARAN PT ASABRI (PERSERO)<br>
       {{ $cabangs->where('VALUE', $filters['cabang'])->first()['DESCRIPTION']}} <br>
