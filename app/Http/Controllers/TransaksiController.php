@@ -676,7 +676,7 @@ class TransaksiController extends Controller
                 return view('transaksi.cetak-realisasi_transaksi', $data);
                 break;
             case 'export' :
-                $pdf = PDF::loadView('transaksi.cetak-realisasi_transaksi', $data);
+                $pdf = PDF::loadView('transaksi.export-realisasi_transaksi', $data);
                 return $pdf->setPaper('a4', 'landscape')->setWarnings(false)->download('Realisasi Transaksi-'.date("dmY").'.pdf');
                 // return $pdf->stream('Realisasi Anggaran-'.date("dmY").'.pdf'); // hanya untuk view pdf
                 break;
@@ -1102,7 +1102,7 @@ class TransaksiController extends Controller
                     return view('transaksi.cetak-kasbank', $data);
                     break;
                 case 'export' :
-                $pdf = PDF::loadView('transaksi.cetak-kasbank', $data);
+                $pdf = PDF::loadView('transaksi.pdf-kasbank', $data);
                 return $pdf->setPaper('a4', 'landscape')->setWarnings(false)->download('Report-kasbank-'.date("dmY").'.pdf');
                 // return $pdf->stream('Realisasi Anggaran-'.date("dmY").'.pdf'); // hanya untuk view pdf
                 break;

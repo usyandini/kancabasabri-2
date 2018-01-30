@@ -64,7 +64,7 @@
               <tr>
                 @if ($longkap != $trans->account)<td style="padding-left:20px;" rowspan = "{{$data_count[$trans->account]}}"> {{$no++}}.) {{ $nama }}</td> @endif
                 <td style="padding-left:20px;"><?php echo nl2br(str_replace('', '', htmlspecialchars($trans->desc))); ?></td>
-                @if ($longkap != $trans->account)<td align="right" rowspan = "{{$data_count[$trans->account]}}">Rp {{ number_format($trans->anggaran, 2, ',','.') }}<?php $tmp_anggaran += $trans->anggaran;?></td>@endif
+                @if ($longkap != $trans->account)<td align="right" rowspan = "{{$data_count[$trans->account]}}">Rp {{ number_format($trans->anggaran, 0, '','.') }}<?php $tmp_anggaran += $trans->anggaran;?></td>@endif
                 <td align="right">Rp. {{ number_format($trans->realisasi, 0, '', '.') }}</td>
                 <td align="right">Rp. {{ number_format($trans->sisa_anggaran, 0, '', '.') }}</td>
               </tr>

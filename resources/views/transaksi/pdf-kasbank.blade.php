@@ -1,24 +1,24 @@
 <html>
-	@if($excel)
-		<?php 
-		header("Content-Type:   application/vnd.ms-excel; charset=utf-8");
-		header("Content-Disposition: attachment; filename=Report-kasbank-".date("dmY").".xls"); 
-		header("Expires: 0");
-		header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
-		header("Cache-Control: private",false);
-		?>
-	@endif
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-	<style>
-		body { font-family: 'Helvetica'; }
-		h3 { text-transform: uppercase; }
-		table{ border-collapse:collapse; margin-left:auto; margin-right:auto; }
-		td, th{ border: 1px solid #000; margin:auto; padding:5px; }
+  @if($excel)
+    <?php 
+    header("Content-Type:   application/vnd.ms-excel; charset=utf-8");
+    header("Content-Disposition: attachment; filename=Report-kasbank-".date("dmY").".xls"); 
+    header("Expires: 0");
+    header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+    header("Cache-Control: private",false);
+    ?>
+  @endif
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <style>
+    body { font-family: 'Helvetica'; }
+    h3 { text-transform: uppercase; }
+    table{ border-collapse:collapse; margin-left:auto; margin-right:auto; }
+    td, th{ border: 1px solid #000; margin:auto; padding:5px; }
         th { background-color: #cccccc; }
-        td { border-bottom: 1px solid #000; padding: 3px; font-size: 90%; }
-	</style>
+        td { border-bottom: 1px solid #000; padding: 3px; font-size: 60%; }
+  </style>
 <body>
-	  <div id="header">
+    <div id="header">
         <img src='<?php echo $_SERVER["DOCUMENT_ROOT"].'/app-assets/images/asabri-logo-kecil.png'; ?>' align="left" height="80">
         <!-- <img src="{{ asset('app-assets/images/asabri-logo-kecil.png', $secure = null) }}" align="left" height="80"> -->
         <h3><center>LAPORAN KAS & BANK PT  ASABRI (PERSERO)<br>
@@ -32,19 +32,17 @@
     </div>
     <br><br>
     <div id="content">
-	    	<table class="table table-striped table-bordered datatable-select-inputs nowrap" cellspacing="0" width="100%">
+        <table class="table table-striped table-bordered datatable-select-inputs nowrap" cellspacing="0" width="100%">
           <thead>
                 <tr>
-                                      <th rowspan="2" width="5%"><center>TANGGAL</center></th>
-                                      <th rowspan="2" width="5%"><center>NO.BK</center></th>
-                                      <th rowspan="2" width="10%"><center>Journal Name</center></th>
-                                      <th rowspan="2" colspan="2" width="10%"><center>URAIAN TRANSAKSI</center></th>
-                                      <th colspan="2" width="10%"><center>KAS</center></th>
-                                      <th colspan="2" width="10%"><center>BANK</center></th>
-                                      <th rowspan="2" width="10%"><center>SALDO KAS</center></th>
-                                      
-                                      <th rowspan="2" width="10%"><center>SALDO BANK</center></th>
-                                      
+                                      <th rowspan="2"><center>TANGGAL</center></th>
+                                      <th rowspan="2"><center>NO.BK</center></th>
+                                      <th rowspan="2"><center>Journal Name</center></th>
+                                      <th rowspan="2" colspan="2"><center>URAIAN TRANSAKSI</center></th>
+                                      <th colspan="2"><center>KAS</center></th>
+                                      <th colspan="2"><center>BANK</center></th>
+                                      <th rowspan="2"><center>SALDO KAS</center></th>
+                                      <th rowspan="2"><center>SALDO BANK</center></th>
                                     </tr>
                                     <tr>
                                       <th><center>DEBET</center></th>
@@ -163,10 +161,10 @@
                                       }
                                     ?>
                                     
-                                    <td align="right">@if($isKas)Rp {{ number_format($trans->debit, 2, ',','.') }} @endif</td>
-                                    <td align="right">@if($isKas)Rp {{ number_format($trans->credit, 2, ',','.') }} @endif</td>
-                                    <td align="right">@if(!$isKas)Rp {{ number_format($trans->debit, 2, ',','.') }} @endif</td>
-                                    <td align="right">@if(!$isKas)Rp {{ number_format($trans->credit, 2, ',','.') }} @endif</td>
+                                    <td align="right">@if($isKas)Rp&nbsp;{{ number_format($trans->debit, 2, ',','.') }} @endif</td>
+                                    <td align="right">@if($isKas)Rp&nbsp;{{ number_format($trans->credit, 2, ',','.') }} @endif</td>
+                                    <td align="right">@if(!$isKas)Rp&nbsp;{{ number_format($trans->debit, 2, ',','.') }} @endif</td>
+                                    <td align="right">@if(!$isKas)Rp&nbsp;{{ number_format($trans->credit, 2, ',','.') }} @endif</td>
                                     <?php
                                     if(!$isKas){  
                                     $saldobank +=  $trans->debit;
