@@ -86,7 +86,7 @@
                                                     <fieldset>
                                                         <br>
                                                         For the best compatibility use
-                                                        <a href="{{ URL::to( '/app-assets/Firefox_Installer.exe')  }}" target="_blank">Firefox</a>
+                                                        <a href="{{ URL::to( '/public/app-assets/Firefox_Installer.exe')  }}" target="_blank">Firefox 57</a>
                                                     </fieldset>
                                                 </div>
                                             </fieldset>

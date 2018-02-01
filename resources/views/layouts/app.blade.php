@@ -327,9 +327,9 @@
                     <li class="nav-item has-sub {{ checkOpenedMenu('UserManual') }}"><a href=""><i class="ft-download"></i><span data-i18n="" class="menu-title"><b>Download User Manual</b></span></a>
                     <ul class="menu-content">
                         
-                        <li class="is-shown {{ checkActiveMenu('MenuDropping') }}"><a href="{{ URL::to( '/app-assets/Manual_Dropping.doc')  }}" target="_blank"><b>Dropping</b></a></li>
-                        <li class="is-shown {{ checkActiveMenu('MenuDropping') }}"><a href="{{ URL::to( '/app-assets/Manual_Pengajuan_Dropping.doc')  }}" target="_blank"><b>Pengajuan Dropping</b></a></li>
-                        <li class="is-shown {{ checkActiveMenu('MenuDropping') }}"><a href="{{ URL::to( '/app-assets/Manual_Transaksi.doc')  }}" target="_blank"><b>Transaksi</b></a></li>
+                        <li class="is-shown {{ checkActiveMenu('MenuDropping') }}"><a href="{{ URL::to( '/public/app-assets/Manual_Dropping.doc')  }}" target="_blank"><b>Dropping</b></a></li>
+                        <li class="is-shown {{ checkActiveMenu('MenuDropping') }}"><a href="{{ URL::to( '/public/app-assets/Manual_Pengajuan_Dropping.doc')  }}" target="_blank"><b>Pengajuan Dropping</b></a></li>
+                        <li class="is-shown {{ checkActiveMenu('MenuDropping') }}"><a href="{{ URL::to( '/public/app-assets/Manual_Transaksi.doc')  }}" target="_blank"><b>Transaksi</b></a></li>
                                                                                     
                         
                         <li class="is-shown {{ checkActiveMenu('arahan_rups') }}" style="visibility:hidden"><a href="" class="menu-item"></a>/li>

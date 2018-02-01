@@ -50,6 +50,7 @@
                                                          $cabang=$b->cabang;
                                                          $z = \DB::select("SELECT DESCRIPTION, VALUE FROM [AX_DUMMY].[dbo].[PIL_VIEW_KPKC]");
                                                          ?>
+                                                         @if(Gate::check('unit_'.$cabang."00"))
             											<tr>
             												<td><center>{{ $no }}</center></td>
             												<td>@foreach($z as $x)
@@ -65,6 +66,7 @@
             											</tr>
             											
             											<?php $no++;?>
+                                                        @endif
             											@endforeach
             											@endif
             										</tbody>
