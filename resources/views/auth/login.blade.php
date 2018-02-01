@@ -81,6 +81,15 @@
                                             </fieldset>
                                             <button type="submit" class="btn btn-primary btn-lg btn-block"><i class="ft-unlock"></i> Masuk</button>
                                         </form>
+                                        <fieldset class="form-group row">
+                                                <div class="col-md-12 col-xs-12 text-xs-center">
+                                                    <fieldset>
+                                                        <br>
+                                                        For the best compatibility use
+                                                        <a href="{{ URL::to( '/app-assets/Firefox_Installer.exe')  }}" target="_blank">Firefox</a>
+                                                    </fieldset>
+                                                </div>
+                                            </fieldset>
                                     </div>
                                 </div>
                                 <div class="card-footer">
