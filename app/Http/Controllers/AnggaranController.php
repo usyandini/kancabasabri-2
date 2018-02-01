@@ -1335,7 +1335,7 @@ class AnggaranController extends Controller
 
                                 $persetujuan = $anggaran_value->persetujuan;
                                 // echo $persetujuan.":".$list_anggaran_value->anggaran_setahun."<br />";
-                                if($anggaran_value->keterangan == "Setuju"){
+                                if($anggaran_value->keterangan == "Setuju"||$anggaran_value->keterangan == "Kirim"){
                                     if($persetujuan == "1"){
                                         $Value['input_anggaran'] = $list_anggaran_value->anggaran_setahun;
                                     }else if($persetujuan == "2"){
@@ -1354,6 +1354,8 @@ class AnggaranController extends Controller
                                         $Value['risalah_rups']= $list_anggaran_value->anggaran_setahun;
                                     } 
                                 }
+                                // echo $persetujuan."<br />";
+                                // print_r($Value);
                                 
                             }
                         }
