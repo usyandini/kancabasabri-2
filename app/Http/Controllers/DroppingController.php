@@ -233,7 +233,10 @@ class DroppingController extends Controller
 
     public function tarik_tunai_process($id_drop, Request $request)
     {
-        $temp_sisa = TarikTunai::where('id_dropping', $id_drop)->orderby('created_at', 'desc')->first();
+        //sementara ini
+        $temp_sisa = TarikTunai::where('id_dropping', $id_drop)->orderby('id', 'desc')->first();
+        //nanti diganti ini
+        // $temp_sisa = TarikTunai::where('id_dropping', $id_drop)->orderby('created_at', 'desc')->first();
 
         $inputsTT = $request->except('_method', '_token', 'nominal');
 
@@ -288,6 +291,8 @@ class DroppingController extends Controller
                 $seg6 = $inputsTT['SEGMEN_6'] = $kegiatan->VALUE;
                 $inputsTT['ACCOUNT'] = $seg1.'-'.$seg2.'-'.$seg3.'-'.$seg4.'-'.$seg5.'-'.$seg6;
                 $inputsTT['stat'] = 1;
+                //nanti ini dihapus
+                $inputsTT['created_at'] = $request->tgl_tarik;
 
                 $TT = TarikTunai::create($inputsTT);
 
@@ -692,7 +697,10 @@ class DroppingController extends Controller
         $inputStagingTT = [
             'DATAAREAID'       => 'asbr',
             'RECID'             => $tariktunai['id'],
-            'PIL_TRANSDATE'     => $tariktunai['updated_at'],
+            //sementara ini
+            'PIL_TRANSDATE'     => $tariktunai['created_at'],
+            //nanti diganti ini
+            // 'PIL_TRANSDATE'     => $tariktunai['updated_at'],
             'PIL_TXT'           => $tariktunai['cabang'], //deskripsi optional
             'PIL_AMOUNT'        => $tariktunai['nominal_tarik'],
             'PIL_BANK'          => $tariktunai['akun_bank'],

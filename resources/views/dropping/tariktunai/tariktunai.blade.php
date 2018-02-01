@@ -136,7 +136,10 @@
                                     <div class="col-md-6">
                                       <div class="form-group">
                                         <label for="tgl_tarik">Tanggal Tarik Tunai</label>
-                                        <input type="text" readonly="" id="tgl_tarik" class="form-control" placeholder="Tanggal Tarik Tunai" name="tgl_tarik" value="{{ date('d-m-Y') }}">
+                                        <!-- sementara ini -->
+                                        <input type="date" id="tgl_tarik" class="form-control" name="tgl_tarik" required>
+                                        <!-- nanti diganti ini -->
+                                        <!-- <input type="text" readonly="" id="tgl_tarik" class="form-control" placeholder="Tanggal Tarik Tunai" name="tgl_tarik" value="{{ date('d-m-Y') }}"> -->
                                       </div>
                                     </div>
                                     <div class="col-md-6">

@@ -31,7 +31,9 @@ class TarikTunai extends Model
         'ACCOUNT',
 
         'stat',
-        'verified_by'
+        'verified_by',
+        //nanti dihapus
+        'created_at'
     ];
 
     public function creator()
