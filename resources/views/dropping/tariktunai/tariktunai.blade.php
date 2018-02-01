@@ -299,17 +299,22 @@
                 <!-- END PAGE LEVEL JS-->  
 
                 <script type="text/javascript">
-                  function forms_submit() {
-                      var num = document.getElementById('nominal_tarik').value;
-                      //var val = parseFloat(num.replace(/./g, ''));
-                      var val = parseFloat(validDigits(num));
-                      var mod = val%100
+                  // function forms_submit() {
+                  //     var num = document.getElementById('nominal_tarik').value;
+                  //     //var val = parseFloat(num.replace(/./g, ''));
+                  //     var val = parseFloat(validDigits(num));
+                  //     var mod = val%100
 
-                      if(mod != 0 || val < 100){
-                        alert("Nominal tidak valid! Silahkan input nominal kembali.\nMinimal input nominal Rp. 100 dengan kelipatan 100.");
-                      }else{
-                        document.getElementById("tariktunai-form").submit();
-                      }
+                  //     if(mod != 0 || val < 100){
+                  //       alert("Nominal tidak valid! Silahkan input nominal kembali.\nMinimal input nominal Rp. 100 dengan kelipatan 100.");
+                  //     }else{
+                  //       document.getElementById("tariktunai-form").submit();
+                  //     }
+                  // };
+
+                  function forms_submit() {
+                    document.getElementById("tariktunai-form").submit();
+                    
                   };
 
                   // insert commas as thousands separators 
