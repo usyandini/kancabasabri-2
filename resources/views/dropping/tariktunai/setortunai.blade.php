@@ -179,7 +179,7 @@
                       <div class="col-md-6">
                         <div class="card" id="history" style="height: 1800px;display: block;">
                           <div class="card-header">
-                            <h4 class="card-title" id="basic-layout-colored-form-control">Riwayat Setor Tunai</h4>
+                            <h4 class="card-title" id="basic-layout-colored-form-control">Riwayat Setor dan Tarik Tunai</h4>
                             <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
                             <div class="heading-elements">
                               <ul class="list-inline mb-0">
