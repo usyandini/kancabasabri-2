@@ -245,6 +245,12 @@ class Notification extends Model
                 return 'Pengajuan Dropping '.$this->pengajuanDropping['kantor_cabang'].' periode TW '.$TW.' dengan Nomor '.$this->pengajuanDropping['nomor'].' telah diterima oleh Kadiv Akuntansi.';
             case 47:
                 return 'Pengajuan Anggaran dan Kegiatan untuk '.$this->pengajuanAnggaran['unit_kerja'].' telah dibuat oleh Renbang.';
+            case 48: 
+                return 'Setor Tunai dilakukan oleh '.$this->idTarikTunai['cabang'].'. Mohon review untuk verifikasi level 1.';
+            case 49:
+                return 'Setor Tunai oleh '.$this->idTarikTunai['cabang'].' pada tanggal '.date('d F Y', strtotime($this->idTarikTunai['created_at'])).' ditolak oleh verifikator dengan alasan '.$this->rejectTarikTunai['reason']['content'].'. Silahkan melakukan Setor Tunai kembali.';
+            case 50:
+                return 'Setor Tunai oleh '.$this->idTarikTunai['cabang'].' pada tanggal '.date('d F Y', strtotime($this->idTarikTunai['created_at'])).' telah diverifikasi.';
         }
     }
 }

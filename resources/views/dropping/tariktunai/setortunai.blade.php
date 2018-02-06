@@ -15,7 +15,7 @@
                 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
                 <script>
                 $( function() {
-                  $( "#tgl_tarik" ).datepicker();
+                  $( "#tgl_setor" ).datepicker();
                 } );
                 </script>
                 @endsection
@@ -23,7 +23,7 @@
                 @section('content')
                 <div class="content-header row">
                     <div class="content-header-left col-md-6 col-xs-12 mb-2">
-                        <h3 class="content-header-title mb-0">Tarik Tunai</h3>
+                        <h3 class="content-header-title mb-0">Setor Tunai</h3>
                         <div class="row breadcrumbs-top">
                             <div class="breadcrumb-wrapper col-xs-12">
                                 <ol class="breadcrumb">
@@ -31,7 +31,7 @@
                                     </li>
                                     <li class="breadcrumb-item"><a href="{{ url('/dropping') }}">Informasi Dropping</a>
                                     </li>
-                                    <li class="breadcrumb-item active">Tarik Tunai
+                                    <li class="breadcrumb-item active">Setor Tunai
                                     </li>
                                 </ol>
                             </div>
@@ -46,25 +46,25 @@
                         @if(session('success'))
                         <div class="col-xs-7">
                             <div class="alert alert-success">
-                              <b>Data tarik tunai berhasil dikirim.</b>
+                              <b>Data setor tunai berhasil dikirim.</b>
                             </div>
                         </div>
                         @elseif(session('offset'))
                         <div class="col-xs-7">
                             <div class="alert alert-warning">
-                              <b>Data tarik tunai gagal dikirim. Nominal tarik tunai melebihi dana dropping.</b>
+                              <b>Data setor tunai gagal dikirim. Nominal setor tunai melebihi dana dropping.</b>
                             </div>
                         </div>
                         @elseif(session('confirm'))
                         <div class="col-xs-7">
                             <div class="alert alert-warning">
-                              <b>Anda sudah melakukan konfirmasi Tarik Tunai, harap menunggu verifikasi dari Kantor Pusat.</b>
+                              <b>Anda sudah melakukan konfirmasi setor Tunai, harap menunggu verifikasi dari Kantor Pusat.</b>
                             </div>
                         </div>
                         @elseif(session('reject1'))
                         <div class="col-xs-8">
                           <div class="alert alert-warning">
-                            <b>Tarik tunai anda ditolak dengan alasan {{ $notif->reason['content'] }}.<br>Silahkan melakukan <i>tarik tunai</i> kembali.</b>
+                            <b>setor tunai anda ditolak dengan alasan {{ $notif->reason['content'] }}.<br>Silahkan melakukan <i>setor tunai</i> kembali.</b>
                           </div>
                         </div>
                         @endif
@@ -85,7 +85,7 @@
                       <div class="col-md-6">
                         <div class="card" style="height: 100px;">
                           <div class="card-header">
-                            <h4 class="card-title" id="basic-layout-form">Detail Tarik Tunai <b><br>{{ $dropping->CABANG_DROPPING }}</b></h4>
+                            <h4 class="card-title" id="basic-layout-form">Detail Setor Tunai <b><br>{{ $dropping->CABANG_DROPPING }}</b></h4>
                             <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
                             <div class="heading-elements">
                               <ul class="list-inline mb-0">
@@ -97,7 +97,7 @@
                             <div class="card-block">
                               <div class="card-text">
                               </div>
-                              <form class="form" id="tariktunai-form" method="POST" action="{{ url('dropping/tariktunai/'.$dropping->RECID) }}" enctype="multipart/form-data">
+                              <form class="form" id="setortunai-form" method="POST" action="{{ url('dropping/setortunai/'.$dropping->RECID) }}" enctype="multipart/form-data">
                               {{ csrf_field() }}
                                 <input type="hidden" name="sisa_dropping" value="{{ $dropping->tarikTunai['sisa_dropping'] }}">
 
@@ -138,30 +138,30 @@
                                       </div>
                                     </div>
                                   </div>
-                                  @can('masuk_tt_d')
-                                  <h4 class="form-section">Tarik Tunai</h4>
+                                  @can('masuk_st_d')
+                                  <h4 class="form-section">Setor Tunai</h4>
                                   <div class="row">
                                     <div class="col-md-6">
                                       <div class="form-group">
-                                        <label for="tgl_tarik">Tanggal Tarik Tunai</label>
+                                        <label for="tgl_setor">Tanggal Setor Tunai</label>
                                         <!-- sementara ini -->
-                                        <input id="tgl_tarik" class="form-control" name="tgl_tarik" required>
+                                        <input id="tgl_setor" class="form-control" name="tgl_setor" required>
                                         <!-- nanti diganti ini -->
-                                        <!-- <input type="date" readonly="" class="form-control" placeholder="Tanggal Tarik Tunai" name="tgl_tarik" value="{{ date('d-m-Y') }}"> -->
+                                        <!-- <input type="text" readonly="" id="tgl_setor" class="form-control" placeholder="Tanggal Setor Tunai" name="tgl_setor" value="{{ date('d-m-Y') }}"> -->
                                       </div>
                                     </div>
                                     <div class="col-md-6">
                                       <div class="form-group">
-                                        <label for="nominal_tarik">Nominal Tarik Tunai</label>
+                                        <label for="nominal_setor">Nominal Setor Tunai</label>
                                         <div class="controls">
-                                          <input type="text" id="nominal_tarik" name="nominal_tarik" class="form-control" value="Rp. {{ old('nominal_tarik') }}" required>
+                                          <input type="text" id="nominal_setor" name="nominal_setor" class="form-control" value="Rp. {{ old('nominal_setor') }}" required>
                                         </div>
                                       </div>
                                     </div>
                                   </div>
                                   <div class="col-md-12">
                                     <div class="form-group">
-                                      <label for="berkas">Unggah berkas tarik tunai</label>
+                                      <label for="berkas">Unggah berkas setor tunai</label>
                                       <span class="required"> *</span>
                                       <div class="controls">
                                         <input type="file" class="form-control-file" id="berkasInput" name="berkas[]" multiple="" required>
@@ -179,7 +179,7 @@
                       <div class="col-md-6">
                         <div class="card" id="history" style="height: 1800px;display: block;">
                           <div class="card-header">
-                            <h4 class="card-title" id="basic-layout-colored-form-control">Riwayat Tarik Tunai</h4>
+                            <h4 class="card-title" id="basic-layout-colored-form-control">Riwayat Setor Tunai</h4>
                             <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
                             <div class="heading-elements">
                               <ul class="list-inline mb-0">
@@ -268,7 +268,7 @@
                                       <h4 class="modal-title" id="myModalLabel20">Box Konfirmasi</h4>
                                     </div>
                                     <div class="modal-body" id="confirmation-msg">
-                                      <p>Apakah anda yakin dengan <b>data tarik tunai dropping</b> yang anda input sudah sesuai?</p>
+                                      <p>Apakah anda yakin dengan <b>data setor tunai dropping</b> yang anda input sudah sesuai?</p>
                                     </div>
                                     <div class="modal-footer">
                                       <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">Tidak, kembali</button>
@@ -311,7 +311,7 @@
 
                 <script type="text/javascript">
                   // function forms_submit() {
-                  //     var num = document.getElementById('nominal_tarik').value;
+                  //     var num = document.getElementById('nominal_setor').value;
                   //     //var val = parseFloat(num.replace(/./g, ''));
                   //     var val = parseFloat(validDigits(num));
                   //     var mod = val%100
@@ -319,12 +319,12 @@
                   //     if(mod != 0 || val < 100){
                   //       alert("Nominal tidak valid! Silahkan input nominal kembali.\nMinimal input nominal Rp. 100 dengan kelipatan 100.");
                   //     }else{
-                  //       document.getElementById("tariktunai-form").submit();
+                  //       document.getElementById("setortunai-form").submit();
                   //     }
                   // };
 
                   function forms_submit() {
-                    document.getElementById("tariktunai-form").submit();
+                    document.getElementById("setortunai-form").submit();
                     
                   };
 
@@ -353,13 +353,13 @@
                       return n;
                   }
                   window.onload= function(){
-                      var n2= document.getElementById('nominal_tarik');
+                      var n2= document.getElementById('nominal_setor');
                       n2.value='';
 
                       n2.onkeyup=n2.onchange= function(e){
                           e=e|| window.event; 
                           var who=e.target || e.srcElement,temp;
-                          if(who.id==='nominal_tarik')  temp= validDigits(who.value); 
+                          if(who.id==='nominal_setor')  temp= validDigits(who.value); 
                           else temp= validDigits(who.value);
                           who.value= addCommas(temp);
                       }   

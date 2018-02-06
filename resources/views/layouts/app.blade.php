@@ -141,6 +141,9 @@
                         @can('setuju_tt_d')
                         <li class="is-shown {{ checkActiveMenu('dropping/lihat/penarikan') }}"><a href="{{ url('dropping/lihat/penarikan', $parameters = [], $secure = null) }}" class="menu-item"><b>Verifikasi Tarik Tunai</b></a></li>
                         @endcan
+                        @can('setuju_st_d')
+                        <li class="is-shown {{ checkActiveMenu('dropping/lihat/penyetoran') }}"><a href="{{ url('dropping/lihat/penyetoran', $parameters = [], $secure = null) }}" class="menu-item"><b>Verifikasi Setor Tunai</b></a></li>
+                        @endcan
                     </ul>
                     </li>
                     @endif

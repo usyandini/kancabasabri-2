@@ -106,6 +106,11 @@ class NotificationController extends Controller
                     $notif = true;
                     }
                 }
+            }else if($value->type < 51){
+                $unit_kerja = $value->idTarikTunai['cabang'];
+                if(Gate::check('unit_'.$this->check($unit_kerja))){
+                    $notif = true;
+                }
             }
 
             if($notif){
@@ -334,6 +339,12 @@ class NotificationController extends Controller
                 return redirect('pengajuan_dropping/lihat/'.$notifDetail->batch_id);
             case 47:
                 return redirect('anggaran/tambah');
+            case 48:
+                return redirect('dropping/verifikasi/setortunai/'.$notifDetail->batch_id);
+            case 49:
+                return redirect('dropping/setortunai/'.$tariktunai->id_dropping);
+            case 50:
+                return redirect('dropping/setortunai/'.$tariktunai->id_dropping);
 			default:
 				return redirect('transaksi/');
     	}
@@ -389,6 +400,11 @@ class NotificationController extends Controller
                     }
                 }else if($value->type <48){
                     $unit_kerja = $value->pengajuanAnggaran['unit_kerja'];
+                    if(Gate::check('unit_'.$this->check($unit_kerja))){
+                        $notif = true;
+                    }
+                }else if($value->type <51){
+                    $unit_kerja = $value->idTarikTunai['cabang'];
                     if(Gate::check('unit_'.$this->check($unit_kerja))){
                         $notif = true;
                     }

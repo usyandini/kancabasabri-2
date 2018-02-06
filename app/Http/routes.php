@@ -39,10 +39,16 @@ Route::group(['middleware' => 'auth'], function() {
 		
 		Route::get('/tariktunai/{id_dropping}', 'DroppingController@tarik_tunai');
 		Route::post('/tariktunai/{id_dropping}', 'DroppingController@tarik_tunai_process');
+
+		Route::get('/setortunai/{id_dropping}', 'DroppingController@setor_tunai');
+		Route::post('/setortunai/{id_dropping}', 'DroppingController@setor_tunai_process');
 		
 		Route::get('/{routes}/berkas/download/{id}', 'DroppingController@downloadBerkas');
 		Route::get('/verifikasi/tariktunai/{id}', 'DroppingController@verifikasiTarikTunai');
 		Route::get('/verifikasi/tariktunai/{reaction}/{id}', 'DroppingController@submitVerification');
+
+		Route::get('/verifikasi/setortunai/{id}', 'DroppingController@verifikasiSetorTunai');
+		Route::get('/verifikasi/setortunai/{reaction}/{id}', 'DroppingController@submitVerificationSetor');
 
 		Route::get('/verifikasi/penyesuaian/{id}', 'DroppingController@verifikasiPenyesuaian');
 		Route::get('/verifikasi/penyesuaian/final/{id}', 'DroppingController@verifikasiPenyesuaianLv2');
@@ -53,6 +59,7 @@ Route::group(['middleware' => 'auth'], function() {
 		Route::get('/lihat/penyesuaian', 'DroppingController@penyesuaianlevel1');
 		Route::get('/lihat/penyesuaian2', 'DroppingController@penyesuaianlevel2');
 		Route::get('/lihat/penarikan', 'DroppingController@penarikanlevel1');
+		Route::get('/lihat/penyetoran', 'DroppingController@penyetoranlevel1');
 	});
 
 	Route::group(['prefix' => 'transaksi'], function() {

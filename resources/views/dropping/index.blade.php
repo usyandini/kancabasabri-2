@@ -220,7 +220,15 @@
                           @if(Gate::check('lihat_tt_d'))
                           { name: "id_dropping", type: "text", align:"center", title: "Penarikan", width: 120,
                             itemTemplate:function(e) {
-                              return "<a href='{{ url('/dropping/tariktunai') }}/"+ e +"' class='btn btn-success btn-sm'>Lanjut</a>"
+                              return "<a href='{{ url('/dropping/tariktunai') }}/"+ e +"' class='btn btn-success btn-sm'>Tarik Tunai</a>"
+                            }
+                          },
+                          @endif
+
+                          @if(Gate::check('lihat_st_d'))
+                          { name: "id_dropping", type: "text", align:"center", title: "Penyetoran", width: 120,
+                            itemTemplate:function(e) {
+                              return "<a href='{{ url('/dropping/setortunai') }}/"+ e +"' class='btn btn-info btn-sm'>Setor Tunai</a>"
                             }
                           }
                           @endif

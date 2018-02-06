@@ -209,7 +209,12 @@ class NotificationSystem
         if(isset($user->perizinan['notif_pengajuan_anggaran'])){
             array_push($array_type,47);
         }
-
+        if(isset($user->perizinan['notif_setuju_st_d'])){
+            array_push($array_type,48);
+        }
+        if(isset($user->perizinan['notif_ubah_st_d'])){
+            array_push($array_type,49,50);
+        }
         return $array_type;
     }
 

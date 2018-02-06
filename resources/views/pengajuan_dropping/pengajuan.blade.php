@@ -10,8 +10,21 @@
                   display: none;
                 }
               </style>
+              
               @endsection
-
+              <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+                <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+                <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+                <script>
+                $( function() {
+                  $( "#my_date" ).datepicker();
+                } );
+                </script>
+                <script>
+                $( function() {
+                  $( "#my_date2" ).datepicker();
+                } );
+                </script>
               @section('content')
               {{-- part alert --}}
               @if (Session::has('after_save'))
@@ -194,7 +207,7 @@
                                                     <br>
                                                     <label class="control-label"><b> Tanggal </b></label>
                                                     <label class="control-label"> : </label>
-                                                    <input class="form-control" type="date" name="tanggal" id="my_date" required="required">
+                                                    <input class="form-control" name="tanggal" id="my_date" required="required">
                                                     
                                                     <br> 
                                                     <label class="control-label"><b> Jumlah Diajukan </b></label>
@@ -405,31 +418,19 @@
           <center><h4 class="modal-title text-info" id="myModalLabel" ><i class="fa fa-edit"></i> Ubah Pengajuan Dropping</h4></center>
         </div>
         <div class="modal-body">
-          <form enctype="multipart/form-data" role="form" action="{{ URL('pengajuan_dropping/update_pengajuandropping/'. $b->id) }}" method="POST" >
+          <form enctype="multipart/form-data" role="form" action="{{ URL('pengajuan_dropping/update_pengajuandropping/'. $b->id) }}" method="POST" onsubmit="return validasi_input(this)">
             {{ csrf_field() }}
             <input type="hidden" name="id"  value="{{$b->id}}" />
             <label class="control-label"><b> Kantor Cabang </b></label>
             <label class="control-label"> : </label><br>
-            <select class="select2 form-control block" name="kantor_cabang" style="width:300px" required="required" value="{{$b->kantor_cabang}}">
-              <option value="0"> - Pilih Kantor Cabang - </option>
-              <?php
-              $second="SELECT DESCRIPTION, VALUE FROM [AX_DUMMY].[dbo].[PIL_VIEW_KPKC]  WHERE VALUE!='00'";
-              $return = DB::select($second);
-              ?>
-              @foreach($return as $bq)
-              <option value="{{ $bq->DESCRIPTION }}"
-                @if($bq->DESCRIPTION == $b->kantor_cabang) Selected>{{ $bq->DESCRIPTION}} @endif
-                @if($bq->DESCRIPTION <> $b->kantor_cabang)>{{ $bq->DESCRIPTION}} @endif
-              </option> 
-              @endforeach
-            </select><br><br>
+            <input class="form-control" type="text" name="kantor_cabang" disabled required="required" value="{{$b->kantor_cabang}}"><br>
             <label class="control-label"><b> Nomor </b></label>
             <label class="control-label"> : </label>
             <input class="form-control" type="text" name="nomor" placeholder="masukkan nomor" required="required" value="{{$b->nomor}}">
             <br>
             <label class="control-label"><b> Tanggal </b></label>
             <label class="control-label"> : </label>
-            <input class="form-control" type="date" name="tanggal" required="required" value="{{$b->tanggal}}">  
+            <input class="form-control" name="tanggal" id="my_date2" required="required" value="{{date('d-m-Y', strtotime($b->tanggal))}}">  
             <br> 
             <label class="control-label"><b> Jumlah Diajukan </b></label>
             <label class="control-label"> : </label>

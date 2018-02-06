@@ -27,6 +27,18 @@
               <label>Persetujuan tarik tunai</label>
             </fieldset>
             <fieldset>
+              <input type="checkbox" name="perizinan[lihat_st_d]" {{ isset(old("perizinan")['lihat_st_d']) ? 'checked=""' : '' }}>
+              <label>Lihat setor tunai</label>
+            </fieldset>
+            <fieldset>
+              <input type="checkbox" name="perizinan[masuk_st_d]" {{ isset(old("perizinan")['masuk_st_d']) ? 'checked=""' : '' }}>
+              <label>Masukkan setor tunai</label>
+            </fieldset>
+            <fieldset>
+              <input type="checkbox" name="perizinan[setuju_st_d]" {{ isset(old("perizinan")['setuju_st_d']) ? 'checked=""' : '' }}>
+              <label>Persetujuan setor tunai</label>
+            </fieldset>
+            <fieldset>
               <input type="checkbox" name="perizinan[lihat_p_d]" {{ isset(old("perizinan")['lihat_p_d']) ? 'checked=""' : '' }}>
               <label>Lihat penyesuaian dropping</label>
             </fieldset>
@@ -52,6 +64,10 @@
               <label>Permintaan Persetujuan tarik tunai</label>
             </fieldset>
             <fieldset>
+              <input type="checkbox" name="perizinan[notif_setuju_st_d]" {{ isset(old("perizinan")['notif_setuju_st_d']) ? 'checked=""' : '' }}>
+              <label>Permintaan Persetujuan setor tunai</label>
+            </fieldset>
+            <fieldset>
               <input type="checkbox" name="perizinan[notif_setuju_p_d]" {{ isset(old("perizinan")['notif_setuju_p_d']) ? 'checked=""' : '' }}>
               <label>Permintaan Persetujuan penyesuaian dropping</label>
             </fieldset>
@@ -62,6 +78,10 @@
             <fieldset>
               <input type="checkbox" name="perizinan[notif_ubah_tt_d]" {{ isset(old("perizinan")['notif_ubah_tt_d']) ? 'checked=""' : '' }}>
               <label>Perubahan tarik tunai dropping</label>
+            </fieldset>
+            <fieldset>
+              <input type="checkbox" name="perizinan[notif_ubah_st_d]" {{ isset(old("perizinan")['notif_ubah_st_d']) ? 'checked=""' : '' }}>
+              <label>Perubahan setor tunai dropping</label>
             </fieldset>
             <fieldset>
               <input type="checkbox" name="perizinan[notif_ubah_p_d]" {{ isset(old("perizinan")['notif_ubah_p_d']) ? 'checked=""' : '' }}>

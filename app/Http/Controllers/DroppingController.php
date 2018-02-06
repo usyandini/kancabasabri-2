@@ -26,6 +26,7 @@ use App\Models\SubPos;
 use App\Models\Kegiatan;
 
 use App\Models\StagingTarikTunai;
+use App\Models\StagingSetorTunai;
 use App\Models\StagingPengembalian;
 
 use Validator;
@@ -43,6 +44,10 @@ use App\Services\NotificationSystem;
 //          6 = Verified Penyesuaian by Level 1 / Submitted penyesuaian to c 
 //          7 = Rejected by Level 2 for re-input Penyesuaian
 //          8 = Verified Penyesuaian by Level 2
+//
+//          9 = Submitted setor tunai to Level 1
+//          10 = Rejected for re-input Setor Tunai
+//          11 = Verified Setor Tunai by Level 1
 //  ----------------------------------------------
 
 
@@ -208,7 +213,7 @@ class DroppingController extends Controller
 
         $dropping = $this->droppingModel->where([['RECID', $id_drop], ['DEBIT', '>', 0]])->firstOrFail();
 
-        $tariktunai = TarikTunai::where([['id_dropping', $id_drop], ['nominal_tarik', '>', 0], ['stat', 3]])->orderby('sisa_dropping', 'asc')->get();
+        $tariktunai = TarikTunai::where([['id_dropping', $id_drop], ['nominal_tarik', '>', 0]])->wherein('stat', [3, 11])->orderby('id', 'desc')->get();
 
         $status = TarikTunai::where('id_dropping', $id_drop)->orderby('updated_at', 'desc')->first();
         $notif = '';
@@ -223,6 +228,35 @@ class DroppingController extends Controller
         }
         return view(
             'dropping.tariktunai.tariktunai', 
+                ['tariktunai' => $tariktunai, 
+                 'dropping' => $dropping, 
+                 'berkas' => $berkas, 
+                 'notif' => $notif,
+                 'integrated' => $integrated
+                ]);
+    }
+
+    public function setor_tunai($id_drop, Request $request)
+    {
+        $this->inputDrop($id_drop); 
+
+        $dropping = $this->droppingModel->where([['RECID', $id_drop], ['DEBIT', '>', 0]])->firstOrFail();
+
+        $tariktunai = TarikTunai::where([['id_dropping', $id_drop], ['nominal_tarik', '>', 0]])->wherein('stat', [3, 11])->orderby('id', 'desc')->get();
+
+        $status = TarikTunai::where('id_dropping', $id_drop)->orderby('updated_at', 'desc')->first();
+        $notif = '';
+        if($tariktunai){
+            $berkas = [];
+            $berkas = $this->berkasTTModel;
+            $integrated = StagingTarikTunai::where('PIL_POSTED', 1);
+            if($status['stat'] == 2){
+                $notif = RejectTarikTunai::where('id_tariktunai', $status['id'])->orderby('updated_at', 'desc')->first();
+                session()->flash('reject1', true);
+            }
+        }
+        return view(
+            'dropping.tariktunai.setortunai', 
                 ['tariktunai' => $tariktunai, 
                  'dropping' => $dropping, 
                  'berkas' => $berkas, 
@@ -292,7 +326,8 @@ class DroppingController extends Controller
                 $inputsTT['ACCOUNT'] = $seg1.'-'.$seg2.'-'.$seg3.'-'.$seg4.'-'.$seg5.'-'.$seg6;
                 $inputsTT['stat'] = 1;
                 //nanti ini dihapus
-                $inputsTT['created_at'] = $request->tgl_tarik;
+                $inputsTT['created_at'] = date('Y-m-d', strtotime($request->tgl_tarik));
+                $inputsTT['tgl_dropping'] = date('Y-m-d', strtotime($request->tgl_dropping));
 
                 $TT = TarikTunai::create($inputsTT);
 
@@ -310,6 +345,88 @@ class DroppingController extends Controller
             return redirect()->back()->withErrors($validatorTT)->withInput();
         }
         return redirect('/dropping/tariktunai/'.$id_drop);
+    }
+
+    public function setor_tunai_process($id_drop, Request $request)
+    {
+        //sementara ini
+        $temp_sisa = TarikTunai::where('id_dropping', $id_drop)->orderby('id', 'desc')->first();
+        //nanti diganti ini
+        // $temp_sisa = TarikTunai::where('id_dropping', $id_drop)->orderby('created_at', 'desc')->first();
+
+        $inputsTT = $request->except('_method', '_token', 'nominal');
+
+        $bank = AkunBank::where('BANK', $request->akun_bank)->first();
+        $program = Program::where('DESCRIPTION', 'Tabungan Hari Tua')->first();
+        $kpkc = KantorCabang::where('DESCRIPTION', $request->cabang)->first();
+        $divisi = Divisi::where('DESCRIPTION', 'None')->first();
+        $subpos = SubPos::where('DESCRIPTION', 'None')->first();
+        $kegiatan = Kegiatan::where('DESCRIPTION', 'None')->first();
+
+        $validatorTT = Validator::make($inputsTT,
+            [
+                'berkas.*'      => 'required|max:100000|mimes:jpg,jpeg,png,doc,docx,xls,xlsx,pdf',
+                'nominal_setor' => 'not_in:0|required|regex:/^\d+([\.]\d+)*([\,]\d+)?$/' //titik separator
+            ], 
+            [
+                'nominal_setor.not_in'    => 'Nominal setor tunai tidak boleh dikosongkan !',
+                'nominal_setor.required'  => 'Nominal setor tunai harus diisi !',
+                'nominal_setor.regex'     => 'Nominal setor tunai hanya bisa diisi oleh angka !',
+                'berkas.*.required'       => 'Attachment bukti setor tunai tidak boleh dikosongkan !',
+                'berkas.*.max'            => 'Attachment bukti setor tunai tidak boleh lebih dari 100 Mb !',
+                'berkas.*.mimes'          => 'Attachment bukti setor tunai yang diperbolehkan hanya .doc, .docx, .xls, .xlsx, .jpg, .jpeg, .png, .pdf'
+            ]);
+
+        //----- Fungsi tarik tunai, jika tidak ada record maka tariktunai berasal dari nominal awal - nominal tarik -----//
+        //----- jika ada record maka tariktunai berasal dari (nominal = sisa dropping sebelumnya) - nominal tarik  -----//
+
+        $string_setor = $request->nominal_setor;
+        $setor = floatval(str_replace('.', '', $string_setor));
+        //dd($tarik);
+        // print_r($divisi->VALUE);
+        if($validatorTT->passes() && $temp_sisa['stat'] !=9){
+            if($temp_sisa){
+                $inputsTT['nominal'] = $temp_sisa['sisa_dropping'];
+            }else{
+                $inputsTT['nominal'] = $request->nominal;
+                $temp_sisa['sisa_dropping'] = $request->nominal;
+            }
+            if($temp_sisa['sisa_dropping'] != 0 && $setor <= $temp_sisa['sisa_dropping']){
+                $inputsTT['sisa_dropping'] = ($temp_sisa['sisa_dropping'] + $setor);
+
+                $inputsTT['created_by'] = \Auth::id();
+                $inputsTT['id_dropping'] = $id_drop;
+
+                $inputsTT['nominal_tarik'] = $setor;
+
+                $seg1 = $inputsTT['SEGMEN_1'] = $bank->ACCOUNT;
+                $seg2 = $inputsTT['SEGMEN_2'] = $program->VALUE;
+                $seg3 = $inputsTT['SEGMEN_3'] = $kpkc->VALUE;
+                $seg4 = $inputsTT['SEGMEN_4'] = $divisi->VALUE;
+                $seg5 = $inputsTT['SEGMEN_5'] = $subpos->VALUE;
+                $seg6 = $inputsTT['SEGMEN_6'] = $kegiatan->VALUE;
+                $inputsTT['ACCOUNT'] = $seg1.'-'.$seg2.'-'.$seg3.'-'.$seg4.'-'.$seg5.'-'.$seg6;
+                $inputsTT['stat'] = 9;
+                //nanti ini dihapus
+                $inputsTT['created_at'] = date('Y-m-d', strtotime($request->tgl_setor));
+                $inputsTT['tgl_dropping'] = date('Y-m-d', strtotime($request->tgl_dropping));
+
+                $TT = TarikTunai::create($inputsTT);
+
+                $this->storeBerkas($request->berkas, 'tariktunai', $TT->id);
+                NotificationSystem::send($TT->id, 48);
+
+                session()->flash('success', true);
+            } else {
+                session()->flash('offset', true);
+            }   
+        }elseif($temp_sisa['stat'] == 9){
+            session()->flash('confirm', true);
+        }
+        else{
+            return redirect()->back()->withErrors($validatorTT)->withInput();
+        }
+        return redirect('/dropping/setortunai/'.$id_drop);
     }
 
     public function penyesuaian($id_drop, Request $request)
@@ -541,6 +658,40 @@ class DroppingController extends Controller
             ]);
     }
 
+    public function verifikasiSetorTunai ($id){
+        $dataTT = TarikTunai::where('id', $id)->first();
+        $berkas = [] ;
+
+        if($dataTT){
+            $berkas   = BerkasTarikTunai::where('id_tariktunai', $id)->get();
+            $bank     = AkunBank::where('ACCOUNT', $dataTT->SEGMEN_1)->first();
+            $program  = Program::where('VALUE', $dataTT->SEGMEN_2)->first();
+            $kpkc     = KantorCabang::where('VALUE', $dataTT->SEGMEN_3)->first();
+            $divisi   = Divisi::where('VALUE', $dataTT->SEGMEN_4)->first();
+            $subpos   = SubPos::where('VALUE', $dataTT->SEGMEN_5)->first();
+            $kegiatan = Kegiatan::where('VALUE', $dataTT->SEGMEN_6)->first();
+        }
+
+        $integrated = StagingTarikTunai::where([['RECID', $id], ['PIL_POSTED', 1]])->first();
+        if($integrated){
+            session()->flash('integrated', true);
+        }else{
+            session()->flash('integrated', false);
+        }
+
+        return view('dropping.tariktunai.verifikasisetor', [
+            'setortunai'     => $dataTT,
+            'berkas'         => $berkas,
+            'bank'           => $bank,
+            'program'        => $program,
+            'kpkc'           => $kpkc,
+            'divisi'         => $divisi,
+            'subpos'         => $subpos,
+            'kegiatan'       => $kegiatan,
+            'reject_reasons' => RejectReason::where('type', 3)->get()
+            ]);
+    }
+
     public function submitVerification($reaction, $id_tarik, Request $request)
     {
         $verification = TarikTunai::where([['id', $id_tarik], ['stat', 1]])->first();
@@ -566,6 +717,39 @@ class DroppingController extends Controller
                     $reject_reason = ['id_tariktunai' => $id_tarik, 'reject_reason' => $request->reason];
                     RejectTarikTunai::create($reject_reason);
                     NotificationSystem::send($id_tarik, 8);
+                    session()->flash('reject', true);
+                    break;
+            }
+        }
+        session()->flash('done', true);
+        return redirect()->back();
+    }
+
+    public function submitVerificationSetor($reaction, $id_tarik, Request $request)
+    {
+        $verification = TarikTunai::where([['id', $id_tarik], ['stat', 9]])->first();
+
+        if($verification)
+        {
+            switch($reaction){
+                case 'verified':
+                    TarikTunai::where('id', $id_tarik)->update(array('stat' => 11, 'verified_by' => \Auth::id()));
+                    session()->flash('success', true);
+                    NotificationSystem::send($id_tarik, 50);
+                    $this->insertStagingSetorTunai($id_tarik);
+                    break;
+                    //update dengan data tarik tunai sebelumnya
+                case 'rejected':
+                    TarikTunai::where('id', $id_tarik)
+                    ->update(array(
+                        'nominal' => $verification->nominal,
+                        'nominal_tarik' => 0,
+                        'sisa_dropping' => $verification->nominal,
+                        'stat' => 10,
+                        'verified_by' => \Auth::id()));
+                    $reject_reason = ['id_tariktunai' => $id_tarik, 'reject_reason' => $request->reason];
+                    RejectTarikTunai::create($reject_reason);
+                    NotificationSystem::send($id_tarik, 49);
                     session()->flash('reject', true);
                     break;
             }
@@ -715,6 +899,31 @@ class DroppingController extends Controller
         StagingTariktunai::insert($inputStagingTT);   
     }
 
+    public function insertStagingSetorTunai($id_tarik)
+    {
+        $tariktunai = TarikTunai::where([['id', $id_tarik], ['stat', 11]])->first();
+
+        $inputStagingTT = [
+            'DATAAREAID'       => 'asbr',
+            'RECID'             => $tariktunai['id'],
+            //sementara ini
+            'PIL_TRANSDATE'     => $tariktunai['created_at'],
+            //nanti diganti ini
+            // 'PIL_TRANSDATE'     => $tariktunai['updated_at'],
+            'PIL_TXT'           => $tariktunai['cabang'], //deskripsi optional
+            'PIL_AMOUNT'        => $tariktunai['nominal_tarik'],
+            'PIL_BANK'          => $tariktunai['akun_bank'],
+            'PIL_ACCOUNT'       => $tariktunai['SEGMEN_1'],
+            'PIL_PROGRAM'       => $tariktunai['SEGMEN_2'],
+            'PIL_KPKC'          => $tariktunai['SEGMEN_3'],
+            'PIL_DIVISI'        => $tariktunai['SEGMEN_4'],
+            'PIL_SUBPOS'        => $tariktunai['SEGMEN_5'],
+            'PIL_MATAANGGARAN'  => $tariktunai['SEGMEN_6']
+        ];
+        
+        StagingSetorTunai::insert($inputStagingTT);   
+    }
+
     //insert staging axapta
     public function insertStagingPengembalian($id_pengembalian)
     {
@@ -769,5 +978,14 @@ class DroppingController extends Controller
              ->Orwhere('stat', 3)
              ->orderBy('id','DESC')->get();
         return view('dropping.tariktunai.penarikanlevel1', compact('a'));
+    }
+
+    public function penyetoranlevel1()
+    {   
+        $a = DB::table('tarik_tunai')
+             ->where('stat', 9)
+             ->Orwhere('stat', 11)
+             ->orderBy('id','DESC')->get();
+        return view('dropping.tariktunai.penyetoranlevel1', compact('a'));
     }
 }

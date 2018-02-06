@@ -284,7 +284,7 @@ class PengajuanDroppingController extends Controller
 		$nilai= str_replace('.', '', $angka);
         $d=$request->kantor_cabang;
         $b=$request->periode_realisasi;
-        $c=$request->tanggal;
+        $c=date('Y-m-d', strtotime($request->tanggal));
         $tgl= date('Y', strtotime($c));
         $kirim='1';
         $nomor=$request->nomor;
@@ -353,9 +353,9 @@ class PengajuanDroppingController extends Controller
      {
         $angka= $request->jumlah_diajukan;
 		$nilai= str_replace('.', '', $angka); 
-        $a=$request->kantor_cabang;
+        
         $b=$request->periode_realisasi;
-        $c=$request->tanggal;
+        $c=date('Y-m-d', strtotime($request->tanggal));
         $tgl= date('Y', strtotime($c));
         // $db = DB::table('pengajuan_dropping_cabang')->where('kantor_cabang', $a)->where('periode_realisasi', $b)->where(DB::raw('YEAR(tanggal)'), '=', $tgl)
         //  ->where('id','<>', $id)->get();
@@ -374,7 +374,7 @@ class PengajuanDroppingController extends Controller
              'title' => 'Data berhasil diubah.'
              ];
             
-	        $value['kantor_cabang'] = $a;
+	        
 	        $value['nomor'] = $request->nomor;
 	        $value['tanggal'] = $c;
 	        $value['jumlah_diajukan'] = $nilai;
@@ -392,7 +392,7 @@ class PengajuanDroppingController extends Controller
              'title' => 'Data berhasil diubah.'
              ];
 	         $data = [
-	         	'kantor_cabang' => $a,
+	         	
 		        'nomor' => $request->nomor,
 		        'tanggal' => $c,
 		        'jumlah_diajukan' => $nilai,
