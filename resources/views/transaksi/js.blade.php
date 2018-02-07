@@ -617,7 +617,7 @@
                   function checkBatchSubmit() {
                     if (totalRows > 0 && is_all_anggaran_safe && is_all_rows_not_rejected && berkas > 0) {
                       $('#xSmall').modal()
-                    } else if(!is_all_anggaran_safe) {
+                    } else if (!is_all_anggaran_safe) {
                       toastr.error("Anggaran yang bersangkutan tidak mencukupi untuk disubmit. Terima kasih.", "Peringatan Anggaran", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:10e3});                      
                     } else if (!is_all_rows_not_rejected) {
                       toastr.error("Untuk melakukan submit kembali, silahkan adakan perbaikan pada batch ini (row berwarna kuning). Terima kasih.", "Perbaikan Diperlukan", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:10e3});                      

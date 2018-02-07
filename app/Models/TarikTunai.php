@@ -50,4 +50,9 @@ class TarikTunai extends Model
     {
         return $this->hasOne('App\Models\StagingTarikTunai', 'RECID', 'id');
     }
+
+    public function integratedsetor()
+    {
+        return $this->hasOne('App\Models\StagingSetorTunai', 'RECID', 'id');
+    }
 }

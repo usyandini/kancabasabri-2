@@ -221,6 +221,7 @@ class DroppingController extends Controller
             $berkas = [];
             $berkas = $this->berkasTTModel;
             $integrated = StagingTarikTunai::where('PIL_POSTED', 1);
+            $integratedsetor = StagingSetorTunai::where('PIL_POSTED', 1);
             if($status['stat'] == 2){
                 $notif = RejectTarikTunai::where('id_tariktunai', $status['id'])->orderby('updated_at', 'desc')->first();
                 session()->flash('reject1', true);
@@ -232,7 +233,8 @@ class DroppingController extends Controller
                  'dropping' => $dropping, 
                  'berkas' => $berkas, 
                  'notif' => $notif,
-                 'integrated' => $integrated
+                 'integrated' => $integrated,
+                 'integratedsetor' => $integratedsetor
                 ]);
     }
 
@@ -250,6 +252,7 @@ class DroppingController extends Controller
             $berkas = [];
             $berkas = $this->berkasTTModel;
             $integrated = StagingTarikTunai::where('PIL_POSTED', 1);
+            $integratedsetor = StagingSetorTunai::where('PIL_POSTED', 1);
             if($status['stat'] == 2){
                 $notif = RejectTarikTunai::where('id_tariktunai', $status['id'])->orderby('updated_at', 'desc')->first();
                 session()->flash('reject1', true);
@@ -261,7 +264,8 @@ class DroppingController extends Controller
                  'dropping' => $dropping, 
                  'berkas' => $berkas, 
                  'notif' => $notif,
-                 'integrated' => $integrated
+                 'integrated' => $integrated,
+                 'integratedsetor' => $integratedsetor
                 ]);
     }
 
