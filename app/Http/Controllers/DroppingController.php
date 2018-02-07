@@ -676,7 +676,7 @@ class DroppingController extends Controller
             $kegiatan = Kegiatan::where('VALUE', $dataTT->SEGMEN_6)->first();
         }
 
-        $integrated = StagingTarikTunai::where([['RECID', $id], ['PIL_POSTED', 1]])->first();
+        $integrated = StagingSetorTunai::where([['RECID', $id], ['PIL_POSTED', 1]])->first();
         if($integrated){
             session()->flash('integrated', true);
         }else{
