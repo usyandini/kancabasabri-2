@@ -306,7 +306,7 @@ class DroppingController extends Controller
         $tarik = floatval(str_replace('.', '', $string_tarik));
         //dd($tarik);
         // print_r($divisi->VALUE);
-        if($validatorTT->passes() && $temp_sisa['stat'] !=1){
+        if($validatorTT->passes() && ( !in_array($temp_sisa['stat'], array('1','9'), true ) )) {
             if($temp_sisa){
                 $inputsTT['nominal'] = $temp_sisa['sisa_dropping'];
             }else{
@@ -344,8 +344,9 @@ class DroppingController extends Controller
             }   
         }elseif($temp_sisa['stat'] == 1){
             session()->flash('confirm', true);
-        }
-        else{
+        }elseif($temp_sisa['stat'] == 9){
+            session()->flash('confirm2', true);
+        }else{
             return redirect()->back()->withErrors($validatorTT)->withInput();
         }
         return redirect('/dropping/tariktunai/'.$id_drop);
@@ -388,7 +389,7 @@ class DroppingController extends Controller
         $setor = floatval(str_replace('.', '', $string_setor));
         //dd($tarik);
         // print_r($divisi->VALUE);
-        if($validatorTT->passes() && $temp_sisa['stat'] !=9){
+        if($validatorTT->passes() && ( !in_array($temp_sisa['stat'], array('1','9'), true ) )) {
             if($temp_sisa){
                 $inputsTT['nominal'] = $temp_sisa['sisa_dropping'];
             }else{
@@ -424,10 +425,11 @@ class DroppingController extends Controller
             } else {
                 session()->flash('offset', true);
             }   
-        }elseif($temp_sisa['stat'] == 9){
+        }elseif($temp_sisa['stat'] == 1){
             session()->flash('confirm', true);
-        }
-        else{
+        }elseif($temp_sisa['stat'] == 9){
+            session()->flash('confirm2', true);
+        }else{
             return redirect()->back()->withErrors($validatorTT)->withInput();
         }
         return redirect('/dropping/setortunai/'.$id_drop);

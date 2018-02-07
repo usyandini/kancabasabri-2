@@ -61,6 +61,12 @@
                               <b>Anda sudah melakukan konfirmasi Tarik Tunai, harap menunggu verifikasi dari Kantor Pusat.</b>
                             </div>
                         </div>
+                        @elseif(session('confirm2'))
+                        <div class="col-xs-7">
+                            <div class="alert alert-warning">
+                              <b>Anda sudah melakukan konfirmasi Setor Tunai, harap menunggu verifikasi dari Kantor Pusat.</b>
+                            </div>
+                        </div>
                         @elseif(session('reject1'))
                         <div class="col-xs-8">
                           <div class="alert alert-warning">
