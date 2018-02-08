@@ -10,6 +10,7 @@ use App\User;
 use App\Services\FileUpload;
 use App\Services\NotificationSystem;
 use App\Models\PengajuanDropping;
+use App\Models\Notification;
 
 class PengajuanDroppingController extends Controller
 {
@@ -522,7 +523,7 @@ class PengajuanDroppingController extends Controller
             NotificationSystem::send($id, 43);
          }
          
-
+         Notification::where('type',42)->where('batch_id',$id)->delete();
          $update = DB::table('pengajuan_dropping_cabang')->where('id', $id)->update($data);
          return redirect()->back()->with('after_update', $after_update);
      }
@@ -547,7 +548,7 @@ class PengajuanDroppingController extends Controller
          $data = [
              'kirim' => $a
          ];
-
+         Notification::where('type',44)->where('batch_id',$id)->delete();
          $update = DB::table('pengajuan_dropping_cabang')->where('id', $id)->update($data);
          return redirect()->back()->with('after_update', $after_update);
      }

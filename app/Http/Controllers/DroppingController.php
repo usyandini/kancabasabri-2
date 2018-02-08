@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use Illuminate\Support\Facades\Gate;
-
+use App\Models\Notification;
 use App\User;
 use App\Models\PaymentJournalDropping;
 use DB;
@@ -726,6 +726,7 @@ class DroppingController extends Controller
                     session()->flash('reject', true);
                     break;
             }
+        Notification::where('type',7)->where('batch_id',$id_tarik)->delete();
         }
         session()->flash('done', true);
         return redirect()->back();
@@ -760,6 +761,7 @@ class DroppingController extends Controller
                     break;
             }
         }
+        Notification::where('type',48)->where('batch_id',$id_tarik)->delete();
         session()->flash('done', true);
         return redirect()->back();
     }
@@ -875,6 +877,7 @@ class DroppingController extends Controller
                         break;
                 }
             }
+            Notification::where('type',12)->where('batch_id',$id_penyesuaian)->delete();
         }
         session()->flash('done', true);
         return redirect()->back();

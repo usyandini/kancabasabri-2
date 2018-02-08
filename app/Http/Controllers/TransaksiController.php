@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests;
-
+use App\Models\Notification;
 use App\Models\AkunBank;
 use App\Models\Item;
 use App\Models\RejectReason;
@@ -567,7 +567,8 @@ class TransaksiController extends Controller
     }      
 
     public function insertStaging($batch_id)
-    {
+    {   
+
         $transaksi = Transaksi::where('batch_id', $batch_id)->get();
         foreach ($transaksi as $trans) {
             $splitted_account = explode("-", $trans->account);
@@ -588,6 +589,7 @@ class TransaksiController extends Controller
                 'RECID' => $trans->id];
                 
             StagingTransaksi::create($input);
+            Notification::where('type',4)->where('batch_id',$batch_id)->delete();
         }
     }
 
