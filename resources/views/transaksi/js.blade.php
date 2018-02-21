@@ -502,9 +502,9 @@
                     var date = today.getDate()
                     var year = today.getFullYear()
                     
-                    if ((date > 8 && (new Date(dateInput).getMonth() < month)) || (new Date(dateInput).getMonth() > month)) {
-                      return false
-                    } 
+                    // if ((date > 8 && (new Date(dateInput).getMonth() < month)) || (new Date(dateInput).getMonth() > month)) {
+                    //   return false
+                    // } 
 
                     return true
                   }
