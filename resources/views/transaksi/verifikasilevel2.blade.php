@@ -52,7 +52,7 @@
                                                                                   $cabang=$b->cabang;
                                                                                   $z = \DB::select("SELECT DESCRIPTION, VALUE FROM [AX_DUMMY].[dbo].[PIL_VIEW_KPKC]  WHERE VALUE!='00'");
                                                                                   $c = \DB::table('batches_status')->where('batch_id', $b->batch_id)->where('stat', 6)->first();
-                                                                                  
+                                                                                  $d = \DB::table('batches_status')->where('batch_id', $b->batch_id)->orderBy('id', 'desc')->first();
                                                                               ?>
                                                                               <tr>
                                                                                     <td><center>{{ $no }}</center></td>
@@ -64,7 +64,11 @@
                                                                                     <td><center>{{date("ymd", strtotime($b->tanggal))}}-{{$b->cabang}}/{{$b->divisi}}-{{$b->seq_number}}</center></td>
                                                                                     <td><center>
                                                                                           @if($c)
-                                                                                          <span class="tag tag-success">Sudah di verifikasi</span>
+                                                                                            @if($d->stat==4)
+                                                                                            <span class="tag tag-warning">Belum di verifikasi</span>
+                                                                                            @else
+                                                                                            <span class="tag tag-success">Sudah di verifikasi</span>
+                                                                                            @endif
                                                                                           @else
                                                                                           <span class="tag tag-warning">Belum di verifikasi</span>
                                                                                           @endif
