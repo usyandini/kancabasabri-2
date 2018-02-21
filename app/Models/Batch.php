@@ -134,4 +134,14 @@ class Batch extends Model
                 return false;
         }
     }
+
+    public function reverse()
+    {
+        switch ($this->latestStat()->stat) {
+            case 6:
+                return true;
+            default:
+                return false;
+        }
+    }
 }

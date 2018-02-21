@@ -125,6 +125,16 @@
                                 </div>
                               </div>
                               @endif
+                              
+                              @if($reverse)
+                              @if($active_batch->posted()==$active_batch->staged())
+                              <div class="col-sm-12 col-lg-3 col-xl-2 pull-right">
+                                <div class="form-group">
+                                  <button data-toggle="modal" data-target="#reverse" class="btn btn-primary pull-right" id="simpan" value="Reverse"><i class="fa fa-undo"></i> Reverse</button>
+                                </div>
+                              </div>
+                              @endif
+                              @endif
                             </div>
                           </div>
                         </div>
@@ -189,6 +199,59 @@
                       <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">Kembali</button>
                       <button onclick="submitVer()" type="submit" class="btn btn-outline-primary">Submit verifikasi</button>
                     </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="modal fade text-xs-left" id="reverse" tabindex="-1" role="dialog" aria-labelledby="myModalLabel20"
+              aria-hidden="true">
+              <div class="modal-dialog modal-md" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel20">Box Konfirmasi Reverse</h4>
+                  </div>
+                  <div class="modal-body" id="confirmation-msg">
+                    <div class="row">
+                      <div class="col-md-12">
+                        <form method="POST" action="{{ url('transaksi/submit/reverse').'/3/'.$active_batch->id }}">
+                          {{ csrf_field() }}
+                          <p>Anda akan <b>mereverse batch ini</b> sebagai Akuntansi. Informasi batch ini : 
+                            <ul>
+                              <li>Batch saat ini : <code>{{ $active_batch->batchNo() }}</code></li>
+                              <?php
+                              $tanggal2=$active_batch->updated_at;                                 
+                              $tgl2= date('d-m-Y H:i:s', strtotime($tanggal2));
+                              ?>
+                              <li>Terakhir Update : <code>{{ $tgl2 }}</code> oleh <code>Verifikator Level 2 : {{ $active_batch->latestStat()->submitter->username }}</code></li>
+                              <!-- <code>{{ $active_batch['creator']['name'] }}</code></li> -->
+                              <li>Banyak item : <code id="totalRows"></code>, dengan <code>{{ count($berkas).' berkas lampiran' }}</code></li>
+                            </ul>
+                            <div class="row">
+                              <div class="col-md-12">
+                                <div class="form-group">
+                                  <label for="companyName">Apakah batch ini akan <b>ditolak</b>?</label>
+                                  <label>Jika ya, silahkan pilih alasan anda</label>
+                                  <select class="form-control" name="reason" required="required">
+                                    <option value="">Silahkan pilih alasan anda</option>
+                                    @foreach($reject_reasons as $res)
+                                    <option value="{{ $res->id }}">{{ $res->content }}</option>
+                                    @endforeach
+                                  </select>
+                                </div>
+                              </div>
+                            </div>
+                          
+                        </div>
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">Tidak</button>
+                      <button type="submit" class="btn btn-outline-primary">Ya</button>
+                    </div>
+                    </form>
                   </div>
                 </div>
               </div>

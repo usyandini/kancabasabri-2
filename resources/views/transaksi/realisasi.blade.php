@@ -155,7 +155,7 @@
                                     <th id="filterable"><center>Realisasi Periode</center></th>
                                     <th id="filterable"><center>Sisa Anggaran</center></th>
                                   </tr>
-                                </thead>
+                                 </thead>
                                 <tbody>
                                   @if($filters)
                                   <?php $no=1; ?>

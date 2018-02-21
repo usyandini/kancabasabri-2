@@ -35,38 +35,48 @@
             								<div class="table-responsive">
             									<table class="table table-striped table-bordered datatable-select-inputs nowrap" cellspacing="0" width="100%">
             										<thead>
-            											<tr>
-            												<th width="5%"><center>No</center></th>
-            												<th id="filterable"><center>Cabang</center></th>
+                                                                              <tr>
+                                                                                    <th width="5%"><center>No</center></th>
+                                                                                    <th id="filterable"><center>Cabang</center></th>
                                                                                     <th id="filterable"><center>No Batch</center></th>
-            												<th width="10%"><center>Aksi</center></th>
-            											</tr>
-            										</thead>
-            										<tbody>
-            											<?php $no='1';?>
-            											@if(count($a))
-            											@foreach($a as $b)
-                                                        <?php
-                                                         $cabang=$b->cabang;
-                                                         $z = \DB::select("SELECT DESCRIPTION, VALUE FROM [AX_DUMMY].[dbo].[PIL_VIEW_KPKC]");
-                                                         ?>
-                                                         @if(Gate::check('unit_'.$cabang."00"))
-            											<tr>
-            												<td><center>{{ $no }}</center></td>
-            												<td>@foreach($z as $x)
-                                                             @if($cabang==$x->VALUE)
-                                                             {{ $x->DESCRIPTION }}
-                                                             @endif
-                                                             @endforeach</td>
-                                                            <td><center>{{date("ymd", strtotime($b->tanggal))}}-{{$b->cabang}}/{{$b->divisi}}-{{$b->seq_number}}</center></td>
-                                                                                    
-            												<td><center>
-                                                             <a href="{{ URL('transaksi/persetujuan/'. $b->batch_id) }}" target="_blank" class="btn btn-success btn-sm"><i class="fa fa-eye"></i> Lihat</a>
-            												</center></td>
-            											</tr>
-            											
+                                                                                    <th id="filterable"><center>Status</center></th>
+                                                                                    <th width="10%"><center>Aksi</center></th>
+                                                                              </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                              <?php $no='1';?>
+                                                                              @if(count($a))
+                                                                              @foreach($a as $b)
+                                                                              <?php
+
+                                                                                  $cabang=$b->cabang;
+                                                                                  $z = \DB::select("SELECT DESCRIPTION, VALUE FROM [AX_DUMMY].[dbo].[PIL_VIEW_KPKC]  WHERE VALUE!='00'");
+                                                                                  $c = \DB::table('batches_status')->where('batch_id', $b->batch_id)->where('stat', 4)->first();
+                                                                                  
+                                                                              ?>
+                                                                              @if(Gate::check('unit_'.$cabang."00"))
+                                                                              <tr>
+                                                                                    <td><center>{{ $no }}</center></td>
+                                                                                    <td><center>@foreach($z as $x)
+                                                                                          @if($cabang==$x->VALUE)
+                                                                                          {{ $x->DESCRIPTION }}
+                                                                                          @endif
+                                                                                        @endforeach</center></td>
+                                                                                    <td><center>{{date("ymd", strtotime($b->tanggal))}}-{{$b->cabang}}/{{$b->divisi}}-{{$b->seq_number}}</center></td>
+                                                                                    <td><center>
+                                                                                          @if($c)
+                                                                                          <span class="tag tag-success">Sudah di verifikasi</span>
+                                                                                          @else
+                                                                                          <span class="tag tag-warning">Belum di verifikasi</span>
+                                                                                          @endif
+                                                                                    </center></td>
+                                                                                    <td><center>
+                                                                                          <a href="{{ URL('transaksi/verifikasi/'. $b->batch_id) }}" target="_blank" class="btn btn-success btn-sm"><i class="fa fa-eye"></i> Lihat</a>
+                                                                                          
+                                                                                    </center></td>
+                                                                              </tr>
+            											                      @endif
             											<?php $no++;?>
-                                                        @endif
             											@endforeach
             											@endif
             										</tbody>

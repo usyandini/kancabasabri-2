@@ -73,6 +73,7 @@ Route::group(['middleware' => 'auth'], function() {
 		Route::get('/verifikasi/{id_batch}', 'TransaksiController@verifikasi');
 
 		Route::post('/submit/verifikasi/{type}/{id_batch}', 'TransaksiController@submitVerification');
+		Route::post('/submit/reverse/{type}/{id_batch}', 'TransaksiController@submitReverse');
 
 		Route::post('/filter/process', 'TransaksiController@filter_handle');
 		Route::get('/filter/result/{batch}', 'TransaksiController@filter_result');

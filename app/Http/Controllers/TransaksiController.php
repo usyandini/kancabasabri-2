@@ -16,7 +16,7 @@ use App\Models\BatchStatus;
 use App\Models\BerkasTransaksi;
 use App\Models\BudgetControl;
 use App\Models\StagingTransaksi;
-
+use App\Models\StagingTransaksiReverse;
 use App\Models\KantorCabang;
 use App\Models\ItemMaster;
 
@@ -522,6 +522,7 @@ class TransaksiController extends Controller
 
         if ($valid_batch) {
             $verifiable = $valid_batch->lvl2Verifiable();
+            $reverse    = $valid_batch->reverse();
             $berkas     = BerkasTransaksi::where('batch_id', $valid_batch['id'])->get();
             $history    = $this->getBatchHistory($valid_batch['id']);
             $jsGrid_url = 'transaksi/get/batch/'.$valid_batch['id'];
@@ -529,6 +530,7 @@ class TransaksiController extends Controller
 
         return view('transaksi.verifikasi', [ 
             'editable'      => false,
+            'reverse'       => $reverse,
             'verifiable'    => $verifiable,
             'active_batch'  => $valid_batch,
             'empty_batch'   => $empty_batch,
@@ -544,6 +546,66 @@ class TransaksiController extends Controller
 
     public function submitVerification($type, $batch_id, Request $request)
     {
+        $this->doRefreshAnggaran($batch_id);
+        if (!$this->isAllAnggaranSafe($batch_id) && $request->is_approved) {
+            session()->flash('failed_safe', true);
+            return redirect()->back();
+        }
+
+        $input = $request->only('is_approved', 'reason');
+        $this->approveOrReject($type, $batch_id, $input);
+
+        if (!$request->is_approved) {
+            $accounts = $this->getAccountsPerBatch($batch_id);
+            $this->resetCalibrateBecauseDeleteOrUpdate($accounts, true);            
+        }
+
+        NotificationSystem::send($batch_id, $type == 1 ? ($request->is_approved ? 3 : 2) : ($request->is_approved ? 6 : 5));
+
+        if ($type == 2 && $request->is_approved) { $this->insertStaging($batch_id); }
+
+        session()->flash('success', true);
+        return redirect()->back();   
+    }
+
+    public function submitReverse($type, $batch_id, Request $request)
+    {
+        $lists=StagingTransaksi::where('PIL_KCJOURNALNUM',$batch_id)->get();
+        foreach ($lists as $list) {
+            // $rec=date('dmYHis');
+            $rec=StagingTransaksiReverse::orderBy('RECID','DESC')->first();
+            if ($rec){
+                $idreverse=$rec->RECID+1;
+            }
+            else {
+                $idreverse=1;
+            }
+            $input = [
+                'PIL_ACCOUNT'           => $list->PIL_ACCOUNT,
+                'PIL_AMOUNT'            => $list->PIL_AMOUNT,
+                'PIL_BANK'              => $list->PIL_BANK,
+                'PIL_DIVISI'            => $list->PIL_DIVISI,
+                'PIL_GENERATED'         => 0,
+                'PIL_JOURNALNUMREVERSE' => $list->PIL_JOURNALNUM,
+                'PIL_KPKC'              => $list->PIL_KPKC,
+                'PIL_MATAANGGARAN'      => $list->PIL_MATAANGGARAN,
+                'PIL_POSTED'            => $list->PIL_POSTED,
+                'PIL_PROGRAM'           => $list->PIL_PROGRAM,
+                'PIL_SUBPOS'            => $list->PIL_SUBPOS,
+                'PIL_TRANSDATE'         => $list->PIL_TRANSDATE,
+                'PIL_TXT'               => $list->PIL_TXT,
+                'PIL_VOUCHER'           => $list->PIL_VOUCHER,
+                'PIL_KCJOURNALNUM'      => $list->PIL_KCJOURNALNUM,
+                'DATAAREAID'            => $list->DATAAREAID,
+                'RECVERSION'            => $list->RECVERSION,
+                'PARTITION'             => $list->PARTITION,
+                'PIL_TRANSACTIONID'     => $list->RECID,
+                'RECID'                 => $idreverse
+            ];
+                
+            StagingTransaksiReverse::create($input);
+        }
+        StagingTransaksi::where('PIL_KCJOURNALNUM',$batch_id)->delete();
         $this->doRefreshAnggaran($batch_id);
         if (!$this->isAllAnggaranSafe($batch_id) && $request->is_approved) {
             session()->flash('failed_safe', true);

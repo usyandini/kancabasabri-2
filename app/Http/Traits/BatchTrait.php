@@ -88,9 +88,17 @@ trait BatchTrait
     public function approveOrReject($type, $batch, $input)
     {
         $data = ['batch_id' => $batch, 'submitted_by' => \Auth::User()->id];
+        // if ($type == 1) {
+        //     $data['stat'] = $input['is_approved'] ? 4 : 3;
+        // } else {
+        //     $data['stat'] = $input['is_approved'] ? 6 : 5;
+        // }
+        // hapus yg bawah
         if ($type == 1) {
             $data['stat'] = $input['is_approved'] ? 4 : 3;
-        } else {
+        } else if ($type == 2) {
+            $data['stat'] = $input['is_approved'] ? 6 : 5;
+        } else if ($type == 3) {
             $data['stat'] = $input['is_approved'] ? 6 : 5;
         }
         $store = BatchStatus::create($data);

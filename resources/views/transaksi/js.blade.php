@@ -597,7 +597,7 @@
                       document.getElementById("reason").style.display = 'none';
                     } else {
                       document.getElementById("reason").style.display = 'block';
-                      toastr.info("Silahkan input alasan penolakan anda untuk verifikasi lvl 1 ini. Terima kasih.", "Alasan penolakan dibutuhkan", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:10e3});
+                      toastr.info("Silahkan input alasan penolakan anda untuk verifikasi ini. Terima kasih.", "Alasan penolakan dibutuhkan", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:10e3});
                     }
                   };
 
@@ -606,7 +606,7 @@
                     if (!$('input[name="is_approved"]').is(':checked')) {
                       if ($('select[name="reason"]').val() == '0') {
                         valid = false;
-                        toastr.error("Silahkan input alasan penolakan anda untuk verifikasi lvl 1 ini. Terima kasih.", "Alasan penolakan dibutuhkan.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:10e3});
+                        toastr.error("Silahkan input alasan penolakan anda untuk verifikasi ini. Terima kasih.", "Alasan penolakan dibutuhkan.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:10e3});
                       } 
                     }
                     if (valid) {
