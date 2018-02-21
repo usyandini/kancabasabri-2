@@ -593,7 +593,7 @@ class TransaksiController extends Controller
                 'PIL_PROGRAM'           => $list->PIL_PROGRAM,
                 'PIL_SUBPOS'            => $list->PIL_SUBPOS,
                 'PIL_TRANSDATE'         => $list->PIL_TRANSDATE,
-                'PIL_TXT'               => $list->PIL_TXT,
+                'PIL_TXT'               => $list->PIL_TXT.'(REVERSE)',
                 'PIL_VOUCHER'           => $list->PIL_VOUCHER,
                 'PIL_KCJOURNALNUM'      => $list->PIL_KCJOURNALNUM,
                 'DATAAREAID'            => $list->DATAAREAID,
@@ -621,7 +621,7 @@ class TransaksiController extends Controller
         }
 
         NotificationSystem::send($batch_id, $type == 1 ? ($request->is_approved ? 3 : 2) : ($request->is_approved ? 6 : 5));
-
+        // BatchStatus::where('batch_id',$batch_id)->where('stat',6)->delete();
         if ($type == 2 && $request->is_approved) { $this->insertStaging($batch_id); }
 
         session()->flash('success', true);
