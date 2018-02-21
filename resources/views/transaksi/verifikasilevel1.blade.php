@@ -71,7 +71,7 @@
                                                                                           @endif
                                                                                     </center></td>
                                                                                     <td><center>
-                                                                                          <a href="{{ URL('transaksi/verifikasi/'. $b->batch_id) }}" target="_blank" class="btn btn-success btn-sm"><i class="fa fa-eye"></i> Lihat</a>
+                                                                                          <a href="{{ URL('transaksi/persetujuan/'. $b->batch_id) }}" target="_blank" class="btn btn-success btn-sm"><i class="fa fa-eye"></i> Lihat</a>
                                                                                           
                                                                                     </center></td>
                                                                               </tr>
