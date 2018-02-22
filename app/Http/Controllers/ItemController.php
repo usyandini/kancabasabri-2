@@ -1002,7 +1002,12 @@ class ItemController extends Controller
                 $jenis = ItemAnggaranMaster::withTrashed()->where('type',1)->get();
                 $jenisVal = ItemAnggaranMaster::where('type',1)->where('name', $value)->get();
                 if(count($jenisVal) == 0){
-                    $kode = 'JA-'.(count($jenis)+1);
+                    if ($jenis) {
+                        $kode = 'JA-'.(count($jenis)+1);
+                    }
+                    else {
+                        $kode = 'JA-1';
+                    }
                     $inputJenis = array(
                         'kode'  => $kode,
                         'name'  => $value,
@@ -1018,7 +1023,12 @@ class ItemController extends Controller
                 $kelompok = ItemAnggaranMaster::withTrashed()->where('type',2)->get();
                 $kelompokVal = ItemAnggaranMaster::where('type',2)->where('name', $value)->get();
                 if(count($kelompokVal) == 0){
-                    $kode = 'KA-'.(count($kelompok)+1);
+                    if ($kelompok) {
+                        $kode = 'KA-'.(count($kelompok)+1);
+                    }
+                    else {
+                        $kode = 'KA-1';
+                    }
                     $inputKelompok = array(
                         'kode'  => $kode,
                         'name'  => $value,
@@ -1033,7 +1043,12 @@ class ItemController extends Controller
                 $pos = ItemAnggaranMaster::withTrashed()->where('type',3)->get();
                 $posVal = ItemAnggaranMaster::where('type',3)->where('name', $value)->get();
                 if(count($posVal) == 0){
-                    $kode = 'PA-'.(count($pos)+1);
+                    if ($pos) {
+                        $kode = 'PA-'.(count($pos)+1);
+                    }
+                    else {
+                        $kode = 'PA-1';
+                    }
                     $inputPos = array(
                         'kode'  => $kode,
                         'name'  => $value,
