@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 
 use App\Models\BudgetControl;
-use App\Models\BudgetControlHistory;
+use App\Models\BudgetControlH;
 use App\Models\Transaksi;
 
 use Carbon;
@@ -38,7 +38,7 @@ trait BudgetControlTrait
 			$input['actual_amount'] = $result['actual_anggaran'] = (int)$currentHistory->actual_amount - (int)$trans->total;
 			$result['anggaran'] = $currentHistory->savepoint_amount; 
 			
-			BudgetControlHistory::where('id', $currentHistory->id)->update($input);	
+			BudgetControlH::where('id', $currentHistory->id)->update($input);	
 			
 			$result['is_anggaran_safe'] = ((int)$result['actual_anggaran'] < 0) ? false : true;
 		}
@@ -48,8 +48,7 @@ trait BudgetControlTrait
 
 	public function resetSavePoint($account)
 	{
-		$localBudgetControl = BudgetControlHistory::where([
-			['month_period', $account->month], 
+		$localBudgetControl = BudgetControlH::where([
 			['year_period', $account->year],
 			['account', $account->account]])->first();
 		$this->updateSavePoint((int)$localBudgetControl->savepoint_amount, $localBudgetControl->id);
@@ -60,8 +59,7 @@ trait BudgetControlTrait
 		foreach ($accounts as $acc) {
 			$this->resetSavePoint($acc);
 			$transaksis = Transaksi::where('account', $acc->account)
-							->whereYear('tgl', '=', $acc->year)
-							->whereMonth('tgl', '=', $acc->month)->get()->filter(function($transaksi) {
+							->whereYear('tgl', '=', $acc->year)->get()->filter(function($transaksi) {
 						        return !$transaksi->batch->isPosted();
 						    });
 
@@ -79,7 +77,7 @@ trait BudgetControlTrait
 				$budgetUpdate['actual_amount'] = $transaksiUpdate['actual_anggaran'] = (int)$currentHistory->actual_amount - (int)$transaksi->total;
 				$transaksiUpdate['is_anggaran_safe'] = ((int)$budgetUpdate['actual_amount'] < 0) ? false : true;
 
-				BudgetControlHistory::where('id', $currentHistory->id)->update($budgetUpdate);				
+				BudgetControlH::where('id', $currentHistory->id)->update($budgetUpdate);				
 				Transaksi::where('id', $transaksi->id)->update($transaksiUpdate);
 			}
 		}
@@ -87,8 +85,7 @@ trait BudgetControlTrait
 
 	public function calibrateSavePointAndActual($account_data)
 	{
-		$localBudgetControl = BudgetControlHistory::where([
-				['month_period', $account_data->month], 
+		$localBudgetControl = BudgetControlH::where([
 				['year_period', $account_data->year],
 				['account', $account_data->account]])->first();
 		$axActual = $this->getAxActual($account_data);
@@ -105,13 +102,12 @@ trait BudgetControlTrait
 		$axBudgetControl = $this->axActual($transaksi_data, $transaksi_date);
 		if ($axBudgetControl) {
 			$historyInput = [
-				'month_period' 	=> $transaksi_date->month,
 				'year_period'	=> $transaksi_date->year,
 				'account'		=> $transaksi_data->account,
 				'savepoint_amount' => (int)$axBudgetControl->PIL_AMOUNTAVAILABLE,
 				'actual_amount'	=> (int)$axBudgetControl->PIL_AMOUNTAVAILABLE];
 
-				return BudgetControlHistory::create($historyInput);
+				return BudgetControlH::create($historyInput);
 			}
 
 		return null;
@@ -119,8 +115,7 @@ trait BudgetControlTrait
 
 	public function getHistory($transaksi_date, $account)
 	{
-		$isAvailable = BudgetControlHistory::where([
-			['month_period', $transaksi_date->month], 
+		$isAvailable = BudgetControlH::where([
 			['year_period', $transaksi_date->year],
 			['account', $account]])->first();
 
@@ -132,8 +127,6 @@ trait BudgetControlTrait
 		$axBudgetControl = BudgetControl::where('PIL_DISPLAYVALUE', $account_data->account)
 			->whereYear('PIL_PERIODENDDATE', '=', $account_data->year)
 			->whereYear('PIL_PERIODSTARTDATE', '=', $account_data->year)
-			->whereMonth('PIL_PERIODENDDATE', '=', $account_data->month)
-			->whereMonth('PIL_PERIODSTARTDATE', '=', $account_data->month)
 			->first();
 
 		return $axBudgetControl ? $axBudgetControl : false;	
@@ -152,6 +145,6 @@ trait BudgetControlTrait
 	public function updateSavePoint($newSavePoint, $id)
 	{
 		$input = ['savepoint_amount' => $newSavePoint, 'actual_amount' => $newSavePoint];
-		BudgetControlHistory::where('id', $id)->update($input);
+		BudgetControlH::where('id', $id)->update($input);
 	}
 }

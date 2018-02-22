@@ -57,9 +57,8 @@ class ItemMaster extends Model
     {
         $transaksi_date = strtotime($transaksi_date);
         $displayvalue = $this->SEGMEN_1.'-'.$this->SEGMEN_2.'-'.$this->SEGMEN_3.'-'.$this->SEGMEN_4.'-'.$this->SEGMEN_5.'-'.$this->SEGMEN_6;
-        return BudgetControlHistory::where([
+        return BudgetControlH::where([
             ['account', $displayvalue],
-            ['month_period', date('m', $transaksi_date)],
             ['year_period', date('Y', $transaksi_date)]
         ])->first();
     }

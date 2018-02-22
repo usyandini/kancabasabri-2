@@ -15,6 +15,7 @@ use App\Models\Batch;
 use App\Models\BatchStatus;
 use App\Models\BerkasTransaksi;
 use App\Models\BudgetControl;
+use App\Models\BudgetControlH;
 use App\Models\StagingTransaksi;
 use App\Models\StagingTransaksiReverse;
 use App\Models\KantorCabang;
@@ -1214,4 +1215,34 @@ class TransaksiController extends Controller
           order by tanggal desc");
           return view('transaksi.rejecthistory', compact('a'));
     }
+
+    // public function adji()
+    // {
+    //     $a= DB::select("SELECT max(id) as id
+    //       ,max([year_period]) as year
+    //       ,[account]
+    //       ,min([savepoint_amount]) as savepoint
+    //       ,min([actual_amount]) as actual
+    //       ,max([created_at]) as created
+    //       ,max([updated_at]) as updated
+    //     FROM [DBCabang].[dbo].[budget_control_history]
+    //     group by account");
+    //     foreach ($a as $b) {
+    //         $input = [
+    //             'id'                => $b->id,
+    //             'year_period'       => $b->year,
+    //             'account'           => $b->account,
+    //             'savepoint_amount'  => $b->savepoint,
+    //             'actual_amount'     => $b->actual,
+    //             'created_at'        => $b->created,
+    //             'updated_at'        => $b->updated
+    //         ];
+                
+    //         BudgetControlH::create($input);
+    //     }
+    //     $c=BudgetControlH::orderBy('id', 'ASC')->get();
+    //     return view('transaksi.adji', [
+    //         'c'    => $c
+    //         ]);
+    // }
 }
