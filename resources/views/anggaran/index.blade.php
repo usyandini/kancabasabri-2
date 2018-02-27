@@ -1099,7 +1099,7 @@
                             align: "left",
                             title: "Unit Kerja", 
                             width: 200, 
-                            readOnly:true,
+                            // readOnly:true,
                             insertTemplate: function() {
                               unitk_field_insert = jsGrid.fields.text.prototype.insertTemplate.call(this);
                               return unitk_field_insert; 

@@ -141,13 +141,13 @@
                               message : "Kolom tanggal tidak boleh kosong."  
                             },
                             insertTemplate: function(value) {
-                              var result = this._insertPicker = $("<input>").datepicker({ defaultDate: new Date() })
-                                                                // $("<input>").datepicker({ dateFormat: 'dd-mm-yy' })
+                              // var result = this._insertPicker = $("<input>").datepicker({ defaultDate: new Date() })
+                              var result = this._insertPicker = $("<input>").datepicker({ dateFormat: 'dd-mm-yy' });
+                              
                               result.on("change", function() {
-                                date_field = result.val()
-                                
                                 if (validateTransaksiDate(date_field)) {
-                                  date_field = ("0" + new Date(date_field).getDate()).slice(-2) + '-' + ("0" + (new Date(date_field).getMonth() + 1)).slice(-2) + '-' + new Date(date_field).getFullYear()
+                                  date_field = result.val()
+                                  // date_field = ("0" + new Date(date_field).getDate()).slice(-2) + '-' + ("0" + (new Date(date_field).getMonth() + 1)).slice(-2) + '-' + new Date(date_field).getFullYear()
                                   if (mainaccount != null) {
                                     getCombination()
                                   }
@@ -155,17 +155,21 @@
                                   toastr.error("Mohon input <b>tanggal transaksi</b> yang valid. Terima kasih", "Tanggal transaksi tidak valid.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:10e3});
                                   $(result).val(null)
                                 }
+                                // alert(date_field)
                               })
                               return result;
                             },
                             editTemplate: function(value) {
-                              var result = this._editPicker = $("<input>").datepicker().datepicker("setDate", new Date(value));
+                              // var result = this._editPicker = $("<input>").datepicker().datepicker("setDate", new Date(value));
+                              var result = this._editPicker = $("<input>").datepicker({ dateFormat: 'dd-mm-yy' }).datepicker("setDate", new Date(value));
                               date_field = ("0" + new Date(value).getDate()).slice(-2) + '-' + ("0" + (new Date(value).getMonth() + 1)).slice(-2) + '-' + new Date(value).getFullYear()
+                              
                               result.on("change", function() {
-                                date_field = result.val()
+                                
                                 
                                 if (validateTransaksiDate(date_field)) {
-                                  date_field = ("0" + new Date(date_field).getDate()).slice(-2) + '-' + ("0" + (new Date(date_field).getMonth() + 1)).slice(-2) + '-' + new Date(date_field).getFullYear()
+                                  // date_field = ("0" + new Date(date_field).getDate()).slice(-2) + '-' + ("0" + (new Date(date_field).getMonth() + 1)).slice(-2) + '-' + new Date(date_field).getFullYear()
+                                  date_field = result.val()
                                   if (mainaccount != null) {
                                     getCombination()
                                   }

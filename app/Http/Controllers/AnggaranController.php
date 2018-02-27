@@ -1535,6 +1535,13 @@ class AnggaranController extends Controller
         return response()->json($return);
     }
 
+    public function getDivisi()
+    {
+        $return = null;
+        $return = $this->divisiModel->select('DESCRIPTION', 'VALUE')->where('VALUE','<>','00')->get();
+        return response()->json($return);
+    }
+
     public function getNDSurat($unit,$stat)
     {
             

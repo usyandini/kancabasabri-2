@@ -123,6 +123,7 @@ Route::group(['middleware' => 'auth'], function() {
 		Route::get('/edit/{nd}', 'AnggaranController@edit_anggaran');
 		Route::get('/persetujuan/{nd}/{status}', 'AnggaranController@persetujuan_anggaran');
 		Route::get('/get/attributes/{type}/{id}', 'AnggaranController@getAttributes');
+		Route::get('/get/divisi', 'AnggaranController@getDivisi');
 		Route::get('/get/nd_surat/{unit}/{status}', 'AnggaranController@getNDSurat');
 		Route::get('/get/filtered/{nd_surat}/{type}', 'AnggaranController@getFiltered');
 		Route::get('/get/filteredHistory/{tahun}/{unit}/{kategori}/{keyword}', 'AnggaranController@getFilteredHistory');
