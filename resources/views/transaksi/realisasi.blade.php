@@ -170,7 +170,7 @@
                                    <td>{{ $nama }}</td>
                                    <td align=right>Rp. {{ number_format($trans->anggaran, 0, '', '.') }}</td>
                                    <td align=right><b>Rp. {{ number_format($trans->realisasi, 0, '', '.') }}</b></td>
-                                   <td align=right>Rp. {{ number_format($trans->sisa_anggaran, 0, '', '.') }}</td>
+                                   <td align=right>Rp. {{ number_format($trans->anggaran-$trans->realisasi, 0, '', '.') }}</td>
                                  </tr>
                                  @empty
                                  <tr>

@@ -68,12 +68,12 @@
 	                <td style="padding-left:20px;" width="35%">{{$no++}}) {{ $nama }}</td>
 	                <td align="right" width="20%">Rp. {{ number_format($trans->anggaran, 0, '','.') }}</td>
 	                <td align="right" width="20%">Rp. {{ number_format($trans->realisasi, 0, '','.') }}</td>
-	                <td align="right" width="25%">Rp. {{ number_format($trans->sisa_anggaran, 0, '','.') }}</td>
+	                <td align="right" width="25%">Rp. {{ number_format($trans->anggaran-$trans->realisasi, 0, '','.') }}</td>
 	              </tr>
 	              <?php 
 	                $tmp_anggaran += $trans->anggaran;
 	                $tmp_realisasi += $trans->realisasi;
-	                $tmp_sisa += $trans->sisa_anggaran;
+	                $tmp_sisa += $trans->anggaran-$trans->realisasi;
 	              ?>
 	              @endforeach
 	              <tr id="tf1">

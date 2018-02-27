@@ -60,13 +60,21 @@
                 $a = DB::table('item_master_transaksi')
                 ->where('SEGMEN_6', $mata)->first();
                 $nama=$a->nama_item;
+
+                $saldo2=DB::select("SELECT max(anggaran) as anggaran, sum(total) as realisasi, max(anggaran)-sum(total) as sisa
+                from [DBCabang].[dbo].[transaksi]
+                where account = '$trans->account'
+                and currently_rejected=0 
+                group by account");
               ?>
               <tr>
                 @if ($longkap != $trans->account)<td style="padding-left:20px;" rowspan = "{{$data_count[$trans->account]}}"> {{$no++}}.) {{ $nama }}</td> @endif
                 <td style="padding-left:20px;"><?php echo nl2br(str_replace('', '', htmlspecialchars($trans->desc))); ?></td>
-                @if ($longkap != $trans->account)<td align="right" rowspan = "{{$data_count[$trans->account]}}">Rp {{ number_format($trans->anggaran, 0, '','.') }}<?php $tmp_anggaran += $trans->anggaran;?></td>@endif
+                @if ($longkap != $trans->account)<td align="right" rowspan = "{{$data_count[$trans->account]}}">@foreach($saldo2 as $a2)Rp. {{ number_format($a2->anggaran, 0, '', '.') }} @endforeach <?php $tmp_anggaran += $a2->anggaran;?></td>@endif
+                
                 <td align="right">Rp. {{ number_format($trans->realisasi, 0, '', '.') }}</td>
-                <td align="right">Rp. {{ number_format($trans->sisa_anggaran, 0, '', '.') }}</td>
+                @if ($longkap != $trans->account)<td align="right" rowspan = "{{$data_count[$trans->account]}}">@foreach($saldo2 as $a3)Rp. {{ number_format($a3->sisa, 0, '', '.') }} @endforeach</td> @endif
+                
               </tr>
               <?php 
                 $longkap = $trans->account;
