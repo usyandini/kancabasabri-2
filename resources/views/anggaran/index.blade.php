@@ -418,7 +418,7 @@
                   var list_berkas=[];
                   var insertableStat = {{ $status=='edit' ? 1 : 0 }};
                   var id_field_item = id_field_edit = null;
-                  var jenis = kelompok = pos = sub = mata_anggaran = null;
+                  var jenis = kelompok = pos = sub = mata_anggaran = unit_kerja =null;
                   var satuan_field_insert = satuan_field_edit = null;
                   var unitk_field_insert = kuantitas_field_insert = nilai_field_insert = null;
                   var unitk_field_edit = kuantitas_field_edit = nilai_field_edit= null;
@@ -1123,17 +1123,20 @@
                             textField: "DESCRIPTION", 
                             width: 200,
                             items: getData('divisi2'),
+                            insertcss: "unit_kerja",
+                            editcss: "unit_kerja_edit",
                             // readOnly:true,
-                            // insertTemplate: function() {
-                            //   unitk_field_insert = jsGrid.fields.text.prototype.insertTemplate.call(this);
-                            //   return unitk_field_insert; 
-                            // },
-                            // editTemplate: function(value) {
-                            //   unitk_field_edit = jsGrid.fields.text.prototype.editTemplate.call(this);
-                            //   $(unitk_field_edit).val(value);
-                            //   return unitk_field_edit; 
-
-                            // } 
+                            insertTemplate: function() {
+                              unit_kerja = this._grid.fields[12];
+                              var result = jsGrid.fields.select.prototype.insertTemplate.call(this);
+                              return result;
+                            },
+                            editTemplate: function(value) {
+                              unit_kerja = this._grid.fields[12];
+                              var result = jsGrid.fields.select.prototype.editTemplate.call(this);
+                              $(result).val(value);
+                              return result;
+                            }
                           
                           @endif
                           },
@@ -1577,6 +1580,21 @@
                     }();
                     return returned;
                   }
+                  function changeCenter(type){
+
+                    if(type == '1'){
+                      unit_kerja.items = getData('divisi2');
+                    }else{
+                      tmp = [];
+                      tmp[0]=[];
+                      tmp[0]["DESCRIPTION"] = document.getElementById("unit_kerja").value;
+                      unit_kerja.items = tmp;
+                    }
+
+                    $(".unit_kerja").empty().append(unit_kerja.insertTemplate());
+                    $(".unit_kerja_edit").empty().append(unit_kerja.editTemplate());
+
+                  }
                   function changeDataSelect(type,value,jenis){
 
                     decode = encodeURI(value);
@@ -1867,12 +1885,15 @@
                           $(twiv_field_insert).attr("readOnly", false);
                         } 
                       }
-
+                      @if($persetujuan!=1)
                       if(type == '1'){
                         $(unitk_field_insert).val("");
                       }else{
                         $(unitk_field_insert).val(document.getElementById("unit_kerja").value);
                       }
+                      @else
+                      changeCenter(type);
+                      @endif
                       
                       
                     }else if(type2 == "edit"){
@@ -1906,11 +1927,15 @@
                         } 
                       }
 
+                      @if($persetujuan!=1)
                       if(type == '1'){
                         $(unitk_field_edit).val("");
                       }else{
                         $(unitk_field_edit).val(document.getElementById("unit_kerja").value);
                       }
+                      @else
+                      changeCenter(type);
+                      @endif
                       
                     }        
                   }
