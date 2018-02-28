@@ -1126,6 +1126,12 @@
                             insertcss: "unit_kerja",
                             editcss: "unit_kerja_edit",
                             // readOnly:true,
+                            validate: {
+                              message : "Pilih Unit Kerja terlebih dahulu." ,
+                              validator :function(value, item) {
+                                  return value !== null;
+                              } 
+                            },
                             insertTemplate: function() {
                               unit_kerja = this._grid.fields[12];
                               var result = jsGrid.fields.select.prototype.insertTemplate.call(this);
