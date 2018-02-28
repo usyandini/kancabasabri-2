@@ -1442,6 +1442,9 @@ class AnggaranController extends Controller
             case 'satuan':
                 $return = ItemAnggaranMaster::select('name')->where('type',4)->orderBy('name','ASC')->get();
                 break;
+            case 'divisi2':
+                $return = $this->divisiModel->select('DESCRIPTION')->orderBy('VALUE','ASC')->get();
+                break;
             case 'mataanggaran':
                 $value = explode("->",$id);
                 $decode = urldecode($id);

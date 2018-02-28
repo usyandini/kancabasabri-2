@@ -1069,24 +1069,24 @@
                             ],
                             valueField: "Id",
                             textField: "Name",
-                            insertTemplate: function() {
-                              var result = jsGrid.fields.select.prototype.insertTemplate.call(this);
-                              result.on("change", function() {
-                                  // if({{$persetujuan}}!=1)
-                                    changeDataUnitKerjaLine($(this).val(),"insert");
-                              });
-                              return result; 
-                            },
-                            editTemplate: function(value) {
-                              var result = jsGrid.fields.select.prototype.editTemplate.call(this);
-                              $(result).val(value);
+                            // insertTemplate: function() {
+                            //   var result = jsGrid.fields.select.prototype.insertTemplate.call(this);
+                            //   result.on("change", function() {
+                            //       // if({{$persetujuan}}!=1)
+                            //         changeDataUnitKerjaLine($(this).val(),"insert");
+                            //   });
+                            //   return result; 
+                            // },
+                            // editTemplate: function(value) {
+                            //   var result = jsGrid.fields.select.prototype.editTemplate.call(this);
+                            //   $(result).val(value);
                               
-                              result.on("change", function() {
-                                  // if({{$persetujuan}}!=1)
-                                    changeDataUnitKerjaLine($(this).val(),"edit");
-                              });
-                              return result; 
-                            },
+                            //   result.on("change", function() {
+                            //       // if({{$persetujuan}}!=1)
+                            //         changeDataUnitKerjaLine($(this).val(),"edit");
+                            //   });
+                            //   return result; 
+                            // },
                             validate: {
                               message : "Pilih Terpusat Ya/Tidak Terlebih dahulu." ,
                               validator :function(value, item) {
@@ -1094,22 +1094,27 @@
                               } 
                             }
                           },
-                          { name: "unit_kerja", 
-                            type: "text", 
+                          { 
+                            name: "unit_kerja", 
+                            type: "select", 
                             align: "left",
                             title: "Unit Kerja", 
-                            width: 200, 
+                            valueField: "DESCRIPTION", 
+                            textField: "DESCRIPTION", 
+                            width: 200,
+                            items: getData('divisi2'), 
+                            
                             // readOnly:true,
-                            insertTemplate: function() {
-                              unitk_field_insert = jsGrid.fields.text.prototype.insertTemplate.call(this);
-                              return unitk_field_insert; 
-                            },
-                            editTemplate: function(value) {
-                              unitk_field_edit = jsGrid.fields.text.prototype.editTemplate.call(this);
-                              $(unitk_field_edit).val(value);
-                              return unitk_field_edit; 
+                            // insertTemplate: function() {
+                            //   unitk_field_insert = jsGrid.fields.text.prototype.insertTemplate.call(this);
+                            //   return unitk_field_insert; 
+                            // },
+                            // editTemplate: function(value) {
+                            //   unitk_field_edit = jsGrid.fields.text.prototype.editTemplate.call(this);
+                            //   $(unitk_field_edit).val(value);
+                            //   return unitk_field_edit; 
 
-                            } 
+                            // } 
                           },
                           { name: "tw_i", 
                             type: "text", 
@@ -1527,7 +1532,19 @@
                                     }else{
                                       tmp[i]["name"] = data[i-1]["name"];
                                     }
-                                  }else{
+                                  }
+                                  if(type == 'divisi2'){
+
+                                    if(i == 0){
+                                      tmp[0]["DESCRIPTION"] = document.getElementById("unit_kerja").value;
+                                    }else{
+                                      tmp[i]["DESCRIPTION"] = data[i-1]["DESCRIPTION"];
+                                    }
+
+                                    // $(unit_kerja).val(document.getElementById("unit_kerja").value);
+
+                                  }
+                                  else{
                                     if(i == 0){
                                       tmp[0]["DESCRIPTION"] = "None";
                                     }else{
