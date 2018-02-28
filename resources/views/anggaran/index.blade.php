@@ -904,6 +904,43 @@
                               } 
                             }
                           },
+                          { name: "terpusat", 
+                            type: "select", 
+                            align: "left",
+                            title: "Terpusat", 
+                            width: 80,
+                            items:[
+                                { Name: "-", Id: '0' },
+                                { Name: "Ya", Id: '1' },
+                                { Name: "Tidak", Id: '2'}
+                            ],
+                            valueField: "Id",
+                            textField: "Name",
+                            insertTemplate: function() {
+                              var result = jsGrid.fields.select.prototype.insertTemplate.call(this);
+                              result.on("change", function() {
+                                  // if({{$persetujuan}}!=1)
+                                    changeDataUnitKerjaLine($(this).val(),"insert");
+                              });
+                              return result; 
+                            },
+                            editTemplate: function(value) {
+                              var result = jsGrid.fields.select.prototype.editTemplate.call(this);
+                              $(result).val(value);
+                              
+                              result.on("change", function() {
+                                  // if({{$persetujuan}}!=1)
+                                    changeDataUnitKerjaLine($(this).val(),"edit");
+                              });
+                              return result; 
+                            },
+                            validate: {
+                              message : "Pilih Terpusat Ya/Tidak Terlebih dahulu." ,
+                              validator :function(value, item) {
+                                  return value > 0 ;
+                              } 
+                            }
+                          },
                           { name: "kuantitas", 
                             type: "number",
                             _createTextBox:function(){
@@ -1057,44 +1094,27 @@
                                 } 
                               }
                           },
-                          { name: "terpusat", 
-                            type: "select", 
+                          {
+                          @if($persetujuan!=1)
+                           name: "unit_kerja", 
+                            type: "text", 
                             align: "left",
-                            title: "Terpusat", 
-                            width: 80,
-                            items:[
-                                { Name: "-", Id: '0' },
-                                { Name: "Ya", Id: '1' },
-                                { Name: "Tidak", Id: '2'}
-                            ],
-                            valueField: "Id",
-                            textField: "Name",
-                            // insertTemplate: function() {
-                            //   var result = jsGrid.fields.select.prototype.insertTemplate.call(this);
-                            //   result.on("change", function() {
-                            //       // if({{$persetujuan}}!=1)
-                            //         changeDataUnitKerjaLine($(this).val(),"insert");
-                            //   });
-                            //   return result; 
-                            // },
-                            // editTemplate: function(value) {
-                            //   var result = jsGrid.fields.select.prototype.editTemplate.call(this);
-                            //   $(result).val(value);
-                              
-                            //   result.on("change", function() {
-                            //       // if({{$persetujuan}}!=1)
-                            //         changeDataUnitKerjaLine($(this).val(),"edit");
-                            //   });
-                            //   return result; 
-                            // },
-                            validate: {
-                              message : "Pilih Terpusat Ya/Tidak Terlebih dahulu." ,
-                              validator :function(value, item) {
-                                  return value > 0 ;
-                              } 
-                            }
-                          },
-                          { 
+                            title: "Unit Kerja", 
+                            width: 200, 
+                            readOnly:true,
+                            insertTemplate: function() {
+                              unitk_field_insert = jsGrid.fields.text.prototype.insertTemplate.call(this);
+                              return unitk_field_insert; 
+                            },
+                            editTemplate: function(value) {
+                              unitk_field_edit = jsGrid.fields.text.prototype.editTemplate.call(this);
+                              $(unitk_field_edit).val(value);
+                              return unitk_field_edit; 
+
+                            } 
+                          
+                          
+                          @else
                             name: "unit_kerja", 
                             type: "select", 
                             align: "left",
@@ -1102,8 +1122,7 @@
                             valueField: "DESCRIPTION", 
                             textField: "DESCRIPTION", 
                             width: 200,
-                            items: getData('divisi2'), 
-                            
+                            items: getData('divisi2'),
                             // readOnly:true,
                             // insertTemplate: function() {
                             //   unitk_field_insert = jsGrid.fields.text.prototype.insertTemplate.call(this);
@@ -1115,6 +1134,8 @@
                             //   return unitk_field_edit; 
 
                             // } 
+                          
+                          @endif
                           },
                           { name: "tw_i", 
                             type: "text", 
@@ -1534,15 +1555,11 @@
                                     }
                                   }
                                   if(type == 'divisi2'){
-
                                     if(i == 0){
                                       tmp[0]["DESCRIPTION"] = document.getElementById("unit_kerja").value;
                                     }else{
                                       tmp[i]["DESCRIPTION"] = data[i-1]["DESCRIPTION"];
                                     }
-
-                                    // $(unit_kerja).val(document.getElementById("unit_kerja").value);
-
                                   }
                                   else{
                                     if(i == 0){
