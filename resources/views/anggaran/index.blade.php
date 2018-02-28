@@ -1129,7 +1129,7 @@
                             validate: {
                               message : "Pilih Unit Kerja terlebih dahulu." ,
                               validator :function(value, item) {
-                                  return value !== null;
+                                  return value !== "None" && value !== null;
                               } 
                             },
                             insertTemplate: function() {
@@ -1565,7 +1565,7 @@
                                   }
                                   if(type == 'divisi2'){
                                     if(i == 0){
-                                      tmp[0]["DESCRIPTION"] = document.getElementById("unit_kerja").value;
+                                      tmp[0]["DESCRIPTION"] = "None";
                                     }else{
                                       tmp[i]["DESCRIPTION"] = data[i-1]["DESCRIPTION"];
                                     }
