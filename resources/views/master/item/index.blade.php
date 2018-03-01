@@ -87,7 +87,7 @@
                                                                                           @endforeach
                                                                                           @endif
                                                                                     
-                                                                                    <td>{{ $item->created_at }}</td>
+                                                                                    <td>{{ date('d-m-Y H:i:s', strtotime($item->created_at)) }}</td>
                                                                                     <td>
                                                                                           <center>
             													<a href="{{ url('item/edit/transaksi').'/'.$item->id }}" class="btn btn-outline-info btn-sm mb-1">

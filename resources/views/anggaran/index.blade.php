@@ -704,11 +704,11 @@
                               message :function(value) {
                                 status = "Pilih Jenis Terlebih dahulu";
                                 // console.log("nilai",value);
-                                if(value=="Belanja Modal"){
+                                if(value=="BELANJA MODAL"){
                                   status="Jika Jenisnya Belanja Modal, Nilai Persatuan Harus Lebih Besar dari Rp. 5.000.000";
                                   // console.log("nilai",status);
                                 }
-                                if(value=="Biaya Kantor"){
+                                if(value=="BIAYA ADMINISTRASI"){
                                   status="Mohon cek kembali kolom Nilai Per Satuan";
                                   // console.log("nilai",status);
                                 }
@@ -719,13 +719,13 @@
                                 // console.log('nilaiNone',parseInt(validDigits(item.nilai_persatuan)) );
                                   return false;
                                 }
-                                else if(value=="Belanja Modal"&&parseInt(validDigits(item.nilai_persatuan)) < 5000001){
+                                else if(value=="BELANJA MODAL"&&parseInt(validDigits(item.nilai_persatuan)) < 5000001){
                                 // console.log('nilaiBelanja',parseInt(validDigits(item.nilai_persatuan)) );
                                   return false;
                                 }
-                                else if(value=="Biaya Kantor"&&parseInt(validDigits(item.nilai_persatuan)) > 5000001){
+                                else if(value=="BIAYA ADMINISTRASI"&&parseInt(validDigits(item.nilai_persatuan)) > 5000001){
                                 // console.log('nilaiBelanja',parseInt(validDigits(item.nilai_persatuan)) );
-                                  var r=confirm("Peringatan, Jenis Biaya Kantor yang diajukan lebih dari Rp. 5.000.000, anda yakin ingin mengajukan anggaran?");
+                                  var r=confirm("Peringatan, Jenis Biaya Administrasi yang diajukan lebih dari Rp. 5.000.000, anda yakin ingin mengajukan anggaran?");
                                   if (r == true){
                                     return true;
                                   }
@@ -2057,11 +2057,15 @@
                             }
                           }else{
                             stop=true;
-                          if(list_berkas.length>0){
-                           if(list_berkas[i].length>0){
-                              stop = false;
+                            if(list_berkas.length>0){
+                             if(list_berkas[i]!=null){
+                               if(list_berkas[i].length>0){
+                                  stop = false;
+                               }
+                             }else{
+                                  stop = false;
+                             }
                             }
-                          }
                                                        
                           }
                           if(!stop){
@@ -2073,9 +2077,10 @@
                             
                           }
                         }
-                        // if(status == 1){
+                        if(status == 1){
                           stop = false;
-                        // }else{
+                        }
+                        // else{
                         //   stop = false;
                         // }
 
