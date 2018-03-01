@@ -2056,7 +2056,7 @@
                               stop=false;
                             }
                           }else{
-                            stop=true;
+                            stop=false;
                             if(list_berkas.length>0){
                              if(list_berkas[i]!=null){
                                if(list_berkas[i].length>0){
