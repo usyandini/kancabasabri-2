@@ -24,9 +24,9 @@
                     MyDateField.prototype = new jsGrid.Field({
                         css: "date-field", align: "center",
                         myCustomProperty: "foo",
-                        sorter: function(date1, date2) {
-                            return new Date(date1) - new Date(date2);
-                        },
+                        // sorter: function(date1, date2) {
+                        //     return new Date(date1) - new Date(date2);
+                        // },
                         itemTemplate: function(value) {
                             return value ? ("0" + new Date(value).getDate()).slice(-2) + '-' + ("0" + (new Date(value).getMonth() + 1)).slice(-2) + '-' + new Date(value).getFullYear() : '';
                         },
@@ -145,7 +145,13 @@
                               var result = this._insertPicker = $("<input>").datepicker({ dateFormat: 'dd-mm-yy' });
                               
                               result.on("change", function() {
-                                if (validateTransaksiDate(date_field)) {
+                                  var myString = result.val();
+                                  var array = new Array();
+                                  array = myString.split('-');
+                                  var newDate = (array[1] + "-" + array[0] + "-" + array[2]);
+                                  // alert(newDate);
+                                if (validateTransaksiDate(newDate)) {
+
                                   date_field = result.val()
                                   // date_field = ("0" + new Date(date_field).getDate()).slice(-2) + '-' + ("0" + (new Date(date_field).getMonth() + 1)).slice(-2) + '-' + new Date(date_field).getFullYear()
                                   if (mainaccount != null) {
@@ -165,9 +171,12 @@
                               date_field = ("0" + new Date(value).getDate()).slice(-2) + '-' + ("0" + (new Date(value).getMonth() + 1)).slice(-2) + '-' + new Date(value).getFullYear()
                               
                               result.on("change", function() {
-                                
-                                
-                                if (validateTransaksiDate(date_field)) {
+                                var myString = result.val();
+                                var array = new Array();
+                                array = myString.split('-');
+                                var newDate = (array[1] + "-" + array[0] + "-" + array[2]);
+                                // alert(newDate);
+                                if (validateTransaksiDate(newDate)) {
                                   // date_field = ("0" + new Date(date_field).getDate()).slice(-2) + '-' + ("0" + (new Date(date_field).getMonth() + 1)).slice(-2) + '-' + new Date(date_field).getFullYear()
                                   date_field = result.val()
                                   if (mainaccount != null) {
@@ -506,10 +515,18 @@
                     var date = today.getDate()
                     var year = today.getFullYear()
                     
-                    // if ((date > 8 && (new Date(dateInput).getMonth() < month)) || (new Date(dateInput).getMonth() > month)) {
+                    if ((date > 5 && (new Date(dateInput).getMonth() < month)) || (new Date(dateInput).getMonth() > month)) {
+                     return false
+                    }
+                    // if (new Date(dateInput).getMonth() > month){
                     //   return false
-                    // } 
-
+                    // }
+                    // if (new Date(dateInput).getMonth() < month){
+                    //   return false
+                    // }
+                    // if (new Date(dateInput).getDate() > 8){
+                    //   return false
+                    // }
                     return true
                   }
 

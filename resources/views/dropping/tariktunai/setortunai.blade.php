@@ -10,14 +10,14 @@
                 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/plugins/extensions/toastr.min.css') }}">
                 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/plugins/forms/validation/form-validation.css') }}">
                 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/forms/icheck/icheck.css') }}">
-                <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+                <!-- <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
                 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
                 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
                 <script>
                 $( function() {
                   $( "#tgl_setor" ).datepicker();
                 } );
-                </script>
+                </script> -->
                 @endsection
 
                 @section('content')
@@ -151,9 +151,9 @@
                                       <div class="form-group">
                                         <label for="tgl_setor">Tanggal Setor Tunai</label>
                                         <!-- sementara ini -->
-                                        <input id="tgl_setor" class="form-control" name="tgl_setor" required>
+                                        <!-- <input id="tgl_setor" class="form-control" name="tgl_setor" required> -->
                                         <!-- nanti diganti ini -->
-                                        <!-- <input type="text" readonly="" id="tgl_setor" class="form-control" placeholder="Tanggal Setor Tunai" name="tgl_setor" value="{{ date('d-m-Y') }}"> -->
+                                        <input type="text" readonly="" id="tgl_setor" class="form-control" placeholder="Tanggal Setor Tunai" name="tgl_setor" value="{{ date('d-m-Y') }}">
                                       </div>
                                     </div>
                                     <div class="col-md-6">

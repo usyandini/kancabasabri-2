@@ -33,7 +33,7 @@ class TarikTunai extends Model
         'stat',
         'verified_by',
         //nanti dihapus
-        'created_at'
+        // 'created_at'
     ];
 
     public function creator()

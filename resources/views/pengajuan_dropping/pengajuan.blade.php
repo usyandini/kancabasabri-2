@@ -17,12 +17,12 @@
                 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
                 <script>
                 $( function() {
-                  $( "#my_date" ).datepicker();
+                  $( "#my_date" ).datepicker({ dateFormat: 'dd-mm-yy' });
                 } );
                 </script>
                 <script>
                 $( function() {
-                  $( "#my_date2" ).datepicker();
+                  $( "#my_date2" ).datepicker({ dateFormat: 'dd-mm-yy' });
                 } );
                 </script>
               @section('content')
