@@ -1,5 +1,12 @@
                 @extends('layouts.app')
-
+                <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+                <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+                <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+                <script>
+                $( function() {
+                  $( "#tanggal" ).datepicker({ dateFormat: 'dd-mm-yy' });
+                } );
+                </script>
                 @section('additional-vendorcss')
                 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/tables/jsgrid/jsgrid-theme.min.css') }}">
                 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/tables/jsgrid/jsgrid.min.css') }}">
@@ -62,7 +69,7 @@
                                           <div class="form-group">
                                             <label>Tanggal Pengajuan</label>
                                             @if($status=='tambah')
-                                            <input type="date" id="tanggal" name="tanggal" class="form-control">
+                                            <input id="tanggal" name="tanggal" class="form-control">
                                             @else
                                             <input id="tanggal" name="tanggal" class="form-control" readonly>
                                             @endif
@@ -1565,7 +1572,7 @@
                                   }
                                   if(type == 'divisi2'){
                                     if(i == 0){
-                                      tmp[0]["DESCRIPTION"] = "None";
+                                      tmp[0]["DESCRIPTION"] = document.getElementById("unit_kerja").value;
                                     }else{
                                       tmp[i]["DESCRIPTION"] = data[i-1]["DESCRIPTION"];
                                     }

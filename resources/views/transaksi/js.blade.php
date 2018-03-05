@@ -145,12 +145,11 @@
                               var result = this._insertPicker = $("<input>").datepicker({ dateFormat: 'dd-mm-yy' });
                               
                               result.on("change", function() {
-                                  var myString = result.val();
-                                  var array = new Array();
-                                  array = myString.split('-');
-                                  var newDate = (array[1] + "-" + array[0] + "-" + array[2]);
-                                  // alert(newDate);
-                                if (validateTransaksiDate(newDate)) {
+                                  var dateVar = result.val();
+                                  var dsplit = dateVar.split("-");
+                                  var d=new Date(dsplit[2],dsplit[1]-1,dsplit[0]);
+                                  // alert(d);
+                                if (validateTransaksiDate(d)) {
 
                                   date_field = result.val()
                                   // date_field = ("0" + new Date(date_field).getDate()).slice(-2) + '-' + ("0" + (new Date(date_field).getMonth() + 1)).slice(-2) + '-' + new Date(date_field).getFullYear()
@@ -171,12 +170,11 @@
                               date_field = ("0" + new Date(value).getDate()).slice(-2) + '-' + ("0" + (new Date(value).getMonth() + 1)).slice(-2) + '-' + new Date(value).getFullYear()
                               
                               result.on("change", function() {
-                                var myString = result.val();
-                                var array = new Array();
-                                array = myString.split('-');
-                                var newDate = (array[1] + "-" + array[0] + "-" + array[2]);
+                                var dateVar = result.val();
+                                  var dsplit = dateVar.split("-");
+                                  var d=new Date(dsplit[2],dsplit[1]-1,dsplit[0]);
                                 // alert(newDate);
-                                if (validateTransaksiDate(newDate)) {
+                                if (validateTransaksiDate(d)) {
                                   // date_field = ("0" + new Date(date_field).getDate()).slice(-2) + '-' + ("0" + (new Date(date_field).getMonth() + 1)).slice(-2) + '-' + new Date(date_field).getFullYear()
                                   date_field = result.val()
                                   if (mainaccount != null) {
@@ -184,7 +182,8 @@
                                   }
                                 } else {
                                   toastr.error("Mohon input <b>tanggal transaksi</b> yang valid. Terima kasih", "Tanggal transaksi tidak valid.", { positionClass: "toast-bottom-right", showMethod: "slideDown", hideMethod: "slideUp", timeOut:10e3});
-                                  $(result).val(null)
+                                  // $(result).val(null)
+                                  date_field=null
                                 }
                               })
                               return result;   
@@ -512,19 +511,21 @@
                   function validateTransaksiDate(dateInput) {
                     var today = new Date()
                     var month = today.getMonth()
+                    var month2 = today.getMonth()-1
                     var date = today.getDate()
                     var year = today.getFullYear()
                     
                     if ((date > 5 && (new Date(dateInput).getMonth() < month)) || (new Date(dateInput).getMonth() > month)) {
                      return false
                     }
-                    // if (new Date(dateInput).getMonth() > month){
-                    //   return false
-                    // }
+                    if (date < 6 && (new Date(dateInput).getMonth() < month2)){
+                      return false
+                    }
+                    
                     // if (new Date(dateInput).getMonth() < month){
                     //   return false
                     // }
-                    // if (new Date(dateInput).getDate() > 8){
+                    // if (date > 8){
                     //   return false
                     // }
                     return true
