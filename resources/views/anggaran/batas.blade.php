@@ -10,19 +10,6 @@
                     display: none;
                   }
                 </style>
-                <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-                <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-                <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-                <script>
-                $( function() {
-                  $( "#tanggal_mulai" ).datepicker({ dateFormat: 'dd-mm-yy' });
-                } );
-                </script>
-                <script>
-                $( function() {
-                  $( "#tanggal_selesai" ).datepicker({ dateFormat: 'dd-mm-yy' });
-                } );
-                </script>
                 @endsection
 
                 @section('content')		         
@@ -70,12 +57,12 @@
                                                 <div class="col-md-6">
 	                                                <label class="control-label"><b> Tanggal Pengajuan Mulai </b></label>
 	                                                <label class="control-label"> : </label>
-											        <input class="form-control" id="tanggal_mulai" name="tanggal_mulai" required="required" min={{Date("Y-m-d")}}>
+											        <input class="form-control" type="date" name="tanggal_mulai" required="required" min={{Date("Y-m-d")}}>
 										        </div>
 										         <div class="col-md-6">
 	                                                <label class="control-label"><b> Tanggal Pengajuan Selesai </b></label>
 	                                                <label class="control-label"> : </label>
-											        <input class="form-control" id="tanggal_selesai" name="tanggal_selesai" required="required" min={{Date("Y-m-d")}}>
+											        <input class="form-control" type="date" name="tanggal_selesai" required="required" min={{Date("Y-m-d")}}>
 										        </div>
 										        <div class="col-md-12">
 										        	<br>
@@ -168,12 +155,12 @@
 	                                                <div class="col-md-6" id="mulai">
 		                                                <label class="control-label"><b> Tanggal Pengajuan Mulai </b></label>
 		                                                <label class="control-label"> : </label>
-												        <input class="form-control" name="tanggal_mulai" id="tanggal_mulai_edit" required="required" min={{Date("Y-m-d")}}>
+												        <input class="form-control" type="date" name="tanggal_mulai" id="tanggal_mulai_edit" required="required" min={{Date("Y-m-d")}}>
 											        </div>
 											        <div class="col-md-6">
 		                                                <label class="control-label"><b> Tanggal Pengajuan Selesai </b></label>
 		                                                <label class="control-label"> : </label>
-												        <input class="form-control" name="tanggal_selesai" id="tanggal_selesai_edit" required="required" min={{Date("Y-m-d")}}>
+												        <input class="form-control" type="date" name="tanggal_selesai" id="tanggal_selesai_edit" required="required" min={{Date("Y-m-d")}}>
 											        </div>
 										        </div>
 									        	<div class="modal-footer">

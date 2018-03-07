@@ -312,24 +312,24 @@ class TransaksiController extends Controller
                 $calibrate = $this->calibrateAnggaran($value, true);
             }
             $store_values = [
-                'id'            => $value->id,
-                'tgl'           => date("Y-m-d",strtotime($value->tgl)),
-                'item'          => $value->item,
-                'qty_item'      => (int)$value->qty_item,
-                'desc'          => $value->desc,
-                'sub_pos'       => $value->sub_pos,
-                'mata_anggaran' => $value->mata_anggaran,
-                'akun_bank'     => $value->bank,
-                'account'       => $value->account,
-                'anggaran'      => isset($value->toBeDeleted) ? 0 : (int)$calibrate['anggaran'],
-                'actual_anggaran' => isset($value->toBeDeleted) ? 0 : (int)$calibrate['actual_anggaran'],
-                'total'         => (int)$value->total,
-                'created_by'    => \Auth::user()->id,
-                'batch_id'      => (int)$batch_id,
-                'is_anggaran_safe' => $calibrate['is_anggaran_safe'],
-                'created_at'    => \Carbon\Carbon::now(),
+                'id'                 => $value->id,
+                'tgl'                => date("Y-m-d",strtotime($value->tgl)),
+                'item'               => $value->item,
+                'qty_item'           => (int)$value->qty_item,
+                'desc'               => $value->desc,
+                'sub_pos'            => $value->sub_pos,
+                'mata_anggaran'      => $value->mata_anggaran,
+                'akun_bank'          => $value->bank,
+                'account'            => $value->account,
+                'anggaran'           => isset($value->toBeDeleted) ? 0 : (int)$calibrate['anggaran'],
+                'actual_anggaran'    => isset($value->toBeDeleted) ? 0 : (int)$calibrate['actual_anggaran'],
+                'total'              => (int)$value->total,
+                'created_by'         => \Auth::user()->id,
+                'batch_id'           => (int)$batch_id,
+                'is_anggaran_safe'   => $calibrate['is_anggaran_safe'],
+                'created_at'         => \Carbon\Carbon::now(),
                 'currently_rejected' => 0,
-                'updated_at'    => \Carbon\Carbon::now()];
+                'updated_at'         => \Carbon\Carbon::now()];
 
             if (isset($value->isNew)) {
                 unset($store_values['id']);
