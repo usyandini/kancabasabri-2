@@ -299,38 +299,40 @@ class AnggaranController extends Controller
             $jumlah_id = count($id);
             for($x=0;$x<$jumlah_id;$x++){
                 if($request->cek[$x]=='y'){
-                    $tasks = Anggaran::find($request->id[$x]);
-                    $newTask = $tasks->replicate();
-                    $newTask->save();
-                    $newID = $newTask->id;
-                    $tasks->update(['active'=>'0']);
-                    if($newTask->persetujuan == 2){
-                        Anggaran::where('id',$newID)->update(['persetujuan'=>1]);
-                        NotificationSystem::send($newID, 18);
+                    $tasks = Anggaran::where('id', $request->id[$x])->first();
+                    // print_r($tasks);
+                    // $newTask = $tasks->replicate();
+                    // $newTask->save();
+                    // $newID = $newTask->id;
+                    // $tasks->update(['active'=>'0']);
+                    // print_r($tasks);
+                    if($tasks->persetujuan == 2){
+                        Anggaran::where('id',$tasks->id)->update(['persetujuan'=>'1']);
+                        NotificationSystem::send($tasks->id, 18);
                     }
-                    else if($newTask->persetujuan == 3){
-                        Anggaran::where('id',$newID)->update(['persetujuan'=>2]);
-                        NotificationSystem::send($newID, 20);
+                    else if($tasks->persetujuan == 3){
+                        Anggaran::where('id',$tasks->id)->update(['persetujuan'=>2]);
+                        NotificationSystem::send($tasks->id, 20);
                     }
-                    else if($newTask->persetujuan == 4){
-                        Anggaran::where('id',$newID)->update(['persetujuan'=>2]);
-                        NotificationSystem::send($newID, 22);
+                    else if($tasks->persetujuan == 4){
+                        Anggaran::where('id',$tasks->id)->update(['persetujuan'=>2]);
+                        NotificationSystem::send($tasks->id, 22);
                     }
-                    else if($newTask->persetujuan == 5){
-                        Anggaran::where('id',$newID)->update(['persetujuan'=>2]);
-                        NotificationSystem::send($newID, 24);
+                    else if($tasks->persetujuan == 5){
+                        Anggaran::where('id',$tasks->id)->update(['persetujuan'=>2]);
+                        NotificationSystem::send($tasks->id, 24);
                     }
-                    else if($newTask->persetujuan == 6){
-                        Anggaran::where('id',$newID)->update(['persetujuan'=>2]);
-                        NotificationSystem::send($newID, 26);
+                    else if($tasks->persetujuan == 6){
+                        Anggaran::where('id',$tasks->id)->update(['persetujuan'=>2]);
+                        NotificationSystem::send($tasks->id, 26);
                     }
-                    else if($newTask->persetujuan == 7){
-                        Anggaran::where('id',$newID)->update(['persetujuan'=>2]);
-                        NotificationSystem::send($newID, 28);
+                    else if($tasks->persetujuan == 7){
+                        Anggaran::where('id',$tasks->id)->update(['persetujuan'=>2]);
+                        NotificationSystem::send($tasks->id, 28);
                     }
-                    else if($newTask->persetujuan == 8){
-                        Anggaran::where('id',$newID)->update(['persetujuan'=>2]);
-                        NotificationSystem::send($newID, 30);
+                    else if($tasks->persetujuan == 8){
+                        Anggaran::where('id',$tasks->id)->update(['persetujuan'=>2]);
+                        NotificationSystem::send($tasks->id, 30);
                     }
                 }  
             }
@@ -1144,13 +1146,13 @@ class AnggaranController extends Controller
 
     public function insertStaging($nd_surat)
     {
-        $anggaran = $this->anggaranModel->where('nd_surat', $nd_surat)->where('active', '1')->get();
+        $anggaran = $this->anggaranModel->where('nd_surat', $nd_surat)->where('active', '1')->first();
         pil_kcanggaranheader::create(['RECID'=>$anggaran->id,'PIL_TRANSID'=>'AC-'.$anggaran->id,'PIL_TRANSDATE'=>$anggaran->tanggal,'DATAAREAID'=>'asbr']);
-        foreach ($anggaran as $angga) {
-            $unit_kerja = $angga->unit_kerja;
-            $listAnggaran = $this->listAnggaranModel->where('id_list_anggaran', $angga->id)
-                                                    ->where('active', '1');
-            foreach ($listAnggaran->get() as $list_anggaran) {
+        // foreach ($anggaran as $angga) {
+            $unit_kerja = $anggaran->unit_kerja;
+            $listAnggaran = $this->listAnggaranModel->where('id_list_anggaran', $anggaran->id)
+                                                    ->where('active', '1')->get();
+            foreach ($listAnggaran as $list_anggaran) {
                 //Ini Seleksi Jika Anggaran Tidak Terpusat Disimpan Kestaging
                 if($list_anggaran->terpusat != "1"){
                     if($list_anggaran->TWI > 0){
@@ -1168,7 +1170,7 @@ class AnggaranController extends Controller
                 }
 
             }
-        }
+        // }
     }
 
     public function getFiltered($nd_surat,$type){
