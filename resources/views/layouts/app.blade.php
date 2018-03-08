@@ -352,7 +352,7 @@
         <footer class="footer navbar-fixed-bottom footer-dark navbar-border" style="">
             <p class="clearfix blue-grey lighten-2 text-sm-center mb-0 px-2">
                 <span class="float-md-left d-xs-block d-md-inline-block">Copyright &copy; <?php echo date('Y'); ?> <a href="http://www.asabri.co.id/"
-                                                                                                  target="_blank" class="text-bold-800 grey darken-2">PT ASABRI (persero)</a></span>
+                                                                                                  target="_blank" class="text-bold-800 grey darken-2">PT ASABRI (Persero)</a></span>
                 <span class="float-md-right d-xs-block d-md-inline-block">All rights reserved</span>
             </p>
         </footer>
