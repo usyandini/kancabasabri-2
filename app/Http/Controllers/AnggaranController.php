@@ -824,9 +824,7 @@ class AnggaranController extends Controller
             //          ];
             //          return redirect()->back()->with('after_save', $after_save);
             //      }
-            if($setuju == 8){
-                $setuju = 9;
-            }
+            
             $tambahtanggal=date("Y-m-d", strtotime($request->tanggal));
             $anggaran_insert = [
             'tanggal'           => $tambahtanggal,
@@ -863,7 +861,7 @@ class AnggaranController extends Controller
             Anggaran::where('nd_surat', $request->nd_surat)->where('active', '1')->update($anggaran_update);
             $AnggaranData=Anggaran::create($anggaran_insert);
         }
-    
+        Anggaran::where('nd_surat', $request->nd_surat)->where('active', '1')->where('persetujuan', 8)->update(['persetujuan'=>9]);
         $index = 0;
         //list_anggaran_download
         foreach (json_decode($request->list_anggaran_values) as $value) {
