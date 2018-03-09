@@ -313,8 +313,7 @@ class TransaksiController extends Controller
             }
             $store_values = [
                 'id'                 => $value->id,
-                // 'tgl'                => date("Y-m-d",strtotime($value->tgl)),
-                'tgl'                => $value->tgl,
+                'tgl'                => date("Y-m-d",strtotime($value->tgl)),
                 'item'               => $value->item,
                 'qty_item'           => (int)$value->qty_item,
                 'desc'               => $value->desc,
