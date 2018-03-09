@@ -40,7 +40,7 @@
 	<div id="header">
 		<img src='<?php echo $_SERVER["DOCUMENT_ROOT"].'/app-assets/images/asabri-logo.png'; ?>' align="left" style="max-height: 80px;">
         <div="title">
-	        <h3><center>LAPORAN Anggaran dan Kegiatan PT ASABRI (PERSERO)</center></h3>	  
+	        <h3><center>LAPORAN Anggaran dan Kegiatan PT ASABRI (Persero)</center></h3>	  
 	    </div>
     </div>
     <br><br><br>
@@ -106,7 +106,7 @@
 						<td class='body'>{{$val['kuantitas']}}</td>
 						<td class='body'>{{$val['satuan']}}</td>
 						<td class='body'>{{number_format($val['nilai_persatuan'],2,',','.')}}</td>
-						<td class='body'>{{$val['terpusat']}}</td>
+						<td class='body'>@if($val['terpusat']==1) Ya @else Tidak @endif</td>
 						<td class='body'>{{number_format($val['TWI'],2,',','.')}}</td>
 						<td class='body'>{{number_format($val['TWII'],2,',','.')}}</td>
 						<td class='body'>{{number_format($val['TWIII'],2,',','.')}}</td>

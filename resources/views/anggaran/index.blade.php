@@ -220,7 +220,7 @@
                                         <div class="col-xs-6 ">
                                           <div class="form-group">
                                             <!-- <button type="submit" class="btn btn-success"><i class="fa fa-send"></i> Kirim</button> -->
-                                            <div id="accept_r" name="accept_r" class="btn btn-success"  onclick="changeButton()"><i class="fa fa-check"></i> Disetujui</div>
+                                            <div id="accept_r" name="accept_r" class="btn btn-success"  onclick="changeButton()" hidden="hidden"><i class="fa fa-check"></i> Disetujui</div>
                                             <div id="send_r" name="send_r" class="btn btn-success" style="display:none"><i class="fa fa-send"></i> Kirim</div>
                                           </div>
                                         </div>
