@@ -799,6 +799,8 @@ class AnggaranController extends Controller
                 $status = "1";
             }else if($setuju == 8){
                 $status = "3";
+                //yang ini
+                $setuju = 9;
             }
         }else if($request->setuju =='Simpan'){
             $status = "1";

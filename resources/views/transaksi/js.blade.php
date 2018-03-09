@@ -24,9 +24,9 @@
                     MyDateField.prototype = new jsGrid.Field({
                         css: "date-field", align: "center",
                         myCustomProperty: "foo",
-                        // sorter: function(date1, date2) {
-                        //     return new Date(date1) - new Date(date2);
-                        // },
+                        sorter: function(date1, date2) {
+                            return new Date(date1) - new Date(date2);
+                        },
                         itemTemplate: function(value) {
                             return value ? ("0" + new Date(value).getDate()).slice(-2) + '-' + ("0" + (new Date(value).getMonth() + 1)).slice(-2) + '-' + new Date(value).getFullYear() : '';
                         },
