@@ -777,7 +777,7 @@ class AnggaranController extends Controller
           case "Persetujuan RUPS"               : $setuju="6";break;
           case "Persetujuan FinRUPS"            : $setuju="7";break;
           case "Persetujuan Risalah RUPS"       : $setuju="8";break;
-          // case "Disetujuai dan Ditandatangani"  : $setuju="9";break;
+          case "Telah disetujui"  : $setuju="9";break;
         }
 
         switch($request->stat_anggaran){
@@ -799,8 +799,6 @@ class AnggaranController extends Controller
                 $status = "1";
             }else if($setuju == 8){
                 $status = "3";
-                //yang ini
-                $setuju = 9;
             }
         }else if($request->setuju =='Simpan'){
             $status = "1";
@@ -826,6 +824,9 @@ class AnggaranController extends Controller
             //          ];
             //          return redirect()->back()->with('after_save', $after_save);
             //      }
+            if($setuju == 8){
+                $setuju = 9;
+            }
             $tambahtanggal=date("Y-m-d", strtotime($request->tanggal));
             $anggaran_insert = [
             'tanggal'           => $tambahtanggal,
