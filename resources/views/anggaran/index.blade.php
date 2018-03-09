@@ -1775,7 +1775,7 @@
                                   case "6" : persetujuan="Persetujuan RUPS";break;
                                   case "7" : persetujuan="Persetujuan FinRUPS";break;
                                   case "8" : persetujuan="Persetujuan Risalah RUPS";break;
-                                  // case "9" : persetujuan="Disetujuai dan Ditandatangani";break;
+                                  case "9" : persetujuan="Telah disetujui";break;
                                 }
                                 switch(data[0].status_anggaran){
                                   case "1" : status_anggaran="Draft";break;

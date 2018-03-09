@@ -777,7 +777,7 @@ class AnggaranController extends Controller
           case "Persetujuan RUPS"               : $setuju="6";break;
           case "Persetujuan FinRUPS"            : $setuju="7";break;
           case "Persetujuan Risalah RUPS"       : $setuju="8";break;
-          case "Telah disetujui"  : $setuju="9";break;
+          case "Telah disetujui"                : $setuju="9";break;
         }
 
         switch($request->stat_anggaran){
