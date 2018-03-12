@@ -307,8 +307,15 @@ class TransaksiController extends Controller
             $value->actual_anggaran = str_replace('.', '', $value->actual_anggaran);
             $value->total = str_replace('.', '', $value->total);
             $value->item = ItemMaster::where('id', $value->item)->first()['SEGMEN_1'];
-            $tglinput=date("Y-m-d",strtotime($value->tgl));
+            date_default_timezone_set('Asia/Jakarta');
 
+            $script_tz = date_default_timezone_get();
+
+            if (strcmp($script_tz, ini_get('date.timezone'))){
+                $tglinput=date("Y-m-d",strtotime($value->tgl . "+1 days"));
+            } else {
+                $tglinput=date("Y-m-d",strtotime($value->tgl));
+            }
             if (!isset($value->toBeDeleted)) {
                 $calibrate = $this->calibrateAnggaran($value, true);
             }
