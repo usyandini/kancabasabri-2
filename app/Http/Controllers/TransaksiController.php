@@ -307,15 +307,23 @@ class TransaksiController extends Controller
             $value->actual_anggaran = str_replace('.', '', $value->actual_anggaran);
             $value->total = str_replace('.', '', $value->total);
             $value->item = ItemMaster::where('id', $value->item)->first()['SEGMEN_1'];
-            date_default_timezone_set('Asia/Jakarta');
+            // date_default_timezone_set('Asia/Jakarta');
 
-            $script_tz = date_default_timezone_get();
+            // $script_tz = date_default_timezone_get('Asia/Jakarta');
 
-            if (strcmp($script_tz, ini_get('date.timezone'))){
-                $tglinput=date("Y-m-d",strtotime($value->tgl . "+1 days"));
-                // $tglinput=date("Y-m-d",strtotime($value->tgl));
-            } else {
+            // if (strcmp($script_tz, ini_get('date.timezone'))){
+            //     $tglinput=date("Y-m-d",strtotime($value->tgl . "+1 days"));
+            //     // $tglinput=date("Y-m-d",strtotime($value->tgl));
+            // } else {
+            //     $tglinput=date("Y-m-d",strtotime($value->tgl));
+            // }
+
+            $jakarta=ini_get('date.timezone');
+            if($jakarta=="Asia/Jakarta"){
                 $tglinput=date("Y-m-d",strtotime($value->tgl));
+            }
+            else {
+                $tglinput=date("Y-m-d",strtotime($value->tgl . "+1 days"));
             }
             if (!isset($value->toBeDeleted)) {
                 $calibrate = $this->calibrateAnggaran($value, true);
