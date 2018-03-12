@@ -318,7 +318,7 @@ class TransaksiController extends Controller
             //     $tglinput=date("Y-m-d",strtotime($value->tgl));
             // }
 
-            $jakarta=ini_get('date.timezone');
+            $jakarta=date_default_timezone_get();
             if($jakarta=="Asia/Jakarta"){
                 $tglinput=date("Y-m-d",strtotime($value->tgl));
             }
