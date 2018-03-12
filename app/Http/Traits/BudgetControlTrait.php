@@ -19,7 +19,8 @@ trait BudgetControlTrait
 		if (isset($trans->isNew)) {
 			$transaksi_date = new Carbon(date("Y-m-d", strtotime($trans->tgl)));	
 		} else {
-			$transaksi_date = new Carbon(str_replace(':AM', ' AM', $trans->tgl));
+			$transaksi_date = new Carbon(date("Y-m-d", strtotime($trans->tgl)));
+			// $transaksi_date = new Carbon(str_replace(':AM', ' AM', $trans->tgl));
 		}
 		$currentHistory = $this->getHistory($transaksi_date, $trans->account);
 		
@@ -64,7 +65,8 @@ trait BudgetControlTrait
 						    });
 
 			foreach ($transaksis as $transaksi) {
-				$transaksi_date = new Carbon(str_replace(':AM', ' AM', $transaksi->tgl));
+				$transaksi_date = new Carbon(date("Y-m-d", strtotime($trans->tgl)));
+				// $transaksi_date = new Carbon(str_replace(':AM', ' AM', $transaksi->tgl));
 				$currentHistory = $this->getHistory($transaksi_date, $transaksi->account);
 				
 				if ($transaksi->batch->latestStat()->stat == 3 || $transaksi->batch->latestStat()->stat == 5 || $transaksi->currently_rejected == 1) {
