@@ -1233,6 +1233,14 @@ class TransaksiController extends Controller
           return view('transaksi.rejecthistory', compact('a'));
     }
 
+
+    public function adji()
+    {
+        $c=BudgetControlH::orderBy('id', 'ASC')->get();
+        return view('transaksi.adji', [
+            'c'    => $c
+            ]);
+    }
     // public function adji()
     // {
     //     $a= DB::select("SELECT max(id) as id
