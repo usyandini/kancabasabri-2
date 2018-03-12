@@ -307,13 +307,14 @@ class TransaksiController extends Controller
             $value->actual_anggaran = str_replace('.', '', $value->actual_anggaran);
             $value->total = str_replace('.', '', $value->total);
             $value->item = ItemMaster::where('id', $value->item)->first()['SEGMEN_1'];
+            $tglinput=date("Y-m-d",strtotime($value->tgl));
 
             if (!isset($value->toBeDeleted)) {
                 $calibrate = $this->calibrateAnggaran($value, true);
             }
             $store_values = [
                 'id'                 => $value->id,
-                'tgl'                => date("Y-m-d",strtotime($value->tgl)),
+                'tgl'                => $tglinput,
                 'item'               => $value->item,
                 'qty_item'           => (int)$value->qty_item,
                 'desc'               => $value->desc,
