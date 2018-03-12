@@ -312,7 +312,8 @@ class TransaksiController extends Controller
             $script_tz = date_default_timezone_get();
 
             if (strcmp($script_tz, ini_get('date.timezone'))){
-                $tglinput=date("Y-m-d",strtotime($value->tgl . "+1 days"));
+                // $tglinput=date("Y-m-d",strtotime($value->tgl . "+1 days"));
+                $tglinput=date("Y-m-d",strtotime($value->tgl));
             } else {
                 $tglinput=date("Y-m-d",strtotime($value->tgl));
             }
