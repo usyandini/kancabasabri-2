@@ -128,11 +128,22 @@
                               
                               @if($reverse)
                               @if($active_batch->posted()==$active_batch->staged())
+                              <?php 
+                              $a= DB::select("SELECT max(tgl) as tgl
+                              FROM [DBCabang].[dbo].[transaksi] where batch_id=$batch_id");
+                              foreach ($a as $c) {
+                                
+                              }
+                              $b=date('m',strtotime($c->tgl));
+                              $y=date('m');
+                              ?>
+                              @if ($b==$y)
                               <div class="col-sm-12 col-lg-3 col-xl-2 pull-right">
                                 <div class="form-group">
-                                  <button data-toggle="modal" data-target="#reverse" class="btn btn-primary pull-right" id="simpan" value="Reverse"><i class="fa fa-undo"></i> Reverse</button>
+                                  <button data-toggle="modal" data-target="#reverse" class="btn btn-warning pull-right" id="simpan" value="Reverse"><i class="fa fa-undo"></i> Reverse</button>
                                 </div>
                               </div>
+                              @endif
                               @endif
                               @endif
                             </div>

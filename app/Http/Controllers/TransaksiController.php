@@ -548,6 +548,7 @@ class TransaksiController extends Controller
 
         return view('transaksi.verifikasi', [ 
             'editable'      => false,
+            'batch_id'      => $batch,
             'reverse'       => $reverse,
             'verifiable'    => $verifiable,
             'active_batch'  => $valid_batch,
