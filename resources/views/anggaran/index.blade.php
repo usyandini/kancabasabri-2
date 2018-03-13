@@ -192,7 +192,7 @@
                                       <div class="col-xs-2 ">
                                         @if($beda)
                                         <div class="form-group" id="edit_button" style="display:{{$display['edit']}}">
-                                          <a href="{{ url('anggaran/edit/'.$filters['nd_surat'].'/1') }}" id="edit" name="edit" class="btn btn-primary"><i class="fa fa-edit"></i> Ubah</a>
+                                          <a href="{{ url('anggaran/edit/'.base64_encode($filters['nd_surat']).'/1') }}" id="edit" name="edit" class="btn btn-primary"><i class="fa fa-edit"></i> Ubah</a>
                                         </div>
                                         @endif
                                       </div>
@@ -213,7 +213,7 @@
                                         <div class="col-xs-6">
                                           <div class="form-group">
                                             <!-- <button type="submit" class="btn btn-warning"><i class="fa fa-edit"></i> Edit</button> -->
-                                            <a href="{{url('anggaran/persetujuan/'.$filters['nd_surat'].'/3')}}" id="edit_r" name="edit_r"  class="btn btn-warning"><i class="fa fa-edit"></i> Edit</a>
+                                            <a href="{{url('anggaran/persetujuan/'.base64_encode($filters['nd_surat']).'/3')}}" id="edit_r" name="edit_r"  class="btn btn-warning"><i class="fa fa-edit"></i> Edit</a>
                                             <div onclick="check('Simpan')" id="save_r" name="save_r"  class="btn btn-primary" style="display:none"><i class="fa fa-save"></i> Simpan</div>
                                           </div>
                                         </div>
@@ -471,7 +471,7 @@
                         loadData: function(filter) {
                           return $.ajax({
                               type: "GET",
-                              url:"{{ (checkActiveMenu('anggaran') == 'active' ? url('anggaran') : url('anggaran/get/filtered/'.$filters['nd_surat'].'/list_anggaran') ) }}",
+                              url:"{{ (checkActiveMenu('anggaran') == 'active' ? url('anggaran') : url('anggaran/get/filtered/'.base64_encode($filters['nd_surat']).'/list_anggaran') ) }}",
                               data: filter,
                               dataType: "JSON"
                           })
@@ -1760,7 +1760,7 @@
                   function setDetailAnggaran(nd_surat){
                     if(nd_surat!=null&&tanggal!=null)
                       $.ajax({
-                          'async': false, 'type': "GET", 'dataType': 'JSON', 'url': "{{ url('anggaran/get/filtered/') }}/"+nd_surat+"/anggaran",
+                          'async': false, 'type': "GET", 'dataType': 'JSON', 'url': "{{ url('anggaran/get/filtered/') }}/"+btoa(nd_surat)+"/anggaran",
                           'success': function (data) {
                                 var persetujuan = status_anggaran = "";
                                 switch(data[0].persetujuan){
@@ -1974,7 +1974,7 @@
                   }
                   function getListData() {
                     $.ajax({
-                          'async': false, 'type': "GET", 'dataType': 'JSON', 'url': "{{ url('anggaran/get/filtered/'.$filters['nd_surat'].'/list_anggaran') }}",
+                          'async': false, 'type': "GET", 'dataType': 'JSON', 'url': "{{ url('anggaran/get/filtered/'.base64_encode($filters['nd_surat']).'/list_anggaran') }}",
                           'success': function (data) {
                               inputs = data;
                               download="";
@@ -2195,7 +2195,7 @@
                     document.getElementById("edit_r").style.display="block";
                     // document.getElementById("send_r").style.display="block";
                     var edit_href = document.getElementById('edit_r'); //or grab it by tagname etc
-                    edit_href.href = "{{url('anggaran/persetujuan/'.$filters['nd_surat'].'/2')}}"
+                    edit_href.href = "{{url('anggaran/persetujuan/'.base64_encode($filters['nd_surat']).'/2')}}"
                   }
                   function readerPrev(index, tempIdCount){
                     // tempIdCount++;

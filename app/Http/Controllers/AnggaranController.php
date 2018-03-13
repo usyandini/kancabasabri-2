@@ -471,7 +471,7 @@ class AnggaranController extends Controller
             'nd_surat' => '',
             'filters' =>$filter]);
 
-        // echo $request->cari_stat_anggaran;
+        // echo $request->cari_nd_surat;
     }
 
     public function tambah_anggaran() 
@@ -552,7 +552,8 @@ class AnggaranController extends Controller
     }
 
     public function edit_anggaran($nd_surat) 
-    {   
+    { 
+        $nd_surat2=base64_decode($nd_surat);  
         $editable = false;
         $displayEdit = 'none';
         $displaySave = 'none';
@@ -572,7 +573,7 @@ class AnggaranController extends Controller
                 $userUnit = $div->DESCRIPTION;
             } 
         }
-        $anggaran = $this->anggaranModel->where('nd_surat', $nd_surat)->where('active', '1')->orderBy('id', 'DESC')->get();
+        $anggaran = $this->anggaranModel->where('nd_surat', $nd_surat2)->where('active', '1')->orderBy('id', 'DESC')->get();
         $unit = "";
         $persetujuan = "";
         foreach ($anggaran as $angg) {
@@ -623,18 +624,19 @@ class AnggaranController extends Controller
         }
 
         // echo $beda?1:0;
+        // echo $nd_surat2;
         return view('anggaran.index', [
             'title' => 'Ubah Kegiatan dan Anggaran',
             'userCabang' =>$this->userCabang,
             'userDivisi' =>$this->userDivisi,
-            'nd_surat' => $nd_surat,
+            'nd_surat' => $nd_surat2,
             'beda' => $beda , 
             'batas' =>$batas,
             'mulai' =>$mulai,
             'status' => 'edit',
             'reject' => false,
             'persetujuan'=>$persetujuan,
-            'filters' => array('nd_surat' => $nd_surat),
+            'filters' => array('nd_surat' => $nd_surat2),
             'display' => array('edit' => $displayEdit,
                     'save' => $displaySave,
                     'send' => $displaySend)]);
@@ -642,6 +644,7 @@ class AnggaranController extends Controller
 
     public function persetujuan_anggaran($nd_surat,$status) 
     {
+        $nd_surat2=base64_decode($nd_surat);
         $editable = false;
         $reject = false;
         if($status == '2'||$status == '3'){
@@ -664,7 +667,7 @@ class AnggaranController extends Controller
                 $userUnit = $div->DESCRIPTION;
             } 
         }
-        $anggaran = $this->anggaranModel->where('nd_surat', $nd_surat)->where('active', '1')->orderBy('id', 'DESC')->get();
+        $anggaran = $this->anggaranModel->where('nd_surat', $nd_surat2)->where('active', '1')->orderBy('id', 'DESC')->get();
         $unit = "";
         $persetujuan = "";
         foreach ($anggaran as $angg) {
@@ -709,14 +712,14 @@ class AnggaranController extends Controller
             'title' => 'Persetujuan Kegiatan dan Anggaran',
             'userCabang' =>$this->userCabang,
             'userDivisi' =>$this->userDivisi,
-            'nd_surat' => $nd_surat,
+            'nd_surat' => $nd_surat2,
             'beda' => $beda , 
             'batas' =>null,
             'mulai' =>false,
             'status' => 'setuju',
             'reject' => $reject,
             'persetujuan'=>$persetujuan,
-            'filters' => array('nd_surat' => $nd_surat),
+            'filters' => array('nd_surat' => $nd_surat2),
             'display' => array('edit' => "none",
                     'save' => "none",
                     'send' => "none",)]);
@@ -1027,7 +1030,7 @@ class AnggaranController extends Controller
 
         }
 
-        $status_view = redirect('anggaran/edit/'.$request->nd_surat); 
+        $status_view = redirect('anggaran/edit/'.base64_encode($request->nd_surat)); 
         // echo $setuju;
         if($request->setuju=='Kirim'||$request->setuju=='Setuju'){
             // *Hapus Notifikasi Ke Kanit Kerja*
@@ -1147,7 +1150,8 @@ class AnggaranController extends Controller
 
     public function insertStaging($nd_surat)
     {
-        $anggaran = $this->anggaranModel->where('nd_surat', $nd_surat)->where('active', '1')->first();
+        $nd_surat2=base64_decode($nd_surat);
+        $anggaran = $this->anggaranModel->where('nd_surat', $nd_surat2)->where('active', '1')->first();
         pil_kcanggaranheader::create(['RECID'=>$anggaran->id,'PIL_TRANSID'=>'AC-'.$anggaran->id,'PIL_TRANSDATE'=>$anggaran->tanggal,'DATAAREAID'=>'asbr']);
         // foreach ($anggaran as $angga) {
             $unit_kerja = $anggaran->unit_kerja;
@@ -1175,15 +1179,16 @@ class AnggaranController extends Controller
     }
 
     public function getFiltered($nd_surat,$type){
+        $decode_nd_surat = base64_decode($nd_surat);
         $result = [];
 
         if($type == "anggaran"){
-            $result = $this->anggaranModel->where('nd_surat', $nd_surat)->orderBy('id', 'DESC')->take(5)->get();
+            $result = $this->anggaranModel->where('nd_surat', $decode_nd_surat)->orderBy('id', 'DESC')->take(5)->get();
             // $result = $this->anggaranModel->where('nd_surat', $nd_surat)->where('active','1')->get();
 
         }else if($type == "list_anggaran"){
 
-            $Anggaran = $this->anggaranModel->where('nd_surat', $nd_surat)->where('active', '1');
+            $Anggaran = $this->anggaranModel->where('nd_surat', $decode_nd_surat)->where('active', '1');
             foreach ($Anggaran->get() as $anggaran) {
                 $listAnggaran = $this->listAnggaranModel->where('id_list_anggaran', $anggaran->id)->where('active', '1');
 
@@ -1390,7 +1395,7 @@ class AnggaranController extends Controller
     }
 
     public function getFilteredAnggaran($nd_surat,$status,$unit){
-        $decode_nd_surat = urldecode($nd_surat);
+        $decode_nd_surat = base64_decode($nd_surat);
         $decode_unit = urldecode($unit);
         $result = [];
 
@@ -1405,8 +1410,8 @@ class AnggaranController extends Controller
         }
 
         $result = $query->where('unit_kerja',$decode_unit)->where('active', '1')->orderBy('updated_at','DESC')->get();
-        
-        return response()->json($result);
+        echo $result;
+        // return response()->json($result);
     }
 
     public function getAttributes($type,$id)

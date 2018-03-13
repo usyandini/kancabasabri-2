@@ -63,7 +63,7 @@
                               <div class="col-lg-6 col-xl-3 mb-1">
                                 <div class="form-group">
                                   <select class="select2 form-control" name="cari_stat_anggaran" id="cari_stat_anggaran" onchange="set_nd_surat()">
-                                    <option disabled="" selected="">Status Anggaran</option>
+                                    <!-- <option disabled="" selected="">Status Anggaran</option> -->
                                     <option value="0">Semua</option>
                                     <option value="1">Draft</option>
                                     <option value="2">Transfer</option>
@@ -146,7 +146,7 @@
                       loadData: function(filter) {
                         return $.ajax({
                           type: "GET",
-                          url:"{{ (checkActiveMenu('anggaran') == 'active' ? url('anggaran') : url('anggaran/get/filteredAnggaran/'.$filters['nd_surat'].'/'.$filters['status_anggaran'].'/'.urlencode(strtolower($filters['unit_kerja']))) ) }}",
+                          url:"{{ (checkActiveMenu('anggaran') == 'active' ? url('anggaran') : url('anggaran/get/filteredAnggaran/'.base64_encode($filters['nd_surat']).'/'.$filters['status_anggaran'].'/'.urlencode(strtolower($filters['unit_kerja']))) ) }}",
                           data: filter,
                           dataType: "JSON"
                         })
@@ -230,7 +230,7 @@
                           case "6" : persetujuan="Persetujuan RUPS";break;
                           case "7" : persetujuan="Persetujuan FinRUPS";break;
                           case "8" : persetujuan="Persetujuan Risalah RUPS";break;
-                          case "9" : persetujuan="Disetujuai dan Ditandatangani";break;
+                          case "9" : persetujuan="Disetujui dan Ditandatangani";break;
                         }
                         return persetujuan;
                       }
@@ -248,9 +248,9 @@
                               } 
                           ?>
                           @if($setuju)
-                          var button = "<a href='{{ url('anggaran/persetujuan/')}}/"+value+"./1'   class='btn btn-sm btn-primary'> Detail</a>";
+                          var button = "<a href='{{ url('anggaran/persetujuan/')}}/"+btoa(value)+"./1'   class='btn btn-sm btn-primary'> Detail</a>";
                           @else
-                          var button = "<a href='{{ url('anggaran/edit/')}}/"+value+"'   class='btn btn-sm btn-primary'> Detail</a>";
+                          var button = "<a href='{{ url('anggaran/edit/')}}/"+btoa(value)+"' class='btn btn-sm btn-primary'> Detail</a>";
                           @endif
                           return button;
                         }
