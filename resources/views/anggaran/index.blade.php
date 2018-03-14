@@ -917,15 +917,19 @@
                             title: "Terpusat", 
                             width: 80,
                             items:[
+                            @if ((Auth::user()->cabang=='00') && ($persetujuan==-1))
+                                { Name: "Ya", Id: '1' }
+                            @else
                                 { Name: "-", Id: '0' },
                                 { Name: "Ya", Id: '1' },
                                 { Name: "Tidak", Id: '2'}
+                            @endif
                             ],
                             valueField: "Id",
                             textField: "Name",
                             insertTemplate: function() {
                               var result = jsGrid.fields.select.prototype.insertTemplate.call(this);
-                              result.on("change", function() {
+                              result.on("click", function() {
                                   // if({{$persetujuan}}!=1)
                                     changeDataUnitKerjaLine($(this).val(),"insert");
                               });
@@ -935,7 +939,7 @@
                               var result = jsGrid.fields.select.prototype.editTemplate.call(this);
                               $(result).val(value);
                               
-                              result.on("change", function() {
+                              result.on("click", function() {
                                   // if({{$persetujuan}}!=1)
                                     changeDataUnitKerjaLine($(this).val(),"edit");
                               });

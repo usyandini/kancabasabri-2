@@ -277,13 +277,13 @@ class NotificationController extends Controller
             case 14:
                 return redirect('dropping/penyesuaian/'.$penyesuaian->id_dropping);
             case 15:
-                return redirect('anggaran/persetujuan/'.$anggaran->nd_surat."/1");
+                return redirect('anggaran/persetujuan/'.base64_encode($anggaran->nd_surat)."/1");
             case 16:
-                return redirect('anggaran/edit/'.$anggaran->nd_surat);
+                return redirect('anggaran/edit/'.base64_encode($anggaran->nd_surat));
             case 17:
-                return redirect('anggaran/persetujuan/'.$anggaran->nd_surat."/1");
+                return redirect('anggaran/persetujuan/'.base64_encode($anggaran->nd_surat)."/1");
             case 18:
-                return redirect('anggaran/edit/'.$anggaran->nd_surat);
+                return redirect('anggaran/edit/'.base64_encode($anggaran->nd_surat));
             case 19:
             case 20:
             case 21:
@@ -297,7 +297,7 @@ class NotificationController extends Controller
             case 29:
             case 30:
             case 31:
-                return redirect('anggaran/persetujuan/'.$anggaran->nd_surat."/1");
+                return redirect('anggaran/persetujuan/'.base64_encode($anggaran->nd_surat)."/1");
             case 32:
                 if(Gate::check('tambah_pelaporan_anggaran'))
                     return redirect('pelaporan/tambah/item/laporan_anggaran/'.$form_master->id);
