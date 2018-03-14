@@ -918,7 +918,7 @@
                             width: 80,
                             items:[
                             @if ((Auth::user()->cabang=='00') && ($persetujuan==-1))
-                                { Name: "Ya", Id: '1' }
+                                { Name: "Ya", Id: '2' }
                             @else
                                 { Name: "-", Id: '0' },
                                 { Name: "Ya", Id: '1' },
