@@ -111,10 +111,10 @@
 						<td class='body'>{{$val['satuan']}}</td>
 						<td class='body'>{{number_format($val['nilai_persatuan'],2,',','.')}}</td>
 						<td class='body'>@if($val['terpusat']==1) Ya @else Tidak @endif</td>
-						<td class='body'>{{number_format($val['TWI'],2,',','.')}}</td>
-						<td class='body'>{{number_format($val['TWII'],2,',','.')}}</td>
-						<td class='body'>{{number_format($val['TWIII'],2,',','.')}}</td>
-						<td class='body'>{{number_format($val['TWIV'],2,',','.')}}</td>
+						<td class='body'>@if($val['terpusat']==1) Terpusat @else {{number_format($val['TWI'],2,',','.')}} @endif</td>
+						<td class='body'>@if($val['terpusat']==1) Terpusat @else {{number_format($val['TWII'],2,',','.')}} @endif</td>
+						<td class='body'>@if($val['terpusat']==1) Terpusat @else {{number_format($val['TWIII'],2,',','.')}} @endif</td>
+						<td class='body'>@if($val['terpusat']==1) Terpusat @else {{number_format($val['TWIV'],2,',','.')}} @endif</td>
 						<td class='body'>{{number_format($val['anggaran_setahun'],2,',','.')}}</td>
 					</tr>
 					@endforeach
