@@ -72,7 +72,11 @@
                                                                                             <span class="tag tag-success">Sudah di verifikasi</span>
                                                                                             @endif
                                                                                           @else
-                                                                                          <span class="tag tag-warning">Belum di verifikasi</span>
+                                                                                            @if($d->stat==3)
+                                                                                              <span class="tag tag-danger">Telah ditolak</span>
+                                                                                            @else
+                                                                                              <span class="tag tag-warning">Belum di verifikasi</span>
+                                                                                            @endif
                                                                                           @endif
                                                                                     </center></td>
                                                                                     <td><center>

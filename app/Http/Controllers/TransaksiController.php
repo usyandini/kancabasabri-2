@@ -20,7 +20,7 @@ use App\Models\StagingTransaksi;
 use App\Models\StagingTransaksiReverse;
 use App\Models\KantorCabang;
 use App\Models\ItemMaster;
-
+use Illuminate\Support\Facades\Gate;
 use Validator;
 use Carbon;
 use Response;
@@ -318,12 +318,13 @@ class TransaksiController extends Controller
             //     $tglinput=date("Y-m-d",strtotime($value->tgl));
             // }
 
-            $jakarta=date_default_timezone_get();
-            if($jakarta=="Asia/Jakarta"){
-                $tglinput=date("Y-m-d",strtotime($value->tgl));
+            // $jakarta=date_default_timezone_get();
+            // if($jakarta=="Asia/Jakarta"){
+            if(Auth::user()->cabang == '21' || Auth::user()->cabang == '29'){
+                $tglinput=date("Y-m-d",strtotime($value->tgl . "+1 days"));
             }
             else {
-                $tglinput=date("Y-m-d",strtotime($value->tgl . "+1 days"));
+                $tglinput=date("Y-m-d",strtotime($value->tgl));
             }
             if (!isset($value->toBeDeleted)) {
                 $calibrate = $this->calibrateAnggaran($value, true);
