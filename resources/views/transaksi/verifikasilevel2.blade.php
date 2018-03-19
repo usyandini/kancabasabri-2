@@ -65,15 +65,15 @@
                                                                                     <td><center>
                                                                                           @if($c)
                                                                                             @if($d->stat==4)
-                                                                                            <span class="tag tag-warning">Belum di verifikasi</span>
+                                                                                            <span class="tag tag-warning">Belum diverifikasi</span>
                                                                                             @else
-                                                                                            <span class="tag tag-success">Sudah di verifikasi</span>
+                                                                                            <span class="tag tag-success">Telah diverifikasi</span>
                                                                                             @endif
                                                                                           @else
                                                                                             @if($d->stat==5)
                                                                                               <span class="tag tag-danger">Telah ditolak</span>
                                                                                             @else
-                                                                                              <span class="tag tag-warning">Belum di verifikasi</span>
+                                                                                              <span class="tag tag-warning">Belum diverifikasi</span>
                                                                                             @endif
                                                                                           @endif
                                                                                     </center></td>
