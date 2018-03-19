@@ -160,7 +160,7 @@
                                         <table>
                                           @forelse($berkas as $value)
                                             <tr>
-                                              <li><a href="{{ url('dropping/setortunai/berkas/download').'/'.$value->id }}" target="_blank">{{ $value->name }}</a></li>
+                                              <li><a href="{{ url('dropping/tariktunai/berkas/download').'/'.$value->id }}" target="_blank">{{ $value->name }}</a></li>
                                             </tr>
                                           @empty
                                             <code>Tidak ada berkas terlampir</code>
