@@ -320,7 +320,22 @@ class TransaksiController extends Controller
 
             // $jakarta=date_default_timezone_get();
             // if($jakarta=="Asia/Jakarta"){
-            if(\Auth::user()->cabang == '21' || \Auth::user()->cabang == '29' || \Auth::user()->cabang == '22' || \Auth::user()->cabang == '18' || \Auth::user()->cabang == '28'){
+            if(\Auth::user()->cabang == '16' || 
+               \Auth::user()->cabang == '17' || 
+               \Auth::user()->cabang == '18' || 
+               \Auth::user()->cabang == '19' ||
+               \Auth::user()->cabang == '20' || 
+               \Auth::user()->cabang == '21' || 
+               \Auth::user()->cabang == '22' || 
+               \Auth::user()->cabang == '23' || 
+               \Auth::user()->cabang == '24' || 
+               \Auth::user()->cabang == '25' || 
+               \Auth::user()->cabang == '26' || 
+               \Auth::user()->cabang == '28' ||
+               \Auth::user()->cabang == '29' || 
+               \Auth::user()->cabang == '32' ||  
+               \Auth::user()->cabang == '33')
+            {
                 $tglinput=date("Y-m-d",strtotime($value->tgl . "+1 days"));
             }
             else {
