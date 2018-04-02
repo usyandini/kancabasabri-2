@@ -886,6 +886,20 @@ class AnggaranController extends Controller
             if($anggaranId == "" && $request->status == 'tambah'){
                 $anggaranId = $AnggaranData->id;
             }
+            if($value->keterangan!=null){
+                if($setuju="-1"){
+                    $tolak= 0;
+                    $keterangan="";
+                }
+                else{
+                    $tolak= 1;
+                    $keterangan=$value->keterangan;
+                }
+            }
+            else {
+                $tolak= 0;
+                $keterangan="";
+            }
             if($request->setuju != 'Simpan' || ($request->setuju == 'Simpan' && $value->id == -1)){
                 // echo "baru";
                 $anggaran_insert_list = [
@@ -908,7 +922,9 @@ class AnggaranController extends Controller
                 'anggaran_setahun'  => (double)$value->anggarana_setahun,
                 'id_first'          => $idBefore,
                 'id_list_anggaran'  => $anggaranId,
-                'active'            => '1'
+                'active'            => '1',
+                'is_rejected'       => $tolak,
+                'keterangan'        => $keterangan
                 ];
             }
 
@@ -916,7 +932,7 @@ class AnggaranController extends Controller
             if($request->setuju == 'Simpan'){
                 $active_list = '1';
             }
-
+            
             $anggaran_update_list = [
                 'jenis'             => $value->jenis,
                 'kelompok'          => $value->kelompok,
@@ -935,7 +951,9 @@ class AnggaranController extends Controller
                 'TWIV'              => (double)$value->tw_iv,
                 'anggaran_setahun'  => (double)$value->anggarana_setahun,
                 'active'            => $active_list,
-                'updated_at'        => \Carbon\Carbon::now()
+                'updated_at'        => \Carbon\Carbon::now(),
+                'is_rejected'       => $tolak,
+                'keterangan'        => $keterangan
                 ];
 
             $LAnggaranInsert;
@@ -1234,8 +1252,9 @@ class AnggaranController extends Controller
                         'tw_iv'             => (int)$list_anggaran->TWIV,
                         'id_first'          => $list_anggaran->id_first,
                         'anggarana_setahun' => (int)$list_anggaran->anggaran_setahun,
-                        'file'              => $fileList
-                        
+                        'file'              => $fileList,
+                        'is_rejected'       => $list_anggaran->is_rejected,
+                        'keterangan'        => $list_anggaran->keterangan
                     ];
                     $countIndex++;
                 }  

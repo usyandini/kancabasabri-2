@@ -12,7 +12,7 @@
                 .hide {
                   display: none;
                 }
-            </style>
+                </style>
             @endsection
 
             @section('content')

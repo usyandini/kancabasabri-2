@@ -2,10 +2,25 @@
                 <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
                 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
                 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+                <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/plugins/forms/checkboxes-radios.min.css') }}">
+                <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/forms/icheck/icheck.css') }}">
+                <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/forms/icheck/custom.css') }}">
+                <script src="{{ asset('app-assets/vendors/js/forms/icheck/icheck.min.js') }}" type="text/javascript"></script>
+              <script src="{{ asset('app-assets/js/scripts/forms/checkbox-radio.min.js') }}" type="text/javascript"></script>
                 <script>
-                $( function() {
+                $(function() {
                   $( "#tanggal" ).datepicker({ dateFormat: 'dd-mm-yy' });
                 } );
+                </script>
+                <script>
+                  $('tolak_field_insert').iCheck({
+                    checkboxClass: 'icheckbox_flat-green',
+                    increaseArea: '20%' // optional
+                  });
+                  $('tolak_field_edit').iCheck({
+                    checkboxClass: 'icheckbox_flat-green',
+                    increaseArea: '20%' // optional
+                  });
                 </script>
                 @section('additional-vendorcss')
                 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/tables/jsgrid/jsgrid-theme.min.css') }}">
@@ -13,6 +28,15 @@
                 <style type="text/css">
                   .hide {
                     display: none;
+                  }
+                  .jsgrid-row .jsgrid-cell, .jsgrid-alt-row .jsgrid-cell {
+                  background: inherit;
+                  }
+                  .merah {
+                    background: rgb(247, 137, 136);
+                  }
+                  .kuning {
+                    background: rgb(255, 204, 0);
                   }
                 </style>
                 @endsection
@@ -447,7 +471,9 @@
                       sorting: true,
                       paging: true,
                       autoload: true,
-
+                      rowClass: function(item, itemIndex) {
+                        return item.is_rejected != true ? "" : "kuning"
+                      }, 
                       
                       @if((Gate::check('ubah_item_a')||(Gate::check('tambah_a')&&$status=="tambah"))&& $beda)
                         editing: true,
@@ -489,6 +515,7 @@
                           item["anggarana_setahun"]= validDigits(item.anggarana_setahun);
                           item["delete"]="none";
                           item["file"]=[];
+                          // item["is_rejected"] = true;
 
                           click_berkas =true;
                                                       
@@ -1539,6 +1566,26 @@
                             //   }
                             // }
                           },
+                          @if($persetujuan==1)
+                          
+                          {
+                            name: "keterangan", 
+                            type: "textarea", 
+                            align: "left",
+                            title: "Keterangan", 
+                            width: 200, 
+                          },
+                          @elseif($persetujuan==-1)
+                          
+                          {
+                            name: "keterangan", 
+                            type: "textarea", 
+                            align: "left",
+                            title: "Keterangan", 
+                            width: 200,
+                            readOnly: true,
+                          },
+                          @endif
                           { type: "control",
                             width: 50,
                             @if(((Gate::check('tambah_item_a')||Gate::check('ubah_item_a')||Gate::check('hapus_item_a'))&& $beda)||(Gate::check('tambah_a')&&$status == "tambah"))

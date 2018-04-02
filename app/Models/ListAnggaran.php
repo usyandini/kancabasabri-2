@@ -31,5 +31,8 @@ class ListAnggaran extends Model
             'id_list_anggaran',
     		'active',
     		'created_at', 
-    		'updated_at'];
+    		'updated_at',
+            'is_rejected',
+            'keterangan'
+        ];
 }
