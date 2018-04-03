@@ -886,8 +886,9 @@ class AnggaranController extends Controller
             if($anggaranId == "" && $request->status == 'tambah'){
                 $anggaranId = $AnggaranData->id;
             }
-            if($value->keterangan!=null){
-                if($setuju="-1"){
+            if($value->keterangan!=""){
+                // $anggaran2=Anggaran::where('nd_surat', $request->nd_surat)->where('active', '1')->first();
+                if($request->persetujuan==""){
                     $tolak= 0;
                     $keterangan="";
                 }
@@ -895,6 +896,8 @@ class AnggaranController extends Controller
                     $tolak= 1;
                     $keterangan=$value->keterangan;
                 }
+                // $tolak= 1;
+                // $keterangan=$value->keterangan;
             }
             else {
                 $tolak= 0;
