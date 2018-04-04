@@ -886,22 +886,17 @@ class AnggaranController extends Controller
             if($anggaranId == "" && $request->status == 'tambah'){
                 $anggaranId = $AnggaranData->id;
             }
-            if($value->keterangan!=""){
-                // $anggaran2=Anggaran::where('nd_surat', $request->nd_surat)->where('active', '1')->first();
-                if($request->persetujuan==""){
-                    $tolak= 0;
-                    $keterangan="";
+            if($request->setuju =='Tolak'){
+                if($value->is_rejected == "1"){
+                // if($request->keterangan ==""){
+                    $tolak = 1;
                 }
                 else{
-                    $tolak= 1;
-                    $keterangan=$value->keterangan;
+                    $tolak = 0;
                 }
-                // $tolak= 1;
-                // $keterangan=$value->keterangan;
             }
             else {
-                $tolak= 0;
-                $keterangan="";
+                $tolak = 0;
             }
             if($request->setuju != 'Simpan' || ($request->setuju == 'Simpan' && $value->id == -1)){
                 // echo "baru";
@@ -927,7 +922,7 @@ class AnggaranController extends Controller
                 'id_list_anggaran'  => $anggaranId,
                 'active'            => '1',
                 'is_rejected'       => $tolak,
-                'keterangan'        => $keterangan
+                'keterangan'        => $value->keterangan
                 ];
             }
 
@@ -956,7 +951,7 @@ class AnggaranController extends Controller
                 'active'            => $active_list,
                 'updated_at'        => \Carbon\Carbon::now(),
                 'is_rejected'       => $tolak,
-                'keterangan'        => $keterangan
+                'keterangan'        => $value->keterangan
                 ];
 
             $LAnggaranInsert;

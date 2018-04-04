@@ -12,7 +12,7 @@
                   $( "#tanggal" ).datepicker({ dateFormat: 'dd-mm-yy' });
                 } );
                 </script>
-                <script>
+                <!-- <script>
                   $('tolak_field_insert').iCheck({
                     checkboxClass: 'icheckbox_flat-green',
                     increaseArea: '20%' // optional
@@ -21,7 +21,7 @@
                     checkboxClass: 'icheckbox_flat-green',
                     increaseArea: '20%' // optional
                   });
-                </script>
+                </script> -->
                 @section('additional-vendorcss')
                 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/tables/jsgrid/jsgrid-theme.min.css') }}">
                 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/tables/jsgrid/jsgrid.min.css') }}">
@@ -940,7 +940,7 @@
                           },
                           { name: "terpusat", 
                             type: "select", 
-                            align: "left",
+                            align: "center",
                             title: "Terpusat", 
                             width: 80,
                             items:[
@@ -1575,6 +1575,37 @@
                             title: "Keterangan", 
                             width: 200, 
                           },
+                          { 
+                            name: "is_rejected", 
+                            type: "select", 
+                            align: "center",
+                            title: "Perbaiki ?", 
+                            width: 100,
+                            items:[
+                                { Name: "Tidak", Id: '0' },
+                                { Name: "Ya", Id: '1'}
+                            ],
+                            valueField: "Id",
+                            textField: "Name",
+                            // insertTemplate: function() {
+                            //     var $result = jsGrid.fields.checkbox.prototype.insertTemplate.call(this);
+                            //     $result.prop("checked", true);
+                            //     return $result;
+                            // } 
+                          },
+                          // { name: "is_rejected", title: "Perbaiki ?", align: "center",
+                          //   itemTemplate: function(value, item) {
+                          //     return $("<input>").attr("type", "checkbox")
+                          //         .attr("checked", value || item.Checked)
+                          //         .on("click", function(event) {
+                          //           event.stopPropagation();
+                          //          // return false;
+                          //         })
+                          //         .on("change", function() {
+                          //           item.Checked = $(this).is(":checked");
+                          //         });
+                          //   }
+                          // },
                           @elseif($persetujuan==-1)
                           
                           {
