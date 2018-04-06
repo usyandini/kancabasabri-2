@@ -136,6 +136,7 @@ class AnggaranController extends Controller
             for($x=0;$x<$jumlah_id;$x++){
                 if($request->cek[$x]=='y'){
                     $tasks = Anggaran::find($request->id[$x]);
+                    $tasks->update(['persetujuan'=>$tasks->persetujuan+1,'status_anggaran'=>2]);
                     $newTask = $tasks->replicate();
                     $newTask->save();
                     $newID = $newTask->id;
@@ -151,31 +152,31 @@ class AnggaranController extends Controller
                         // $list->update(['id_list_anggaran'=>$newID]);
                     }
                     if($newTask->persetujuan == 2){
-                        Anggaran::where('id',$newID)->update(['persetujuan'=>$newTask->persetujuan+1]);
-                        NotificationSystem::send($newID, 19);
-                    }
-                    else if($newTask->persetujuan == 3){
-                        Anggaran::where('id',$newID)->update(['persetujuan'=>$newTask->persetujuan+1]);
+                        // Anggaran::where('id',$newID)->update(['persetujuan'=>$newTask->persetujuan+1]);
                         NotificationSystem::send($newID, 21);
                     }
-                    else if($newTask->persetujuan == 4){
-                        Anggaran::where('id',$newID)->update(['persetujuan'=>$newTask->persetujuan+1]);
+                    else if($newTask->persetujuan == 3){
+                        // Anggaran::where('id',$newID)->update(['persetujuan'=>$newTask->persetujuan+1]);
                         NotificationSystem::send($newID, 23);
                     }
-                    else if($newTask->persetujuan == 5){
-                        Anggaran::where('id',$newID)->update(['persetujuan'=>$newTask->persetujuan+1]);
+                    else if($newTask->persetujuan == 4){
+                        // Anggaran::where('id',$newID)->update(['persetujuan'=>$newTask->persetujuan+1]);
                         NotificationSystem::send($newID, 25);
                     }
-                    else if($newTask->persetujuan == 6){
-                        Anggaran::where('id',$newID)->update(['persetujuan'=>$newTask->persetujuan+1]);
+                    else if($newTask->persetujuan == 5){
+                        // Anggaran::where('id',$newID)->update(['persetujuan'=>$newTask->persetujuan+1]);
                         NotificationSystem::send($newID, 27);
                     }
-                    else if($newTask->persetujuan == 7){
-                        Anggaran::where('id',$newID)->update(['persetujuan'=>$newTask->persetujuan+1]);
+                    else if($newTask->persetujuan == 6){
+                        // Anggaran::where('id',$newID)->update(['persetujuan'=>$newTask->persetujuan+1]);
                         NotificationSystem::send($newID, 29);
                     }
-                    else if($newTask->persetujuan == 8){
-                        Anggaran::where('id',$newID)->update(['status_anggaran'=>3,'persetujuan'=>$newTask->persetujuan+1]);
+                    // else if($newTask->persetujuan == 7){
+                    //     Anggaran::where('id',$newID)->update(['persetujuan'=>$newTask->persetujuan+1]);
+                    //     NotificationSystem::send($newID, 31);
+                    // }
+                    else if($newTask->persetujuan == 7){
+                        Anggaran::where('id',$newID)->update(['status_anggaran'=>3]);
                         NotificationSystem::send($newID, 31);
                         pil_kcanggaranheader::create(['RECID'=>$newID,'PIL_TRANSID'=>'AC-'.$newID,'PIL_TRANSDATE'=>$newTask->tanggal,'DATAAREAID'=>'asbr']);
                         $lines=ListAnggaran::where('id_list_anggaran',$newID)->get();
@@ -652,7 +653,6 @@ class AnggaranController extends Controller
             if($status == '3'){
                 $reject = true;
             }
-
         }
 
         $userUnit = "";
@@ -864,7 +864,7 @@ class AnggaranController extends Controller
             Anggaran::where('nd_surat', $request->nd_surat)->where('active', '1')->update($anggaran_update);
             $AnggaranData=Anggaran::create($anggaran_insert);
         }
-        Anggaran::where('nd_surat', $request->nd_surat)->where('active', '1')->where('persetujuan', 8)->update(['persetujuan'=>9]);
+        // Anggaran::where('nd_surat', $request->nd_surat)->where('active', '1')->where('persetujuan', 8)->update(['persetujuan'=>9]);
         $index = 0;
         //list_anggaran_download
         foreach (json_decode($request->list_anggaran_values) as $value) {
@@ -886,18 +886,18 @@ class AnggaranController extends Controller
             if($anggaranId == "" && $request->status == 'tambah'){
                 $anggaranId = $AnggaranData->id;
             }
-            if($request->setuju =='Tolak'){
-                if($value->is_rejected == "1"){
-                // if($request->keterangan ==""){
-                    $tolak = 1;
-                }
-                else{
-                    $tolak = 0;
-                }
-            }
-            else {
-                $tolak = 0;
-            }
+            // if($request->setuju =='Tolak'){
+            //     if($value->is_rejected == "1"){
+            //     // if($request->keterangan ==""){
+            //         $tolak = 1;
+            //     }
+            //     else{
+            //         $tolak = 0;
+            //     }
+            // }
+            // else {
+            //     $tolak = 0;
+            // }
             if($request->setuju != 'Simpan' || ($request->setuju == 'Simpan' && $value->id == -1)){
                 // echo "baru";
                 $anggaran_insert_list = [
@@ -921,7 +921,7 @@ class AnggaranController extends Controller
                 'id_first'          => $idBefore,
                 'id_list_anggaran'  => $anggaranId,
                 'active'            => '1',
-                'is_rejected'       => $tolak,
+                'is_rejected'       => $value->is_rejected,
                 'keterangan'        => $value->keterangan
                 ];
             }
@@ -950,7 +950,7 @@ class AnggaranController extends Controller
                 'anggaran_setahun'  => (double)$value->anggarana_setahun,
                 'active'            => $active_list,
                 'updated_at'        => \Carbon\Carbon::now(),
-                'is_rejected'       => $tolak,
+                'is_rejected'       => $value->is_rejected,
                 'keterangan'        => $value->keterangan
                 ];
 
@@ -1166,8 +1166,7 @@ class AnggaranController extends Controller
 
     public function insertStaging($nd_surat)
     {
-        $nd_surat2=base64_decode($nd_surat);
-        $anggaran = $this->anggaranModel->where('nd_surat', $nd_surat2)->where('active', '1')->first();
+        $anggaran = $this->anggaranModel->where('nd_surat', $nd_surat)->where('active', '1')->first();
         pil_kcanggaranheader::create(['RECID'=>$anggaran->id,'PIL_TRANSID'=>'AC-'.$anggaran->id,'PIL_TRANSDATE'=>$anggaran->tanggal,'DATAAREAID'=>'asbr']);
         // foreach ($anggaran as $angga) {
             $unit_kerja = $anggaran->unit_kerja;

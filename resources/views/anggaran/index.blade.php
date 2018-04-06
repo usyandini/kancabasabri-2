@@ -440,6 +440,10 @@
                 
                   }
                 </script>
+                <?php 
+                  use App\Models\Anggaran;
+                  $renbang=Anggaran::where('nd_surat',$nd_surat)->where('persetujuan',1)->first();
+                ?>
                 <script type="text/javascript">
                 
                   var inputs = [];
@@ -714,6 +718,9 @@
                             insertcss: "jenis_select",
                             editcss: "jenis_select_edit",
                             items: getData('jenis'),
+                            @if($renbang && $persetujuan!=1)
+                            readOnly: true,
+                            @endif
                             itemTemplate:function(value){
                               changeDataSelect('kelompok',value,"");
                               return value;
@@ -738,11 +745,11 @@
                               message :function(value) {
                                 status = "Pilih Jenis Terlebih dahulu";
                                 // console.log("nilai",value);
-                                if(value=="BELANJA MODAL"){
+                                if(value=="Belanja modal"){
                                   status="Jika Jenisnya Belanja Modal, Nilai Persatuan Harus Lebih Besar dari Rp. 5.000.000";
                                   // console.log("nilai",status);
                                 }
-                                if(value=="BIAYA ADMINISTRASI"){
+                                if(value=="Biaya umum dan administrasi"){
                                   status="Mohon cek kembali kolom Nilai Per Satuan";
                                   // console.log("nilai",status);
                                 }
@@ -753,13 +760,13 @@
                                 // console.log('nilaiNone',parseInt(validDigits(item.nilai_persatuan)) );
                                   return false;
                                 }
-                                else if(value=="BELANJA MODAL"&&parseInt(validDigits(item.nilai_persatuan)) < 5000001){
+                                else if(value=="Belanja modal"&&parseInt(validDigits(item.nilai_persatuan)) < 5000001){
                                 // console.log('nilaiBelanja',parseInt(validDigits(item.nilai_persatuan)) );
                                   return false;
                                 }
-                                else if(value=="BIAYA ADMINISTRASI"&&parseInt(validDigits(item.nilai_persatuan)) > 5000001){
+                                else if(value=="Biaya umum dan administrasi"&&parseInt(validDigits(item.nilai_persatuan)) > 5000001){
                                 // console.log('nilaiBelanja',parseInt(validDigits(item.nilai_persatuan)) );
-                                  var r=confirm("Peringatan, Jenis Biaya Administrasi yang diajukan lebih dari Rp. 5.000.000, anda yakin ingin mengajukan anggaran?");
+                                  var r=confirm("Peringatan, Jenis Biaya umum dan administrasi yang diajukan lebih dari Rp. 5.000.000, anda yakin ingin mengajukan anggaran?");
                                   if (r == true){
                                     return true;
                                   }
@@ -783,6 +790,9 @@
                             insertcss: "kelompok_select",
                             editcss: "kelompok_select_edit",
                             // items: getData('kelompok'),
+                            @if($renbang && $persetujuan!=1)
+                            readOnly: true,
+                            @endif
                             items:[
                                 { name: "Silahkan Pilih Jenis" }
                             ],
@@ -825,6 +835,9 @@
                             insertcss: "pos_select",
                             editcss: "pos_select_edit",
                             // items: getData('posanggaran'),
+                            @if($renbang && $persetujuan!=1)
+                            readOnly: true,
+                            @endif
                             items:[
                                 { name: "Silahkan Pilih Kelompok" },
                             ],
@@ -867,6 +880,9 @@
                             insertcss: "sub_select",
                             editcss: "sub_select_edit",
                             // items: getData('subpos'),
+                            @if($renbang && $persetujuan!=1)
+                            readOnly: true,
+                            @endif
                             items:[
                                 { DESCRIPTION: "Silahkan Pilih Pos Anggaran" },
                             ],
@@ -909,6 +925,9 @@
                             insertcss: "mata_select",
                             editcss: "mata_select_edit",
                             // items: getData('mataanggaran'),
+                            @if($renbang && $persetujuan!=1)
+                            readOnly: true,
+                            @endif
 
                             items:[
                                 { DESCRIPTION: "Silahkan Pilih Sub Pos" },
@@ -943,6 +962,9 @@
                             align: "center",
                             title: "Terpusat", 
                             width: 80,
+                            @if($renbang && $persetujuan!=1)
+                            readOnly: true,
+                            @endif
                             items:[
                             @if ((Auth::user()->cabang=='00') && ($persetujuan==-1))
                                 { Name: "Ya", Id: '2' }
@@ -988,6 +1010,9 @@
                             align: "left",
                             title: "Kuantitas", 
                             width: 90, 
+                            @if($renbang && $persetujuan!=1)
+                            readOnly: true,
+                            @endif
                             insertTemplate: function() {
                               kuantitas_field_insert = jsGrid.fields.text.prototype.insertTemplate.call(this);
                               kuantitas_field_insert.on("change", function() {
@@ -1041,7 +1066,9 @@
                             textField: "name", 
                             width: 100,
                             items: getData('satuan'),
-                            
+                            @if($renbang && $persetujuan!=1)
+                            readOnly: true,
+                            @endif
                             validate: {
                               message : "Pilih Satuan terlebih dahulu." ,
                               validator :function(value, item) {
@@ -1068,6 +1095,9 @@
                             align: "right",
                             title: "Nilai Per Satuan", 
                             width: 130, 
+                            @if($renbang && $persetujuan!=1)
+                            readOnly: true,
+                            @endif
                             itemTemplate: function(value) {
                               var display ="<span><b>Rp. " + addCommas(value) + "</b></span>";
                               
@@ -1189,6 +1219,9 @@
                             align: "right",
                             title: "TW I", 
                             width: 200,
+                            @if($renbang && $persetujuan!=1)
+                            readOnly: true,
+                            @endif
                             itemTemplate: function(value) {
                               var display ="<span><b>Rp. " + addCommas(value) + "</b></span>";
                               
@@ -1251,6 +1284,9 @@
                             align: "right",
                             title: "TW II", 
                             width: 200 ,
+                            @if($renbang && $persetujuan!=1)
+                            readOnly: true,
+                            @endif
                             itemTemplate: function(value) {
                               var display ="<span><b>Rp. " + addCommas(value) + "</b></span>";
                               
@@ -1284,6 +1320,9 @@
                             align: "right",
                             title: "TW III", 
                             width: 200 ,
+                            @if($renbang && $persetujuan!=1)
+                            readOnly: true,
+                            @endif
                             itemTemplate: function(value) {
                               var display ="<span><b>Rp. " + addCommas(value) + "</b></span>";
                               
@@ -1317,6 +1356,9 @@
                             align: "right",
                             title: "TW IV",
                             width: 200,
+                            @if($renbang && $persetujuan!=1)
+                            readOnly: true,
+                            @endif
                             itemTemplate: function(value) {
                               var display ="<span><b>Rp. " + addCommas(value) + "</b></span>";
                               
@@ -1451,8 +1493,16 @@
                               }else{
                                 title = count_berkas+" Berkas";
                               }
+                              @if($renbang)
+                                if(item.is_rejected==1) {
+                                  var button = "<span class='btn btn-sm btn-primary' id='button_"+id_list+"' onclick='setModalFile("+id_list+")' >"+title+"</span>";
+                                  return button;
+                                }
+                              @endif
+                              @if(!$renbang||$persetujuan==1)
                               var button = "<span class='btn btn-sm btn-primary' id='button_"+id_list+"' onclick='setModalFile("+id_list+")' >"+title+"</span>";
                               return button;
+                              @endif
                             },
 
                             insertTemplate: function() {
@@ -1476,8 +1526,10 @@
                               }else{
                                 title = count_berkas+" Berkas";
                               }
+                              @if(!$renbang||$persetujuan==1)
                               var button = "<span class='btn btn-sm btn-primary' id='button_"+id_list+"' onclick='setModalFile("+id_list+")' >"+title+"</span>";
                               return button;
+                              @endif
                             },
                             
                             editTemplate: function(value,item) {
@@ -1519,8 +1571,16 @@
                               }else{
                                 title = count_berkas+" Berkas";
                               }
+                              @if($renbang)
+                                if(item.is_rejected==1) {
+                                  var button = "<span class='btn btn-sm btn-primary' id='button_"+id_list+"' onclick='setModalFile("+id_list+")' >"+title+"</span>";
+                                  return button;
+                                }
+                              @endif
+                              @if(!$renbang||$persetujuan==1)
                               var button = "<span class='btn btn-sm btn-primary' id='button_"+id_list+"' onclick='setModalFile("+id_list+")' >"+title+"</span>";
                               return button;
+                              @endif
                             },
                             // validate: {
                             //   message :function(value) {
@@ -1615,6 +1675,19 @@
                             title: "Keterangan", 
                             width: 200,
                             readOnly: true,
+                          },
+                          {
+                            name: "is_rejected", 
+                            css: "hide",
+                            type: "select", 
+                            width: 0,
+                            readOnly: true,
+                            items:[
+                                { Name: "Tidak", Id: '0' },
+                                { Name: "Ya", Id: '1' }
+                            ],
+                            valueField: "Id",
+                            textField: "Name",
                           },
                           @endif
                           { type: "control",
@@ -2308,6 +2381,7 @@
 
                     };
                   }
+                  
                   function setModalFile(index) {
                     if(click_berkas){
                       $('#files').replaceWith($('#files').val('').clone(true));
@@ -2375,6 +2449,7 @@
                     
                     }
                   }
+                  
                   function deleteRowFile(i,index){
                       $("#upload_"+i).remove();
                       hasil[i] = "";

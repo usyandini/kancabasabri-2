@@ -205,7 +205,8 @@
                                                   @elseif ($b->persetujuan==7) Persetujuan FinRUPS
                                                   @elseif ($b->persetujuan==8) Persetujuan Risalah RUPS
                                                   @else Disetujui dan Ditandatangani @endif</center></td>
-                                      <td><center><a href="{{ url('anggaran/edit/'. $b->nd_surat)}}" target="_blank" class='btn btn-sm btn-primary'> Detail</a></center></td>
+                                      <td><center><a href="{{ url('anggaran/persetujuan/'. base64_encode($b->nd_surat) .'/1')}}" target="_blank" class='btn btn-sm btn-primary'> Detail</a></center></td>
+                                      @if ($b->persetujuan!=8)
                                       <td><center>
                                         
                                         <div class="skin skin-flat" id="check">
@@ -218,6 +219,7 @@
                                         <input type="hidden" name="status_anggaran[]" value="{{$b->status_anggaran}}">
                                         <input type="hidden" name="persetujuan[]" value="{{$b->persetujuan}}">
                                       </center></td>
+                                      @endif
                                       
                                     </tr>
                                     
