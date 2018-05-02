@@ -66,6 +66,8 @@
                                                                                           @if($c)
                                                                                             @if($d->stat==4)
                                                                                             <span class="tag tag-warning">Belum diverifikasi</span>
+                                                                                            @elseif($d->stat==5)
+                                                                                            <span class="tag tag-danger">Telah ditolak</span>
                                                                                             @else
                                                                                             <span class="tag tag-success">Telah diverifikasi</span>
                                                                                             @endif

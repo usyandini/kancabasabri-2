@@ -620,7 +620,7 @@ class TransaksiController extends Controller
                 'PIL_POSTED'            => $list->PIL_POSTED,
                 'PIL_PROGRAM'           => $list->PIL_PROGRAM,
                 'PIL_SUBPOS'            => $list->PIL_SUBPOS,
-                'PIL_TRANSDATE'         => $list->PIL_TRANSDATE,
+                'PIL_TRANSDATE'         => date('Y-m-d'),
                 'PIL_TXT'               => $list->PIL_TXT.' (REVERSED)',
                 'PIL_VOUCHER'           => $list->PIL_VOUCHER,
                 'PIL_KCJOURNALNUM'      => $list->PIL_KCJOURNALNUM,

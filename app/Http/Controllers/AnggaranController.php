@@ -308,33 +308,33 @@ class AnggaranController extends Controller
                     // $tasks->update(['active'=>'0']);
                     // print_r($tasks);
                     if($tasks->persetujuan == 2){
-                        Anggaran::where('id',$tasks->id)->update(['persetujuan'=>'1']);
-                        NotificationSystem::send($tasks->id, 18);
+                        Anggaran::where('id',$tasks->id)->update(['persetujuan'=>1]);
+                        NotificationSystem::send($tasks->id, 20);
                     }
                     else if($tasks->persetujuan == 3){
                         Anggaran::where('id',$tasks->id)->update(['persetujuan'=>2]);
-                        NotificationSystem::send($tasks->id, 20);
+                        NotificationSystem::send($tasks->id, 22);
                     }
                     else if($tasks->persetujuan == 4){
                         Anggaran::where('id',$tasks->id)->update(['persetujuan'=>2]);
-                        NotificationSystem::send($tasks->id, 22);
+                        NotificationSystem::send($tasks->id, 24);
                     }
                     else if($tasks->persetujuan == 5){
                         Anggaran::where('id',$tasks->id)->update(['persetujuan'=>2]);
-                        NotificationSystem::send($tasks->id, 24);
+                        NotificationSystem::send($tasks->id, 26);
                     }
                     else if($tasks->persetujuan == 6){
                         Anggaran::where('id',$tasks->id)->update(['persetujuan'=>2]);
-                        NotificationSystem::send($tasks->id, 26);
+                        NotificationSystem::send($tasks->id, 28);
                     }
                     else if($tasks->persetujuan == 7){
                         Anggaran::where('id',$tasks->id)->update(['persetujuan'=>2]);
-                        NotificationSystem::send($tasks->id, 28);
-                    }
-                    else if($tasks->persetujuan == 8){
-                        Anggaran::where('id',$tasks->id)->update(['persetujuan'=>2]);
                         NotificationSystem::send($tasks->id, 30);
                     }
+                    // else if($tasks->persetujuan == 8){
+                    //     Anggaran::where('id',$tasks->id)->update(['persetujuan'=>2]);
+                    //     NotificationSystem::send($tasks->id, 30);
+                    // }
                 }  
             }
             $after_save = [
@@ -1174,7 +1174,7 @@ class AnggaranController extends Controller
                                                     ->where('active', '1')->get();
             foreach ($listAnggaran as $list_anggaran) {
                 //Ini Seleksi Jika Anggaran Tidak Terpusat Disimpan Kestaging
-                if($list_anggaran->terpusat != "1"){
+                // if($list_anggaran->terpusat != "1"){
                     if($list_anggaran->TWI > 0){
                         $this->insertTW($list_anggaran,1,$unit_kerja);
                     }
@@ -1187,7 +1187,7 @@ class AnggaranController extends Controller
                     if($list_anggaran->TWIV > 0){
                         $this->insertTW($list_anggaran,4,$unit_kerja);
                     }
-                }
+                // }
 
             }
         // }
