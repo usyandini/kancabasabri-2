@@ -1,3 +1,6 @@
+                <?php 
+                  $is_reversed=\DB::table('batches_status')->where('batch_id', $active_batch['id'])->where('stat', 6)->first();
+                ?>
                 <script type="text/javascript">
                   var inputs = [];
                   var item = m_anggaran = subpos = mainaccount = account_field = date_field = anggaran_field = actual_anggaran = null;
@@ -54,13 +57,18 @@
                       autoload: true,
                       rowClass: function(item, itemIndex) {
                         return item.is_anggaran_safe != true ? "contoh" : (item.is_rejected == true ? "contohh" : "")
-                      }, 
+                      },
+                      @if($is_reversed)
+                          inserting: false,
+                          editing: false, 
+                      @else 
                       @if(Gate::check('ubah_item_t') || Gate::check('hapus_item_t'))
                           editing: editableStat == 1 ? true : false, 
                       @endif
                       @can('tambah_item_t')
                           inserting: editableStat == 1 ? true : false,
                       @endcan
+                      @endif
                       pageSize: 10, pageButtonCount: 10,
                       
                       controller: {
@@ -126,7 +134,9 @@
                             @if(!Gate::check('ubah_item_t'))
                                 editButton: false,
                             @endif
-                            @if (!$editable || (!Gate::check('ubah_item_t') && !Gate::check('hapus_item_t')))
+                            @if($is_reversed)
+                            css: "hide" 
+                            @elseif (!$editable || (!Gate::check('ubah_item_t') && !Gate::check('hapus_item_t')))
                               css: editableStat == 1 ? "" : "hide"
                             @endif
                           },
@@ -468,7 +478,9 @@
                             @if(!Gate::check('ubah_item_t'))
                                 editButton: false,
                             @endif
-                            @if (!$editable || (!Gate::check('ubah_item_t') && !Gate::check('hapus_item_t')))
+                            @if($is_reversed)
+                              css: "hide"
+                            @elseif (!$editable || (!Gate::check('ubah_item_t') && !Gate::check('hapus_item_t')))
                               css: editableStat == 1 ? "" : "hide"
                             @endif
                           }

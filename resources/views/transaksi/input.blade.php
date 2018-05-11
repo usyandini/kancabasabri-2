@@ -145,12 +145,17 @@
                                   </div>
                                 </div> --}}
                                 <div class="col-sm-12 col-lg-10 col-xl-6 pull-right">
+                                  <?php 
+                                    $is_reversed=\DB::table('batches_status')->where('batch_id', $active_batch['id'])->where('stat', 6)->first();
+                                  ?>
+                                  @if(!$is_reversed)
                                     @if (Gate::check('tambah_item_t') || Gate::check('ubah_item_t') || Gate::check('hapus_item_t'))
                                     <button onclick="populateBatchInput()" class="btn btn-outline-danger btn-md pull-right mb-1 ml-1" id="simpan" value="Simpan"><i class="fa fa-check"></i> Simpan perubahan batch</button>
                                     @endif
                                     @if (Gate::check('ajukan_t'))
                                     <button onclick="checkBatchSubmit()" class="btn btn-secondary btn-md pull-right mb-1" id="button_status"><i class="fa fa-check-circle"></i> Submit batch untuk Verifikasi</button>
                                     @endif
+                                  @endif
                                 </div>
                                 @endif 
                               </div>

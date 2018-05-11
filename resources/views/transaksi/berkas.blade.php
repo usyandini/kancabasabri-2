@@ -18,8 +18,13 @@
         <td width="25%"><b>{{ $tgl }}</b></td>
         <td width="5%">
           @if($editable && Gate::check('berkas_t'))
+          <?php 
+            $is_reversed=\DB::table('batches_status')->where('batch_id', $active_batch['id'])->where('stat', 6)->first();
+          ?>
+          @if(!$is_reversed)
           <!-- <a href="javascript:deleteBerkas('{{ $value->id }}', '{{ $value->file_name }}');"><i class="fa fa-times"></i> Hapus</a> -->
           <span data-toggle='tooltip' title='Hapus'><a class="btn btn-outline-danger btn-sm" data-target="#hapus{{$value->id}}" data-toggle="modal"><i class="fa fa-times"></i> Hapus</a></span>
+          @endif
           <div class="modal fade" data-backdrop="static" id="hapus{{$value->id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog">
               <div class="modal-content">
