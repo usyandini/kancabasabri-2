@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class ChangeColumnListAnggaran extends Migration
+class CreateTanggalTransaksi extends Migration
 {
     /**
      * Run the migrations.
@@ -12,8 +12,10 @@ class ChangeColumnListAnggaran extends Migration
      */
     public function up()
     {
-        Schema::table('list_anggaran', function(Blueprint $table) {
-            $table->string('keterangan',255)->nullable()->change();
+        Schema::create('tanggal_transaksi', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('tanggal');
+            $table->timestamps();
         });
     }
 
@@ -24,6 +26,6 @@ class ChangeColumnListAnggaran extends Migration
      */
     public function down()
     {
-        //
+        Schema::drop('tanggal_transaksi');
     }
 }

@@ -191,6 +191,9 @@
                             @can ('setuju2_t')
                                 <li class="is-shown {{ checkActiveMenu('transaksi/lihat/verifikasi') }}"><a href="{{ url('/transaksi/lihat/verifikasi', $parameters = [], $secure = null) }}" class="menu-item"><b>Verifikasi Level 2</b></a></li>
                             @endcan
+                            @can ('tanggal')
+                                <li class="is-shown {{ checkActiveMenu('transaksi/lihat/input_tanggal') }}"><a href="{{ url('/transaksi/lihat/input_tanggal', $parameters = [], $secure = null) }}" class="menu-item"><b>Manajemen Tanggal Transaksi</b></a></li>
+                            @endcan
                             @can ('reject_t')
                                 <li class="is-shown {{ checkActiveMenu('transaksi/lihat/reject_history') }}"><a href="{{ url('/transaksi/lihat/reject_history', $parameters = [], $secure = null) }}" class="menu-item"><b>Reject History</b></a></li>
                             @endcan

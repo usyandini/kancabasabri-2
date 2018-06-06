@@ -20,6 +20,7 @@ use App\Models\StagingTransaksi;
 use App\Models\StagingTransaksiReverse;
 use App\Models\KantorCabang;
 use App\Models\ItemMaster;
+use App\Models\TanggalInputTransaksi;
 use Illuminate\Support\Facades\Gate;
 use Validator;
 use Carbon;
@@ -1280,4 +1281,47 @@ class TransaksiController extends Controller
     //         'c'    => $c
     //         ]);
     // }
+    public function input_tanggal()
+    {
+
+        $tanggal = TanggalInputTransaksi::orderBy('id','DESC')->get();
+
+        return view('transaksi.tanggal_input', compact('tanggal'));
+    }
+
+    public function store_input_tanggal(Request $request)
+    {
+               
+       
+             $after_save = [
+                 'alert' => 'success',
+                 'title' => 'Data berhasil ditambah.'
+             ];
+         
+            $data = [
+             'tanggal' => $request->tanggal
+            ];
+ 
+             $store = \App\Models\TanggalInputTransaksi::insert($data);
+           
+             return redirect()->back()->with('after_save', $after_save);
+        
+    }
+    public function update_input_tanggal(Request $request, $id)
+     {
+            
+            $after_update = [
+                 'alert' => 'success',
+                 'title' => 'Data berhasil diubah.'
+             ];
+     
+             $data = [
+                'tanggal' => $request->tanggal
+             ];
+             
+             $update = \App\Models\TanggalInputTransaksi::where('id', $id)->update($data);
+
+             return redirect()->back()->with('after_update', $after_update);
+         
+     }
 }

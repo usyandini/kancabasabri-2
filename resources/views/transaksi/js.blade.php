@@ -1,5 +1,6 @@
                 <?php 
                   $is_reversed=\DB::table('batches_status')->where('batch_id', $active_batch['id'])->where('stat', 6)->first();
+                  $tanggal=\DB::table('tanggal_transaksi')->first();
                 ?>
                 <script type="text/javascript">
                   var inputs = [];
@@ -526,11 +527,13 @@
                     var month2 = today.getMonth()-1
                     var date = today.getDate()
                     var year = today.getFullYear()
-                    
-                    if ((date > 5 && (new Date(dateInput).getMonth() < month)) || (new Date(dateInput).getMonth() > month)) {
+                    var tanggal = {{ $tanggal->tanggal }}
+                    var tanggal2 = {{ $tanggal->tanggal+1 }}
+                  
+                    if ((date > tanggal && (new Date(dateInput).getMonth() < month)) || (new Date(dateInput).getMonth() > month)) {
                      return false
                     }
-                    if (date < 6 && (new Date(dateInput).getMonth() < month2)){
+                    if (date < tanggal2 && (new Date(dateInput).getMonth() < month2)){
                       return false
                     }
                     

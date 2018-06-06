@@ -108,6 +108,9 @@ Route::group(['middleware' => 'auth'], function() {
 
 		Route::get('/lihat/reject_history', 'TransaksiController@rejecthistory');
 		Route::get('/adji/adji/adji', 'TransaksiController@adji');
+		Route::get('/lihat/input_tanggal', 'TransaksiController@input_tanggal');
+		Route::post('/input_tanggal/store_input_tanggal', 'TransaksiController@store_input_tanggal');
+		Route::post('/input_tanggal/update_input_tanggal/{id}', 'TransaksiController@update_input_tanggal');
 	});
 
 

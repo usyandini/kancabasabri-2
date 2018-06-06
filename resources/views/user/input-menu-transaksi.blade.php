@@ -78,6 +78,12 @@
               </li>
               <li>
                 <fieldset>
+                  <input type="checkbox" name="perizinan[tanggal]" {{ isset(old("perizinan")['tanggal']) ? 'checked=""' : '' }}>
+                  <label>Manajemen tanggal transaksi</label>
+                </fieldset>
+              </li>
+              <li>
+                <fieldset>
                   <input type="checkbox" name="perizinan[report_mata_anggaran]" {{ isset(old("perizinan")['report_mata_anggaran']) ? 'checked=""' : '' }}>
                   <label>Report Realisasi Mata Anggaran</label>
                 </fieldset>
