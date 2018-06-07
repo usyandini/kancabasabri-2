@@ -329,8 +329,7 @@ class TransaksiController extends Controller
                \Auth::user()->cabang == '21' || 
                \Auth::user()->cabang == '22' || 
                \Auth::user()->cabang == '23' || 
-               \Auth::user()->cabang == '24' || 
-               \Auth::user()->cabang == '25' || 
+               \Auth::user()->cabang == '24' ||
                \Auth::user()->cabang == '28' || 
                \Auth::user()->cabang == '29' || 
                \Auth::user()->cabang == '32' || 
@@ -338,7 +337,8 @@ class TransaksiController extends Controller
             {
                 $tglinput=date("Y-m-d",strtotime($value->tgl . "+1 days"));
             }
-            //\Auth::user()->cabang == '26' || 
+            //\Auth::user()->cabang == '26' ||  
+            //\Auth::user()->cabang == '25' || 
             else {
                 $tglinput=date("Y-m-d",strtotime($value->tgl));
             }
