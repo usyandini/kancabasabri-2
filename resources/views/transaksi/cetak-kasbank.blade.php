@@ -49,9 +49,9 @@
                                       <th rowspan="2" colspan="2" style="vertical-align:middle;"><center>URAIAN TRANSAKSI</center></th>
                                       <th colspan="2"><center>KAS</center></th>
                                       <th colspan="2"><center>BANK</center></th>
-                                      <th rowspan="2"><center>SALDO KAS</center></th>
+                                      <th style="vertical-align:middle;"><center>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SALDO KAS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</center></th>
                                       
-                                      <th rowspan="2"><center>SALDO BANK</center></th>
+                                      <th style="vertical-align:middle;"><center>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SALDO BANK&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</center></th>
                                       
                                     </tr>
                                     <tr>
@@ -73,7 +73,8 @@
                                                               and a.ACCOUNTID like '%KKC%'
                                                               group by a.ACCOUNTID");
                                       ?>
-                                     @foreach($saldoo as $aa)  @endforeach
+                                    <td align="right"><b>@foreach($saldoo as $aa) Rp {{ number_format($aa->saldo, 2, ',','.') }} @endforeach</b></td>
+                                      
                                       
                                       <?php
                                       $tglb="".$filters['transyear']."-".$filters['awal']."-01";
@@ -89,7 +90,8 @@
                                                               and a.ACCOUNTID like '%GKC%'
                                                               group by a.ACCOUNTID");
                                       ?>
-                                      @foreach($saldob as $bb)  @endforeach
+                                      <td align="right"><b>@foreach($saldob as $bb) Rp {{ number_format($bb->saldo, 2, ',','.') }} @endforeach</b></td>
+                                    
                                     </tr>
                                   </thead>
                                   <tbody>
