@@ -104,8 +104,9 @@ Route::group(['middleware' => 'auth'], function() {
 	
 	//verifikasi
 		Route::get('/lihat/persetujuan', 'TransaksiController@verifikasilevel1');
+		Route::post('/lihat/persetujuan/hasil', 'TransaksiController@verifikasilevel1hasil');
 		Route::get('/lihat/verifikasi', 'TransaksiController@verifikasilevel2');
-
+		Route::post('/lihat/verifikasi/hasil', 'TransaksiController@verifikasilevel2hasil');
 		Route::get('/lihat/reject_history', 'TransaksiController@rejecthistory');
 		Route::get('/adji/adji/adji', 'TransaksiController@adji');
 		Route::get('/lihat/input_tanggal', 'TransaksiController@input_tanggal');

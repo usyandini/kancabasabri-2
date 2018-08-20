@@ -21,6 +21,103 @@
             </div>
 
             <div class="row">
+              <section id="select-inputs">
+                <div class="row">
+                  <div class="col-xs-12">
+                    <div class="card">
+                      <div class="card-header">
+                        <h4 class="card-title">Pencarian Pengajuan Dropping</h4>
+                        <a class="heading-elements-toggle"><i class="ft-align-justify font-medium-3"></i></a>
+                      </div>
+                      <div class="card-body collapse in">
+                        <div class="card-block">
+                          <form enctype="multipart/form-data" role="form" action="{{ URL('transaksi/lihat/persetujuan/hasil') }}" method="POST" >
+                            <div class="row">
+                              {{ csrf_field() }}
+                              <div class="col-lg-3">
+                                <div class="form-group">
+                                  <label>Kantor Cabang</label><br>
+                                  <select class="select2 form-control block" name="cabang" style="width:100%" required="required">
+                                    <option value="" disabled="" selected=""> - Pilih Kantor Cabang - </option>
+                                    <?php
+                                    $second="SELECT DESCRIPTION, VALUE FROM [AX_DUMMY].[dbo].[PIL_VIEW_KPKC]  WHERE VALUE!='00'";
+                                    $return = DB::select($second);
+                                    ?>
+                                    @foreach ($return as $cabang)
+                                    <option value="{{ $cabang->VALUE }}" >{{ $cabang->DESCRIPTION }}</option>                                         
+                                    @endforeach
+                                  </select>
+                                </div>
+                              </div>
+                              <div class="col-lg-3">
+                                <div class="form-group">
+                                  <label>Periode Awal</label><br>
+                                  <select class="select2 form-control block" name="awal" style="width:100%" required="required">
+                                    <option value="" disabled="" selected=""> - Pilih Periode Awal - </option>
+                                    <option value="01"> Januari </option>
+                                    <option value="02"> Februari </option>
+                                    <option value="03"> Maret </option>
+                                    <option value="04"> April </option>
+                                    <option value="05"> Mei </option>
+                                    <option value="06"> Juni </option>
+                                    <option value="07"> Juli </option>
+                                    <option value="08"> Agustus </option>
+                                    <option value="09"> September </option>
+                                    <option value="10"> Oktober </option>
+                                    <option value="11"> November </option>
+                                    <option value="12"> Desember </option>
+                                  </select>
+                                </div>
+                              </div>
+                              <div class="col-lg-3">
+                                <div class="form-group">
+                                  <label>Periode Akhir</label><br>
+                                  <select class="select2 form-control block" name="akhir" style="width:100%" required="required">
+                                    <option value="" disabled="" selected=""> - Pilih Periode Akhir - </option>
+                                    <option value="01"> Januari </option>
+                                    <option value="02"> Februari </option>
+                                    <option value="03"> Maret </option>
+                                    <option value="04"> April </option>
+                                    <option value="05"> Mei </option>
+                                    <option value="06"> Juni </option>
+                                    <option value="07"> Juli </option>
+                                    <option value="08"> Agustus </option>
+                                    <option value="09"> September </option>
+                                    <option value="10"> Oktober </option>
+                                    <option value="11"> November </option>
+                                    <option value="12"> Desember </option>
+                                  </select>
+                                </div>
+                              </div>
+                              <div class="col-lg-3">
+                                <div class="form-group">
+                                  <label>Tahun</label><br>
+                                  <select class="select2 form-control" name="tahun" style="width:100%" required>
+                                  <option selected disabled>Pilih Tahun</option>
+                                  <?php
+                                  $thn_skr = date('Y');
+                                  for($x=$thn_skr; $x >= 2015; $x--){
+                                    ?>
+                                    <option value="{{$x}}">{{$x}}</option>
+                                    <?php }?>
+                                  </select>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="row">
+                              <div class="col-xs-7">
+                                <button type="submit" class="btn btn-outline-primary"><i class="fa fa-search "></i> Cari</button>
+                              </div>
+                            </div>
+                          </form>
+                        </div>
+                      </div>
+                    </div>                  
+                  </div>
+                </div>
+              </div>
+            @if($a)
+            <div class="row">
             	<section id="select-inputs">
             		<div class="row">
             			<div class="col-xs-12">
@@ -35,13 +132,13 @@
             								<div class="table-responsive">
             									<table class="table table-striped table-bordered datatable-select-inputs nowrap" cellspacing="0" width="100%">
             										<thead>
-                                                                              <tr>
-                                                                                    <th width="5%"><center>No</center></th>
-                                                                                    <th id="filterable"><center>Cabang</center></th>
-                                                                                    <th id="filterable"><center>No Batch</center></th>
-                                                                                    <th id="filterable"><center>Status</center></th>
-                                                                                    <th width="10%"><center>Aksi</center></th>
-                                                                              </tr>
+                                                          <tr>
+                                                                <th width="5%"><center>No</center></th>
+                                                                <th id="filterable"><center>Cabang</center></th>
+                                                                <th id="filterable"><center>No Batch</center></th>
+                                                                <th id="filterable"><center>Status</center></th>
+                                                                <th width="10%"><center>Aksi</center></th>
+                                                          </tr>
                                                                         </thead>
                                                                         <tbody>
                                                                               <?php $no='1';?>
@@ -99,6 +196,7 @@
             			</div>
             		</section>
             	</div>
+                @endif
             </div>
             @endsection
 

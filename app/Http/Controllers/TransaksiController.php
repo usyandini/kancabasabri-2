@@ -884,7 +884,7 @@ class TransaksiController extends Controller
     public function reportQuery_transaksi($cabang, $awal, $akhir, $transyear)
     {
         return \DB::select("SELECT 
-                  a.id as id, mata_anggaran, account, tgl, [desc], anggaran, total as realisasi, actual_anggaran as sisa_anggaran
+                  a.id as id, a.batch_id as batch_id, mata_anggaran, account, tgl, [desc], anggaran, total as realisasi, actual_anggaran as sisa_anggaran
                   FROM [DBCabang].[dbo].[transaksi] as a join [DBCabang].[dbo].[batches] as c on a.batch_id=c.id
                   
                   where
@@ -1215,6 +1215,18 @@ class TransaksiController extends Controller
 
     public function verifikasilevel1()
     {   
+        $a="";
+        return view('transaksi.verifikasilevel1', compact('a'));
+    }
+
+    public function verifikasilevel2()
+    {   
+        $a="";
+        return view('transaksi.verifikasilevel2', compact('a'));
+    }
+
+    public function verifikasilevel1hasil(Request $request)
+    {   
         $a = DB::select("SELECT 
         max(a.id) as id, batch_id, max(divisi) as divisi, 
         max(cabang) as cabang, max(seq_number) as seq_number, 
@@ -1222,11 +1234,15 @@ class TransaksiController extends Controller
         FROM [DBCabang].[dbo].[batches_status] as a join [DBCabang].[dbo].[batches] as b
         on a.batch_id=b.id
         where stat=2
+        AND cabang = ".$request->cabang." AND
+                    DATEPART(MONTH, b.created_at) >= ".$request->awal." AND 
+                    DATEPART(MONTH, b.created_at) <= ".$request->akhir." AND 
+                    DATEPART(YEAR, b.created_at) = ".$request->tahun."
         group by batch_id order by tanggal desc");
         return view('transaksi.verifikasilevel1', compact('a'));
     }
 
-    public function verifikasilevel2()
+    public function verifikasilevel2hasil(Request $request)
     {   
         $a = DB::select("SELECT 
         max(a.id) as id, batch_id, max(divisi) as divisi, 
@@ -1235,6 +1251,10 @@ class TransaksiController extends Controller
         FROM [DBCabang].[dbo].[batches_status] as a join [DBCabang].[dbo].[batches] as b
         on a.batch_id=b.id
         where stat=4
+        AND cabang = ".$request->cabang." AND
+                    DATEPART(MONTH, b.created_at) >= ".$request->awal." AND 
+                    DATEPART(MONTH, b.created_at) <= ".$request->akhir." AND 
+                    DATEPART(YEAR, b.created_at) = ".$request->tahun."
         group by batch_id order by tanggal desc");
         return view('transaksi.verifikasilevel2', compact('a'));
     }
