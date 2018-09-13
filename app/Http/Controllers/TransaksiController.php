@@ -1343,7 +1343,11 @@ class TransaksiController extends Controller
              ];
      
              $data = [
-                'tanggal' => $request->tanggal
+                'tanggal' => $request->tanggal,
+                'bulanawal' => $request->awal,
+                'bulanakhir' => $request->akhir,
+                'tahun' => $request->tahun,
+                'stat' => $request->stat
              ];
              
              $update = \App\Models\TanggalInputTransaksi::where('id', $id)->update($data);

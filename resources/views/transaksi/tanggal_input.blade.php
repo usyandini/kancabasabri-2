@@ -98,8 +98,11 @@
             										<thead>
             											<tr>
             												<th width="5%"><center>No</center></th>
-            												<th id="filterable"><center>Tanggal</center></th>
-
+                                                                                    <th id="filterable"><center>Tanggal</center></th>
+            												<th id="filterable"><center>Status</center></th>
+                                                                                    <th id="filterable"><center>Bulan Awal</center></th>
+                                                                                    <th id="filterable"><center>Bulan Akhir</center></th>
+                                                                                    <th id="filterable"><center>Tahun</center></th>
             												<th width="10%"><center>Aksi</center></th>
             											</tr>
             										</thead>
@@ -111,8 +114,35 @@
             											<tr>
             												<td><center>{{ $no }}</center></td>
             												<td><center>{{ $reason->tanggal }}</center></td>
-
-            												<td><center>
+                                                                                    <td><center>@if($reason->stat==1) <a class="btn btn-info btn-sm"><b>Aktif:Tanggal</b></a> @elseif($reason->stat==2) <a class="btn btn-success btn-sm"><b>Aktif:Tahun & Bulan</b></a> @endif</center></td>
+                                                                                    <td><center>@if($reason->bulanawal==0) Januari
+                                                                                                @elseif($reason->bulanawal==1) Februari
+                                                                                                @elseif($reason->bulanawal==2) Maret
+                                                                                                @elseif($reason->bulanawal==3) April
+                                                                                                @elseif($reason->bulanawal==4) Mei
+                                                                                                @elseif($reason->bulanawal==5) Juni
+                                                                                                @elseif($reason->bulanawal==6) Juli
+                                                                                                @elseif($reason->bulanawal==7) Agustus
+                                                                                                @elseif($reason->bulanawal==8) September
+                                                                                                @elseif($reason->bulanawal==9) Oktober
+                                                                                                @elseif($reason->bulanawal==10) November
+                                                                                                @elseif($reason->bulanawal==11) Desember @endif
+                                                                                    </center></td>
+                                                                                    <td><center>@if($reason->bulanakhir==0) Januari
+                                                                                                @elseif($reason->bulanakhir==1) Februari
+                                                                                                @elseif($reason->bulanakhir==2) Maret
+                                                                                                @elseif($reason->bulanakhir==3) April
+                                                                                                @elseif($reason->bulanakhir==4) Mei
+                                                                                                @elseif($reason->bulanakhir==5) Juni
+                                                                                                @elseif($reason->bulanakhir==6) Juli
+                                                                                                @elseif($reason->bulanakhir==7) Agustus
+                                                                                                @elseif($reason->bulanakhir==8) September
+                                                                                                @elseif($reason->bulanakhir==9) Oktober
+                                                                                                @elseif($reason->bulanakhir==10) November
+                                                                                                @elseif($reason->bulanakhir==11) Desember @endif
+                                                                                    </center></td>
+            												<td><center>{{ $reason->tahun }}</center></td>
+                                                                                    <td><center>
             													<a href="#" class="btn btn-outline-info btn-sm" data-target="#ubah{{$reason->id}}" data-toggle="modal"><i class="fa fa-edit"></i> Edit</a>
             												</center></td>
             											</tr>
@@ -128,10 +158,70 @@
             																{{ csrf_field() }}
             																<input type="hidden" name="id"  value="{{$reason->id}}" />
 
-
+                                                                                                            <label class="control-label"><b> Aktif </b></label>
+                                                                                                            <label class="control-label"> : </label>
+                                                                                                            <select class="form-control block" name="stat" style="width:100%" required="required">
+                                                                                                                  <option value="" disabled="" selected=""> - Aktif - </option>
+                                                                                                                  <option value="1" @if ($reason->stat==1)Selected @endif> Tanggal </option>
+                                                                                                                  <option value="2" @if ($reason->stat==2)Selected @endif> Bulan dan Tahun </option>
+                                                                                                            </select><br>
             																<label class="control-label"><b> Tanggal </b></label>
             																<label class="control-label"> : </label>
             																<input class="form-control" type="number" min="1" name="tanggal" placeholder="masukkan tanggal" value="{{$reason->tanggal}}" required="required"/>
+                                                                                                            <br>
+                                                                                                            <label class="control-label"><b> Bulan Awal </b></label>
+                                                                                                            <label class="control-label"> : </label>
+                                                                                                            <select class="form-control block" name="awal" style="width:100%" required="required">
+                                                                                                                  <option value="" disabled="" selected=""> - Pilih Bulan Awal - </option>
+                                                                                                                  <option value="0" @if ($reason->bulanawal==0)Selected @endif> Januari </option>
+                                                                                                                  <option value="1" @if ($reason->bulanawal==1)Selected @endif> Februari </option>
+                                                                                                                  <option value="2" @if ($reason->bulanawal==2)Selected @endif> Maret </option>
+                                                                                                                  <option value="3" @if ($reason->bulanawal==3)Selected @endif> April </option>
+                                                                                                                  <option value="4" @if ($reason->bulanawal==4)Selected @endif> Mei </option>
+                                                                                                                  <option value="5" @if ($reason->bulanawal==5)Selected @endif> Juni </option>
+                                                                                                                  <option value="6" @if ($reason->bulanawal==6)Selected @endif> Juli </option>
+                                                                                                                  <option value="7" @if ($reason->bulanawal==7)Selected @endif> Agustus </option>
+                                                                                                                  <option value="8" @if ($reason->bulanawal==8)Selected @endif> September </option>
+                                                                                                                  <option value="9" @if ($reason->bulanawal==9)Selected @endif> Oktober </option>
+                                                                                                                  <option value="10" @if ($reason->bulanawal==10)Selected @endif> November </option>
+                                                                                                                  <option value="11" @if ($reason->bulanawal==11)Selected @endif> Desember </option>
+                                                                                                            </select>
+                                                                                                            <br>
+                                                                                                            <label class="control-label"><b> Bulan Akhir </b></label>
+                                                                                                            <label class="control-label"> : </label>
+                                                                                                            <select class="form-control block" name="akhir" style="width:100%" required="required">
+                                                                                                                  <option value="" disabled="" selected=""> - Pilih Bulan Akhir - </option>
+                                                                                                                  <option value="0" @if ($reason->bulanakhir==0)Selected @endif> Januari </option>
+                                                                                                                  <option value="1" @if ($reason->bulanakhir==1)Selected @endif> Februari </option>
+                                                                                                                  <option value="2" @if ($reason->bulanakhir==2)Selected @endif> Maret </option>
+                                                                                                                  <option value="3" @if ($reason->bulanakhir==3)Selected @endif> April </option>
+                                                                                                                  <option value="4" @if ($reason->bulanakhir==4)Selected @endif> Mei </option>
+                                                                                                                  <option value="5" @if ($reason->bulanakhir==5)Selected @endif> Juni </option>
+                                                                                                                  <option value="6" @if ($reason->bulanakhir==6)Selected @endif> Juli </option>
+                                                                                                                  <option value="7" @if ($reason->bulanakhir==7)Selected @endif> Agustus </option>
+                                                                                                                  <option value="8" @if ($reason->bulanakhir==8)Selected @endif> September </option>
+                                                                                                                  <option value="9" @if ($reason->bulanakhir==9)Selected @endif> Oktober </option>
+                                                                                                                  <option value="10" @if ($reason->bulanakhir==10)Selected @endif> November </option>
+                                                                                                                  <option value="11" @if ($reason->bulanakhir==11)Selected @endif> Desember </option>
+                                                                                                            </select>
+                                                                                                            <br>
+                                                                                                            <label class="control-label"><b> Tahun </b></label>
+                                                                                                            <label class="control-label"> : </label>
+                                                                                                            <select class="form-control" name="tahun" style="width:100%" required value="{{$reason->tahun}}">
+                                                                                                                <option selected disabled>Pilih Tahun</option>
+                                                                                                                <?php
+                                                                                                                $thn_skr = date('Y');
+                                                                                                                for($x=$thn_skr; $x >= 2015; $x--){
+                                                                                                                  ?>
+                                                                                                                  <option value="{{$x}}"
+                                                                                                                  @if($x == $reason->tahun) Selected>{{ $x }}@endif
+                                                                                                                  @if($x <> $reason->tahun)>{{ $x }}@endif
+                                                                                                                  </option>
+                                                                                                                  <?php }?>
+                                                                                                            </select>
+
+                                                                                                            
+
             															</div>
             															<div class="modal-footer">
             																<button type="submit" name="save" class="btn btn-sm btn-primary"><i class="fa fa-check "></i> Ubah</button>

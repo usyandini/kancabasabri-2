@@ -522,28 +522,35 @@
                   }
 
                   function validateTransaksiDate(dateInput) {
+                    @if($tanggal->stat==1)
                     var today = new Date()
                     var month = today.getMonth()
                     var month2 = today.getMonth()-1
                     var date = today.getDate()
-                    var year = today.getFullYear()
                     var tanggal = {{ $tanggal->tanggal }}
                     var tanggal2 = {{ $tanggal->tanggal+1 }}
-                  
                     if ((date > tanggal && (new Date(dateInput).getMonth() < month)) || (new Date(dateInput).getMonth() > month)) {
-                     return false
+                      return false
                     }
                     if (date < tanggal2 && (new Date(dateInput).getMonth() < month2)){
                       return false
                     }
-                    
-                    // if (new Date(dateInput).getMonth() < month){
+                    return true
+                    @elseif($tanggal->stat==2)
+                    var bulanawal = {{ $tanggal->bulanawal }}
+                    var bulanakhir = {{ $tanggal->bulanakhir }}
+                    var tahun = {{ $tanggal->tahun }}
+                    if(((new Date(dateInput).getMonth() < bulanawal) || (new Date(dateInput).getMonth() > bulanakhir)) && (new Date(dateInput).getFullYear() == tahun)){
+                    return false
+                    }
+                    return true
+                    @endif
+                    // if (new Date(dateInput).getMonth() < bulan){
                     //   return false
                     // }
                     // if (date > 8){
                     //   return false
                     // }
-                    return true
                   }
 
                   function getCombination() {
